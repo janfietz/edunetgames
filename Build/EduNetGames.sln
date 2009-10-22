@@ -1,0 +1,27 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opensteer", "..\Source\opensteer\win32\opensteer.vcproj", "{2FCB5399-059F-405F-A19B-3ACBE92057A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EduNetGamesBase", "EduNetGamesBase.vcproj", "{43A48629-75C9-46F2-A383-1DD1DC809DB1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2FCB5399-059F-405F-A19B-3ACBE92057A9} = {2FCB5399-059F-405F-A19B-3ACBE92057A9}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FCB5399-059F-405F-A19B-3ACBE92057A9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2FCB5399-059F-405F-A19B-3ACBE92057A9}.Debug|Win32.Build.0 = Debug|Win32
+		{2FCB5399-059F-405F-A19B-3ACBE92057A9}.Release|Win32.ActiveCfg = Release|Win32
+		{2FCB5399-059F-405F-A19B-3ACBE92057A9}.Release|Win32.Build.0 = Release|Win32
+		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Debug|Win32.Build.0 = Debug|Win32
+		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Release|Win32.ActiveCfg = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
