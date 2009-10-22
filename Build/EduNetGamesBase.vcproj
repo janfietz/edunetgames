@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opensteerd.lib"
+				AdditionalDependencies="opensteerd.lib glut32.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_d.exe"
 				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\Source\opensteer\win32\lib&quot;;&quot;$(ProjectDir)\..\build&quot;"
 				GenerateDebugInformation="true"
