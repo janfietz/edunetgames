@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="../../../Bin/$(PlatformName)/lib"
+			IntermediateDirectory="../../../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -79,13 +79,13 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir &quot;$(ProjectDir)\lib&quot;&#x0D;&#x0A;copy &quot;$(TargetPath)&quot; &quot;$(ProjectDir)\lib&quot;&#x0D;&#x0A;"
+				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="../../../Bin/$(PlatformName)/lib"
+			IntermediateDirectory="../../../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -146,7 +146,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="mkdir $(ProjectDir)\lib&#x0D;&#x0A;copy $(TargetPath) $(ProjectDir)\lib&#x0D;&#x0A;"
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -166,11 +166,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Color.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Draw.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\lq.c"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Obstacle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\OldPathway.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Path.cpp"
 				>
 			</File>
 			<File
@@ -182,11 +198,43 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PolylineSegmentedPath.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\PolylineSegmentedPathwaySegmentRadii.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\PolylineSegmentedPathwaySingleRadius.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SegmentedPath.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SegmentedPathway.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\SimpleVehicle.cpp"
 				>
 			</File>
 			<File
+				RelativePath="..\src\TerrainRayTest.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TerrainRayTest.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Vec3.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Vec3Utilities.cpp"
 				>
 			</File>
 		</Filter>
@@ -211,6 +259,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\Color.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\Draw.h"
 				>
 			</File>
@@ -227,6 +279,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\OldPathway.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\Path.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\Pathway.h"
 				>
 			</File>
@@ -235,11 +295,59 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\PolylineSegmentedPath.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\PolylineSegmentedPathwaySegmentRadii.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\PolylineSegmentedPathwaySingleRadius.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\Proximity.h"
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\QueryPathAlike.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\QueryPathAlikeBaseDataExtractionPolicies.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\QueryPathAlikeMappings.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\QueryPathAlikeUtilities.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\SegmentedPath.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\SegmentedPathAlikeUtilities.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\SegmentedPathway.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\SharedPointer.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\SimpleVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\StandardTypes.h"
 				>
 			</File>
 			<File
@@ -251,11 +359,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\UnusedParameter.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\Utilities.h"
 				>
 			</File>
 			<File
 				RelativePath="..\include\OpenSteer\Vec3.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\Vec3Utilities.h"
 				>
 			</File>
 		</Filter>

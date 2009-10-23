@@ -20,6 +20,7 @@ Global
 		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Debug|Win32.ActiveCfg = Debug|Win32
 		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Debug|Win32.Build.0 = Debug|Win32
 		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Release|Win32.ActiveCfg = Release|Win32
+		{43A48629-75C9-46F2-A383-1DD1DC809DB1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

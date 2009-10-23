@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\Bin"
-			IntermediateDirectory="..\Temp"
+			OutputDirectory="../Bin/$(PlatformName)"
+			IntermediateDirectory="../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -63,9 +63,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opensteerd.lib glut32.lib"
+				AdditionalDependencies="glut32.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_d.exe"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\Source\opensteer\win32\lib&quot;;&quot;$(ProjectDir)\..\build&quot;"
+				AdditionalLibraryDirectories="$(OutDir)/lib"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -96,8 +96,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\Bin"
-			IntermediateDirectory="..\Temp"
+			OutputDirectory="../Bin/$(PlatformName)"
+			IntermediateDirectory="../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -122,7 +122,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\include&quot;;&quot;$(ProjectDir)\..\include\Opensteer&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -143,10 +143,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="opensteer.lib"
+				AdditionalDependencies="glut32.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(ProjectDir)\..\Source\opensteer\win32\lib&quot;;&quot;$(ProjectDir)\..\build&quot;"
+				AdditionalLibraryDirectories="$(OutDir)/lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -225,6 +225,10 @@
 			</File>
 			<File
 				RelativePath="..\Source\opensteer\plugins\Pedestrian.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\opensteer\plugins\PedestriansWalkingAnEight.cpp"
 				>
 			</File>
 			<File
