@@ -1,1 +1,2 @@
-Put here 3rd party libs like raknet
+Put here 3rd party libs
+Raknet has to be above the root folder

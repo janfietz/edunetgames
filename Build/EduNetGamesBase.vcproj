@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,9 +63,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glut32.lib"
+				AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStaticDebug.lib "
 				OutputFile="$(OutDir)/$(ProjectName)_d.exe"
-				AdditionalLibraryDirectories="$(OutDir)/lib"
+				AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\Raknet\Lib&quot;"
 				GenerateDebugInformation="true"
 			/>
 			<Tool
@@ -122,7 +122,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -146,7 +146,7 @@
 				AdditionalDependencies="glut32.lib"
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(OutDir)/lib"
+				AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;ProjectDir)\..\..\Raknet\Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\opensteer\plugins\Boids.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\opensteer\plugins\CaptureTheFlag.cpp"
 				>
 			</File>
@@ -232,6 +236,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\opensteer\plugins\SamplePlugins.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\opensteer\plugins\Soccer.cpp"
 				>
 			</File>
@@ -245,6 +253,14 @@
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGamesBase\ClientPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\NetBoidPlugin.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\NetBoidPlugin.h"
 				>
 			</File>
 			<File

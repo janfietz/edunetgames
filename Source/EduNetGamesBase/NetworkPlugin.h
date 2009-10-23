@@ -7,7 +7,15 @@
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Utilities.h"
 
+#include "RakNetworkFactory.h"
+#include "RakPeerInterface.h"
+//#include <RakNetTypes.h>
 
+#define _WINSOCK2API_
+#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
+#include "SocketLayer.h"
+
+#define SERVER_PORT 12345
 #if 0
 
 template 
@@ -108,21 +116,26 @@ public:
 	const OpenSteer::AVGroup& allVehicles (void) {return m_kGamePlugIn.allVehicles();}
 
 
-	virtual void CreateContent();
-	virtual void DeleteContent();
+	virtual void CreateContent( void );
+	virtual void DeleteContent( void );
 	virtual bool IsConnected() const{  return false; };// = 0;
 	virtual bool Connect(){ return false; };// = 0;
 	virtual void Disconnect(){};// = 0;
 
+	virtual void StartNetworkSession( void ){};
+	virtual void StopNetworkSession( void ){};
+
 
 	PluginClass m_kGamePlugIn;
+
+	RakPeerInterface* m_pNetInterface;
 };
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::open()
 {
-// 	StartNetworkSession();
+ 	this->StartNetworkSession();
 // 
  	this->CreateContent();
 
@@ -134,7 +147,7 @@ void NetworkPlugIn< PluginClass >::close()
 {
 	this->DeleteContent();
 // 
-// 	StopNetworkSession();
+ 	this->StopNetworkSession();
 	
 
 }
@@ -162,7 +175,7 @@ void NetworkPlugIn< PluginClass >::update (const float currentTime, const float 
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::CreateContent()
+void NetworkPlugIn< PluginClass >::CreateContent( void )
 {
 
 }
@@ -170,7 +183,7 @@ void NetworkPlugIn< PluginClass >::CreateContent()
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::DeleteContent()
+void NetworkPlugIn< PluginClass >::DeleteContent( void )
 {
 
 }
