@@ -193,6 +193,10 @@ OpenSteer::OpenSteerDemo::errorExit (const char* message)
 void 
 OpenSteer::OpenSteerDemo::exit (int exitCode)
 {
+	if(0 != selectedPlugIn)
+	{
+		selectedPlugIn->close();
+	}
 	::exit (exitCode);
 }
 
@@ -1448,8 +1452,8 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 	// create and initialize our window with GLUT tools
 	// (center window on screen with size equal to "ws" times screen size)
-	const int sw = glutGet (GLUT_SCREEN_WIDTH);
-	const int sh = glutGet (GLUT_SCREEN_HEIGHT);
+	const int sw = glutGet (GLUT_SCREEN_WIDTH) / 2;
+	const int sh = glutGet (GLUT_SCREEN_HEIGHT)/ 2;
 	const float ws = 0.8f; // window_size / screen_size
 	const int ww = (int) (sw * ws);
 	const int wh = (int) (sh * ws);
