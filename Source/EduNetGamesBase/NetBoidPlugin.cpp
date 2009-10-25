@@ -1,3 +1,4 @@
 #include "NetBoidPlugin.h"
 
-NetBoidPlugin gNetBoidPlugin;
+NetPeerBoidPlugin gNetPeerBoidPlugin;
+NetClientBoidPlugin gNetClientBoidPlugin;

@@ -19,9 +19,9 @@ public:
 
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
-
-	virtual bool IsConnected() const;
+	
 	virtual void StartNetworkSession( void );
+
 private:
 
 	FullyConnectedMesh2 m_kfullyConnectedMeshPlugin;
@@ -75,9 +75,3 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 	printf("Starting peer at port: %d.\n", sd.port);	
 }
 
-//-----------------------------------------------------------------------------
-template < class PluginClass >
-bool PeerPlugin<PluginClass>::IsConnected() const
-{
-	return 0 < this->m_pNetInterface->NumberOfConnections();
-}

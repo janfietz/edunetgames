@@ -20,7 +20,10 @@
 #define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include "SocketLayer.h"
 
+
+static const int CLIENT_PORT = 23456;
 static const int SERVER_PORT = 12345;
+static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 
 #if 0
@@ -128,7 +131,7 @@ public:
 
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
-	virtual bool IsConnected() const{  return false; };// = 0;
+	virtual bool IsConnected() const;// = 0;
 	virtual bool Connect();
 	virtual void Disconnect(){};// = 0;
 
@@ -238,6 +241,10 @@ void NetworkPlugIn< PluginClass >::CheckPongTimeout( void )
 	if( kCurrent > this->m_kPongEndTime )
 	{
 		this->m_iWaitForPongPort += 1;
+		if(SERVER_PONG_COUNT <= this->m_iWaitForPongPort - SERVER_PORT)
+		{
+			this->m_iWaitForPongPort -= SERVER_PONG_COUNT;
+		}
 		this->m_iWaitForPongPort *= -1;
 	}
 }
@@ -352,9 +359,18 @@ bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
 	{		
 		if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )
 		{
+			printf("Send ping to port: %d at time %i\n", 
+				iPort, RakNet::GetTime() );
 			this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;
 			this->m_iWaitForPongPort = iPort;
 		}
 	}
 	return this->WaitForPong();
+}
+
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+bool NetworkPlugIn<PluginClass>::IsConnected() const
+{
+	return 0 < this->m_pNetInterface->NumberOfConnections();
 }
