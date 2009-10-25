@@ -113,7 +113,8 @@ void Boid::reset (void)
 // draw this boid into the scene
 void Boid::draw (void)
 {
-    drawBasic3dSphericalVehicle (*this, gGray70);
+	 drawBasic3dSphericalVehicle (*this,
+		(this->IsRemoteObject()) ? gOrange : gGray70);
     // drawTrail ();
 }
 
@@ -287,13 +288,17 @@ void Boid::annotateAvoidObstacle (const float minDistanceToCollision)
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::open (void)
 {
+	if(0 == this->m_pBoidFactory)
+	{
+		this->m_pBoidFactory = new BoidFactory();
+	}
     // make the database used to accelerate proximity queries
     cyclePD = -1;
     nextPD ();
 
     // make default-sized flock
     population = 0;
-    for (int i = 0; i < 200; i++) addBoidToFlock ();
+    for (int i = 0; i < 5; i++) addBoidToFlock ();
 
     // initialize camera
     OpenSteerDemo::init3dCamera (*OpenSteerDemo::selectedVehicle);
@@ -392,6 +397,12 @@ void BoidsPlugIn::close (void)
     // delete the proximity database
     delete pd;
     pd = NULL;
+
+	if(NULL < this->m_pBoidFactory)
+	{
+		delete this->m_pBoidFactory;
+		this->m_pBoidFactory = NULL;
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -495,14 +506,51 @@ void BoidsPlugIn::printMiniHelpForFunctionKeys (void)
 
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::addBoidToFlock (void)
-{
-    population++;
-    Boid* boid = new Boid (*pd);
-    flock.push_back (boid);
-    if (population == 1) OpenSteerDemo::selectedVehicle = boid;
+{    
+	Boid* boid = this->m_pBoidFactory->CreateBoid( *pd );
+	this->AddBoidToFlock( boid );
 }
-
-
+// ----------------------------------------------------------------------------
+// JF ++ 
+void BoidsPlugIn::AddBoidToFlock( Boid* pkBoid )
+{
+	population++;
+	flock.push_back (pkBoid);
+    if (population == 1) 
+		OpenSteerDemo::selectedVehicle = pkBoid;
+}
+// ----------------------------------------------------------------------------
+void BoidsPlugIn::RemoveBoidFromFlock( const Boid* pkBoid )
+{
+	if (population > 0)
+    {
+		Boid::groupType::iterator kIter = this->FindBoid(pkBoid);
+		if(kIter != flock.end())
+		{
+			flock.erase( kIter );
+			population--;
+			 // if it is OpenSteerDemo's selected vehicle, unselect it
+        if (pkBoid == OpenSteerDemo::selectedVehicle)
+            OpenSteerDemo::selectedVehicle = NULL;
+		}       
+    }
+}
+// ----------------------------------------------------------------------------
+Boid::groupType::iterator BoidsPlugIn::FindBoid( const Boid* pkBoid )
+{
+	Boid::groupType::iterator kIter = flock.begin();
+	Boid::groupType::iterator kIterEnd = flock.end();
+	while(kIter != kIterEnd)
+	{
+		if(*kIter == pkBoid)
+		{
+			return kIter;
+		}
+		++kIter;
+	}
+	return kIterEnd;
+}
+// JF --
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::removeBoidFromFlock (void)
 {
@@ -510,15 +558,9 @@ void BoidsPlugIn::removeBoidFromFlock (void)
     {
         // save a pointer to the last boid, then remove it from the flock
         const Boid* boid = flock.back();
-        flock.pop_back();
-        population--;
+		this->RemoveBoidFromFlock( boid );
 
-        // if it is OpenSteerDemo's selected vehicle, unselect it
-        if (boid == OpenSteerDemo::selectedVehicle)
-            OpenSteerDemo::selectedVehicle = NULL;
-
-        // delete the Boid
-        delete boid;
+		this->m_pBoidFactory->DestroyBoid( boid );
     }
 }    
 

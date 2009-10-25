@@ -14,6 +14,7 @@
 #include "RakNetTypes.h"
 #include "GetTime.h"
 #include "BitStream.h"
+#include "NetworkIDManager.h"
 //#include <RakNetTypes.h>
 
 #define _WINSOCK2API_
@@ -137,8 +138,7 @@ public:
 
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );
-
-
+	
 	PluginClass m_kGamePlugIn;
 protected:
 	
@@ -147,6 +147,7 @@ protected:
 	virtual void OnReceivedPacket( Packet* pPacket );
 	
 	RakPeerInterface* m_pNetInterface;
+	NetworkIDManager m_kNetworkIdManager;
 private:
 	void ReceivePackets( void );
 	void ReceivedPongPacket( Packet* pPacket );

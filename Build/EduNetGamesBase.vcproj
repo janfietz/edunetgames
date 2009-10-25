@@ -272,11 +272,31 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\EduNetGamesBase\OSReplica.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\OSReplicaConnection.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\OSReplicaConnection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\OSReplicaTypes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\EduNetGamesBase\PeerPlugin.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGamesBase\PeerPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGamesBase\ReplicaManager.h"
 				>
 			</File>
 		</Filter>

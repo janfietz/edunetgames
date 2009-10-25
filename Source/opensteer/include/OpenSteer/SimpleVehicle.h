@@ -221,6 +221,18 @@ namespace OpenSteer {
             setSide (localRotateForwardToSide (forward()));
         }
 
+		// JF ++
+		void SetIsRemoteObject( bool bIsRemote )
+		{
+			bIsRemoteObject = bIsRemote;
+		}
+
+		bool IsRemoteObject( void )
+		{
+			return bIsRemoteObject;
+		}
+		// JF --
+
     private:
 
         float _mass;       // mass (defaults to unity so acceleration=force)
@@ -245,6 +257,10 @@ namespace OpenSteer {
 
         // measure path curvature (1/turning-radius), maintain smoothed version
         void measurePathCurvature (const float elapsedTime);
+
+		// JF ++
+		bool bIsRemoteObject;
+		// JF --
     };
 
 

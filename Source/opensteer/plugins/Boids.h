@@ -1,3 +1,6 @@
+#ifndef BOID_H
+#define BOID_H
+
 #include "OpenSteer/PlugIn.h"
 #include "OpenSteer/Obstacle.h"
 #include "OpenSteer/Proximity.h"
@@ -16,6 +19,7 @@ namespace OpenSteer{
     typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
 
+	
     // ----------------------------------------------------------------------------
 
 	 class Boid : public OpenSteer::SimpleVehicle
@@ -56,11 +60,27 @@ namespace OpenSteer{
         // allocate one and share amoung instances just to save memory usage
         // (change to per-instance allocation to be more MP-safe)
         static AVGroup neighbors;
-		
-		
-
 
 	 };
+
+	 // ----------------------------------------------------------------------------
+	// JF ++
+	class BoidFactory
+	{
+	public:
+
+		virtual Boid* CreateBoid( ProximityDatabase& pd )
+		{
+			return new Boid(pd);
+		};
+
+		virtual void DestroyBoid( const Boid* boid )
+		{
+			delete boid;
+		};
+
+	};
+	// JF --
 
 	// ----------------------------------------------------------------------------
     // PlugIn for OpenSteerDemo
@@ -86,6 +106,21 @@ namespace OpenSteer{
 
 		 // return an AVGroup containing each boid of the flock
         const AVGroup& allVehicles (void) {return (const AVGroup&)flock;}
+
+		// JF ++ 
+		ProximityDatabase* AccessProximityDataBase( void ) const
+		{
+			return this->pd;
+		}
+
+		void AddBoidToFlock( Boid* pkBoid );
+		void RemoveBoidFromFlock( const Boid* pkBoid );
+
+		void SetBoidFactory( BoidFactory* pBoidFactory )
+		{
+			this->m_pBoidFactory = pBoidFactory;
+		}
+		// JF --
 
 	private:
 		void addBoidToFlock (void);
@@ -119,6 +154,9 @@ namespace OpenSteer{
         Boid::groupType flock;
         typedef Boid::groupType::const_iterator iterator;
 
+		// JF ++ 
+		Boid::groupType::iterator FindBoid( const Boid* pkBoid );
+		// JF --
         // pointer to database used to accelerate proximity queries
         ProximityDatabase* pd;
 
@@ -151,6 +189,10 @@ namespace OpenSteer{
         BO outsideBigBox, insideBigBox;
         SO insideBigSphere, outsideSphere0, outsideSphere1, outsideSphere2,
            outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
+
+		BoidFactory* m_pBoidFactory;
 	
 	};
 }
+
+#endif //BOID_H

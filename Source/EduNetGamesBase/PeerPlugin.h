@@ -56,6 +56,9 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 {
 	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
 
+	this->m_pNetInterface->SetNetworkIDManager(&this->m_kNetworkIdManager);
+	this->m_kNetworkIdManager.SetIsNetworkIDAuthority(true);
+
 	this->m_pNetInterface->AttachPlugin(&this->m_kfullyConnectedMeshPlugin);
 	this->m_pNetInterface->AttachPlugin(&this->m_kconnectionGraphPlugin);
 
