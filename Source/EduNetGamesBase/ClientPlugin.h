@@ -46,8 +46,6 @@ void ClientPlugin<PluginClass>::DeleteContent( void )
 template < class PluginClass >
 void ClientPlugin<PluginClass>::StartNetworkSession( void )
 {
-	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
-
 	SocketDescriptor sd;
 	sd.port=CLIENT_PORT;
 	bool bStarted(false);

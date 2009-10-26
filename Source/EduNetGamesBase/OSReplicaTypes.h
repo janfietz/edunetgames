@@ -2,7 +2,7 @@
 #define OSREPLICATYPES
 
 #include "OSReplica.h"
-
+#include "BitStream.h"
 #include "opensteer/plugins/SamplePlugins.h"
 
 //-----------------------------------------------------------------------------
@@ -36,7 +36,9 @@ public:
 	{
 		return QueryActionOnPopConnection_PeerToPeer(droppedConnection);
 	}
-	
+
+	virtual RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters);
+	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
 
 	OSType* AccessVehicle( void )const
 	{
@@ -45,6 +47,36 @@ public:
 protected:
 	OSType* m_pVehicle;
 };
+
+template< class OSType>
+RakNet::RM3SerializationResult OSReplica<OSType>::Serialize(RakNet::SerializeParameters *serializeParameters)
+{
+	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
+
+	OpenSteer::Vec3 kVec = m_pVehicle->position();
+	kStream.WriteAlignedBytes((const unsigned char*)&kVec,sizeof(kVec));
+	
+	kVec = m_pVehicle->forward();
+	kStream.WriteAlignedBytes((const unsigned char*)&kVec,sizeof(kVec));
+
+	
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+}
+
+//-----------------------------------------------------------------------------
+template< class OSType>
+void OSReplica<OSType>::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+{
+	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
+
+	OpenSteer::Vec3 kVec;
+	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
+	m_pVehicle->setPosition(kVec);
+	
+	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
+	m_pVehicle->setForward(kVec);	
+	
+}
 
 //-----------------------------------------------------------------------------
 class BoidReplica : public OSReplica<OpenSteer::Boid>

@@ -94,6 +94,10 @@ namespace OpenSteer {
         virtual void close (void) = 0;
         virtual void reset (void) = 0;
 
+		// JF ++
+		virtual bool needRedraw ( void ) const = 0;
+		// JF ++
+
         // return a pointer to this instance's character string name
         virtual const char* name (void) = 0;
 
@@ -134,6 +138,10 @@ namespace OpenSteer {
 
         // default reset method is to do a close then an open
         void reset (void) {close (); open ();}
+
+		// JF ++
+		bool needRedraw ( void ) const { return true; }
+		// JF ++
 
         // default sort key (after the "built ins")
         float selectionOrderSortKey (void) {return 1.0f;}

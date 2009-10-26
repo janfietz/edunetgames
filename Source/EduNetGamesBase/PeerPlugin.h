@@ -23,6 +23,7 @@ public:
 	virtual void StartNetworkSession( void );
 
 private:
+	virtual bool HasIdAuthority( void ) const {return true;}
 
 	FullyConnectedMesh2 m_kfullyConnectedMeshPlugin;
 	ConnectionGraph2 m_kconnectionGraphPlugin;
@@ -54,11 +55,6 @@ void PeerPlugin<PluginClass>::DeleteContent( void )
 template < class PluginClass >
 void PeerPlugin<PluginClass>::StartNetworkSession( void )
 {
-	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
-
-	this->m_pNetInterface->SetNetworkIDManager(&this->m_kNetworkIdManager);
-	this->m_kNetworkIdManager.SetIsNetworkIDAuthority(true);
-
 	this->m_pNetInterface->AttachPlugin(&this->m_kfullyConnectedMeshPlugin);
 	this->m_pNetInterface->AttachPlugin(&this->m_kconnectionGraphPlugin);
 

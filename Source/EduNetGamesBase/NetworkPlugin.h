@@ -126,6 +126,9 @@ public:
 	virtual void close(void);
 	virtual void reset (void);
 	void update (const float currentTime, const float elapsedTime);
+	virtual void handleFunctionKeys (int keyNumber);
+	virtual void printMiniHelpForFunctionKeys (void);
+
 
 	const OpenSteer::AVGroup& allVehicles (void) {return m_kGamePlugIn.allVehicles();}
 
@@ -136,6 +139,7 @@ public:
 	virtual bool Connect();
 	virtual void Disconnect(){};// = 0;
 
+
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );
 	
@@ -143,12 +147,20 @@ public:
 protected:
 	
 	bool PingForOtherPeers( const int iPort );
+	void AttachNetworkIdManager( void );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
 	
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager m_kNetworkIdManager;
 private:
+	
+	void CreateNetworkInterface( void );
+	void DestroyNetworkInterface( void );
+	virtual bool HasIdAuthority( void ) const {return false;}
+
+
+
 	void ReceivePackets( void );
 	void ReceivedPongPacket( Packet* pPacket );
 	void CheckPongTimeout( void );
@@ -163,25 +175,37 @@ private:
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::open( void )
 {
+	this->CreateNetworkInterface();
  	this->StartNetworkSession(); 
  	this->CreateContent();
 }
-
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+void NetworkPlugIn< PluginClass >::CreateNetworkInterface( void )
+{
+	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
+	this->AttachNetworkIdManager();
+}
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::close( void )
 {
 	this->DeleteContent();
  	this->StopNetworkSession();
+	this->DestroyNetworkInterface();
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::StopNetworkSession( void )
-{
-	
+{	
 	this->CloseOpenConnections();
+	this->m_pNetInterface->Shutdown(100,0);	
+}
 
-	this->m_pNetInterface->Shutdown(100,0);
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+void NetworkPlugIn< PluginClass >::DestroyNetworkInterface( void )
+{
 	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
 	printf("Destroyed peer.\n");
 }
@@ -368,10 +392,30 @@ bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
 	}
 	return this->WaitForPong();
 }
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+void NetworkPlugIn< PluginClass >::AttachNetworkIdManager( void )
+{
+	this->m_pNetInterface->SetNetworkIDManager(&this->m_kNetworkIdManager);
+	this->m_kNetworkIdManager.SetIsNetworkIDAuthority( this->HasIdAuthority() );
+}
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 bool NetworkPlugIn<PluginClass>::IsConnected() const
 {
 	return 0 < this->m_pNetInterface->NumberOfConnections();
+}
+
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+void NetworkPlugIn<PluginClass>::handleFunctionKeys (int keyNumber)
+{
+	this->m_kGamePlugIn.handleFunctionKeys(keyNumber);
+}
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+void NetworkPlugIn<PluginClass>::printMiniHelpForFunctionKeys (void)
+{
+	this->m_kGamePlugIn.printMiniHelpForFunctionKeys();
 }

@@ -49,13 +49,32 @@ public:
 	  m_pkReplicaManager(pkManager){}
 
 	virtual OpenSteer::Boid* CreateBoid( OpenSteer::ProximityDatabase& pd );
-	virtual void DestroyBoid( const OpenSteer::Boid* );
-	
+	virtual void DestroyBoid( const OpenSteer::Boid* );	
 
 private:	
 	BoidReplicaManager* m_pkReplicaManager;
 	DataStructures::Map<unsigned int, RakNet::Replica3* > m_uidMap;
 };
+
+// ----------------------------------------------------------------------------
+class BoidDummyFactory : public BoidReplicaFactory
+{
+public:
+	BoidDummyFactory(BoidReplicaManager* pkManager):
+	  BoidReplicaFactory(pkManager){}
+
+	virtual OpenSteer::Boid* CreateBoid( OpenSteer::ProximityDatabase& pd )
+	{
+		return NULL;
+	};
+	virtual void DestroyBoid( const OpenSteer::Boid* )
+	{
+	}	
+};
+
+
+
+
 
 // ----------------------------------------------------------------------------
 class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugIn>
@@ -68,6 +87,10 @@ public:
 
 	 bool requestInitialSelection (void) {return true;}
 	 virtual float selectionOrderSortKey (void) { return 2.0f ;}
+	 
+	virtual bool needRedraw ( void ) const { return false; }
+	
+
 
 	 virtual void StartNetworkSession( void );
 
@@ -81,10 +104,18 @@ private:
 class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugIn>
 {
 public:
-	NetClientBoidPlugin(){};
+	NetClientBoidPlugin();
 	virtual ~NetClientBoidPlugin(){};
 
 	virtual const char* name (void){return "NetClientBoidPlugin";};
 
 	virtual float selectionOrderSortKey (void) { return 3.0f ;}
+
+	virtual void StartNetworkSession( void );
+
+private:
+
+	BoidReplicaFactory* m_pkBoidFactory;
+	BoidReplicaManager m_kReplicaManager;
+
 };

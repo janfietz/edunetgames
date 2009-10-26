@@ -57,3 +57,18 @@ void NetPeerBoidPlugin::StartNetworkSession( void )
 	PeerPlugin<OpenSteer::BoidsPlugIn>::StartNetworkSession();
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 }
+
+//-----------------------------------------------------------------------------
+NetClientBoidPlugin::NetClientBoidPlugin()
+{
+	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugIn);
+
+	this->m_pkBoidFactory = new BoidDummyFactory(&this->m_kReplicaManager);	
+	this->m_kGamePlugIn.SetBoidFactory( this->m_pkBoidFactory );
+}
+//-----------------------------------------------------------------------------
+void NetClientBoidPlugin::StartNetworkSession( void )
+{
+	ClientPlugin<OpenSteer::BoidsPlugIn>::StartNetworkSession();
+	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
+}

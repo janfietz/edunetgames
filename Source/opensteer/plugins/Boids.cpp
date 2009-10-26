@@ -123,12 +123,15 @@ void Boid::draw (void)
 void Boid::update (const float currentTime, const float elapsedTime)
 {
     OPENSTEER_UNUSED_PARAMETER(currentTime);
-    
-    // steer to flock and avoid obstacles if any
-    applySteeringForce (steerToFlock (), elapsedTime);
+	
+	if( false == this->IsRemoteObject() )
+	{
+		// steer to flock and avoid obstacles if any
+		applySteeringForce (steerToFlock (), elapsedTime);
 
-    // wrap around to contrain boid within the spherical boundary
-    sphericalWrapAround ();
+		// wrap around to contrain boid within the spherical boundary
+		sphericalWrapAround ();
+	}
 
     // notify proximity database that our position has changed
     proximityToken->updateForNewPosition (position());
@@ -298,7 +301,7 @@ void BoidsPlugIn::open (void)
 
     // make default-sized flock
     population = 0;
-    for (int i = 0; i < 5; i++) addBoidToFlock ();
+    for (int i = 0; i < 100; i++) addBoidToFlock ();
 
     // initialize camera
     OpenSteerDemo::init3dCamera (*OpenSteerDemo::selectedVehicle);
@@ -508,7 +511,10 @@ void BoidsPlugIn::printMiniHelpForFunctionKeys (void)
 void BoidsPlugIn::addBoidToFlock (void)
 {    
 	Boid* boid = this->m_pBoidFactory->CreateBoid( *pd );
-	this->AddBoidToFlock( boid );
+	if(NULL != boid)
+	{
+		this->AddBoidToFlock( boid );
+	}
 }
 // ----------------------------------------------------------------------------
 // JF ++ 
