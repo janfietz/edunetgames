@@ -1,8 +1,23 @@
 //-----------------------------------------------------------------------------
 // implements a plugin doing nothing
 #include "EduNet/common/EduNetCommon.h"
+#include "EduNet/templates/TUpdatePeriod.h"
+#include "EduNet/common/InstanceCount.h"
+
 #include "OpenSteer/OpenSteerDemo.h"
-#include "../../OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerExtras/AbstractVehicleGroup.h"
+
+
+
+// ???
+// class AbstractGamePlugIn : public AbstractPlugIn
+// {
+// public:
+// }
+
+
+// typedef GamePluginMixin<Plugin> SimpleGamePlugin;
+
 
 // anonymous namespace
 namespace {
@@ -11,10 +26,37 @@ namespace {
 
 	class EmptyVehicle : public SimpleVehicle
 	{
+	public:
+
+		EmptyVehicle():m_uiId( EmptyVehicle::ms_kInstanceCount.Constructor() )
+		{
+			this->reset();
+		}
+
+		virtual ~EmptyVehicle()
+		{
+			EmptyVehicle::ms_kInstanceCount.Destructor();
+		}
+
+		// reset vehicle state
+		virtual void reset (void)
+		{
+			SimpleVehicle::reset();
+			m_kUpdatePeriod.SetPeriodTime( 0.5f );
+		}
+
 		// per frame simulation update
 		virtual void update (const float currentTime, const float elapsedTime)
 		{
 			// do nothing
+
+			// test the UpdatePeriod
+			size_t uiTicks = m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
+			if( uiTicks >= 1 )
+			{
+				bool bTest = true;
+				bTest  = false;
+			}
 		}
 
 		// draw this character/vehicle into the scene
@@ -22,7 +64,12 @@ namespace {
 		{
 			drawBasic2dCircularVehicle (*this, gGray50);
 		}
+		EduNet::UpdatePeriodFloat m_kUpdatePeriod;
+		static EduNet::InstanceCount ms_kInstanceCount;
+		size_t m_uiId;
 	};
+
+	EduNet::InstanceCount EmptyVehicle::ms_kInstanceCount;
 
 	class EmptyPlugIn : public PlugIn
 	{
@@ -38,6 +85,7 @@ namespace {
 
 		virtual void open (void)
 		{
+			m_kVehicle.reset();
 			OpenSteerDemo::selectedVehicle = &m_kVehicle;
 			m_kVehicles.push_back( &m_kVehicle );
 
@@ -75,6 +123,8 @@ namespace {
 
 		virtual void reset (void)
 		{
+			AbstractVehicleGroup kVehicles( m_kVehicles );
+			kVehicles.reset( );
 		}
 
 		const AVGroup& allVehicles (void) {return (const AVGroup&) m_kVehicles;}

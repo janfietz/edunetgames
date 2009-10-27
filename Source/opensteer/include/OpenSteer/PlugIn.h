@@ -116,8 +116,7 @@ namespace OpenSteer {
         virtual const AVGroup& allVehicles (void) = 0;
     };
 
-
-    class PlugIn : public AbstractPlugIn
+	class PlugIn : public AbstractPlugIn
     {
     public:
         // prototypes for function pointers used with PlugIns

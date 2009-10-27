@@ -96,6 +96,7 @@ namespace OpenSteer {
 		virtual void update(const float currentTime, const float elapsedTime) = 0;
 		// CP ++
 		virtual void draw(const float currentTime, const float elapsedTime) = 0;
+		virtual void reset (void) = 0;
 		// CP --
    };
 

@@ -1,5 +1,6 @@
 #include "NetBoidPlugin.h"
 #include "EduNet/network/OSReplicaTypes.h"
+#include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 NetPeerBoidPlugin gNetPeerBoidPlugin;
 NetClientBoidPlugin gNetClientBoidPlugin;
@@ -13,7 +14,9 @@ RakNet::Replica3* BoidReplicaConnection::AllocReplica(
 	allocationId->Read(typeName);
 	if (typeName=="BoidReplica"){
 		BoidReplica* pkNewReplica = new BoidReplica( this->m_pBoidPlugin  );
-		this->m_pBoidPlugin->AddBoidToFlock( pkNewReplica->AccessVehicle() );
+		OpenSteer::AbstractVehicleGroup kVG( (OpenSteer::AVGroup &)this->m_pBoidPlugin->allVehicles() );
+		kVG.addVehicle( pkNewReplica->AccessVehicle() );
+//		this->m_pBoidPlugin->AddBoidToFlock( pkNewReplica->AccessVehicle() );
 		return pkNewReplica; 
 	}
 	return 0;

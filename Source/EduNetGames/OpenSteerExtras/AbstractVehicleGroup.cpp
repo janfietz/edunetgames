@@ -36,6 +36,18 @@ void AbstractVehicleGroup::redraw (const float currentTime, const float elapsedT
 }
 
 //-----------------------------------------------------------------------------
+void AbstractVehicleGroup::reset( void )
+{
+	AVIterator iter = m_kVehicles.begin();
+	AVIterator last = m_kVehicles.end();
+	while( iter != last )
+	{
+		(*iter)->reset( );
+		++iter;
+	}
+}
+
+//-----------------------------------------------------------------------------
 void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle )
 {
 	m_kVehicles.push_back( pkVehicle );

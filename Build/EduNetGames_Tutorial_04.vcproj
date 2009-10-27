@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="EduNetGames_Tutorial_03"
-	ProjectGUID="{2417F0FA-33F9-4422-B243-F9D71676607F}"
+	Name="EduNetGames_Tutorial_04"
+	ProjectGUID="{9FF3BFB6-B65D-46AF-A766-66F2C4C30B02}"
 	RootNamespace="opensteer"
 	Keyword="Win32Proj"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_03&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_04&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -122,7 +122,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_03&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_04&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -215,6 +215,14 @@
 				Name="net"
 				>
 				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
 					>
 				</File>
@@ -222,34 +230,22 @@
 					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
 					>
 				</File>
-				<Filter
-					Name="from_tutorial2"
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.cpp"
 					>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.h"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
-						>
-					</File>
-				</Filter>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

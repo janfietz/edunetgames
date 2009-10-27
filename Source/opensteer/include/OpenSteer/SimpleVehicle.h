@@ -99,7 +99,7 @@ namespace OpenSteer {
         ~SimpleVehicle ();
 
         // reset vehicle state
-        void reset (void)
+        virtual void reset (void)
         {
             // reset LocalSpace state
             resetLocalSpace ();

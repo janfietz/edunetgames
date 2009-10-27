@@ -16,6 +16,7 @@ public:
 	virtual void update (const float currentTime, const float elapsedTime);
 
 	virtual void redraw (const float currentTime, const float elapsedTime);
+	virtual void reset( void );
 
 	virtual void addVehicle( AbstractVehicle* pkVehicle );
  	virtual void removeVehicle( AbstractVehicle* pkVehicle );
