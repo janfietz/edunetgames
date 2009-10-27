@@ -94,7 +94,10 @@ namespace OpenSteer {
 
 		// dp - added to support heterogeneous flocks
 		virtual void update(const float currentTime, const float elapsedTime) = 0;
-    };
+		// CP ++
+		virtual void draw(const float currentTime, const float elapsedTime) = 0;
+		// CP --
+   };
 
 
     // more convenient short names for AbstractVehicle group and iterator
