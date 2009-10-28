@@ -80,6 +80,19 @@ namespace OpenSteer{
 	};
 	// JF --
 
+	// enumerate demos of various constraints on the flock
+	enum EBoidConstraintType {
+		EBoidConstraintType_none,
+		EBoidConstraintType_insideSphere,
+		EBoidConstraintType_outsideSphere,
+		EBoidConstraintType_outsideSpheres,
+		EBoidConstraintType_outsideSpheresNoBig,
+		EBoidConstraintType_rectangle,
+		EBoidConstraintType_rectangleNoBig,
+		EBoidConstraintType_outsideBox,
+		EBoidConstraintType_insideBox
+	};
+
 	// ----------------------------------------------------------------------------
     // PlugIn for OpenSteerDemo
 	class BoidsPlugIn : public PlugIn
@@ -118,6 +131,20 @@ namespace OpenSteer{
 		{
 			this->m_pBoidFactory = pBoidFactory;
 		}
+
+		const EBoidConstraintType GetCurrentBoundaryCondition( void ) const
+		{
+			return this->constraint;
+		}
+
+		const bool WasBoundaryConditionChangedLocally( void ) const
+		{
+			return this->bWasLocalChange;
+		}
+
+		void SetCurrentBoundaryCondition( const EBoidConstraintType  eType,
+			bool bLocalChange = true);
+
 		// JF --
 
 	private:
@@ -166,19 +193,9 @@ namespace OpenSteer{
         // the rest of this plug-in supports the various obstacles:
         // --------------------------------------------------------
 
-        // enumerate demos of various constraints on the flock
-        enum ConstraintType {
-			none,
-			insideSphere,
-			outsideSphere,
-			outsideSpheres,
-			outsideSpheresNoBig,
-			rectangle,
-			rectangleNoBig,
-			outsideBox,
-			insideBox
-		};
-        ConstraintType constraint;
+        
+        EBoidConstraintType constraint;
+		bool bWasLocalChange;
 
 		
         RO bigRectangle;

@@ -87,8 +87,8 @@ void NetworkPlugIn< PluginClass >::CreateNetworkInterface( void )
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::close( void )
 {
-	this->DeleteContent();
- 	this->StopNetworkSession();
+	this->StopNetworkSession();
+	this->DeleteContent(); 	
 	this->DestroyNetworkInterface();
 }
 //-----------------------------------------------------------------------------

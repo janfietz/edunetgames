@@ -1,7 +1,9 @@
 #pragma once
-#include "Tutorial_02/plugins/PeerPlugin.h"
 #include "Tutorial_02/plugins/ClientPlugin.h"
+#include "Tutorial_02/plugins/PeerPlugin.h"
+#include "EduNet/network/OSReplica.h"
 #include "Boids.h"
+
 
 // ----------------------------------------------------------------------------
 class BoidReplicaConnection : public RakNet::Connection_RM3
@@ -71,6 +73,64 @@ public:
 	}	
 };
 
+//-----------------------------------------------------------------------------
+class BoidConditionReplica : public OSObjectReplica
+{
+public:
+	virtual RakNet::RakString GetName(void) const
+	{
+		return "BoidCondition";
+	};
+
+	BoidConditionReplica(OpenSteer::BoidsPlugIn* pBoidPlugin):
+		m_pBoidPlugin(pBoidPlugin){}
+
+	virtual RakNet::RM3ConstructionState QueryConstruction(
+		RakNet::Connection_RM3 *destinationConnection,
+		RakNet::ReplicaManager3 *replicaManager3)
+	{
+		return QueryConstruction_PeerToPeer(destinationConnection);
+	}
+	
+	virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection)
+	{
+		return QueryRemoteConstruction_PeerToPeer(sourceConnection);
+	}	
+
+	virtual RakNet::RM3QuerySerializationResult QuerySerialization(
+		RakNet::Connection_RM3 *destinationConnection);
+
+
+	virtual RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(
+		RakNet::Connection_RM3 *droppedConnection) const
+	{
+		return QueryActionOnPopConnection_PeerToPeer(droppedConnection);
+	}
+	virtual void SerializeConstructionExisting(
+		RakNet::BitStream *constructionBitstream, 
+		RakNet::Connection_RM3 *destinationConnection);
+
+	virtual void DeserializeConstructionExisting(
+		RakNet::BitStream *constructionBitstream,
+		RakNet::Connection_RM3 *sourceConnection) ;
+
+	virtual RakNet::RM3SerializationResult Serialize(
+		RakNet::SerializeParameters *serializeParameters);
+
+	virtual void Deserialize(
+		RakNet::DeserializeParameters *deserializeParameters);
+
+	virtual void SerializeConstructionRequestAccepted(
+		RakNet::BitStream *serializationBitstream,
+		RakNet::Connection_RM3 *requestingConnection);
+	virtual void DeserializeConstructionRequestAccepted(
+		RakNet::BitStream *serializationBitstream,
+		RakNet::Connection_RM3 *acceptingConnection);
+
+
+protected:
+	OpenSteer::BoidsPlugIn* m_pBoidPlugin;
+};
 
 
 
@@ -91,10 +151,12 @@ public:
 	
 
 
-	 virtual void StartNetworkSession( void );
+	virtual void StartNetworkSession( void );
+	virtual void CreateContent( void );
+	virtual void DeleteContent( void );
 
 private:
-
+	BoidConditionReplica* m_pkConditionReplic;
 	BoidReplicaFactory* m_pkBoidFactory;
 	BoidReplicaManager m_kReplicaManager;
 };
@@ -111,10 +173,13 @@ public:
 	virtual float selectionOrderSortKey (void) { return 3.0f ;}
 
 	virtual void StartNetworkSession( void );
+	virtual void CreateContent( void );
+	virtual void DeleteContent( void );
 
 private:
 
 	BoidReplicaFactory* m_pkBoidFactory;
 	BoidReplicaManager m_kReplicaManager;
+	BoidConditionReplica* m_pkConditionReplic;
 
 };

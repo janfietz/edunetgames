@@ -365,23 +365,23 @@ void BoidsPlugIn::redraw (const float currentTime, const float elapsedTime)
     status << "\n[F4]    Obstacles: ";
     switch (constraint)
     {
-    case none:
+    case EBoidConstraintType_none:
         status << "none (wrap-around at sphere boundary)" ; break;
-    case insideSphere:
+    case EBoidConstraintType_insideSphere:
         status << "inside a sphere" ; break;
-    case outsideSphere:
+    case EBoidConstraintType_outsideSphere:
         status << "inside a sphere, outside another" ; break;
-    case outsideSpheres:
+    case EBoidConstraintType_outsideSpheres:
         status << "inside a sphere, outside several" ; break;
-    case outsideSpheresNoBig:
+    case EBoidConstraintType_outsideSpheresNoBig:
         status << "outside several spheres, with wrap-around" ; break;
-    case rectangle:
+    case EBoidConstraintType_rectangle:
         status << "inside a sphere, with a rectangle" ; break;
-    case rectangleNoBig:
+    case EBoidConstraintType_rectangleNoBig:
         status << "a rectangle, with wrap-around" ; break;
-    case outsideBox:
+    case EBoidConstraintType_outsideBox:
         status << "inside a sphere, outside a box" ; break;
-    case insideBox:
+    case EBoidConstraintType_insideBox:
         status << "inside a box" ; break;
     }
     status << std::endl;
@@ -573,15 +573,26 @@ void BoidsPlugIn::removeBoidFromFlock (void)
 
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::nextBoundaryCondition (void)
-{
-    constraint = (ConstraintType) ((int) constraint + 1);
-    updateObstacles ();
+{    
+	SetCurrentBoundaryCondition((EBoidConstraintType) ((int) constraint + 1));
 }
 
+void BoidsPlugIn::SetCurrentBoundaryCondition( 
+	const EBoidConstraintType  eType,
+	bool bLocalChange )
+{
+	if(eType != this->constraint)
+	{
+		this->bWasLocalChange = bLocalChange;
+		this->constraint = eType;
+		updateObstacles ();
+	}	
+}
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::initObstacles (void)
 {
-    constraint = none;
+	this->bWasLocalChange = false;
+    constraint = EBoidConstraintType_none;
 
     insideBigSphere.radius = Boid::worldRadius;
     insideBigSphere.setSeenFrom (Obstacle::inside);
@@ -642,19 +653,19 @@ void BoidsPlugIn::updateObstacles (void)
     {
     default:
         // reset for wrap-around, fall through to first case:
-        constraint = none;
-    case none:
+        constraint = EBoidConstraintType_none;
+    case EBoidConstraintType_none:
         break;
-    case insideSphere:
+    case EBoidConstraintType_insideSphere:
         Boid::obstacles.push_back (&insideBigSphere);
         break;
-    case outsideSphere:
+    case EBoidConstraintType_outsideSphere:
         Boid::obstacles.push_back (&insideBigSphere);
         Boid::obstacles.push_back (&outsideSphere0);
         break;
-    case outsideSpheres:
+    case EBoidConstraintType_outsideSpheres:
         Boid::obstacles.push_back (&insideBigSphere);
-    case outsideSpheresNoBig:
+    case EBoidConstraintType_outsideSpheresNoBig:
         Boid::obstacles.push_back (&outsideSphere1);
         Boid::obstacles.push_back (&outsideSphere2);
         Boid::obstacles.push_back (&outsideSphere3);
@@ -662,17 +673,17 @@ void BoidsPlugIn::updateObstacles (void)
         Boid::obstacles.push_back (&outsideSphere5);
         Boid::obstacles.push_back (&outsideSphere6);
         break;
-    case rectangle:
+    case EBoidConstraintType_rectangle:
         Boid::obstacles.push_back (&insideBigSphere);
         Boid::obstacles.push_back (&bigRectangle);
-    case rectangleNoBig:
+    case EBoidConstraintType_rectangleNoBig:
         Boid::obstacles.push_back (&bigRectangle);
         break;
-    case outsideBox:
+    case EBoidConstraintType_outsideBox:
         Boid::obstacles.push_back (&insideBigSphere);
         Boid::obstacles.push_back (&outsideBigBox);
         break;
-    case insideBox:
+    case EBoidConstraintType_insideBox:
         Boid::obstacles.push_back (&insideBigBox);
         break;
     }
