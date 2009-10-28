@@ -10,9 +10,9 @@
 #ifdef WIN32
 #pragma message( " - windows build" )
 
-#define __RK_WINDOWS_SPEEDUPS__ 1
+#define __ET_WINDOWS_SPEEDUPS__ 1
 // some windows speedups
-#	if __RK_WINDOWS_SPEEDUPS__
+#	if __ET_WINDOWS_SPEEDUPS__
 
 #		define WIN32_LEAN_AND_MEAN
 #		define WIN32_EXTRA_LEAN
@@ -20,7 +20,7 @@
 #		define NOGDICAPMASKS
 #		define OEMRESOURCE
 #		define NOATOM
-#ifndef __RK_WINDOWS_USECLIPBOARD__
+#ifndef __ET_WINDOWS_USECLIPBOARD__
 #		define NOCLIPBOARD
 #endif
 //#		define NOCTLMGR // windows utility functions like DialogBox, 
@@ -40,7 +40,7 @@
 # define WIN32_LEAN_AND_MEAN
 # define WIN32_EXTRA_LEAN
 
-#	endif // __RK_WINDOWS_SPEEDUPS__
+#	endif // __ET_WINDOWS_SPEEDUPS__
 
 
 # ifndef _WIN32_WINNT
@@ -96,6 +96,8 @@
 #include "OpenSteer/Annotation.h"
 #include "OpenSteer/Color.h"
 
+#include "OpenSteer/Obstacle.h"
+#include "OpenSteer/Proximity.h"
 
 #endif // EDUNET_HAVE_OPENSTEER
 

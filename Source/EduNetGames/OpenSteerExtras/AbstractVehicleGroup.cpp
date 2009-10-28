@@ -12,6 +12,13 @@ m_kVehicles(kAVGroup)
 }
 
 //-----------------------------------------------------------------------------
+AbstractVehicleGroup::AbstractVehicleGroup( const AVGroup& kAVGroup ):
+m_kVehicles((AVGroup&)kAVGroup)
+{
+
+}
+
+//-----------------------------------------------------------------------------
 void AbstractVehicleGroup::update (const float currentTime, const float elapsedTime)
 {
 	AVIterator iter = m_kVehicles.begin();

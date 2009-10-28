@@ -1,10 +1,7 @@
 #ifndef BOID_H
 #define BOID_H
 
-#include "OpenSteer/PlugIn.h"
-#include "OpenSteer/Obstacle.h"
-#include "OpenSteer/Proximity.h"
-#include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteerExtras/SimpleNetworkVehicle.h"
 
 namespace OpenSteer{
 
@@ -22,8 +19,9 @@ namespace OpenSteer{
 	
     // ----------------------------------------------------------------------------
 
-	 class Boid : public OpenSteer::SimpleVehicle
+	 class Boid : public SimpleNetworkVehicle
 	 {
+		 ET_DECLARE_BASE( SimpleNetworkVehicle )
 	 public:
 		// type for a flock: an STL vector of Boid pointers
         typedef std::vector<Boid*> groupType;
@@ -61,18 +59,6 @@ namespace OpenSteer{
         // (change to per-instance allocation to be more MP-safe)
         static AVGroup neighbors;
 
-		// JF ++
-		void SetIsRemoteObject( bool bIsRemote )
-		{
-			m_bIsRemoteObject = bIsRemote;
-		}
-
-		bool IsRemoteObject( void )
-		{
-			return m_bIsRemoteObject;
-		}
-		bool m_bIsRemoteObject;
-		// JF --
 	 };
 
 	 // ----------------------------------------------------------------------------
@@ -172,8 +158,6 @@ namespace OpenSteer{
         // pointer to database used to accelerate proximity queries
         ProximityDatabase* pd;
 
-        // keep track of current flock size
-        int population;
 
         // which of the various proximity databases is currently in use
         int cyclePD;

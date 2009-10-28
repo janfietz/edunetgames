@@ -14,7 +14,7 @@ RakNet::Replica3* BoidReplicaConnection::AllocReplica(
 	allocationId->Read(typeName);
 	if (typeName=="BoidReplica"){
 		BoidReplica* pkNewReplica = new BoidReplica( this->m_pBoidPlugin  );
-		OpenSteer::AbstractVehicleGroup kVG( (OpenSteer::AVGroup &)this->m_pBoidPlugin->allVehicles() );
+		OpenSteer::AbstractVehicleGroup kVG( this->m_pBoidPlugin->allVehicles() );
 		kVG.addVehicle( pkNewReplica->AccessVehicle() );
 //		this->m_pBoidPlugin->AddBoidToFlock( pkNewReplica->AccessVehicle() );
 		return pkNewReplica; 

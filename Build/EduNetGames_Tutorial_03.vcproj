@@ -256,11 +256,31 @@
 			Name="OpenSteerExtras"
 			>
 			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.h"
 				>
 			</File>
 		</Filter>
@@ -291,6 +311,10 @@
 				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
 				>
 			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\common\InstanceCount.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="network"
@@ -313,6 +337,14 @@
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\include\EduNet\network\ReplicaManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="templates"
+			>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\templates\TUpdatePeriod.h"
 				>
 			</File>
 		</Filter>

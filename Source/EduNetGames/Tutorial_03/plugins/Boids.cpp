@@ -42,6 +42,7 @@
 
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
+#include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 
 #ifdef WIN32
@@ -88,7 +89,7 @@ Boid::~Boid ()
 void Boid::reset (void)
 {
     // reset the vehicle
-    SimpleVehicle::reset ();
+    BaseClass::reset ();
 
     // steering force is clipped to this magnitude
     setMaxForce (27);
@@ -114,7 +115,7 @@ void Boid::reset (void)
 void Boid::draw (void)
 {
 	 drawBasic3dSphericalVehicle (*this,
-		(this->IsRemoteObject()) ? gOrange : gGray70);
+		(this->isRemoteObject()) ? gOrange : gGray70);
     // drawTrail ();
 }
 
@@ -124,7 +125,7 @@ void Boid::update (const float currentTime, const float elapsedTime)
 {
     OPENSTEER_UNUSED_PARAMETER(currentTime);
 	
-	if( false == this->IsRemoteObject() )
+	if( false == this->isRemoteObject() )
 	{
 		// steer to flock and avoid obstacles if any
 		applySteeringForce (steerToFlock (), elapsedTime);
@@ -300,7 +301,6 @@ void BoidsPlugIn::open (void)
     nextPD ();
 
     // make default-sized flock
-    population = 0;
     for (int i = 0; i < 100; i++) addBoidToFlock ();
 
     // initialize camera
@@ -354,7 +354,8 @@ void BoidsPlugIn::redraw (const float currentTime, const float elapsedTime)
 
     // display status in the upper left corner of the window
     std::ostringstream status;
-    status << "[F1/F2] " << population << " boids";
+	AbstractVehicleGroup kVG( this->allVehicles() );
+    status << "[F1/F2] " << kVG.population() << " boids";
     status << "\n[F3]    PD type: ";
     switch (cyclePD)
     {
@@ -395,7 +396,8 @@ void BoidsPlugIn::redraw (const float currentTime, const float elapsedTime)
 void BoidsPlugIn::close (void)
 {
     // delete each member of the flock
-    while (population > 0) removeBoidFromFlock ();
+	AbstractVehicleGroup kVG( this->allVehicles() );
+    while (kVG.population() > 0) removeBoidFromFlock ();
 
     // delete the proximity database
     delete pd;
@@ -477,6 +479,7 @@ void BoidsPlugIn::handleFunctionKeys (int keyNumber)
 void BoidsPlugIn::printLQbinStats (void)
 {
 #ifndef NO_LQ_BIN_STATS
+	AbstractVehicleGroup kVG( this->allVehicles() );
     int min, max; float average;
     Boid& aBoid = **(flock.begin());
     aBoid.proximityToken->getBinPopulationStats (min, max, average);
@@ -488,7 +491,7 @@ void BoidsPlugIn::printLQbinStats (void)
     std::cout << "Boid neighbors:  min, max, average: "
               << Boid::minNeighbors << ", "
               << Boid::maxNeighbors << ", "
-              << ((float)Boid::totalNeighbors) / ((float)population)
+              << ((float)Boid::totalNeighbors) / ((float)kVG.population())
               << std::endl;
 #endif // NO_LQ_BIN_STATS
 }
@@ -520,21 +523,19 @@ void BoidsPlugIn::addBoidToFlock (void)
 // JF ++ 
 void BoidsPlugIn::AddBoidToFlock( Boid* pkBoid )
 {
-	population++;
 	flock.push_back (pkBoid);
-    if (population == 1) 
+    if (flock.size() == 1) 
 		OpenSteerDemo::selectedVehicle = pkBoid;
 }
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::RemoveBoidFromFlock( const Boid* pkBoid )
 {
-	if (population > 0)
+	if (flock.size() > 0)
     {
 		Boid::groupType::iterator kIter = this->FindBoid(pkBoid);
 		if(kIter != flock.end())
 		{
 			flock.erase( kIter );
-			population--;
 			 // if it is OpenSteerDemo's selected vehicle, unselect it
         if (pkBoid == OpenSteerDemo::selectedVehicle)
             OpenSteerDemo::selectedVehicle = NULL;
@@ -560,7 +561,7 @@ Boid::groupType::iterator BoidsPlugIn::FindBoid( const Boid* pkBoid )
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::removeBoidFromFlock (void)
 {
-    if (population > 0)
+    if (flock.size() > 0)
     {
         // save a pointer to the last boid, then remove it from the flock
         const Boid* boid = flock.back();

@@ -11,6 +11,7 @@ class AbstractVehicleGroup
 {
 public:
 	AbstractVehicleGroup( AVGroup& kAVGroup );
+	AbstractVehicleGroup( const AVGroup& kAVGroup );
 	virtual ~AbstractVehicleGroup( void ){};
 
 	virtual void update (const float currentTime, const float elapsedTime);

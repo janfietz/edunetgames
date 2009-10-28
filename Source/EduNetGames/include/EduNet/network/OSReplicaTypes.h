@@ -90,7 +90,7 @@ public:
 		m_pBoidPlugin(NULL)
 	{
 		this->m_pVehicle = new OpenSteer::Boid( pd );
-		this->m_pVehicle->SetIsRemoteObject(false);
+		this->m_pVehicle->setIsRemoteObject(false);
 	};
 
 	BoidReplica( OpenSteer::BoidsPlugIn* pBoidPlugin  ):
@@ -98,7 +98,7 @@ public:
 	{
 		this->m_pVehicle = new OpenSteer::Boid( 
 			*this->m_pBoidPlugin->AccessProximityDataBase() );
-		this->m_pVehicle->SetIsRemoteObject(true);
+		this->m_pVehicle->setIsRemoteObject(true);
 	};
 
 	virtual void DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
