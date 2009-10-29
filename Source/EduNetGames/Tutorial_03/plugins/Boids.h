@@ -51,13 +51,19 @@ namespace OpenSteer{
 		static float worldRadius;
 	 //private:
 		 // group of all obstacles to be avoided by each Boid
-        static ObstacleGroup obstacles;
+//        static ObstacleGroup obstacles;
+		const ObstacleGroup& obstacles(void) const;
+		ObstacleGroup& obstacles(void);
+
 
 		
 
         // allocate one and share amoung instances just to save memory usage
         // (change to per-instance allocation to be more MP-safe)
-        static AVGroup neighbors;
+        //static AVGroup neighbors;
+		AVGroup neighbors;
+
+		class BoidsPlugIn* m_pkParentPlugin;
 
 	 };
 
@@ -117,6 +123,9 @@ namespace OpenSteer{
 
 		 // return an AVGroup containing each boid of the flock
         const AVGroup& allVehicles (void) {return (const AVGroup&)flock;}
+
+		const ObstacleGroup& obstacles(void) const { return m_kObstacles; }
+		ObstacleGroup& obstacles(void){ return m_kObstacles; }
 
 		// JF ++ 
 		ProximityDatabase* AccessProximityDataBase( void ) const
@@ -204,6 +213,7 @@ namespace OpenSteer{
            outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
 		BoidFactory* m_pBoidFactory;
+		ObstacleGroup m_kObstacles;
 	
 	};
 }

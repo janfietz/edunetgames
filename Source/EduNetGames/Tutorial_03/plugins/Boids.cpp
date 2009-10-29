@@ -60,9 +60,9 @@
 // namespaces to search to find names.
 using namespace OpenSteer;
 
-AVGroup Boid::neighbors;
+//AVGroup Boid::neighbors;
 float Boid::worldRadius = 50.0f;
-ObstacleGroup Boid::obstacles;
+//ObstacleGroup Boid::obstacles;
 
 size_t Boid::minNeighbors = 0;
 size_t Boid::maxNeighbors = 0;
@@ -144,7 +144,7 @@ Vec3 Boid::steerToFlock (void)
 {
     // avoid obstacles if needed
     // XXX this should probably be moved elsewhere
-    const Vec3 avoidance = steerToAvoidObstacles (1.0f, obstacles);
+    const Vec3 avoidance = steerToAvoidObstacles (1.0f, obstacles());
     if (avoidance != Vec3::zero) return avoidance;
 
     const float separationRadius =  5.0f;
@@ -287,6 +287,10 @@ void Boid::annotateAvoidObstacle (const float minDistanceToCollision)
     annotationLine (BL, BR, white);
     annotationLine (BR, FR, white);
 }
+
+
+const ObstacleGroup& Boid::obstacles(void) const { return m_pkParentPlugin->obstacles(); }
+ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -516,6 +520,7 @@ void BoidsPlugIn::addBoidToFlock (void)
 	Boid* boid = this->m_pBoidFactory->CreateBoid( *pd );
 	if(NULL != boid)
 	{
+		boid->m_pkParentPlugin = this;
 		this->AddBoidToFlock( boid );
 	}
 }
@@ -646,7 +651,7 @@ void BoidsPlugIn::initObstacles (void)
 void BoidsPlugIn::updateObstacles (void)
 {
     // first clear out obstacle list
-    Boid::obstacles.clear ();
+    this->obstacles().clear ();
 
     // add back obstacles based on mode
     switch (constraint)
@@ -657,34 +662,34 @@ void BoidsPlugIn::updateObstacles (void)
     case EBoidConstraintType_none:
         break;
     case EBoidConstraintType_insideSphere:
-        Boid::obstacles.push_back (&insideBigSphere);
+        this->obstacles().push_back (&insideBigSphere);
         break;
     case EBoidConstraintType_outsideSphere:
-        Boid::obstacles.push_back (&insideBigSphere);
-        Boid::obstacles.push_back (&outsideSphere0);
+        this->obstacles().push_back (&insideBigSphere);
+        this->obstacles().push_back (&outsideSphere0);
         break;
     case EBoidConstraintType_outsideSpheres:
-        Boid::obstacles.push_back (&insideBigSphere);
+        this->obstacles().push_back (&insideBigSphere);
     case EBoidConstraintType_outsideSpheresNoBig:
-        Boid::obstacles.push_back (&outsideSphere1);
-        Boid::obstacles.push_back (&outsideSphere2);
-        Boid::obstacles.push_back (&outsideSphere3);
-        Boid::obstacles.push_back (&outsideSphere4);
-        Boid::obstacles.push_back (&outsideSphere5);
-        Boid::obstacles.push_back (&outsideSphere6);
+        this->obstacles().push_back (&outsideSphere1);
+        this->obstacles().push_back (&outsideSphere2);
+        this->obstacles().push_back (&outsideSphere3);
+        this->obstacles().push_back (&outsideSphere4);
+        this->obstacles().push_back (&outsideSphere5);
+        this->obstacles().push_back (&outsideSphere6);
         break;
     case EBoidConstraintType_rectangle:
-        Boid::obstacles.push_back (&insideBigSphere);
-        Boid::obstacles.push_back (&bigRectangle);
+        this->obstacles().push_back (&insideBigSphere);
+        this->obstacles().push_back (&bigRectangle);
     case EBoidConstraintType_rectangleNoBig:
-        Boid::obstacles.push_back (&bigRectangle);
+        this->obstacles().push_back (&bigRectangle);
         break;
     case EBoidConstraintType_outsideBox:
-        Boid::obstacles.push_back (&insideBigSphere);
-        Boid::obstacles.push_back (&outsideBigBox);
+        this->obstacles().push_back (&insideBigSphere);
+        this->obstacles().push_back (&outsideBigBox);
         break;
     case EBoidConstraintType_insideBox:
-        Boid::obstacles.push_back (&insideBigBox);
+        this->obstacles().push_back (&insideBigBox);
         break;
     }
 }
@@ -692,8 +697,8 @@ void BoidsPlugIn::updateObstacles (void)
 // ----------------------------------------------------------------------------
 void BoidsPlugIn::drawObstacles (void)
 {
-    for (ObstacleIterator o = Boid::obstacles.begin();
-         o != Boid::obstacles.end();
+    for (ObstacleIterator o = this->obstacles().begin();
+         o != this->obstacles().end();
          o++)
     {
         (**o).draw (false, // draw in wireframe
