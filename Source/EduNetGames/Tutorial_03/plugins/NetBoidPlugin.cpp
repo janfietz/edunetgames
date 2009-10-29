@@ -130,7 +130,7 @@ void NetPeerBoidPlugin::StartNetworkSession( void )
 
 void NetPeerBoidPlugin::CreateContent( void )
 {
-	PeerPlugin<OpenSteer::BoidsPlugIn>::CreateContent();
+	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
 		new BoidConditionReplica(&this->m_kGamePlugIn);
@@ -141,7 +141,7 @@ void NetPeerBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);
 	delete m_pkConditionReplic;	
-	PeerPlugin<OpenSteer::BoidsPlugIn>::DeleteContent();
+	BaseClass::DeleteContent();
 }
 //-----------------------------------------------------------------------------
 NetClientBoidPlugin::NetClientBoidPlugin()
@@ -154,13 +154,13 @@ NetClientBoidPlugin::NetClientBoidPlugin()
 //-----------------------------------------------------------------------------
 void NetClientBoidPlugin::StartNetworkSession( void )
 {
-	ClientPlugin<OpenSteer::BoidsPlugIn>::StartNetworkSession();
+	BaseClass::StartNetworkSession();
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 }
 
 void NetClientBoidPlugin::CreateContent( void )
 {
-	ClientPlugin<OpenSteer::BoidsPlugIn>::CreateContent();
+	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
 		new BoidConditionReplica(&this->m_kGamePlugIn);
@@ -171,5 +171,5 @@ void NetClientBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);
 	delete m_pkConditionReplic;	
-	ClientPlugin<OpenSteer::BoidsPlugIn>::DeleteContent();
+	BaseClass::DeleteContent();
 }

@@ -138,6 +138,7 @@ protected:
 // ----------------------------------------------------------------------------
 class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugIn>
 {
+	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugIn>);
 public:
 	NetPeerBoidPlugin();
 	virtual ~NetPeerBoidPlugin(){};
@@ -164,6 +165,7 @@ private:
 // ----------------------------------------------------------------------------
 class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugIn>
 {
+	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugIn>);
 public:
 	NetClientBoidPlugin();
 	virtual ~NetClientBoidPlugin(){};
