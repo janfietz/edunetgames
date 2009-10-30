@@ -2,14 +2,13 @@
 #define __EDUNETTUTORIALCONFIG_H__
 
 // no raknet
-#define EDUNET_HAVE_RAKNET 0
+#define EDUNET_HAVE_RAKNET 1
 
 // opensteer
 #define EDUNET_HAVE_OPENSTEER 1
 
-// boost lib
-#define EDUNET_HAVE_BOOST 0
-
+// opensteer
+#define EDUNET_HAVE_BOOST 1
 
 #endif // __EDUNETTUTORIALCONFIG_H__
 

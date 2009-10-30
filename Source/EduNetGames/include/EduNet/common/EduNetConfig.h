@@ -14,6 +14,11 @@
 #define EDUNET_HAVE_OPENSTEER 1
 #endif
 
+// boost lib
+#ifndef EDUNET_HAVE_BOOST
+#define EDUNET_HAVE_BOOST 0
+#endif
+
 #if EDUNET_SHOW_CONFIG
 #pragma message( "-------------------------------------------------------------------------------" )
 #pragma message( " Build Configuration" )
@@ -25,6 +30,10 @@
 
 #if EDUNET_HAVE_OPENSTEER
 #pragma message( " - EDUNET_HAVE_OPENSTEER" )
+#endif
+
+#if EDUNET_HAVE_BOOST
+#pragma message( " - EDUNET_HAVE_BOOST" )
 #endif
 
 #pragma message( "-------------------------------------------------------------------------------" )

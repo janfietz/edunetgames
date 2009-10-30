@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="EduNetGames_Tutorial_01"
-	ProjectGUID="{7306363D-3C27-41BB-8E85-10641FB638EE}"
+	Name="EduNetGames_Tutorial_05"
+	ProjectGUID="{3CC32D74-C84E-417E-9982-8E8B98C71A5F}"
 	RootNamespace="opensteer"
 	Keyword="Win32Proj"
 	>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_01&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_05&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glut32.lib"
+				AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStaticDebug.lib opensteerd.lib argtabled.lib"
 				OutputFile="$(OutDir)/$(ProjectName)_d.exe"
 				AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
 				GenerateDebugInformation="true"
@@ -122,7 +122,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_01&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_04&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -143,7 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="glut32.lib"
+				AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStatic.lib "
 				OutputFile="$(OutDir)/$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
@@ -199,32 +199,76 @@
 		<Filter
 			Name="plugins"
 			>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
+			<Filter
+				Name="net"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.cpp"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ShowIncludes="false"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
-				>
-			</File>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.h"
+					>
+				</File>
+				<Filter
+					Name="from tutorial 2"
+					>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="OpenSteerExtras"
 			>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.h"
+				>
+			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.h"
 				>
 			</File>
 		</Filter>
@@ -248,23 +292,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\EduNetTutorialConfig.h"
+				RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetTutorialConfig.h"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\InstanceCount.h"
-				>
-			</File>
 		</Filter>
 		<Filter
-			Name="templates"
+			Name="network"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\templates\TUpdatePeriod.h"
+				RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplica.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaConnection.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaConnection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaTypes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\include\EduNet\network\ReplicaManager.h"
 				>
 			</File>
 		</Filter>
