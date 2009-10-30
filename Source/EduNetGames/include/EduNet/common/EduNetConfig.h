@@ -14,6 +14,7 @@
 #define EDUNET_HAVE_OPENSTEER 1
 #endif
 
+#if EDUNET_SHOW_CONFIG
 #pragma message( "-------------------------------------------------------------------------------" )
 #pragma message( " Build Configuration" )
 #pragma message( "-------------------------------------------------------------------------------" )
@@ -27,6 +28,6 @@
 #endif
 
 #pragma message( "-------------------------------------------------------------------------------" )
-
+#endif
 
 #endif // __EDUNETCONFIG_H__

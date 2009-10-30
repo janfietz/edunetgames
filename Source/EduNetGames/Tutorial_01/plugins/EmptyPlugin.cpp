@@ -4,7 +4,7 @@
 #include "EduNet/templates/TUpdatePeriod.h"
 #include "EduNet/common/InstanceCount.h"
 
-#include "OpenSteer/OpenSteerDemo.h"
+#include "EduNetGames.h"
 #include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 

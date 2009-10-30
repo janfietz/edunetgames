@@ -37,11 +37,13 @@
 //
 // ----------------------------------------------------------------------------
 
+// 10-30-09 cp/jf: modified for educational purpose
+
+#include "EduNetGames.h"
 
 #include <iomanip>
 #include <sstream>
 #include "OpenSteer/SimpleVehicle.h"
-#include "OpenSteer/OpenSteerDemo.h"
 #include "OpenSteer/Draw.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"

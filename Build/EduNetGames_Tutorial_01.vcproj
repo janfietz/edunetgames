@@ -269,6 +269,18 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Source\EduNetGames\EduNetGames.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetOptions.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetOptions.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Source\EduNetGames\main.cpp"
 			>
 		</File>

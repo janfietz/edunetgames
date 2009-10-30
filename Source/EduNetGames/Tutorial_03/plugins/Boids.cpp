@@ -36,9 +36,11 @@
 // ----------------------------------------------------------------------------
 #include "Boids.h"
 
-#include <sstream>
+// 10-30-09 cp/jf: modified for educational purpose
 
-#include "OpenSteer/OpenSteerDemo.h"
+#include "EduNetGames.h"
+
+#include <sstream>
 
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"

@@ -40,8 +40,10 @@
 //
 // ----------------------------------------------------------------------------
 
+// 10-30-09 cp/jf: modified for educational purpose
 
-#include "OpenSteer/OpenSteerDemo.h"
+#include "EduNetGames.h"
+
 #include "OpenSteer/Annotation.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/Vec3.h"
@@ -60,6 +62,9 @@
 #else
 #include <GL/glut.h>     // for Linux and Windows
 #endif
+
+
+EduNetOptions OpenSteer::OpenSteerDemo::options;
 
 // ----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"

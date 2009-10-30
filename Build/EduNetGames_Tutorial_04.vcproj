@@ -252,11 +252,31 @@
 			Name="OpenSteerExtras"
 			>
 			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.h"
 				>
 			</File>
 		</Filter>
@@ -314,6 +334,18 @@
 		</Filter>
 		<File
 			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetGames.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetOptions.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetOptions.h"
 			>
 		</File>
 		<File

@@ -8,8 +8,9 @@
 
 //-----------------------------------------------------------------------------
 #ifdef WIN32
+#if EDUNET_SHOW_CONFIG
 #pragma message( " - windows build" )
-
+#endif
 #define __ET_WINDOWS_SPEEDUPS__ 1
 // some windows speedups
 #	if __ET_WINDOWS_SPEEDUPS__

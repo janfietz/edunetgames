@@ -35,9 +35,11 @@
 //
 // ----------------------------------------------------------------------------
 
+// 10-30-09 cp/jf: modified for educational purpose
+
+#include "EduNetGames.h"
 
 #include "OpenSteer/SimpleVehicle.h"
-#include "OpenSteer/OpenSteerDemo.h"
 #include "OpenSteer/Color.h"
 
 namespace {

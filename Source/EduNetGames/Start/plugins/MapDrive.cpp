@@ -49,11 +49,14 @@
 //
 // ----------------------------------------------------------------------------
 
+// 10-30-09 cp/jf: modified for educational purpose
+
+#include "EduNetGames.h"
 
 #include <iomanip>
 #include <sstream>
 #include <cassert>
-#include "OpenSteer/OpenSteerDemo.h"
+
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
@@ -91,6 +94,8 @@ namespace {
 
     using namespace OpenSteer;
 
+	//    typedef OpenSteer::size_t size_type;
+	typedef std::size_t size_type;
     
     class PointToRadiusMapping : public OpenSteer::DontExtractPathDistance {
     public:
@@ -100,7 +105,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float r ) { radius = r; }
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -119,7 +124,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& t ) { tangent = t; }
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -139,7 +144,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const& ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float d ) { distancePointToPathBoundary = d; }
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -160,7 +165,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float d ) { distancePointToPathBoundary = d; }
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -179,13 +184,13 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t i ) { segmentIndex = i; }
+        void setSegmentIndex( size_type i ) { segmentIndex = i; }
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
         void setDistanceOnSegment( float ) {}    
         
-        OpenSteer::size_t segmentIndex;
+        size_type segmentIndex;
     };
     
     /**
@@ -2076,7 +2081,7 @@ namespace {
             const Color color = interpolate (0.1f, sandColor, pathColor);
 
             const Vec3 down (0, -0.1f, 0);
-            for ( OpenSteer::size_t i = 1; i < path->pointCount(); ++i )
+            for ( size_type i = 1; i < path->pointCount(); ++i )
             {
                 const Vec3 endPoint0 = path->point( i ) + down;
                 const Vec3 endPoint1 = path->point( i - 1 ) + down;
@@ -2883,12 +2888,12 @@ namespace {
 	    // randomize path widths
 	    if (vehicle->demoSelect == 2)
 	    {
-		const OpenSteer::size_t count = vehicle->path->segmentCount();
+		const size_type count = vehicle->path->segmentCount();
 		const bool upstream = vehicle->pathFollowDirection > 0;
-		const OpenSteer::size_t entryIndex = upstream ? 0 : count-1;
-		const OpenSteer::size_t exitIndex  = upstream ? count-1 : 0;
+		const size_type entryIndex = upstream ? 0 : count-1;
+		const size_type exitIndex  = upstream ? count-1 : 0;
 		const float lastExitRadius = vehicle->path->segmentRadius( exitIndex );
-		for (OpenSteer::size_t i = 0; i < count; i++)
+		for (size_type i = 0; i < count; i++)
 		{
 		    vehicle->path->setSegmentRadius( i, frandom2 (4, 19) );
 		}
