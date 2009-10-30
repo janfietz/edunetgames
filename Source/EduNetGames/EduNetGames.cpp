@@ -1377,7 +1377,7 @@ namespace {
 
 		switch (key)
 		{
-		case GLUT_KEY_F1:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (1);  break;
+		/*case GLUT_KEY_F1:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (1);  break;
 		case GLUT_KEY_F2:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (2);  break;
 		case GLUT_KEY_F3:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (3);  break;
 		case GLUT_KEY_F4:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (4);  break;
@@ -1388,7 +1388,7 @@ namespace {
 		case GLUT_KEY_F9:  OpenSteer::OpenSteerDemo::functionKeyForPlugIn (9);  break;
 		case GLUT_KEY_F10: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (10); break;
 		case GLUT_KEY_F11: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (11); break;
-		case GLUT_KEY_F12: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (12); break;
+		case GLUT_KEY_F12: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (12); break;*/
 
 		case GLUT_KEY_RIGHT:
 			OpenSteer::OpenSteerDemo::clock.setPausedState (true);
@@ -1398,6 +1398,10 @@ namespace {
 				<< std::endl;
 			OpenSteer::OpenSteerDemo::printMessage (message);
 			break;
+		/*case GLUT_KEY_UP: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (GLUT_KEY_UP); break;
+		case GLUT_KEY_DOWN: OpenSteer::OpenSteerDemo::functionKeyForPlugIn (GLUT_KEY_DOWN); break;
+		*/default:
+			OpenSteer::OpenSteerDemo::functionKeyForPlugIn (key); break;
 		}
 	}
 

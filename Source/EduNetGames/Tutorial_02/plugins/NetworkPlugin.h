@@ -281,8 +281,6 @@ bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
 	{		
 		if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )
 		{
-			printf("Send ping to port: %d at time %i\n", 
-				iPort, RakNet::GetTime() );
 			this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;
 			this->m_iWaitForPongPort = iPort;
 		}

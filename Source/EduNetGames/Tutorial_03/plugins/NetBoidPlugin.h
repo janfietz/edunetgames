@@ -52,7 +52,8 @@ public:
 	virtual OpenSteer::Boid* CreateBoid( OpenSteer::ProximityDatabase& pd );
 	virtual void DestroyBoid( const OpenSteer::Boid* );	
 
-private:	
+private:
+
 	BoidReplicaManager* m_pkReplicaManager;
 	DataStructures::Map<unsigned int, RakNet::Replica3* > m_uidMap;
 };
@@ -150,6 +151,7 @@ public:
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	
+	void handleFunctionKeys (int keyNumber);
 
 
 	virtual void StartNetworkSession( void );
@@ -157,9 +159,19 @@ public:
 	virtual void DeleteContent( void );
 
 private:
+	struct ReplicationParams
+	{
+		ReplicationParams():
+			interval(30){}		
+		RakNetTime interval;
+	};
+	void ChangeReplicationInterval( RakNetTime additionalTime );
+
 	BoidConditionReplica* m_pkConditionReplic;
 	BoidReplicaFactory* m_pkBoidFactory;
 	BoidReplicaManager m_kReplicaManager;
+
+	ReplicationParams m_kReplicationSettings;
 };
 
 // ----------------------------------------------------------------------------

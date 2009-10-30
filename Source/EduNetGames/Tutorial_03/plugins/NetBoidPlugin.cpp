@@ -116,6 +116,9 @@ RakNet::RM3QuerySerializationResult BoidConditionReplica::QuerySerialization(
 //-----------------------------------------------------------------------------
 NetPeerBoidPlugin::NetPeerBoidPlugin()
 {
+	this->m_kReplicaManager.SetAutoSerializeInterval(
+		this->m_kReplicationSettings.interval);
+
 	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugIn);
 
 	this->m_pkBoidFactory = new BoidReplicaFactory(&this->m_kReplicaManager);	
@@ -135,6 +138,32 @@ void NetPeerBoidPlugin::CreateContent( void )
 	m_pkConditionReplic = 
 		new BoidConditionReplica(&this->m_kGamePlugIn);
 	m_kReplicaManager.Reference(m_pkConditionReplic);
+}
+
+void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
+{
+	switch (keyNumber)
+    {
+    case 101:  ChangeReplicationInterval(5);         break; //GLUT_KEY_UP
+    case 103:  ChangeReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
+	default: BaseClass::handleFunctionKeys(keyNumber);
+    }
+	
+}
+
+void NetPeerBoidPlugin::ChangeReplicationInterval( RakNetTime additionalTime )
+{
+	m_kReplicationSettings.interval += additionalTime;
+	//clamp interval
+	if( 5 > m_kReplicationSettings.interval )
+	{
+		m_kReplicationSettings.interval = 5;
+	}
+	printf("Changed replication interval to: %d ms\n",
+		m_kReplicationSettings.interval);
+
+	this->m_kReplicaManager.SetAutoSerializeInterval(
+		this->m_kReplicationSettings.interval);
 }
 
 void NetPeerBoidPlugin::DeleteContent( void )
