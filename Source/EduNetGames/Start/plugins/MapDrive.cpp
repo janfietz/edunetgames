@@ -2570,9 +2570,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Driving through map based obstacles";}
+        const char* name (void) const {return "Driving through map based obstacles";}
 
-        float selectionOrderSortKey (void) {return 0.07f;}
+        float selectionOrderSortKey (void) const {return 0.07f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~MapDrivePlugIn() {}
@@ -3011,7 +3011,7 @@ namespace {
     #endif
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) vehicles;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) vehicles;}
 
         MapDriver* vehicle;
         std::vector<MapDriver*> vehicles; // for allVehicles

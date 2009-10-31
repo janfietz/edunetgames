@@ -141,13 +141,13 @@ class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugIn>
 {
 	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugIn>);
 public:
-	NetPeerBoidPlugin();
+	NetPeerBoidPlugin(bool bAddToRegistry = true);
 	virtual ~NetPeerBoidPlugin(){};
 
-	virtual const char* name (void){return "NetPeerBoidPlugin";};
+	virtual const char* name (void) const {return "NetPeerBoidPlugin";};
 
-	 bool requestInitialSelection (void) {return true;}
-	 virtual float selectionOrderSortKey (void) { return 2.0f ;}
+	 bool requestInitialSelection (void) const {return true;}
+	 virtual float selectionOrderSortKey (void) const { return 2.0f ;}
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	
@@ -182,9 +182,9 @@ public:
 	NetClientBoidPlugin();
 	virtual ~NetClientBoidPlugin(){};
 
-	virtual const char* name (void){return "NetClientBoidPlugin";};
+	virtual const char* name (void) const {return "NetClientBoidPlugin";};
 
-	virtual float selectionOrderSortKey (void) { return 3.0f ;}
+	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );

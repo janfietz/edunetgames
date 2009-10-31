@@ -248,11 +248,11 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "Michael's Simple Soccer";}
+        const char* name (void) const {return "Michael's Simple Soccer";}
 
-        // float selectionOrderSortKey (void) {return 0.06f;}
+        // float selectionOrderSortKey (void) const {return 0.06f;}
 
-        // bool requestInitialSelection() { return true;}
+        // bool requestInitialSelection() const { return true;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~MicTestPlugIn() {}
@@ -376,7 +376,7 @@ namespace {
             m_Ball->reset();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) TeamA;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) TeamA;}
 
         unsigned int	m_PlayerCountA;
         unsigned int	m_PlayerCountB;

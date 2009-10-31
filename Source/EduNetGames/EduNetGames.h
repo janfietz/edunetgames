@@ -78,7 +78,7 @@ namespace OpenSteer {
         // ------------------------------------------ addresses of selected objects
 
         // currently selected plug-in (user can choose or cycle through them)
-        static PlugIn* selectedPlugIn;
+        static AbstractPlugIn* selectedPlugIn;
 
         // currently selected vehicle.  Generally the one the camera follows and
         // for which additional information may be displayed.  Clicking the mouse

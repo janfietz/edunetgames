@@ -829,9 +829,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Capture the Flag";}
+        const char* name (void) const {return "Capture the Flag";}
 
-        float selectionOrderSortKey (void) {return 0.01f;}
+        float selectionOrderSortKey (void) const {return 0.01f;}
 
         virtual ~CtfPlugIn() {} // be more "nice" to avoid a compiler warning
 
@@ -946,7 +946,7 @@ namespace {
             }
         }
 
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -957,7 +957,7 @@ namespace {
             OpenSteerDemo::printMessage ("");
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) all;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
 
         void drawHomeBase (void)
         {

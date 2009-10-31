@@ -426,9 +426,9 @@ class PedestrianPlugIn : public PlugIn
 {
 public:
     
-    const char* name (void) {return "Pedestrians Walking an Eight";}
+    const char* name (void) const {return "Pedestrians Walking an Eight";}
     
-    float selectionOrderSortKey (void) {return 98.0f;}
+    float selectionOrderSortKey (void) const {return 98.0f;}
     
     virtual ~PedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
     
@@ -601,7 +601,7 @@ public:
         }
     }
     
-    void printMiniHelpForFunctionKeys (void)
+    void printMiniHelpForFunctionKeys (void) const
     {
         std::ostringstream message;
         message << "Function keys handled by ";
@@ -683,7 +683,7 @@ public:
     }
     
     
-    const AVGroup& allVehicles (void) {return (const AVGroup&) crowd;}
+    const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
     
     // crowd: a group (STL vector) of all Pedestrians
     Pedestrian::groupType crowd;

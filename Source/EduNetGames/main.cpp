@@ -40,12 +40,15 @@
 #define EDUNET_SHOW_CONFIG 1
 #include "EduNetGames.h"
 
+#include "OpenSteerExtras/PlugInArray.h"
+
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
+//	OpenSteer::PlugInArray::TestPluginArray();
 	if( EXIT_SUCCESS == OpenSteer::OpenSteerDemo::options.parseCommandLine( argc, argv ) )
 	{
 		if( true ==  OpenSteer::OpenSteerDemo::options.continueProcess() )

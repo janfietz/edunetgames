@@ -14,11 +14,16 @@
 #endif //  KK_STRING
 
 // sample 1
-//#pragma message (__FILE__ "(" ET_STRING(__LINE__) "): USE KernelMacros ")
+//#pragma message (__FILE__ "(" ET_STRING(__LINE__) "): USE Macros ")
 #define ET_SOURCE_MESSAGE __FILE__ "(" ET_STRING(__LINE__) "):"
 // sample 2
 //#pragma message( ET_SOURCE_MESSAGE "Warning: Unicode disabled! Check your project settings!")
 
 
+//-----------------------------------------------------------------------------
+//! implement an empty private copy constructor and a private assignment
+#define ET_IMPLEMENT_CLASS_NO_COPY( classname ) private:\
+	classname( const classname& );\
+	classname& operator=( const classname& );
 
 #endif // __EDUNETMACROS_H__

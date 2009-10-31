@@ -13,10 +13,10 @@ public:
 	EmptyRpcPlugin();
 	virtual ~EmptyRpcPlugin(){};
 
-	virtual const char* name (void){return "EmptyRpcPlugin";};
+	virtual const char* name (void) const {return "EmptyRpcPlugin";};
 
-	 bool requestInitialSelection (void) {return true;}
-	 virtual float selectionOrderSortKey (void) { return 2.0f ;}
+	 bool requestInitialSelection (void) const {return true;}
+	 virtual float selectionOrderSortKey (void) const { return 2.0f ;}
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	

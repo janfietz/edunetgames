@@ -503,7 +503,7 @@ void BoidsPlugIn::printLQbinStats (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::printMiniHelpForFunctionKeys (void)
+void BoidsPlugIn::printMiniHelpForFunctionKeys (void) const
 {
     std::ostringstream message;
     message << "Function keys handled by ";
@@ -768,6 +768,6 @@ void BoidsPlugIn::tempDrawBox (const BoxObstacle& box, const Color& color)
 namespace
 {
 	using namespace OpenSteer;
-	BoidsPlugIn gBoidsPlugIn;
+	BoidsPlugIn gBoidsPlugIn(true);
 }
 

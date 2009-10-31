@@ -12,8 +12,11 @@ template < class PluginClass = OpenSteer::PlugIn  >
 class NetworkPlugIn :
 	public OpenSteer::PlugIn
 {
+	ET_DECLARE_BASE(OpenSteer::PlugIn);
 public:
-	NetworkPlugIn(void):
+	NetworkPlugIn(bool bAddToRegistry = true):
+	  BaseClass( bAddToRegistry ),
+		m_kGamePlugIn( false ),
 		m_iWaitForPongPort(-1*SERVER_PORT)
 	{
 	};
@@ -24,10 +27,10 @@ public:
 	virtual void reset (void);
 	void update (const float currentTime, const float elapsedTime);
 	virtual void handleFunctionKeys (int keyNumber);
-	virtual void printMiniHelpForFunctionKeys (void);
+	virtual void printMiniHelpForFunctionKeys (void) const;
 
 
-	const OpenSteer::AVGroup& allVehicles (void) {return m_kGamePlugIn.allVehicles();}
+	const OpenSteer::AVGroup& allVehicles (void) const {return m_kGamePlugIn.allVehicles();}
 
 
 	virtual void CreateContent( void );
@@ -310,7 +313,7 @@ void NetworkPlugIn<PluginClass>::handleFunctionKeys (int keyNumber)
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn<PluginClass>::printMiniHelpForFunctionKeys (void)
+void NetworkPlugIn<PluginClass>::printMiniHelpForFunctionKeys (void) const
 {
 	this->m_kGamePlugIn.printMiniHelpForFunctionKeys();
 }

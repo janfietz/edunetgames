@@ -48,17 +48,20 @@
 
 int OpenSteer::PlugIn::itemsInRegistry = 0;
 const int OpenSteer::PlugIn::totalSizeOfRegistry = 1000;
-OpenSteer::PlugIn* OpenSteer::PlugIn::registry [totalSizeOfRegistry];
+OpenSteer::AbstractPlugIn* OpenSteer::PlugIn::registry [totalSizeOfRegistry];
 
 
 // ----------------------------------------------------------------------------
 // constructor
 
 
-OpenSteer::PlugIn::PlugIn (void)
+OpenSteer::PlugIn::PlugIn (bool bAddToRegistry)
 {
     // save this new instance in the registry
-    addToRegistry ();
+	if( true == bAddToRegistry )
+	{
+		addToRegistry ( this );
+	}
 }
 
 
@@ -73,18 +76,24 @@ OpenSteer::PlugIn::~PlugIn() {}
 // returns pointer to the next PlugIn in "selection order"
 
 
-OpenSteer::PlugIn* 
-OpenSteer::PlugIn::next (void)
+OpenSteer::AbstractPlugIn* 
+OpenSteer::PlugIn::next (void) const
 {
-    for (int i = 0; i < itemsInRegistry; i++)
-    {
-        if (this == registry[i])
-        {
-            const bool atEnd = (i == (itemsInRegistry - 1));
-            return registry [atEnd ? 0 : i + 1];
-        }
-    }
-    return NULL;
+	return OpenSteer::PlugIn::findNextPlugin( this );
+}
+
+OpenSteer::AbstractPlugIn* 
+OpenSteer::PlugIn::findNextPlugin( const AbstractPlugIn* pkThis )
+{
+	for (int i = 0; i < itemsInRegistry; i++)
+	{
+		if (pkThis == registry[i])
+		{
+			const bool atEnd = (i == (itemsInRegistry - 1));
+			return registry [atEnd ? 0 : i + 1];
+		}
+	}
+	return NULL;
 }
 
 
@@ -93,14 +102,14 @@ OpenSteer::PlugIn::next (void)
 // returns NULL if none is found
 
 
-OpenSteer::PlugIn* 
+OpenSteer::AbstractPlugIn* 
 OpenSteer::PlugIn::findByName (const char* string)
 {
     if (string)
     {
         for (int i = 0; i < itemsInRegistry; i++)
         {
-            PlugIn& pi = *registry[i];
+            AbstractPlugIn& pi = *registry[i];
             const char* s = pi.name();
             if (s && (strcmp (string, s) == 0)) return &pi;
         }
@@ -146,7 +155,7 @@ OpenSteer::PlugIn::sortBySelectionOrder (void)
 
             if (iKey > jKey)
             {
-                PlugIn* temporary = registry[i];
+                AbstractPlugIn* temporary = registry[i];
                 registry[i] = registry[j];
                 registry[j] = temporary;
             }
@@ -159,7 +168,7 @@ OpenSteer::PlugIn::sortBySelectionOrder (void)
 // returns pointer to default PlugIn (currently, first in registry)
 
 
-OpenSteer::PlugIn* 
+OpenSteer::AbstractPlugIn* 
 OpenSteer::PlugIn::findDefault (void)
 {
     // return NULL if no PlugIns exist
@@ -182,10 +191,10 @@ OpenSteer::PlugIn::findDefault (void)
 
 
 void 
-OpenSteer::PlugIn::addToRegistry (void)
+OpenSteer::PlugIn::addToRegistry (AbstractPlugIn* pkPlugin)
 {
     // save this instance in the registry
-    registry[itemsInRegistry++] = this;
+    registry[itemsInRegistry++] = pkPlugin;
 }
 
 

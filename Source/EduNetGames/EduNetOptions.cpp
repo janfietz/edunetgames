@@ -88,7 +88,6 @@ int EduNetOptions::parseCommandLine(int argc, char **argv)
 	{
 		printf("Try '%s --help' for more information.\n",progname);
 		exitcode = EXIT_SUCCESS;
-		this->setContinueProcess( false );
 		goto exit;
 	}
 

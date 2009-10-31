@@ -1,4 +1,7 @@
 #include "EmptyPlugin.h"
 
-EduNetGames::EmptyPlugIn gEmptyPlugIn;
+
+EduNet::InstanceCount EduNetGames::EmptyVehicle::ms_kInstanceCount;
+
+
 

@@ -69,21 +69,22 @@ namespace EduNetGames{
 		EduNet::UpdatePeriodFloat m_kUpdatePeriod;
 		static EduNet::InstanceCount ms_kInstanceCount;
 		size_t m_uiId;
+		ET_IMPLEMENT_CLASS_NO_COPY( EmptyVehicle );
 	};
 
-	EduNet::InstanceCount EmptyVehicle::ms_kInstanceCount;
 
 	class EmptyPlugIn : public PlugIn
 	{
+		ET_DECLARE_BASE(PlugIn);
 	public:
 
 		// construction / destruction
-		EmptyPlugIn() {}
+		EmptyPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
 		virtual ~EmptyPlugIn() {}
 
-		virtual const char* name (void) {return "A plugin doing nothing";}
+		virtual const char* name (void) const {return "A plugin doing nothing";}
 
-		virtual float selectionOrderSortKey (void) {return 1.0f;}
+		virtual float selectionOrderSortKey (void) const {return 1.0f;}
 
 		virtual void open (void)
 		{
@@ -129,11 +130,12 @@ namespace EduNetGames{
 			kVehicles.reset( );
 		}
 
-		const AVGroup& allVehicles (void) {return (const AVGroup&) m_kVehicles;}
+		const AVGroup& allVehicles (void) const {return (const AVGroup&) m_kVehicles;}
 
+	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;
-
+		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugIn );
 	};
 }
 #endif //__EMPTYPLUGIN_H__

@@ -476,9 +476,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Pedestrians";}
+        const char* name (void) const {return "Pedestrians";}
 
-        float selectionOrderSortKey (void) {return 0.02f;}
+        float selectionOrderSortKey (void) const {return 0.02f;}
 
         virtual ~PedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
 
@@ -672,7 +672,7 @@ namespace {
             }
         }
 
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -754,7 +754,7 @@ namespace {
         }
 
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) crowd;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
 
         // crowd: a group (STL vector) of all Pedestrians
         Pedestrian::groupType crowd;

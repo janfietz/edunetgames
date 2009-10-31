@@ -103,12 +103,14 @@ namespace OpenSteer{
     // PlugIn for OpenSteerDemo
 	class BoidsPlugIn : public PlugIn
     {
+		ET_DECLARE_BASE(PlugIn);
     public:
+		BoidsPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
 		virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning
 		
-		const char* name (void) {return "Boids";}
+		const char* name (void) const {return "Boids";}
 
-        float selectionOrderSortKey (void) {return 0.03f;}
+        float selectionOrderSortKey (void) const {return 0.03f;}
 
 		void open (void);
 		void close (void);
@@ -119,10 +121,10 @@ namespace OpenSteer{
 		void nextPD (void);
 		void handleFunctionKeys (int keyNumber);
 		void printLQbinStats (void);
-		void printMiniHelpForFunctionKeys (void);
+		void printMiniHelpForFunctionKeys (void) const;
 
 		 // return an AVGroup containing each boid of the flock
-        const AVGroup& allVehicles (void) {return (const AVGroup&)flock;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
 
 		const ObstacleGroup& obstacles(void) const { return m_kObstacles; }
 		ObstacleGroup& obstacles(void){ return m_kObstacles; }

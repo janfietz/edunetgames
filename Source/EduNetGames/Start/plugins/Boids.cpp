@@ -337,9 +337,9 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "Boids";}
+        const char* name (void) const {return "Boids";}
 
-        float selectionOrderSortKey (void) {return 0.03f;}
+        float selectionOrderSortKey (void) const {return 0.03f;}
 
         virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning
 
@@ -529,7 +529,7 @@ namespace {
     #endif // NO_LQ_BIN_STATS
         }
      
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -569,7 +569,7 @@ namespace {
         }
 
         // return an AVGroup containing each boid of the flock
-        const AVGroup& allVehicles (void) {return (const AVGroup&)flock;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
 
         // flock: a group (STL vector) of pointers to all boids
         Boid::groupType flock;

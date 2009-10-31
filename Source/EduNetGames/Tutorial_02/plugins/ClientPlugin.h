@@ -6,11 +6,13 @@ template < class PluginClass = OpenSteer::PlugIn  >
 class ClientPlugin :
 	public NetworkPlugIn<PluginClass>
 {
+	ET_DECLARE_BASE(NetworkPlugIn<PluginClass>);
 public:
-	ClientPlugin(void){};
+	ClientPlugin(bool bAddToRegistry = true):
+	  BaseClass( bAddToRegistry ){};
 	virtual ~ClientPlugin(void){};
 
-	virtual const char* name (void){return "ClientPlugin";};
+	virtual const char* name (void) const {return "ClientPlugin";};
 
 	virtual void redraw (const float currentTime,
 		const float elapsedTime);
@@ -48,7 +50,7 @@ template < class PluginClass >
 void ClientPlugin<PluginClass>::StartNetworkSession( void )
 {
 	SocketDescriptor sd;
-	sd.port=CLIENT_PORT;
+	sd.port = CLIENT_PORT;
 	bool bStarted(false);
 	while( false == bStarted )
 	{

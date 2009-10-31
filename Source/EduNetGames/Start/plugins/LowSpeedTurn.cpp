@@ -143,9 +143,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Low Speed Turn";}
+        const char* name (void) const {return "Low Speed Turn";}
 
-        float selectionOrderSortKey (void) {return 0.05f;}
+        float selectionOrderSortKey (void) const {return 0.05f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~LowSpeedTurnPlugIn() {}
@@ -230,7 +230,7 @@ namespace {
             for (iterator i = all.begin(); i!=all.end(); i++) (**i).reset();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) all;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
 
         std::vector<LowSpeedTurn*> all; // for allVehicles
         typedef std::vector<LowSpeedTurn*>::const_iterator iterator;

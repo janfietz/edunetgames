@@ -5,12 +5,14 @@ template < class PluginClass = OpenSteer::PlugIn  >
 class PeerPlugin :
 	public NetworkPlugIn<PluginClass>
 {
+	ET_DECLARE_BASE(NetworkPlugIn<PluginClass>);
 public:
 
-	PeerPlugin(void){};
+	PeerPlugin(bool bAddToRegistry = true):
+	  BaseClass( bAddToRegistry ){};
 	virtual ~PeerPlugin(void){};
 
-	virtual const char* name (void){return "PeerPlugin";};	
+	virtual const char* name (void) const {return "PeerPlugin";};	
 	virtual void redraw (const float currentTime,
 		const float elapsedTime);
 
@@ -56,7 +58,7 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 	this->m_pNetInterface->AttachPlugin(&this->m_kconnectionGraphPlugin);
 
 	SocketDescriptor sd;
-	sd.port=SERVER_PORT;
+	sd.port = SERVER_PORT;
 	bool bStarted(false);
 	while( false == bStarted )
 	{

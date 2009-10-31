@@ -114,7 +114,7 @@ RakNet::RM3QuerySerializationResult BoidConditionReplica::QuerySerialization(
 }
 
 //-----------------------------------------------------------------------------
-NetPeerBoidPlugin::NetPeerBoidPlugin()
+NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegistry )
 {
 	this->m_kReplicaManager.SetAutoSerializeInterval(
 		this->m_kReplicationSettings.interval);

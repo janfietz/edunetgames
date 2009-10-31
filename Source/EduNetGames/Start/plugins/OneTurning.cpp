@@ -96,9 +96,9 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "One Turning Away";}
+        const char* name (void) const {return "One Turning Away";}
 
-        float selectionOrderSortKey (void) {return 0.06f;}
+        float selectionOrderSortKey (void) const {return 0.06f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~OneTurningPlugIn() {}
@@ -155,7 +155,7 @@ namespace {
             gOneTurning->reset ();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) theVehicle;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) theVehicle;}
 
         OneTurning* gOneTurning;
         std::vector<OneTurning*> theVehicle; // for allVehicles
