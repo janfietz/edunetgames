@@ -304,6 +304,7 @@ void BoidsPlugIn::open (void)
 	}
     // make the database used to accelerate proximity queries
     cyclePD = -1;
+	this->pd = NULL;
     nextPD ();
 
     // make default-sized flock

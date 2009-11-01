@@ -16,14 +16,15 @@ namespace OpenSteer
 	class PlugInArray : public AbstractPlugIn, protected TPlugInArray
 	{
 	public:
-		PlugInArray();
+		PlugInArray(bool bAddToRegistry = true);
 		virtual ~PlugInArray();
 
 		//---------------------------------------------------------------------
 		// functionality PlugInArray
 		void addPlugIn( AbstractPlugIn* pkPlugin );
 		void removePlugIn( AbstractPlugIn* pkPlugin );
-		AbstractPlugIn* getPlugIn( size_t uiIdx );
+		void removeAllPlugIns( void );
+		AbstractPlugIn* getPlugIn( size_t uiIdx ) const;		
 
 
 		static void TestPluginArray( void );

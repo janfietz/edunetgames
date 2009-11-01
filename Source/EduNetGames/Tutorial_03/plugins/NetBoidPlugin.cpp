@@ -127,7 +127,7 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegis
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::StartNetworkSession( void )
 {
-	PeerPlugin<OpenSteer::BoidsPlugIn>::StartNetworkSession();
+	BaseClass::StartNetworkSession();
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 }
 

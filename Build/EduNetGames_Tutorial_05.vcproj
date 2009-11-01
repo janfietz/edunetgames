@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_05&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_05&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\DependentExtensions&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -197,15 +197,31 @@
 		<Filter
 			Name="plugins"
 			>
+			<File
+				RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EduNetPluginHost.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginSelector.h"
+				>
+			</File>
 			<Filter
 				Name="net"
 				>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginSelector.cpp"
+					>
+				</File>
 				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\NetPluginHosts.cpp"
 					>
 				</File>
 				<Filter
@@ -233,6 +249,26 @@
 					</File>
 					<File
 						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="from tutorial 4"
+					>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
 						>
 					</File>
 				</Filter>
@@ -271,6 +307,14 @@
 			</File>
 			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PluginArray.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PluginArray.h"
 				>
 			</File>
 			<File
@@ -333,6 +377,22 @@
 				RelativePath="..\Source\EduNetGames\include\EduNet\network\ReplicaManager.h"
 				>
 			</File>
+			<Filter
+				Name="raknet"
+				>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3_Boost.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"

@@ -4,13 +4,18 @@ using namespace OpenSteer;
 
 
 //-----------------------------------------------------------------------------
-PlugInArray::PlugInArray()
+PlugInArray::PlugInArray(bool bAddToRegistry)
 {
 
 }
 
 //-----------------------------------------------------------------------------
 PlugInArray::~PlugInArray()
+{
+	this->removeAllPlugIns();
+}
+//-----------------------------------------------------------------------------
+void PlugInArray::removeAllPlugIns( void )
 {
 	AbstractPlugIn* pkPlugin = this->getPlugIn( 0 );
 	while( NULL != pkPlugin )
@@ -21,7 +26,6 @@ PlugInArray::~PlugInArray()
 	bool bTest = true;
 	bTest = false;
 }
-
 //-----------------------------------------------------------------------------
 void PlugInArray::addPlugIn( AbstractPlugIn* pkPlugin )
 {
@@ -48,7 +52,7 @@ void PlugInArray::removePlugIn( AbstractPlugIn* pkPlugin )
 }
 
 //-----------------------------------------------------------------------------
-AbstractPlugIn* PlugInArray::getPlugIn( size_t uiIdx )
+AbstractPlugIn* PlugInArray::getPlugIn( size_t uiIdx ) const
 {
 	if( uiIdx < this->size() )
 	{

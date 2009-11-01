@@ -58,7 +58,7 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 	this->m_pNetInterface->AttachPlugin(&this->m_kconnectionGraphPlugin);
 
 	SocketDescriptor sd;
-	sd.port = SERVER_PORT;
+	sd.port = this->m_uiStartPort;
 	bool bStarted(false);
 	while( false == bStarted )
 	{

@@ -16,9 +16,9 @@ class NetworkPlugIn :
 public:
 	NetworkPlugIn(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry ),
-		m_kGamePlugIn( false ),
-		m_iWaitForPongPort(-1*SERVER_PORT)
+		m_kGamePlugIn( false )
 	{
+		
 	};
 	virtual ~NetworkPlugIn(void) {};
 
@@ -36,6 +36,7 @@ public:
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
 	virtual bool IsConnected() const;// = 0;
+	virtual bool DoAutoConnect( void ) const;
 	virtual bool Connect();
 	virtual void Disconnect(){};// = 0;
 
@@ -53,11 +54,25 @@ protected:
 	
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager m_kNetworkIdManager;
+
+	unsigned int m_uiStartPort;
+	unsigned int m_uiPortPongCount;
 private:
 	
 	void CreateNetworkInterface( void );
 	void DestroyNetworkInterface( void );
 	virtual bool HasIdAuthority( void ) const {return false;}
+
+	void InitializeServerPortSettings( void )
+	{
+		this->InitializeServerPortAndPongCount();
+		this->m_iWaitForPongPort = -1*this->m_uiStartPort;
+	}
+	virtual void InitializeServerPortAndPongCount( void )
+	{
+		this->m_uiStartPort = SERVER_PORT;
+		this->m_uiPortPongCount = SERVER_PONG_COUNT;
+	}
 
 
 
@@ -68,13 +83,14 @@ private:
 	bool WaitForPong( void ) const;
 
 	int m_iWaitForPongPort;
+	
 	RakNetTime m_kPongEndTime;
 };
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::open( void )
-{
+{	
 	this->CreateNetworkInterface();
  	this->StartNetworkSession(); 
  	this->CreateContent();
@@ -85,6 +101,7 @@ void NetworkPlugIn< PluginClass >::CreateNetworkInterface( void )
 {
 	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
 	this->AttachNetworkIdManager();
+	this->InitializeServerPortSettings();
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
@@ -143,7 +160,7 @@ void NetworkPlugIn< PluginClass >::reset()
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::update (const float currentTime, const float elapsedTime)
 {
-	if( !IsConnected() )
+	if( !IsConnected()&& DoAutoConnect() )
 	{
 		Connect();
 	}
@@ -157,7 +174,12 @@ void NetworkPlugIn< PluginClass >::update (const float currentTime, const float 
 
 	m_kGamePlugIn.update(currentTime, elapsedTime);
 }
-
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+bool NetworkPlugIn< PluginClass >::DoAutoConnect( void ) const
+{
+	return true;
+}
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void NetworkPlugIn< PluginClass >::CheckPongTimeout( void )
@@ -166,9 +188,9 @@ void NetworkPlugIn< PluginClass >::CheckPongTimeout( void )
 	if( kCurrent > this->m_kPongEndTime )
 	{
 		this->m_iWaitForPongPort += 1;
-		if(SERVER_PONG_COUNT <= this->m_iWaitForPongPort - SERVER_PORT)
+		if(this->m_uiPortPongCount <= this->m_iWaitForPongPort - this->m_uiStartPort)
 		{
-			this->m_iWaitForPongPort -= SERVER_PONG_COUNT;
+			this->m_iWaitForPongPort -= this->m_uiPortPongCount;
 		}
 		this->m_iWaitForPongPort *= -1;
 	}
