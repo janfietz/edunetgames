@@ -10,12 +10,14 @@
 #include "OpenSteerExtras/PlugInArray.h"
 
 // ----------------------------------------------------------------------------
-class EmptyServerRpcPlugin : public PeerPlugin<OpenSteer::PlugInArray>,
+template < class PluginClass = OpenSteer::PlugIn  >
+class EmptyServerRpcPlugin : public PeerPlugin<PluginClass>,
 	public EduNetGames::PluginHost
 {
-	ET_DECLARE_BASE(PeerPlugin<OpenSteer::PlugInArray>);
+	ET_DECLARE_BASE(PeerPlugin<PluginClass>);
 public:
-	EmptyServerRpcPlugin(bool bAddToRegistry = true);
+	EmptyServerRpcPlugin(bool bAddToRegistry = true):
+	  BaseClass( bAddToRegistry ){};
 	virtual ~EmptyServerRpcPlugin(){};
 
 	virtual const char* name (void) const;
@@ -25,10 +27,6 @@ public:
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	
-	void handleFunctionKeys (int keyNumber);
-	
-	virtual void open(void);
-
 	virtual bool DoAutoConnect( void ) const
 	{
 		return false;
@@ -36,7 +34,6 @@ public:
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );
-	virtual void DeleteContent( void );
 
 	const char* GetCurrentPluginName( void ) const;
 	virtual void SelectPluginByName( const char* pszPluginName ){ };
@@ -44,8 +41,6 @@ public:
 private:
 
 	void InitializeRpcSystem( void );
-
-	virtual void InitializeGamePlugin( void );
 
 	virtual void InitializeServerPortAndPongCount( void )
 	{
@@ -59,6 +54,49 @@ private:
 	
 };
 
+//-----------------------------------------------------------------------------
+template < class PluginClass>
+void EmptyServerRpcPlugin<PluginClass>::StartNetworkSession( void )
+{
+	BaseClass::StartNetworkSession();
+	this->InitializeRpcSystem();
+}
+
+//-----------------------------------------------------------------------------
+template < class PluginClass>
+void EmptyServerRpcPlugin<PluginClass>::InitializeRpcSystem( void )
+{
+	this->m_kRpc3Inst.SetNetworkIDManager(&this->m_kNetworkIdManager);	
+	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, false);
+	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
+	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
+
+	m_kPluginSelector.Initialize(&this->m_kRpc3Inst, this);	
+}
+//-----------------------------------------------------------------------------
+template < class PluginClass>
+void EmptyServerRpcPlugin<PluginClass>::CreateContent ( void )
+{
+	BaseClass::CreateContent();
+	this->m_kReplicaManager.Reference( &this->m_kPluginSelector );	
+}
+
+//-----------------------------------------------------------------------------
+template < class PluginClass>
+const char* EmptyServerRpcPlugin<PluginClass>::name (void) const {
+	const char* pszCurrentPluginName = this->GetCurrentPluginName();
+	if(NULL != pszCurrentPluginName )
+	{
+		return pszCurrentPluginName ;
+	}
+	return "EmptyServerRpcPlugin";
+}
+//-----------------------------------------------------------------------------
+template < class PluginClass>
+const char* EmptyServerRpcPlugin<PluginClass>::GetCurrentPluginName( void ) const
+{	
+	return this->m_kGamePlugIn.name();	
+}
 
 // ----------------------------------------------------------------------------
 class EmptyClientRpcPlugin : public ClientPlugin<OpenSteer::PlugInArray>,

@@ -3,15 +3,6 @@
 
 namespace{
 
-	class NetPluginServerHost : public EmptyServerRpcPlugin
-	{
-	private:
-		void InitializeGamePlugin( void )
-		{
-			this->m_kGamePlugIn.addPlugIn(new NetPeerBoidPlugin() );
-		}
-	};
-
 	class NetPluginClientHost : public EmptyClientRpcPlugin
 	{
 	private:
@@ -27,6 +18,6 @@ namespace{
 		}
 	};
 
-	NetPluginServerHost gNetServerHost;
+	EmptyServerRpcPlugin<NetPeerBoidPlugin> gNetServerHost;
 	NetPluginClientHost gNetClientHost;
 }
