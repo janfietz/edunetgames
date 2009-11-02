@@ -20,8 +20,18 @@ public:
 	void setContinueProcess( bool bValue );
 
 	static const char* getAppName( void );
+
+	void setSelectedPlugin( const char* pluginName)
+	{
+		this->m_kPluginName.assign(pluginName);
+	}
+	const char* getSelectedPlugin( void )
+	{
+		return this->m_kPluginName.c_str();
+	}
 private:
 	bool m_bContinueProcess;
+	std::string m_kPluginName;
 };
 
 //-----------------------------------------------------------------------------

@@ -26,7 +26,10 @@ int setOptions( EduNetOptions& kOptions,
 	int i;
 
 	for (i=0; i<ndefines; i++)
+	{
 		printf("selected plugin \"%s\"\n",defines[i]);
+		kOptions.setSelectedPlugin( defines[i] );
+	}
 
 	return 0;
 }

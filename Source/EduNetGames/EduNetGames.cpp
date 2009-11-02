@@ -213,8 +213,15 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 void 
 OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 {
-	PlugIn::sortBySelectionOrder ();
-	selectedPlugIn = PlugIn::findDefault ();
+
+	const char* pszPluginName = OpenSteer::OpenSteerDemo::options.getSelectedPlugin();
+	selectedPlugIn = PlugIn::findByName (pszPluginName);
+	if (NULL == selectedPlugIn)
+	{
+		PlugIn::sortBySelectionOrder ();
+		selectedPlugIn = PlugIn::findDefault ();
+	}
+	
 }
 
 
