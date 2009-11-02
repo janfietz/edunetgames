@@ -2,7 +2,7 @@
 <VisualStudioPropertySheet
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="EdunetCommonProperties"
+	Name="EdunetReleaseProperties"
 	>
 	<Tool
 		Name="VCCLCompilerTool"
@@ -10,7 +10,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="glut32.lib ws2_32.lib"		
-		AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
+		AdditionalDependencies="RakNetLibStatic.lib opensteer.lib"
+		OutputFile="$(OutDir)/$(ProjectName).exe"
 	/>
 </VisualStudioPropertySheet>
