@@ -1,7 +1,7 @@
 #pragma once
 #include "NetworkPlugin.h"
 
-template < class PluginClass = OpenSteer::PlugIn  >
+template < class PluginClass = OpenSteer::Plugin  >
 class PeerPlugin :
 	public NetworkPlugIn<PluginClass>
 {

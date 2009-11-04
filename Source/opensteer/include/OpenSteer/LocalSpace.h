@@ -80,14 +80,14 @@ namespace OpenSteer {
         
 
         // accessors (get and set) for side, up, forward and position
-        virtual Vec3 side (void) const = 0;
-        virtual Vec3 setSide (Vec3 s) = 0;
-        virtual Vec3 up (void) const = 0;
-        virtual Vec3 setUp (Vec3 u) = 0;
-        virtual Vec3 forward (void) const = 0;
-        virtual Vec3 setForward (Vec3 f) = 0;
-        virtual Vec3 position (void) const = 0;
-        virtual Vec3 setPosition (Vec3 p) = 0;
+        virtual const Vec3& side (void) const = 0;
+        virtual Vec3 setSide (const Vec3& s) = 0;
+        virtual const Vec3& up (void) const = 0;
+        virtual Vec3 setUp (const Vec3& u) = 0;
+        virtual const Vec3& forward (void) const = 0;
+        virtual Vec3 setForward (const Vec3& f) = 0;
+        virtual const Vec3& position (void) const = 0;
+        virtual Vec3 setPosition (const Vec3& p) = 0;
 
         // use right-(or left-)handed coordinate space
         virtual bool rightHanded (void) const = 0;
@@ -149,14 +149,14 @@ namespace OpenSteer {
     public:
 
         // accessors (get and set) for side, up, forward and position
-        Vec3 side     (void) const {return _side;};
-        Vec3 up       (void) const {return _up;};
-        Vec3 forward  (void) const {return _forward;};
-        Vec3 position (void) const {return _position;};
-        Vec3 setSide     (Vec3 s) {return _side = s;};
-        Vec3 setUp       (Vec3 u) {return _up = u;};
-        Vec3 setForward  (Vec3 f) {return _forward = f;};
-        Vec3 setPosition (Vec3 p) {return _position = p;};
+        const Vec3& side     (void) const {return _side;};
+        const Vec3& up       (void) const {return _up;};
+        const Vec3& forward  (void) const {return _forward;};
+        const Vec3& position (void) const {return _position;};
+        Vec3 setSide     (const Vec3& s) {return _side = s;};
+        Vec3 setUp       (const Vec3& u) {return _up = u;};
+        Vec3 setForward  (const Vec3& f) {return _forward = f;};
+        Vec3 setPosition (const Vec3& p) {return _position = p;};
         Vec3 setSide     (float x, float y, float z){return _side.set    (x,y,z);};
         Vec3 setUp       (float x, float y, float z){return _up.set      (x,y,z);};
         Vec3 setForward  (float x, float y, float z){return _forward.set (x,y,z);};

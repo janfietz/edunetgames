@@ -53,7 +53,7 @@
 #if _MSC_VER >= 1400
 
 #endif
-
+//#include <windows.h>
 #endif  // WIN32
 
 
@@ -76,10 +76,27 @@
 #include "BitStream.h"
 #include "NetworkIDManager.h"
 //#include <RakNetTypes.h>
+//#include <winsock2.h>
 
+#if 0
+#ifndef _WINSOCKAPI_
+#define _WINSOCKAPI_
+#endif
+#ifndef _WINSOCK2API_
+#define _WINSOCK2API_
+#endif
+#endif
 //#define _WINSOCK2API_
 //#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include "SocketLayer.h"
+#include "Rpc3/RPC3.h"
+
+#ifndef _WINSOCKAPI_
+#define _WINSOCKAPI_
+#endif
+#ifndef _WINSOCK2API_
+#define _WINSOCK2API_
+#endif
 
 #endif // EDUNET_HAVE_RAKNET
 

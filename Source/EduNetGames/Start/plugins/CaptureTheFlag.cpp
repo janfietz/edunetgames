@@ -76,7 +76,7 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // This PlugIn uses two vehicle types: CtfSeeker and CtfEnemy.  They have a
+    // This Plugin uses two vehicle types: CtfSeeker and CtfEnemy.  They have a
     // common base class: CtfBase which is a specialization of SimpleVehicle.
 
 
@@ -166,7 +166,7 @@ namespace {
 
     // ----------------------------------------------------------------------------
     // globals
-    // (perhaps these should be member variables of a Vehicle or PlugIn class)
+    // (perhaps these should be member variables of a Vehicle or Plugin class)
 
 
     const int CtfBase::maxObstacleCount = 100;
@@ -198,7 +198,7 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // state for OpenSteerDemo PlugIn
+    // state for OpenSteerDemo Plugin
     //
     // XXX consider moving this inside CtfPlugIn
     // XXX consider using STL (any advantage? consistency?)
@@ -822,10 +822,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
-    class CtfPlugIn : public PlugIn
+    class CtfPlugIn : public Plugin
     {
     public:
 
@@ -980,7 +980,7 @@ namespace {
             }
         }
 
-        // a group (STL vector) of all vehicles in the PlugIn
+        // a group (STL vector) of all vehicles in the Plugin
         std::vector<CtfBase*> all;
     };
 

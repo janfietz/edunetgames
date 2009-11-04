@@ -48,7 +48,7 @@ namespace {
     using namespace OpenSteer;
 
     // ----------------------------------------------------------------------------
-    // This PlugIn uses two vehicle types: MpWanderer and MpPursuer.  They have
+    // This Plugin uses two vehicle types: MpWanderer and MpPursuer.  They have
     // a common base class, MpBase, which is a specialization of SimpleVehicle.
 
 
@@ -160,10 +160,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
-    class MpPlugIn : public PlugIn
+    class MpPlugIn : public Plugin
     {
     public:
 

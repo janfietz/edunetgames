@@ -87,6 +87,11 @@ size_t UpdateAccumTime( TFLOAT fAccumTime )
 		}
 	}
 	TFLOAT fDeltaTime = fAccumTime - this->m_fLastAccumTime;
+	// prevent deltatime overflow ?
+	if( ( fDeltaTime > TFLOAT( 5.0 ) ) && ( fDeltaTime <= this->m_fPeriodTime ) )
+	{
+		fDeltaTime = this->m_fPeriodTime;
+	}
 	this->m_fLastAccumTime = fAccumTime;
 
 	this->m_fAccumPeriodTime += fDeltaTime;
@@ -134,7 +139,7 @@ TFLOAT AccumPeriodTime( void ) const
 
 TFLOAT Period( void ) const
 {
-	return this->m_fPeriodTime;
+	return this->GetPeriodTime();
 }
 
 bool PeriodElapsed( void ) const
@@ -162,6 +167,10 @@ private:
 template <class TFLOAT, class TMathLimits>
 void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( TFLOAT fFrequency )
 {
+	if( fFrequency == this->m_fPeriodFrequency )
+	{
+		return;
+	}
 	if( fFrequency > TFLOAT( 0.0 ) )
 	{
 		this->m_fPeriodTime = TFLOAT( 1.0 ) / fFrequency;
@@ -178,6 +187,10 @@ void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( TFLOAT fFrequency )
 template <class TFLOAT, class TMathLimits>
 void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodTime( TFLOAT fPeriodTime )
 {
+	if( fPeriodTime == this->m_fPeriodTime )
+	{
+		return;
+	}
 	this->m_fPeriodTime = fPeriodTime;
 	if( this->m_fPeriodTime > TFLOAT( 0.0 ) )
 	{

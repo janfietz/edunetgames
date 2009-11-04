@@ -10,19 +10,16 @@ EduNetGames::EmptyPlugIn gEmptyPlugIn;
 
 using namespace OpenSteer;
 
-
 typedef PeerPlugin<EduNetGames::EmptyPlugIn> EmtyServerPlugin;
 typedef ClientPlugin<EduNetGames::EmptyPlugIn> EmtyClientPlugin;
-
 
 //-----------------------------------------------------------------------------
 ClientServerPlugin::ClientServerPlugin()
 {
-	PlugIn::addToRegistry(this);
+	Plugin::addToRegistry(this);
 
 	this->addPlugIn( new EmtyServerPlugin( false ) );
 	this->addPlugIn( new EmtyClientPlugin( false ) );
-
 }
 
 //-----------------------------------------------------------------------------

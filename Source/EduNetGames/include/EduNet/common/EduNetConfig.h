@@ -4,6 +4,13 @@
 #include "EduNetTutorialConfig.h"
 
 // raknet
+#ifndef EDUNET_APPNAME
+#define EDUNET_APPNAME EduNetOptions::getAppName()
+#endif
+
+
+
+// raknet
 #ifndef EDUNET_HAVE_RAKNET
 #define EDUNET_HAVE_RAKNET 1
 #endif

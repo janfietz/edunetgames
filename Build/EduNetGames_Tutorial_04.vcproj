@@ -337,6 +337,14 @@
 			</File>
 		</Filter>
 		<File
+			RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetApplication.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
 			>
 		</File>

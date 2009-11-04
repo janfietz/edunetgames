@@ -206,7 +206,7 @@ namespace OpenSteer {
 
         // if this position is outside sphere, push it back in by one diameter
 
-        Vec3 sphericalWrapAround (const Vec3& center, float radius)
+        Vec3 sphericalWrapAround (const Vec3& center, float radius) const
         {
             const Vec3 offset = *this - center;
             const float r = offset.length();

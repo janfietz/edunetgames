@@ -330,10 +330,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
-    class BoidsPlugIn : public PlugIn
+    class BoidsPlugIn : public Plugin
     {
     public:
         

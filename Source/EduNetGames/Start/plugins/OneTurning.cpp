@@ -28,7 +28,7 @@
 // ----------------------------------------------------------------------------
 //
 //
-// One vehicle turning way: a (near) minimal OpenSteerDemo PlugIn
+// One vehicle turning way: a (near) minimal OpenSteerDemo Plugin
 //
 // 06-24-02 cwr: created 
 //
@@ -89,10 +89,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
-    class OneTurningPlugIn : public PlugIn
+    class OneTurningPlugIn : public Plugin
     {
     public:
         

@@ -63,8 +63,30 @@
 #include <GL/glut.h>     // for Linux and Windows
 #endif
 
+#include "glui/GL/glui.h"
+
+
+
 
 EduNetOptions OpenSteer::OpenSteerDemo::options;
+EduNet::Application OpenSteer::OpenSteerDemo::ms_kApplication;
+
+//-----------------------------------------------------------------------------
+namespace
+{
+	int tx, ty, tw, th;
+	int framePeriod = 1;//todo: test if this value should be 0
+
+	const char* appVersionName = EDUNET_APPNAME;//"OpenSteerDemo 0.8.2";
+
+	// The number of our GLUT window
+	int windowID = 0;
+
+	bool gMouseAdjustingCameraAngle = false;
+	bool gMouseAdjustingCameraRadius = false;
+	int gMouseAdjustingCameraLastX;
+	int gMouseAdjustingCameraLastY;
+}
 
 // ----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"
@@ -132,7 +154,8 @@ namespace {
 void 
 OpenSteer::OpenSteerDemo::initialize (void)
 {
-	// select the default PlugIn
+
+	// select the default Plugin
 	selectDefaultPlugIn ();
 
 	{
@@ -140,17 +163,17 @@ OpenSteer::OpenSteerDemo::initialize (void)
 		// XXX should it be replaced with something permanent?
 
 		std::cout << std::endl << "Known plugins:" << std::endl;   // xxx?
-		PlugIn::applyToAll (printPlugIn);                          // xxx?
+		Plugin::applyToAll (printPlugIn);                          // xxx?
 		std::cout << std::endl;                                    // xxx?
 
-		// identify default PlugIn
-		if (!selectedPlugIn) errorExit ("no default PlugIn");
+		// identify default Plugin
+		if (!selectedPlugIn) errorExit ("no default Plugin");
 		std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
 		std::cout << " " << *selectedPlugIn << std::endl;          // xxx?
 		std::cout << std::endl;                                    // xxx?
 	}
 
-	// initialize the default PlugIn
+	// initialize the default Plugin
 	openSelectedPlugIn ();
 }
 
@@ -170,11 +193,11 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 	//  routine)
 	initPhaseTimers ();
 
-	// run selected PlugIn (with simulation's current time and step size)
+	// run selected Plugin (with simulation's current time and step size)
 	updateSelectedPlugIn (clock.getTotalSimulationTime (),
 		clock.getElapsedSimulationTime ());
 
-	// redraw selected PlugIn (based on real time)
+	// redraw selected Plugin (based on real time)
 	redrawSelectedPlugIn (clock.getTotalRealTime (),
 		clock.getElapsedRealTime ());
 }
@@ -207,7 +230,7 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 
 
 // ----------------------------------------------------------------------------
-// select the default PlugIn
+// select the default Plugin
 
 
 void 
@@ -215,11 +238,11 @@ OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 {
 
 	const char* pszPluginName = OpenSteer::OpenSteerDemo::options.getSelectedPlugin();
-	selectedPlugIn = PlugIn::findByName (pszPluginName);
+	selectedPlugIn = Plugin::findByName (pszPluginName);
 	if (NULL == selectedPlugIn)
 	{
-		PlugIn::sortBySelectionOrder ();
-		selectedPlugIn = PlugIn::findDefault ();
+		Plugin::sortBySelectionOrder ();
+		selectedPlugIn = Plugin::findDefault ();
 	}
 	
 }
@@ -256,13 +279,14 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 {
-	return (selectedPlugIn ? selectedPlugIn->name() : "no PlugIn");
+	return (selectedPlugIn ? selectedPlugIn->name() : "no Plugin");
 }
 
 
 // ----------------------------------------------------------------------------
 // open the currently selected plug-in
 
+//GLUI* glui = NULL;
 
 void 
 OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
@@ -270,6 +294,29 @@ OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 	camera.reset ();
 	selectedVehicle = NULL;
 	selectedPlugIn->open ();
+/*
+	if( windowID )
+	{
+		GLUI_Node* firstChild = GLUI_Master.gluis.first_child();
+		if (firstChild != NULL )
+		{
+		}
+		if (glui != NULL )
+		{
+			glui->close();
+		}
+		else
+		{
+			// gui elements
+			glui = GLUI_Master.create_glui_subwindow( windowID, 
+				GLUI_SUBWINDOW_RIGHT );
+			glui->set_main_gfx_window( windowID );
+
+			OpenSteer::OpenSteerDemo::ms_kApplication.addGuiElements( glui );
+		}
+	}
+*/
+
 }
 
 
@@ -294,8 +341,9 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
 		if (vehicles.size() > 0) selectedVehicle = vehicles.front();
 	}
 
-	// invoke selected PlugIn's Update method
-	selectedPlugIn->update (currentTime, elapsedTime);
+	// invoke selected Plugin's Update method
+//	selectedPlugIn->update (currentTime, elapsedTime);
+	OpenSteerDemo::ms_kApplication.updateSelectedPlugIn( currentTime, elapsedTime );
 
 	// return to previous phase
 	popPhase ();
@@ -313,10 +361,11 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
 	// switch to Draw phase
 	pushPhase (drawPhase);
 
-	// invoke selected PlugIn's Draw method
-	selectedPlugIn->redraw (currentTime, elapsedTime);
+	// invoke selected Plugin's Draw method
+//	selectedPlugIn->redraw (currentTime, elapsedTime);
+	OpenSteerDemo::ms_kApplication.redrawSelectedPlugIn( currentTime, elapsedTime );
 
-	// draw any annotation queued up during selected PlugIn's Update method
+	// draw any annotation queued up during selected Plugin's Update method
 	drawAllDeferredLines ();
 	drawAllDeferredCirclesOrDisks ();
 
@@ -382,7 +431,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPlugInXXX (void)
 
 // ----------------------------------------------------------------------------
 // return a group (an STL vector of AbstractVehicle pointers) of all
-// vehicles(/agents/characters) defined by the currently selected PlugIn
+// vehicles(/agents/characters) defined by the currently selected Plugin
 
 
 const OpenSteer::AVGroup& 
@@ -745,18 +794,18 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
 	printMessage ("");
 	printMessage ("defined single key commands:");
-	printMessage ("  r      restart current PlugIn.");
+	printMessage ("  r      restart current Plugin.");
 	printMessage ("  s      select next vehicle.");
 	printMessage ("  c      select next camera mode.");
 	printMessage ("  f      select next preset frame rate");
-	printMessage ("  Tab    select next PlugIn.");
+	printMessage ("  Tab    select next Plugin.");
 	printMessage ("  a      toggle annotation on/off.");
 	printMessage ("  Space  toggle between Run and Pause.");
 	printMessage ("  ->     step forward one frame.");
 	printMessage ("  Esc    exit.");
 	printMessage ("");
 
-	// allow PlugIn to print mini help for the function keys it handles
+	// allow Plugin to print mini help for the function keys it handles
 	selectedPlugIn->printMiniHelpForFunctionKeys ();
 }
 
@@ -838,15 +887,6 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 
 namespace {
 
-	char* appVersionName = "OpenSteerDemo 0.8.2";
-
-	// The number of our GLUT window
-	int windowID;
-
-	bool gMouseAdjustingCameraAngle = false;
-	bool gMouseAdjustingCameraRadius = false;
-	int gMouseAdjustingCameraLastX;
-	int gMouseAdjustingCameraLastY;
 
 
 
@@ -897,14 +937,19 @@ namespace {
 	void 
 		reshapeFunc (int width, int height)
 	{
-		// set viewport to full window
-		glViewport(0, 0, width, height);
+		GLUI_Master.get_viewport_area( &tx, &ty, &tw, &th );
+		glViewport( tx, ty, tw, th );
+
+// 		// set viewport to full window
+// 		glViewport(0, 0, width, height);
 
 		// set perspective transformation
 		glMatrixMode (GL_PROJECTION);
 		glLoadIdentity ();
-		const GLfloat w = width;
-		const GLfloat h = height;
+		const GLfloat w = tw;
+		const GLfloat h = th;
+// 		const GLfloat w = width;
+// 		const GLfloat h = height;
 		const GLfloat aspectRatio = (height == 0) ? 1 : w/h;
 		const GLfloat fieldOfViewY = 45;
 		const GLfloat hither = 1;  // put this on Camera so PlugIns can frob it
@@ -1048,6 +1093,13 @@ namespace {
 		if (state == GLUT_LEFT)    OpenSteer::OpenSteerDemo::mouseInWindow = false;
 	}
 
+	// This is used to control the frame rate (60Hz).
+	void timerFunc(int)
+	{
+		glutSetWindow(windowID);
+		glutPostRedisplay();
+		glutTimerFunc(framePeriod, timerFunc, 0);
+	}
 
 	// ----------------------------------------------------------------------------
 	// draw PlugI name in upper lefthand corner of screen
@@ -1272,6 +1324,14 @@ namespace {
 	//
 	// parameter names commented out to prevent compiler warning from "-W"
 
+	void keyboardSpecialUpFunc(int key, int x, int y)
+	{
+		// 		if (demo)
+		// 		{
+		// 			demo->specialKeyboardUp(key,x,y);
+		// 		}
+
+	}
 
 	void 
 		keyboardFunc (unsigned char key, int /*x*/, int /*y*/) 
@@ -1285,10 +1345,10 @@ namespace {
 
 		switch (key)
 		{
-			// reset selected PlugIn
+			// reset selected Plugin
 		case 'r':
 			OpenSteer::OpenSteerDemo::resetSelectedPlugIn ();
-			message << "reset PlugIn "
+			message << "reset Plugin "
 				<< '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn () << '"'
 				<< std::ends;
 			OpenSteer::OpenSteerDemo::printMessage (message);
@@ -1308,10 +1368,10 @@ namespace {
 			OpenSteer::OpenSteerDemo::printMessage (message);
 			break;
 
-			// select next PlugIn
+			// select next Plugin
 		case tab:
 			OpenSteer::OpenSteerDemo::selectNextPlugIn ();
-			message << "select next PlugIn: "
+			message << "select next Plugin: "
 				<< '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn () << '"'
 				<< std::ends;
 			OpenSteer::OpenSteerDemo::printMessage (message);
@@ -1373,13 +1433,17 @@ namespace {
 
 	// ------------------------------------------------------------------------
 	// handles "special" keys,
-	// function keys are handled by the PlugIn
+	// function keys are handled by the Plugin
 	//
 	// parameter names commented out to prevent compiler warning from "-W"
 
 	void 
-		specialFunc (int key, int /*x*/, int /*y*/)
+		keyboardSpecialFunc (int key, int /*x*/, int /*y*/)
 	{
+		// 		if (demo)
+		// 		{
+		// 			demo->keyboardSpecialFunc(key,x,y);
+		// 		}
 		std::ostringstream message;
 
 		switch (key)
@@ -1413,24 +1477,35 @@ namespace {
 	}
 
 
-	// ------------------------------------------------------------------------
-	// Main drawing function for OpenSteerDemo application,
-	// drives simulation as a side effect
-
-
 	void 
 		displayFunc (void)
 	{
+		// update global simulation clock
+		OpenSteer::OpenSteerDemo::clock.update ();
+		//  start the phase timer (XXX to accurately measure "overhead" time this
+		//  should be in displayFunc, or somehow account for time outside this
+		//  routine)
+		OpenSteer::OpenSteerDemo::initPhaseTimers ();
+
+		// run selected Plugin (with simulation's current time and step size)
+ 		OpenSteer::OpenSteerDemo::updateSelectedPlugIn (OpenSteer::OpenSteerDemo::clock.getTotalSimulationTime (),
+ 			OpenSteer::OpenSteerDemo::clock.getElapsedSimulationTime ());
 		// clear color and depth buffers
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
 		// run simulation and draw associated graphics
-		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
+//		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
+
+		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// redraw selected Plugin (based on real time)
+ 		OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (OpenSteer::OpenSteerDemo::clock.getTotalRealTime (),
+ 			OpenSteer::OpenSteerDemo::clock.getElapsedRealTime ());
 
 		// draw text showing (smoothed, rounded) "frames per second" rate
 		drawDisplayFPS ();
 
-		// draw the name of the selected PlugIn
+		// draw the name of the selected Plugin
 		drawDisplayPlugInName ();
 
 		// draw the name of the camera's current mode
@@ -1448,6 +1523,29 @@ namespace {
 	}
 
 
+	// ------------------------------------------------------------------------
+	void idleFunc( void )
+	{
+		int current_window, new_window(0);
+		current_window = glutGetWindow();
+		if (GLUI_Master.gluis.first_child() != NULL )
+		{
+			new_window = ((GLUI_Main*)GLUI_Master.gluis.first_child())->getMainWindowId();
+		}
+		if ( (new_window > 0) && (new_window != current_window )) 
+		{
+			//--- Window is changed only if its not already the current window ---
+			glutSetWindow( new_window );
+		}
+
+		displayFunc();
+		// 		if (demo)
+		// 			demo->moveAndDisplay();
+
+		glutSetWindow( current_window );
+
+	}
+
 } // annonymous namespace
 
 
@@ -1464,6 +1562,7 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 	// display modes: RGB+Z and double buffered
 	GLint mode = GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE;
+	mode = GLUT_RGBA | GLUT_DOUBLE |GLUT_DEPTH | GLUT_STENCIL;
 	glutInitDisplayMode (mode);
 
 	// create and initialize our window with GLUT tools
@@ -1481,14 +1580,14 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 	// register our display function, make it the idle handler too
 	glutDisplayFunc (&displayFunc);  
-	glutIdleFunc (&displayFunc);
+	glutIdleFunc (&idleFunc);
 
 	// register handler for window reshaping
 	glutReshapeFunc (&reshapeFunc);
 
 	// register handler for keyboard events
 	glutKeyboardFunc (&keyboardFunc);
-	glutSpecialFunc (&specialFunc);
+	glutSpecialFunc (&keyboardSpecialFunc);
 
 	// register handler for mouse button events
 	glutMouseFunc (&mouseButtonFunc);
@@ -1501,6 +1600,27 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 	// register handler for when mouse enters or exists the window
 	glutEntryFunc (mouseEnterExitWindowFunc);
+
+	// GLUI setup
+	GLUI_Master.set_glutReshapeFunc(reshapeFunc);  
+	GLUI_Master.set_glutKeyboardFunc(keyboardFunc);
+	GLUI_Master.set_glutSpecialFunc(keyboardSpecialFunc);
+	GLUI_Master.set_glutIdleFunc(idleFunc);
+	GLUI_Master.set_glutDisplayFunc(displayFunc);
+	GLUI_Master.set_glutSpecialUpFunc(keyboardSpecialUpFunc);
+	GLUI_Master.set_glutMouseFunc(mouseButtonFunc);
+
+
+	// gui elements
+	GLUI* glui = GLUI_Master.create_glui_subwindow( windowID, 
+		GLUI_SUBWINDOW_RIGHT );
+	glui->set_main_gfx_window( windowID );
+
+	OpenSteer::OpenSteerDemo::ms_kApplication.addGuiElements( glui );
+
+
+	// Use a timer to control the frame rate.
+	glutTimerFunc(framePeriod, timerFunc, 0);
 }
 
 

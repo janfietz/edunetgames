@@ -28,7 +28,7 @@
 // ----------------------------------------------------------------------------
 //
 //
-// OpenSteerDemo PlugIn class
+// OpenSteerDemo Plugin class
 // 
 // 10-04-04 bk:  put everything into the OpenSteer namespace
 // 11-13-02 cwr: created 
@@ -41,21 +41,21 @@
 
 
 // ----------------------------------------------------------------------------
-// PlugIn registry
+// Plugin registry
 //
 // XXX replace with STL utilities
 
 
-int OpenSteer::PlugIn::itemsInRegistry = 0;
-const int OpenSteer::PlugIn::totalSizeOfRegistry = 1000;
-OpenSteer::AbstractPlugIn* OpenSteer::PlugIn::registry [totalSizeOfRegistry];
+int OpenSteer::Plugin::itemsInRegistry = 0;
+const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
+OpenSteer::AbstractPlugIn* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
 
 // ----------------------------------------------------------------------------
 // constructor
 
 
-OpenSteer::PlugIn::PlugIn (bool bAddToRegistry)
+OpenSteer::Plugin::Plugin (bool bAddToRegistry)
 {
     // save this new instance in the registry
 	if( true == bAddToRegistry )
@@ -69,21 +69,21 @@ OpenSteer::PlugIn::PlugIn (bool bAddToRegistry)
 // destructor
 
 
-OpenSteer::PlugIn::~PlugIn() {}
+OpenSteer::Plugin::~Plugin() {}
 
 
 // ----------------------------------------------------------------------------
-// returns pointer to the next PlugIn in "selection order"
+// returns pointer to the next Plugin in "selection order"
 
 
 OpenSteer::AbstractPlugIn* 
-OpenSteer::PlugIn::next (void) const
+OpenSteer::Plugin::next (void) const
 {
-	return OpenSteer::PlugIn::findNextPlugin( this );
+	return OpenSteer::Plugin::findNextPlugin( this );
 }
 
 OpenSteer::AbstractPlugIn* 
-OpenSteer::PlugIn::findNextPlugin( const AbstractPlugIn* pkThis )
+OpenSteer::Plugin::findNextPlugin( const AbstractPlugIn* pkThis )
 {
 	for (int i = 0; i < itemsInRegistry; i++)
 	{
@@ -103,7 +103,7 @@ OpenSteer::PlugIn::findNextPlugin( const AbstractPlugIn* pkThis )
 
 
 OpenSteer::AbstractPlugIn* 
-OpenSteer::PlugIn::findByName (const char* string)
+OpenSteer::Plugin::findByName (const char* string)
 {
     if (string)
     {
@@ -123,7 +123,7 @@ OpenSteer::PlugIn::findByName (const char* string)
 
 
 void 
-OpenSteer::PlugIn::applyToAll (plugInCallBackFunction f)
+OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
 {
     for (int i = 0; i < itemsInRegistry; i++)
     {
@@ -133,13 +133,13 @@ OpenSteer::PlugIn::applyToAll (plugInCallBackFunction f)
 
 
 // ----------------------------------------------------------------------------
-// sort PlugIn registry by "selection order"
+// sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
 
 
 void 
-OpenSteer::PlugIn::sortBySelectionOrder (void)
+OpenSteer::Plugin::sortBySelectionOrder (void)
 {
     // I know, I know, just what the world needs:
     // another inline shell sort implementation...
@@ -165,22 +165,22 @@ OpenSteer::PlugIn::sortBySelectionOrder (void)
 
 
 // ----------------------------------------------------------------------------
-// returns pointer to default PlugIn (currently, first in registry)
+// returns pointer to default Plugin (currently, first in registry)
 
 
 OpenSteer::AbstractPlugIn* 
-OpenSteer::PlugIn::findDefault (void)
+OpenSteer::Plugin::findDefault (void)
 {
     // return NULL if no PlugIns exist
     if (itemsInRegistry == 0) return NULL;
 
-    // otherwise, return the first PlugIn that requests initial selection
+    // otherwise, return the first Plugin that requests initial selection
     for (int i = 0; i < itemsInRegistry; i++)
     {
         if (registry[i]->requestInitialSelection ()) return registry[i];
     }
 
-    // otherwise, return the "first" PlugIn (in "selection order")
+    // otherwise, return the "first" Plugin (in "selection order")
     return registry[0];
 }
 
@@ -191,7 +191,7 @@ OpenSteer::PlugIn::findDefault (void)
 
 
 void 
-OpenSteer::PlugIn::addToRegistry (AbstractPlugIn* pkPlugin)
+OpenSteer::Plugin::addToRegistry (AbstractPlugIn* pkPlugin)
 {
     // save this instance in the registry
     registry[itemsInRegistry++] = pkPlugin;

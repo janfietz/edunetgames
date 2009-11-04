@@ -130,7 +130,7 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
     const int lstCount = 5;
@@ -139,7 +139,7 @@ namespace {
     const Vec3 lstPlusZ (0, 0, 1);
 
 
-    class LowSpeedTurnPlugIn : public PlugIn
+    class LowSpeedTurnPlugIn : public Plugin
     {
     public:
 

@@ -28,9 +28,9 @@
 // ----------------------------------------------------------------------------
 //
 //
-// OpenSteerDemo PlugIn class
+// OpenSteerDemo Plugin class
 //
-// Provides AbstractPlugIn a pure abstract base class, and PlugIn a partial
+// Provides AbstractPlugIn a pure abstract base class, and Plugin a partial
 // implementation providing default methods to be sub-classed by the
 // programmer defining a new "MyPlugIn".
 //
@@ -39,12 +39,12 @@
 //
 //
 // ----------------------------------------------------------------------------
-// A pattern for a specific user-defined OpenSteerDemo PlugIn class called Foo.
+// A pattern for a specific user-defined OpenSteerDemo Plugin class called Foo.
 // Defines class FooPlugIn, then makes a single instance (singleton) of it.
 /*
 
 
-class FooPlugIn : public PlugIn
+class FooPlugIn : public Plugin
 {
     // required methods:
     const char* name (void) const {return "Foo";}
@@ -87,7 +87,7 @@ namespace OpenSteer {
         
         virtual ~AbstractPlugIn() { /* Nothing to do. */ }
         
-        // generic PlugIn actions: open, update, redraw, close and reset
+        // generic Plugin actions: open, update, redraw, close and reset
         virtual void open (void) = 0;
         virtual void update (const float currentTime, const float elapsedTime) = 0;
         virtual void redraw (const float currentTime, const float elapsedTime) = 0;
@@ -97,37 +97,37 @@ namespace OpenSteer {
         // return a pointer to this instance's character string name
         virtual const char* name (void) const = 0;
 
-        // numeric sort key used to establish user-visible PlugIn ordering
+        // numeric sort key used to establish user-visible Plugin ordering
         // ("built ins" have keys greater than 0 and less than 1)
         virtual float selectionOrderSortKey (void) const = 0;
 
-        // allows a PlugIn to nominate itself as OpenSteerDemo's initially selected
-        // (default) PlugIn, which is otherwise the first in "selection order"
+        // allows a Plugin to nominate itself as OpenSteerDemo's initially selected
+        // (default) Plugin, which is otherwise the first in "selection order"
         virtual bool requestInitialSelection (void) const = 0;
 
         // handle function keys (which are reserved by SterTest for PlugIns)
         virtual void handleFunctionKeys (int keyNumber) = 0;
 
-        // print "mini help" documenting function keys handled by this PlugIn
+        // print "mini help" documenting function keys handled by this Plugin
         virtual void printMiniHelpForFunctionKeys (void) const = 0;
 
         // return an AVGroup (an STL vector of AbstractVehicle pointers) of
-        // all vehicles(/agents/characters) defined by the PlugIn
+        // all vehicles(/agents/characters) defined by the Plugin
         virtual const AVGroup& allVehicles (void) const = 0;
   
-		// returns pointer to the next PlugIn in "selection order"
+		// returns pointer to the next Plugin in "selection order"
 		virtual AbstractPlugIn* next(void) const = 0;
 
 		// format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugIn& pi)
 		{
-			os << "<PlugIn " << '"' << pi.name() << '"' << ">";
+			os << "<Plugin " << '"' << pi.name() << '"' << ">";
 			return os;
 		}
 	
 	};
 
-	class PlugIn : public AbstractPlugIn
+	class Plugin : public AbstractPlugIn
     {
     public:
         // prototypes for function pointers used with PlugIns
@@ -137,10 +137,10 @@ namespace OpenSteer {
                                                    const float elapsedTime);
 
         // constructor
-        PlugIn (bool bAddToRegistry = true);
+        Plugin (bool bAddToRegistry = true);
 
         // destructor
-        virtual ~PlugIn();
+        virtual ~Plugin();
 
         // default reset method is to do a close then an open
         void reset (void) {close (); open ();}
@@ -158,13 +158,13 @@ namespace OpenSteer {
         // default "mini help": print nothing
         void printMiniHelpForFunctionKeys (void) const {}
 
-        // returns pointer to the next PlugIn in "selection order"
+        // returns pointer to the next Plugin in "selection order"
         AbstractPlugIn* next (void) const;
 
         // format instance to characters for printing to stream
-        friend std::ostream& operator<< (std::ostream& os, PlugIn& pi)
+        friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {
-            os << "<PlugIn " << '"' << pi.name() << '"' << ">";
+            os << "<Plugin " << '"' << pi.name() << '"' << ">";
             return os;
         }
 
@@ -176,10 +176,10 @@ namespace OpenSteer {
         // apply a given function to all PlugIns in the class registry
         static void applyToAll (plugInCallBackFunction f);
 
-        // sort PlugIn registry by "selection order"
+        // sort Plugin registry by "selection order"
         static void sortBySelectionOrder (void);
 
-        // returns pointer to default PlugIn (currently, first in registry)
+        // returns pointer to default Plugin (currently, first in registry)
         static AbstractPlugIn* findDefault (void);
 
 		// save this instance in the class's registry of instances

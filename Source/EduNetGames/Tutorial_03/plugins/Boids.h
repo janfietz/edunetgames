@@ -100,10 +100,10 @@ namespace OpenSteer{
 	};
 
 	// ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
-	class BoidsPlugIn : public PlugIn
+    // Plugin for OpenSteerDemo
+	class BoidsPlugIn : public Plugin
     {
-		ET_DECLARE_BASE(PlugIn);
+		ET_DECLARE_BASE(Plugin);
     public:
 		BoidsPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
 		virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning

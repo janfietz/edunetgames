@@ -3,6 +3,8 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="EdunetCommonProperties"
+	OutputDirectory="../Bin/$(PlatformName)"
+	IntermediateDirectory="../Temp/$(ProjectName)/$(ConfigurationName)"
 	>
 	<Tool
 		Name="VCCLCompilerTool"
@@ -10,7 +12,7 @@
 	/>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="glut32.lib ws2_32.lib"		
+		AdditionalDependencies="glut32.lib ws2_32.lib"
 		AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
 	/>
 </VisualStudioPropertySheet>

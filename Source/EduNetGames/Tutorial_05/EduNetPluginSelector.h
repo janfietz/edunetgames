@@ -5,7 +5,6 @@
 #include "EduNet/network/OSReplica.h"
 #include "plugins/EduNetPluginHost.h"
 
-#include "Rpc3/RPC3.h"
 
 //-----------------------------------------------------------------------------
 class PluginSelector: public OSObjectReplica

@@ -229,33 +229,65 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="common"
+			Name="EduNet"
 			>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetCommon.h"
+			<Filter
+				Name="common"
 				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetConfig.h"
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetCommon.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetConfig.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetExternal.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetMacros.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Start\EduNetTutorialConfig.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="gui"
 				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetExternal.h"
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\gui\EduNetGui.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\gui\EduNetGui.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="templates"
 				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetMacros.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Start\EduNetTutorialConfig.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
-				>
-			</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\templates\TUpdatePeriod.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\EduNetApplication.h"
+			>
+		</File>
 		<File
 			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
 			>

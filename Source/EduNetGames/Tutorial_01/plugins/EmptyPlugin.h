@@ -73,16 +73,16 @@ namespace EduNetGames{
 	};
 
 
-	class EmptyPlugIn : public PlugIn
+	class EmptyPlugIn : public Plugin
 	{
-		ET_DECLARE_BASE(PlugIn);
+		ET_DECLARE_BASE(Plugin);
 	public:
 
 		// construction / destruction
 		EmptyPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
 		virtual ~EmptyPlugIn() {}
 
-		virtual const char* name (void) const {return "A plugin doing nothing";}
+		virtual const char* name (void) const {return "EmptyPlugIn";}
 
 		virtual float selectionOrderSortKey (void) const {return 1.0f;}
 

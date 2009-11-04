@@ -48,6 +48,7 @@
 
 #include "EduNet/common/EduNetCommon.h"
 #include "EduNetOptions.h"
+#include "EduNetApplication.h"
 
 #include "OpenSteer/Clock.h"
 #include "OpenSteer/PlugIn.h"
@@ -66,6 +67,7 @@ namespace OpenSteer {
     public:
 		// options
 		static EduNetOptions options;
+		static EduNet::Application ms_kApplication;
 
         // ------------------------------------------------------ component objects
 
@@ -99,9 +101,9 @@ namespace OpenSteer {
         static void errorExit (const char* message);
         static void exit (int exitCode);
 
-        // ------------------------------------------------------- PlugIn interface
+        // ------------------------------------------------------- Plugin interface
 
-        // select the default PlugIn
+        // select the default Plugin
         static void selectDefaultPlugIn (void);
         
         // select the "next" plug-in, cycling through "plug-in selection order"
@@ -253,6 +255,7 @@ namespace OpenSteer {
 
         // ---------------------------------------------------------------- private
 
+		static void initPhaseTimers (void);
     private:
         static int phase;
         static int phaseStack[];
@@ -262,7 +265,6 @@ namespace OpenSteer {
         static const int phaseStackSize;
         static void pushPhase (const int newPhase);
         static void popPhase (void);
-        static void initPhaseTimers (void);
         static void updatePhaseTimers (void);
 
         // XXX apparently MS VC6 cannot handle initialized static const members,

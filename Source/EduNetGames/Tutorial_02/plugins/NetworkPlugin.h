@@ -8,11 +8,11 @@ static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 
 //-----------------------------------------------------------------------------
-template < class PluginClass = OpenSteer::PlugIn  >
+template < class PluginClass = OpenSteer::Plugin  >
 class NetworkPlugIn :
-	public OpenSteer::PlugIn
+	public OpenSteer::Plugin
 {
-	ET_DECLARE_BASE(OpenSteer::PlugIn);
+	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
 	NetworkPlugIn(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry ),

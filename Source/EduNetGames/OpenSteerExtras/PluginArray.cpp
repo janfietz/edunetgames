@@ -181,9 +181,9 @@ const AVGroup& PlugInArray::allVehicles(void) const
 }
 
 //-----------------------------------------------------------------------------
-class FooPlugIn : public PlugIn
+class FooPlugIn : public Plugin
 {
-	ET_DECLARE_BASE(OpenSteer::PlugIn);
+	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
 	FooPlugIn (bool bAddToRegistry = false):BaseClass(bAddToRegistry){};
 
@@ -210,7 +210,7 @@ private:
 //-----------------------------------------------------------------------------
 AbstractPlugIn* PlugInArray::next(void) const 
 { 
-	return OpenSteer::PlugIn::findNextPlugin( this );
+	return OpenSteer::Plugin::findNextPlugin( this );
 };
 
 

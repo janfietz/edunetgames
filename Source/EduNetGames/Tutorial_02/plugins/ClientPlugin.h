@@ -2,7 +2,7 @@
 #include "NetworkPlugin.h"
 
 //-----------------------------------------------------------------------------
-template < class PluginClass = OpenSteer::PlugIn  >
+template < class PluginClass = OpenSteer::Plugin  >
 class ClientPlugin :
 	public NetworkPlugIn<PluginClass>
 {

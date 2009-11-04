@@ -28,7 +28,7 @@
 // ----------------------------------------------------------------------------
 //
 //
-// Driving through map-based obstacles    (OpenSteerDemo PlugIn)
+// Driving through map-based obstacles    (OpenSteerDemo Plugin)
 //
 // This demonstration is inspired by the DARPA Grand Challenge cross country
 // race for autonomous vehicles (http://www.darpa.mil/grandchallenge/).  A
@@ -2563,10 +2563,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
+    // Plugin for OpenSteerDemo
 
 
-    class MapDrivePlugIn : public PlugIn
+    class MapDrivePlugIn : public Plugin
     {
     public:
 
