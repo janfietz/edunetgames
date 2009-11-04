@@ -8,7 +8,7 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Start&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\DependendExtensions&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\boost_1_40_0&quot;"
+		AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Start&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\DependentExtensions&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\boost_1_40_0&quot;"
 	/>
 	<Tool
 		Name="VCLinkerTool"
