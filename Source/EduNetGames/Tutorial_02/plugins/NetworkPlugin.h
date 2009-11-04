@@ -303,12 +303,19 @@ template < class PluginClass >
 bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
 {
 	if( false == this->WaitForPong() )
-	{		
-		if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )
-		{
-			this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;
-			this->m_iWaitForPongPort = iPort;
+	{	
+		unsigned short usMyPort = 
+			this->m_pNetInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS,0).port;
+		if (usMyPort != iPort)
+		{		
+			if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )
+			{
+				this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;				
+			}
 		}
+
+		this->m_iWaitForPongPort = iPort;
+		
 	}
 	return this->WaitForPong();
 }
