@@ -7,10 +7,10 @@
 #include "EduNetPluginHost.h"
 #include "../EduNetPluginSelector.h"
 
-#include "OpenSteerExtras/PlugInArray.h"
+#include "OpenSteerExtras/PluginArray.h"
 
 // ----------------------------------------------------------------------------
-template < class PluginClass = OpenSteer::PlugIn  >
+template < class PluginClass = OpenSteer::Plugin  >
 class EmptyServerRpcPlugin : public PeerPlugin<PluginClass>,
 	public EduNetGames::PluginHost
 {
@@ -95,14 +95,14 @@ const char* EmptyServerRpcPlugin<PluginClass>::name (void) const {
 template < class PluginClass>
 const char* EmptyServerRpcPlugin<PluginClass>::GetCurrentPluginName( void ) const
 {	
-	return this->m_kGamePlugIn.name();	
+	return this->m_kGamePlugin.name();	
 }
 
 // ----------------------------------------------------------------------------
-class EmptyClientRpcPlugin : public ClientPlugin<OpenSteer::PlugInArray>,
+class EmptyClientRpcPlugin : public ClientPlugin<OpenSteer::PluginArray>,
 	public EduNetGames::PluginHost
 {
-	ET_DECLARE_BASE(ClientPlugin<OpenSteer::PlugInArray>);
+	ET_DECLARE_BASE(ClientPlugin<OpenSteer::PluginArray>);
 public:
 	EmptyClientRpcPlugin(bool bAddToRegistry = true);
 	virtual ~EmptyClientRpcPlugin(){};

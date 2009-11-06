@@ -32,7 +32,7 @@
 //
 // Provides AbstractPlugin a pure abstract base class, and Plugin a partial
 // implementation providing default methods to be sub-classed by the
-// programmer defining a new "MyPlugIn".
+// programmer defining a new "MyPlugin".
 //
 // 10-04-04 bk:  put everything into the OpenSteer namespace
 // 11-13-02 cwr: created 
@@ -40,11 +40,11 @@
 //
 // ----------------------------------------------------------------------------
 // A pattern for a specific user-defined OpenSteerDemo Plugin class called Foo.
-// Defines class FooPlugIn, then makes a single instance (singleton) of it.
+// Defines class FooPlugin, then makes a single instance (singleton) of it.
 /*
 
 
-class FooPlugIn : public Plugin
+class FooPlugin : public Plugin
 {
     // required methods:
     const char* name (void) const {return "Foo";}
@@ -58,11 +58,11 @@ class FooPlugIn : public Plugin
     void reset (void) {...} // default is to reset by doing close-then-open
     float selectionOrderSortKey (void) const {return 1234;}
     bool requestInitialSelection (void) const {return true;}
-    void handleFunctionKeys (int keyNumber) {...} // fkeys reserved for PlugIns
+    void handleFunctionKeys (int keyNumber) {...} // fkeys reserved for Plugins
     void printMiniHelpForFunctionKeys (void) {...} // if fkeys are used
 };
 
-FooPlugIn gFooPlugIn;
+FooPlugin gFooPlugin;
 
 
 */
@@ -105,7 +105,7 @@ namespace OpenSteer {
         // (default) Plugin, which is otherwise the first in "selection order"
         virtual bool requestInitialSelection (void) const = 0;
 
-        // handle function keys (which are reserved by SterTest for PlugIns)
+        // handle function keys (which are reserved by SterTest for Plugins)
         virtual void handleFunctionKeys (int keyNumber) = 0;
 
         // print "mini help" documenting function keys handled by this Plugin
@@ -130,7 +130,7 @@ namespace OpenSteer {
 	class Plugin : public AbstractPlugin
     {
     public:
-        // prototypes for function pointers used with PlugIns
+        // prototypes for function pointers used with Plugins
         typedef void (* plugInCallBackFunction) (AbstractPlugin& clientObject);
         typedef void (* voidCallBackFunction) (void);
         typedef void (* timestepCallBackFunction) (const float currentTime,
@@ -173,7 +173,7 @@ namespace OpenSteer {
         // search the class registry for a Plugin with the given name
         static AbstractPlugin* findByName (const char* string);
 
-        // apply a given function to all PlugIns in the class registry
+        // apply a given function to all Plugins in the class registry
         static void applyToAll (plugInCallBackFunction f);
 
         // sort Plugin registry by "selection order"
@@ -187,7 +187,7 @@ namespace OpenSteer {
 		static AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis );
     private:
 
-        // This array stores a list of all PlugIns.  It is manipulated by the
+        // This array stores a list of all Plugins.  It is manipulated by the
         // constructor and destructor, and used in findByName and applyToAll.
         static const int totalSizeOfRegistry;
         static int itemsInRegistry;

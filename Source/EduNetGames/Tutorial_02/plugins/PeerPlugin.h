@@ -3,9 +3,9 @@
 
 template < class PluginClass = OpenSteer::Plugin  >
 class PeerPlugin :
-	public NetworkPlugIn<PluginClass>
+	public NetworkPlugin<PluginClass>
 {
-	ET_DECLARE_BASE(NetworkPlugIn<PluginClass>);
+	ET_DECLARE_BASE(NetworkPlugin<PluginClass>);
 public:
 
 	PeerPlugin(bool bAddToRegistry = true):
@@ -34,20 +34,20 @@ template < class PluginClass >
 void PeerPlugin<PluginClass>::redraw (const float currentTime,
 	const float elapsedTime)
 {
-	this->m_kGamePlugIn.redraw( currentTime, elapsedTime);
+	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void PeerPlugin<PluginClass>::CreateContent( void )
 {
-	this->m_kGamePlugIn.open();
+	this->m_kGamePlugin.open();
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void PeerPlugin<PluginClass>::DeleteContent( void )
 {
-		this->m_kGamePlugIn.close();
+		this->m_kGamePlugin.close();
 }
 
 //-----------------------------------------------------------------------------

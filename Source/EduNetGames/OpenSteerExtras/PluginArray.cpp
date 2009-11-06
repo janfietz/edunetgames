@@ -1,43 +1,43 @@
-#include "PlugInArray.h"
+#include "PluginArray.h"
 
 using namespace OpenSteer;
 
 
 //-----------------------------------------------------------------------------
-PlugInArray::PlugInArray(bool bAddToRegistry)
+PluginArray::PluginArray(bool bAddToRegistry)
 {
 
 }
 
 //-----------------------------------------------------------------------------
-PlugInArray::~PlugInArray()
+PluginArray::~PluginArray()
 {
-	this->removeAllPlugIns();
+	this->removeAllPlugins();
 }
 //-----------------------------------------------------------------------------
-void PlugInArray::removeAllPlugIns( void )
+void PluginArray::removeAllPlugins( void )
 {
-	AbstractPlugin* pkPlugin = this->getPlugIn( 0 );
+	AbstractPlugin* pkPlugin = this->getPlugin( 0 );
 	while( NULL != pkPlugin )
 	{
-		this->removePlugIn( pkPlugin );
-		pkPlugin = this->getPlugIn( 0 );
+		this->removePlugin( pkPlugin );
+		pkPlugin = this->getPlugin( 0 );
 	}
 	bool bTest = true;
 	bTest = false;
 }
 //-----------------------------------------------------------------------------
-void PlugInArray::addPlugIn( AbstractPlugin* pkPlugin )
+void PluginArray::addPlugin( AbstractPlugin* pkPlugin )
 {
-	AbstractPlugInPtr spPlugin(pkPlugin);
+	AbstractPluginPtr spPlugin(pkPlugin);
 	this->push_back( spPlugin );
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::removePlugIn( AbstractPlugin* pkPlugin )
+void PluginArray::removePlugin( AbstractPlugin* pkPlugin )
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkArrayPlugin = (*kIter).get();
@@ -52,7 +52,7 @@ void PlugInArray::removePlugIn( AbstractPlugin* pkPlugin )
 }
 
 //-----------------------------------------------------------------------------
-AbstractPlugin* PlugInArray::getPlugIn( size_t uiIdx ) const
+AbstractPlugin* PluginArray::getPlugin( size_t uiIdx ) const
 {
 	if( uiIdx < this->size() )
 	{
@@ -62,10 +62,10 @@ AbstractPlugin* PlugInArray::getPlugIn( size_t uiIdx ) const
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::open(void)
+void PluginArray::open(void)
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -75,10 +75,10 @@ void PlugInArray::open(void)
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::update(const float currentTime, const float elapsedTime)
+void PluginArray::update(const float currentTime, const float elapsedTime)
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -88,10 +88,10 @@ void PlugInArray::update(const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::redraw(const float currentTime, const float elapsedTime)
+void PluginArray::redraw(const float currentTime, const float elapsedTime)
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -101,10 +101,10 @@ void PlugInArray::redraw(const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::close(void)
+void PluginArray::close(void)
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -114,13 +114,13 @@ void PlugInArray::close(void)
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::reset(void)
+void PluginArray::reset(void)
 {
 	this->close();
 	this->open();
 /*
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -131,28 +131,28 @@ void PlugInArray::reset(void)
 }
 
 //-----------------------------------------------------------------------------
-const char* PlugInArray::name(void) const
+const char* PluginArray::name(void) const
 {
-	return "PlugInArray";
+	return "PluginArray";
 }
 
 //-----------------------------------------------------------------------------
-float PlugInArray::selectionOrderSortKey(void) const
+float PluginArray::selectionOrderSortKey(void) const
 {
 	return 1.0f;
 }
 
 //-----------------------------------------------------------------------------
-bool PlugInArray::requestInitialSelection(void) const
+bool PluginArray::requestInitialSelection(void) const
 {
 	return false;
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::handleFunctionKeys(int keyNumber)
+void PluginArray::handleFunctionKeys(int keyNumber)
 {
-	TPlugInArray::iterator kIter = this->begin();
-	TPlugInArray::iterator kEnd = this->end();
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -162,10 +162,10 @@ void PlugInArray::handleFunctionKeys(int keyNumber)
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::printMiniHelpForFunctionKeys(void) const
+void PluginArray::printMiniHelpForFunctionKeys(void) const
 {
-	TPlugInArray::const_iterator kIter = this->begin();
-	TPlugInArray::const_iterator kEnd = this->end();
+	TPluginArray::const_iterator kIter = this->begin();
+	TPluginArray::const_iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
@@ -175,17 +175,17 @@ void PlugInArray::printMiniHelpForFunctionKeys(void) const
 }
 
 //-----------------------------------------------------------------------------
-const AVGroup& PlugInArray::allVehicles(void) const
+const AVGroup& PluginArray::allVehicles(void) const
 {
 	return this->m_kVehicles;
 }
 
 //-----------------------------------------------------------------------------
-class FooPlugIn : public Plugin
+class FooPlugin : public Plugin
 {
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
-	FooPlugIn (bool bAddToRegistry = false):BaseClass(bAddToRegistry){};
+	FooPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry){};
 
 	// required methods:
 	const char* name (void) const {return "Foo";}
@@ -199,40 +199,40 @@ public:
 	void reset (void) { } // default is to reset by doing close-then-open
 	float selectionOrderSortKey (void) const {return 1234;}
 	bool requestInitialSelection (void) const {return true;}
-	void handleFunctionKeys (int keyNumber) { } // fkeys reserved for PlugIns
+	void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
 	void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
 private:
 	AVGroup m_kVehicles;
-	ET_IMPLEMENT_CLASS_NO_COPY(FooPlugIn);
+	ET_IMPLEMENT_CLASS_NO_COPY(FooPlugin);
 
 };
 
 //-----------------------------------------------------------------------------
-AbstractPlugin* PlugInArray::next(void) const 
+AbstractPlugin* PluginArray::next(void) const 
 { 
 	return OpenSteer::Plugin::findNextPlugin( this );
 };
 
 
-//PlugInArray gTestPluginArray;
+//PluginArray gTestPluginArray;
 
-void PlugInArray::TestPluginArray( void )
+void PluginArray::TestPluginArray( void )
 {
 	{
-		PlugInArray gTestPluginArray;
+		PluginArray gTestPluginArray;
 
-		PlugInArray* pkAdd[] = 
+		PluginArray* pkAdd[] = 
 		{
-			new PlugInArray,
-			new PlugInArray,
-			new PlugInArray
+			new PluginArray,
+			new PluginArray,
+			new PluginArray
 		};
-		gTestPluginArray.addPlugIn( pkAdd[0] );
-		gTestPluginArray.addPlugIn( pkAdd[1] );
-		gTestPluginArray.addPlugIn( pkAdd[2] );
+		gTestPluginArray.addPlugin( pkAdd[0] );
+		gTestPluginArray.addPlugin( pkAdd[1] );
+		gTestPluginArray.addPlugin( pkAdd[2] );
 
 
-		gTestPluginArray.removePlugIn( pkAdd[0] );
+		gTestPluginArray.removePlugin( pkAdd[0] );
 
 		bool bTest = true;
 		bTest = false;

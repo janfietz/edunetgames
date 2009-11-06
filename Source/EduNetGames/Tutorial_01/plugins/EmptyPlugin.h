@@ -12,7 +12,7 @@
 
 
 // ???
-// class AbstractGamePlugIn : public AbstractPlugin
+// class AbstractGamePlugin : public AbstractPlugin
 // {
 // public:
 // }
@@ -73,16 +73,16 @@ namespace EduNetGames{
 	};
 
 
-	class EmptyPlugIn : public Plugin
+	class EmptyPlugin : public Plugin
 	{
 		ET_DECLARE_BASE(Plugin);
 	public:
 
 		// construction / destruction
-		EmptyPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
-		virtual ~EmptyPlugIn() {}
+		EmptyPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
+		virtual ~EmptyPlugin() {}
 
-		virtual const char* name (void) const {return "EmptyPlugIn";}
+		virtual const char* name (void) const {return "EmptyPlugin";}
 
 		virtual float selectionOrderSortKey (void) const {return 1.0f;}
 
@@ -135,7 +135,7 @@ namespace EduNetGames{
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;
-		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugIn );
+		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugin );
 	};
 }
 #endif //__EMPTYPLUGIN_H__

@@ -119,10 +119,10 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegis
 	this->m_kReplicaManager.SetAutoSerializeInterval(
 		this->m_kReplicationSettings.interval);
 
-	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugIn);
+	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 	this->m_pkBoidFactory = new BoidReplicaFactory(&this->m_kReplicaManager);	
-	this->m_kGamePlugIn.SetBoidFactory( this->m_pkBoidFactory );
+	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
 }
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::StartNetworkSession( void )
@@ -136,7 +136,7 @@ void NetPeerBoidPlugin::CreateContent( void )
 	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
-		new BoidConditionReplica(&this->m_kGamePlugIn);
+		new BoidConditionReplica(&this->m_kGamePlugin);
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 
@@ -175,10 +175,10 @@ void NetPeerBoidPlugin::DeleteContent( void )
 //-----------------------------------------------------------------------------
 NetClientBoidPlugin::NetClientBoidPlugin()
 {
-	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugIn);
+	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 	this->m_pkBoidFactory = new BoidDummyFactory(&this->m_kReplicaManager);	
-	this->m_kGamePlugIn.SetBoidFactory( this->m_pkBoidFactory );
+	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
 }
 //-----------------------------------------------------------------------------
 void NetClientBoidPlugin::StartNetworkSession( void )
@@ -192,7 +192,7 @@ void NetClientBoidPlugin::CreateContent( void )
 	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
-		new BoidConditionReplica(&this->m_kGamePlugIn);
+		new BoidConditionReplica(&this->m_kGamePlugin);
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 

@@ -32,7 +32,7 @@
 //
 // A steerable point mass with a velocity-aligned local coordinate system.
 // SimpleVehicle is useful for developing prototype vehicles in OpenSteerDemo,
-// it is the base class for vehicles in the PlugIns supplied with OpenSteer.
+// it is the base class for vehicles in the Plugins supplied with OpenSteer.
 // Note that SimpleVehicle is provided only as sample code.  Your application
 // can use the OpenSteer library without using SimpleVehicle, as long as you
 // implement the AbstractVehicle protocol.

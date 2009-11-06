@@ -63,7 +63,7 @@ namespace OpenSteer{
         //static AVGroup neighbors;
 		AVGroup neighbors;
 
-		class BoidsPlugIn* m_pkParentPlugin;
+		class BoidsPlugin* m_pkParentPlugin;
 
 	 };
 
@@ -101,12 +101,12 @@ namespace OpenSteer{
 
 	// ----------------------------------------------------------------------------
     // Plugin for OpenSteerDemo
-	class BoidsPlugIn : public Plugin
+	class BoidsPlugin : public Plugin
     {
 		ET_DECLARE_BASE(Plugin);
     public:
-		BoidsPlugIn (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
-		virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning
+		BoidsPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
+		virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
 		
 		const char* name (void) const {return "Boids";}
 

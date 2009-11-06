@@ -333,7 +333,7 @@ namespace {
     // Plugin for OpenSteerDemo
 
 
-    class BoidsPlugIn : public Plugin
+    class BoidsPlugin : public Plugin
     {
     public:
         
@@ -341,7 +341,7 @@ namespace {
 
         float selectionOrderSortKey (void) const {return 0.03f;}
 
-        virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning
+        virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
 
         void open (void)
         {
@@ -791,7 +791,7 @@ namespace {
     };
 
 
-    BoidsPlugIn gBoidsPlugIn;
+    BoidsPlugin gBoidsPlugin;
 
 
 

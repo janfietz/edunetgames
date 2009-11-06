@@ -19,7 +19,7 @@ public:
 		this->m_pVehicle->setIsRemoteObject(false);
 	};
 
-	BoidReplica( OpenSteer::BoidsPlugIn* pBoidPlugin  ):
+	BoidReplica( OpenSteer::BoidsPlugin* pBoidPlugin  ):
 	m_pBoidPlugin(pBoidPlugin)
 	{
 		this->m_pVehicle = new OpenSteer::Boid( 
@@ -61,7 +61,7 @@ public:
 	}
 
 private:
-	OpenSteer::BoidsPlugIn* m_pBoidPlugin;
+	OpenSteer::BoidsPlugin* m_pBoidPlugin;
 };
 
 #endif // __BOIDREPLICA_H__

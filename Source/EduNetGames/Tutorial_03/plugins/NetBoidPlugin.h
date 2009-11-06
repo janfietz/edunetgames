@@ -11,7 +11,7 @@ class BoidReplicaConnection : public RakNet::Connection_RM3
 {
 public:
 	BoidReplicaConnection(SystemAddress _systemAddress, RakNetGUID _guid,
-		OpenSteer::BoidsPlugIn* pBoidPlugin) :
+		OpenSteer::BoidsPlugin* pBoidPlugin) :
 		Connection_RM3(_systemAddress, _guid)
 	{
 		m_pBoidPlugin = pBoidPlugin;
@@ -21,7 +21,7 @@ public:
 	virtual RakNet::Replica3 *AllocReplica(RakNet::BitStream *allocationId,
 		RakNet::ReplicaManager3 *replicaManager3);
 private:
-	OpenSteer::BoidsPlugIn* m_pBoidPlugin;
+	OpenSteer::BoidsPlugin* m_pBoidPlugin;
 };
 
 // ----------------------------------------------------------------------------
@@ -35,13 +35,13 @@ class BoidReplicaManager : public RakNet::ReplicaManager3
 		delete connection;
 	}	
 public:
-	void SetPlugin(OpenSteer::BoidsPlugIn* pPlugin)
+	void SetPlugin(OpenSteer::BoidsPlugin* pPlugin)
 	{
 		this->m_pBoidPlugin = pPlugin;
 	}
 
 private:
-	OpenSteer::BoidsPlugIn* m_pBoidPlugin;
+	OpenSteer::BoidsPlugin* m_pBoidPlugin;
 };
 // ----------------------------------------------------------------------------
 class BoidReplicaFactory : public OpenSteer::BoidFactory
@@ -84,7 +84,7 @@ public:
 		return "BoidCondition";
 	};
 
-	BoidConditionReplica(OpenSteer::BoidsPlugIn* pBoidPlugin):
+	BoidConditionReplica(OpenSteer::BoidsPlugin* pBoidPlugin):
 		m_pBoidPlugin(pBoidPlugin){}
 
 	virtual RakNet::RM3ConstructionState QueryConstruction(
@@ -131,16 +131,16 @@ public:
 
 
 protected:
-	OpenSteer::BoidsPlugIn* m_pBoidPlugin;
+	OpenSteer::BoidsPlugin* m_pBoidPlugin;
 };
 
 
 
 
 // ----------------------------------------------------------------------------
-class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugIn>
+class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugin>
 {
-	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugIn>);
+	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugin>);
 public:
 	NetPeerBoidPlugin(bool bAddToRegistry = true);
 	virtual ~NetPeerBoidPlugin(){};
@@ -176,9 +176,9 @@ private:
 };
 
 // ----------------------------------------------------------------------------
-class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugIn>
+class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugin>
 {
-	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugIn>);
+	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugin>);
 public:
 	NetClientBoidPlugin();
 	virtual ~NetClientBoidPlugin(){};

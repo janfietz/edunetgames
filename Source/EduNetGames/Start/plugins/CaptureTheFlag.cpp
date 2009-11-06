@@ -200,7 +200,7 @@ namespace {
     // ----------------------------------------------------------------------------
     // state for OpenSteerDemo Plugin
     //
-    // XXX consider moving this inside CtfPlugIn
+    // XXX consider moving this inside CtfPlugin
     // XXX consider using STL (any advantage? consistency?)
 
 
@@ -657,7 +657,7 @@ namespace {
             if (currentTime > resetTime) 
             {
                 // xxx a royal hack (should do this internal to CTF):
-                OpenSteerDemo::queueDelayedResetPlugInXXX ();
+                OpenSteerDemo::queueDelayedResetPluginXXX ();
             }
         }
     }
@@ -825,7 +825,7 @@ namespace {
     // Plugin for OpenSteerDemo
 
 
-    class CtfPlugIn : public Plugin
+    class CtfPlugin : public Plugin
     {
     public:
 
@@ -833,7 +833,7 @@ namespace {
 
         float selectionOrderSortKey (void) const {return 0.01f;}
 
-        virtual ~CtfPlugIn() {} // be more "nice" to avoid a compiler warning
+        virtual ~CtfPlugin() {} // be more "nice" to avoid a compiler warning
 
         void open (void)
         {
@@ -985,7 +985,7 @@ namespace {
     };
 
 
-    CtfPlugIn gCtfPlugIn;
+    CtfPlugin gCtfPlugin;
 
 
     // ----------------------------------------------------------------------------

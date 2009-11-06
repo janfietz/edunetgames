@@ -9,18 +9,18 @@ static const int SERVER_PONG_COUNT = 32;
 
 //-----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
-class NetworkPlugIn :
+class NetworkPlugin :
 	public OpenSteer::Plugin
 {
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
-	NetworkPlugIn(bool bAddToRegistry = true):
+	NetworkPlugin(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry ),
-		m_kGamePlugIn( false )
+		m_kGamePlugin( false )
 	{
 		
 	};
-	virtual ~NetworkPlugIn(void) {};
+	virtual ~NetworkPlugin(void) {};
 
 	virtual void open(void);
 	virtual void close(void);
@@ -30,7 +30,7 @@ public:
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
 
-	const OpenSteer::AVGroup& allVehicles (void) const {return m_kGamePlugIn.allVehicles();}
+	const OpenSteer::AVGroup& allVehicles (void) const {return m_kGamePlugin.allVehicles();}
 
 
 	virtual void CreateContent( void );
@@ -44,7 +44,7 @@ public:
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );
 	
-	PluginClass m_kGamePlugIn;
+	PluginClass m_kGamePlugin;
 protected:
 	
 	bool PingForOtherPeers( const int iPort );
@@ -89,7 +89,7 @@ private:
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::open( void )
+void NetworkPlugin< PluginClass >::open( void )
 {	
 	this->CreateNetworkInterface();
  	this->StartNetworkSession(); 
@@ -97,7 +97,7 @@ void NetworkPlugIn< PluginClass >::open( void )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::CreateNetworkInterface( void )
+void NetworkPlugin< PluginClass >::CreateNetworkInterface( void )
 {
 	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
 	this->AttachNetworkIdManager();
@@ -105,7 +105,7 @@ void NetworkPlugIn< PluginClass >::CreateNetworkInterface( void )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::close( void )
+void NetworkPlugin< PluginClass >::close( void )
 {
 	this->StopNetworkSession();
 	this->DeleteContent(); 	
@@ -113,7 +113,7 @@ void NetworkPlugIn< PluginClass >::close( void )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::StopNetworkSession( void )
+void NetworkPlugin< PluginClass >::StopNetworkSession( void )
 {	
 	this->CloseOpenConnections();
 	this->m_pNetInterface->Shutdown(100,0);	
@@ -121,7 +121,7 @@ void NetworkPlugIn< PluginClass >::StopNetworkSession( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::DestroyNetworkInterface( void )
+void NetworkPlugin< PluginClass >::DestroyNetworkInterface( void )
 {
 	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
 	printf("Destroyed peer.\n");
@@ -129,7 +129,7 @@ void NetworkPlugIn< PluginClass >::DestroyNetworkInterface( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::CloseOpenConnections( void )
+void NetworkPlugin< PluginClass >::CloseOpenConnections( void )
 {
 	DataStructures::List<SystemAddress> kAddresses;
 	DataStructures::List<RakNetGUID> kGuids;
@@ -149,16 +149,16 @@ void NetworkPlugIn< PluginClass >::CloseOpenConnections( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::reset()
+void NetworkPlugin< PluginClass >::reset()
 {
-	//m_kGamePlugIn.reset();
+	//m_kGamePlugin.reset();
 }
 
 
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::update (const float currentTime, const float elapsedTime)
+void NetworkPlugin< PluginClass >::update (const float currentTime, const float elapsedTime)
 {
 	if( !IsConnected()&& DoAutoConnect() )
 	{
@@ -172,17 +172,17 @@ void NetworkPlugIn< PluginClass >::update (const float currentTime, const float 
 
 	this->ReceivePackets();
 
-	m_kGamePlugIn.update(currentTime, elapsedTime);
+	m_kGamePlugin.update(currentTime, elapsedTime);
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-bool NetworkPlugIn< PluginClass >::DoAutoConnect( void ) const
+bool NetworkPlugin< PluginClass >::DoAutoConnect( void ) const
 {
 	return true;
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::CheckPongTimeout( void )
+void NetworkPlugin< PluginClass >::CheckPongTimeout( void )
 {
 	RakNetTime kCurrent = RakNet::GetTime();
 	if( kCurrent > this->m_kPongEndTime )
@@ -198,7 +198,7 @@ void NetworkPlugIn< PluginClass >::CheckPongTimeout( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::CreateContent( void )
+void NetworkPlugin< PluginClass >::CreateContent( void )
 {
 
 }
@@ -206,13 +206,13 @@ void NetworkPlugIn< PluginClass >::CreateContent( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::DeleteContent( void )
+void NetworkPlugin< PluginClass >::DeleteContent( void )
 {
 
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::ReceivePackets( void )
+void NetworkPlugin< PluginClass >::ReceivePackets( void )
 {
 	
 	while(true)
@@ -231,7 +231,7 @@ void NetworkPlugIn< PluginClass >::ReceivePackets( void )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::OnReceivedPacket( Packet* pPacket )
+void NetworkPlugin< PluginClass >::OnReceivedPacket( Packet* pPacket )
 {
 	switch (pPacket->data[0])
 	{
@@ -267,7 +267,7 @@ void NetworkPlugIn< PluginClass >::OnReceivedPacket( Packet* pPacket )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::ReceivedPongPacket( Packet* pPacket )
+void NetworkPlugin< PluginClass >::ReceivedPongPacket( Packet* pPacket )
 {
 	if( true == this->WaitForPong() )
 	{		
@@ -287,20 +287,20 @@ void NetworkPlugIn< PluginClass >::ReceivedPongPacket( Packet* pPacket )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-bool NetworkPlugIn< PluginClass >::WaitForPong( void ) const
+bool NetworkPlugin< PluginClass >::WaitForPong( void ) const
 {
 	return ( 0 <= this->m_iWaitForPongPort );
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-bool NetworkPlugIn< PluginClass >::Connect()
+bool NetworkPlugin< PluginClass >::Connect()
 {	
 	return this->PingForOtherPeers( -1* this->m_iWaitForPongPort);	
 }
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
+bool NetworkPlugin< PluginClass >::PingForOtherPeers( const int iPort )
 {
 	if( false == this->WaitForPong() )
 	{	
@@ -321,7 +321,7 @@ bool NetworkPlugIn< PluginClass >::PingForOtherPeers( const int iPort )
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn< PluginClass >::AttachNetworkIdManager( void )
+void NetworkPlugin< PluginClass >::AttachNetworkIdManager( void )
 {
 	this->m_pNetInterface->SetNetworkIDManager(&this->m_kNetworkIdManager);
 	this->m_kNetworkIdManager.SetIsNetworkIDAuthority( this->HasIdAuthority() );
@@ -329,20 +329,20 @@ void NetworkPlugIn< PluginClass >::AttachNetworkIdManager( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-bool NetworkPlugIn<PluginClass>::IsConnected() const
+bool NetworkPlugin<PluginClass>::IsConnected() const
 {
 	return 0 < this->m_pNetInterface->NumberOfConnections();
 }
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn<PluginClass>::handleFunctionKeys (int keyNumber)
+void NetworkPlugin<PluginClass>::handleFunctionKeys (int keyNumber)
 {
-	this->m_kGamePlugIn.handleFunctionKeys(keyNumber);
+	this->m_kGamePlugin.handleFunctionKeys(keyNumber);
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void NetworkPlugIn<PluginClass>::printMiniHelpForFunctionKeys (void) const
+void NetworkPlugin<PluginClass>::printMiniHelpForFunctionKeys (void) const
 {
-	this->m_kGamePlugIn.printMiniHelpForFunctionKeys();
+	this->m_kGamePlugin.printMiniHelpForFunctionKeys();
 }

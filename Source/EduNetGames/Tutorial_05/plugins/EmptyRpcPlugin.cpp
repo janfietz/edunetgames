@@ -32,7 +32,7 @@ void EmptyClientRpcPlugin::InitializeRpcSystem( void )
 //-----------------------------------------------------------------------------
 void EmptyClientRpcPlugin::DeleteContent( void )
 {
-	this->m_kGamePlugIn.removeAllPlugIns();
+	this->m_kGamePlugin.removeAllPlugins();
 	BaseClass::DeleteContent();
 }
 //-----------------------------------------------------------------------------
@@ -45,16 +45,16 @@ void EmptyClientRpcPlugin::SelectPluginByName(
 		pszPluginName);
 	if(NULL != pkNewPlugin)
 	{
-		OpenSteer::AbstractPlugInPtr spCurrentPlugin( 
-			this->m_kGamePlugIn.getPlugIn(0) );
+		OpenSteer::AbstractPluginPtr spCurrentPlugin( 
+			this->m_kGamePlugin.getPlugin(0) );
 		if(NULL != spCurrentPlugin)
 		{
-			this->m_kGamePlugIn.removePlugIn(spCurrentPlugin.get());
+			this->m_kGamePlugin.removePlugin(spCurrentPlugin.get());
 			spCurrentPlugin->close();
 		}
 
 		pkNewPlugin->open();
-		this->m_kGamePlugIn.addPlugIn(pkNewPlugin);
+		this->m_kGamePlugin.addPlugin(pkNewPlugin);
 	}
 
 }
@@ -71,7 +71,7 @@ const char* EmptyClientRpcPlugin::name (void) const
 //-----------------------------------------------------------------------------
 const char* EmptyClientRpcPlugin::GetCurrentPluginName( void ) const
 {
-	AbstractPlugin* pkCurrentPlugin = this->m_kGamePlugIn.getPlugIn( 0 );
+	AbstractPlugin* pkCurrentPlugin = this->m_kGamePlugin.getPlugin( 0 );
 	if( NULL != pkCurrentPlugin)
 	{
 		return pkCurrentPlugin->name();

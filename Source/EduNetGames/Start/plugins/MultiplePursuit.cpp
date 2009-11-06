@@ -163,7 +163,7 @@ namespace {
     // Plugin for OpenSteerDemo
 
 
-    class MpPlugIn : public Plugin
+    class MpPlugin : public Plugin
     {
     public:
 
@@ -171,7 +171,7 @@ namespace {
 
         float selectionOrderSortKey (void) const {return 0.04f;}
 
-        virtual ~MpPlugIn() {} // be more "nice" to avoid a compiler warning
+        virtual ~MpPlugin() {} // be more "nice" to avoid a compiler warning
 
         void open (void)
         {
@@ -257,7 +257,7 @@ namespace {
     };
 
 
-    MpPlugIn gMpPlugIn;
+    MpPlugin gMpPlugin;
 
 
 

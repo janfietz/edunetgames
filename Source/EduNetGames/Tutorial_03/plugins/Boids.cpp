@@ -296,7 +296,7 @@ ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::open (void)
+void BoidsPlugin::open (void)
 {
 	if(0 == this->m_pBoidFactory)
 	{
@@ -324,7 +324,7 @@ void BoidsPlugIn::open (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::update (const float currentTime, const float elapsedTime)
+void BoidsPlugin::update (const float currentTime, const float elapsedTime)
 {
 #ifndef NO_LQ_BIN_STATS
     Boid::maxNeighbors = Boid::totalNeighbors = 0;
@@ -339,7 +339,7 @@ void BoidsPlugIn::update (const float currentTime, const float elapsedTime)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::redraw (const float currentTime, const float elapsedTime)
+void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 {
     // selected vehicle (user can mouse click to select another)
     AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
@@ -400,7 +400,7 @@ void BoidsPlugIn::redraw (const float currentTime, const float elapsedTime)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::close (void)
+void BoidsPlugin::close (void)
 {
     // delete each member of the flock
 	AbstractVehicleGroup kVG( this->allVehicles() );
@@ -418,7 +418,7 @@ void BoidsPlugIn::close (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::reset (void)
+void BoidsPlugin::reset (void)
 {
     // reset each boid in flock
     for (iterator i = flock.begin(); i != flock.end(); i++) (**i).reset();
@@ -435,7 +435,7 @@ void BoidsPlugIn::reset (void)
 // for purposes of demonstration, allow cycling through various
 // types of proximity databases.  this routine is called when the
 // OpenSteerDemo user pushes a function key.
-void BoidsPlugIn::nextPD (void)
+void BoidsPlugin::nextPD (void)
 {
     // save pointer to old PD
     ProximityDatabase* oldPD = pd;
@@ -470,7 +470,7 @@ void BoidsPlugIn::nextPD (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::handleFunctionKeys (int keyNumber)
+void BoidsPlugin::handleFunctionKeys (int keyNumber)
 {
     switch (keyNumber)
     {
@@ -483,7 +483,7 @@ void BoidsPlugIn::handleFunctionKeys (int keyNumber)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::printLQbinStats (void)
+void BoidsPlugin::printLQbinStats (void)
 {
 #ifndef NO_LQ_BIN_STATS
 	AbstractVehicleGroup kVG( this->allVehicles() );
@@ -504,7 +504,7 @@ void BoidsPlugIn::printLQbinStats (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::printMiniHelpForFunctionKeys (void) const
+void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
 {
     std::ostringstream message;
     message << "Function keys handled by ";
@@ -518,7 +518,7 @@ void BoidsPlugIn::printMiniHelpForFunctionKeys (void) const
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::addBoidToFlock (void)
+void BoidsPlugin::addBoidToFlock (void)
 {    
 	Boid* boid = this->m_pBoidFactory->CreateBoid( *pd );
 	if(NULL != boid)
@@ -529,14 +529,14 @@ void BoidsPlugIn::addBoidToFlock (void)
 }
 // ----------------------------------------------------------------------------
 // JF ++ 
-void BoidsPlugIn::AddBoidToFlock( Boid* pkBoid )
+void BoidsPlugin::AddBoidToFlock( Boid* pkBoid )
 {
 	flock.push_back (pkBoid);
     if (flock.size() == 1) 
 		OpenSteerDemo::selectedVehicle = pkBoid;
 }
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::RemoveBoidFromFlock( const Boid* pkBoid )
+void BoidsPlugin::RemoveBoidFromFlock( const Boid* pkBoid )
 {
 	if (flock.size() > 0)
     {
@@ -551,7 +551,7 @@ void BoidsPlugIn::RemoveBoidFromFlock( const Boid* pkBoid )
     }
 }
 // ----------------------------------------------------------------------------
-Boid::groupType::iterator BoidsPlugIn::FindBoid( const Boid* pkBoid )
+Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )
 {
 	Boid::groupType::iterator kIter = flock.begin();
 	Boid::groupType::iterator kIterEnd = flock.end();
@@ -567,7 +567,7 @@ Boid::groupType::iterator BoidsPlugIn::FindBoid( const Boid* pkBoid )
 }
 // JF --
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::removeBoidFromFlock (void)
+void BoidsPlugin::removeBoidFromFlock (void)
 {
     if (flock.size() > 0)
     {
@@ -580,12 +580,12 @@ void BoidsPlugIn::removeBoidFromFlock (void)
 }    
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::nextBoundaryCondition (void)
+void BoidsPlugin::nextBoundaryCondition (void)
 {    
 	SetCurrentBoundaryCondition((EBoidConstraintType) ((int) constraint + 1));
 }
 
-void BoidsPlugIn::SetCurrentBoundaryCondition( 
+void BoidsPlugin::SetCurrentBoundaryCondition( 
 	const EBoidConstraintType  eType,
 	bool bLocalChange )
 {
@@ -597,7 +597,7 @@ void BoidsPlugIn::SetCurrentBoundaryCondition(
 	}	
 }
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::initObstacles (void)
+void BoidsPlugin::initObstacles (void)
 {
 	this->bWasLocalChange = false;
     constraint = EBoidConstraintType_none;
@@ -651,7 +651,7 @@ void BoidsPlugIn::initObstacles (void)
 
 // ----------------------------------------------------------------------------
 // update Boid::obstacles list when constraint changes
-void BoidsPlugIn::updateObstacles (void)
+void BoidsPlugin::updateObstacles (void)
 {
     // first clear out obstacle list
     this->obstacles().clear ();
@@ -698,7 +698,7 @@ void BoidsPlugIn::updateObstacles (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::drawObstacles (void)
+void BoidsPlugin::drawObstacles (void)
 {
     for (ObstacleIterator o = this->obstacles().begin();
          o != this->obstacles().end();
@@ -713,7 +713,7 @@ void BoidsPlugIn::drawObstacles (void)
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::tempDrawRectangle (const RectangleObstacle& rect, const Color& color)
+void BoidsPlugin::tempDrawRectangle (const RectangleObstacle& rect, const Color& color)
 {
     float w = rect.width / 2;
     float h = rect.height / 2;
@@ -730,7 +730,7 @@ void BoidsPlugIn::tempDrawRectangle (const RectangleObstacle& rect, const Color&
 }
 
 // ----------------------------------------------------------------------------
-void BoidsPlugIn::tempDrawBox (const BoxObstacle& box, const Color& color)
+void BoidsPlugin::tempDrawBox (const BoxObstacle& box, const Color& color)
 {
     const float w = box.width / 2;
     const float h = box.height / 2;
@@ -769,6 +769,6 @@ void BoidsPlugIn::tempDrawBox (const BoxObstacle& box, const Color& color)
 namespace
 {
 	using namespace OpenSteer;
-	BoidsPlugIn gBoidsPlugIn(true);
+	BoidsPlugin gBoidsPlugin(true);
 }
 

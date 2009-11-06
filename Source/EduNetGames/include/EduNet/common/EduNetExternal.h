@@ -106,7 +106,7 @@
 
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/Clock.h"
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 #include "OpenSteer/Camera.h"
 //#include "OpenSteer/Utilities.h"
 #include "OpenSteer/AbstractVehicle.h"

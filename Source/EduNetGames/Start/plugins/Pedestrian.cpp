@@ -472,7 +472,7 @@ namespace {
     // OpenSteerDemo Plugin
 
 
-    class PedestrianPlugIn : public Plugin
+    class PedestrianPlugin : public Plugin
     {
     public:
 
@@ -480,7 +480,7 @@ namespace {
 
         float selectionOrderSortKey (void) const {return 0.02f;}
 
-        virtual ~PedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
+        virtual ~PedestrianPlugin() {}// be more "nice" to avoid a compiler warning
 
         void open (void)
         {
@@ -773,7 +773,7 @@ namespace {
     };
 
 
-    PedestrianPlugIn gPedestrianPlugIn;
+    PedestrianPlugin gPedestrianPlugin;
 
 
 

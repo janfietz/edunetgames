@@ -37,7 +37,7 @@
 // ----------------------------------------------------------------------------
 
 
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 
 
 // ----------------------------------------------------------------------------
@@ -119,7 +119,7 @@ OpenSteer::Plugin::findByName (const char* string)
 
 
 // ----------------------------------------------------------------------------
-// apply a given function to all PlugIns in the registry
+// apply a given function to all Plugins in the registry
 
 
 void 
@@ -171,7 +171,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findDefault (void)
 {
-    // return NULL if no PlugIns exist
+    // return NULL if no Plugins exist
     if (itemsInRegistry == 0) return NULL;
 
     // otherwise, return the first Plugin that requests initial selection

@@ -18,7 +18,7 @@ namespace
 
 }
 
-class NetPedestrianPlugIn : public Plugin
+class NetPedestrianPlugin : public Plugin
 {
 public:
 
@@ -26,7 +26,7 @@ public:
 
 	float selectionOrderSortKey (void) const {return 98.0f;}
 
-	virtual ~NetPedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
+	virtual ~NetPedestrianPlugin() {}// be more "nice" to avoid a compiler warning
 
 	void open (void)
 	{
@@ -298,4 +298,4 @@ public:
 };
 
 
-NetPedestrianPlugIn gPedestrianPlugIn;
+NetPedestrianPlugin gPedestrianPlugin;

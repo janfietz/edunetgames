@@ -20,11 +20,11 @@ public:
 	void addGuiElements( GLUI *glui );
 
 	// do a simulation update for the currently selected plug-in
-	void updateSelectedPlugIn (const float currentTime,
+	void updateSelectedPlugin (const float currentTime,
 		const float elapsedTime);
 
 	// redraw graphics for the currently selected plug-in
-	void redrawSelectedPlugIn (const float currentTime,
+	void redrawSelectedPlugin (const float currentTime,
 		const float elapsedTime);
 
 	float m_fSimulationFPS;

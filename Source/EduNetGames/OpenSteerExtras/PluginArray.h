@@ -9,22 +9,22 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-	typedef boost::shared_ptr<AbstractPlugin> AbstractPlugInPtr;
-	typedef std::vector<AbstractPlugInPtr> TPlugInArray;
+	typedef boost::shared_ptr<AbstractPlugin> AbstractPluginPtr;
+	typedef std::vector<AbstractPluginPtr> TPluginArray;
 
 
-	class PlugInArray : public AbstractPlugin, protected TPlugInArray
+	class PluginArray : public AbstractPlugin, protected TPluginArray
 	{
 	public:
-		PlugInArray(bool bAddToRegistry = true);
-		virtual ~PlugInArray();
+		PluginArray(bool bAddToRegistry = true);
+		virtual ~PluginArray();
 
 		//---------------------------------------------------------------------
-		// functionality PlugInArray
-		void addPlugIn( AbstractPlugin* pkPlugin );
-		void removePlugIn( AbstractPlugin* pkPlugin );
-		void removeAllPlugIns( void );
-		AbstractPlugin* getPlugIn( size_t uiIdx ) const;		
+		// functionality PluginArray
+		void addPlugin( AbstractPlugin* pkPlugin );
+		void removePlugin( AbstractPlugin* pkPlugin );
+		void removeAllPlugins( void );
+		AbstractPlugin* getPlugin( size_t uiIdx ) const;		
 
 
 		static void TestPluginArray( void );

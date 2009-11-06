@@ -92,7 +92,7 @@ namespace {
     // Plugin for OpenSteerDemo
 
 
-    class OneTurningPlugIn : public Plugin
+    class OneTurningPlugin : public Plugin
     {
     public:
         
@@ -101,7 +101,7 @@ namespace {
         float selectionOrderSortKey (void) const {return 0.06f;}
 
         // be more "nice" to avoid a compiler warning
-        virtual ~OneTurningPlugIn() {}
+        virtual ~OneTurningPlugin() {}
 
         void open (void)
         {
@@ -162,7 +162,7 @@ namespace {
     };
 
 
-    OneTurningPlugIn gOneTurningPlugIn;
+    OneTurningPlugin gOneTurningPlugin;
 
 
 

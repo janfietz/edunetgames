@@ -2566,7 +2566,7 @@ namespace {
     // Plugin for OpenSteerDemo
 
 
-    class MapDrivePlugIn : public Plugin
+    class MapDrivePlugin : public Plugin
     {
     public:
 
@@ -2575,7 +2575,7 @@ namespace {
         float selectionOrderSortKey (void) const {return 0.07f;}
 
         // be more "nice" to avoid a compiler warning
-        virtual ~MapDrivePlugIn() {}
+        virtual ~MapDrivePlugin() {}
 
         void open (void)
         {
@@ -3023,7 +3023,7 @@ namespace {
     };
 
 
-    MapDrivePlugIn gMapDrivePlugIn;
+    MapDrivePlugin gMapDrivePlugin;
 
 
     // ----------------------------------------------------------------------------

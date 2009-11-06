@@ -51,7 +51,7 @@
 #include "EduNetApplication.h"
 
 #include "OpenSteer/Clock.h"
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Utilities.h"
 
@@ -80,7 +80,7 @@ namespace OpenSteer {
         // ------------------------------------------ addresses of selected objects
 
         // currently selected plug-in (user can choose or cycle through them)
-        static AbstractPlugin* selectedPlugIn;
+        static AbstractPlugin* selectedPlugin;
 
         // currently selected vehicle.  Generally the one the camera follows and
         // for which additional information may be displayed.  Clicking the mouse
@@ -104,35 +104,35 @@ namespace OpenSteer {
         // ------------------------------------------------------- Plugin interface
 
         // select the default Plugin
-        static void selectDefaultPlugIn (void);
+        static void selectDefaultPlugin (void);
         
         // select the "next" plug-in, cycling through "plug-in selection order"
-        static void selectNextPlugIn (void);
+        static void selectNextPlugin (void);
 
         // handle function keys an a per-plug-in basis
-        static void functionKeyForPlugIn (int keyNumber);
+        static void functionKeyForPlugin (int keyNumber);
 
         // return name of currently selected plug-in
-        static const char* nameOfSelectedPlugIn (void);
+        static const char* nameOfSelectedPlugin (void);
 
         // open the currently selected plug-in
-        static void openSelectedPlugIn (void);
+        static void openSelectedPlugin (void);
 
         // do a simulation update for the currently selected plug-in
-        static void updateSelectedPlugIn (const float currentTime,
+        static void updateSelectedPlugin (const float currentTime,
                                           const float elapsedTime);
 
         // redraw graphics for the currently selected plug-in
-        static void redrawSelectedPlugIn (const float currentTime,
+        static void redrawSelectedPlugin (const float currentTime,
                                           const float elapsedTime);
 
         // close the currently selected plug-in
-        static void closeSelectedPlugIn (void);
+        static void closeSelectedPlugin (void);
 
         // reset the currently selected plug-in
-        static void resetSelectedPlugIn (void);
+        static void resetSelectedPlugin (void);
 
-        static const AVGroup& allVehiclesOfSelectedPlugIn(void);
+        static const AVGroup& allVehiclesOfSelectedPlugin(void);
 
         // ---------------------------------------------------- OpenSteerDemo phase
 
@@ -154,8 +154,8 @@ namespace OpenSteer {
         // ------------------------------------------------------ delayed reset XXX
 
         // XXX to be reconsidered
-        static void queueDelayedResetPlugInXXX (void);
-        static void doDelayedResetPlugInXXX (void);
+        static void queueDelayedResetPluginXXX (void);
+        static void doDelayedResetPluginXXX (void);
 
         // ------------------------------------------------------ vehicle selection
 

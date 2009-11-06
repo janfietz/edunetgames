@@ -422,7 +422,7 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 // OpenSteerDemo Plugin
 
 
-class PedestrianPlugIn : public Plugin
+class PedestrianPlugin : public Plugin
 {
 public:
     
@@ -430,7 +430,7 @@ public:
     
     float selectionOrderSortKey (void) const {return 98.0f;}
     
-    virtual ~PedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
+    virtual ~PedestrianPlugin() {}// be more "nice" to avoid a compiler warning
     
     void open (void)
     {
@@ -702,7 +702,7 @@ public:
 };
 
 
-PedestrianPlugIn gPedestrianPlugIn;
+PedestrianPlugin gPedestrianPlugin;
 
 
 

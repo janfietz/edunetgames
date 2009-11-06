@@ -1,12 +1,12 @@
 #ifndef __CLIENTSERVERPLUGIN_H__
 #define __CLIENTSERVERPLUGIN_H__
 
-#include "OpenSteerExtras/PlugInArray.h"
+#include "OpenSteerExtras/PluginArray.h"
 
 //-----------------------------------------------------------------------------
-class ClientServerPlugin : public OpenSteer::PlugInArray
+class ClientServerPlugin : public OpenSteer::PluginArray
 {
-	ET_DECLARE_BASE(OpenSteer::PlugInArray);
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
 public:
 
 	ClientServerPlugin();

@@ -244,7 +244,7 @@ namespace {
 
     // ----------------------------------------------------------------------------
     // Plugin for OpenSteerDemo
-    class MicTestPlugIn : public Plugin
+    class MicTestPlugin : public Plugin
     {
     public:
         
@@ -255,7 +255,7 @@ namespace {
         // bool requestInitialSelection() const { return true;}
 
         // be more "nice" to avoid a compiler warning
-        virtual ~MicTestPlugIn() {}
+        virtual ~MicTestPlugin() {}
 
         void open (void)
         {
@@ -394,7 +394,7 @@ namespace {
     };
 
 
-    MicTestPlugIn pMicTestPlugIn;
+    MicTestPlugin pMicTestPlugin;
 
 
 

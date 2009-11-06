@@ -139,7 +139,7 @@ namespace {
     const Vec3 lstPlusZ (0, 0, 1);
 
 
-    class LowSpeedTurnPlugIn : public Plugin
+    class LowSpeedTurnPlugin : public Plugin
     {
     public:
 
@@ -148,7 +148,7 @@ namespace {
         float selectionOrderSortKey (void) const {return 0.05f;}
 
         // be more "nice" to avoid a compiler warning
-        virtual ~LowSpeedTurnPlugIn() {}
+        virtual ~LowSpeedTurnPlugin() {}
 
         void open (void)
         {
@@ -237,7 +237,7 @@ namespace {
     };
 
 
-    LowSpeedTurnPlugIn gLowSpeedTurnPlugIn;
+    LowSpeedTurnPlugin gLowSpeedTurnPlugin;
 
 
 

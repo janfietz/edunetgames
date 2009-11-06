@@ -6,20 +6,20 @@
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
 
-EduNetGames::EmptyPlugIn gEmptyPlugIn;
+EduNetGames::EmptyPlugin gEmptyPlugin;
 
 using namespace OpenSteer;
 
-typedef PeerPlugin<EduNetGames::EmptyPlugIn> EmtyServerPlugin;
-typedef ClientPlugin<EduNetGames::EmptyPlugIn> EmtyClientPlugin;
+typedef PeerPlugin<EduNetGames::EmptyPlugin> EmtyServerPlugin;
+typedef ClientPlugin<EduNetGames::EmptyPlugin> EmtyClientPlugin;
 
 //-----------------------------------------------------------------------------
 ClientServerPlugin::ClientServerPlugin()
 {
 	Plugin::addToRegistry(this);
 
-	this->addPlugIn( new EmtyServerPlugin( false ) );
-	this->addPlugIn( new EmtyClientPlugin( false ) );
+	this->addPlugin( new EmtyServerPlugin( false ) );
+	this->addPlugin( new EmtyClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------
