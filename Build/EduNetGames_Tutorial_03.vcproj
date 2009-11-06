@@ -190,6 +190,10 @@
 				Name="net"
 				>
 				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\BoidReplica.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
 					>
 				</File>

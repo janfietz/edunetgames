@@ -47,7 +47,7 @@
 #define OPENSTEER_OPENSTEERDEMO_H
 
 #include "EduNet/common/EduNetCommon.h"
-#include "EduNetOptions.h"
+#include "EduNet/options/EduNetOptions.h"
 #include "EduNetApplication.h"
 
 #include "OpenSteer/Clock.h"

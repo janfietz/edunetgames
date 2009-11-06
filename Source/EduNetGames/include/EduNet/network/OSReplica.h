@@ -1,5 +1,5 @@
-#ifndef OSREPLICA
-#define OSREPLICA
+#ifndef __OSREPLICA_H__
+#define __OSREPLICA_H__
 
 #include "EduNet/common/EduNetCommon.h"
 
@@ -65,4 +65,4 @@ public:
 };
 
 
-#endif //OSREPLICAS
+#endif //__OSREPLICA_H__

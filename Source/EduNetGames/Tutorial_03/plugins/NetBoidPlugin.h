@@ -3,6 +3,7 @@
 #include "Tutorial_02/plugins/PeerPlugin.h"
 #include "EduNet/network/OSReplica.h"
 #include "Boids.h"
+#include "BoidReplica.h"
 
 
 // ----------------------------------------------------------------------------

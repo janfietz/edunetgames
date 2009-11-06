@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
-	return EduNetMain( argc, argv );
+	return ::EduNetMain( argc, argv );
 }
 
 
