@@ -6,7 +6,7 @@ namespace{
 	class NetPluginClientHost : public EmptyClientRpcPlugin
 	{
 	private:
-		OpenSteer::AbstractPlugIn* CreatePluginByName(
+		OpenSteer::AbstractPlugin* CreatePluginByName(
 			const char* pszPluginName )
 		{
 			RakNet::RakString kPluginName(pszPluginName);

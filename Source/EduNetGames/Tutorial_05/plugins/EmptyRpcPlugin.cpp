@@ -41,7 +41,7 @@ void EmptyClientRpcPlugin::SelectPluginByName(
 {
 	printf("Create plugin: %s \n", pszPluginName);
 
-	OpenSteer::AbstractPlugIn* pkNewPlugin = this->CreatePluginByName(
+	OpenSteer::AbstractPlugin* pkNewPlugin = this->CreatePluginByName(
 		pszPluginName);
 	if(NULL != pkNewPlugin)
 	{
@@ -71,7 +71,7 @@ const char* EmptyClientRpcPlugin::name (void) const
 //-----------------------------------------------------------------------------
 const char* EmptyClientRpcPlugin::GetCurrentPluginName( void ) const
 {
-	AbstractPlugIn* pkCurrentPlugin = this->m_kGamePlugIn.getPlugIn( 0 );
+	AbstractPlugin* pkCurrentPlugin = this->m_kGamePlugIn.getPlugIn( 0 );
 	if( NULL != pkCurrentPlugin)
 	{
 		return pkCurrentPlugin->name();

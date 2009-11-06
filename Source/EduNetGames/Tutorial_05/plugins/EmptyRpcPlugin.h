@@ -124,7 +124,7 @@ private:
 
 	virtual void InitializeRpcSystem( void );
 
-	virtual OpenSteer::AbstractPlugIn* CreatePluginByName(
+	virtual OpenSteer::AbstractPlugin* CreatePluginByName(
 		const char* pszPluginName )
 	{
 		return NULL;
