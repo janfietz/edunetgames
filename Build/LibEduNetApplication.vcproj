@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="EduNetGames_Tutorial_01"
-	ProjectGUID="{7306363D-3C27-41BB-8E85-10641FB638EE}"
-	RootNamespace="opensteer"
+	Name="LibEduNetApplication"
+	ProjectGUID="{70FAD9C0-ADE6-4AC3-A6AE-8BC56547E126}"
+	RootNamespace="LibEduNetApplication"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,8 +17,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;.\EdunetCommonProperties.vsprops;.\EdunetDebugProperties .vsprops"
+			OutputDirectory="../Bin/$(PlatformName)/lib"
+			ConfigurationType="4"
+			InheritedPropertySheets=".\EdunetCommonProperties.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -39,15 +40,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ProjectDir)\..\Source\EduNetGames\Tutorial_01"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
+				AdditionalIncludeDirectories="$(ProjectDir)\..\Source\EduNetGames\LibEduNet"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderThrough=""
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
+				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -60,15 +60,11 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="true"
+				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -80,21 +76,17 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine=""
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;.\EdunetCommonProperties.vsprops;.\EdunetReleaseProperties.vsprops"
+			OutputDirectory="../Bin/$(PlatformName)/lib"
+			IntermediateDirectory="../Temp/$(ProjectName)/$(ConfigurationName)"
+			ConfigurationType="4"
+			InheritedPropertySheets=".\EdunetCommonProperties.vsprops"
 			CharacterSet="2"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -113,14 +105,9 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				OmitFramePointers="true"
-				AdditionalIncludeDirectories="$(ProjectDir)\..\Source\EduNetGames\Tutorial_01"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
-				StringPooling="true"
+				AdditionalIncludeDirectories="$(ProjectDir)\..\Source\EduNetGames\LibEduNet"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
@@ -136,20 +123,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories=""
-				GenerateDebugInformation="true"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -161,14 +138,7 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -176,35 +146,59 @@
 	</References>
 	<Files>
 		<Filter
-			Name="plugins"
+			Name="EduNet"
 			>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
+			<Filter
+				Name="application"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
 					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ShowIncludes="false"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
-				>
-			</File>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetApplication.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetGames.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetMain.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\EduNetMain.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\main.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="config"
+			Name="resources"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\EduNetTutorialConfig.h"
+				RelativePath=".\OpenSteerDemo.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\opensteer\win32\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\opensteer\win32\SteerTest.rc"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\Source\EduNetGames\main.cpp"
+			RelativePath=".\ReadMe.txt"
 			>
 		</File>
 	</Files>

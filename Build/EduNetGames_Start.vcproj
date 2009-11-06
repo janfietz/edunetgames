@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Start&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Start&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -176,19 +176,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="resources"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
-			<File
-				RelativePath=".\OpenSteerDemo.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\opensteer\win32\SteerTest.rc"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="plugins"
 			>
 			<File
@@ -229,87 +216,15 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="EduNet"
+			Name="config"
 			>
-			<Filter
-				Name="common"
+			<File
+				RelativePath="..\Source\EduNetGames\Start\EduNetTutorialConfig.h"
 				>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetCommon.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetConfig.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetExternal.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetMacros.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Start\EduNetTutorialConfig.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="gui"
-				>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\gui\EduNetGui.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\gui\EduNetGui.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="templates"
-				>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\templates\TUpdatePeriod.h"
-					>
-				</File>
-			</Filter>
+			</File>
 		</Filter>
 		<File
-			RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetApplication.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetGames.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetOptions.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetOptions.h"
-			>
-		</File>
-		<File
 			RelativePath="..\Source\EduNetGames\main.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\opensteer\win32\resource.h"
 			>
 		</File>
 	</Files>

@@ -176,19 +176,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="resources"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
-			>
-			<File
-				RelativePath=".\OpenSteerDemo.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\opensteer\win32\SteerTest.rc"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="plugins"
 			>
 			<Filter
@@ -241,115 +228,15 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="OpenSteerExtras"
+			Name="config"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PlugInArray.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PlugInArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.h"
+				RelativePath="..\Source\EduNetGames\Tutorial_02\EduNetTutorialConfig.h"
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="EduNet"
-			>
-			<Filter
-				Name="common"
-				>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetCommon.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetConfig.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetExternal.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetMacros.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\EduNetTutorialConfig.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetTypes.h"
-					>
-				</File>
-			</Filter>
-		</Filter>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-					ShowIncludes="false"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetApplication.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetGames.h"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetOptions.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\EduNetGames\EduNetOptions.h"
-			>
-		</File>
 		<File
 			RelativePath="..\Source\EduNetGames\main.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\Source\opensteer\win32\resource.h"
 			>
 		</File>
 	</Files>

@@ -5,12 +5,9 @@
 	Name="EdunetDebugProperties"
 	>
 	<Tool
-		Name="VCCLCompilerTool"
-		AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\include&quot;;&quot;$(ProjectDir)\..\Source\EduNetGames\Start&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include&quot;;&quot;$(ProjectDir)\..\Source\opensteer\include\Opensteer&quot;;&quot;$(ProjectDir)\..\..\ThirdParty&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Source&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\DependendExtensions&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\boost_1_40_0&quot;"
-	/>
-	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="RakNetLibStaticDebug.lib opensteerd.lib"
-		OutputFile="$(OutDir)/$(ProjectName)_d.exe"
+		AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStaticDebug.lib opensteerd.lib"
+		AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
+		OutputFile="$(OutDir)/$(ProjectName)d.exe"
 	/>
 </VisualStudioPropertySheet>

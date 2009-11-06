@@ -1,6 +1,6 @@
 #include "EduNetApplication.h"
 
-#include "EduNetOptions.h"
+#include "EduNet/options/EduNetOptions.h"
 #include "EduNetGames.h"
 
 
