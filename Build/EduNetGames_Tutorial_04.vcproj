@@ -178,55 +178,95 @@
 		<Filter
 			Name="plugins"
 			>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
-				>
-			</File>
 			<Filter
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrian.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrian.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianPlugin.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplica.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplica.h"
+					>
+				</File>
+				<Filter
+					Name="from tutorial2"
+					>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\ClientPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\NetworkPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="from tutorial 3"
+					>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\BoidReplica.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="from tutorial 1"
+				>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\plugins\PeerPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
 					>
 				</File>
 			</Filter>

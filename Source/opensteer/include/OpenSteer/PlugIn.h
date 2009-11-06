@@ -30,7 +30,7 @@
 //
 // OpenSteerDemo Plugin class
 //
-// Provides AbstractPlugIn a pure abstract base class, and Plugin a partial
+// Provides AbstractPlugin a pure abstract base class, and Plugin a partial
 // implementation providing default methods to be sub-classed by the
 // programmer defining a new "MyPlugIn".
 //
@@ -54,7 +54,7 @@ class FooPlugIn : public Plugin
     void close (void) {...}
     const AVGroup& allVehicles (void) const {...}
 
-    // optional methods (see comments in AbstractPlugIn for explanation):
+    // optional methods (see comments in AbstractPlugin for explanation):
     void reset (void) {...} // default is to reset by doing close-then-open
     float selectionOrderSortKey (void) const {return 1234;}
     bool requestInitialSelection (void) const {return true;}
@@ -81,11 +81,11 @@ FooPlugIn gFooPlugIn;
 
 namespace OpenSteer {
 
-    class AbstractPlugIn
+    class AbstractPlugin
     {
     public:
         
-        virtual ~AbstractPlugIn() { /* Nothing to do. */ }
+        virtual ~AbstractPlugin() { /* Nothing to do. */ }
         
         // generic Plugin actions: open, update, redraw, close and reset
         virtual void open (void) = 0;
@@ -116,10 +116,10 @@ namespace OpenSteer {
         virtual const AVGroup& allVehicles (void) const = 0;
   
 		// returns pointer to the next Plugin in "selection order"
-		virtual AbstractPlugIn* next(void) const = 0;
+		virtual AbstractPlugin* next(void) const = 0;
 
 		// format instance to characters for printing to stream
-		friend std::ostream& operator<< (std::ostream& os, AbstractPlugIn& pi)
+		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
 		{
 			os << "<Plugin " << '"' << pi.name() << '"' << ">";
 			return os;
@@ -127,11 +127,11 @@ namespace OpenSteer {
 	
 	};
 
-	class Plugin : public AbstractPlugIn
+	class Plugin : public AbstractPlugin
     {
     public:
         // prototypes for function pointers used with PlugIns
-        typedef void (* plugInCallBackFunction) (AbstractPlugIn& clientObject);
+        typedef void (* plugInCallBackFunction) (AbstractPlugin& clientObject);
         typedef void (* voidCallBackFunction) (void);
         typedef void (* timestepCallBackFunction) (const float currentTime,
                                                    const float elapsedTime);
@@ -159,7 +159,7 @@ namespace OpenSteer {
         void printMiniHelpForFunctionKeys (void) const {}
 
         // returns pointer to the next Plugin in "selection order"
-        AbstractPlugIn* next (void) const;
+        AbstractPlugin* next (void) const;
 
         // format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
@@ -171,7 +171,7 @@ namespace OpenSteer {
         // CLASS FUNCTIONS
 
         // search the class registry for a Plugin with the given name
-        static AbstractPlugIn* findByName (const char* string);
+        static AbstractPlugin* findByName (const char* string);
 
         // apply a given function to all PlugIns in the class registry
         static void applyToAll (plugInCallBackFunction f);
@@ -180,18 +180,18 @@ namespace OpenSteer {
         static void sortBySelectionOrder (void);
 
         // returns pointer to default Plugin (currently, first in registry)
-        static AbstractPlugIn* findDefault (void);
+        static AbstractPlugin* findDefault (void);
 
 		// save this instance in the class's registry of instances
-		static void addToRegistry (AbstractPlugIn*);
-		static AbstractPlugIn* findNextPlugin( const AbstractPlugIn* pkThis );
+		static void addToRegistry (AbstractPlugin*);
+		static AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis );
     private:
 
         // This array stores a list of all PlugIns.  It is manipulated by the
         // constructor and destructor, and used in findByName and applyToAll.
         static const int totalSizeOfRegistry;
         static int itemsInRegistry;
-        static AbstractPlugIn* registry[];
+        static AbstractPlugin* registry[];
     };
 
 } // namespace OpenSteer    

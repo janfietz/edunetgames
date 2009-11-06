@@ -13,7 +13,7 @@ public:
 	virtual ~ClientServerPlugin();
 
 	//---------------------------------------------------------------------
-	// interface AbstractPlugIn
+	// interface AbstractPlugin
 	virtual const char *name(void) const; 
 
 };

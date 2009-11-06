@@ -237,6 +237,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\EduNetGames\OpenSteerExtras\OpenSteerExtrasTypes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PluginArray.cpp"
 				>
 			</File>

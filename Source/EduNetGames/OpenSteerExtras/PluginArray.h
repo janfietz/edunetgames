@@ -9,11 +9,11 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-	typedef boost::shared_ptr<AbstractPlugIn> AbstractPlugInPtr;
+	typedef boost::shared_ptr<AbstractPlugin> AbstractPlugInPtr;
 	typedef std::vector<AbstractPlugInPtr> TPlugInArray;
 
 
-	class PlugInArray : public AbstractPlugIn, protected TPlugInArray
+	class PlugInArray : public AbstractPlugin, protected TPlugInArray
 	{
 	public:
 		PlugInArray(bool bAddToRegistry = true);
@@ -21,16 +21,16 @@ namespace OpenSteer
 
 		//---------------------------------------------------------------------
 		// functionality PlugInArray
-		void addPlugIn( AbstractPlugIn* pkPlugin );
-		void removePlugIn( AbstractPlugIn* pkPlugin );
+		void addPlugIn( AbstractPlugin* pkPlugin );
+		void removePlugIn( AbstractPlugin* pkPlugin );
 		void removeAllPlugIns( void );
-		AbstractPlugIn* getPlugIn( size_t uiIdx ) const;		
+		AbstractPlugin* getPlugIn( size_t uiIdx ) const;		
 
 
 		static void TestPluginArray( void );
 
 		//---------------------------------------------------------------------
-		// interface AbstractPlugIn
+		// interface AbstractPlugin
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime); 
 		virtual void redraw(const float currentTime, const float elapsedTime); 
@@ -43,7 +43,7 @@ namespace OpenSteer
 		virtual void printMiniHelpForFunctionKeys(void) const; 
 		virtual const AVGroup& allVehicles(void) const;
 
-		virtual AbstractPlugIn* next(void) const;
+		virtual AbstractPlugin* next(void) const;
 
 	private:
 		AVGroup m_kVehicles;

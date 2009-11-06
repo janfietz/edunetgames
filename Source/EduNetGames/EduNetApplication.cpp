@@ -81,7 +81,7 @@ void Application::updateSelectedPlugIn (const float currentTime,
 	// opensteer demo options update
 	OpenSteer::enableAnnotation = false;
 
-	AbstractPlugIn* selectedPlugIn = OpenSteerDemo::selectedPlugIn;
+	AbstractPlugin* selectedPlugIn = OpenSteerDemo::selectedPlugIn;
 	if( NULL == selectedPlugIn )
 	{
 		return;
@@ -117,7 +117,7 @@ void Application::updateSelectedPlugIn (const float currentTime,
 void Application::redrawSelectedPlugIn (const float currentTime,
 						   const float elapsedTime )
 {
-	AbstractPlugIn* selectedPlugIn = OpenSteerDemo::selectedPlugIn;
+	AbstractPlugin* selectedPlugIn = OpenSteerDemo::selectedPlugIn;
 	if( NULL == selectedPlugIn )
 	{
 		return;

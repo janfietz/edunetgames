@@ -17,7 +17,7 @@ PlugInArray::~PlugInArray()
 //-----------------------------------------------------------------------------
 void PlugInArray::removeAllPlugIns( void )
 {
-	AbstractPlugIn* pkPlugin = this->getPlugIn( 0 );
+	AbstractPlugin* pkPlugin = this->getPlugIn( 0 );
 	while( NULL != pkPlugin )
 	{
 		this->removePlugIn( pkPlugin );
@@ -27,20 +27,20 @@ void PlugInArray::removeAllPlugIns( void )
 	bTest = false;
 }
 //-----------------------------------------------------------------------------
-void PlugInArray::addPlugIn( AbstractPlugIn* pkPlugin )
+void PlugInArray::addPlugIn( AbstractPlugin* pkPlugin )
 {
 	AbstractPlugInPtr spPlugin(pkPlugin);
 	this->push_back( spPlugin );
 }
 
 //-----------------------------------------------------------------------------
-void PlugInArray::removePlugIn( AbstractPlugIn* pkPlugin )
+void PlugInArray::removePlugIn( AbstractPlugin* pkPlugin )
 {
 	TPlugInArray::iterator kIter = this->begin();
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkArrayPlugin = (*kIter).get();
+		AbstractPlugin* pkArrayPlugin = (*kIter).get();
 		if( pkArrayPlugin == pkPlugin )
 		{
 			pkArrayPlugin->close();
@@ -52,7 +52,7 @@ void PlugInArray::removePlugIn( AbstractPlugIn* pkPlugin )
 }
 
 //-----------------------------------------------------------------------------
-AbstractPlugIn* PlugInArray::getPlugIn( size_t uiIdx ) const
+AbstractPlugin* PlugInArray::getPlugIn( size_t uiIdx ) const
 {
 	if( uiIdx < this->size() )
 	{
@@ -68,7 +68,7 @@ void PlugInArray::open(void)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->open();
 		++kIter;
 	}
@@ -81,7 +81,7 @@ void PlugInArray::update(const float currentTime, const float elapsedTime)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->update( currentTime, elapsedTime );
 		++kIter;
 	}
@@ -94,7 +94,7 @@ void PlugInArray::redraw(const float currentTime, const float elapsedTime)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->redraw( currentTime, elapsedTime );
 		++kIter;
 	}
@@ -107,7 +107,7 @@ void PlugInArray::close(void)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->close(  );
 		++kIter;
 	}
@@ -123,7 +123,7 @@ void PlugInArray::reset(void)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->reset(  );
 		++kIter;
 	}
@@ -155,7 +155,7 @@ void PlugInArray::handleFunctionKeys(int keyNumber)
 	TPlugInArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->handleFunctionKeys( keyNumber );
 		++kIter;
 	}
@@ -168,7 +168,7 @@ void PlugInArray::printMiniHelpForFunctionKeys(void) const
 	TPlugInArray::const_iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
-		AbstractPlugIn* pkPlugin = (*kIter).get();
+		AbstractPlugin* pkPlugin = (*kIter).get();
 		pkPlugin->printMiniHelpForFunctionKeys( );
 		++kIter;
 	}
@@ -195,7 +195,7 @@ public:
 	void close (void) { }
 	const AVGroup& allVehicles (void) const { return m_kVehicles; }
 
-	// optional methods (see comments in AbstractPlugIn for explanation):
+	// optional methods (see comments in AbstractPlugin for explanation):
 	void reset (void) { } // default is to reset by doing close-then-open
 	float selectionOrderSortKey (void) const {return 1234;}
 	bool requestInitialSelection (void) const {return true;}
@@ -208,7 +208,7 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-AbstractPlugIn* PlugInArray::next(void) const 
+AbstractPlugin* PlugInArray::next(void) const 
 { 
 	return OpenSteer::Plugin::findNextPlugin( this );
 };

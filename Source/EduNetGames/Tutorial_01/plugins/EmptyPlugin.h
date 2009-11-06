@@ -12,7 +12,7 @@
 
 
 // ???
-// class AbstractGamePlugIn : public AbstractPlugIn
+// class AbstractGamePlugIn : public AbstractPlugin
 // {
 // public:
 // }

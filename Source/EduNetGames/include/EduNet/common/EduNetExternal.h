@@ -116,6 +116,7 @@
 
 #include "OpenSteer/Obstacle.h"
 #include "OpenSteer/Proximity.h"
+#include "OpenSteer/PolylineSegmentedPathwaySingleRadius.h"
 
 #endif // EDUNET_HAVE_OPENSTEER
 

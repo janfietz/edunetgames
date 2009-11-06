@@ -106,7 +106,7 @@ OpenSteer::Camera OpenSteer::OpenSteerDemo::camera;
 // currently selected plug-in (user can choose or cycle through them)
 
 
-OpenSteer::AbstractPlugIn* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
+OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
 
 
 // ----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ const int OpenSteer::OpenSteerDemo::drawPhase = 2;
 
 namespace {
 
-	void printPlugIn (OpenSteer::AbstractPlugIn& pi) {std::cout << " " << pi << std::endl;} // XXX
+	void printPlugIn (OpenSteer::AbstractPlugin& pi) {std::cout << " " << pi << std::endl;} // XXX
 
 } // anonymous namespace
 

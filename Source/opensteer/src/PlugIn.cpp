@@ -48,7 +48,7 @@
 
 int OpenSteer::Plugin::itemsInRegistry = 0;
 const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
-OpenSteer::AbstractPlugIn* OpenSteer::Plugin::registry [totalSizeOfRegistry];
+OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
 
 // ----------------------------------------------------------------------------
@@ -76,14 +76,14 @@ OpenSteer::Plugin::~Plugin() {}
 // returns pointer to the next Plugin in "selection order"
 
 
-OpenSteer::AbstractPlugIn* 
+OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::next (void) const
 {
 	return OpenSteer::Plugin::findNextPlugin( this );
 }
 
-OpenSteer::AbstractPlugIn* 
-OpenSteer::Plugin::findNextPlugin( const AbstractPlugIn* pkThis )
+OpenSteer::AbstractPlugin* 
+OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 {
 	for (int i = 0; i < itemsInRegistry; i++)
 	{
@@ -102,14 +102,14 @@ OpenSteer::Plugin::findNextPlugin( const AbstractPlugIn* pkThis )
 // returns NULL if none is found
 
 
-OpenSteer::AbstractPlugIn* 
+OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findByName (const char* string)
 {
     if (string)
     {
         for (int i = 0; i < itemsInRegistry; i++)
         {
-            AbstractPlugIn& pi = *registry[i];
+            AbstractPlugin& pi = *registry[i];
             const char* s = pi.name();
             if (s && (strcmp (string, s) == 0)) return &pi;
         }
@@ -155,7 +155,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 
             if (iKey > jKey)
             {
-                AbstractPlugIn* temporary = registry[i];
+                AbstractPlugin* temporary = registry[i];
                 registry[i] = registry[j];
                 registry[j] = temporary;
             }
@@ -168,7 +168,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 // returns pointer to default Plugin (currently, first in registry)
 
 
-OpenSteer::AbstractPlugIn* 
+OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findDefault (void)
 {
     // return NULL if no PlugIns exist
@@ -191,7 +191,7 @@ OpenSteer::Plugin::findDefault (void)
 
 
 void 
-OpenSteer::Plugin::addToRegistry (AbstractPlugIn* pkPlugin)
+OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {
     // save this instance in the registry
     registry[itemsInRegistry++] = pkPlugin;
