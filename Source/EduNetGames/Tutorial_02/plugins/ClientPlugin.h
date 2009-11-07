@@ -49,18 +49,5 @@ void ClientPlugin<PluginClass>::DeleteContent( void )
 template < class PluginClass >
 void ClientPlugin<PluginClass>::StartNetworkSession( void )
 {
-	SocketDescriptor sd;
-	sd.port = CLIENT_PORT;
-	bool bStarted(false);
-	while( false == bStarted )
-	{
-		while (SocketLayer::IsPortInUse(sd.port)==true)
-			sd.port++;
-		if( true == this->m_pNetInterface->Startup(1,100,&sd,1) )
-		{
-			this->m_pNetInterface->SetMaximumIncomingConnections(0);
-			bStarted = true;
-		}
-	}
-	printf("Starting client at port: %d.\n", sd.port);	
+	this->StartClientNetworkSession();
 }
