@@ -2,7 +2,31 @@
 
 #include "EduNet/common/EduNetCommon.h"
 
+//-----------------------------------------------------------------------------
+enum ENetworkSessionType
+{
+	ENetworkSessionType_Undefined,
+	ENetworkSessionType_Client,
+	ENetworkSessionType_Peer,
+	ENetworkSessionType_Count
+};
 
+
+//-----------------------------------------------------------------------------
+typedef struct TNetworkStats
+{
+	TNetworkStats():
+	m_uiPacketsReceived(0)
+	{
+	}
+
+	void reset()
+	{
+		m_uiPacketsReceived = 0;
+	}
+
+	size_t m_uiPacketsReceived;
+} NetworkStats;
 
 //-----------------------------------------------------------------------------
 class AbstractNetworkPlugin
@@ -36,6 +60,7 @@ public:
 	virtual void close(void);
 	virtual void reset (void);
 	void update (const float currentTime, const float elapsedTime);
+	void redraw (const float currentTime, const float elapsedTime);
 	virtual void handleFunctionKeys (int keyNumber);
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
@@ -50,6 +75,8 @@ public:
 	virtual void StopNetworkSession( void );
 
 	void StartClientNetworkSession( void );
+	bool StartupNetworkSession( 
+		SocketDescriptor& sd, unsigned short maxAllowed, unsigned short maxIncoming );
 
 protected:
 
@@ -58,6 +85,7 @@ protected:
 	void AttachNetworkIdManager( void );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
+	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager m_kNetworkIdManager;
@@ -65,6 +93,15 @@ protected:
 	unsigned int m_uiStartPort;
 	unsigned int m_uiPortPongCount;
 
+	int m_iWaitForPongPort;
+	SocketDescriptor m_kSocketDescriptor;
+
+	RakNetTime m_kPongEndTime;
+	ENetworkSessionType m_eNetworkSessionType;
+	NetworkStats m_kStats;
+
+	// settings
+	int m_bAutoConnect;
 private:
 
 	void CreateNetworkInterface( void );
@@ -82,9 +119,6 @@ private:
 	void CloseOpenConnections( void );
 	bool WaitForPong( void ) const;
 
-	int m_iWaitForPongPort;
-
-	RakNetTime m_kPongEndTime;
 };
 
 //-----------------------------------------------------------------------------
@@ -98,20 +132,25 @@ public:
 	  BaseClass( bAddToRegistry ),
 		m_kGamePlugin( false )
 	{
-		
+		this->m_kGamePlugin.setParentPlugin( this );
 	};
 	virtual ~TNetworkPlugin(void) {};
 
 	virtual void reset (void);
-	void update (const float currentTime, const float elapsedTime);
+	virtual void update (const float currentTime, const float elapsedTime);
 	virtual void handleFunctionKeys (int keyNumber);
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
-	const OpenSteer::AVGroup& allVehicles (void) const 
+	virtual const OpenSteer::AVGroup& allVehicles (void) const 
 	{
 		return m_kGamePlugin.allVehicles();
 	}
 	
+	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const
+	{
+		return ((OpenSteer::AbstractPlugin*)&this->m_kGamePlugin);
+	}
+
 	PluginClass m_kGamePlugin;
 };
 

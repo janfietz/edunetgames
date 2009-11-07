@@ -8,9 +8,14 @@ static const int SERVER_PORT = 12345;
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 
+using namespace OpenSteer;
+
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
-	BaseClass( bAddToRegistry )
+	BaseClass( bAddToRegistry ),
+		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
+		m_bAutoConnect(1)
+
 {
 
 }
@@ -26,36 +31,17 @@ void NetworkPlugin::initGui( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	glui->add_button_to_panel( pluginPanel, "Connect" );
-}
 
-//-----------------------------------------------------------------------------
-void NetworkPlugin::InitializeServerPortSettings( void )
-{
-	this->InitializeServerPortAndPongCount();
-	this->m_iWaitForPongPort = -1*this->m_uiStartPort;
-}
 
-//-----------------------------------------------------------------------------
-void NetworkPlugin::InitializeServerPortAndPongCount( void )
-{
-	this->m_uiStartPort = SERVER_PORT;
-	this->m_uiPortPongCount = SERVER_PONG_COUNT;
-}
+	OpenSteer::AbstractPlugin* pkHostedPlugin = this->getHostedPlugin();
+	if( NULL != pkHostedPlugin )
+	{
+		GLUI_Panel* subPluginPanel = glui->add_panel_to_panel( pluginPanel, pkHostedPlugin ? pkHostedPlugin->name() : "Plugin" );
+		pkHostedPlugin->initGui( subPluginPanel );
+	}
 
-//-----------------------------------------------------------------------------
-void NetworkPlugin::CreateNetworkInterface( void )
-{
-	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
-	this->AttachNetworkIdManager();
-	this->InitializeServerPortSettings();
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::DestroyNetworkInterface( void )
-{
-	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
-	printf("Destroyed peer.\n");
+	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
+//	glui->add_button_to_panel( pluginPanel, "Connect" );
 }
 
 //-----------------------------------------------------------------------------
@@ -81,52 +67,6 @@ void NetworkPlugin::reset (void)
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::StartClientNetworkSession( void )
-{
-	SocketDescriptor sd;
-	sd.port = CLIENT_PORT;
-	bool bStarted(false);
-	while( false == bStarted )
-	{
-		while (SocketLayer::IsPortInUse(sd.port)==true)
-			sd.port++;
-		if( true == this->m_pNetInterface->Startup(1,100,&sd,1) )
-		{
-			this->m_pNetInterface->SetMaximumIncomingConnections(0);
-			bStarted = true;
-		}
-	}
-	printf("Starting client at port: %d.\n", sd.port);	
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::StopNetworkSession( void )
-{	
-	this->CloseOpenConnections();
-	this->m_pNetInterface->Shutdown(100,0);	
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::CloseOpenConnections( void )
-{
-	DataStructures::List<SystemAddress> kAddresses;
-	DataStructures::List<RakNetGUID> kGuids;
-	unsigned short usCount = this->m_pNetInterface->NumberOfConnections();
-	if( 0 < usCount )
-	{
-		this->m_pNetInterface->GetSystemList(kAddresses, kGuids );
-		for(unsigned short us = 0; us < usCount; ++us)
-		{
-			this->m_pNetInterface->CloseConnection(
-				kAddresses[us], true );
-		}
-
-		Sleep(1000);
-	}
-}
-
-
-//-----------------------------------------------------------------------------
 void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 {
 	if( !IsConnected()&& DoAutoConnect() )
@@ -143,9 +83,71 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
+void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
+{
+
+	// display status 
+
+	bool bIsClient = ( ENetworkSessionType_Client == this->m_eNetworkSessionType );
+
+	std::ostringstream status;
+	status << std::setprecision (2);
+	status << std::setiosflags (std::ios::fixed);
+	if( false == this->IsConnected() )
+	{
+
+	}
+	else
+	{
+		switch( this->m_eNetworkSessionType )
+		{
+		case(ENetworkSessionType_Client):
+			{
+				status << "Client";
+				break;
+			}
+		case(ENetworkSessionType_Peer):
+			{
+				status << "Server";
+				break;
+			}
+		}
+		SocketDescriptor& sd = this->m_kSocketDescriptor;
+		status << " Port: ";
+		status << sd.port << std::endl;;
+		status << "PacketsReceived: ";
+		status << this->m_kStats.m_uiPacketsReceived << std::endl;;
+		
+	}
+	const float h = drawGetWindowHeight();
+	osVector3 screenLocation( 10, h, 0);
+	float fOffset = 50.0f;
+	fOffset += bIsClient ? 50.0f : 100.0f;
+	screenLocation.y -= fOffset;
+	draw2dTextAt2dLocation(
+		status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::handleFunctionKeys (int keyNumber)
+{
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::printMiniHelpForFunctionKeys (void) const
+{
+}
+
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractPlugin* NetworkPlugin::getHostedPlugin( void ) const
+{
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
 bool NetworkPlugin::DoAutoConnect( void ) const
 {
-	return true;
+	return ( this->m_bAutoConnect != 0 );
 }
 
 //-----------------------------------------------------------------------------
@@ -176,16 +178,108 @@ void NetworkPlugin::DeleteContent( void )
 }
 
 //-----------------------------------------------------------------------------
+void NetworkPlugin::InitializeServerPortSettings( void )
+{
+	this->InitializeServerPortAndPongCount();
+	this->m_iWaitForPongPort = -1 * this->m_uiStartPort;
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::InitializeServerPortAndPongCount( void )
+{
+	this->m_uiStartPort = SERVER_PORT;
+	this->m_uiPortPongCount = SERVER_PONG_COUNT;
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::CreateNetworkInterface( void )
+{
+	this->m_pNetInterface = RakNetworkFactory::GetRakPeerInterface();
+	this->AttachNetworkIdManager();
+	this->InitializeServerPortSettings();
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::DestroyNetworkInterface( void )
+{
+	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
+	printf("Destroyed peer.\n");
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::StartClientNetworkSession( void )
+{
+	SocketDescriptor& sd = this->m_kSocketDescriptor;
+	this->m_uiStartPort = CLIENT_PORT;
+	sd.port = this->m_uiStartPort;
+	if( true == this->StartupNetworkSession( sd, 1, 0 ) )
+	{
+		this->m_eNetworkSessionType = ENetworkSessionType_Client;
+	}
+	printf("Starting client at port: %d.\n", sd.port);	
+}
+
+//-----------------------------------------------------------------------------
+bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short maxAllowed, unsigned short maxIncoming )
+{
+	// 	virtual bool Startup( unsigned short maxConnections, int _threadSleepTimer, SocketDescriptor *socketDescriptors, unsigned socketDescriptorCount )=0;
+	const int threadSleepTimer = 33;
+	bool bStarted(false);
+	while( false == bStarted )
+	{
+		while( SocketLayer::IsPortInUse(sd.port) == true )
+			++sd.port;
+		if( true == this->m_pNetInterface->Startup( maxAllowed, threadSleepTimer, &sd, 1 ) )
+		{
+			this->m_pNetInterface->SetMaximumIncomingConnections( maxIncoming );
+			bStarted = true;
+		}
+	}
+	return bStarted;
+}
+
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::StopNetworkSession( void )
+{	
+	this->CloseOpenConnections();
+	this->m_pNetInterface->Shutdown( 100,0 );	
+	this->m_eNetworkSessionType = ENetworkSessionType_Undefined;
+	this->m_kStats.reset();
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::CloseOpenConnections( void )
+{
+	DataStructures::List<SystemAddress> kAddresses;
+	DataStructures::List<RakNetGUID> kGuids;
+	unsigned short usCount = this->m_pNetInterface->NumberOfConnections();
+	if( 0 < usCount )
+	{
+		this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
+		for(unsigned short us = 0; us < usCount; ++us)
+		{
+			this->m_pNetInterface->CloseConnection(
+				kAddresses[us], true );
+		}
+
+		Sleep(1000);
+	}
+}
+
+//-----------------------------------------------------------------------------
 void NetworkPlugin::ReceivePackets( void )
 {
 	while(true)
 	{
 		Packet* pPacket = this->m_pNetInterface->Receive();
-		if(0 !=  pPacket)
+		if(0 != pPacket)
 		{
+			++this->m_kStats.m_uiPacketsReceived;
 			this->OnReceivedPacket( pPacket );
 			this->m_pNetInterface->DeallocatePacket(pPacket);
-		} else
+		} 
+		else
 		{
 			return;
 		}
@@ -232,7 +326,7 @@ void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 {
 	if( true == this->WaitForPong() )
 	{		
-		if(pPacket->systemAddress != this->m_pNetInterface->GetInternalID())
+		if( pPacket->systemAddress != this->m_pNetInterface->GetInternalID() )
 		{
 			printf("Got pong from %s(%s) with time %i\n", 
 				pPacket->systemAddress.ToString(),
@@ -243,7 +337,6 @@ void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 				pPacket->systemAddress.port,0,0);
 			this->m_iWaitForPongPort *= -1;
 		}
-
 	}
 }
 
@@ -293,12 +386,3 @@ bool NetworkPlugin::IsConnected() const
 	return 0 < this->m_pNetInterface->NumberOfConnections();
 }
 
-//-----------------------------------------------------------------------------
-void NetworkPlugin::handleFunctionKeys (int keyNumber)
-{
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::printMiniHelpForFunctionKeys (void) const
-{
-}

@@ -132,6 +132,8 @@ namespace EduNetGames{
 
 		const AVGroup& allVehicles (void) const {return (const AVGroup&) m_kVehicles;}
 
+		void initGui( void* pkUserdata );
+
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;

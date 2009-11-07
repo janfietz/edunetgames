@@ -27,11 +27,11 @@ namespace OpenSteer
 		AbstractPlugin* findPlugin( AbstractPlugin* pkPlugin ) const;		
 		AbstractPlugin* getPlugin( size_t uiIdx ) const;		
 
-
+		// unit test function
 		static void TestPluginArray( void );
 
 		//---------------------------------------------------------------------
-		// interface AbstractPlugin
+		// AbstractPlugin interface
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime); 
 		virtual void redraw(const float currentTime, const float elapsedTime); 

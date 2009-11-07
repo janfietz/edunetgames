@@ -30,6 +30,7 @@ void ClientPlugin<PluginClass>::redraw (const float currentTime,
 	const float elapsedTime)
 {
 	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
+	BaseClass::redraw( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +43,7 @@ void ClientPlugin<PluginClass>::CreateContent( void )
 template < class PluginClass >
 void ClientPlugin<PluginClass>::DeleteContent( void )
 {
-		this->m_kGamePlugin.close();
+	this->m_kGamePlugin.close();
 }
 
 //-----------------------------------------------------------------------------

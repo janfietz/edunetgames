@@ -21,5 +21,9 @@ namespace OpenSteer{
 }
 
 typedef OpenSteer::Vec3 osVector3;
+typedef OpenSteer::AbstractVehicle osAbstractVehicle;
+typedef OpenSteer::AVGroup osAVGroup;
+typedef OpenSteer::ProximityDatabase osProximityDatabase;
+typedef OpenSteer::ProximityToken osProximityToken;
 
 #endif //  __OPENSTEEREXTRASTYPES_H__

@@ -42,8 +42,8 @@ void ClientServerPlugin::initGui( void* pkUserdata )
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
-	glui->add_button_to_panel( pluginPanel, "Connect Client" );
-	glui->add_button_to_panel( pluginPanel, "Connect Server" );
+// 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
+// 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
 };
 
 

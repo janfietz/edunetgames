@@ -17,7 +17,10 @@ class EmptyServerRpcPlugin : public PeerPlugin<PluginClass>,
 	ET_DECLARE_BASE(PeerPlugin<PluginClass>);
 public:
 	EmptyServerRpcPlugin(bool bAddToRegistry = true):
-	  BaseClass( bAddToRegistry ){};
+	  BaseClass( bAddToRegistry )
+	{
+		m_bAutoConnect = 0;
+	};
 	virtual ~EmptyServerRpcPlugin(){};
 
 	virtual const char* name (void) const;
@@ -27,10 +30,10 @@ public:
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	
-	virtual bool DoAutoConnect( void ) const
-	{
-		return false;
-	}
+// 	virtual bool DoAutoConnect( void ) const
+// 	{
+// 		return false;
+// 	}
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );

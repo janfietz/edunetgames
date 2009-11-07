@@ -3,13 +3,12 @@
 
 #include "OpenSteerExtras/SimpleNetworkVehicle.h"
 
+
 //-----------------------------------------------------------------------------
 class NetPedestrian : public OpenSteer::SimpleNetworkVehicle
 {
 	ET_DECLARE_BASE( SimpleNetworkVehicle )
 public:
-	// type for a group of Pedestrians
-	typedef std::vector<NetPedestrian*> groupType;
 
 	NetPedestrian();
 	NetPedestrian( OpenSteer::ProximityDatabase& pd );

@@ -9,7 +9,10 @@ class PeerPlugin :
 public:
 
 	PeerPlugin(bool bAddToRegistry = true):
-	  BaseClass( bAddToRegistry ){};
+	  BaseClass( bAddToRegistry )
+	  {
+
+	  };
 	virtual ~PeerPlugin(void){};
 
 	virtual const char* name (void) const {return "PeerPlugin";};	
@@ -35,6 +38,7 @@ void PeerPlugin<PluginClass>::redraw (const float currentTime,
 	const float elapsedTime)
 {
 	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
+	BaseClass::redraw( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
@@ -57,19 +61,23 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 	this->m_pNetInterface->AttachPlugin(&this->m_kfullyConnectedMeshPlugin);
 	this->m_pNetInterface->AttachPlugin(&this->m_kconnectionGraphPlugin);
 
-	SocketDescriptor sd;
+	SocketDescriptor& sd = this->m_kSocketDescriptor;
 	sd.port = this->m_uiStartPort;
-	bool bStarted(false);
-	while( false == bStarted )
+	if( true == this->StartupNetworkSession( sd, 32, 32 ) )
 	{
-		while (SocketLayer::IsPortInUse(sd.port)==true)
-			sd.port++;
-		if( true == this->m_pNetInterface->Startup(32,100,&sd,1) )
-		{
-			this->m_pNetInterface->SetMaximumIncomingConnections(32);
-			bStarted = true;
-		}
+		this->m_eNetworkSessionType = ENetworkSessionType_Peer;
 	}
+// 	bool bStarted(false);
+// 	while( false == bStarted )
+// 	{
+// 		while (SocketLayer::IsPortInUse(sd.port)==true)
+// 			sd.port++;
+// 		if( true == this->m_pNetInterface->Startup(32,100,&sd,1) )
+// 		{
+// 			this->m_pNetInterface->SetMaximumIncomingConnections(32);
+// 			bStarted = true;
+// 		}
+// 	}
 	printf("Starting peer at port: %d.\n", sd.port);	
 }
 
