@@ -185,6 +185,11 @@ namespace OpenSteer {
 		// save this instance in the class's registry of instances
 		static void addToRegistry (AbstractPlugin*);
 		static AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis );
+
+		// 
+		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
+		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
+
     private:
 
         // This array stores a list of all Plugins.  It is manipulated by the

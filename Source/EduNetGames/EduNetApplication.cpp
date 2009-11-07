@@ -12,6 +12,9 @@ using namespace OpenSteer;
 namespace
 {
 	int pluginSelection=0;
+	int pluginIndex=0;
+
+	GLUI_Listbox* pluginList = NULL;
 }
 
 
@@ -31,6 +34,35 @@ void gluiNextPlugin()
 {
 	OpenSteer::OpenSteerDemo::selectNextPlugin();
 }
+
+void gluiSelectPlugin()
+{
+	// update the index first
+	AbstractPlugin* pi = Plugin::getPluginAt( pluginList->orig_value );
+	if( OpenSteerDemo::selectedPlugin != pi )
+	{
+		int numPlugins = Plugin::getNumPlugins();
+		for (int i = 0; i < numPlugins; i++)
+		{
+			AbstractPlugin* piList = Plugin::getPluginAt(i);
+			if( piList == OpenSteerDemo::selectedPlugin )
+			{
+				pluginSelection = i;
+				pluginList->do_selection( i );
+				break;
+			}
+		}
+
+	}
+	
+
+	if( pluginSelection != pluginIndex )
+	{
+		OpenSteerDemo::selectPluginByIndex( pluginSelection );	
+		pluginIndex = pluginSelection;
+	}
+}
+
 //-----------------------------------------------------------------------------
 
 
@@ -55,8 +87,17 @@ Application::~Application( void )
 void Application::addGuiElements( GLUI* glui )
 {
 	glui->add_statictext("Plugins");
-	GLUI_Listbox* testList =
-		glui->add_listbox("", &pluginSelection);
+	pluginList =
+		glui->add_listbox("", &pluginSelection);//, -1, gluiSelectPlugin);
+
+	int numPlugins = Plugin::getNumPlugins();
+	for (int i = 0; i < numPlugins; i++)
+	{
+		AbstractPlugin* pi = Plugin::getPluginAt(i);
+		const char* s = pi->name();
+		pluginList->add_item(i, s);
+	}
+
 
 	glui->add_button("Next Plugin", 0,(GLUI_Update_CB)gluiNextPlugin);
 
@@ -78,6 +119,9 @@ void Application::addGuiElements( GLUI* glui )
 void Application::updateSelectedPlugin (const float currentTime,
 						   const float elapsedTime )
 {
+	gluiSelectPlugin();
+
+
 	// opensteer demo options update
 	OpenSteer::enableAnnotation = false;
 

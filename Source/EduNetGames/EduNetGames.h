@@ -109,6 +109,9 @@ namespace OpenSteer {
         // select the "next" plug-in, cycling through "plug-in selection order"
         static void selectNextPlugin (void);
 
+		// select the plug-in by index
+		static void selectPluginByIndex (size_t idx);
+
         // handle function keys an a per-plug-in basis
         static void functionKeyForPlugin (int keyNumber);
 

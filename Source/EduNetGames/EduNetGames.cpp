@@ -247,11 +247,8 @@ OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 	
 }
 
-
 // ----------------------------------------------------------------------------
 // select the "next" plug-in, cycling through "plug-in selection order"
-
-
 void 
 OpenSteer::OpenSteerDemo::selectNextPlugin (void)
 {
@@ -260,6 +257,17 @@ OpenSteer::OpenSteerDemo::selectNextPlugin (void)
 	openSelectedPlugin ();
 }
 
+// select the plug-in by index
+void OpenSteer::OpenSteerDemo::selectPluginByIndex (size_t idx)
+{
+	AbstractPlugin* p = Plugin::getPluginAt( idx );
+	if( ( NULL != p ) && (p != selectedPlugin) )
+	{
+		closeSelectedPlugin ();
+		selectedPlugin = p;
+		openSelectedPlugin ();
+	}
+}
 
 // ----------------------------------------------------------------------------
 // handle function keys an a per-plug-in basis
