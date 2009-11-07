@@ -74,12 +74,18 @@ FooPlugin gFooPlugin;
 
 #include <iostream>
 #include "OpenSteer/AbstractVehicle.h"
+#include "OpenSteer/Obstacle.h"
+#include "OpenSteer/Proximity.h"
 
 
 //-----------------------------------------------------------------------------
 
 
 namespace OpenSteer {
+
+
+	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
+	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
     class AbstractPlugin
     {
@@ -111,7 +117,10 @@ namespace OpenSteer {
         // print "mini help" documenting function keys handled by this Plugin
         virtual void printMiniHelpForFunctionKeys (void) const = 0;
 
-        // return an AVGroup (an STL vector of AbstractVehicle pointers) of
+		// return the current vehicle proximity database for this plugin
+		virtual ProximityDatabase* accessProximityDataBase( void ) const = 0;
+
+       // return an AVGroup (an STL vector of AbstractVehicle pointers) of
         // all vehicles(/agents/characters) defined by the Plugin
         virtual const AVGroup& allVehicles (void) const = 0;
   
@@ -166,6 +175,9 @@ namespace OpenSteer {
 
         // default "mini help": print nothing
         void printMiniHelpForFunctionKeys (void) const {}
+
+		// return the current vehicle proximity database for this plugin
+		virtual ProximityDatabase* accessProximityDataBase( void ) const { return NULL; };
 
         // returns pointer to the next Plugin in "selection order"
         AbstractPlugin* next (void) const;

@@ -1,5 +1,6 @@
 #include "NetPedestrianPlugin.h"
 #include "NetPedestrian.h"
+#include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 
 #include "EduNetGames.h"
@@ -17,6 +18,17 @@ namespace
 
 }
 
+//-----------------------------------------------------------------------------
+class NetPedestrian* NetPedestrianPlugin::PedestrianFactory::CreateBoid( ProximityDatabase& pd )
+{
+	return new NetPedestrian(pd);
+};
+
+//-----------------------------------------------------------------------------
+void NetPedestrianPlugin::PedestrianFactory::DestroyBoid( const class NetPedestrian* boid )
+{
+	delete boid;
+};
 
 //-----------------------------------------------------------------------------
 const char* NetPedestrianPlugin::name (void) const 
@@ -44,7 +56,6 @@ void NetPedestrianPlugin::open (void)
 	nextPD ();
 
 	// create the specified number of Pedestrians
-	population = 0;
 	for (int i = 0; i < gPedestrianStartCount; i++) addPedestrianToCrowd ();
 
 	// initialize camera and selectedVehicle
@@ -113,9 +124,10 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		draw2dTextAt3dLocation (annote, textPosition, color, drawGetWindowWidth(), drawGetWindowHeight());
 	}
 
+	AbstractVehicleGroup kVG( this->allVehicles() );
 	// display status in the upper left corner of the window
 	std::ostringstream status;
-	status << "[F1/F2] Crowd size: " << population;
+	status << "[F1/F2] Crowd size: " << kVG.population();
 	status << "\n[F3] PD type: ";
 	switch (cyclePD)
 	{
@@ -182,8 +194,9 @@ void NetPedestrianPlugin::drawPathAndObstacles (void)
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::close (void)
 {
+	AbstractVehicleGroup kVG( this->allVehicles() );
 	// delete all Pedestrians
-	while (population > 0) removePedestrianFromCrowd ();
+	while (kVG.population() > 0) removePedestrianFromCrowd ();
 }
 
 //-----------------------------------------------------------------------------
@@ -231,21 +244,21 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	population++;
 	NetPedestrian* pedestrian = new NetPedestrian (*pd);
 	crowd.push_back (pedestrian);
-	if (population == 1) OpenSteerDemo::selectedVehicle = pedestrian;
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	if (kVG.population() == 1) OpenSteerDemo::selectedVehicle = pedestrian;
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 {
-	if (population > 0)
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	if (kVG.population() > 0)
 	{
 		// save pointer to last pedestrian, then remove it from the crowd
 		const NetPedestrian* pedestrian = crowd.back();
 		crowd.pop_back();
-		population--;
 
 		// if it is OpenSteerDemo's selected vehicle, unselect it
 		if (pedestrian == OpenSteerDemo::selectedVehicle)
@@ -291,7 +304,7 @@ void NetPedestrianPlugin::nextPD (void)
 	for (iterator i=crowd.begin(); i!=crowd.end(); i++) (**i).newPD(*pd);
 
 	// delete old PD (if any)
-	delete oldPD;
+	ET_SAFE_DELETE( oldPD );
 }
 
 
@@ -302,17 +315,97 @@ const AVGroup& NetPedestrianPlugin::allVehicles (void) const
 }
 
 //-----------------------------------------------------------------------------
+void addPedestrian(GLUI_Control* pkControl )
+{
+	NetPedestrianPlugin* pkPlugin = (NetPedestrianPlugin*)pkControl->ptr_val;
+	pkPlugin->addPedestrianToCrowd();
+}
+
+//-----------------------------------------------------------------------------
+void removePedestrian(GLUI_Control* pkControl )
+{
+	NetPedestrianPlugin* pkPlugin = (NetPedestrianPlugin*)pkControl->ptr_val;
+	pkPlugin->removePedestrianFromCrowd();
+}
+
+//-----------------------------------------------------------------------------
 // implement to initialize additional gui functionality
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
-	glui->add_button_to_panel( pluginPanel, "Test" );
-	glui->add_button_to_panel( pluginPanel, "Add" );
-	glui->add_button_to_panel( pluginPanel, "Remove" );
+	GLUI_Control* pkControl;
+//	pkControl = glui->add_button_to_panel( pluginPanel, "Test" );
+	pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addPedestrian );
+	pkControl->set_ptr_val( this );
+	pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removePedestrian  );
+	pkControl->set_ptr_val( this );
 
 };
 
 
 NetPedestrianPlugin gPedestrianPlugin;
+
+
+
+#include "OpenSteerExtras/PluginArray.h"
+#include "Tutorial_02/plugins/ClientPlugin.h"
+#include "Tutorial_02/plugins/PeerPlugin.h"
+
+//-----------------------------------------------------------------------------
+class PedestrianClientServerPlugin : public OpenSteer::PluginArray
+{
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
+public:
+
+	PedestrianClientServerPlugin();
+	virtual ~PedestrianClientServerPlugin();
+
+	//---------------------------------------------------------------------
+	// interface AbstractPlugin
+	virtual const char *name(void) const; 
+
+	virtual void initGui( void* pkUserdata );
+
+
+};
+
+
+
+typedef PeerPlugin<NetPedestrianPlugin> PedestrianServerPlugin;
+typedef ClientPlugin<NetPedestrianPlugin> PedestrianClientPlugin;
+
+//-----------------------------------------------------------------------------
+PedestrianClientServerPlugin::PedestrianClientServerPlugin()
+{
+	Plugin::addToRegistry(this);
+
+	this->addPlugin( new PedestrianServerPlugin( false ) );
+	this->addPlugin( new PedestrianClientPlugin( false ) );
+}
+
+//-----------------------------------------------------------------------------
+PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+const char* PedestrianClientServerPlugin::name(void) const
+{
+	return "PedestrianClientServerPlugin";
+}
+
+//-----------------------------------------------------------------------------
+void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
+{
+	BaseClass::initGui( pkUserdata );
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+	// 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
+	// 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
+};
+
+PedestrianClientServerPlugin gClientServerPlugin;

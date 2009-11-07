@@ -20,7 +20,7 @@ public:
 	virtual void reset( void );
 
 	virtual void addVehicle( AbstractVehicle* pkVehicle );
- 	virtual void removeVehicle( AbstractVehicle* pkVehicle );
+ 	virtual void removeVehicle( const AbstractVehicle* pkVehicle );
  	virtual AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
 
 	size_t population() const { return m_kVehicles.size(); }

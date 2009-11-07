@@ -130,7 +130,7 @@ namespace OpenSteer{
 		ObstacleGroup& obstacles(void){ return m_kObstacles; }
 
 		// JF ++ 
-		ProximityDatabase* AccessProximityDataBase( void ) const
+		virtual ProximityDatabase* accessProximityDataBase( void ) const
 		{
 			return this->pd;
 		}

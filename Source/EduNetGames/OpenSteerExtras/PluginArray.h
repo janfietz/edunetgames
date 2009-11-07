@@ -42,6 +42,7 @@ namespace OpenSteer
 		virtual bool requestInitialSelection(void) const; 
 		virtual void handleFunctionKeys(int keyNumber); 
 		virtual void printMiniHelpForFunctionKeys(void) const; 
+		virtual ProximityDatabase* accessProximityDataBase( void ) const {return NULL;};
 		virtual const AVGroup& allVehicles(void) const;
 
 		virtual AbstractPlugin* next(void) const;

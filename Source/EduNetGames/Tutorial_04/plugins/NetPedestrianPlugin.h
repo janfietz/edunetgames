@@ -3,13 +3,15 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNet/common/EduNetCommon.h"
-#include "OpenSteerExtras/OpenSteerExtrasTypes.h"
 
 
 //-----------------------------------------------------------------------------
 class NetPedestrianPlugin : public OpenSteer::Plugin
 {
+	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
+	NetPedestrianPlugin( bool bAddToRegistry = true ):
+	  BaseClass( bAddToRegistry ),pd(NULL){}
 
 	virtual ~NetPedestrianPlugin();
 
@@ -31,6 +33,11 @@ public:
 	virtual void handleFunctionKeys (int keyNumber);
 
 	virtual void printMiniHelpForFunctionKeys (void) const;
+
+	virtual osProximityDatabase* accessProximityDataBase( void ) const
+	{
+		return this->pd;
+	}
 
 	virtual const osAVGroup& allVehicles (void) const;
 
@@ -54,6 +61,14 @@ public:
 	void nextPD (void);
 
 
+	class PedestrianFactory
+	{
+	public:
+
+		virtual class NetPedestrian* CreateBoid( osProximityDatabase& pd );
+
+		virtual void DestroyBoid( const class NetPedestrian* boid );
+	};
 
 private:
 
@@ -67,9 +82,6 @@ private:
 
 	// pointer to database used to accelerate proximity queries
 	osProximityDatabase* pd;
-
-	// keep track of current flock size
-	int population;
 
 	// which of the various proximity databases is currently in use
 	int cyclePD;

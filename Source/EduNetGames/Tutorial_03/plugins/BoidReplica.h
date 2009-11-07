@@ -23,7 +23,7 @@ public:
 	m_pBoidPlugin(pBoidPlugin)
 	{
 		this->m_pVehicle = new OpenSteer::Boid( 
-			*this->m_pBoidPlugin->AccessProximityDataBase() );
+			*this->m_pBoidPlugin->accessProximityDataBase() );
 		this->m_pVehicle->setIsRemoteObject(true);
 	};
 

@@ -36,6 +36,7 @@ OpenSteer::Boid* BoidReplicaFactory::CreateBoid(
 	this->m_uidMap.Set((unsigned int)pkNewReplica->AccessVehicle(), pkNewReplica);
 	return pkNewReplica->AccessVehicle();
 }
+
 //-----------------------------------------------------------------------------
 void BoidReplicaFactory::DestroyBoid( const OpenSteer::Boid* pkBoid)
 {	
@@ -49,6 +50,7 @@ void BoidReplicaFactory::DestroyBoid( const OpenSteer::Boid* pkBoid)
 	}
 
 }
+
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult BoidConditionReplica::Serialize(
 		RakNet::SerializeParameters *serializeParameters)
@@ -61,6 +63,7 @@ RakNet::RM3SerializationResult BoidConditionReplica::Serialize(
 	kStream.Write((int)this->m_pBoidPlugin->GetCurrentBoundaryCondition() );
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 }
+
 //-----------------------------------------------------------------------------
 void BoidConditionReplica::Deserialize(
 		RakNet::DeserializeParameters *deserializeParameters)
@@ -71,6 +74,7 @@ void BoidConditionReplica::Deserialize(
 	this->m_pBoidPlugin->SetCurrentBoundaryCondition(
 		(OpenSteer::EBoidConstraintType)i, false);
 }
+//-----------------------------------------------------------------------------
 void BoidConditionReplica::SerializeConstructionExisting(
 		RakNet::BitStream *constructionBitstream, 
 		RakNet::Connection_RM3 *destinationConnection)
@@ -78,7 +82,7 @@ void BoidConditionReplica::SerializeConstructionExisting(
 	constructionBitstream->Write(GetName() + RakNet::RakString(" SerializeConstructionExisting"));
 }
 
-
+//-----------------------------------------------------------------------------
 void BoidConditionReplica::DeserializeConstructionExisting(
 		RakNet::BitStream *constructionBitstream,
 		RakNet::Connection_RM3 *sourceConnection)
@@ -86,6 +90,7 @@ void BoidConditionReplica::DeserializeConstructionExisting(
 	PrintOutput(constructionBitstream);
 }
 
+//-----------------------------------------------------------------------------
 void BoidConditionReplica::SerializeConstructionRequestAccepted(
 		RakNet::BitStream *serializationBitstream,
 		RakNet::Connection_RM3 *requestingConnection)
@@ -93,6 +98,7 @@ void BoidConditionReplica::SerializeConstructionRequestAccepted(
 	serializationBitstream->Write((int)this->m_pBoidPlugin->GetCurrentBoundaryCondition() );
 }
 
+//-----------------------------------------------------------------------------
 void BoidConditionReplica::DeserializeConstructionRequestAccepted(
 		RakNet::BitStream *serializationBitstream,
 		RakNet::Connection_RM3 *acceptingConnection)
@@ -103,6 +109,7 @@ void BoidConditionReplica::DeserializeConstructionRequestAccepted(
 		(OpenSteer::EBoidConstraintType)i, false);
 }
 
+//-----------------------------------------------------------------------------
 RakNet::RM3QuerySerializationResult BoidConditionReplica::QuerySerialization(
 		RakNet::Connection_RM3 *destinationConnection)
 {
@@ -124,6 +131,7 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegis
 	this->m_pkBoidFactory = new BoidReplicaFactory(&this->m_kReplicaManager);	
 	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
 }
+
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::StartNetworkSession( void )
 {
@@ -131,6 +139,7 @@ void NetPeerBoidPlugin::StartNetworkSession( void )
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 }
 
+//-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::CreateContent( void )
 {
 	BaseClass::CreateContent();
@@ -140,6 +149,7 @@ void NetPeerBoidPlugin::CreateContent( void )
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 
+//-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
 {
 	switch (keyNumber)
@@ -147,10 +157,10 @@ void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
     case 101:  ChangeReplicationInterval(5);         break; //GLUT_KEY_UP
     case 103:  ChangeReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
 	default: BaseClass::handleFunctionKeys(keyNumber);
-    }
-	
+    }	
 }
 
+//-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::ChangeReplicationInterval( RakNetTime additionalTime )
 {
 	m_kReplicationSettings.interval += additionalTime;
@@ -166,12 +176,14 @@ void NetPeerBoidPlugin::ChangeReplicationInterval( RakNetTime additionalTime )
 		this->m_kReplicationSettings.interval);
 }
 
+//-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);
 	delete m_pkConditionReplic;	
 	BaseClass::DeleteContent();
 }
+
 //-----------------------------------------------------------------------------
 NetClientBoidPlugin::NetClientBoidPlugin()
 {
@@ -180,6 +192,7 @@ NetClientBoidPlugin::NetClientBoidPlugin()
 	this->m_pkBoidFactory = new BoidDummyFactory(&this->m_kReplicaManager);	
 	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
 }
+
 //-----------------------------------------------------------------------------
 void NetClientBoidPlugin::StartNetworkSession( void )
 {
@@ -187,6 +200,7 @@ void NetClientBoidPlugin::StartNetworkSession( void )
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 }
 
+//-----------------------------------------------------------------------------
 void NetClientBoidPlugin::CreateContent( void )
 {
 	BaseClass::CreateContent();
@@ -196,6 +210,7 @@ void NetClientBoidPlugin::CreateContent( void )
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 
+//-----------------------------------------------------------------------------
 void NetClientBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);

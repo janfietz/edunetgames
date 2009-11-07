@@ -538,17 +538,19 @@ void BoidsPlugin::AddBoidToFlock( Boid* pkBoid )
 // ----------------------------------------------------------------------------
 void BoidsPlugin::RemoveBoidFromFlock( const Boid* pkBoid )
 {
-	if (flock.size() > 0)
-    {
-		Boid::groupType::iterator kIter = this->FindBoid(pkBoid);
-		if(kIter != flock.end())
-		{
-			flock.erase( kIter );
-			 // if it is OpenSteerDemo's selected vehicle, unselect it
-        if (pkBoid == OpenSteerDemo::selectedVehicle)
-            OpenSteerDemo::selectedVehicle = NULL;
-		}       
-    }
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.removeVehicle( pkBoid );
+// 	if (flock.size() > 0)
+//     {
+// 		Boid::groupType::iterator kIter = this->FindBoid(pkBoid);
+// 		if(kIter != flock.end())
+// 		{
+// 			flock.erase( kIter );
+// 			 // if it is OpenSteerDemo's selected vehicle, unselect it
+//         if (pkBoid == OpenSteerDemo::selectedVehicle)
+//             OpenSteerDemo::selectedVehicle = NULL;
+// 		}       
+//     }
 }
 // ----------------------------------------------------------------------------
 Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )

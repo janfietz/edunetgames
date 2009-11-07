@@ -1,5 +1,7 @@
 #include "NetPedestrianReplica.h"
 #include "NetPedestrian.h"
+#include "OpenSteerExtras/AbstractVehicleGroup.h"
+
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
@@ -14,8 +16,8 @@ m_pkHostPlugin( NULL )
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-// 	this->m_pVehicle = new NetPedestrian( 
-// 		*this->m_pkHostPlugin->AccessProximityDataBase() );
+	this->m_pVehicle = new NetPedestrian( 
+		*this->m_pkHostPlugin->accessProximityDataBase() );
 	this->m_pVehicle->setIsRemoteObject(true);
 };
 
@@ -28,7 +30,8 @@ RakNet::RakString NetPedestrianReplica::GetName(void) const
 //-----------------------------------------------------------------------------
 void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
-//	m_pkHostPlugin->RemoveBoidFromFlock(this->m_pVehicle);
+	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
+	kVG.removeVehicle( this->m_pVehicle );
 	delete this;
 }
 

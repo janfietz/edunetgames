@@ -2,7 +2,6 @@
 #define __NETPEDESTRIANREPLICA_H__
 
 #include "EduNet/network/OSReplicaTypes.h"
-#include "OpenSteerExtras/OpenSteerExtrasTypes.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrianReplica : public OSReplica<class NetPedestrian>

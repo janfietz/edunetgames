@@ -65,7 +65,7 @@ void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle )
 }
 
 //-----------------------------------------------------------------------------
-void AbstractVehicleGroup::removeVehicle( AbstractVehicle* pkVehicle )
+void AbstractVehicleGroup::removeVehicle( const AbstractVehicle* pkVehicle )
 {
 	AVGroup::iterator kIter = this->findVehicle( pkVehicle );
 	if(kIter != m_kVehicles.end())
