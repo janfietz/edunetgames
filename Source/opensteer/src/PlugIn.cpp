@@ -53,9 +53,8 @@ OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
 //-----------------------------------------------------------------------------
 // constructor
-
-
-OpenSteer::Plugin::Plugin (bool bAddToRegistry)
+OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
+	m_pkParentPlugin( NULL )
 {
     // save this new instance in the registry
 	if( true == bAddToRegistry )
@@ -64,18 +63,13 @@ OpenSteer::Plugin::Plugin (bool bAddToRegistry)
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // destructor
-
-
 OpenSteer::Plugin::~Plugin() {}
 
 
 //-----------------------------------------------------------------------------
 // returns pointer to the next Plugin in "selection order"
-
-
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::next (void) const
@@ -99,7 +93,7 @@ OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 }
 
 //-----------------------------------------------------------------------------
-int OpenSteer::Plugin::getPluginsIdx( const AbstractPlugin* pkPlugin )
+int OpenSteer::Plugin::getPluginIdx( const AbstractPlugin* pkPlugin )
 {
 	for (int i = 0; i < itemsInRegistry; ++i)
 	{
@@ -114,8 +108,6 @@ int OpenSteer::Plugin::getPluginsIdx( const AbstractPlugin* pkPlugin )
 //-----------------------------------------------------------------------------
 // search the class registry for a Plugin with the given name
 // returns NULL if none is found
-
-
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findByName (const char* string)
 {
@@ -131,11 +123,8 @@ OpenSteer::Plugin::findByName (const char* string)
     return NULL;
 }
 
-
 //-----------------------------------------------------------------------------
 // apply a given function to all Plugins in the registry
-
-
 void 
 OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
 {
@@ -145,13 +134,10 @@ OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
-
-
 void 
 OpenSteer::Plugin::sortBySelectionOrder (void)
 {
@@ -180,8 +166,6 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 
 //-----------------------------------------------------------------------------
 // returns pointer to default Plugin (currently, first in registry)
-
-
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findDefault (void)
 {
@@ -198,12 +182,9 @@ OpenSteer::Plugin::findDefault (void)
     return registry[0];
 }
 
-
 //-----------------------------------------------------------------------------
 // save this instance in the class's registry of instances
 // (for use by contractors)
-
-
 void 
 OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {

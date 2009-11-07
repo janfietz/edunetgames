@@ -1,18 +1,12 @@
 #include "NetPedestrianPlugin.h"
-
-
-
-namespace OpenSteer
-{
-
-}
-using namespace OpenSteer;
 #include "NetPedestrian.h"
 
 
 #include "EduNetGames.h"
 
 #include "glui/GL/glui.h"
+
+using namespace OpenSteer;
 
 
 namespace
@@ -91,10 +85,10 @@ public:
 		if (OpenSteerDemo::selectedVehicle && OpenSteer::annotationIsOn())
 		{
 			const Color color (0.8f, 0.8f, 1.0f);
-			const Vec3 textOffset (0, 0.25f, 0);
-			const Vec3 textPosition = selected.position() + textOffset;
-			const Vec3 camPosition = OpenSteerDemo::camera.position();
-			const float camDistance = Vec3::distance (selected.position(),
+			const osVector3 textOffset (0, 0.25f, 0);
+			const osVector3 textPosition = selected.position() + textOffset;
+			const osVector3 camPosition = OpenSteerDemo::camera.position();
+			const float camDistance = osVector3::distance (selected.position(),
 				camPosition);
 			const char* spacer = "      ";
 			std::ostringstream annote;
@@ -125,7 +119,7 @@ public:
 		if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
 		status << std::endl;
 		const float h = drawGetWindowHeight ();
-		const Vec3 screenLocation (10, h-50, 0);
+		const osVector3 screenLocation (10, h-50, 0);
 		draw2dTextAt2dLocation (status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
 	}
 
@@ -141,19 +135,19 @@ public:
 			{
 				AbstractVehicle* vehicle = *i;
 				const float nearDistance = 6;
-				const Vec3& vp = vehicle->position();
-				const Vec3& np = nearMouse.position();
-				if ((Vec3::distance (vp, selected.position()) < nearDistance)
+				const osVector3& vp = vehicle->position();
+				const osVector3& np = nearMouse.position();
+				if ((osVector3::distance (vp, selected.position()) < nearDistance)
 					||
-					(&nearMouse && (Vec3::distance (vp, np) < nearDistance)))
+					(&nearMouse && (osVector3::distance (vp, np) < nearDistance)))
 				{
 					std::ostringstream sn;
 					sn << "#"
 						<< ((NetPedestrian*)vehicle)->serialNumber
 						<< std::ends;
 					const Color textColor (0.8f, 1, 0.8f);
-					const Vec3 textOffset (0, 0.25f, 0);
-					const Vec3 textPos = vehicle->position() + textOffset;
+					const osVector3 textOffset (0, 0.25f, 0);
+					const osVector3 textPos = vehicle->position() + textOffset;
 					draw2dTextAt3dLocation (sn, textPos, textColor, drawGetWindowWidth(), drawGetWindowHeight());
 				}
 			}
@@ -260,11 +254,11 @@ public:
 		{
 		case 0:
 			{
-				const Vec3 center;
+				const osVector3 center;
 				const float div = 20.0f;
-				const Vec3 divisions (div, 1.0f, div);
+				const osVector3 divisions (div, 1.0f, div);
 				const float diameter = 80.0f; //XXX need better way to get this
-				const Vec3 dimensions (diameter, diameter, diameter);
+				const osVector3 dimensions (diameter, diameter, diameter);
 				typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
 				pd = new LQPDAV (center, dimensions, divisions);
 				break;
@@ -287,10 +281,10 @@ public:
 	const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
 
 	// implement to initialize additional gui functionality
-	virtual void initGui(void) 
+	virtual void initGui( void* pkUserdata ) 
 	{
-		GLUI* glui = OpenSteerDemo::ms_kApplication.getAppGui();
-		GLUI_Panel* pluginPanel = OpenSteerDemo::ms_kApplication.getPluginPanel();
+		GLUI* glui = ::getRootGLUI();
+		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
 		glui->add_button_to_panel( pluginPanel, "Test" );
 		glui->add_button_to_panel( pluginPanel, "Add" );
@@ -304,7 +298,7 @@ public:
 	NetPedestrian::groupType crowd;
 	typedef NetPedestrian::groupType::const_iterator iterator;
 
-	Vec3 gridCenter;
+	osVector3 gridCenter;
 
 	// pointer to database used to accelerate proximity queries
 	ProximityDatabase* pd;

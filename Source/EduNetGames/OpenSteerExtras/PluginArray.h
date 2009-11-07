@@ -24,6 +24,7 @@ namespace OpenSteer
 		void addPlugin( AbstractPlugin* pkPlugin );
 		void removePlugin( AbstractPlugin* pkPlugin );
 		void removeAllPlugins( void );
+		AbstractPlugin* findPlugin( AbstractPlugin* pkPlugin ) const;		
 		AbstractPlugin* getPlugin( size_t uiIdx ) const;		
 
 
@@ -45,10 +46,17 @@ namespace OpenSteer
 
 		virtual AbstractPlugin* next(void) const;
 
+		// returns pointer to the parent Plugin
+		virtual AbstractPlugin* getParentPlugin(void) const { return m_pkParentPlugin; };
+
+		// set a parent Plugin
+		virtual void setParentPlugin( AbstractPlugin* pkPlugin ) { m_pkParentPlugin = pkPlugin; };
+
 		// implement to initialize additional gui functionality
-		virtual void initGui(void);
+		virtual void initGui( void* pkUserdata );
 	private:
 		AVGroup m_kVehicles;
+		AbstractPlugin* m_pkParentPlugin;
 
 	};
 

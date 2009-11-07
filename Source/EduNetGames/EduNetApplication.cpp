@@ -23,6 +23,12 @@ namespace
 }
 
 //-----------------------------------------------------------------------------
+GLUI* getRootGLUI()
+{
+	return appGlui;
+}
+
+//-----------------------------------------------------------------------------
 void setDefaultSettings()
 {
 
@@ -73,18 +79,6 @@ Application::~Application( void )
 }
 
 //-----------------------------------------------------------------------------
-GLUI* Application::getAppGui( void ) const
-{
-	return appGlui;
-}
-
-//-----------------------------------------------------------------------------
-GLUI_Panel* Application::getPluginPanel( void ) const
-{
-	return pluginPanel;
-}
-
-//-----------------------------------------------------------------------------
 void Application::addGuiElements( GLUI* glui )
 {
 	appGlui = glui;
@@ -99,7 +93,7 @@ void Application::addGuiElements( GLUI* glui )
 		const char* s = pi->name();
 		pluginList->add_item(i, s);
 	}
-	pluginIndex = pluginSelection = Plugin::getPluginsIdx( OpenSteerDemo::selectedPlugin );
+	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteerDemo::selectedPlugin );
 	pluginList->do_selection( pluginSelection );
 
 
@@ -154,7 +148,7 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 		if( pluginPanel == NULL )
 		{
 			pluginPanel = appGlui->add_panel( pkPlugin ? pkPlugin->name() : "Plugin" );
-			pkPlugin->initGui();
+			pkPlugin->initGui( pluginPanel );
 		}
 	}
 }

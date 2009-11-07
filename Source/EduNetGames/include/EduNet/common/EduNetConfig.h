@@ -3,11 +3,20 @@
 
 #include "EduNetTutorialConfig.h"
 
-// raknet
+// application name macro
 #ifndef EDUNET_APPNAME
 #define EDUNET_APPNAME EduNetOptions::getAppName()
 #endif
 
+// glut
+#ifndef EDUNET_HAVE_GLUT
+#define EDUNET_HAVE_GLUT 1
+#endif
+
+// glui
+#ifndef EDUNET_HAVE_GLUI
+#define EDUNET_HAVE_GLUI 1
+#endif
 
 
 // raknet

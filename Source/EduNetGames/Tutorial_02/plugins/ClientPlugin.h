@@ -4,9 +4,9 @@
 //-----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
 class ClientPlugin :
-	public NetworkPlugin<PluginClass>
+	public TNetworkPlugin<PluginClass>
 {
-	ET_DECLARE_BASE(NetworkPlugin<PluginClass>);
+	ET_DECLARE_BASE(TNetworkPlugin<PluginClass>);
 public:
 	ClientPlugin(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry ){};

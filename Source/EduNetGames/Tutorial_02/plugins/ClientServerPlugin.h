@@ -16,7 +16,7 @@ public:
 	// interface AbstractPlugin
 	virtual const char *name(void) const; 
 
-	virtual void initGui(void);
+	virtual void initGui( void* pkUserdata );
 
 
 };

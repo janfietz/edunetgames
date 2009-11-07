@@ -18,12 +18,12 @@ public:
 
 	virtual void reset( void );
 	virtual void update( const float currentTime, const float elapsedTime);
-	virtual Vec3 determineCombinedSteering( const float elapsedTime );
+	virtual osVector3 determineCombinedSteering( const float elapsedTime );
 	virtual void draw( void );
 
-	virtual void annotatePathFollowing( const Vec3& future,
-		const Vec3& onPath,
-		const Vec3& target,
+	virtual void annotatePathFollowing( const osVector3& future,
+		const osVector3& onPath,
+		const osVector3& target,
 		const float outside );
 
 	virtual void annotateAvoidCloseNeighbor( const AbstractVehicle& other,
@@ -31,8 +31,8 @@ public:
 
 	virtual void annotateAvoidNeighbor (const AbstractVehicle& threat,
 		const float /*steer*/,
-		const Vec3& ourFuture,
-		const Vec3& threatFuture );
+		const osVector3& ourFuture,
+		const osVector3& threatFuture );
 
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
 	virtual void newPD( OpenSteer::ProximityDatabase& pd );
@@ -47,14 +47,14 @@ private:
 
 	// allocate one and share amoung instances just to save memory usage
 	// (change to per-instance allocation to be more MP-safe)
-	static AVGroup neighbors;
+	static OpenSteer::AVGroup neighbors;
 
 	// path to be followed by this pedestrian
 	// XXX Ideally this should be a generic Pathway, but we use the
 	// XXX getTotalPathLength and radius methods (currently defined only
 	// XXX on PolylinePathway) to set random initial positions.  Could
 	// XXX there be a "random position inside path" method on Pathway?
-	PolylineSegmentedPathwaySingleRadius* path;
+	OpenSteer::PolylineSegmentedPathwaySingleRadius* path;
 
 	// direction for path following (upstream or downstream)
 	int pathDirection;
@@ -62,7 +62,7 @@ private:
 
 };
 
-PolylineSegmentedPathwaySingleRadius* getTestPath (void);
+OpenSteer::PolylineSegmentedPathwaySingleRadius* getTestPath (void);
 
 
 #endif //  __NETPEDESTRIAN_H__

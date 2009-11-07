@@ -3,9 +3,9 @@
 
 template < class PluginClass = OpenSteer::Plugin  >
 class PeerPlugin :
-	public NetworkPlugin<PluginClass>
+	public TNetworkPlugin<PluginClass>
 {
-	ET_DECLARE_BASE(NetworkPlugin<PluginClass>);
+	ET_DECLARE_BASE(TNetworkPlugin<PluginClass>);
 public:
 
 	PeerPlugin(bool bAddToRegistry = true):

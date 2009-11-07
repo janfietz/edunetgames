@@ -1,11 +1,6 @@
 #include "NetPedestrianReplica.h"
-
-namespace OpenSteer
-{
-
-}
-using namespace OpenSteer;
 #include "NetPedestrian.h"
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::ProximityDatabase& pd):

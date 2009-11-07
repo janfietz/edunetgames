@@ -164,6 +164,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetGuiTypes.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetMacros.h"
 					>
 				</File>

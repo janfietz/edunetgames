@@ -36,10 +36,11 @@ const char* ClientServerPlugin::name(void) const
 }
 
 //-----------------------------------------------------------------------------
-void ClientServerPlugin::initGui(void) 
+void ClientServerPlugin::initGui( void* pkUserdata ) 
 {
-	GLUI* glui = OpenSteerDemo::ms_kApplication.getAppGui();
-	GLUI_Panel* pluginPanel = OpenSteerDemo::ms_kApplication.getPluginPanel();
+	BaseClass::initGui( pkUserdata );
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
 	glui->add_button_to_panel( pluginPanel, "Connect Server" );

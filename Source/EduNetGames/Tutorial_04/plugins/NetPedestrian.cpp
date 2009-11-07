@@ -1,10 +1,10 @@
-namespace OpenSteer
-{
-
-}
-using namespace OpenSteer;
+// namespace OpenSteer
+// {
+// 
+// }
 #include "NetPedestrian.h"
 
+using namespace OpenSteer;
 
 namespace
 {
@@ -14,8 +14,8 @@ namespace
 	// creates a path for the Plugin
 	PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
 	ObstacleGroup gObstacles;
-	Vec3 gEndpoint0;
-	Vec3 gEndpoint1;
+	osVector3 gEndpoint0;
+	osVector3 gEndpoint1;
 
 
 
@@ -35,23 +35,23 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 
 		const PolylineSegmentedPathwaySingleRadius::size_type pathPointCount = 16;
 		// const float size = 30;
-		const Vec3 pathPoints[pathPointCount] = {
-			Vec3( -12.678730011f, 0.0144290002063f, 0.523285984993f ),
-			Vec3( -10.447640419f, 0.0149269998074f, -3.44138407707f ),
-			Vec3( -5.88988399506f, 0.0128290001303f, -4.1717581749f ),
-			Vec3( 0.941263973713f, 0.00330199999735f, 0.350513994694f ),
-			Vec3( 5.83484792709f, -0.00407700007781f, 6.56243610382f ),
-			Vec3( 11.0144147873f, -0.0111180003732f, 10.175157547f ),
-			Vec3( 15.9621419907f, -0.0129949999973f, 8.82364273071f ),
-			Vec3( 18.697883606f, -0.0102310003713f, 2.42084693909f ),
-			Vec3( 16.0552558899f, -0.00506500015035f, -3.57153511047f ),
-			Vec3( 10.5450153351f, 0.00284500000998f, -9.92683887482f ),
-			Vec3( 5.88374519348f, 0.00683500012383f, -8.51393127441f ),
-			Vec3( 3.17790007591f, 0.00419700006023f, -2.33129906654f ),
-			Vec3( 1.94371795654f, 0.00101799995173f, 2.78656601906f ),
-			Vec3( -1.04967498779f, 0.000867999973707f, 5.57114219666f ),
-			Vec3( -7.58111476898f, 0.00634300010279f, 6.13661909103f ),
-			Vec3( -12.4111375809f, 0.0108559997752f, 3.5670940876f )
+		const osVector3 pathPoints[pathPointCount] = {
+			osVector3( -12.678730011f, 0.0144290002063f, 0.523285984993f ),
+			osVector3( -10.447640419f, 0.0149269998074f, -3.44138407707f ),
+			osVector3( -5.88988399506f, 0.0128290001303f, -4.1717581749f ),
+			osVector3( 0.941263973713f, 0.00330199999735f, 0.350513994694f ),
+			osVector3( 5.83484792709f, -0.00407700007781f, 6.56243610382f ),
+			osVector3( 11.0144147873f, -0.0111180003732f, 10.175157547f ),
+			osVector3( 15.9621419907f, -0.0129949999973f, 8.82364273071f ),
+			osVector3( 18.697883606f, -0.0102310003713f, 2.42084693909f ),
+			osVector3( 16.0552558899f, -0.00506500015035f, -3.57153511047f ),
+			osVector3( 10.5450153351f, 0.00284500000998f, -9.92683887482f ),
+			osVector3( 5.88374519348f, 0.00683500012383f, -8.51393127441f ),
+			osVector3( 3.17790007591f, 0.00419700006023f, -2.33129906654f ),
+			osVector3( 1.94371795654f, 0.00101799995173f, 2.78656601906f ),
+			osVector3( -1.04967498779f, 0.000867999973707f, 5.57114219666f ),
+			osVector3( -7.58111476898f, 0.00634300010279f, 6.13661909103f ),
+			osVector3( -12.4111375809f, 0.0108559997752f, 3.5670940876f )
 		};
 
 
@@ -130,7 +130,7 @@ void NetPedestrian::reset (void)
 	// (random point on path + random horizontal offset)
 	const float d = path->length() * frandom01();
 	const float r = path->radius();
-	const Vec3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
+	const osVector3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
 	setPosition (path->mapPathDistanceToPoint (d) + randomOffset);
 
 
@@ -161,12 +161,12 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 		const Color darkRed (0.7f, 0, 0);
 		float const pathRadius = path->radius();
 
-		if (Vec3::distance (position(), gEndpoint0) < pathRadius )
+		if (osVector3::distance (position(), gEndpoint0) < pathRadius )
 		{
 			pathDirection = +1;
 			annotationXZCircle (pathRadius, gEndpoint0, darkRed, 20);
 		}
-		if (Vec3::distance (position(), gEndpoint1) < pathRadius )
+		if (osVector3::distance (position(), gEndpoint1) < pathRadius )
 		{
 			pathDirection = -1;
 			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
@@ -184,10 +184,10 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 // compute combined steering force: move forward, avoid obstacles
 // or neighbors if needed, otherwise follow the path and wander
-Vec3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
+osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 {
 	// move forward
-	Vec3 steeringForce = forward();
+	osVector3 steeringForce = forward();
 
 	// probability that a lower priority behavior will be given a
 	// chance to "drive" even if a higher priority behavior might
@@ -195,7 +195,7 @@ Vec3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 	const float leakThrough = 0.1f;
 
 	// determine if obstacle avoidance is required
-	Vec3 obstacleAvoidance;
+	osVector3 obstacleAvoidance;
 	if (leakThrough < frandom01())
 	{
 		const float oTime = 6; // minTimeToCollision = 6 seconds
@@ -209,14 +209,14 @@ Vec3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 	}
 
 	// if obstacle avoidance is needed, do it
-	if (obstacleAvoidance != Vec3::zero)
+	if (obstacleAvoidance != osVector3::zero)
 	{
 		steeringForce += obstacleAvoidance;
 	}
 	else
 	{
 		// otherwise consider avoiding collisions with others
-		Vec3 collisionAvoidance;
+		osVector3 collisionAvoidance;
 		const float caLeadTime = 3;
 
 		// find all neighbors within maxRadius using proximity database
@@ -231,7 +231,7 @@ Vec3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 			steerToAvoidNeighbors (caLeadTime, neighbors) * 10;
 
 		// if collision avoidance is needed, do it
-		if (collisionAvoidance != Vec3::zero)
+		if (collisionAvoidance != osVector3::zero)
 		{
 			steeringForce += collisionAvoidance;
 		}
@@ -243,7 +243,7 @@ Vec3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 
 			// do (interactively) selected type of path following
 			const float pfLeadTime = 3;
-			const Vec3 pathFollow =
+			const osVector3 pathFollow =
 				(gUseDirectedPathFollowing ?
 				steerToFollowPath (pathDirection, pfLeadTime, *path) :
 			steerToStayOnPath (pfLeadTime, *path));
@@ -269,9 +269,9 @@ void NetPedestrian::draw (void)
 
 //-----------------------------------------------------------------------------
 // called when steerToFollowPath decides steering is required
-void NetPedestrian::annotatePathFollowing (const Vec3& future,
-							const Vec3& onPath,
-							const Vec3& target,
+void NetPedestrian::annotatePathFollowing (const osVector3& future,
+							const osVector3& onPath,
+							const osVector3& target,
 							const float outside)
 {
 	const Color yellow (1, 1, 0);
@@ -288,8 +288,8 @@ void NetPedestrian::annotatePathFollowing (const Vec3& future,
 	// draw a two-toned line between the future test point and its
 	// projection onto the path, the change from dark to light color
 	// indicates the boundary of the tube.
-	const Vec3 boundaryOffset = (onPath - future).normalize() * outside;
-	const Vec3 onPathBoundary = future + boundaryOffset;
+	const osVector3 boundaryOffset = (onPath - future).normalize() * outside;
+	const osVector3 onPathBoundary = future + boundaryOffset;
 	annotationLine (onPath, onPathBoundary, darkOrange);
 	annotationLine (onPathBoundary, future, lightOrange);
 }
@@ -306,7 +306,7 @@ void NetPedestrian::annotateAvoidCloseNeighbor (const AbstractVehicle& other,
 	const Color red (1, 0.1f, 0);
 	const Color color = headOn ? red : green;
 	const char* string = headOn ? "OUCH!" : "pardon me";
-	const Vec3 location = position() + Vec3 (0, 0.5f, 0);
+	const osVector3 location = position() + osVector3 (0, 0.5f, 0);
 	if (OpenSteer::annotationIsOn())
 		draw2dTextAt3dLocation (*string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
 }
@@ -316,8 +316,8 @@ void NetPedestrian::annotateAvoidCloseNeighbor (const AbstractVehicle& other,
 // (parameter names commented out to prevent compiler warning from "-W")
 void NetPedestrian::annotateAvoidNeighbor (const AbstractVehicle& threat,
 							const float /*steer*/,
-							const Vec3& ourFuture,
-							const Vec3& threatFuture)
+							const osVector3& ourFuture,
+							const osVector3& threatFuture)
 {
 	const Color green (0.15f, 0.6f, 0.0f);
 
@@ -334,12 +334,12 @@ void NetPedestrian::annotateAvoidNeighbor (const AbstractVehicle& threat,
 // xxx CaptureTheFlag.cpp
 void NetPedestrian::annotateAvoidObstacle (const float minDistanceToCollision)
 {
-	const Vec3 boxSide = side() * radius();
-	const Vec3 boxFront = forward() * minDistanceToCollision;
-	const Vec3 FR = position() + boxFront - boxSide;
-	const Vec3 FL = position() + boxFront + boxSide;
-	const Vec3 BR = position()            - boxSide;
-	const Vec3 BL = position()            + boxSide;
+	const osVector3 boxSide = side() * radius();
+	const osVector3 boxFront = forward() * minDistanceToCollision;
+	const osVector3 FR = position() + boxFront - boxSide;
+	const osVector3 FL = position() + boxFront + boxSide;
+	const osVector3 BR = position()            - boxSide;
+	const osVector3 BL = position()            + boxSide;
 	const Color white (1,1,1);
 	annotationLine (FR, FL, white);
 	annotationLine (FL, BL, white);

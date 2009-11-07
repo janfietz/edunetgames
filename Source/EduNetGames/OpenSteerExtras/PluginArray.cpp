@@ -1,10 +1,12 @@
 #include "PluginArray.h"
 
+#include "glui/GL/glui.h"
+
 using namespace OpenSteer;
 
 
 //-----------------------------------------------------------------------------
-PluginArray::PluginArray(bool bAddToRegistry)
+PluginArray::PluginArray(bool bAddToRegistry):m_pkParentPlugin(NULL)
 {
 
 }
@@ -29,8 +31,29 @@ void PluginArray::removeAllPlugins( void )
 //-----------------------------------------------------------------------------
 void PluginArray::addPlugin( AbstractPlugin* pkPlugin )
 {
-	AbstractPluginPtr spPlugin(pkPlugin);
-	this->push_back( spPlugin );
+	if( NULL == this->findPlugin( pkPlugin ) )
+	{
+		AbstractPluginPtr spPlugin(pkPlugin);
+		pkPlugin->setParentPlugin( this );
+		this->push_back( spPlugin );
+	}
+}
+
+//-----------------------------------------------------------------------------
+AbstractPlugin* PluginArray::findPlugin( AbstractPlugin* pkPlugin ) const
+{
+	TPluginArray::const_iterator kIter = this->begin();
+	TPluginArray::const_iterator kEnd = this->end();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkArrayPlugin = (*kIter).get();
+		if( pkArrayPlugin == pkPlugin )
+		{
+			return pkPlugin;
+		}
+		++kIter;
+	}
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -44,6 +67,7 @@ void PluginArray::removePlugin( AbstractPlugin* pkPlugin )
 		if( pkArrayPlugin == pkPlugin )
 		{
 			pkArrayPlugin->close();
+			pkArrayPlugin->setParentPlugin( NULL );
 			this->erase( kIter );
 			break;
 		}
@@ -180,13 +204,28 @@ const AVGroup& PluginArray::allVehicles(void) const
 	return this->m_kVehicles;
 }
 
+//-----------------------------------------------------------------------------
+AbstractPlugin* PluginArray::next(void) const 
+{ 
+	return OpenSteer::Plugin::findNextPlugin( this );
+};
+
 // implement to initialize additional gui functionality
 //-----------------------------------------------------------------------------
-void PluginArray::initGui(void) 
+void PluginArray::initGui( void* pkUserdata ) 
 {
-	// do nothing here !
-	// implement in derived classes
-	// prevent glui dependency
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>(pkUserdata);
+
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		GLUI_Panel* subPluginPanel = glui->add_panel_to_panel( pluginPanel, pkPlugin ? pkPlugin->name() : "Plugin" );
+		pkPlugin->initGui( subPluginPanel );
+		++kIter;
+	}
 };
 
 //-----------------------------------------------------------------------------
@@ -216,11 +255,6 @@ private:
 
 };
 
-//-----------------------------------------------------------------------------
-AbstractPlugin* PluginArray::next(void) const 
-{ 
-	return OpenSteer::Plugin::findNextPlugin( this );
-};
 
 
 //PluginArray gTestPluginArray;

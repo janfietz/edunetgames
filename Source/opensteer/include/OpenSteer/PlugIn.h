@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteerDemo Plugin class
@@ -38,7 +38,7 @@
 // 11-13-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // A pattern for a specific user-defined OpenSteerDemo Plugin class called Foo.
 // Defines class FooPlugin, then makes a single instance (singleton) of it.
 /*
@@ -66,7 +66,7 @@ FooPlugin gFooPlugin;
 
 
 */
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_PLUGIN_H
@@ -76,7 +76,7 @@ FooPlugin gFooPlugin;
 #include "OpenSteer/AbstractVehicle.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 namespace OpenSteer {
@@ -118,8 +118,14 @@ namespace OpenSteer {
 		// returns pointer to the next Plugin in "selection order"
 		virtual AbstractPlugin* next(void) const = 0;
 
+		// returns pointer to the parent Plugin
+		virtual AbstractPlugin* getParentPlugin(void) const = 0;
+
+		// set a parent Plugin
+		virtual void setParentPlugin( AbstractPlugin* ) = 0;
+
 		// implement to initialize additional gui functionality
-		virtual void initGui(void) = 0;
+		virtual void initGui( void* /*pkUserdata*/ ) = 0;
 
 		// format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
@@ -140,7 +146,7 @@ namespace OpenSteer {
                                                    const float elapsedTime);
 
         // constructor
-        Plugin (bool bAddToRegistry = true);
+        Plugin( bool bAddToRegistry = true );
 
         // destructor
         virtual ~Plugin();
@@ -164,8 +170,14 @@ namespace OpenSteer {
         // returns pointer to the next Plugin in "selection order"
         AbstractPlugin* next (void) const;
 
+		// returns pointer to the parent Plugin
+		virtual AbstractPlugin* getParentPlugin(void) const { return m_pkParentPlugin; };
+
+		// set a parent Plugin
+		virtual void setParentPlugin( AbstractPlugin* pkPlugin ) { m_pkParentPlugin = pkPlugin; };
+
 		// implement to initialize additional gui functionality
-		virtual void initGui(void) {};
+		virtual void initGui( void* /*pkUserdata*/ ) {};
 
         // format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
@@ -195,9 +207,10 @@ namespace OpenSteer {
 		// 
 		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
 		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
-		static int getPluginsIdx( const AbstractPlugin* pkPlugin );
+		static int getPluginIdx( const AbstractPlugin* pkPlugin );
 
     private:
+		AbstractPlugin* m_pkParentPlugin;
 
         // This array stores a list of all Plugins.  It is manipulated by the
         // constructor and destructor, and used in findByName and applyToAll.
@@ -209,5 +222,5 @@ namespace OpenSteer {
 } // namespace OpenSteer    
     
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_PLUGIN_H
