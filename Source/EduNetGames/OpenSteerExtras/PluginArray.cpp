@@ -180,6 +180,15 @@ const AVGroup& PluginArray::allVehicles(void) const
 	return this->m_kVehicles;
 }
 
+// implement to initialize additional gui functionality
+//-----------------------------------------------------------------------------
+void PluginArray::initGui(void) 
+{
+	// do nothing here !
+	// implement in derived classes
+	// prevent glui dependency
+};
+
 //-----------------------------------------------------------------------------
 class FooPlugin : public Plugin
 {

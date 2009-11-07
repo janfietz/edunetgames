@@ -20,5 +20,6 @@ namespace OpenSteer{
 
 }
 
+typedef OpenSteer::Vec3 osVector3;
 
 #endif //  __OPENSTEEREXTRASTYPES_H__

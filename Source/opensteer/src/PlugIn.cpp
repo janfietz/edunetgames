@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteerDemo Plugin class
@@ -34,13 +34,13 @@
 // 11-13-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Plugin.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Plugin registry
 //
 // XXX replace with STL utilities
@@ -51,7 +51,7 @@ const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // constructor
 
 
@@ -65,23 +65,25 @@ OpenSteer::Plugin::Plugin (bool bAddToRegistry)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // destructor
 
 
 OpenSteer::Plugin::~Plugin() {}
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // returns pointer to the next Plugin in "selection order"
 
 
+//-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::next (void) const
 {
 	return OpenSteer::Plugin::findNextPlugin( this );
 }
 
+//-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 {
@@ -96,8 +98,20 @@ OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 	return NULL;
 }
 
+//-----------------------------------------------------------------------------
+int OpenSteer::Plugin::getPluginsIdx( const AbstractPlugin* pkPlugin )
+{
+	for (int i = 0; i < itemsInRegistry; ++i)
+	{
+		if (pkPlugin == registry[i])
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // search the class registry for a Plugin with the given name
 // returns NULL if none is found
 
@@ -118,7 +132,7 @@ OpenSteer::Plugin::findByName (const char* string)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // apply a given function to all Plugins in the registry
 
 
@@ -132,7 +146,7 @@ OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
@@ -164,7 +178,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // returns pointer to default Plugin (currently, first in registry)
 
 
@@ -185,7 +199,7 @@ OpenSteer::Plugin::findDefault (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // save this instance in the class's registry of instances
 // (for use by contractors)
 
@@ -198,4 +212,4 @@ OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

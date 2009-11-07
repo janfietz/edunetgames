@@ -118,6 +118,9 @@ namespace OpenSteer {
 		// returns pointer to the next Plugin in "selection order"
 		virtual AbstractPlugin* next(void) const = 0;
 
+		// implement to initialize additional gui functionality
+		virtual void initGui(void) = 0;
+
 		// format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
 		{
@@ -161,6 +164,9 @@ namespace OpenSteer {
         // returns pointer to the next Plugin in "selection order"
         AbstractPlugin* next (void) const;
 
+		// implement to initialize additional gui functionality
+		virtual void initGui(void) {};
+
         // format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {
@@ -189,6 +195,7 @@ namespace OpenSteer {
 		// 
 		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
 		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
+		static int getPluginsIdx( const AbstractPlugin* pkPlugin );
 
     private:
 

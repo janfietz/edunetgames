@@ -1,5 +1,7 @@
 #include "NetPedestrianPlugin.h"
 
+
+
 namespace OpenSteer
 {
 
@@ -9,6 +11,9 @@ using namespace OpenSteer;
 
 
 #include "EduNetGames.h"
+
+#include "glui/GL/glui.h"
+
 
 namespace
 {
@@ -280,6 +285,20 @@ public:
 
 
 	const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
+
+	// implement to initialize additional gui functionality
+	virtual void initGui(void) 
+	{
+		GLUI* glui = OpenSteerDemo::ms_kApplication.getAppGui();
+		GLUI_Panel* pluginPanel = OpenSteerDemo::ms_kApplication.getPluginPanel();
+
+		glui->add_button_to_panel( pluginPanel, "Test" );
+		glui->add_button_to_panel( pluginPanel, "Add" );
+		glui->add_button_to_panel( pluginPanel, "Remove" );
+
+	};
+
+
 
 	// crowd: a group (STL vector) of all Pedestrians
 	NetPedestrian::groupType crowd;

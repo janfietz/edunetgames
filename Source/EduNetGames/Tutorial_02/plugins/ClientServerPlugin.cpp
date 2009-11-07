@@ -5,6 +5,7 @@
 
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
+#include "glui/GL/glui.h"
 
 EduNetGames::EmptyPlugin gEmptyPlugin;
 
@@ -33,5 +34,16 @@ const char* ClientServerPlugin::name(void) const
 {
 	return "ClientServerPlugin";
 }
+
+//-----------------------------------------------------------------------------
+void ClientServerPlugin::initGui(void) 
+{
+	GLUI* glui = OpenSteerDemo::ms_kApplication.getAppGui();
+	GLUI_Panel* pluginPanel = OpenSteerDemo::ms_kApplication.getPluginPanel();
+
+	glui->add_button_to_panel( pluginPanel, "Connect Client" );
+	glui->add_button_to_panel( pluginPanel, "Connect Server" );
+};
+
 
 ClientServerPlugin gClientServerPlugin;

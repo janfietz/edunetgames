@@ -112,6 +112,8 @@ namespace OpenSteer {
 		// select the plug-in by index
 		static void selectPluginByIndex (size_t idx);
 
+		static void selectPlugin( AbstractPlugin* pkPlugin );
+
         // handle function keys an a per-plug-in basis
         static void functionKeyForPlugin (int keyNumber);
 
@@ -269,6 +271,8 @@ namespace OpenSteer {
         static void pushPhase (const int newPhase);
         static void popPhase (void);
         static void updatePhaseTimers (void);
+
+
 
         // XXX apparently MS VC6 cannot handle initialized static const members,
         // XXX so they have to be initialized not-inline.

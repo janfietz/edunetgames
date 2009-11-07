@@ -45,6 +45,8 @@ namespace OpenSteer
 
 		virtual AbstractPlugin* next(void) const;
 
+		// implement to initialize additional gui functionality
+		virtual void initGui(void);
 	private:
 		AVGroup m_kVehicles;
 
