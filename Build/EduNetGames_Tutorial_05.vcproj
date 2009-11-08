@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginSelector.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginSelector.h"
 				>
 			</File>
@@ -191,19 +195,15 @@
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginSelector.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EmptyRpcPlugin.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\NetPluginHosts.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\PluginSelectionPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\PluginSelectionPlugin.h"
 					>
 				</File>
 				<Filter
@@ -235,7 +235,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="from tutorial 4"
+					Name="from tutorial 3"
 					>
 					<File
 						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
@@ -246,11 +246,43 @@
 						>
 					</File>
 					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidConditionReplica.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidConditionReplica.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidFactory.h"
+						>
+					</File>
+					<File
 						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
 						>
 					</File>
 					<File
 						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplica.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplica.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplicaConnection.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplicaConnection.h"
 						>
 					</File>
 				</Filter>

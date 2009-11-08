@@ -1,9 +1,9 @@
-#include "EmptyRpcPlugin.h"
+#include "PluginSelectionPlugin.h"
 #include "Tutorial_03/plugins/NetBoidPlugin.h"
 
 namespace{
 
-	class NetPluginClientHost : public EmptyClientRpcPlugin
+	class NetPluginClientHost : public PluginClientPlugin
 	{
 	private:
 		OpenSteer::AbstractPlugin* CreatePluginByName(
@@ -18,6 +18,6 @@ namespace{
 		}
 	};
 
-	EmptyServerRpcPlugin<NetPeerBoidPlugin> gNetServerHost;
+	PluginServerPlugin<NetPeerBoidPlugin> gNetServerHost;
 	NetPluginClientHost gNetClientHost;
 }

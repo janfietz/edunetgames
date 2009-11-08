@@ -178,19 +178,31 @@
 		<Filter
 			Name="plugins"
 			>
+			<File
+				RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
+				>
+			</File>
 			<Filter
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\BoidReplica.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidConditionReplica.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidConditionReplica.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidFactory.h"
 					>
 				</File>
 				<File
@@ -199,6 +211,22 @@
 				</File>
 				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplica.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplica.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplicaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplicaConnection.h"
 					>
 				</File>
 				<Filter

@@ -65,7 +65,7 @@ void gluiSelectPlugin()
 Application::Application( void ):
 m_fSimulationFPS(60.0f),
 m_fTimeFactor(1.0f),
-m_bFixedSimulationFPS(1),
+m_bFixedSimulationFPS(false),
 m_bEnableAnnotation(0)
 {
 	setDefaultSettings();

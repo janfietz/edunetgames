@@ -31,6 +31,17 @@ void PluginSelector::Initialize(RakNet::RPC3* rpc3Inst,
 	
 };
 
+void PluginSelector::DeserializeConstructionRequestAccepted(
+		RakNet::BitStream *serializationBitstream,
+		RakNet::Connection_RM3 *acceptingConnection)
+{
+	if (this->m_rpc3Inst!=NULL)
+	{
+		this->TestRpc();
+		this->SelectServerPlugin();
+	}
+}
+
 void PluginSelector::PostDeserializeConstruction(
 	RakNet::Connection_RM3 *sourceConnection)
 {
@@ -74,24 +85,18 @@ void PluginSelector::SelectServerPlugin( RakNet::RPC3 *rpcFromNetwork )
 	if (rpcFromNetwork==0)
 	{
 		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectServerPlugin", GetNetworkID(), rpcFromNetwork);
-	}
-	else
+	} else
 	{
 		RakNet::RakString rs( this->m_pkPluginHost->GetCurrentPluginName() );
-		this->SelectPlugin(rs, NULL);
-	}	
+		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), rs,  rpcFromNetwork);
+	}
 }
 
 void PluginSelector::SelectPlugin( 
 	RakNet::RakString kPluginName,
 	RakNet::RPC3 *rpcFromNetwork )
-{
-	if (rpcFromNetwork==0)
-	{
-		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), kPluginName,  rpcFromNetwork);
-	}
-	else
-	{		
-		this->m_pkPluginHost->SelectPluginByName(kPluginName.C_String());
-	}	
+{	
+	printf("\nRakNet::SelectPlugin %s called from remote\n",
+		kPluginName.C_String());
+	this->m_pkPluginHost->SelectPluginByName(kPluginName.C_String());
 }

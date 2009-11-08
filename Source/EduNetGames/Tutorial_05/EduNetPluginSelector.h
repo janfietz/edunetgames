@@ -21,27 +21,31 @@ public:
 		RakNet::Connection_RM3 *destinationConnection,
 		RakNet::ReplicaManager3 *replicaManager3)
 	{
-		return QueryConstruction_ServerConstruction(destinationConnection);
+		return QueryConstruction_ClientConstruction(destinationConnection);
 	}
 	
 	virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection)
 	{
-		return QueryRemoteConstruction_ServerConstruction(sourceConnection);
+		return QueryRemoteConstruction_ClientConstruction(sourceConnection);
 	}	
 
 	virtual RakNet::RM3QuerySerializationResult QuerySerialization(
 		RakNet::Connection_RM3 *destinationConnection)
 	{
-		return RakNet::RM3QSR_NEVER_CALL_SERIALIZE;
+		return QuerySerialization_ClientSerializable(destinationConnection);
 	}
 
 	virtual RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(
 		RakNet::Connection_RM3 *droppedConnection) const
 	{
-		return QueryActionOnPopConnection_Server(droppedConnection);
-	}
+		return QueryActionOnPopConnection_Client(droppedConnection);
+	}	
 
 	virtual void PostDeserializeConstruction(RakNet::Connection_RM3 *sourceConnection);
+
+	virtual void DeserializeConstructionRequestAccepted(
+		RakNet::BitStream *serializationBitstream,
+		RakNet::Connection_RM3 *acceptingConnection);
 
 	void TestRpc( RakNet::RPC3 *rpcFromNetwork  = 0);
 	void TestRpcAnswer( RakNet::RPC3 *rpcFromNetwork  = 0);
@@ -103,15 +107,18 @@ class PluginSelectorReplicaManager : public RakNet::ReplicaManager3
 {
 	virtual RakNet::Connection_RM3* AllocConnection(SystemAddress systemAddress, RakNetGUID rakNetGUID) const 
 	{
-		if(true == this->m_bIsClient)
+		if(false == m_bIsClient)
 		{
 			return new PluginSelectorClientConnection(
-							this->m_rpc3Inst,
-							this->m_pkPluginHost,
-							systemAddress,
-							rakNetGUID);
+						this->m_rpc3Inst,
+						this->m_pkPluginHost,
+						systemAddress,
+						rakNetGUID);
 		}
-		return new PluginSelectorConnection(systemAddress,rakNetGUID);
+		return new PluginSelectorConnection(
+						systemAddress,
+						rakNetGUID);
+		
 	}
 	virtual void DeallocConnection(RakNet::Connection_RM3 *connection) const {
 		delete connection;
