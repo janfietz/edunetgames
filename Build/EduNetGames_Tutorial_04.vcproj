@@ -190,6 +190,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianFactory.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianPlugin.cpp"
 					>
 				</File>
@@ -203,6 +207,14 @@
 				</File>
 				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplica.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplicaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplicaConnection.h"
 					>
 				</File>
 				<Filter

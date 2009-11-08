@@ -1,5 +1,6 @@
 #include "NetPedestrianPlugin.h"
 #include "NetPedestrian.h"
+#include "NetPedestrianFactory.h"
 #include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 
@@ -18,17 +19,6 @@ namespace
 
 }
 
-//-----------------------------------------------------------------------------
-class NetPedestrian* NetPedestrianPlugin::PedestrianFactory::CreateBoid( ProximityDatabase& pd )
-{
-	return new NetPedestrian(pd);
-};
-
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::PedestrianFactory::DestroyBoid( const class NetPedestrian* boid )
-{
-	delete boid;
-};
 
 //-----------------------------------------------------------------------------
 const char* NetPedestrianPlugin::name (void) const 
@@ -45,12 +35,17 @@ float NetPedestrianPlugin::selectionOrderSortKey (void) const
 //-----------------------------------------------------------------------------
 NetPedestrianPlugin::~NetPedestrianPlugin() 
 {
-
+	this->setNetPedestrianFactory( NULL );
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::open (void)
 {
+	if(0 == this->m_pkPedestrianFactory)
+	{
+		this->setNetPedestrianFactory( new NetPedestrianFactory() );
+	}
+
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
 	nextPD ();
@@ -59,8 +54,15 @@ void NetPedestrianPlugin::open (void)
 	for (int i = 0; i < gPedestrianStartCount; i++) addPedestrianToCrowd ();
 
 	// initialize camera and selectedVehicle
-	NetPedestrian& firstPedestrian = **crowd.begin();
-	OpenSteerDemo::init3dCamera (firstPedestrian);
+	if( crowd.size() > 0 )
+	{
+		AbstractVehicle* pkVehicle = *crowd.begin();
+		if( NULL != pkVehicle )
+		{
+			AbstractVehicle& firstPedestrian = *pkVehicle;
+			OpenSteerDemo::init3dCamera( firstPedestrian );
+		}
+	}
 	OpenSteerDemo::camera.mode = Camera::cmFixedDistanceOffset;
 	OpenSteerDemo::camera.fixedTarget.set (15, 0, 30);
 	OpenSteerDemo::camera.fixedPosition.set (15, 70, -70);
@@ -72,7 +74,11 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 	// update each NetPedestrian
 	for (iterator i = crowd.begin(); i != crowd.end(); i++)
 	{
-		(**i).update (currentTime, elapsedTime);
+		AbstractVehicle* pkVehicle = (*i);
+		if( NULL != pkVehicle )
+		{
+			pkVehicle->update (currentTime, elapsedTime);
+		}
 	}
 }
 
@@ -80,17 +86,20 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTime)
 {
 	// selected NetPedestrian (user can mouse click to select another)
-	AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
+	AbstractVehicle* selected = OpenSteerDemo::selectedVehicle;
 
 	// NetPedestrian nearest mouse (to be highlighted)
-	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse();
+	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
 
 	// update camera
-	OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+	if( NULL != selected )
+	{
+		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
 
-	// draw "ground plane"
-	if (OpenSteerDemo::selectedVehicle) gridCenter = selected.position();
-	OpenSteerDemo::gridUtility (gridCenter);
+		// draw "ground plane"
+		if (OpenSteerDemo::selectedVehicle) gridCenter = selected->position();
+		OpenSteerDemo::gridUtility (gridCenter);
+	}
 
 	// draw and annotate each NetPedestrian
 	for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).draw (); 
@@ -98,26 +107,29 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	// draw the path they follow and obstacles they avoid
 	drawPathAndObstacles ();
 
-	// highlight NetPedestrian nearest mouse
-	OpenSteerDemo::highlightVehicleUtility (nearMouse);
+	if( ( NULL != nearMouse ) && ( NULL != selected ) )
+	{
+		// highlight NetPedestrian nearest mouse
+		OpenSteerDemo::highlightVehicleUtility (*nearMouse);
 
-	// textual annotation (at the vehicle's screen position)
-	serialNumberAnnotationUtility (selected, nearMouse);
+		// textual annotation (at the vehicle's screen position)
+		serialNumberAnnotationUtility(*selected, *nearMouse);
+	}
 
 	// textual annotation for selected NetPedestrian
 	if (OpenSteerDemo::selectedVehicle && OpenSteer::annotationIsOn())
 	{
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
-		const osVector3 textPosition = selected.position() + textOffset;
+		const osVector3 textPosition = selected->position() + textOffset;
 		const osVector3 camPosition = OpenSteerDemo::camera.position();
-		const float camDistance = osVector3::distance (selected.position(),
+		const float camDistance = osVector3::distance (selected->position(),
 			camPosition);
 		const char* spacer = "      ";
 		std::ostringstream annote;
 		annote << std::setprecision (2);
 		annote << std::setiosflags (std::ios::fixed);
-		annote << spacer << "1: speed: " << selected.speed() << std::endl;
+		annote << spacer << "1: speed: " << selected->speed() << std::endl;
 		annote << std::setprecision (1);
 		annote << spacer << "2: cam dist: " << camDistance << std::endl;
 		annote << spacer << "3: no third thing" << std::ends;
@@ -244,10 +256,20 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	NetPedestrian* pedestrian = new NetPedestrian (*pd);
-	crowd.push_back (pedestrian);
+	NetPedestrian* pedestrian = this->m_pkPedestrianFactory->CreateNetPedestrian( *pd );
+	this->addPedestrianToCrowd( pedestrian );
+}
+
+//-----------------------------------------------------------------------------
+void NetPedestrianPlugin::addPedestrianToCrowd( NetPedestrian* pkVehicle )
+{
+	if( NULL == pkVehicle )
+	{
+		return;
+	}
+	crowd.push_back( pkVehicle );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	if (kVG.population() == 1) OpenSteerDemo::selectedVehicle = pedestrian;
+	if (kVG.population() == 1) OpenSteerDemo::selectedVehicle = pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
@@ -265,7 +287,7 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 			OpenSteerDemo::selectedVehicle = NULL;
 
 		// delete the NetPedestrian
-		delete pedestrian;
+		this->m_pkPedestrianFactory->DestroyNetPedestrian( pedestrian );
 	}
 }
 
@@ -344,68 +366,18 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 
 };
 
+//-----------------------------------------------------------------------------
+void NetPedestrianPlugin::setNetPedestrianFactory( class NetPedestrianFactory* pkFactory )
+{
+	if( this->m_pkPedestrianFactory != pkFactory )
+	{
+		ET_SAFE_DELETE( this->m_pkPedestrianFactory );
+		this->m_pkPedestrianFactory = pkFactory;
+	}
+}
 
 NetPedestrianPlugin gPedestrianPlugin;
 
 
 
-#include "OpenSteerExtras/PluginArray.h"
-#include "Tutorial_02/plugins/ClientPlugin.h"
-#include "Tutorial_02/plugins/PeerPlugin.h"
 
-//-----------------------------------------------------------------------------
-class PedestrianClientServerPlugin : public OpenSteer::PluginArray
-{
-	ET_DECLARE_BASE(OpenSteer::PluginArray);
-public:
-
-	PedestrianClientServerPlugin();
-	virtual ~PedestrianClientServerPlugin();
-
-	//---------------------------------------------------------------------
-	// interface AbstractPlugin
-	virtual const char *name(void) const; 
-
-	virtual void initGui( void* pkUserdata );
-
-
-};
-
-
-
-typedef PeerPlugin<NetPedestrianPlugin> PedestrianServerPlugin;
-typedef ClientPlugin<NetPedestrianPlugin> PedestrianClientPlugin;
-
-//-----------------------------------------------------------------------------
-PedestrianClientServerPlugin::PedestrianClientServerPlugin()
-{
-	Plugin::addToRegistry(this);
-
-	this->addPlugin( new PedestrianServerPlugin( false ) );
-	this->addPlugin( new PedestrianClientPlugin( false ) );
-}
-
-//-----------------------------------------------------------------------------
-PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
-{
-
-}
-
-//-----------------------------------------------------------------------------
-const char* PedestrianClientServerPlugin::name(void) const
-{
-	return "PedestrianClientServerPlugin";
-}
-
-//-----------------------------------------------------------------------------
-void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
-{
-	BaseClass::initGui( pkUserdata );
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-	// 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
-	// 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
-};
-
-PedestrianClientServerPlugin gClientServerPlugin;

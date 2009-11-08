@@ -11,7 +11,7 @@ class NetPedestrianPlugin : public OpenSteer::Plugin
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
 	NetPedestrianPlugin( bool bAddToRegistry = true ):
-	  BaseClass( bAddToRegistry ),pd(NULL){}
+	  BaseClass( bAddToRegistry ),pd(NULL),m_pkPedestrianFactory(NULL){}
 
 	virtual ~NetPedestrianPlugin();
 
@@ -50,7 +50,8 @@ public:
 
 	void drawPathAndObstacles (void);
 
-	void addPedestrianToCrowd (void);
+	void addPedestrianToCrowd(void);
+	void addPedestrianToCrowd( class NetPedestrian* pkVehicle );
 
 	void removePedestrianFromCrowd (void);
 
@@ -60,17 +61,10 @@ public:
 	// OpenSteerDemo user pushes a function key.
 	void nextPD (void);
 
-
-	class PedestrianFactory
-	{
-	public:
-
-		virtual class NetPedestrian* CreateBoid( osProximityDatabase& pd );
-
-		virtual void DestroyBoid( const class NetPedestrian* boid );
-	};
+	void setNetPedestrianFactory( class NetPedestrianFactory* pkFactory );
 
 private:
+	class NetPedestrianFactory* m_pkPedestrianFactory;
 
 	// type for a group of Pedestrians
 	typedef std::vector<class NetPedestrian*> groupType;
