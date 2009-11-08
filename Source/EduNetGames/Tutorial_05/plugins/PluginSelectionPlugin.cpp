@@ -1,42 +1,46 @@
-#include "EmptyRpcPlugin.h"
-#include "EduNet/network/OSReplicaTypes.h"
-#include "Tutorial_03/plugins/NetBoidPlugin.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
-
-
-
+#include "PluginSelectionPlugin.h"
 
 //-----------------------------------------------------------------------------
-EmptyClientRpcPlugin::EmptyClientRpcPlugin(bool bAddToRegistry):
+PluginClientPlugin::PluginClientPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry )
 {
 	
 }
 //-----------------------------------------------------------------------------
-void EmptyClientRpcPlugin::StartNetworkSession( void )
+void PluginClientPlugin::StartNetworkSession( void )
 {
 	BaseClass::StartNetworkSession();
 	this->InitializeRpcSystem();	
 }
 
 //-----------------------------------------------------------------------------
-void EmptyClientRpcPlugin::InitializeRpcSystem( void )
+void PluginClientPlugin::InitializeRpcSystem( void )
 {
 	this->m_kRpc3Inst.SetNetworkIDManager(&this->m_kNetworkIdManager);	
 	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, true);	
 
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
+
+	
 	
 }
 //-----------------------------------------------------------------------------
-void EmptyClientRpcPlugin::DeleteContent( void )
+void PluginClientPlugin::CreateContent( void )
+{
+	BaseClass::CreateContent();
+	PluginSelector* pkNewSelector = new PluginSelector();
+	pkNewSelector->Initialize(&this->m_kRpc3Inst, this);	
+	this->m_kReplicaManager.Reference( pkNewSelector );	
+}
+//-----------------------------------------------------------------------------
+void PluginClientPlugin::DeleteContent( void )
 {
 	this->m_kGamePlugin.removeAllPlugins();
 	BaseClass::DeleteContent();
 }
 //-----------------------------------------------------------------------------
-void EmptyClientRpcPlugin::SelectPluginByName( 
+void PluginClientPlugin::SelectPluginByName( 
 	const char* pszPluginName )
 {
 	printf("Create plugin: %s \n", pszPluginName);
@@ -59,7 +63,7 @@ void EmptyClientRpcPlugin::SelectPluginByName(
 
 }
 //-----------------------------------------------------------------------------
-const char* EmptyClientRpcPlugin::name (void) const
+const char* PluginClientPlugin::name (void) const
 {
 	const char* pszCurrentPluginName = this->GetCurrentPluginName();
 	if(NULL != pszCurrentPluginName )
@@ -69,7 +73,7 @@ const char* EmptyClientRpcPlugin::name (void) const
 	return "ClientRpcPlugin";
 }
 //-----------------------------------------------------------------------------
-const char* EmptyClientRpcPlugin::GetCurrentPluginName( void ) const
+const char* PluginClientPlugin::GetCurrentPluginName( void ) const
 {
 	AbstractPlugin* pkCurrentPlugin = this->m_kGamePlugin.getPlugin( 0 );
 	if( NULL != pkCurrentPlugin)

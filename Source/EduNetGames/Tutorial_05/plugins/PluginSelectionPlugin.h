@@ -11,29 +11,25 @@
 
 // ----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
-class EmptyServerRpcPlugin : public PeerPlugin<PluginClass>,
+class PluginServerPlugin : public PeerPlugin<PluginClass>,
 	public EduNetGames::PluginHost
 {
 	ET_DECLARE_BASE(PeerPlugin<PluginClass>);
 public:
-	EmptyServerRpcPlugin(bool bAddToRegistry = true):
+	PluginServerPlugin(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry )
 	{
 		m_bAutoConnect = 0;
 	};
-	virtual ~EmptyServerRpcPlugin(){};
+	virtual ~PluginServerPlugin(){};
 
 	virtual const char* name (void) const;
 
 	 bool requestInitialSelection (void) const {return true;}
 	 virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 	 
-	virtual bool needRedraw ( void ) const { return false; }
-	
-// 	virtual bool DoAutoConnect( void ) const
-// 	{
-// 		return false;
-// 	}
+	virtual bool needRedraw ( void ) const { return false; }	
+
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );
@@ -51,7 +47,7 @@ private:
 		this->m_uiPortPongCount = 1;
 	}
 
-	PluginSelector m_kPluginSelector;
+	
 	PluginSelectorReplicaManager m_kReplicaManager;
 	RakNet::RPC3 m_kRpc3Inst;
 	
@@ -59,7 +55,7 @@ private:
 
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-void EmptyServerRpcPlugin<PluginClass>::StartNetworkSession( void )
+void PluginServerPlugin<PluginClass>::StartNetworkSession( void )
 {
 	BaseClass::StartNetworkSession();
 	this->InitializeRpcSystem();
@@ -67,48 +63,47 @@ void EmptyServerRpcPlugin<PluginClass>::StartNetworkSession( void )
 
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-void EmptyServerRpcPlugin<PluginClass>::InitializeRpcSystem( void )
+void PluginServerPlugin<PluginClass>::InitializeRpcSystem( void )
 {
 	this->m_kRpc3Inst.SetNetworkIDManager(&this->m_kNetworkIdManager);	
 	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, false);
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
 
-	m_kPluginSelector.Initialize(&this->m_kRpc3Inst, this);	
+	
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-void EmptyServerRpcPlugin<PluginClass>::CreateContent ( void )
+void PluginServerPlugin<PluginClass>::CreateContent ( void )
 {
-	BaseClass::CreateContent();
-	this->m_kReplicaManager.Reference( &this->m_kPluginSelector );	
+	BaseClass::CreateContent();	
 }
 
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-const char* EmptyServerRpcPlugin<PluginClass>::name (void) const {
+const char* PluginServerPlugin<PluginClass>::name (void) const {
 	const char* pszCurrentPluginName = this->GetCurrentPluginName();
 	if(NULL != pszCurrentPluginName )
 	{
 		return pszCurrentPluginName ;
 	}
-	return "EmptyServerRpcPlugin";
+	return "PluginServerPlugin";
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-const char* EmptyServerRpcPlugin<PluginClass>::GetCurrentPluginName( void ) const
+const char* PluginServerPlugin<PluginClass>::GetCurrentPluginName( void ) const
 {	
 	return this->m_kGamePlugin.name();	
 }
 
 // ----------------------------------------------------------------------------
-class EmptyClientRpcPlugin : public ClientPlugin<OpenSteer::PluginArray>,
+class PluginClientPlugin : public ClientPlugin<OpenSteer::PluginArray>,
 	public EduNetGames::PluginHost
 {
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::PluginArray>);
 public:
-	EmptyClientRpcPlugin(bool bAddToRegistry = true);
-	virtual ~EmptyClientRpcPlugin(){};
+	PluginClientPlugin(bool bAddToRegistry = true);
+	virtual ~PluginClientPlugin(){};
 
 	virtual const char* name (void) const;
 
@@ -118,6 +113,7 @@ public:
 	virtual bool needRedraw ( void ) const { return false; }
 	
 	virtual void StartNetworkSession( void );
+	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
 
 	const char* GetCurrentPluginName( void ) const;
