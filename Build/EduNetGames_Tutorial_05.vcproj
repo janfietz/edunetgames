@@ -291,11 +291,11 @@
 				Name="from tutorial 1"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.h"
 					>
 				</File>
 			</Filter>

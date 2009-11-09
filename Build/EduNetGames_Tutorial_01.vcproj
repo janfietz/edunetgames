@@ -179,7 +179,7 @@
 			Name="plugins"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.cpp"
+				RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -191,7 +191,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\plugins\EmptyPlugin.h"
+				RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.h"
 				>
 			</File>
 		</Filter>
