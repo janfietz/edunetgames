@@ -179,39 +179,39 @@
 			Name="plugins"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\Boids.cpp"
+				RelativePath="..\Source\EduNetGames\Start\Boids.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\CaptureTheFlag.cpp"
+				RelativePath="..\Source\EduNetGames\Start\CaptureTheFlag.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\LowSpeedTurn.cpp"
+				RelativePath="..\Source\EduNetGames\Start\LowSpeedTurn.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\MapDrive.cpp"
+				RelativePath="..\Source\EduNetGames\Start\MapDrive.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\MultiplePursuit.cpp"
+				RelativePath="..\Source\EduNetGames\Start\MultiplePursuit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\OneTurning.cpp"
+				RelativePath="..\Source\EduNetGames\Start\OneTurning.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\Pedestrian.cpp"
+				RelativePath="..\Source\EduNetGames\Start\Pedestrian.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\PedestriansWalkingAnEight.cpp"
+				RelativePath="..\Source\EduNetGames\Start\PedestriansWalkingAnEight.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\plugins\Soccer.cpp"
+				RelativePath="..\Source\EduNetGames\Start\Soccer.cpp"
 				>
 			</File>
 		</Filter>
