@@ -3,7 +3,7 @@
 
 #include "EduNet/common/EduNetCommon.h"
 #include "EduNet/network/OSReplica.h"
-#include "plugins/EduNetPluginHost.h"
+#include "EduNetPluginHost.h"
 
 
 //-----------------------------------------------------------------------------

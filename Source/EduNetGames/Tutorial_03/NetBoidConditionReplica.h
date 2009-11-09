@@ -2,7 +2,7 @@
 #define __NETBOIDCONDITIONREPLCIA_H__
 
 #include "EduNet/network/OSReplica.h"
-#include "plugins/Boids.h"
+#include "Boids.h"
 
 //-----------------------------------------------------------------------------
 class NetBoidConditionReplica : public OSObjectReplica

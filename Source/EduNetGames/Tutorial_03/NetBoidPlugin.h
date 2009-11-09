@@ -3,7 +3,7 @@
 #include "Tutorial_02/plugins/PeerPlugin.h"
 
 
-#include "../NetBoidReplicaConnection.h"
+#include "NetBoidReplicaConnection.h"
 
 
 // ----------------------------------------------------------------------------

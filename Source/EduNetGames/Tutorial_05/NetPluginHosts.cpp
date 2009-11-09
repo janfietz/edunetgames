@@ -1,5 +1,5 @@
 #include "PluginSelectionPlugin.h"
-#include "Tutorial_03/plugins/NetBoidPlugin.h"
+#include "Tutorial_03/NetBoidPlugin.h"
 
 namespace{
 

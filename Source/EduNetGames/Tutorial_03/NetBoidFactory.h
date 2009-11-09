@@ -1,7 +1,7 @@
 #ifndef __NETBOIDFACTORY_H__
 #define __NETBOIDFACTORY_H__
 
-#include "plugins/Boids.h"
+#include "Boids.h"
 #include "NetBoidReplicaConnection.h"
 
 // ----------------------------------------------------------------------------

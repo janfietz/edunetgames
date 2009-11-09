@@ -2,8 +2,8 @@
 #include "EduNet/network/OSReplicaTypes.h"
 #include "OpenSteerExtras/AbstractVehicleGroup.h"
 
-#include "../NetBoidFactory.h"
-#include "../NetBoidConditionReplica.h"
+#include "NetBoidFactory.h"
+#include "NetBoidConditionReplica.h"
 
 NetPeerBoidPlugin gNetPeerBoidPlugin;
 NetClientBoidPlugin gNetClientBoidPlugin;

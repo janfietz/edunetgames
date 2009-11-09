@@ -203,6 +203,7 @@ void NetworkPlugin::CreateNetworkInterface( void )
 void NetworkPlugin::DestroyNetworkInterface( void )
 {
 	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
+	this->m_pNetInterface = NULL;
 	printf("Destroyed peer.\n");
 }
 

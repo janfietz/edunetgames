@@ -180,7 +180,7 @@
 			Name="plugins"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\EduNetPluginHost.h"
+				RelativePath="..\Source\EduNetGames\Tutorial_05\EduNetPluginHost.h"
 				>
 			</File>
 			<File
@@ -195,15 +195,15 @@
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\NetPluginHosts.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_05\NetPluginHosts.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\PluginSelectionPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_05\PluginSelectionPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_05\plugins\PluginSelectionPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_05\PluginSelectionPlugin.h"
 					>
 				</File>
 				<Filter
@@ -238,11 +238,11 @@
 					Name="from tutorial 3"
 					>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.cpp"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\Boids.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\Boids.h"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\Boids.h"
 						>
 					</File>
 					<File
@@ -262,11 +262,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.cpp"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidPlugin.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\plugins\NetBoidPlugin.h"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidPlugin.h"
 						>
 					</File>
 					<File

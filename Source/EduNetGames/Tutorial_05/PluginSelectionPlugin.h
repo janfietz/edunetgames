@@ -5,7 +5,7 @@
 #include "Tutorial_02/plugins/ClientPlugin.h"
 #include "Tutorial_02/plugins/PeerPlugin.h"
 #include "EduNetPluginHost.h"
-#include "../EduNetPluginSelector.h"
+#include "EduNetPluginSelector.h"
 
 #include "OpenSteerExtras/PluginArray.h"
 

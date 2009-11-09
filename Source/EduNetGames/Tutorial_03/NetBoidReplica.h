@@ -1,7 +1,7 @@
 #ifndef __BOIDREPLICA_H__
 #define __BOIDREPLICA_H__
 
-#include "plugins/Boids.h"
+#include "Boids.h"
 #include "EduNet/network/OSReplicaTypes.h"
 
 //-----------------------------------------------------------------------------
