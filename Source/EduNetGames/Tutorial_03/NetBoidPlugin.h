@@ -1,6 +1,6 @@
 #pragma once
-#include "Tutorial_02/plugins/ClientPlugin.h"
-#include "Tutorial_02/plugins/PeerPlugin.h"
+#include "Tutorial_02/ClientPlugin.h"
+#include "Tutorial_02/PeerPlugin.h"
 
 
 #include "NetBoidReplicaConnection.h"

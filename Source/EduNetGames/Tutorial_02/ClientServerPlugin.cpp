@@ -1,7 +1,7 @@
 #include "ClientServerPlugin.h"
 
 
-#include "Tutorial_01/plugins/EmptyPlugin.h"
+#include "Tutorial_01/EmptyPlugin.h"
 
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"

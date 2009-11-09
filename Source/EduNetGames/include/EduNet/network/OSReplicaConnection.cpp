@@ -1,5 +1,5 @@
 #include "OSReplicaConnection.h"
-#include "Tutorial_03/plugins/Boids.h"
+#include "Tutorial_03/Boids.h"
 
 //-----------------------------------------------------------------------------
  RakNet::Replica3* OSReplicaConnection::AllocReplica(
