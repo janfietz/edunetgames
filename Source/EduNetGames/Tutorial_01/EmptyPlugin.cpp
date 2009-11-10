@@ -3,7 +3,7 @@
 #include "glui/GL/glui.h"
 
 
-EduNet::InstanceCount EduNetGames::EmptyVehicle::ms_kInstanceCount;
+OpenSteer::InstanceTracker EduNetGames::EmptyVehicle::ms_kInstanceCount;
 
 
 using namespace EduNetGames;

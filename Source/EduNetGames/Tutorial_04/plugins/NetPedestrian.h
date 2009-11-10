@@ -14,6 +14,7 @@ public:
 	NetPedestrian( OpenSteer::ProximityDatabase& pd );
 	virtual ~NetPedestrian();
 
+	OS_IMPLEMENT_CLASSNAME( NetPedestrian )
 
 	virtual void reset( void );
 	virtual void update( const float currentTime, const float elapsedTime);

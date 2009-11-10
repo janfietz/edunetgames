@@ -4,7 +4,7 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 	
-	EduNet::InstanceCount SimpleNetworkVehicle::ms_kInstanceCount;
+	OpenSteer::InstanceTracker SimpleNetworkVehicle::ms_kInstanceCount;
 
 	SimpleNetworkVehicle::SimpleNetworkVehicle():
 		m_uiId( SimpleNetworkVehicle::ms_kInstanceCount.Constructor() ) 

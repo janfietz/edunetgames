@@ -24,7 +24,8 @@ m_pkHostPlugin(pkHostPlugin)
 //-----------------------------------------------------------------------------
 RakNet::RakString NetPedestrianReplica::GetName(void) const
 {
-	return "NetPedestrianReplica";
+	static NetPedestrian kProtoType;
+	return kProtoType.getClassName();
 }
 
 //-----------------------------------------------------------------------------

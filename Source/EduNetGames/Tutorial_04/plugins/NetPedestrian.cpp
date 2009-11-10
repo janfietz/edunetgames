@@ -103,6 +103,8 @@ NetPedestrian::NetPedestrian( ProximityDatabase& pd )
 
 	// reset Pedestrian state
 	reset ();
+
+	const char* pszClassName = this->getClassName();
 }
 
 

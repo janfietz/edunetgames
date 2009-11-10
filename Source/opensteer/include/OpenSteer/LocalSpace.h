@@ -160,6 +160,8 @@ namespace OpenSteer {
 			return this->m_kEntity.getEntityId();
 		}
 
+		OS_IMPLEMENT_CLASSNAME( Super )
+
         // accessors (get and set) for side, up, forward and position
         const Vec3& side     (void) const {return _side;};
         const Vec3& up       (void) const {return _up;};

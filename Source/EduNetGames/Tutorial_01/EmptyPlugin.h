@@ -67,7 +67,7 @@ namespace EduNetGames{
 			drawBasic2dCircularVehicle (*this, gGray50);
 		}
 		EduNet::UpdatePeriodFloat m_kUpdatePeriod;
-		static EduNet::InstanceCount ms_kInstanceCount;
+		static OpenSteer::InstanceTracker ms_kInstanceCount;
 		size_t m_uiId;
 		ET_IMPLEMENT_CLASS_NO_COPY( EmptyVehicle );
 	};

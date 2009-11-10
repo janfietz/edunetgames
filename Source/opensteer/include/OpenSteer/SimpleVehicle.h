@@ -98,7 +98,9 @@ namespace OpenSteer {
         // destructor
         ~SimpleVehicle ();
 
-        // reset vehicle state
+		OS_IMPLEMENT_CLASSNAME( SimpleVehicle )
+
+       // reset vehicle state
         virtual void reset (void)
         {
             // reset LocalSpace state

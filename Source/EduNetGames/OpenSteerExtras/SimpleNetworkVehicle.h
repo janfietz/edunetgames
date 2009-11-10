@@ -28,10 +28,12 @@ namespace OpenSteer {
 		SimpleNetworkVehicle();
 		virtual ~SimpleNetworkVehicle();
 
+		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
+
 		virtual size_t getVehicleId( void ) const;
 
 	private:
-		static EduNet::InstanceCount ms_kInstanceCount;
+		static OpenSteer::InstanceTracker ms_kInstanceCount;
 		size_t m_uiId;
 
 

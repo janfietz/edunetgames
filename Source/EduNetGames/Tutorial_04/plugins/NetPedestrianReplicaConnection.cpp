@@ -25,9 +25,10 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 	RakNet::BitStream *allocationId,
 	RakNet::ReplicaManager3 *replicaManager3)
 {
+	static NetPedestrianReplica kReplica;
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
-	if (typeName=="NetPedestrianReplica"){
+	if ( typeName== kReplica.GetName() ){
 		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pNetPedestrianPlugin  );
 		// 		OpenSteer::AbstractVehicleGroup kVG( this->m_pNetPedestrianPlugin->allVehicles() );
 		// 		kVG.addVehicle( pkNewReplica->AccessVehicle() );

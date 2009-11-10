@@ -8,7 +8,7 @@ class NetPedestrianReplica : public OSReplica<class NetPedestrian>
 {
 	ET_DECLARE_BASE( NetPedestrianReplica )
 public:
-
+	NetPedestrianReplica():m_pkHostPlugin(NULL){}
 	NetPedestrianReplica( OpenSteer::ProximityDatabase& pd );
 
 	NetPedestrianReplica( OpenSteer::AbstractPlugin* pPlugin );

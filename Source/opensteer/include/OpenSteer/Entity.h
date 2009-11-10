@@ -1,7 +1,8 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
-#include "InstanceTracker.h"
+#include "OpenSteer/OpenSteerMacros.h"
+#include "OpenSteer/InstanceTracker.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -14,6 +15,7 @@ namespace OpenSteer {
 		virtual ~AbstractEntity() { /* Nothing to do. */ }
 
 		virtual size_t getEntityId( void ) const = 0;
+		OS_DECLARE_CLASSNAME
 	};
 
 	//-------------------------------------------------------------------------
@@ -46,6 +48,8 @@ namespace OpenSteer {
 		{
 			return this->m_kInstance.getId();
 		}
+
+		OS_IMPLEMENT_CLASSNAME( Super )
 	private:
 		EntityInstance m_kInstance;
 	};
