@@ -17,7 +17,7 @@ public:
 private:
 
 	NetBoidReplicaManager* m_pkReplicaManager;
-	DataStructures::Map<unsigned int, RakNet::Replica3* > m_uidMap;
+	DataStructures::Map<size_t, RakNet::Replica3* > m_uidMap;
 };
 
 // ----------------------------------------------------------------------------

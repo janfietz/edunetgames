@@ -43,6 +43,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetGames.h"
+#include "EduNetApplication.h"
 
 #include "OpenSteer/Annotation.h"
 #include "OpenSteer/Color.h"
@@ -69,7 +70,6 @@
 
 
 EduNetOptions OpenSteer::OpenSteerDemo::options;
-EduNet::Application OpenSteer::OpenSteerDemo::ms_kApplication;
 
 //-----------------------------------------------------------------------------
 namespace
@@ -202,7 +202,7 @@ OpenSteer::OpenSteerDemo::errorExit (const char* message)
 void 
 OpenSteer::OpenSteerDemo::exit (int exitCode)
 {
-	if(0 != selectedPlugin)
+	if(NULL != selectedPlugin)
 	{
 		selectedPlugin->close();
 	}
@@ -233,7 +233,7 @@ OpenSteer::OpenSteerDemo::selectPlugin( AbstractPlugin* pkPlugin )
 	}
 	closeSelectedPlugin();
 	selectedPlugin = pkPlugin;
-	ms_kApplication.onPluginSelected( selectedPlugin );
+	EduNet::Application::AccessApplication().onPluginSelected( selectedPlugin );
 	openSelectedPlugin();
 }
 
@@ -303,7 +303,7 @@ OpenSteer::OpenSteerDemo::openSelectedPlugin (void)
 				GLUI_SUBWINDOW_RIGHT );
 			glui->set_main_gfx_window( windowID );
 
-			OpenSteer::OpenSteerDemo::ms_kApplication.addGuiElements( glui );
+			EduNet::Application::AccessApplication().addGuiElements( glui );
 		}
 	}
 */
@@ -334,7 +334,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 
 	// invoke selected Plugin's Update method
 //	selectedPlugin->update (currentTime, elapsedTime);
-	OpenSteerDemo::ms_kApplication.updateSelectedPlugin( currentTime, elapsedTime );
+	EduNet::Application::AccessApplication().updateSelectedPlugin( currentTime, elapsedTime );
 
 	// return to previous phase
 	popPhase ();
@@ -354,7 +354,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 
 	// invoke selected Plugin's Draw method
 //	selectedPlugin->redraw (currentTime, elapsedTime);
-	OpenSteerDemo::ms_kApplication.redrawSelectedPlugin( currentTime, elapsedTime );
+	EduNet::Application::AccessApplication().redrawSelectedPlugin( currentTime, elapsedTime );
 
 	// draw any annotation queued up during selected Plugin's Update method
 	drawAllDeferredLines ();
@@ -1087,8 +1087,8 @@ namespace {
 	// This is used to control the frame rate (60Hz).
 	void timerFunc(int)
 	{
-		glutSetWindow(windowID);
-		glutPostRedisplay();
+//		glutSetWindow(windowID);
+//		glutPostRedisplay();
 		glutTimerFunc(framePeriod, timerFunc, 0);
 	}
 
@@ -1407,9 +1407,35 @@ namespace {
 
 			// exit application with normal status 
 		case esc:
-			glutDestroyWindow (windowID);
-			OpenSteer::OpenSteerDemo::printMessage ("exit.");
-			OpenSteer::OpenSteerDemo::exit (0);
+			{
+#if 0
+// to be investigated
+				OpenSteer::OpenSteerDemo::printMessage ("exit.");
+				GLUI* glui = ::getRootGLUI();
+				if( NULL != glui )
+				{
+					int glutWindow = glutGetWindow();
+					GLUI_Master.close_all();
+					//glui->close();
+					// 					if( OpenSteer::OpenSteerDemo::selectedPlugin )
+					// 					{
+					// 						OpenSteer::OpenSteerDemo::selectedPlugin->close();
+					// 						OpenSteer::OpenSteerDemo::selectedPlugin = NULL;
+					// 					}
+					//OpenSteer::OpenSteerDemo::exit (0);
+				}
+				else
+				{
+					glutDestroyWindow( windowID );
+					OpenSteer::OpenSteerDemo::exit( 0 );
+				}
+#endif
+				OpenSteer::OpenSteerDemo::exit( 0 );
+			}
+			break;
+// 			glutDestroyWindow (windowID);
+// 			OpenSteer::OpenSteerDemo::printMessage ("exit.");
+// 			OpenSteer::OpenSteerDemo::exit (0);
 
 		default:
 			message << "unrecognized single key command: " << key;
@@ -1469,7 +1495,7 @@ namespace {
 
 
 	void 
-		displayFunc (void)
+		displayFunc000 (void)
 	{
 		// update global simulation clock
 		OpenSteer::OpenSteerDemo::clock.update ();
@@ -1513,9 +1539,8 @@ namespace {
 		glutSwapBuffers();
 	}
 
-
 	// ------------------------------------------------------------------------
-	void idleFunc( void )
+	void displayFunc( void )
 	{
 		int current_window, new_window(0);
 		current_window = glutGetWindow();
@@ -1529,12 +1554,21 @@ namespace {
 			glutSetWindow( new_window );
 		}
 
-		displayFunc();
+		displayFunc000();
 		// 		if (demo)
 		// 			demo->moveAndDisplay();
 
 		glutSetWindow( current_window );
 
+	}
+	/*
+*/
+	// ------------------------------------------------------------------------
+	void idleFunc( void )
+	{
+//		displayFunc();
+		glutSetWindow(windowID);
+		glutPostRedisplay();
 	}
 
 } // annonymous namespace
@@ -1607,7 +1641,7 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 		GLUI_SUBWINDOW_RIGHT );
 	glui->set_main_gfx_window( windowID );
 
-	OpenSteer::OpenSteerDemo::ms_kApplication.addGuiElements( glui );
+	EduNet::Application::AccessApplication().addGuiElements( glui );
 
 
 	// Use a timer to control the frame rate.

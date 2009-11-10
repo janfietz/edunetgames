@@ -65,6 +65,7 @@
 
 
 #include "OpenSteer/Vec3.h"
+#include "OpenSteer/Entity.h"
 
 
 // ----------------------------------------------------------------------------
@@ -73,7 +74,7 @@
 namespace OpenSteer {
 
 
-    class AbstractLocalSpace
+	class AbstractLocalSpace : public AbstractEntity
     {
     public:
         virtual ~AbstractLocalSpace() { /* Nothing to do. */ }
@@ -140,6 +141,7 @@ namespace OpenSteer {
         // a 3x4 transformation matrix with [0 0 0 1] as the final column
 
     private:
+		Entity m_kEntity;
 
         Vec3 _side;     //    side-pointing unit basis vector
         Vec3 _up;       //  upward-pointing unit basis vector
@@ -147,6 +149,10 @@ namespace OpenSteer {
         Vec3 _position; // origin of local space
 
     public:
+		virtual size_t getEntityId( void ) const
+		{
+			return this->m_kEntity.getEntityId();
+		}
 
         // accessors (get and set) for side, up, forward and position
         const Vec3& side     (void) const {return _side;};
@@ -349,8 +355,10 @@ namespace OpenSteer {
     // ----------------------------------------------------------------------------
     // Concrete LocalSpace class, and a global constant for the identity transform
 
+	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
+	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 
-    typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
+ //   typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 
     const LocalSpace gGlobalSpace;
 

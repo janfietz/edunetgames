@@ -4,6 +4,7 @@
 #include "NetPedestrianPlugin.h"
 
 #include "OpenSteerExtras/PluginArray.h"
+#include "Tutorial_01/EmptyPlugin.h"
 #include "Tutorial_02/ClientPlugin.h"
 #include "Tutorial_02/PeerPlugin.h"
 
@@ -43,14 +44,14 @@ NetPedestrian* NetPedestrianReplicaFactory::CreateNetPedestrian(
 	NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pd );		
 	this->m_pkReplicaManager->Reference(pkNewReplica);
 
-	this->m_uidMap.Set((unsigned int)pkNewReplica->AccessVehicle(), pkNewReplica);
+	this->m_uidMap.Set(pkNewReplica->AccessVehicle()->getEntityId(), pkNewReplica);
 	return pkNewReplica->AccessVehicle();
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianReplicaFactory::DestroyNetPedestrian( const NetPedestrian* pkNetPedestrian)
 {	
-	unsigned int uiNetPedestrianAddress = (unsigned int)pkNetPedestrian;	
+	size_t uiNetPedestrianAddress = pkNetPedestrian->getEntityId();	
 	if(true == this->m_uidMap.Has(uiNetPedestrianAddress))
 	{
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiNetPedestrianAddress);		
@@ -243,3 +244,5 @@ PedestrianPeerPlugin gPedestrianPeerPlugin( true );
 PedestrianClientPlugin gPedestrianClientPlugin( true );
 
 PedestrianClientServerPlugin gClientServerPlugin;
+
+EduNetGames::EmptyPlugin gEmptyPlugin;

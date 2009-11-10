@@ -48,7 +48,6 @@
 
 #include "EduNet/common/EduNetCommon.h"
 #include "EduNet/options/EduNetOptions.h"
-#include "EduNetApplication.h"
 
 #include "OpenSteer/Clock.h"
 #include "OpenSteer/Plugin.h"
@@ -67,7 +66,6 @@ namespace OpenSteer {
     public:
 		// options
 		static EduNetOptions options;
-		static EduNet::Application ms_kApplication;
 
         // ------------------------------------------------------ component objects
 

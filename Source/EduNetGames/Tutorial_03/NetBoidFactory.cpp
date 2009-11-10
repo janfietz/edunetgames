@@ -8,14 +8,14 @@ OpenSteer::Boid* NetBoidReplicaFactory::CreateBoid(
 	NetBoidReplica* pkNewReplica = new NetBoidReplica( pd );		
 	this->m_pkReplicaManager->Reference(pkNewReplica);
 
-	this->m_uidMap.Set((unsigned int)pkNewReplica->AccessVehicle(), pkNewReplica);
+	this->m_uidMap.Set( pkNewReplica->AccessVehicle()->getEntityId(), pkNewReplica );
 	return pkNewReplica->AccessVehicle();
 }
 
 //-----------------------------------------------------------------------------
 void NetBoidReplicaFactory::DestroyBoid( const OpenSteer::Boid* pkBoid)
 {	
-	unsigned int uiBoidAddress = (unsigned int)pkBoid;	
+	size_t uiBoidAddress = pkBoid->getEntityId();	
 	if(true == this->m_uidMap.Has(uiBoidAddress))
 	{
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiBoidAddress);		

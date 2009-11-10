@@ -58,14 +58,23 @@ void gluiSelectPlugin()
 	}
 }
 
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+Application& Application::AccessApplication( void )
+{
+	static Application kApplication;
+	return kApplication;
+}
 
 //-----------------------------------------------------------------------------
 Application::Application( void ):
 m_fSimulationFPS(60.0f),
 m_fTimeFactor(1.0f),
-m_bFixedSimulationFPS(false),
+m_bFixedSimulationFPS(1),
 m_bEnableAnnotation(0)
 {
 	setDefaultSettings();
@@ -77,6 +86,37 @@ Application::~Application( void )
 {
 
 }
+
+//-----------------------------------------------------------------------------
+void fnExit0 (void)
+{
+	printf( "shutdown ...");
+	Application::_SDMShutdown();
+}
+
+//-----------------------------------------------------------------------------
+void Application::_SDMInit( void )
+{
+	atexit (fnExit0);
+}
+
+//-----------------------------------------------------------------------------
+void Application::_SDMShutdown( void )
+{
+	static bool bShutdown = false;
+	if( true == bShutdown )
+	{
+		return;
+	}
+	bShutdown = true;
+	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
+	if( NULL != selectedPlugin )
+	{
+		selectedPlugin->close();
+		OpenSteerDemo::selectedPlugin = NULL;
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 void Application::addGuiElements( GLUI* glui )

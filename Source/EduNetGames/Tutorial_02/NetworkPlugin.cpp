@@ -13,6 +13,7 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry ),
+		m_pNetInterface( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1)
 
@@ -226,14 +227,17 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 	// 	virtual bool Startup( unsigned short maxConnections, int _threadSleepTimer, SocketDescriptor *socketDescriptors, unsigned socketDescriptorCount )=0;
 	const int threadSleepTimer = 33;
 	bool bStarted(false);
-	while( false == bStarted )
+	if( NULL != this->m_pNetInterface )
 	{
-		while( SocketLayer::IsPortInUse(sd.port) == true )
-			++sd.port;
-		if( true == this->m_pNetInterface->Startup( maxAllowed, threadSleepTimer, &sd, 1 ) )
+		while( false == bStarted )
 		{
-			this->m_pNetInterface->SetMaximumIncomingConnections( maxIncoming );
-			bStarted = true;
+			while( SocketLayer::IsPortInUse(sd.port) == true )
+				++sd.port;
+			if( true == this->m_pNetInterface->Startup( maxAllowed, threadSleepTimer, &sd, 1 ) )
+			{
+				this->m_pNetInterface->SetMaximumIncomingConnections( maxIncoming );
+				bStarted = true;
+			}
 		}
 	}
 	return bStarted;
@@ -244,7 +248,10 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 void NetworkPlugin::StopNetworkSession( void )
 {	
 	this->CloseOpenConnections();
-	this->m_pNetInterface->Shutdown( 100,0 );	
+	if( NULL != this->m_pNetInterface )
+	{
+		this->m_pNetInterface->Shutdown( 100,0 );
+	}
 	this->m_eNetworkSessionType = ENetworkSessionType_Undefined;
 	this->m_kStats.reset();
 }
@@ -254,17 +261,20 @@ void NetworkPlugin::CloseOpenConnections( void )
 {
 	DataStructures::List<SystemAddress> kAddresses;
 	DataStructures::List<RakNetGUID> kGuids;
-	unsigned short usCount = this->m_pNetInterface->NumberOfConnections();
-	if( 0 < usCount )
+	if( NULL != this->m_pNetInterface )
 	{
-		this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
-		for(unsigned short us = 0; us < usCount; ++us)
+		unsigned short usCount = this->m_pNetInterface->NumberOfConnections();
+		if( 0 < usCount )
 		{
-			this->m_pNetInterface->CloseConnection(
-				kAddresses[us], true );
-		}
+			this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
+			for(unsigned short us = 0; us < usCount; ++us)
+			{
+				this->m_pNetInterface->CloseConnection(
+					kAddresses[us], true );
+			}
 
-		Sleep(1000);
+			Sleep(1000);
+		}
 	}
 }
 

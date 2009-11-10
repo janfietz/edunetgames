@@ -14,8 +14,6 @@ namespace EduNet	{
 class Application
 {
 public:
-	Application( void );
-	virtual ~Application( void );
 
 	void addGuiElements( GLUI *glui );
 
@@ -29,6 +27,11 @@ public:
 
 	void onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin );
 
+	static Application& AccessApplication( void );
+
+	static void _SDMInit( void );
+	static void _SDMShutdown( void );
+
 
 	float m_fSimulationFPS;
 	float m_fTimeFactor;
@@ -36,6 +39,8 @@ public:
 	int m_bEnableAnnotation;
 
 private:
+	Application( void );
+	virtual ~Application( void );
 
 	EduNet::UpdatePeriodFloat m_kUpdatePeriod;
 
