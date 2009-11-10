@@ -2,6 +2,9 @@
 
 #include "EduNet/common/EduNetCommon.h"
 
+#define CLIENT_PORT  23456
+#define SERVER_PORT  12345
+
 //-----------------------------------------------------------------------------
 enum ENetworkSessionType
 {
@@ -27,6 +30,16 @@ typedef struct TNetworkStats
 
 	size_t m_uiPacketsReceived;
 } NetworkStats;
+//-----------------------------------------------------------------------------
+typedef struct TNetworkAddress
+{
+public:
+	TNetworkAddress():
+		addressString("127.0.0.1"),
+		port(SERVER_PORT){}
+	RakNet::RakString addressString;
+	unsigned short port;
+}NetworkAddress;
 
 //-----------------------------------------------------------------------------
 class AbstractNetworkPlugin
@@ -69,7 +82,7 @@ public:
 	virtual bool IsConnected() const;
 	virtual bool DoAutoConnect( void ) const;
 	virtual bool Connect();
-	virtual void Disconnect(){};
+	virtual void Disconnect();
 
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );
@@ -77,6 +90,13 @@ public:
 	void StartClientNetworkSession( void );
 	bool StartupNetworkSession( 
 		SocketDescriptor& sd, unsigned short maxAllowed, unsigned short maxIncoming );
+
+	void ConnectToAddress( const NetworkAddress& kAddress );
+
+	NetworkAddress& GetCurrentAddress( void )
+	{
+		return this->m_kAddress;
+	};
 
 protected:
 
@@ -111,13 +131,15 @@ private:
 	void InitializeServerPortSettings( void );
 	virtual void InitializeServerPortAndPongCount( void );
 
-
+	virtual bool AddConnectBox( void ){ return false; }
 
 	void ReceivePackets( void );
 	void ReceivedPongPacket( Packet* pPacket );
 	void CheckPongTimeout( void );
 	void CloseOpenConnections( void );
-	bool WaitForPong( void ) const;
+	bool WaitForPong( void ) const;	
+
+	NetworkAddress m_kAddress;
 
 };
 
