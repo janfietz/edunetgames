@@ -90,7 +90,7 @@ Application::~Application( void )
 //-----------------------------------------------------------------------------
 void fnExit0 (void)
 {
-	printf( "shutdown ...");
+	printf( "shutdown ...\n");
 	Application::_SDMShutdown();
 }
 

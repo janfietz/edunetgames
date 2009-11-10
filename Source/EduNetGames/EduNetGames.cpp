@@ -205,6 +205,7 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 	if(NULL != selectedPlugin)
 	{
 		selectedPlugin->close();
+		selectedPlugin = NULL;
 	}
 	::exit (exitCode);
 }

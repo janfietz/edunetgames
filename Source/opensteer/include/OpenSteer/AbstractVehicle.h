@@ -50,9 +50,9 @@
 // ----------------------------------------------------------------------------
 
 namespace OpenSteer {
-
-
-    class AbstractVehicle : public AbstractLocalSpace 
+	
+	
+    class AbstractVehicle : public AbstractUpdatedLocalSpace 
     {
     public:
         virtual ~AbstractVehicle() { /* Nothing to do. */ }
@@ -93,7 +93,7 @@ namespace OpenSteer {
         virtual float setMaxSpeed (float) = 0;
 
 		// dp - added to support heterogeneous flocks
-		virtual void update(const float currentTime, const float elapsedTime) = 0;
+//		virtual void update(const float currentTime, const float elapsedTime) = 0;
 		// CP ++
 		virtual void draw(const float currentTime, const float elapsedTime) = 0;
 		virtual void reset (void) = 0;

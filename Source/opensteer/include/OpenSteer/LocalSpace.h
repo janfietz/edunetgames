@@ -65,6 +65,7 @@
 
 
 #include "OpenSteer/Vec3.h"
+#include "OpenSteer/AbstractUpdated.h"
 #include "OpenSteer/Entity.h"
 
 
@@ -126,7 +127,12 @@ namespace OpenSteer {
         virtual Vec3 localRotateForwardToSide (const Vec3& v) const = 0;
         virtual Vec3 globalRotateForwardToSide (const Vec3& globalForward) const=0;
     };
-
+    // ----------------------------------------------------------------------------
+	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {
+    public:
+        virtual ~AbstractUpdatedLocalSpace() { /* Nothing to do. */ }
+	};
+	
 
     // ----------------------------------------------------------------------------
     // LocalSpaceMixin is a mixin layer, a class template with a paramterized base
@@ -355,7 +361,6 @@ namespace OpenSteer {
     // ----------------------------------------------------------------------------
     // Concrete LocalSpace class, and a global constant for the identity transform
 
-	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 
  //   typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;

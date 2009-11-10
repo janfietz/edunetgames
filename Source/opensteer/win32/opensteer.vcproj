@@ -247,6 +247,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath="..\include\OpenSteer\AbstractState.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\AbstractUpdated.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\AbstractVehicle.h"
 				>
 			</File>
@@ -292,6 +300,14 @@
 			</File>
 			<File
 				RelativePath="..\include\OpenSteer\OldPathway.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\OpenSteerMacros.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\OpenSteerTypes.h"
 				>
 			</File>
 			<File
