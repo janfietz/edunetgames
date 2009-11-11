@@ -3,8 +3,7 @@
 #include "EduNet/common/EduNetDraw.h"
 
 
-static const int CLIENT_PORT = 23456;
-static const int SERVER_PORT = 12345;
+
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 
@@ -28,6 +27,31 @@ NetworkPlugin::~NetworkPlugin(void)
 }
 
 //-----------------------------------------------------------------------------
+void setPort(GLUI_Control* pkControl )
+{
+	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
+	
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
+	kAddress.port = pkTextBox->get_int_val();
+}
+//-----------------------------------------------------------------------------
+void setAddress(GLUI_Control* pkControl )
+{
+	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
+	
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
+	kAddress.addressString = pkTextBox->get_text();	
+}
+//-----------------------------------------------------------------------------
+void connectToAddress(GLUI_Control* pkControl )
+{
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	const NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
+	pkPlugin->ConnectToAddress(kAddress);
+}
+//-----------------------------------------------------------------------------
 void NetworkPlugin::initGui( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
@@ -42,7 +66,26 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	}
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
-//	glui->add_button_to_panel( pluginPanel, "Connect" );
+	if(true == this->AddConnectBox())
+	{
+		
+		GLUI_EditText* pkTextControl;
+		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Address", GLUI_EDITTEXT_TEXT,
+			NULL, -1, setAddress );
+		pkTextControl->set_text(this->m_kAddress.addressString.C_String());
+		pkTextControl->set_ptr_val( this );
+
+		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Port", GLUI_EDITTEXT_INT,
+			NULL, -1, setPort );
+		pkTextControl->set_int_val(this->m_kAddress.port);
+		pkTextControl->set_int_limits(0, (unsigned short)-1 );
+		pkTextControl->set_ptr_val( this );
+		
+		GLUI_Control* pkControl;
+		pkControl = glui->add_button_to_panel( pluginPanel, "Connect", -1 , connectToAddress );
+		pkControl->set_ptr_val( this );
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -247,7 +290,8 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::StopNetworkSession( void )
 {	
-	this->CloseOpenConnections();
+	this->CloseOpenConnections();	
+
 	if( NULL != this->m_pNetInterface )
 	{
 		this->m_pNetInterface->Shutdown( 100,0 );
@@ -271,10 +315,12 @@ void NetworkPlugin::CloseOpenConnections( void )
 			{
 				this->m_pNetInterface->CloseConnection(
 					kAddresses[us], true );
-			}
-
-			Sleep(1000);
+			}			
 		}
+		while(IsConnected())
+	{
+		Sleep(1);
+	}
 	}
 }
 
@@ -343,12 +389,26 @@ void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 				pPacket->systemAddress.ToString(),
 				pPacket->guid.ToString(),
 				this->m_kPongEndTime - RakNet::GetTime() );
-			this->m_pNetInterface->Connect(
-				pPacket->systemAddress.ToString(false),
-				pPacket->systemAddress.port,0,0);
+			
+			NetworkAddress kAddress;
+			kAddress.addressString = pPacket->systemAddress.ToString(false);
+			kAddress.port = pPacket->systemAddress.port;
+
+			this->ConnectToAddress( kAddress );
 			this->m_iWaitForPongPort *= -1;
 		}
 	}
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::ConnectToAddress( const NetworkAddress& kAddress )
+{
+	this->CloseOpenConnections();
+	
+
+	this->m_pNetInterface->Connect(
+		kAddress.addressString.C_String(),
+		kAddress.port,0,0);
 }
 
 //-----------------------------------------------------------------------------
@@ -361,6 +421,11 @@ bool NetworkPlugin::WaitForPong( void ) const
 bool NetworkPlugin::Connect()
 {	
 	return this->PingForOtherPeers( -1* this->m_iWaitForPongPort);	
+}
+
+void NetworkPlugin::Disconnect()
+{
+	this->CloseOpenConnections();
 }
 
 //-----------------------------------------------------------------------------

@@ -156,11 +156,12 @@ namespace OpenSteer{
 		void SetCurrentBoundaryCondition( const EBoidConstraintType  eType,
 			bool bLocalChange = true);
 
+		void initGui( void* pkUserdata );
+		void addBoidToFlock (void);
+		void removeBoidFromFlock (void);
 		// JF --
 
 	private:
-		void addBoidToFlock (void);
-		void removeBoidFromFlock (void);
 		
 		// select next "boundary condition / constraint / obstacle"
 		void nextBoundaryCondition (void);

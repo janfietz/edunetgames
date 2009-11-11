@@ -4,6 +4,8 @@
 
 #include "NetBoidFactory.h"
 #include "NetBoidConditionReplica.h"
+#include "glui/GL/glui.h"
+
 
 NetPeerBoidPlugin gNetPeerBoidPlugin;
 NetClientBoidPlugin gNetClientBoidPlugin;
@@ -63,6 +65,33 @@ void NetPeerBoidPlugin::ChangeReplicationInterval( RakNetTime additionalTime )
 	this->m_kReplicaManager.SetAutoSerializeInterval(
 		this->m_kReplicationSettings.interval);
 }
+//-----------------------------------------------------------------------------
+void NetPeerBoidPlugin::UpdateReplicationValue( void )
+{
+	this->m_kReplicaManager.SetAutoSerializeInterval(
+		this->m_kReplicationSettings.interval);
+}
+
+//-----------------------------------------------------------------------------
+void changeReplicationDelay(GLUI_Control* pkControl )
+{
+	NetPeerBoidPlugin* pkPlugin = (NetPeerBoidPlugin*)pkControl->ptr_val;
+	pkPlugin->UpdateReplicationValue();
+}
+
+//-----------------------------------------------------------------------------
+void NetPeerBoidPlugin::initGui( void* pkUserdata ) 
+{
+	BaseClass::initGui( pkUserdata );
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+	GLUI_Spinner* repSpinner =
+		glui->add_spinner_to_panel(pluginPanel, "ReplicationDelay", GLUI_SPINNER_INT, &m_kReplicationSettings.interval, -1, changeReplicationDelay);
+	repSpinner->set_int_limits(5, 1000000);
+	repSpinner->set_ptr_val( this );
+};
+
 
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::DeleteContent( void )

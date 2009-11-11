@@ -22,11 +22,14 @@ public:
 	virtual bool needRedraw ( void ) const { return false; }
 	
 	void handleFunctionKeys (int keyNumber);
+	virtual void initGui( void* pkUserdata );
 
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
+
+	void UpdateReplicationValue( void );
 
 private:
 	struct ReplicationParams
