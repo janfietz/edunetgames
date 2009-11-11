@@ -2,7 +2,7 @@
 #define __BOIDREPLICA_H__
 
 #include "Boids.h"
-#include "EduNet/network/OSReplicaTypes.h"
+#include "EduNetConnect/OSReplicaTypes.h"
 
 //-----------------------------------------------------------------------------
 class NetBoidReplica : public OSReplica<OpenSteer::Boid>

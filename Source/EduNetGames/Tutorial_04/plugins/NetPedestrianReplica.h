@@ -1,7 +1,7 @@
 #ifndef __NETPEDESTRIANREPLICA_H__
 #define __NETPEDESTRIANREPLICA_H__
 
-#include "EduNet/network/OSReplicaTypes.h"
+#include "EduNetConnect/OSReplicaTypes.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrianReplica : public OSReplica<class NetPedestrian>
