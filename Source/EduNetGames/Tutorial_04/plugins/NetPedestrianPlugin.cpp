@@ -350,6 +350,7 @@ void removePedestrian(GLUI_Control* pkControl )
 	pkPlugin->removePedestrianFromCrowd();
 }
 
+
 //-----------------------------------------------------------------------------
 // implement to initialize additional gui functionality
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
@@ -362,6 +363,9 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 	pkControl->set_ptr_val( this );
 	pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removePedestrian  );
 	pkControl->set_ptr_val( this );
+
+
+
 };
 
 //-----------------------------------------------------------------------------
