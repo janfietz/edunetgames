@@ -149,44 +149,84 @@
 			Name="EduNet"
 			>
 			<Filter
-				Name="network"
+				Name="plugins"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplica.h"
+					RelativePath="..\Source\src\EduNetConnect\ClientPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaConnection.cpp"
+					RelativePath="..\Source\src\EduNetConnect\ClientPlugin.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaConnection.h"
+					RelativePath="..\Source\src\EduNetConnect\ClientServerPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\network\OSReplicaTypes.h"
+					RelativePath="..\Source\src\EduNetConnect\ClientServerPlugin.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\include\EduNet\network\ReplicaManager.h"
+					RelativePath="..\Source\src\EduNetConnect\EduNetTutorialConfig.h"
 					>
 				</File>
-				<Filter
-					Name="raknet"
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkPlugin.cpp"
 					>
-					<File
-						RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3_Boost.h"
-						>
-					</File>
-				</Filter>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\PeerPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\PeerPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\ReplicaManager.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="raknet"
+				>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\ThirdParty\RakNet\DependentExtensions\RPC3\RPC3_Boost.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="replication"
+				>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\OSReplica.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\OSReplicaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\OSReplicaConnection.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\OSReplicaTypes.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

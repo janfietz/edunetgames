@@ -5,8 +5,8 @@
 
 #include "OpenSteerExtras/PluginArray.h"
 #include "Tutorial_01/EmptyPlugin.h"
-#include "Tutorial_02/ClientPlugin.h"
-#include "Tutorial_02/PeerPlugin.h"
+#include "EduNetConnect/ClientPlugin.h"
+#include "EduNetConnect/PeerPlugin.h"
 
 #include "EduNet/common/EduNetDraw.h"
 

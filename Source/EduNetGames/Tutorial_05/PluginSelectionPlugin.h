@@ -1,8 +1,8 @@
 #ifndef __EMPTYRPCPLUGIN_H__
 #define __EMPTYRPCPLUGIN_H__
 
-#include "Tutorial_02/ClientPlugin.h"
-#include "Tutorial_02/PeerPlugin.h"
+#include "EduNetConnect/ClientPlugin.h"
+#include "EduNetConnect/PeerPlugin.h"
 #include "EduNetPluginHost.h"
 #include "EduNetPluginSelector.h"
 
