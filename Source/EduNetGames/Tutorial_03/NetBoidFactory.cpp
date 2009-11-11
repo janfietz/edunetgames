@@ -15,13 +15,13 @@ OpenSteer::Boid* NetBoidReplicaFactory::CreateBoid(
 //-----------------------------------------------------------------------------
 void NetBoidReplicaFactory::DestroyBoid( const OpenSteer::Boid* pkBoid)
 {	
-	size_t uiBoidAddress = pkBoid->getEntityId();	
-	if(true == this->m_uidMap.Has(uiBoidAddress))
+	const OpenSteer::InstanceTracker::Id uiEntityId = pkBoid->getEntityId();	
+	if(true == this->m_uidMap.Has(uiEntityId))
 	{
-		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiBoidAddress);		
+		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
 		this->m_pkReplicaManager->BroadcastDestruction( 
 			pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
-		this->m_uidMap.Set(uiBoidAddress, NULL);
+		this->m_uidMap.Set(uiEntityId, NULL);
 		delete pReplicaObject;
 	}
 

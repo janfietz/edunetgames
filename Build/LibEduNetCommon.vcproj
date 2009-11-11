@@ -160,6 +160,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetDraw.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetDrawConfig.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetDrawExternal.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\include\EduNet\common\EduNetExternal.h"
 					>
 				</File>

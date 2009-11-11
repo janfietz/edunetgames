@@ -17,7 +17,7 @@ public:
 private:
 
 	NetBoidReplicaManager* m_pkReplicaManager;
-	DataStructures::Map<size_t, RakNet::Replica3* > m_uidMap;
+	DataStructures::Map<OpenSteer::InstanceTracker::Id, RakNet::Replica3* > m_uidMap;
 };
 
 // ----------------------------------------------------------------------------

@@ -30,6 +30,7 @@ public:
 	static Application& AccessApplication( void );
 
 	static void _SDMInit( void );
+	static void _SDMCleanup( void );
 	static void _SDMShutdown( void );
 
 
@@ -42,7 +43,9 @@ private:
 	Application( void );
 	virtual ~Application( void );
 
-	EduNet::UpdatePeriodFloat m_kUpdatePeriod;
+	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
+	OpenSteer::Clock m_kUpdateClock;
+	osScalar m_fUpdateCPUTime;
 
 };
 

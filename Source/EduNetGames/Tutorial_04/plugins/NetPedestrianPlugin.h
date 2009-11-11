@@ -66,11 +66,7 @@ public:
 private:
 	class NetPedestrianFactory* m_pkPedestrianFactory;
 
-	// type for a group of Pedestrians
-	typedef std::vector<class NetPedestrian*> groupType;
-	// crowd: a group (STL vector) of all Pedestrians
-	groupType crowd;
-	typedef groupType::const_iterator iterator;
+	osAVGroup crowd;
 
 	osVector3 gridCenter;
 

@@ -18,6 +18,7 @@ public:
 
 	virtual void redraw (const float currentTime, const float elapsedTime);
 	virtual void reset( void );
+	virtual void newPD( ProximityDatabase& pd );
 
 	virtual void addVehicle( AbstractVehicle* pkVehicle );
  	virtual void removeVehicle( const AbstractVehicle* pkVehicle );

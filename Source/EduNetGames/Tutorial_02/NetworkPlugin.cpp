@@ -1,6 +1,6 @@
 #include "NetworkPlugin.h"
 
-#include "glui/GL/glui.h"
+#include "EduNet/common/EduNetDraw.h"
 
 
 static const int CLIENT_PORT = 23456;

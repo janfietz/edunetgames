@@ -65,7 +65,9 @@ OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 
 //-----------------------------------------------------------------------------
 // destructor
-OpenSteer::Plugin::~Plugin() {}
+OpenSteer::Plugin::~Plugin() 
+{
+}
 
 
 //-----------------------------------------------------------------------------

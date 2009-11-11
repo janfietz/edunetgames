@@ -1,6 +1,7 @@
 #include "PluginArray.h"
 
-#include "glui/GL/glui.h"
+#include "EduNet/common/EduNetDraw.h"
+
 
 using namespace OpenSteer;
 

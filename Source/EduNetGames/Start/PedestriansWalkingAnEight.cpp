@@ -548,7 +548,7 @@ public:
                 {
                     std::ostringstream sn;
                     sn << "#"
-                        << ((Pedestrian*)vehicle)->serialNumber
+                        << vehicle->getEntityId()
                         << std::ends;
                     const Color textColor (0.8f, 1, 0.8f);
                     const Vec3 textOffset (0, 0.25f, 0);

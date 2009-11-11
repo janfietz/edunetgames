@@ -262,7 +262,7 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 
 //-----------------------------------------------------------------------------
 // draw this pedestrian into scene
-void NetPedestrian::draw (void)
+void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 {
 	drawBasic2dCircularVehicle (*this, gGray50);
 	drawTrail ();

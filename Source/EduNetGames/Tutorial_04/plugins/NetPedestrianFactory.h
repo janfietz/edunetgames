@@ -11,7 +11,7 @@ public:
 
 	virtual class NetPedestrian* CreateNetPedestrian( osProximityDatabase& pd );
 
-	virtual void DestroyNetPedestrian( const class NetPedestrian* boid );
+	virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* boid );
 };
 
 

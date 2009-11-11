@@ -19,7 +19,19 @@ m_kVehicles((AVGroup&)kAVGroup)
 }
 
 //-----------------------------------------------------------------------------
-void AbstractVehicleGroup::update (const float currentTime, const float elapsedTime)
+void AbstractVehicleGroup::newPD( ProximityDatabase& pd )
+{
+	AVIterator iter = m_kVehicles.begin();
+	AVIterator last = m_kVehicles.end();
+	while( iter != last )
+	{
+		(*iter)->newPD( pd );
+		++iter;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void AbstractVehicleGroup::update( const float currentTime, const float elapsedTime )
 {
 	AVIterator iter = m_kVehicles.begin();
 	AVIterator last = m_kVehicles.end();

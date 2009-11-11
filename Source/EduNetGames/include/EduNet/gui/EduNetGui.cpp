@@ -1,7 +1,5 @@
 #include "EduNetGui.h"
 
-#include "glui/GL/glui.h"
-
 using namespace EduNetGames;
 
 //-----------------------------------------------------------------------------

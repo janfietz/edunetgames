@@ -15,7 +15,7 @@ class NetPedestrian* NetPedestrianFactory::CreateNetPedestrian( osProximityDatab
 };
 
 //-----------------------------------------------------------------------------
-void NetPedestrianFactory::DestroyNetPedestrian( const class NetPedestrian* boid )
+void NetPedestrianFactory::DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* boid )
 {
 	delete boid;
 };
@@ -50,14 +50,14 @@ NetPedestrian* NetPedestrianReplicaFactory::CreateNetPedestrian(
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianReplicaFactory::DestroyNetPedestrian( const NetPedestrian* pkNetPedestrian)
+void NetPedestrianReplicaFactory::DestroyNetPedestrian( const OpenSteer::AbstractVehicle* pkNetPedestrian)
 {	
-	size_t uiNetPedestrianAddress = pkNetPedestrian->getEntityId();	
-	if(true == this->m_uidMap.Has(uiNetPedestrianAddress))
+	const OpenSteer::InstanceTracker::Id uiEntityId = pkNetPedestrian->getEntityId();	
+	if(true == this->m_uidMap.Has( uiEntityId ))
 	{
-		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiNetPedestrianAddress);		
+		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
-		this->m_uidMap.Set(uiNetPedestrianAddress, NULL);
+		this->m_uidMap.Set( uiEntityId, NULL );
 		delete pReplicaObject;
 	}
 

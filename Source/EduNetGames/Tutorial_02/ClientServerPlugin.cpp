@@ -5,7 +5,6 @@
 
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
-#include "glui/GL/glui.h"
 
 EduNetGames::EmptyPlugin gEmptyPlugin;
 

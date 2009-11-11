@@ -51,12 +51,12 @@ public:
 	  m_pkReplicaManager(pkManager){}
 
 	  virtual class NetPedestrian* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd );
-	  virtual void DestroyNetPedestrian( const class NetPedestrian* );	
+	  virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* );	
 
 private:
 
 	NetPedestrianReplicaManager* m_pkReplicaManager;
-	DataStructures::Map<size_t, RakNet::Replica3* > m_uidMap;
+	DataStructures::Map<OpenSteer::InstanceTracker::Id, RakNet::Replica3* > m_uidMap;
 };
 
 //-----------------------------------------------------------------------------
@@ -70,7 +70,7 @@ public:
 	  {
 		  return NULL;
 	  };
-	  virtual void DestroyNetPedestrian( const class NetPedestrian* )
+	  virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* )
 	  {
 	  }	
 };

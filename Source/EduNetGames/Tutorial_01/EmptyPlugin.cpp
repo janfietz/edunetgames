@@ -1,6 +1,6 @@
 #include "EmptyPlugin.h"
 
-#include "glui/GL/glui.h"
+#include "EduNet/common/EduNetDraw.h"
 
 
 OpenSteer::InstanceTracker EduNetGames::EmptyVehicle::ms_kInstanceCount;

@@ -5,14 +5,21 @@
 namespace OpenSteer	{
 
 //-----------------------------------------------------------------------------
-	class InstanceTracker
+	template < 
+		class TypeId
+	>
+	class TInstanceTracker
 	{
 	public:
-		InstanceTracker(): m_nConstructed(0), m_nDestructed(0), m_nOnCreateCalls(0), m_nAssigned(0)
+		TInstanceTracker(): 
+		  m_nConstructed(TypeId(0)), 
+		  m_nDestructed(TypeId(0)),
+		  m_nOnCreateCalls(TypeId(0)), 
+		  m_nAssigned(TypeId(0))
 		{
 		}
 
-		virtual ~InstanceTracker() {}
+		virtual ~TInstanceTracker() {}
 
 		size_t Constructor()
 		{
@@ -53,22 +60,25 @@ namespace OpenSteer	{
 		{
 			if (this->m_nDestructed > this->m_nConstructed)
 			{
-				return 0;
+				return TypeId(0);
 			}
 			return this->m_nConstructed - this->m_nDestructed;
 		}
 
 		void Reset()
 		{
-			m_nConstructed = m_nDestructed = m_nAssigned = m_nOnCreateCalls = 0;
+			m_nConstructed = m_nDestructed = m_nAssigned = m_nOnCreateCalls = TypeId(0);
 		}
+		typedef TypeId Id;
 
 	private:
-		size_t m_nConstructed;
-		size_t m_nDestructed;
-		size_t m_nAssigned;
-		size_t m_nOnCreateCalls;
+		TypeId m_nConstructed;
+		TypeId m_nDestructed;
+		TypeId m_nAssigned;
+		TypeId m_nOnCreateCalls;
 	};
+
+	typedef TInstanceTracker<size_t> InstanceTracker;
 
 
 } // namespace EduNet

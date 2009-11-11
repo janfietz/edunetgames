@@ -75,7 +75,6 @@ FooPlugin gFooPlugin;
 #include <iostream>
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
-#include "OpenSteer/Proximity.h"
 
 
 //-----------------------------------------------------------------------------
@@ -84,8 +83,6 @@ FooPlugin gFooPlugin;
 namespace OpenSteer {
 
 
-	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
-	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
     class AbstractPlugin
     {
@@ -161,7 +158,7 @@ namespace OpenSteer {
         virtual ~Plugin();
 
         // default reset method is to do a close then an open
-        void reset (void) {close (); open ();}
+		void reset (void) {close (); open ();}
 
         // default sort key (after the "built ins")
         float selectionOrderSortKey (void) const {return 1.0f;}

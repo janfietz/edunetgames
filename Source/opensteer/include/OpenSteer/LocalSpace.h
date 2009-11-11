@@ -155,12 +155,22 @@ namespace OpenSteer {
         Vec3 _position; // origin of local space
 
     public:
+		OS_IMPLEMENT_CLASSNAME( Super )
+
 		virtual size_t getEntityId( void ) const
 		{
 			return this->m_kEntity.getEntityId();
 		}
 
-		OS_IMPLEMENT_CLASSNAME( Super )
+		virtual NetworkId getNetworkId( void ) const
+		{
+			return this->m_kEntity.getNetworkId();
+		}
+
+		virtual void setNetworkId( NetworkId id )
+		{
+			this->m_kEntity.setNetworkId( id );
+		}
 
         // accessors (get and set) for side, up, forward and position
         const Vec3& side     (void) const {return _side;};

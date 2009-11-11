@@ -44,29 +44,15 @@
 
 #include "EduNetGames.h"
 #include "EduNetApplication.h"
+#include "EduNet/common/EduNetDraw.h"
 
-#include "OpenSteer/Annotation.h"
-#include "OpenSteer/Color.h"
-#include "OpenSteer/Vec3.h"
+// #include "OpenSteer/Annotation.h"
+// #include "OpenSteer/Color.h"
+// #include "OpenSteer/Vec3.h"
 
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
-
-// Include headers for OpenGL (gl.h), OpenGL Utility Library (glu.h) and
-// OpenGL Utility Toolkit (glut.h).
-//
-// XXX In Mac OS X these headers are located in a different directory.
-// XXX Need to revisit conditionalization on operating system.
-#if __APPLE__ && __MACH__
-#include <GLUT/glut.h>   // for Mac OS X
-#else
-#include <GL/glut.h>     // for Linux and Windows
-#endif
-
-#include "glui/GL/glui.h"
-
-
 
 
 EduNetOptions OpenSteer::OpenSteerDemo::options;
@@ -75,7 +61,7 @@ EduNetOptions OpenSteer::OpenSteerDemo::options;
 namespace
 {
 	int tx, ty, tw, th;
-	int framePeriod = 1;//todo: test if this value should be 0
+	int framePeriod = 100;//todo: test if this value should be 0
 
 	const char* appVersionName = EDUNET_APPNAME;//"OpenSteerDemo 0.8.2";
 
@@ -1567,9 +1553,9 @@ namespace {
 	// ------------------------------------------------------------------------
 	void idleFunc( void )
 	{
-//		displayFunc();
-		glutSetWindow(windowID);
-		glutPostRedisplay();
+		displayFunc();
+//		glutSetWindow(windowID);
+//		glutPostRedisplay();
 	}
 
 } // annonymous namespace
@@ -1579,12 +1565,30 @@ namespace {
 //-----------------------------------------------------------------------------
 // do all initialization related to graphics
 
+extern "C" {
+int APIENTRY __glutCreateWindowWithExit(const char *title, void (__cdecl *exitfunc)(int));
+void APIENTRY __glutInitWithExit(int *argcp, char **argv, void (__cdecl *exitfunc)(int));
+}
 
+//-----------------------------------------------------------------------------
+void consoleExit( int i )
+{
+	EduNet::Application::_SDMCleanup();
+}
+
+//-----------------------------------------------------------------------------
+void windowExit( int i )
+{
+	EduNet::Application::_SDMCleanup();
+}
+
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::initializeGraphics (int argc, char **argv)
 {
 	// initialize GLUT state based on command line arguments
-	glutInit (&argc, argv);  
+//	glutInit (&argc, argv);  
+	__glutInitWithExit (&argc, argv, consoleExit);
 
 	// display modes: RGB+Z and double buffered
 	GLint mode = GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE;
@@ -1600,7 +1604,8 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 	const int wh = (int) (sh * ws);
 	glutInitWindowPosition ((int) (sw * (1-ws)/2), (int) (sh * (1-ws)/2));
 	glutInitWindowSize (ww, wh);
-	windowID = glutCreateWindow (appVersionName);
+	windowID = __glutCreateWindowWithExit (appVersionName, windowExit);
+//	windowID = glutCreateWindow (appVersionName);
 	reshapeFunc (ww, wh);
 	initGL ();
 

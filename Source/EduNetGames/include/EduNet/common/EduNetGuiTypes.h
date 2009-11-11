@@ -2,7 +2,7 @@
 #define __EDUNETGUITYPES_H__
 
 
-#if EDUNET_HAVE_GLUI
+#if 1 // EDUNET_HAVE_GLUI
 
 // forward all glui classes
 class GLUI;

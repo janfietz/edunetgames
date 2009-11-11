@@ -4,59 +4,6 @@
 // include configuration
 #include "EduNetConfig.h"
 
-// windows
-
-//-----------------------------------------------------------------------------
-#ifdef WIN32
-#if EDUNET_SHOW_CONFIG
-#pragma message( " - windows build" )
-#endif
-#define __ET_WINDOWS_SPEEDUPS__ 1
-// some windows speedups
-#	if __ET_WINDOWS_SPEEDUPS__
-
-#		define WIN32_LEAN_AND_MEAN
-#		define WIN32_EXTRA_LEAN
-
-#		define NOGDICAPMASKS
-#		define OEMRESOURCE
-#		define NOATOM
-#ifndef __ET_WINDOWS_USECLIPBOARD__
-#		define NOCLIPBOARD
-#endif
-//#		define NOCTLMGR // windows utility functions like DialogBox, 
-#		define NOMEMMGR
-#		define NOMETAFILE
-#		define NOOPENFILE
-#		define NOSERVICE
-#		define NOSOUND
-#		define NOCOMM
-#		define NOKANJI
-#		define NOHELP
-#		define NOPROFILER
-#		define NODEFERWINDOWPOS
-#		define NOMCX
-// #define NONLS
-// #define NOMB
-# define WIN32_LEAN_AND_MEAN
-# define WIN32_EXTRA_LEAN
-
-#	endif // __ET_WINDOWS_SPEEDUPS__
-
-
-# ifndef _WIN32_WINNT
-#  define _WIN32_WINNT 0x0502 // Windows XP SP1
-# endif
-//# endif
-
-
-#if _MSC_VER >= 1400
-
-#endif
-//#include <windows.h>
-#endif  // WIN32
-
-
 
 //-----------------------------------------------------------------------------
 // raknet
@@ -76,27 +23,8 @@
 #include "BitStream.h"
 #include "NetworkIDManager.h"
 //#include <RakNetTypes.h>
-//#include <winsock2.h>
-
-#if 0
-#ifndef _WINSOCKAPI_
-#define _WINSOCKAPI_
-#endif
-#ifndef _WINSOCK2API_
-#define _WINSOCK2API_
-#endif
-#endif
-//#define _WINSOCK2API_
-//#define _WINSOCKAPI_   /* Prevent inclusion of winsock.h in windows.h */
 #include "SocketLayer.h"
 #include "Rpc3/RPC3.h"
-
-#ifndef _WINSOCKAPI_
-#define _WINSOCKAPI_
-#endif
-#ifndef _WINSOCK2API_
-#define _WINSOCK2API_
-#endif
 
 #endif // EDUNET_HAVE_RAKNET
 

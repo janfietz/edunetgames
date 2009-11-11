@@ -1,9 +1,8 @@
 #include "EduNetApplication.h"
 
+#include "EduNet/common/EduNetDraw.h"
 #include "EduNet/options/EduNetOptions.h"
 #include "EduNetGames.h"
-
-#include "glui/GL/glui.h"
 
 
 using namespace EduNet;
@@ -20,6 +19,8 @@ namespace
 	GLUI_Listbox* pluginList = NULL;
 
 	GLUI_Panel* pluginPanel = NULL;
+	GLUI_StaticText* simulationFPS = NULL;
+	GLUI_StaticText* cpuFPS = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -75,7 +76,8 @@ Application::Application( void ):
 m_fSimulationFPS(60.0f),
 m_fTimeFactor(1.0f),
 m_bFixedSimulationFPS(1),
-m_bEnableAnnotation(0)
+m_bEnableAnnotation(0),
+m_fUpdateCPUTime( 0.0f )
 {
 	setDefaultSettings();
 	this->m_kUpdatePeriod.SetPeriodFrequency( m_fSimulationFPS );
@@ -84,13 +86,14 @@ m_bEnableAnnotation(0)
 //-----------------------------------------------------------------------------
 Application::~Application( void )
 {
-
+	bool bTest = true;
+	bTest = false;
+	Application::_SDMCleanup();
 }
 
 //-----------------------------------------------------------------------------
 void fnExit0 (void)
 {
-	printf( "shutdown ...\n");
 	Application::_SDMShutdown();
 }
 
@@ -101,20 +104,33 @@ void Application::_SDMInit( void )
 }
 
 //-----------------------------------------------------------------------------
-void Application::_SDMShutdown( void )
+void Application::_SDMCleanup( void )
 {
-	static bool bShutdown = false;
-	if( true == bShutdown )
+	static bool bCleanedup = false;
+	if( true == bCleanedup )
 	{
 		return;
 	}
-	bShutdown = true;
+	bCleanedup = true;
 	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
 	if( NULL != selectedPlugin )
 	{
 		selectedPlugin->close();
 		OpenSteerDemo::selectedPlugin = NULL;
 	}
+}
+
+
+//-----------------------------------------------------------------------------
+void Application::_SDMShutdown( void )
+{
+	printf( "shutdown ...\n");
+	static bool bShutdown = false;
+	if( true == bShutdown )
+	{
+		return;
+	}
+	bShutdown = true;
 }
 
 
@@ -149,6 +165,8 @@ void Application::addGuiElements( GLUI* glui )
 		glui->add_spinner("Simulation FPS", GLUI_SPINNER_FLOAT, &this->m_fSimulationFPS);
 	simulationFPSSpinner->set_float_limits(5.0f, 200.0f);
 	glui->add_checkbox("Fixed Timestep", &this->m_bFixedSimulationFPS);
+	simulationFPS = glui->add_statictext( "FPS" );
+	cpuFPS = glui->add_statictext( "CPU" );
 	glui->add_separator();
 	glui->add_checkbox("Enable Annotation", &this->m_bEnableAnnotation);
 
@@ -200,37 +218,99 @@ void Application::updateSelectedPlugin (const float currentTime,
 	::gluiSelectPlugin();
 
 	// opensteer demo options update
-	OpenSteer::enableAnnotation = false;
 
 	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
-	if( NULL == selectedPlugin )
+	if( ( NULL == selectedPlugin ) || ( elapsedTime <= 0.0f ) )
 	{
 		return;
 	}
 
-	// fixed timestep implementation
-	this->m_kUpdatePeriod.SetPeriodFrequency( this->m_fSimulationFPS );
-	float fCurrentAccumTime = this->m_kUpdatePeriod.GetAccumTime();
-	float fModifiedDeltaTime = elapsedTime * m_fTimeFactor;
-	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( fModifiedDeltaTime );
-	if( true == ( this->m_bFixedSimulationFPS == 1 ) )
+	osScalar fSimulationFPS = this->m_fSimulationFPS;
+
+	// in case the last CPU time was higher than the incoming delta time
+	// reduce the simulation rate
+	if( this->m_fUpdateCPUTime > elapsedTime )
 	{
-		while( uiTicks > 0 )
+		fSimulationFPS *= ( elapsedTime / this->m_fUpdateCPUTime );
+	}
+
+	if( this->m_fUpdateCPUTime > 0.0f )
+	{
+		// in case the last CPU frame rate was lower than the
+		// target frame rate reduce the target frame rate
+		osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
+		if( fCPUFPS < fSimulationFPS )
 		{
-			if( uiTicks == 1 )
-			{
-				OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
-			}
-			selectedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
-			fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
-			--uiTicks;
+//			blendIntoAccumulator(this->m_kUpdatePeriod.GetPeriodTime(), fCPUFPS, fSimulationFPS);
+			fSimulationFPS = fCPUFPS * 0.9f;
 		}
 	}
-	else
+
+
 	{
-		OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
-		float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
-		selectedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
+		std::ostringstream status;
+		status << std::setprecision (2);
+		status << std::setiosflags (std::ios::fixed);
+		status << "Sim FPS: ";
+		status << fSimulationFPS;
+		simulationFPS->set_text( status.str().c_str() );
+	}
+	{
+		if( this->m_fUpdateCPUTime > 0.0f )
+		{
+			std::ostringstream status;
+			status << std::setprecision (2);
+			status << std::setiosflags (std::ios::fixed);
+			osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
+			status << "CPU FPS: ";
+			status << fCPUFPS;
+			cpuFPS->set_text( status.str().c_str() );
+		}
+	}
+
+
+	// fixed timestep implementation
+	this->m_kUpdatePeriod.SetPeriodFrequency( fSimulationFPS );
+	
+	float fCurrentAccumTime = this->m_kUpdatePeriod.GetAccumTime();
+
+	// take time factor into account
+	float fModifiedDeltaTime = elapsedTime * m_fTimeFactor;
+	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( fModifiedDeltaTime );
+	
+	// only update in case at least one tick has been generated
+	if( uiTicks > 0 )
+	{
+		this->m_kUpdateClock.update();
+		const osScalar preUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
+
+		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
+		{
+			OpenSteer::enableAnnotation = false;
+			while( uiTicks > 0 )
+			{
+				if( uiTicks == 1 )
+				{
+					OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
+				}
+				selectedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
+				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
+				--uiTicks;
+			}
+		}
+		else
+		{
+			OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
+			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
+			selectedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
+		}
+
+		this->m_kUpdateClock.update();
+		const osScalar postUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
+		const osScalar fUpdateCPUTime = postUpdateElapsedTime - preUpdateElapsedTime; 
+		this->m_fUpdateCPUTime += fUpdateCPUTime;
+		this->m_fUpdateCPUTime *= 0.5f;
+
 	}
 }
 

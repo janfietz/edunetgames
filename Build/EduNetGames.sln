@@ -70,11 +70,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EduNetGames_Tutorial_05", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibGlui", "LibGlui.vcproj", "{BD8898F7-0B57-4672-90B9-BF16294B21C0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduCommon", "LibEduNetCommon.vcproj", "{35A4ABE2-0905-4575-98ED-CC600CE355E6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduNetCommon", "LibEduNetCommon.vcproj", "{35A4ABE2-0905-4575-98ED-CC600CE355E6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduApplication", "LibEduNetApplication.vcproj", "{70FAD9C0-ADE6-4AC3-A6AE-8BC56547E126}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduNetApplication", "LibEduNetApplication.vcproj", "{70FAD9C0-ADE6-4AC3-A6AE-8BC56547E126}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduConnect", "LibEduNetConnect.vcproj", "{63330065-AADF-4727-B577-3B227E351E0A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibEduNetConnect", "LibEduNetConnect.vcproj", "{63330065-AADF-4727-B577-3B227E351E0A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibIProf", "LibIProf.vcproj", "{8A4F91C1-9D6C-4283-8037-EB485F7A1898}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -134,6 +136,10 @@ Global
 		{63330065-AADF-4727-B577-3B227E351E0A}.Debug|Win32.Build.0 = Debug|Win32
 		{63330065-AADF-4727-B577-3B227E351E0A}.Release|Win32.ActiveCfg = Release|Win32
 		{63330065-AADF-4727-B577-3B227E351E0A}.Release|Win32.Build.0 = Release|Win32
+		{8A4F91C1-9D6C-4283-8037-EB485F7A1898}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A4F91C1-9D6C-4283-8037-EB485F7A1898}.Debug|Win32.Build.0 = Debug|Win32
+		{8A4F91C1-9D6C-4283-8037-EB485F7A1898}.Release|Win32.ActiveCfg = Release|Win32
+		{8A4F91C1-9D6C-4283-8037-EB485F7A1898}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,11 +1,16 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+#include "OpenSteer/OpenSteerTypes.h"
 #include "OpenSteer/OpenSteerMacros.h"
 #include "OpenSteer/InstanceTracker.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
+
+
+
+	typedef uint64_t NetworkId; 
 
 
 	//-------------------------------------------------------------------------
@@ -14,15 +19,22 @@ namespace OpenSteer {
 	public:
 		virtual ~AbstractEntity() { /* Nothing to do. */ }
 
-		virtual size_t getEntityId( void ) const = 0;
 		OS_DECLARE_CLASSNAME
+
+		virtual InstanceTracker::Id getEntityId( void ) const = 0;
+
+		virtual NetworkId getNetworkId( void ) const = 0;
+		virtual void setNetworkId( NetworkId ) = 0;
+
 	};
 
 	//-------------------------------------------------------------------------
 	class EntityInstance
 	{
 	public:
-		EntityInstance():m_uiId( ms_InstanceTracker.Constructor() )
+		EntityInstance():
+		  m_uiId( ms_InstanceTracker.Constructor() ),
+		  m_netWorkId( NetworkId(0) )
 		{
 
 		}
@@ -30,12 +42,24 @@ namespace OpenSteer {
 		{
 			ms_InstanceTracker.Destructor();
 		}
-		size_t getId( void ) const
+		InstanceTracker::Id getId( void ) const
 		{
 			return m_uiId; 
 		}
+
+		NetworkId getNetworkId( void ) const
+		{
+			return m_netWorkId;
+		}
+
+		void setNetworkId( NetworkId id )
+		{
+			m_netWorkId = id;
+		}
+
 	private:
-		size_t m_uiId;
+		InstanceTracker::Id m_uiId;
+		NetworkId m_netWorkId;
 		static InstanceTracker ms_InstanceTracker;
 	};
 
@@ -44,12 +68,23 @@ namespace OpenSteer {
 	class EntityMixin : public Super
 	{
 	public:
-		virtual size_t getEntityId( void ) const
+		OS_IMPLEMENT_CLASSNAME( Super )
+
+		virtual InstanceTracker::Id getEntityId( void ) const
 		{
 			return this->m_kInstance.getId();
 		}
 
-		OS_IMPLEMENT_CLASSNAME( Super )
+		virtual NetworkId getNetworkId( void ) const
+		{
+			return this->m_kInstance.getNetworkId();
+		}
+
+		virtual void setNetworkId( NetworkId id )
+		{
+			this->m_kInstance.setNetworkId( id );
+		}
+
 	private:
 		EntityInstance m_kInstance;
 	};

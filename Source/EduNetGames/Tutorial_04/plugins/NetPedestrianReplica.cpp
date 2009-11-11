@@ -5,10 +5,17 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
+NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
+{
+
+}
+
+//-----------------------------------------------------------------------------
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::ProximityDatabase& pd):
 m_pkHostPlugin( NULL )
 {
 	this->m_pVehicle = new NetPedestrian( pd );
+	this->m_pVehicle->setNetworkId( this->GetNetworkID().guid.g );
 	this->m_pVehicle->setIsRemoteObject(false);
 };
 
@@ -18,6 +25,7 @@ m_pkHostPlugin(pkHostPlugin)
 {
 	this->m_pVehicle = new NetPedestrian( 
 		*this->m_pkHostPlugin->accessProximityDataBase() );
+	this->m_pVehicle->setNetworkId( this->GetNetworkID().guid.g );
 	this->m_pVehicle->setIsRemoteObject(true);
 };
 

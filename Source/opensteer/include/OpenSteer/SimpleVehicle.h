@@ -203,9 +203,6 @@ namespace OpenSteer {
             return _smoothedPosition = value;
         }
 
-        // give each vehicle a unique number
-        int serialNumber;
-        static int serialNumberCounter;
 
         // draw lines from vehicle's position showing its velocity and acceleration
         void annotationVelocityAcceleration (float maxLengthA, float maxLengthV);
@@ -224,7 +221,8 @@ namespace OpenSteer {
         }
 
 		// CP ++
-		virtual void draw(const float currentTime, const float elapsedTime) {};
+		virtual void draw( const float currentTime, const float elapsedTime ) {};
+		virtual void newPD( ProximityDatabase& pd ) {};
 		// CP --
     private:
 

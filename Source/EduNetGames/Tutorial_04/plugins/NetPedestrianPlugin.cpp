@@ -6,19 +6,16 @@
 
 #include "EduNetGames.h"
 
-#include "glui/GL/glui.h"
+#include "EduNet/common/EduNetDraw.h"
 
 using namespace OpenSteer;
-
 
 namespace
 {
 	//-------------------------------------------------------------------------
 	// How many pedestrians to create when the plugin starts first?
 	int const gPedestrianStartCount = 1; // 100
-
 }
-
 
 //-----------------------------------------------------------------------------
 const char* NetPedestrianPlugin::name (void) const 
@@ -36,6 +33,7 @@ float NetPedestrianPlugin::selectionOrderSortKey (void) const
 NetPedestrianPlugin::~NetPedestrianPlugin() 
 {
 	this->setNetPedestrianFactory( NULL );
+	this->close();
 }
 
 //-----------------------------------------------------------------------------
@@ -48,15 +46,19 @@ void NetPedestrianPlugin::open (void)
 
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
-	nextPD ();
+	this->nextPD ();
 
 	// create the specified number of Pedestrians
-	for (int i = 0; i < gPedestrianStartCount; i++) addPedestrianToCrowd ();
+	for (int i = 0; i < gPedestrianStartCount; i++)
+	{
+		this->addPedestrianToCrowd();
+	}
 
 	// initialize camera and selectedVehicle
-	if( crowd.size() > 0 )
+	const AVGroup& kAllVehicles = this->allVehicles();
+	if( kAllVehicles.size() > 0 )
 	{
-		AbstractVehicle* pkVehicle = *crowd.begin();
+		AbstractVehicle* pkVehicle = *kAllVehicles.begin();
 		if( NULL != pkVehicle )
 		{
 			AbstractVehicle& firstPedestrian = *pkVehicle;
@@ -69,26 +71,45 @@ void NetPedestrianPlugin::open (void)
 }
 
 //-----------------------------------------------------------------------------
+void NetPedestrianPlugin::close (void)
+{
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	// delete all Pedestrians
+	while (kVG.population() > 0) removePedestrianFromCrowd ();
+}
+
+//-----------------------------------------------------------------------------
+void NetPedestrianPlugin::reset (void)
+{
+	// reset each Pedestrian
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.reset();
+
+	// reset camera position
+	if( NULL != OpenSteerDemo::selectedVehicle )
+	{
+		OpenSteerDemo::position2dCamera (*OpenSteerDemo::selectedVehicle);
+	}
+
+	// make camera jump immediately to new position
+	OpenSteerDemo::camera.doNotSmoothNextMove ();
+}
+
+//-----------------------------------------------------------------------------
 void NetPedestrianPlugin::update (const float currentTime, const float elapsedTime)
 {
-	// update each NetPedestrian
-	for (iterator i = crowd.begin(); i != crowd.end(); i++)
-	{
-		AbstractVehicle* pkVehicle = (*i);
-		if( NULL != pkVehicle )
-		{
-			pkVehicle->update (currentTime, elapsedTime);
-		}
-	}
+	// update each Pedestrian
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.update( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTime)
 {
-	// selected NetPedestrian (user can mouse click to select another)
+	// selected Pedestrian (user can mouse click to select another)
 	AbstractVehicle* selected = OpenSteerDemo::selectedVehicle;
 
-	// NetPedestrian nearest mouse (to be highlighted)
+	// Pedestrian nearest mouse (to be highlighted)
 	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
 
 	// update camera
@@ -101,22 +122,23 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		OpenSteerDemo::gridUtility (gridCenter);
 	}
 
-	// draw and annotate each NetPedestrian
-	for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).draw (); 
+	// draw and annotate each Pedestrian
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.redraw( currentTime, elapsedTime );
 
 	// draw the path they follow and obstacles they avoid
 	drawPathAndObstacles ();
 
 	if( ( NULL != nearMouse ) && ( NULL != selected ) )
 	{
-		// highlight NetPedestrian nearest mouse
+		// highlight Pedestrian nearest mouse
 		OpenSteerDemo::highlightVehicleUtility (*nearMouse);
 
 		// textual annotation (at the vehicle's screen position)
 		serialNumberAnnotationUtility(*selected, *nearMouse);
 	}
 
-	// textual annotation for selected NetPedestrian
+	// textual annotation for selected Pedestrian
 	if (OpenSteerDemo::selectedVehicle && OpenSteer::annotationIsOn())
 	{
 		const Color color (0.8f, 0.8f, 1.0f);
@@ -136,7 +158,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		draw2dTextAt3dLocation (annote, textPosition, color, drawGetWindowWidth(), drawGetWindowHeight());
 	}
 
-	AbstractVehicleGroup kVG( this->allVehicles() );
 	// display status in the upper left corner of the window
 	std::ostringstream status;
 	status << "[F1/F2] Crowd size: " << kVG.population();
@@ -163,11 +184,12 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 void NetPedestrianPlugin::serialNumberAnnotationUtility (const AbstractVehicle& selected,
 	const AbstractVehicle& nearMouse)
 {
-	// display a NetPedestrian's serial number as a text label near its
+	// display a Pedestrian's serial number as a text label near its
 	// screen position when it is near the selected vehicle or mouse.
 	if (&selected && &nearMouse && OpenSteer::annotationIsOn())
 	{
-		for (iterator i = crowd.begin(); i != crowd.end(); i++)
+		const AVGroup& kAllVehicles = this->allVehicles();
+		for (AVGroup::const_iterator i = kAllVehicles.begin(); i != kAllVehicles.end(); i++)
 		{
 			AbstractVehicle* vehicle = *i;
 			const float nearDistance = 6;
@@ -179,7 +201,7 @@ void NetPedestrianPlugin::serialNumberAnnotationUtility (const AbstractVehicle& 
 			{
 				std::ostringstream sn;
 				sn << "#"
-					<< ((NetPedestrian*)vehicle)->serialNumber
+					<< vehicle->getEntityId()
 					<< std::ends;
 				const Color textColor (0.8f, 1, 0.8f);
 				const osVector3 textOffset (0, 0.25f, 0);
@@ -200,28 +222,6 @@ void NetPedestrianPlugin::drawPathAndObstacles (void)
 	for (size_type i = 1; i < path.pointCount(); ++i ) {
 		drawLine (path.point( i ), path.point( i-1) , gRed);
 	}
-
-}
-
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::close (void)
-{
-	AbstractVehicleGroup kVG( this->allVehicles() );
-	// delete all Pedestrians
-	while (kVG.population() > 0) removePedestrianFromCrowd ();
-}
-
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::reset (void)
-{
-	// reset each NetPedestrian
-	for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).reset ();
-
-	// reset camera position
-	OpenSteerDemo::position2dCamera (*OpenSteerDemo::selectedVehicle);
-
-	// make camera jump immediately to new position
-	OpenSteerDemo::camera.doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------
@@ -279,14 +279,14 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 	if (kVG.population() > 0)
 	{
 		// save pointer to last pedestrian, then remove it from the crowd
-		const NetPedestrian* pedestrian = crowd.back();
+		const AbstractVehicle* pedestrian = crowd.back();
 		crowd.pop_back();
 
 		// if it is OpenSteerDemo's selected vehicle, unselect it
 		if (pedestrian == OpenSteerDemo::selectedVehicle)
 			OpenSteerDemo::selectedVehicle = NULL;
 
-		// delete the NetPedestrian
+		// delete the Pedestrian
 		this->m_pkPedestrianFactory->DestroyNetPedestrian( pedestrian );
 	}
 }
@@ -322,18 +322,18 @@ void NetPedestrianPlugin::nextPD (void)
 		}
 	}
 
-	// switch each boid to new PD
-	for (iterator i=crowd.begin(); i!=crowd.end(); i++) (**i).newPD(*pd);
+	// switch each vehicle to new PD
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.newPD(*pd);
 
 	// delete old PD (if any)
 	ET_SAFE_DELETE( oldPD );
 }
 
-
 //-----------------------------------------------------------------------------
 const AVGroup& NetPedestrianPlugin::allVehicles (void) const 
 {
-	return (const AVGroup&) crowd;
+	return crowd;
 }
 
 //-----------------------------------------------------------------------------
@@ -358,12 +358,10 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
 	GLUI_Control* pkControl;
-//	pkControl = glui->add_button_to_panel( pluginPanel, "Test" );
 	pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addPedestrian );
 	pkControl->set_ptr_val( this );
 	pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removePedestrian  );
 	pkControl->set_ptr_val( this );
-
 };
 
 //-----------------------------------------------------------------------------
