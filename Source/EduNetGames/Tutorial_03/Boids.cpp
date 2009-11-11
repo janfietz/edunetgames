@@ -46,6 +46,7 @@
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerExtras/AbstractVehicleGroup.h"
 
+#include "glui/GL/glui.h"
 
 #ifdef WIN32
 // Windows defines these as macros :(
@@ -482,6 +483,33 @@ void BoidsPlugin::handleFunctionKeys (int keyNumber)
     }
 }
 
+//-----------------------------------------------------------------------------
+void addBoid(GLUI_Control* pkControl )
+{
+	BoidsPlugin* pkPlugin = (BoidsPlugin*)pkControl->ptr_val;
+	pkPlugin->addBoidToFlock();
+}
+
+//-----------------------------------------------------------------------------
+void removeBoid(GLUI_Control* pkControl )
+{
+	BoidsPlugin* pkPlugin = (BoidsPlugin*)pkControl->ptr_val;
+	pkPlugin->removeBoidFromFlock();
+}
+
+
+// ----------------------------------------------------------------------------
+void BoidsPlugin::initGui( void* pkUserdata )
+{
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+	GLUI_Control* pkControl;
+	pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addBoid );
+	pkControl->set_ptr_val( this );
+	pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removeBoid  );
+	pkControl->set_ptr_val( this );
+}
 // ----------------------------------------------------------------------------
 void BoidsPlugin::printLQbinStats (void)
 {

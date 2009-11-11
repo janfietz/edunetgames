@@ -21,6 +21,10 @@ public:
 	virtual void DeleteContent( void );
 
 	virtual void StartNetworkSession( void );
+	virtual bool Connect();
+private:
+
+	virtual bool AddConnectBox( void ){ return true; }
 
 };
 
@@ -52,3 +56,13 @@ void ClientPlugin<PluginClass>::StartNetworkSession( void )
 {
 	this->StartClientNetworkSession();
 }
+
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+bool ClientPlugin<PluginClass>::Connect( void )
+{
+	this->ConnectToAddress( this->GetCurrentAddress() );
+	return true;
+}
+
+
