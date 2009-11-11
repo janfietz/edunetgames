@@ -1,0 +1,13 @@
+# use glob syntax.
+syntax: glob
+*.suo
+*.user
+*.ncb
+*.exe
+*.ilk
+*.pdb
+
+# switch to regexp syntax.
+syntax: regexp
+^Temp/.*
+
