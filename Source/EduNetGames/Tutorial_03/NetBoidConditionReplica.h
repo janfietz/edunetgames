@@ -1,7 +1,7 @@
 #ifndef __NETBOIDCONDITIONREPLCIA_H__
 #define __NETBOIDCONDITIONREPLCIA_H__
 
-#include "EduNet/network/OSReplica.h"
+#include "EduNetConnect/OSReplica.h"
 #include "Boids.h"
 
 //-----------------------------------------------------------------------------
