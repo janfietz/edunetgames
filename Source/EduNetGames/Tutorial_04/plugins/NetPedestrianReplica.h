@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------
 class NetPedestrianReplica : public OSReplica<class NetPedestrian>
 {
-	ET_DECLARE_BASE( NetPedestrianReplica )
+	ET_DECLARE_BASE( OSReplica<class NetPedestrian> )
 public:
 	NetPedestrianReplica();
 	NetPedestrianReplica( OpenSteer::ProximityDatabase& pd );
@@ -16,6 +16,8 @@ public:
 	//-------------------------------------------------------------------------
 	// replica interface
 	virtual RakNet::RakString GetName(void) const;
+
+	virtual void SetNetworkID( NetworkID id );
 
 	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
 

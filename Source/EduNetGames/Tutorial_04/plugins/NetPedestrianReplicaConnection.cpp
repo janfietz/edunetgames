@@ -8,6 +8,8 @@
 #include "Tutorial_02/ClientPlugin.h"
 #include "Tutorial_02/PeerPlugin.h"
 
+#include "EduNet/common/EduNetDraw.h"
+
 //-----------------------------------------------------------------------------
 class NetPedestrian* NetPedestrianFactory::CreateNetPedestrian( osProximityDatabase& pd )
 {
@@ -45,7 +47,8 @@ NetPedestrian* NetPedestrianReplicaFactory::CreateNetPedestrian(
 	NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pd );		
 	this->m_pkReplicaManager->Reference(pkNewReplica);
 
-	this->m_uidMap.Set(pkNewReplica->AccessVehicle()->getEntityId(), pkNewReplica);
+	OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
+	this->m_uidMap.Set(pkVehicle->getEntityId(), pkNewReplica);
 	return pkNewReplica->AccessVehicle();
 }
 
@@ -143,9 +146,35 @@ public:
 		printf("Changed replication interval to: %d ms\n",
 			m_kReplicationSettings.interval);
 
+		this->UpdateReplicationValue();
+	}
+
+	//-----------------------------------------------------------------------------
+	static void changeReplicationDelay(GLUI_Control* pkControl )
+	{
+		PedestrianPeerPlugin* pkPlugin = (PedestrianPeerPlugin*)pkControl->ptr_val;
+		pkPlugin->UpdateReplicationValue();
+	}
+
+	//-----------------------------------------------------------------------------
+	void UpdateReplicationValue( void )
+	{
 		this->m_kReplicaManager.SetAutoSerializeInterval(
 			this->m_kReplicationSettings.interval);
 	}
+
+	//-----------------------------------------------------------------------------
+	virtual void initGui( void* pkUserdata ) 
+	{
+		BaseClass::initGui( pkUserdata );
+		GLUI* glui = ::getRootGLUI();
+		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+		GLUI_Spinner* repSpinner =
+			glui->add_spinner_to_panel(pluginPanel, "ReplicationDelay", GLUI_SPINNER_INT, &m_kReplicationSettings.interval, -1, changeReplicationDelay);
+		repSpinner->set_int_limits(5, 1000000);
+		repSpinner->set_ptr_val( this );
+	};
 
 	//-----------------------------------------------------------------------------
 	void DeleteContent( void )
