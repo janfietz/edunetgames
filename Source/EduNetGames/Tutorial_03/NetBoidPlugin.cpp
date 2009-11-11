@@ -1,5 +1,5 @@
 #include "NetBoidPlugin.h"
-#include "EduNet/network/OSReplicaTypes.h"
+#include "EduNetConnect/OSReplicaTypes.h"
 #include "OpenSteerExtras/AbstractVehicleGroup.h"
 
 #include "NetBoidFactory.h"
