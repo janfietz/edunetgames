@@ -224,15 +224,8 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\Source\EduNetGames\main.cpp"
+			RelativePath="..\Source\EduNetGames\Start\main.cpp"
 			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-				/>
-			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

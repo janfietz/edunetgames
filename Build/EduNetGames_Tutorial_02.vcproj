@@ -236,7 +236,7 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\Source\EduNetGames\main.cpp"
+			RelativePath="..\Source\EduNetGames\Tutorial_02\main.cpp"
 			>
 		</File>
 	</Files>
