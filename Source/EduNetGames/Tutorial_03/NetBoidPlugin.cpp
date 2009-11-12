@@ -4,6 +4,7 @@
 
 #include "NetBoidFactory.h"
 #include "NetBoidConditionReplica.h"
+
 #include "glui/GL/glui.h"
 
 

@@ -2,7 +2,7 @@
 #define __NETBOIDCONDITIONREPLCIA_H__
 
 #include "EduNetConnect/OSReplica.h"
-#include "Boids.h"
+#include "BoidsPlugin.h"
 
 //-----------------------------------------------------------------------------
 class NetBoidConditionReplica : public OSObjectReplica
@@ -13,7 +13,7 @@ public:
 		return "BoidCondition";
 	};
 
-	NetBoidConditionReplica(OpenSteer::BoidsPlugin* pBoidPlugin):
+	NetBoidConditionReplica(OpenSteer::BoidsPlugin* pBoidPlugin = NULL):
 		m_pBoidPlugin(pBoidPlugin){}
 
 	virtual RakNet::RM3ConstructionState QueryConstruction(
