@@ -17,14 +17,16 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 	RakNet::BitStream *allocationId,
 	RakNet::ReplicaManager3 *replicaManager3)
 {
+	static NetBoidReplica kReplica;
+	static NetBoidConditionReplica kReplicaCondition;
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
-	if (typeName=="NetBoidReplica"){
+	if (typeName==kReplica.GetName()){
 		NetBoidReplica* pkNewReplica = new NetBoidReplica( this->m_pBoidPlugin  );
 		this->m_pBoidPlugin->AddBoidToFlock( pkNewReplica->AccessVehicle() );
 		return pkNewReplica; 
 	}
-	if (typeName=="BoidCondition"){
+	if (typeName==kReplicaCondition.GetName()){
 		NetBoidConditionReplica* pkNewReplica = 
 			new NetBoidConditionReplica( this->m_pBoidPlugin  );
 		return pkNewReplica; 

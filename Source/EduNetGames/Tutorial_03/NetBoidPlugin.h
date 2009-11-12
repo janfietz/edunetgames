@@ -2,9 +2,8 @@
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 
-
 #include "NetBoidReplicaConnection.h"
-
+#include "BoidsPlugin.h"
 
 // ----------------------------------------------------------------------------
 class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugin>

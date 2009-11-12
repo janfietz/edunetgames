@@ -210,11 +210,19 @@
 					Name="from tutorial 3"
 					>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\Boids.cpp"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\BoidsPlugin.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Source\EduNetGames\Tutorial_03\Boids.h"
+						RelativePath="..\Source\EduNetGames\Tutorial_03\BoidsPlugin.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoid.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoid.h"
 						>
 					</File>
 					<File
