@@ -31,7 +31,7 @@
 
 
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
-
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrian : public OpenSteer::SimpleNetworkVehicle
@@ -70,6 +70,9 @@ public:
 	static bool gUseDirectedPathFollowing;
 
 private:
+	OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
+	OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
+
 
 	// a pointer to this boid's interface object for the proximity database
 	OpenSteer::ProximityToken* proximityToken;
