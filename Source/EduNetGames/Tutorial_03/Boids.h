@@ -1,7 +1,7 @@
 #ifndef BOID_H
 #define BOID_H
 
-#include "OpenSteerExtras/SimpleNetworkVehicle.h"
+#include "OpenSteerUT/SimpleNetworkVehicle.h"
 
 namespace OpenSteer{
 

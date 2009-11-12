@@ -1,6 +1,6 @@
 #include "NetPedestrianReplica.h"
 #include "NetPedestrian.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 using namespace OpenSteer;
 

@@ -230,46 +230,46 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="OpenSteerExtras"
+			Name="OpenSteerUT"
 			>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.cpp"
+				RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractNetworkVehicle.h"
+				RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.cpp"
+				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\AbstractVehicleGroup.h"
+				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\NetworkVehicle.h"
+				RelativePath="..\Source\src\OpenSteerUT\NetworkVehicle.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\OpenSteerExtrasTypes.h"
+				RelativePath="..\Source\src\OpenSteerUT\OpenSteerExtrasTypes.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PluginArray.cpp"
+				RelativePath="..\Source\src\OpenSteerUT\PluginArray.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\PluginArray.h"
+				RelativePath="..\Source\src\OpenSteerUT\PluginArray.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.cpp"
+				RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\OpenSteerExtras\SimpleNetworkVehicle.h"
+				RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.h"
 				>
 			</File>
 		</Filter>

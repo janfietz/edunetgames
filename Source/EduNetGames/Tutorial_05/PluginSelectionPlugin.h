@@ -6,7 +6,7 @@
 #include "EduNetPluginHost.h"
 #include "EduNetPluginSelector.h"
 
-#include "OpenSteerExtras/PluginArray.h"
+#include "OpenSteerUT/PluginArray.h"
 
 // ----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
