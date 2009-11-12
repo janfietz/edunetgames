@@ -56,8 +56,7 @@
 
 namespace {
     
-//    typedef OpenSteer::size_t size_type;
-	typedef std::size_t size_type;
+    typedef std::size_t size_type;
     
     /**
      * Calculates the number of radii needed for the given path alike.

@@ -241,8 +241,8 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // PlugIn for OpenSteerDemo
-    class MicTestPlugIn : public PlugIn
+    // Plugin for OpenSteerDemo
+    class MicTestPlugIn : public Plugin
     {
     public:
         

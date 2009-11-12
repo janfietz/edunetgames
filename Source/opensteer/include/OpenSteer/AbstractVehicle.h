@@ -102,6 +102,20 @@ namespace OpenSteer {
 		virtual void draw( const float currentTime, const float elapsedTime ) = 0;
 		virtual void reset( void ) = 0;
 		virtual void newPD( ProximityDatabase& pd ) = 0;
+
+		virtual void regenerateLocalSpace (const Vec3& newVelocity,
+                                           const float elapsedTime) = 0;
+		
+		virtual void applySteeringForce (const Vec3& force,
+										 const float elapsedTime) = 0;
+		
+        virtual Vec3 determineCombinedSteering (const float elapsedTime) = 0;
+
+        // adjust the steering force passed to applySteeringForce.
+        // allows a specific vehicle class to redefine this adjustment.
+        // default is to disallow backward-facing steering at low speed.
+        virtual Vec3 adjustRawSteeringForce (const Vec3& force,
+                                             const float deltaTime) = 0;
 		// CP --
    };
 

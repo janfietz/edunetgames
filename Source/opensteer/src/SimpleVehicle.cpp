@@ -138,6 +138,13 @@ OpenSteer::SimpleVehicle::applyBrakingForce (const float rate, const float delta
     setSpeed (speed () - (clipBraking * deltaTime));
 }
 
+// ----------------------------------------------------------------------------
+// determine a raw steering force
+OpenSteer::Vec3
+OpenSteer::SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/)
+{
+	return OpenSteer::Vec3::zero;
+}
 
 // ----------------------------------------------------------------------------
 // apply a given steering force to our momentum,

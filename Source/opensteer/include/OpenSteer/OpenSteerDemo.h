@@ -49,7 +49,7 @@
 
 
 #include "OpenSteer/Clock.h"
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Utilities.h"
 
@@ -74,7 +74,7 @@ namespace OpenSteer {
         // ------------------------------------------ addresses of selected objects
 
         // currently selected plug-in (user can choose or cycle through them)
-        static PlugIn* selectedPlugIn;
+        static Plugin* selectedPlugIn;
 
         // currently selected vehicle.  Generally the one the camera follows and
         // for which additional information may be displayed.  Clicking the mouse
@@ -95,9 +95,9 @@ namespace OpenSteer {
         static void errorExit (const char* message);
         static void exit (int exitCode);
 
-        // ------------------------------------------------------- PlugIn interface
+        // ------------------------------------------------------- Plugin interface
 
-        // select the default PlugIn
+        // select the default Plugin
         static void selectDefaultPlugIn (void);
         
         // select the "next" plug-in, cycling through "plug-in selection order"

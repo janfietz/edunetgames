@@ -62,7 +62,7 @@ namespace {
     
     // How many pedestrians to create when the plugin starts first?
     int const gPedestrianStartCount = 1; // 100
-    // creates a path for the PlugIn
+    // creates a path for the Plugin
     PolylineSegmentedPathwaySingleRadius* getTestPath (void);
     PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
     ObstacleGroup gObstacles;
@@ -415,10 +415,10 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 
 
 // ----------------------------------------------------------------------------
-// OpenSteerDemo PlugIn
+// OpenSteerDemo Plugin
 
 
-class PedestrianPlugIn : public PlugIn
+class PedestrianPlugIn : public Plugin
 {
 public:
     

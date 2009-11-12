@@ -12,6 +12,7 @@
 
 #define OS_ABSTRACT = 0
 
+#define OS_DECLARE_BASE( className ) typedef className BaseClass;
 
 #define OS_DECLARE_CLASSNAME virtual const char* getClassName( void ) const OS_ABSTRACT;
 
