@@ -7,7 +7,7 @@
 #include "EduNet/common/InstanceCount.h"
 
 #include "EduNetGames.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 
 

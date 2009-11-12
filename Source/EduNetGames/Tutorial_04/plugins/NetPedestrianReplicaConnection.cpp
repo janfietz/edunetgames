@@ -3,7 +3,7 @@
 #include "NetPedestrianReplica.h"
 #include "NetPedestrianPlugin.h"
 
-#include "OpenSteerExtras/PluginArray.h"
+#include "OpenSteerUT/PluginArray.h"
 #include "Tutorial_01/EmptyPlugin.h"
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"

@@ -44,7 +44,7 @@
 
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 #include "glui/GL/glui.h"
 

@@ -1,7 +1,7 @@
 #include "NetPedestrianPlugin.h"
 #include "NetPedestrian.h"
 #include "NetPedestrianFactory.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 
 #include "EduNetGames.h"

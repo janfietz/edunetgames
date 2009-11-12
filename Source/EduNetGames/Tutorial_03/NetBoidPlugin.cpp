@@ -1,6 +1,6 @@
 #include "NetBoidPlugin.h"
 #include "EduNetConnect/OSReplicaTypes.h"
-#include "OpenSteerExtras/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 #include "NetBoidFactory.h"
 #include "NetBoidConditionReplica.h"
