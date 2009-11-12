@@ -2,7 +2,7 @@
 #define __NETPEDESTRIANPLUGIN_H__
 
 //-----------------------------------------------------------------------------
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 
 //-----------------------------------------------------------------------------

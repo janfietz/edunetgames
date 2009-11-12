@@ -1,7 +1,7 @@
 #ifndef OSREPLICACONNECTION
 #define OSREPLICACONNECTION
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 class OSReplicaConnection : public RakNet::Connection_RM3 {
 public:

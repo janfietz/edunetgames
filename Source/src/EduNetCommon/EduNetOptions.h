@@ -2,7 +2,7 @@
 #define __EDUNETOPTIONS_H__
 
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 
 //-----------------------------------------------------------------------------

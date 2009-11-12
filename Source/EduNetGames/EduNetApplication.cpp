@@ -1,7 +1,7 @@
 #include "EduNetApplication.h"
 
-#include "EduNet/common/EduNetDraw.h"
-#include "EduNet/options/EduNetOptions.h"
+#include "EduNetCommon/EduNetDraw.h"
+#include "EduNetCommon/EduNetOptions.h"
 #include "EduNetGames.h"
 
 

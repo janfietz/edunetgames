@@ -1,7 +1,7 @@
 #ifndef __PLUGINARRAY_H__
 #define __PLUGINARRAY_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 #include "boost/smart_ptr.hpp" 
 

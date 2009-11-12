@@ -44,7 +44,7 @@
 
 #include "EduNetGames.h"
 #include "EduNetApplication.h"
-#include "EduNet/common/EduNetDraw.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 // #include "OpenSteer/Annotation.h"
 // #include "OpenSteer/Color.h"

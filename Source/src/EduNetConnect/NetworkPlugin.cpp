@@ -1,6 +1,6 @@
 #include "NetworkPlugin.h"
 
-#include "EduNet/common/EduNetDraw.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 
 

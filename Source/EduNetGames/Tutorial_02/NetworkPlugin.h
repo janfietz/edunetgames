@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 #define CLIENT_PORT  23456
 #define SERVER_PORT  12345

@@ -1,7 +1,7 @@
 #ifndef __OSREPLICA_H__
 #define __OSREPLICA_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 class OSObjectReplica : public RakNet::Replica3
 {

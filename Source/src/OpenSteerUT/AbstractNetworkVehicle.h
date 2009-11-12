@@ -2,7 +2,7 @@
 #define __ABSTRACTNETWORKVEHICLE_H__
 
 //-----------------------------------------------------------------------------
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 #include "OpenSteerExtrasTypes.h"
 
 //-----------------------------------------------------------------------------

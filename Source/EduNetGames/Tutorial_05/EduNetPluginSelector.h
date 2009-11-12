@@ -1,7 +1,7 @@
 #ifndef __EDUNETPLUGINSELECTOR_H__
 #define __EDUNETPLUGINSELECTOR_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 #include "EduNetConnect/OSReplica.h"
 #include "EduNetPluginHost.h"
 

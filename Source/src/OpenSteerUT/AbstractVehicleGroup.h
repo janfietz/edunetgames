@@ -1,7 +1,7 @@
 #ifndef __ABSTRACTVEHICLEGROUP_H__
 #define __ABSTRACTVEHICLEGROUP_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 namespace OpenSteer {
 
