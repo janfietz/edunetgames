@@ -1,0 +1,676 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		32FFF49306E90A9F00E1D8A3 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FFF49106E90A9F00E1D8A3 /* GLUT.framework */; };
+		32FFF49406E90A9F00E1D8A3 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FFF49206E90A9F00E1D8A3 /* OpenGL.framework */; };
+		32FFF58106E9CF3800E1D8A3 /* OpenSteer.icns in Resources */ = {isa = PBXBuildFile; fileRef = 32FFF58006E9CF3800E1D8A3 /* OpenSteer.icns */; };
+		6EBC230610AC6F7400728FA0 /* Boids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC22FD10AC6F7400728FA0 /* Boids.cpp */; };
+		6EBC230710AC6F7400728FA0 /* CaptureTheFlag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC22FE10AC6F7400728FA0 /* CaptureTheFlag.cpp */; };
+		6EBC230810AC6F7400728FA0 /* LowSpeedTurn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC22FF10AC6F7400728FA0 /* LowSpeedTurn.cpp */; };
+		6EBC230910AC6F7400728FA0 /* MapDrive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230010AC6F7400728FA0 /* MapDrive.cpp */; };
+		6EBC230A10AC6F7400728FA0 /* MultiplePursuit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230110AC6F7400728FA0 /* MultiplePursuit.cpp */; };
+		6EBC230B10AC6F7400728FA0 /* OneTurning.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230210AC6F7400728FA0 /* OneTurning.cpp */; };
+		6EBC230C10AC6F7400728FA0 /* Pedestrian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230310AC6F7400728FA0 /* Pedestrian.cpp */; };
+		6EBC230D10AC6F7400728FA0 /* PedestriansWalkingAnEight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230410AC6F7400728FA0 /* PedestriansWalkingAnEight.cpp */; };
+		6EBC230E10AC6F7400728FA0 /* Soccer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC230510AC6F7400728FA0 /* Soccer.cpp */; };
+		6EBC232A10AC6F9A00728FA0 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231010AC6F9A00728FA0 /* Camera.cpp */; };
+		6EBC232B10AC6F9A00728FA0 /* Clock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231110AC6F9A00728FA0 /* Clock.cpp */; };
+		6EBC232C10AC6F9A00728FA0 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231210AC6F9A00728FA0 /* Color.cpp */; };
+		6EBC232D10AC6F9A00728FA0 /* Draw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231310AC6F9A00728FA0 /* Draw.cpp */; };
+		6EBC232E10AC6F9A00728FA0 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231410AC6F9A00728FA0 /* Entity.cpp */; };
+		6EBC232F10AC6F9A00728FA0 /* lq.c in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231510AC6F9A00728FA0 /* lq.c */; };
+		6EBC233010AC6F9A00728FA0 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231610AC6F9A00728FA0 /* main.cpp */; };
+		6EBC233110AC6F9A00728FA0 /* Obstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231710AC6F9A00728FA0 /* Obstacle.cpp */; };
+		6EBC233210AC6F9A00728FA0 /* OldPathway.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231810AC6F9A00728FA0 /* OldPathway.cpp */; };
+		6EBC233310AC6F9A00728FA0 /* OpenSteerDemo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231910AC6F9A00728FA0 /* OpenSteerDemo.cpp */; };
+		6EBC233510AC6F9A00728FA0 /* Path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231B10AC6F9A00728FA0 /* Path.cpp */; };
+		6EBC233610AC6F9A00728FA0 /* Pathway.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231C10AC6F9A00728FA0 /* Pathway.cpp */; };
+		6EBC233710AC6F9A00728FA0 /* PlugIn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231D10AC6F9A00728FA0 /* PlugIn.cpp */; };
+		6EBC233810AC6F9A00728FA0 /* PolylineSegmentedPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231E10AC6F9A00728FA0 /* PolylineSegmentedPath.cpp */; };
+		6EBC233910AC6F9A00728FA0 /* PolylineSegmentedPathwaySegmentRadii.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC231F10AC6F9A00728FA0 /* PolylineSegmentedPathwaySegmentRadii.cpp */; };
+		6EBC233B10AC6F9A00728FA0 /* PolylineSegmentedPathwaySingleRadius.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232110AC6F9A00728FA0 /* PolylineSegmentedPathwaySingleRadius.cpp */; };
+		6EBC233C10AC6F9A00728FA0 /* SegmentedPath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232210AC6F9A00728FA0 /* SegmentedPath.cpp */; };
+		6EBC233D10AC6F9A00728FA0 /* SegmentedPathway.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232310AC6F9A00728FA0 /* SegmentedPathway.cpp */; };
+		6EBC233E10AC6F9A00728FA0 /* SimpleVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232410AC6F9A00728FA0 /* SimpleVehicle.cpp */; };
+		6EBC234110AC6F9A00728FA0 /* Vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232810AC6F9A00728FA0 /* Vec3.cpp */; };
+		6EBC234210AC6F9A00728FA0 /* Vec3Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232910AC6F9A00728FA0 /* Vec3Utilities.cpp */; };
+		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		29B97319FDCFA39411CA2CEA /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/MainMenu.nib; sourceTree = "<group>"; };
+		32FFF49106E90A9F00E1D8A3 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+		32FFF49206E90A9F00E1D8A3 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		32FFF58006E9CF3800E1D8A3 /* OpenSteer.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = OpenSteer.icns; sourceTree = "<group>"; };
+		6EBC22FD10AC6F7400728FA0 /* Boids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Boids.cpp; sourceTree = "<group>"; };
+		6EBC22FE10AC6F7400728FA0 /* CaptureTheFlag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CaptureTheFlag.cpp; sourceTree = "<group>"; };
+		6EBC22FF10AC6F7400728FA0 /* LowSpeedTurn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LowSpeedTurn.cpp; sourceTree = "<group>"; };
+		6EBC230010AC6F7400728FA0 /* MapDrive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapDrive.cpp; sourceTree = "<group>"; };
+		6EBC230110AC6F7400728FA0 /* MultiplePursuit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplePursuit.cpp; sourceTree = "<group>"; };
+		6EBC230210AC6F7400728FA0 /* OneTurning.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OneTurning.cpp; sourceTree = "<group>"; };
+		6EBC230310AC6F7400728FA0 /* Pedestrian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pedestrian.cpp; sourceTree = "<group>"; };
+		6EBC230410AC6F7400728FA0 /* PedestriansWalkingAnEight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PedestriansWalkingAnEight.cpp; sourceTree = "<group>"; };
+		6EBC230510AC6F7400728FA0 /* Soccer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Soccer.cpp; sourceTree = "<group>"; };
+		6EBC231010AC6F9A00728FA0 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		6EBC231110AC6F9A00728FA0 /* Clock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Clock.cpp; sourceTree = "<group>"; };
+		6EBC231210AC6F9A00728FA0 /* Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
+		6EBC231310AC6F9A00728FA0 /* Draw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Draw.cpp; sourceTree = "<group>"; };
+		6EBC231410AC6F9A00728FA0 /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		6EBC231510AC6F9A00728FA0 /* lq.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lq.c; sourceTree = "<group>"; };
+		6EBC231610AC6F9A00728FA0 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		6EBC231710AC6F9A00728FA0 /* Obstacle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Obstacle.cpp; sourceTree = "<group>"; };
+		6EBC231810AC6F9A00728FA0 /* OldPathway.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OldPathway.cpp; sourceTree = "<group>"; };
+		6EBC231910AC6F9A00728FA0 /* OpenSteerDemo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenSteerDemo.cpp; sourceTree = "<group>"; };
+		6EBC231B10AC6F9A00728FA0 /* Path.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Path.cpp; sourceTree = "<group>"; };
+		6EBC231C10AC6F9A00728FA0 /* Pathway.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Pathway.cpp; sourceTree = "<group>"; };
+		6EBC231D10AC6F9A00728FA0 /* PlugIn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlugIn.cpp; sourceTree = "<group>"; };
+		6EBC231E10AC6F9A00728FA0 /* PolylineSegmentedPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineSegmentedPath.cpp; sourceTree = "<group>"; };
+		6EBC231F10AC6F9A00728FA0 /* PolylineSegmentedPathwaySegmentRadii.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineSegmentedPathwaySegmentRadii.cpp; sourceTree = "<group>"; };
+		6EBC232110AC6F9A00728FA0 /* PolylineSegmentedPathwaySingleRadius.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolylineSegmentedPathwaySingleRadius.cpp; sourceTree = "<group>"; };
+		6EBC232210AC6F9A00728FA0 /* SegmentedPath.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SegmentedPath.cpp; sourceTree = "<group>"; };
+		6EBC232310AC6F9A00728FA0 /* SegmentedPathway.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SegmentedPathway.cpp; sourceTree = "<group>"; };
+		6EBC232410AC6F9A00728FA0 /* SimpleVehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleVehicle.cpp; sourceTree = "<group>"; };
+		6EBC232810AC6F9A00728FA0 /* Vec3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec3.cpp; sourceTree = "<group>"; };
+		6EBC232910AC6F9A00728FA0 /* Vec3Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec3Utilities.cpp; sourceTree = "<group>"; };
+		6EBC234C10AC6FEA00728FA0 /* egl_cpx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_cpx.h; sourceTree = "<group>"; };
+		6EBC234D10AC6FEA00728FA0 /* egl_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_defs.h; sourceTree = "<group>"; };
+		6EBC234E10AC6FEA00728FA0 /* egl_logged.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_logged.h; sourceTree = "<group>"; };
+		6EBC234F10AC6FEA00728FA0 /* egl_tokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_tokens.h; sourceTree = "<group>"; };
+		6EBC235010AC6FEA00728FA0 /* egl_void.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_void.h; sourceTree = "<group>"; };
+		6EBC235110AC6FEA00728FA0 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
+		6EBC235210AC6FEA00728FA0 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glu.h; sourceTree = "<group>"; };
+		6EBC235310AC6FEA00728FA0 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBC235410AC6FEA00728FA0 /* glew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glew.h; sourceTree = "<group>"; };
+		6EBC235510AC6FEA00728FA0 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
+		6EBC235610AC6FEA00728FA0 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBC235710AC6FEA00728FA0 /* glxew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxew.h; sourceTree = "<group>"; };
+		6EBC235810AC6FEA00728FA0 /* glxext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxext.h; sourceTree = "<group>"; };
+		6EBC235910AC6FEA00728FA0 /* wglew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglew.h; sourceTree = "<group>"; };
+		6EBC235A10AC6FEA00728FA0 /* wglext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglext.h; sourceTree = "<group>"; };
+		6EBC235C10AC6FEA00728FA0 /* AbstractState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractState.h; sourceTree = "<group>"; };
+		6EBC235D10AC6FEA00728FA0 /* AbstractUpdated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractUpdated.h; sourceTree = "<group>"; };
+		6EBC235E10AC6FEA00728FA0 /* AbstractVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbstractVehicle.h; sourceTree = "<group>"; };
+		6EBC236010AC6FEA00728FA0 /* Annotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Annotation.h; sourceTree = "<group>"; };
+		6EBC236110AC6FEA00728FA0 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Camera.h; sourceTree = "<group>"; };
+		6EBC236210AC6FEA00728FA0 /* Clock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Clock.h; sourceTree = "<group>"; };
+		6EBC236310AC6FEA00728FA0 /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		6EBC236410AC6FEA00728FA0 /* Draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Draw.h; sourceTree = "<group>"; };
+		6EBC236510AC6FEA00728FA0 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		6EBC236610AC6FEA00728FA0 /* InstanceTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstanceTracker.h; sourceTree = "<group>"; };
+		6EBC236810AC6FEA00728FA0 /* LocalSpace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalSpace.h; sourceTree = "<group>"; };
+		6EBC236A10AC6FEA00728FA0 /* lq.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lq.h; sourceTree = "<group>"; };
+		6EBC236B10AC6FEA00728FA0 /* Obstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obstacle.h; sourceTree = "<group>"; };
+		6EBC236C10AC6FEA00728FA0 /* OldPathway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OldPathway.h; sourceTree = "<group>"; };
+		6EBC236D10AC6FEA00728FA0 /* OpenSteerDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSteerDemo.h; sourceTree = "<group>"; };
+		6EBC236F10AC6FEA00728FA0 /* OpenSteerMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSteerMacros.h; sourceTree = "<group>"; };
+		6EBC237110AC6FEA00728FA0 /* OpenSteerTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenSteerTypes.h; sourceTree = "<group>"; };
+		6EBC237310AC6FEA00728FA0 /* Path.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Path.h; sourceTree = "<group>"; };
+		6EBC237410AC6FEA00728FA0 /* Pathway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pathway.h; sourceTree = "<group>"; };
+		6EBC237510AC6FEA00728FA0 /* PlugIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlugIn.h; sourceTree = "<group>"; };
+		6EBC237610AC6FEA00728FA0 /* PolylineSegmentedPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineSegmentedPath.h; sourceTree = "<group>"; };
+		6EBC237710AC6FEA00728FA0 /* PolylineSegmentedPathwaySegmentRadii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineSegmentedPathwaySegmentRadii.h; sourceTree = "<group>"; };
+		6EBC237810AC6FEA00728FA0 /* PolylineSegmentedPathwaySingleRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolylineSegmentedPathwaySingleRadius.h; sourceTree = "<group>"; };
+		6EBC237910AC6FEA00728FA0 /* Proximity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Proximity.h; sourceTree = "<group>"; };
+		6EBC237A10AC6FEA00728FA0 /* QueryPathAlike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryPathAlike.h; sourceTree = "<group>"; };
+		6EBC237B10AC6FEA00728FA0 /* QueryPathAlikeBaseDataExtractionPolicies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryPathAlikeBaseDataExtractionPolicies.h; sourceTree = "<group>"; };
+		6EBC237C10AC6FEA00728FA0 /* QueryPathAlikeMappings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryPathAlikeMappings.h; sourceTree = "<group>"; };
+		6EBC237D10AC6FEA00728FA0 /* QueryPathAlikeUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryPathAlikeUtilities.h; sourceTree = "<group>"; };
+		6EBC237E10AC6FEA00728FA0 /* SegmentedPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedPath.h; sourceTree = "<group>"; };
+		6EBC237F10AC6FEA00728FA0 /* SegmentedPathAlikeUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedPathAlikeUtilities.h; sourceTree = "<group>"; };
+		6EBC238010AC6FEB00728FA0 /* SegmentedPathway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedPathway.h; sourceTree = "<group>"; };
+		6EBC238110AC6FEB00728FA0 /* SharedPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedPointer.h; sourceTree = "<group>"; };
+		6EBC238210AC6FEB00728FA0 /* SimpleVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleVehicle.h; sourceTree = "<group>"; };
+		6EBC238410AC6FEB00728FA0 /* StandardTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardTypes.h; sourceTree = "<group>"; };
+		6EBC238510AC6FEB00728FA0 /* SteerLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SteerLibrary.h; sourceTree = "<group>"; };
+		6EBC238610AC6FEB00728FA0 /* UnusedParameter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnusedParameter.h; sourceTree = "<group>"; };
+		6EBC238710AC6FEB00728FA0 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		6EBC238810AC6FEB00728FA0 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
+		6EBC238910AC6FEB00728FA0 /* Vec3Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3Utilities.h; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* OpenSteerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpenSteerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				32FFF49306E90A9F00E1D8A3 /* GLUT.framework in Frameworks */,
+				32FFF49406E90A9F00E1D8A3 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* OpenSteerDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* opensteer */ = {
+			isa = PBXGroup;
+			children = (
+				32FFF59206EB3F9A00E1D8A3 /* Documents */,
+				84FACBA506EFC297000A998A /* Source Code */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			comments = "Set USE_HEADERMAP to no to disable header caching that leads to problems with the Math.h header. Mac OS X file system isn't case sensitive and in this case the header gets cached and is included by cmath - so the std c math.h declarations are missing...";
+			name = opensteer;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				32FFF58006E9CF3800E1D8A3 /* OpenSteer.icns */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				29B97318FDCFA39411CA2CEA /* MainMenu.nib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				32FFF49106E90A9F00E1D8A3 /* GLUT.framework */,
+				32FFF49206E90A9F00E1D8A3 /* OpenGL.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		32FFF59206EB3F9A00E1D8A3 /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documents;
+			sourceTree = "<group>";
+		};
+		6EBC22FC10AC6F7400728FA0 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC22FD10AC6F7400728FA0 /* Boids.cpp */,
+				6EBC22FE10AC6F7400728FA0 /* CaptureTheFlag.cpp */,
+				6EBC22FF10AC6F7400728FA0 /* LowSpeedTurn.cpp */,
+				6EBC230010AC6F7400728FA0 /* MapDrive.cpp */,
+				6EBC230110AC6F7400728FA0 /* MultiplePursuit.cpp */,
+				6EBC230210AC6F7400728FA0 /* OneTurning.cpp */,
+				6EBC230310AC6F7400728FA0 /* Pedestrian.cpp */,
+				6EBC230410AC6F7400728FA0 /* PedestriansWalkingAnEight.cpp */,
+				6EBC230510AC6F7400728FA0 /* Soccer.cpp */,
+			);
+			name = plugins;
+			path = ../Source/opensteer/plugins;
+			sourceTree = SOURCE_ROOT;
+		};
+		6EBC230F10AC6F9A00728FA0 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC231010AC6F9A00728FA0 /* Camera.cpp */,
+				6EBC231110AC6F9A00728FA0 /* Clock.cpp */,
+				6EBC231210AC6F9A00728FA0 /* Color.cpp */,
+				6EBC231310AC6F9A00728FA0 /* Draw.cpp */,
+				6EBC231410AC6F9A00728FA0 /* Entity.cpp */,
+				6EBC231510AC6F9A00728FA0 /* lq.c */,
+				6EBC231610AC6F9A00728FA0 /* main.cpp */,
+				6EBC231710AC6F9A00728FA0 /* Obstacle.cpp */,
+				6EBC231810AC6F9A00728FA0 /* OldPathway.cpp */,
+				6EBC231910AC6F9A00728FA0 /* OpenSteerDemo.cpp */,
+				6EBC231B10AC6F9A00728FA0 /* Path.cpp */,
+				6EBC231C10AC6F9A00728FA0 /* Pathway.cpp */,
+				6EBC231D10AC6F9A00728FA0 /* PlugIn.cpp */,
+				6EBC231E10AC6F9A00728FA0 /* PolylineSegmentedPath.cpp */,
+				6EBC231F10AC6F9A00728FA0 /* PolylineSegmentedPathwaySegmentRadii.cpp */,
+				6EBC232110AC6F9A00728FA0 /* PolylineSegmentedPathwaySingleRadius.cpp */,
+				6EBC232210AC6F9A00728FA0 /* SegmentedPath.cpp */,
+				6EBC232310AC6F9A00728FA0 /* SegmentedPathway.cpp */,
+				6EBC232410AC6F9A00728FA0 /* SimpleVehicle.cpp */,
+				6EBC232810AC6F9A00728FA0 /* Vec3.cpp */,
+				6EBC232910AC6F9A00728FA0 /* Vec3Utilities.cpp */,
+			);
+			name = src;
+			path = ../Source/opensteer/src;
+			sourceTree = SOURCE_ROOT;
+		};
+		6EBC234810AC6FEA00728FA0 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC234910AC6FEA00728FA0 /* GL */,
+				6EBC235B10AC6FEA00728FA0 /* OpenSteer */,
+			);
+			name = include;
+			path = ../Source/opensteer/include;
+			sourceTree = SOURCE_ROOT;
+		};
+		6EBC234910AC6FEA00728FA0 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC234A10AC6FEA00728FA0 /* EmptyGL */,
+				6EBC235410AC6FEA00728FA0 /* glew.h */,
+				6EBC235510AC6FEA00728FA0 /* glext.h */,
+				6EBC235610AC6FEA00728FA0 /* glut.h */,
+				6EBC235710AC6FEA00728FA0 /* glxew.h */,
+				6EBC235810AC6FEA00728FA0 /* glxext.h */,
+				6EBC235910AC6FEA00728FA0 /* wglew.h */,
+				6EBC235A10AC6FEA00728FA0 /* wglext.h */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		6EBC234A10AC6FEA00728FA0 /* EmptyGL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC234B10AC6FEA00728FA0 /* GL */,
+			);
+			path = EmptyGL;
+			sourceTree = "<group>";
+		};
+		6EBC234B10AC6FEA00728FA0 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC234C10AC6FEA00728FA0 /* egl_cpx.h */,
+				6EBC234D10AC6FEA00728FA0 /* egl_defs.h */,
+				6EBC234E10AC6FEA00728FA0 /* egl_logged.h */,
+				6EBC234F10AC6FEA00728FA0 /* egl_tokens.h */,
+				6EBC235010AC6FEA00728FA0 /* egl_void.h */,
+				6EBC235110AC6FEA00728FA0 /* gl.h */,
+				6EBC235210AC6FEA00728FA0 /* glu.h */,
+				6EBC235310AC6FEA00728FA0 /* glut.h */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		6EBC235B10AC6FEA00728FA0 /* OpenSteer */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC235C10AC6FEA00728FA0 /* AbstractState.h */,
+				6EBC235D10AC6FEA00728FA0 /* AbstractUpdated.h */,
+				6EBC235E10AC6FEA00728FA0 /* AbstractVehicle.h */,
+				6EBC236010AC6FEA00728FA0 /* Annotation.h */,
+				6EBC236110AC6FEA00728FA0 /* Camera.h */,
+				6EBC236210AC6FEA00728FA0 /* Clock.h */,
+				6EBC236310AC6FEA00728FA0 /* Color.h */,
+				6EBC236410AC6FEA00728FA0 /* Draw.h */,
+				6EBC236510AC6FEA00728FA0 /* Entity.h */,
+				6EBC236610AC6FEA00728FA0 /* InstanceTracker.h */,
+				6EBC236810AC6FEA00728FA0 /* LocalSpace.h */,
+				6EBC236A10AC6FEA00728FA0 /* lq.h */,
+				6EBC236B10AC6FEA00728FA0 /* Obstacle.h */,
+				6EBC236C10AC6FEA00728FA0 /* OldPathway.h */,
+				6EBC236D10AC6FEA00728FA0 /* OpenSteerDemo.h */,
+				6EBC236F10AC6FEA00728FA0 /* OpenSteerMacros.h */,
+				6EBC237110AC6FEA00728FA0 /* OpenSteerTypes.h */,
+				6EBC237310AC6FEA00728FA0 /* Path.h */,
+				6EBC237410AC6FEA00728FA0 /* Pathway.h */,
+				6EBC237510AC6FEA00728FA0 /* PlugIn.h */,
+				6EBC237610AC6FEA00728FA0 /* PolylineSegmentedPath.h */,
+				6EBC237710AC6FEA00728FA0 /* PolylineSegmentedPathwaySegmentRadii.h */,
+				6EBC237810AC6FEA00728FA0 /* PolylineSegmentedPathwaySingleRadius.h */,
+				6EBC237910AC6FEA00728FA0 /* Proximity.h */,
+				6EBC237A10AC6FEA00728FA0 /* QueryPathAlike.h */,
+				6EBC237B10AC6FEA00728FA0 /* QueryPathAlikeBaseDataExtractionPolicies.h */,
+				6EBC237C10AC6FEA00728FA0 /* QueryPathAlikeMappings.h */,
+				6EBC237D10AC6FEA00728FA0 /* QueryPathAlikeUtilities.h */,
+				6EBC237E10AC6FEA00728FA0 /* SegmentedPath.h */,
+				6EBC237F10AC6FEA00728FA0 /* SegmentedPathAlikeUtilities.h */,
+				6EBC238010AC6FEB00728FA0 /* SegmentedPathway.h */,
+				6EBC238110AC6FEB00728FA0 /* SharedPointer.h */,
+				6EBC238210AC6FEB00728FA0 /* SimpleVehicle.h */,
+				6EBC238410AC6FEB00728FA0 /* StandardTypes.h */,
+				6EBC238510AC6FEB00728FA0 /* SteerLibrary.h */,
+				6EBC238610AC6FEB00728FA0 /* UnusedParameter.h */,
+				6EBC238710AC6FEB00728FA0 /* Utilities.h */,
+				6EBC238810AC6FEB00728FA0 /* Vec3.h */,
+				6EBC238910AC6FEB00728FA0 /* Vec3Utilities.h */,
+			);
+			path = OpenSteer;
+			sourceTree = "<group>";
+		};
+		84FACBA506EFC297000A998A /* Source Code */ = {
+			isa = PBXGroup;
+			children = (
+				6EBC234810AC6FEA00728FA0 /* include */,
+				6EBC230F10AC6F9A00728FA0 /* src */,
+				6EBC22FC10AC6F7400728FA0 /* plugins */,
+			);
+			name = "Source Code";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D1107260486CEB800E47090 /* OpenSteerDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3219D3030855BC5800EB7908 /* Build configuration list for PBXNativeTarget "OpenSteerDemo" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpenSteerDemo;
+			productInstallPath = "$(HOME)/Applications";
+			productName = opensteer;
+			productReference = 8D1107320486CEB800E47090 /* OpenSteerDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 3219D30B0855BC5800EB7908 /* Build configuration list for PBXProject "OpenSteer" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* opensteer */;
+			projectDirPath = "";
+			projectRoots = (
+				../Source,
+				../Source/opensteer/include,
+				"<Project File Directory>",
+			);
+			targets = (
+				8D1107260486CEB800E47090 /* OpenSteerDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */,
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				32FFF58106E9CF3800E1D8A3 /* OpenSteer.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6EBC230610AC6F7400728FA0 /* Boids.cpp in Sources */,
+				6EBC230710AC6F7400728FA0 /* CaptureTheFlag.cpp in Sources */,
+				6EBC230810AC6F7400728FA0 /* LowSpeedTurn.cpp in Sources */,
+				6EBC230910AC6F7400728FA0 /* MapDrive.cpp in Sources */,
+				6EBC230A10AC6F7400728FA0 /* MultiplePursuit.cpp in Sources */,
+				6EBC230B10AC6F7400728FA0 /* OneTurning.cpp in Sources */,
+				6EBC230C10AC6F7400728FA0 /* Pedestrian.cpp in Sources */,
+				6EBC230D10AC6F7400728FA0 /* PedestriansWalkingAnEight.cpp in Sources */,
+				6EBC230E10AC6F7400728FA0 /* Soccer.cpp in Sources */,
+				6EBC232A10AC6F9A00728FA0 /* Camera.cpp in Sources */,
+				6EBC232B10AC6F9A00728FA0 /* Clock.cpp in Sources */,
+				6EBC232C10AC6F9A00728FA0 /* Color.cpp in Sources */,
+				6EBC232D10AC6F9A00728FA0 /* Draw.cpp in Sources */,
+				6EBC232E10AC6F9A00728FA0 /* Entity.cpp in Sources */,
+				6EBC232F10AC6F9A00728FA0 /* lq.c in Sources */,
+				6EBC233010AC6F9A00728FA0 /* main.cpp in Sources */,
+				6EBC233110AC6F9A00728FA0 /* Obstacle.cpp in Sources */,
+				6EBC233210AC6F9A00728FA0 /* OldPathway.cpp in Sources */,
+				6EBC233310AC6F9A00728FA0 /* OpenSteerDemo.cpp in Sources */,
+				6EBC233510AC6F9A00728FA0 /* Path.cpp in Sources */,
+				6EBC233610AC6F9A00728FA0 /* Pathway.cpp in Sources */,
+				6EBC233710AC6F9A00728FA0 /* PlugIn.cpp in Sources */,
+				6EBC233810AC6F9A00728FA0 /* PolylineSegmentedPath.cpp in Sources */,
+				6EBC233910AC6F9A00728FA0 /* PolylineSegmentedPathwaySegmentRadii.cpp in Sources */,
+				6EBC233B10AC6F9A00728FA0 /* PolylineSegmentedPathwaySingleRadius.cpp in Sources */,
+				6EBC233C10AC6F9A00728FA0 /* SegmentedPath.cpp in Sources */,
+				6EBC233D10AC6F9A00728FA0 /* SegmentedPathway.cpp in Sources */,
+				6EBC233E10AC6F9A00728FA0 /* SimpleVehicle.cpp in Sources */,
+				6EBC234110AC6F9A00728FA0 /* Vec3.cpp in Sources */,
+				6EBC234210AC6F9A00728FA0 /* Vec3Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		29B97318FDCFA39411CA2CEA /* MainMenu.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				29B97319FDCFA39411CA2CEA /* English */,
+			);
+			name = MainMenu.nib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3219D3040855BC5800EB7908 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_EFFECTIVE_CPLUSPLUS_VIOLATIONS = NO;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INHIBIT_ALL_WARNINGS = NO;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = NO;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../Applications/usr/local/lib\"";
+				PRODUCT_NAME = OpenSteerDemo;
+				USE_HEADERMAP = NO;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3219D3050855BC5800EB7908 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_CPU = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_WARN_SIGN_COMPARE = NO;
+				HEADER_SEARCH_PATHS = ../include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../Applications/usr/local/lib\"";
+				PRODUCT_NAME = OpenSteerDemo;
+				USE_HEADERMAP = NO;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		3219D3060855BC5800EB7908 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				HEADER_SEARCH_PATHS = ../include;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Applications";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../../../../Applications/usr/local/lib\"";
+				PRODUCT_NAME = OpenSteerDemo;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Default;
+		};
+		3219D30C0855BC5800EB7908 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G4;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../include,
+					../Source/opensteer/include,
+				);
+				USER_HEADER_SEARCH_PATHS = ../Source/opensteer/include;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		3219D30D0855BC5800EB7908 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_MODEL_TUNING = G4;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../include,
+					../Source/opensteer/include,
+				);
+			};
+			name = Deployment;
+		};
+		3219D30E0855BC5800EB7908 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_MODEL_TUNING = G4;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
+				GCC_WARN_HIDDEN_VIRTUAL_FUNCTIONS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
+				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
+				GCC_WARN_UNUSED_VALUE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					../include,
+					../Source/opensteer/include,
+				);
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3219D3030855BC5800EB7908 /* Build configuration list for PBXNativeTarget "OpenSteerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3219D3040855BC5800EB7908 /* Development */,
+				3219D3050855BC5800EB7908 /* Deployment */,
+				3219D3060855BC5800EB7908 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3219D30B0855BC5800EB7908 /* Build configuration list for PBXProject "OpenSteer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3219D30C0855BC5800EB7908 /* Development */,
+				3219D30D0855BC5800EB7908 /* Deployment */,
+				3219D30E0855BC5800EB7908 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
