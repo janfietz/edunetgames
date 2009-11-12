@@ -153,8 +153,10 @@ namespace OpenSteer {
 
         // apply a given steering force to our momentum,
         // adjusting our orientation to maintain velocity-alignment.
-        void applySteeringForce (const Vec3& force, const float deltaTime);
+        virtual void applySteeringForce (const Vec3& force, const float deltaTime);
 
+        virtual Vec3 determineCombinedSteering (const float elapsedTime);
+		
         // the default version: keep FORWARD parallel to velocity, change
         // UP as little as possible.
         virtual void regenerateLocalSpace (const Vec3& newVelocity,

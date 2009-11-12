@@ -79,7 +79,7 @@ OpenSteer::Camera OpenSteer::OpenSteerDemo::camera;
 // currently selected plug-in (user can choose or cycle through them)
 
 
-OpenSteer::PlugIn* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
+OpenSteer::Plugin* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
 
 
 // ----------------------------------------------------------------------------
@@ -120,14 +120,14 @@ const int OpenSteer::OpenSteerDemo::drawPhase = 2;
 
 namespace {
 
-    void printPlugIn (OpenSteer::PlugIn& pi) {std::cout << " " << pi << std::endl;} // XXX
+    void printPlugIn (OpenSteer::Plugin& pi) {std::cout << " " << pi << std::endl;} // XXX
 
 } // anonymous namespace
 
 void 
 OpenSteer::OpenSteerDemo::initialize (void)
 {
-    // select the default PlugIn
+    // select the default Plugin
     selectDefaultPlugIn ();
 
     {
@@ -135,17 +135,17 @@ OpenSteer::OpenSteerDemo::initialize (void)
         // XXX should it be replaced with something permanent?
 
         std::cout << std::endl << "Known plugins:" << std::endl;   // xxx?
-        PlugIn::applyToAll (printPlugIn);                          // xxx?
+        Plugin::applyToAll (printPlugIn);                          // xxx?
         std::cout << std::endl;                                    // xxx?
 
-        // identify default PlugIn
-        if (!selectedPlugIn) errorExit ("no default PlugIn");
+        // identify default Plugin
+        if (!selectedPlugIn) errorExit ("no default Plugin");
         std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
         std::cout << " " << *selectedPlugIn << std::endl;          // xxx?
         std::cout << std::endl;                                    // xxx?
     }
 
-    // initialize the default PlugIn
+    // initialize the default Plugin
     openSelectedPlugIn ();
 }
 
@@ -165,11 +165,11 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
     //  routine)
     initPhaseTimers ();
 
-    // run selected PlugIn (with simulation's current time and step size)
+    // run selected Plugin (with simulation's current time and step size)
     updateSelectedPlugIn (clock.getTotalSimulationTime (),
                           clock.getElapsedSimulationTime ());
 
-    // redraw selected PlugIn (based on real time)
+    // redraw selected Plugin (based on real time)
     redrawSelectedPlugIn (clock.getTotalRealTime (),
                           clock.getElapsedRealTime ());
 }
@@ -198,14 +198,14 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 
 
 // ----------------------------------------------------------------------------
-// select the default PlugIn
+// select the default Plugin
 
 
 void 
 OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 {
-    PlugIn::sortBySelectionOrder ();
-    selectedPlugIn = PlugIn::findDefault ();
+    Plugin::sortBySelectionOrder ();
+    selectedPlugIn = Plugin::findDefault ();
 }
 
 
@@ -240,7 +240,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 {
-    return (selectedPlugIn ? selectedPlugIn->name() : "no PlugIn");
+    return (selectedPlugIn ? selectedPlugIn->name() : "no Plugin");
 }
 
 
@@ -278,7 +278,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
         if (vehicles.size() > 0) selectedVehicle = vehicles.front();
     }
 
-    // invoke selected PlugIn's Update method
+    // invoke selected Plugin's Update method
     selectedPlugIn->update (currentTime, elapsedTime);
 
     // return to previous phase
@@ -297,10 +297,10 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
     // switch to Draw phase
     pushPhase (drawPhase);
 
-    // invoke selected PlugIn's Draw method
+    // invoke selected Plugin's Draw method
     selectedPlugIn->redraw (currentTime, elapsedTime);
 
-    // draw any annotation queued up during selected PlugIn's Update method
+    // draw any annotation queued up during selected Plugin's Update method
     drawAllDeferredLines ();
     drawAllDeferredCirclesOrDisks ();
 
@@ -366,7 +366,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPlugInXXX (void)
 
 // ----------------------------------------------------------------------------
 // return a group (an STL vector of AbstractVehicle pointers) of all
-// vehicles(/agents/characters) defined by the currently selected PlugIn
+// vehicles(/agents/characters) defined by the currently selected Plugin
 
 
 const OpenSteer::AVGroup& 
@@ -729,18 +729,18 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
     printMessage ("");
     printMessage ("defined single key commands:");
-    printMessage ("  r      restart current PlugIn.");
+    printMessage ("  r      restart current Plugin.");
     printMessage ("  s      select next vehicle.");
     printMessage ("  c      select next camera mode.");
     printMessage ("  f      select next preset frame rate");
-    printMessage ("  Tab    select next PlugIn.");
+    printMessage ("  Tab    select next Plugin.");
     printMessage ("  a      toggle annotation on/off.");
     printMessage ("  Space  toggle between Run and Pause.");
     printMessage ("  ->     step forward one frame.");
     printMessage ("  Esc    exit.");
     printMessage ("");
 
-    // allow PlugIn to print mini help for the function keys it handles
+    // allow Plugin to print mini help for the function keys it handles
     selectedPlugIn->printMiniHelpForFunctionKeys ();
 }
 
@@ -822,7 +822,7 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 
 namespace {
 
-    char* appVersionName = "OpenSteerDemo 0.8.2";
+    const char* appVersionName = "OpenSteerDemo 0.8.2";
 
     // The number of our GLUT window
     int windowID;
@@ -1269,10 +1269,10 @@ namespace {
 
         switch (key)
         {
-        // reset selected PlugIn
+        // reset selected Plugin
         case 'r':
             OpenSteer::OpenSteerDemo::resetSelectedPlugIn ();
-            message << "reset PlugIn "
+            message << "reset Plugin "
                     << '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn () << '"'
                     << std::ends;
             OpenSteer::OpenSteerDemo::printMessage (message);
@@ -1292,10 +1292,10 @@ namespace {
             OpenSteer::OpenSteerDemo::printMessage (message);
             break;
 
-        // select next PlugIn
+        // select next Plugin
         case tab:
             OpenSteer::OpenSteerDemo::selectNextPlugIn ();
-            message << "select next PlugIn: "
+            message << "select next Plugin: "
                     << '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn () << '"'
                     << std::ends;
             OpenSteer::OpenSteerDemo::printMessage (message);
@@ -1357,7 +1357,7 @@ namespace {
 
     // ------------------------------------------------------------------------
     // handles "special" keys,
-    // function keys are handled by the PlugIn
+    // function keys are handled by the Plugin
     //
     // parameter names commented out to prevent compiler warning from "-W"
 
@@ -1410,7 +1410,7 @@ namespace {
         // draw text showing (smoothed, rounded) "frames per second" rate
         drawDisplayFPS ();
 
-        // draw the name of the selected PlugIn
+        // draw the name of the selected Plugin
         drawDisplayPlugInName ();
 
         // draw the name of the camera's current mode

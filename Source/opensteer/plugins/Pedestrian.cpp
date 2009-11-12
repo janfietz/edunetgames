@@ -62,7 +62,7 @@ namespace {
 
     // How many pedestrians to create when the plugin starts first?
     int const gPedestrianStartCount = 100;
-    // creates a path for the PlugIn
+    // creates a path for the Plugin
     PolylineSegmentedPathwaySingleRadius* getTestPath (void);
     PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
     SphereObstacle gObstacle1;
@@ -181,7 +181,7 @@ namespace {
 
         // compute combined steering force: move forward, avoid obstacles
         // or neighbors if needed, otherwise follow the path and wander
-        Vec3 determineCombinedSteering (const float elapsedTime)
+        virtual Vec3 determineCombinedSteering (const float elapsedTime)
         {
             // move forward
             Vec3 steeringForce = forward();
@@ -372,7 +372,7 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // create path for PlugIn 
+    // create path for Plugin 
     //
     //
     //        | gap |
@@ -465,10 +465,10 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-    // OpenSteerDemo PlugIn
+    // OpenSteerDemo Plugin
 
 
-    class PedestrianPlugIn : public PlugIn
+    class PedestrianPlugIn : public Plugin
     {
     public:
 
