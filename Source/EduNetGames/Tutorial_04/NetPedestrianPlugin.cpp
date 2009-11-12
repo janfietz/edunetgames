@@ -86,9 +86,9 @@ void NetPedestrianPlugin::reset (void)
 	kVG.reset();
 
 	// reset camera position
-	if( NULL != OpenSteerDemo::selectedVehicle )
+	if( NULL != SimpleVehicle::selectedVehicle )
 	{
-		OpenSteerDemo::position2dCamera (*OpenSteerDemo::selectedVehicle);
+		OpenSteerDemo::position2dCamera (*SimpleVehicle::selectedVehicle);
 	}
 
 	// make camera jump immediately to new position
@@ -107,7 +107,7 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTime)
 {
 	// selected Pedestrian (user can mouse click to select another)
-	AbstractVehicle* selected = OpenSteerDemo::selectedVehicle;
+	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
 
 	// Pedestrian nearest mouse (to be highlighted)
 	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
@@ -118,7 +118,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
 
 		// draw "ground plane"
-		if (OpenSteerDemo::selectedVehicle) gridCenter = selected->position();
+		if (SimpleVehicle::selectedVehicle) gridCenter = selected->position();
 		OpenSteerDemo::gridUtility (gridCenter);
 	}
 
@@ -139,7 +139,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	}
 
 	// textual annotation for selected Pedestrian
-	if (OpenSteerDemo::selectedVehicle && OpenSteer::annotationIsOn())
+	if (SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn())
 	{
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
@@ -269,7 +269,7 @@ void NetPedestrianPlugin::addPedestrianToCrowd( NetPedestrian* pkVehicle )
 	}
 	crowd.push_back( pkVehicle );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	if (kVG.population() == 1) OpenSteerDemo::selectedVehicle = pkVehicle;
+	if (kVG.population() == 1) SimpleVehicle::selectedVehicle = pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
@@ -283,8 +283,8 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 		crowd.pop_back();
 
 		// if it is OpenSteerDemo's selected vehicle, unselect it
-		if (pedestrian == OpenSteerDemo::selectedVehicle)
-			OpenSteerDemo::selectedVehicle = NULL;
+		if (pedestrian == SimpleVehicle::selectedVehicle)
+			SimpleVehicle::selectedVehicle = NULL;
 
 		// delete the Pedestrian
 		this->m_pkPedestrianFactory->DestroyNetPedestrian( pedestrian );

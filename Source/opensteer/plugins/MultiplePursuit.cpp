@@ -185,7 +185,7 @@ namespace {
             pEnd = allMP.end();          // iterator pointing to last pursuer
 
             // initialize camera
-            OpenSteerDemo::selectedVehicle = wanderer;
+            SimpleVehicle::selectedVehicle = wanderer;
             OpenSteerDemo::camera.mode = Camera::cmStraightDown;
             OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
             OpenSteerDemo::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
@@ -206,7 +206,7 @@ namespace {
         void redraw (const float currentTime, const float elapsedTime)
         {
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();

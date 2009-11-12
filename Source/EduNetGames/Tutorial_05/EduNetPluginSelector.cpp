@@ -18,7 +18,7 @@ RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 void PluginSelector::Initialize(RakNet::RPC3* rpc3Inst,
-	EduNetGames::PluginHost* pkPluginHost)
+	EduNet::PluginHost* pkPluginHost)
 {
 	
 	this->m_rpc3Inst = rpc3Inst;

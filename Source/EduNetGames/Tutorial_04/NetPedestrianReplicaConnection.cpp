@@ -275,4 +275,4 @@ PedestrianClientPlugin gPedestrianClientPlugin( true );
 
 PedestrianClientServerPlugin gClientServerPlugin;
 
-EduNetGames::EmptyPlugin gEmptyPlugin;
+EduNet::EmptyPlugin gEmptyPlugin;

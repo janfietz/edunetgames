@@ -225,10 +225,10 @@ namespace {
                 // wrap around (teleport)
                 setPosition (position().sphericalWrapAround (Vec3::zero,
                                                              worldRadius));
-                if (this == OpenSteerDemo::selectedVehicle)
+                if (this == SimpleVehicle::selectedVehicle)
                 {
                     OpenSteerDemo::position3dCamera
-                        (*OpenSteerDemo::selectedVehicle); 
+                        (*SimpleVehicle::selectedVehicle); 
                     OpenSteerDemo::camera.doNotSmoothNextMove ();
                 }
             }
@@ -354,7 +354,7 @@ namespace {
             for (int i = 0; i < 200; i++) addBoidToFlock ();
 
             // initialize camera
-            OpenSteerDemo::init3dCamera (*OpenSteerDemo::selectedVehicle);
+            OpenSteerDemo::init3dCamera (*SimpleVehicle::selectedVehicle);
             OpenSteerDemo::camera.mode = Camera::cmFixed;
             OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
             OpenSteerDemo::camera.fixedDistVOffset = 0;
@@ -383,7 +383,7 @@ namespace {
         void redraw (const float currentTime, const float elapsedTime)
         {
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
@@ -455,7 +455,7 @@ namespace {
             for (iterator i = flock.begin(); i != flock.end(); i++) (**i).reset();
 
             // reset camera position
-            OpenSteerDemo::position3dCamera (*OpenSteerDemo::selectedVehicle);
+            OpenSteerDemo::position3dCamera (*SimpleVehicle::selectedVehicle);
 
             // make camera jump immediately to new position
             OpenSteerDemo::camera.doNotSmoothNextMove ();
@@ -547,7 +547,7 @@ namespace {
             population++;
             Boid* boid = new Boid (*pd);
             flock.push_back (boid);
-            if (population == 1) OpenSteerDemo::selectedVehicle = boid;
+            if (population == 1) SimpleVehicle::selectedVehicle = boid;
         }
 
         void removeBoidFromFlock (void)
@@ -560,8 +560,8 @@ namespace {
                 population--;
 
                 // if it is OpenSteerDemo's selected vehicle, unselect it
-                if (boid == OpenSteerDemo::selectedVehicle)
-                    OpenSteerDemo::selectedVehicle = NULL;
+                if (boid == SimpleVehicle::selectedVehicle)
+                    SimpleVehicle::selectedVehicle = NULL;
 
                 // delete the Boid
                 delete boid;

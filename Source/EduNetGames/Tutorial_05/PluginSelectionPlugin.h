@@ -11,7 +11,7 @@
 // ----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
 class PluginServerPlugin : public PeerPlugin<PluginClass>,
-	public EduNetGames::PluginHost
+	public EduNet::PluginHost
 {
 	ET_DECLARE_BASE(PeerPlugin<PluginClass>);
 public:
@@ -97,7 +97,7 @@ const char* PluginServerPlugin<PluginClass>::GetCurrentPluginName( void ) const
 
 // ----------------------------------------------------------------------------
 class PluginClientPlugin : public ClientPlugin<OpenSteer::PluginArray>,
-	public EduNetGames::PluginHost
+	public EduNet::PluginHost
 {
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::PluginArray>);
 public:

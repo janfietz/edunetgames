@@ -62,23 +62,36 @@
 
 #include "OpenSteer/SimpleVehicle.h"
 #include <algorithm>
+
+//-----------------------------------------------------------------------------
+// currently selected vehicle.  Generally the one the camera follows and
+// for which additional information may be displayed.  Clicking the mouse
+// near a vehicle causes it to become the Selected Vehicle.
+OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
+
 // ----------------------------------------------------------------------------
 // constructor
-
-
 OpenSteer::SimpleVehicle::SimpleVehicle (void)
 {
     // set inital state
     reset ();
+
+	// set a global selected vehicle in case there is none
+	if( NULL == SimpleVehicle::selectedVehicle )
+	{
+		SimpleVehicle::selectedVehicle = this;
+	}
 }
 
 
 // ----------------------------------------------------------------------------
 // destructor
-
-
 OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 {
+	if( this == SimpleVehicle::selectedVehicle )
+	{
+		SimpleVehicle::selectedVehicle = NULL;
+	}
 }
 
 

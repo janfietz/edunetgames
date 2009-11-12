@@ -1,7 +1,7 @@
 #ifndef __EDUNETPLUGINHOST_H__
 #define __EDUNETPLUGINHOST_H__
 
-namespace EduNetGames
+namespace EduNet
 {
 	class PluginHost
 	{

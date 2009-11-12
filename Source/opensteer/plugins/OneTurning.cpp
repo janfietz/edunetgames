@@ -102,7 +102,7 @@ namespace {
         void open (void)
         {
             gOneTurning = new OneTurning;
-            OpenSteerDemo::selectedVehicle = gOneTurning;
+            SimpleVehicle::selectedVehicle = gOneTurning;
             theVehicle.push_back (gOneTurning);
 
             // initialize camera

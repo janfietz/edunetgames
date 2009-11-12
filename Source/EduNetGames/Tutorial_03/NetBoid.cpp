@@ -157,10 +157,10 @@ void Boid::sphericalWrapAround (void)
 		// wrap around (teleport)
 		setPosition (position().sphericalWrapAround (Vec3::zero,
 			worldRadius));
-		if (this == OpenSteerDemo::selectedVehicle)
+		if (this == SimpleVehicle::selectedVehicle)
 		{
 			OpenSteerDemo::position3dCamera
-				(*OpenSteerDemo::selectedVehicle); 
+				(*SimpleVehicle::selectedVehicle); 
 			OpenSteerDemo::camera.doNotSmoothNextMove ();
 		}
 	}

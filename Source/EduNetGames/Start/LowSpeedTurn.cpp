@@ -158,7 +158,7 @@ namespace {
             for (int i = 0; i < lstCount; i++) all.push_back (new LowSpeedTurn);
 
             // initial selected vehicle
-            OpenSteerDemo::selectedVehicle = *all.begin();
+            SimpleVehicle::selectedVehicle = *all.begin();
 
             // initialize camera
             OpenSteerDemo::camera.mode = Camera::cmFixed;
@@ -183,7 +183,7 @@ namespace {
         void redraw (const float currentTime, const float elapsedTime)
         {
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();

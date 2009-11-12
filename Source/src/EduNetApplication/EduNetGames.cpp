@@ -46,9 +46,7 @@
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
 
-// #include "OpenSteer/Annotation.h"
-// #include "OpenSteer/Color.h"
-// #include "OpenSteer/Vec3.h"
+#include "../../../ThirdParty/iprof/prof.h" 
 
 #include <algorithm>
 #include <sstream>
@@ -89,11 +87,6 @@ OpenSteer::Camera OpenSteer::OpenSteerDemo::camera;
 OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugin = NULL;
 
 
-//-----------------------------------------------------------------------------
-// currently selected vehicle.  Generally the one the camera follows and
-// for which additional information may be displayed.  Clicking the mouse
-// near a vehicle causes it to become the Selected Vehicle.
-OpenSteer::AbstractVehicle* OpenSteer::OpenSteerDemo::selectedVehicle = NULL;
 
 
 //-----------------------------------------------------------------------------
@@ -270,7 +263,7 @@ void
 OpenSteer::OpenSteerDemo::openSelectedPlugin (void)
 {
 	camera.reset ();
-	selectedVehicle = NULL;
+	SimpleVehicle::selectedVehicle = NULL;
 	selectedPlugin->open ();
 /*
 	if( windowID )
@@ -313,10 +306,10 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	doDelayedResetPluginXXX ();
 
 	// if no vehicle is selected, and some exist, select the first one
-	if (selectedVehicle == NULL)
+	if (SimpleVehicle::selectedVehicle == NULL)
 	{
 		const AVGroup& vehicles = allVehiclesOfSelectedPlugin();
-		if (vehicles.size() > 0) selectedVehicle = vehicles.front();
+		if (vehicles.size() > 0) SimpleVehicle::selectedVehicle = vehicles.front();
 	}
 
 	// invoke selected Plugin's Update method
@@ -360,7 +353,6 @@ void
 OpenSteer::OpenSteerDemo::closeSelectedPlugin (void)
 {
 	selectedPlugin->close ();
-	selectedVehicle = NULL;
 }
 
 
@@ -427,7 +419,7 @@ OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugin (void)
 void 
 OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 {
-	if (selectedVehicle != NULL)
+	if (SimpleVehicle::selectedVehicle != NULL)
 	{
 		// get a container of all vehicles
 		const AVGroup& all = allVehiclesOfSelectedPlugin ();
@@ -435,16 +427,16 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 		const AVIterator last = all.end();
 
 		// find selected vehicle in container
-		const AVIterator s = std::find (first, last, selectedVehicle);
+		const AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
 
 		// normally select the next vehicle in container
-		selectedVehicle = *(s+1);
+		SimpleVehicle::selectedVehicle = *(s+1);
 
 		// if we are at the end of the container, select the first vehicle
-		if (s == last-1) selectedVehicle = *first;
+		if (s == last-1) SimpleVehicle::selectedVehicle = *first;
 
 		// if the search failed, use NULL
-		if (s == last) selectedVehicle = NULL;
+		if (s == last) SimpleVehicle::selectedVehicle = NULL;
 	}
 }
 
@@ -456,7 +448,7 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 void 
 OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (int x, int y)
 {
-	selectedVehicle = findVehicleNearestScreenPosition (x, y);
+	SimpleVehicle::selectedVehicle = findVehicleNearestScreenPosition (x, y);
 }
 
 
@@ -581,7 +573,7 @@ OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
 											float distance,
 											float /*elevation*/)
 {
-	selectedVehicle = &selected;
+	SimpleVehicle::selectedVehicle = &selected;
 	if (&selected)
 	{
 		const Vec3 behind = selected.forward() * -distance;
@@ -1480,55 +1472,92 @@ namespace {
 		}
 	}
 
+	void profPrintText(float x, float y, char *str)
+	{
+		OpenSteer::Vec3 screenLocation (x, y, 0);
+//		const OpenSteer::Color color = (usage >= 100) ? OpenSteer::gRed : OpenSteer::gWhite;
+//		const OpenSteer::Color color = OpenSteer::gRed;
+		const OpenSteer::Color color = OpenSteer::gGreen;
+		OpenSteer::Vec3 sp;
+		sp = screenLocation;
+		draw2dTextAt2dLocation (*str, sp, color, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
+
+	}
+
+	float profPrintTextText_width(char *str)
+	{
+		return strlen(str) * 9;
+	}
 
 	void 
 		displayFunc000 (void)
 	{
-		// update global simulation clock
-		OpenSteer::OpenSteerDemo::clock.update ();
-		//  start the phase timer (XXX to accurately measure "overhead" time this
-		//  should be in displayFunc, or somehow account for time outside this
-		//  routine)
-		OpenSteer::OpenSteerDemo::initPhaseTimers ();
+		{
+			Prof(update);
 
-		// run selected Plugin (with simulation's current time and step size)
- 		OpenSteer::OpenSteerDemo::updateSelectedPlugin (OpenSteer::OpenSteerDemo::clock.getTotalSimulationTime (),
- 			OpenSteer::OpenSteerDemo::clock.getElapsedSimulationTime ());
-		// clear color and depth buffers
+			// update global simulation clock
+			OpenSteer::OpenSteerDemo::clock.update ();
+			//  start the phase timer (XXX to accurately measure "overhead" time this
+			//  should be in displayFunc, or somehow account for time outside this
+			//  routine)
+			OpenSteer::OpenSteerDemo::initPhaseTimers ();
+
+			// run selected Plugin (with simulation's current time and step size)
+			OpenSteer::OpenSteerDemo::updateSelectedPlugin (OpenSteer::OpenSteerDemo::clock.getTotalSimulationTime (),
+				OpenSteer::OpenSteerDemo::clock.getElapsedSimulationTime ());
+			// clear color and depth buffers
+		}
 
 
-		// run simulation and draw associated graphics
-//		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
+		{
+			Prof(draw);
+		
+			// run simulation and draw associated graphics
+			//		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
 
-		glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// redraw selected Plugin (based on real time)
- 		OpenSteer::OpenSteerDemo::redrawSelectedPlugin (OpenSteer::OpenSteerDemo::clock.getTotalRealTime (),
- 			OpenSteer::OpenSteerDemo::clock.getElapsedRealTime ());
+			// redraw selected Plugin (based on real time)
+			OpenSteer::OpenSteerDemo::redrawSelectedPlugin (OpenSteer::OpenSteerDemo::clock.getTotalRealTime (),
+				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime ());
 
-		// draw text showing (smoothed, rounded) "frames per second" rate
-		drawDisplayFPS ();
+			// draw text showing (smoothed, rounded) "frames per second" rate
+			drawDisplayFPS ();
 
-		// draw the name of the selected Plugin
-		drawDisplayPluginName ();
+			// draw the name of the selected Plugin
+			drawDisplayPluginName ();
 
-		// draw the name of the camera's current mode
-		drawDisplayCameraModeName ();
+			// draw the name of the camera's current mode
+			drawDisplayCameraModeName ();
 
-		// draw crosshairs to indicate aimpoint (xxx for debugging only?)
-		// drawReticle ();
+			// draw crosshairs to indicate aimpoint (xxx for debugging only?)
+			// drawReticle ();
 
-		// check for errors in drawing module, if so report and exit
-		OpenSteer::checkForDrawError ("OpenSteerDemo::updateSimulationAndRedraw");
+			// check for errors in drawing module, if so report and exit
+			OpenSteer::checkForDrawError ("OpenSteerDemo::updateSimulationAndRedraw");
 
-		// double buffering, swap back and front buffers
-		glFlush ();
-		glutSwapBuffers();
+		}
+		{
+			Prof_update(1);
+			Prof_draw_gl( 100, 250, 500, 500, -15, 2, profPrintText, profPrintTextText_width );
+//			Prof_draw_graph_gl( 0, 0, 2, 8 );
+
+//			Prof_draw_graph_gl(10.0, 300.0, 1.0, 8.0);
+
+
+		}
+		{
+			// double buffering, swap back and front buffers
+			glFlush ();
+			glutSwapBuffers();
+		}
 	}
 
 	// ------------------------------------------------------------------------
 	void displayFunc( void )
 	{
+		Prof(displayFunc);
+
 		int current_window, new_window(0);
 		current_window = glutGetWindow();
 		if (GLUI_Master.gluis.first_child() != NULL )

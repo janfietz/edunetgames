@@ -80,7 +80,7 @@ void BoidsPlugin::open (void)
     for (int i = 0; i < 100; i++) addBoidToFlock ();
 
     // initialize camera
-    OpenSteerDemo::init3dCamera (*OpenSteerDemo::selectedVehicle);
+    OpenSteerDemo::init3dCamera (*SimpleVehicle::selectedVehicle);
     OpenSteerDemo::camera.mode = Camera::cmFixed;
     OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
     OpenSteerDemo::camera.fixedDistVOffset = 0;
@@ -111,7 +111,7 @@ void BoidsPlugin::update (const float currentTime, const float elapsedTime)
 void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 {
     // selected vehicle (user can mouse click to select another)
-    AbstractVehicle& selected = *OpenSteerDemo::selectedVehicle;
+    AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
     // vehicle nearest mouse (to be highlighted)
     AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
@@ -193,7 +193,7 @@ void BoidsPlugin::reset (void)
     for (iterator i = flock.begin(); i != flock.end(); i++) (**i).reset();
 
     // reset camera position
-    OpenSteerDemo::position3dCamera (*OpenSteerDemo::selectedVehicle);
+    OpenSteerDemo::position3dCamera (*SimpleVehicle::selectedVehicle);
 
     // make camera jump immediately to new position
     OpenSteerDemo::camera.doNotSmoothNextMove ();
@@ -329,24 +329,13 @@ void BoidsPlugin::AddBoidToFlock( Boid* pkBoid )
 {
 	flock.push_back (pkBoid);
     if (flock.size() == 1) 
-		OpenSteerDemo::selectedVehicle = pkBoid;
+		SimpleVehicle::selectedVehicle = pkBoid;
 }
 // ----------------------------------------------------------------------------
 void BoidsPlugin::RemoveBoidFromFlock( const Boid* pkBoid )
 {
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.removeVehicle( pkBoid );
-// 	if (flock.size() > 0)
-//     {
-// 		Boid::groupType::iterator kIter = this->FindBoid(pkBoid);
-// 		if(kIter != flock.end())
-// 		{
-// 			flock.erase( kIter );
-// 			 // if it is OpenSteerDemo's selected vehicle, unselect it
-//         if (pkBoid == OpenSteerDemo::selectedVehicle)
-//             OpenSteerDemo::selectedVehicle = NULL;
-// 		}       
-//     }
 }
 // ----------------------------------------------------------------------------
 Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )
