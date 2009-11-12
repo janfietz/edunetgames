@@ -1,8 +1,6 @@
 #ifndef __EDUNETCONFIG_H__
 #define __EDUNETCONFIG_H__
 
-#include "EduNetTutorialConfig.h"
-
 // application name macro
 #ifndef EDUNET_APPNAME
 #define EDUNET_APPNAME EduNetOptions::getAppName()
@@ -21,7 +19,7 @@
 
 // boost lib
 #ifndef EDUNET_HAVE_BOOST
-#define EDUNET_HAVE_BOOST 0
+#define EDUNET_HAVE_BOOST 1
 #endif
 
 #if EDUNET_SHOW_CONFIG

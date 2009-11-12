@@ -1,7 +1,7 @@
 #include "ClientServerPlugin.h"
 
 
-#include "Tutorial_01/EmptyPlugin.h"
+#include "OpenSteerUT/EmptyPlugin.h"
 
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
