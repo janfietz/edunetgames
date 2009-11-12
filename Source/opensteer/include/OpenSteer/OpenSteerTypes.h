@@ -14,11 +14,11 @@
 #ifndef __OSNATIVE_TYPES_H__
 #define __OSNATIVE_TYPES_H__
 
-#if (defined(__GNUC__)  || defined(__GCCXML__) || defined(__SNC__))
+#if (defined(__GNUC__)  || defined(__GCCXML__) || defined(__SNC__) || defined(__APPLE__) )
 #include <stdint.h>
 #endif
 
-#if !defined(_STDINT_H) && !defined(_SN_STDINT_H) && !defined(_SYS_STDINT_H_)
+#if !defined(_STDINT_H) && !defined(_SN_STDINT_H) && !defined(_SYS_STDINT_H_) && !defined(_STDINT_H_)
 typedef unsigned char         uint8_t;
 typedef unsigned short        uint16_t;
 typedef unsigned int          uint32_t;

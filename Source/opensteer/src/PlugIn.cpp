@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 //
 //
 // OpenSteerDemo Plugin class
@@ -34,13 +34,13 @@
 // 11-13-02 cwr: created 
 //
 //
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Plugin.h"
 
 
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // Plugin registry
 //
 // XXX replace with STL utilities
@@ -51,7 +51,7 @@ const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
 
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 	m_pkParentPlugin( NULL )
@@ -140,6 +140,8 @@ OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
 // sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
+
+
 void 
 OpenSteer::Plugin::sortBySelectionOrder (void)
 {
@@ -166,12 +168,12 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 }
 
 
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 // returns pointer to default Plugin (currently, first in registry)
 OpenSteer::AbstractPlugin* 
 OpenSteer::Plugin::findDefault (void)
 {
-    // return NULL if no Plugins exist
+    // return NULL if no PlugIns exist
     if (itemsInRegistry == 0) return NULL;
 
     // otherwise, return the first Plugin that requests initial selection
@@ -187,6 +189,8 @@ OpenSteer::Plugin::findDefault (void)
 //-----------------------------------------------------------------------------
 // save this instance in the class's registry of instances
 // (for use by contractors)
+
+
 void 
 OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {
@@ -195,4 +199,4 @@ OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 }
 
 
-//-----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------

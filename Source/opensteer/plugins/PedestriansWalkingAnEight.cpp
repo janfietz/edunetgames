@@ -75,8 +75,6 @@ namespace {
     
     
     // ----------------------------------------------------------------------------
-    
-    
     class Pedestrian : public SimpleVehicle
     {
 public:
@@ -140,7 +138,7 @@ public:
             // notify proximity database that our position has changed
             proximityToken->updateForNewPosition (position());
         }
-        
+		
         // per frame simulation update
         void update (const float currentTime, const float elapsedTime)
         {
@@ -251,7 +249,7 @@ public:
         
         
         // draw this pedestrian into scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, gGray50);
             drawTrail ();
@@ -422,9 +420,9 @@ class PedestrianPlugIn : public Plugin
 {
 public:
     
-    const char* name (void) {return "Pedestrians Walking an Eight";}
+    const char* name (void) const {return "Pedestrians Walking an Eight";}
     
-    float selectionOrderSortKey (void) {return 98.0f;}
+    float selectionOrderSortKey (void) const {return 98.0f;}
     
     virtual ~PedestrianPlugIn() {}// be more "nice" to avoid a compiler warning
     
@@ -471,7 +469,7 @@ public:
         OpenSteerDemo::gridUtility (gridCenter);
         
         // draw and annotate each Pedestrian
-        for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).draw (); 
+        for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).draw ( currentTime, elapsedTime ); 
         
         // draw the path they follow and obstacles they avoid
         drawPathAndObstacles ();
@@ -544,7 +542,7 @@ public:
                 {
                     std::ostringstream sn;
                     sn << "#"
-                        << ((Pedestrian*)vehicle)->serialNumber
+                        << ((Pedestrian*)vehicle)->getEntityId()
                         << std::ends;
                     const Color textColor (0.8f, 1, 0.8f);
                     const Vec3 textOffset (0, 0.25f, 0);
@@ -597,7 +595,7 @@ public:
         }
     }
     
-    void printMiniHelpForFunctionKeys (void)
+    void printMiniHelpForFunctionKeys (void) const
     {
         std::ostringstream message;
         message << "Function keys handled by ";
@@ -679,7 +677,7 @@ public:
     }
     
     
-    const AVGroup& allVehicles (void) {return (const AVGroup&) crowd;}
+    const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
     
     // crowd: a group (STL vector) of all Pedestrians
     Pedestrian::groupType crowd;

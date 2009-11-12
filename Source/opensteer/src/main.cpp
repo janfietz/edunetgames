@@ -45,6 +45,7 @@
 
 int main (int argc, char **argv) 
 {
+//	testStateMachine();
     // initialize OpenSteerDemo application
     OpenSteer::OpenSteerDemo::initialize ();
 

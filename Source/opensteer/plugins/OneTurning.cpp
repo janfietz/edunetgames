@@ -76,7 +76,7 @@ namespace {
         }
 
         // draw this character/vehicle into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, gGray50);
             drawTrail ();
@@ -92,9 +92,9 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "One Turning Away";}
+        const char* name (void) const {return "One Turning Away";}
 
-        float selectionOrderSortKey (void) {return 0.06f;}
+        float selectionOrderSortKey (void) const {return 0.06f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~OneTurningPlugIn() {}
@@ -122,7 +122,7 @@ namespace {
         void redraw (const float currentTime, const float elapsedTime)
         {
             // draw test vehicle
-            gOneTurning->draw ();
+            gOneTurning->draw (currentTime, elapsedTime);
 
             // textual annotation (following the test vehicle's screen position)
             std::ostringstream annote;
@@ -151,7 +151,7 @@ namespace {
             gOneTurning->reset ();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) theVehicle;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) theVehicle;}
 
         OneTurning* gOneTurning;
         std::vector<OneTurning*> theVehicle; // for allVehicles

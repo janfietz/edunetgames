@@ -69,7 +69,7 @@ namespace {
         }
 
         // draw into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, bodyColor);
             drawTrail ();
@@ -165,9 +165,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Multiple Pursuit";}
+        const char* name (void) const {return "Multiple Pursuit";}
 
-        float selectionOrderSortKey (void) {return 0.04f;}
+        float selectionOrderSortKey (void) const {return 0.04f;}
 
         virtual ~MpPlugIn() {} // be more "nice" to avoid a compiler warning
 
@@ -218,7 +218,7 @@ namespace {
             OpenSteerDemo::gridUtility (selected.position());
 
             // draw each vehicles
-            for (iterator i = allMP.begin(); i != pEnd; i++) (**i).draw ();
+            for (iterator i = allMP.begin(); i != pEnd; i++) (**i).draw ( currentTime, elapsedTime );
 
             // highlight vehicle nearest mouse
             OpenSteerDemo::highlightVehicleUtility (nearMouse);
@@ -244,7 +244,7 @@ namespace {
             OpenSteerDemo::camera.resetLocalSpace ();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) allMP;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) allMP;}
 
         // a group (STL vector) of all vehicles
         std::vector<MpBase*> allMP;

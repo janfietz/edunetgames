@@ -89,7 +89,7 @@ namespace {
         }
 
         // draw into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, gGray50);
             drawTrail ();
@@ -139,9 +139,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Low Speed Turn";}
+        const char* name (void) const {return "Low Speed Turn";}
 
-        float selectionOrderSortKey (void) {return 0.05f;}
+        float selectionOrderSortKey (void) const {return 0.05f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~LowSpeedTurnPlugIn() {}
@@ -195,7 +195,7 @@ namespace {
             {
                 // draw this agent
                 LowSpeedTurn& agent = **i;
-                agent.draw ();
+                agent.draw (currentTime, elapsedTime);
 
                 // display speed near agent's screen position
                 const Color textColor (0.8f, 0.8f, 1.0f);
@@ -226,7 +226,7 @@ namespace {
             for (iterator i = all.begin(); i!=all.end(); i++) (**i).reset();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) all;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
 
         std::vector<LowSpeedTurn*> all; // for allVehicles
         typedef std::vector<LowSpeedTurn*>::const_iterator iterator;

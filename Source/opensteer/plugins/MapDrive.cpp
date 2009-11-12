@@ -90,6 +90,7 @@
 namespace {
 
     using namespace OpenSteer;
+	typedef std::size_t size_type;
 
     
     class PointToRadiusMapping : public OpenSteer::DontExtractPathDistance {
@@ -100,7 +101,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float r ) { radius = r; }
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -119,7 +120,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& t ) { tangent = t; }
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -139,7 +140,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const& ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float d ) { distancePointToPathBoundary = d; }
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -160,7 +161,7 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t ) {}
+        void setSegmentIndex( size_type ) {}
         void setDistancePointToPath( float d ) { distancePointToPathBoundary = d; }
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
@@ -179,13 +180,13 @@ namespace {
         void setPointOnPathBoundary( OpenSteer::Vec3 const&  ) {}
         void setRadius( float ) {}
         void setTangent( OpenSteer::Vec3 const& ) {}
-        void setSegmentIndex( OpenSteer::size_t i ) { segmentIndex = i; }
+        void setSegmentIndex( size_type i ) { segmentIndex = i; }
         void setDistancePointToPath( float  ) {}
         void setDistancePointToPathCenterLine( float ) {}
         void setDistanceOnPath( float  ) {}
         void setDistanceOnSegment( float ) {}    
         
-        OpenSteer::size_t segmentIndex;
+        size_type segmentIndex;
     };
     
     /**
@@ -1959,7 +1960,7 @@ namespace {
         }
 
         // draw vehicle's body and annotation
-        void draw (void)
+        void draw (const float /*currentTime*/, const float /*elapsedTime*/)
         {
             // for now: draw as a 2d bounding box on the ground
             Color                     bodyColor( gBlack );
@@ -2076,7 +2077,7 @@ namespace {
             const Color color = interpolate (0.1f, sandColor, pathColor);
 
             const Vec3 down (0, -0.1f, 0);
-            for ( OpenSteer::size_t i = 1; i < path->pointCount(); ++i )
+            for ( size_type i = 1; i < path->pointCount(); ++i )
             {
                 const Vec3 endPoint0 = path->point( i ) + down;
                 const Vec3 endPoint1 = path->point( i - 1 ) + down;
@@ -2565,9 +2566,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Driving through map based obstacles";}
+        const char* name (void) const {return "Driving through map based obstacles";}
 
-        float selectionOrderSortKey (void) {return 0.07f;}
+        float selectionOrderSortKey (void) const {return 0.07f;}
 
         // be more "nice" to avoid a compiler warning
         virtual ~MapDrivePlugIn() {}
@@ -2637,7 +2638,7 @@ namespace {
             if (vehicle->demoSelect == 2) vehicle->drawPath ();
 
             // draw test vehicle
-            vehicle->draw ();
+            vehicle->draw (currentTime, elapsedTime);
 
             // QQQ mark origin to help spot artifacts
             const float tick = 2;
@@ -2800,7 +2801,7 @@ namespace {
             }
         }
 
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -2883,12 +2884,12 @@ namespace {
 	    // randomize path widths
 	    if (vehicle->demoSelect == 2)
 	    {
-		const OpenSteer::size_t count = vehicle->path->segmentCount();
+		const size_type count = vehicle->path->segmentCount();
 		const bool upstream = vehicle->pathFollowDirection > 0;
-		const OpenSteer::size_t entryIndex = upstream ? 0 : count-1;
-		const OpenSteer::size_t exitIndex  = upstream ? count-1 : 0;
+		const size_type entryIndex = upstream ? 0 : count-1;
+		const size_type exitIndex  = upstream ? count-1 : 0;
 		const float lastExitRadius = vehicle->path->segmentRadius( exitIndex );
-		for (OpenSteer::size_t i = 0; i < count; i++)
+		for (size_type i = 0; i < count; i++)
 		{
 		    vehicle->path->setSegmentRadius( i, frandom2 (4, 19) );
 		}
@@ -3006,7 +3007,7 @@ namespace {
     #endif
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) vehicles;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) vehicles;}
 
         MapDriver* vehicle;
         std::vector<MapDriver*> vehicles; // for allVehicles

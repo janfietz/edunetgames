@@ -127,7 +127,7 @@ namespace {
 
 
         // draw this boid into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic3dSphericalVehicle (*this, gGray70);
             // drawTrail ();
@@ -333,9 +333,9 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "Boids";}
+        const char* name (void) const {return "Boids";}
 
-        float selectionOrderSortKey (void) {return 0.03f;}
+        float selectionOrderSortKey (void) const {return 0.03f;}
 
         virtual ~BoidsPlugIn() {} // be more "nice" to avoid a compiler warning
 
@@ -388,7 +388,7 @@ namespace {
             OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
 
             // draw each boid in flock
-            for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ();
+            for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ( currentTime, elapsedTime );
 
             // highlight vehicle nearest mouse
             OpenSteerDemo::drawCircleHighlightOnVehicle (nearMouse, 1, gGray70);
@@ -525,7 +525,7 @@ namespace {
     #endif // NO_LQ_BIN_STATS
         }
      
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -565,7 +565,7 @@ namespace {
         }
 
         // return an AVGroup containing each boid of the flock
-        const AVGroup& allVehicles (void) {return (const AVGroup&)flock;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
 
         // flock: a group (STL vector) of pointers to all boids
         Boid::groupType flock;

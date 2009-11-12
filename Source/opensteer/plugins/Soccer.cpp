@@ -135,7 +135,7 @@ namespace {
         }
 
         // draw this character/vehicle into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, Color(0.0f,1.0f,0.0f));
             drawTrail ();
@@ -224,7 +224,7 @@ namespace {
         }
 
         // draw this character/vehicle into the scene
-        void draw (void)
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
         {
             drawBasic2dCircularVehicle (*this, b_ImTeamA ? Color(1.0f,0.0f,0.0f):Color(0.0f,0.0f,1.0f));
             drawTrail ();
@@ -246,7 +246,7 @@ namespace {
     {
     public:
         
-        const char* name (void) {return "Michael's Simple Soccer";}
+        const char* name (void) const {return "Michael's Simple Soccer";}
 
         // float selectionOrderSortKey (void) {return 0.06f;}
 
@@ -318,10 +318,10 @@ namespace {
         {
             // draw test vehicle
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
-                TeamA[i]->draw ();
+                TeamA[i]->draw ( currentTime, elapsedTime );
             for(unsigned int i=0; i < m_PlayerCountB ; i++)
-                TeamB[i]->draw ();
-            m_Ball->draw();
+                TeamB[i]->draw ( currentTime, elapsedTime );
+            m_Ball->draw( currentTime, elapsedTime );
             m_bbox->draw();
             m_TeamAGoal->draw();
             m_TeamBGoal->draw();
@@ -374,7 +374,7 @@ namespace {
             m_Ball->reset();
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) TeamA;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) TeamA;}
 
         unsigned int	m_PlayerCountA;
         unsigned int	m_PlayerCountB;

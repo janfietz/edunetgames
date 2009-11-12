@@ -223,8 +223,8 @@ namespace OpenSteer {
         }
 
 		// CP ++
-		virtual void draw( const float currentTime, const float elapsedTime ) {};
-		virtual void newPD( ProximityDatabase& pd ) {};
+		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
+		virtual void newPD( ProximityDatabase& /*pd*/ ) {};
 		// CP --
     private:
 

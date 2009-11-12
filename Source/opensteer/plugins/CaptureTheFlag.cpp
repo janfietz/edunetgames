@@ -86,7 +86,7 @@ namespace {
         void reset (void);
 
         // draw this character/vehicle into the scene
-        void draw (void);
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ );
 
         // annotate when actively avoiding obstacles
         void annotateAvoidObstacle (const float minDistanceToCollision);
@@ -131,7 +131,7 @@ namespace {
 
         Vec3 steeringForSeeker (void);
         void updateState (const float currentTime);
-        void draw (void);
+        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ );
         Vec3 steerToEvadeAllDefenders (void);
         Vec3 XXXsteerToEvadeAllDefenders (void);
         void adjustObstacleAvoidanceLookAhead (const bool clearPath);
@@ -246,7 +246,7 @@ namespace {
     // draw this character/vehicle into the scene
 
 
-    void CtfBase::draw (void)
+    void CtfBase::draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
     {
         drawBasic2dCircularVehicle (*this, bodyColor);
         drawTrail ();
@@ -662,10 +662,10 @@ namespace {
     // ----------------------------------------------------------------------------
 
 
-    void CtfSeeker::draw (void)
+    void CtfSeeker::draw ( const float currentTime, const float elapsedTime )
     {
         // first call the draw method in the base class
-        CtfBase::draw();
+        CtfBase::draw( currentTime, elapsedTime );
 
         // select string describing current seeker state
         const char* seekerStateString = "";
@@ -825,9 +825,9 @@ namespace {
     {
     public:
 
-        const char* name (void) {return "Capture the Flag";}
+        const char* name (void) const {return "Capture the Flag";}
 
-        float selectionOrderSortKey (void) {return 0.01f;}
+        float selectionOrderSortKey (void) const {return 0.01f;}
 
         virtual ~CtfPlugIn() {} // be more "nice" to avoid a compiler warning
 
@@ -889,12 +889,12 @@ namespace {
             OpenSteerDemo::gridUtility (gridCenter);
 
             // draw the seeker, obstacles and home base
-            ctfSeeker->draw();
+            ctfSeeker->draw(currentTime, elapsedTime);
             drawObstacles ();
             drawHomeBase();
 
             // draw each enemy
-            for (int i = 0; i < ctfEnemyCount; i++) ctfEnemies[i]->draw ();
+            for (int i = 0; i < ctfEnemyCount; i++) ctfEnemies[i]->draw (currentTime, elapsedTime);
 
             // highlight vehicle nearest mouse
             OpenSteerDemo::highlightVehicleUtility (nearMouse);
@@ -942,7 +942,7 @@ namespace {
             }
         }
 
-        void printMiniHelpForFunctionKeys (void)
+        void printMiniHelpForFunctionKeys (void) const
         {
             std::ostringstream message;
             message << "Function keys handled by ";
@@ -953,7 +953,7 @@ namespace {
             OpenSteerDemo::printMessage ("");
         }
 
-        const AVGroup& allVehicles (void) {return (const AVGroup&) all;}
+        const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
 
         void drawHomeBase (void)
         {

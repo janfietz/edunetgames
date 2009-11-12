@@ -157,7 +157,7 @@ namespace OpenSteer {
     public:
 		OS_IMPLEMENT_CLASSNAME( Super )
 
-		virtual size_t getEntityId( void ) const
+		virtual InstanceTracker::Id getEntityId( void ) const
 		{
 			return this->m_kEntity.getEntityId();
 		}

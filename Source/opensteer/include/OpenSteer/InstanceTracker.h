@@ -21,42 +21,42 @@ namespace OpenSteer	{
 
 		virtual ~TInstanceTracker() {}
 
-		size_t Constructor()
+		TypeId Constructor()
 		{
 			return ++this->m_nConstructed;
 		}
 
-		size_t Destructor()
+		TypeId Destructor()
 		{
 			return ++this->m_nDestructed;
 		}
 
-		size_t Assign()
+		TypeId Assign()
 		{
 			return ++this->m_nAssigned;
 		}
 
-		size_t OnCreate()
+		TypeId OnCreate()
 		{
 			return ++this->m_nOnCreateCalls;
 		}
 
-		size_t GetConstructedCount() const
+		TypeId GetConstructedCount() const
 		{
 			return this->m_nConstructed;
 		}
 
-		size_t GetDestructedCount() const
+		TypeId GetDestructedCount() const
 		{
 			return this->m_nDestructed;
 		}
 
-		size_t GetAssignCount() const
+		TypeId GetAssignCount() const
 		{
 			return this->m_nAssigned;
 		}
 
-		size_t GetInstanceCount() const
+		TypeId GetInstanceCount() const
 		{
 			if (this->m_nDestructed > this->m_nConstructed)
 			{
@@ -78,7 +78,8 @@ namespace OpenSteer	{
 		TypeId m_nOnCreateCalls;
 	};
 
-	typedef TInstanceTracker<size_t> InstanceTracker;
+//	typedef TInstanceTracker<size_t> InstanceTracker;
+	typedef TInstanceTracker<unsigned int> InstanceTracker;
 
 
 } // namespace EduNet
