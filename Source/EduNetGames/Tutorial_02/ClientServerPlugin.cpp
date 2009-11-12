@@ -6,12 +6,12 @@
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
 
-EduNetGames::EmptyPlugin gEmptyPlugin;
+EduNet::EmptyPlugin gEmptyPlugin;
 
 using namespace OpenSteer;
 
-typedef PeerPlugin<EduNetGames::EmptyPlugin> EmtyServerPlugin;
-typedef ClientPlugin<EduNetGames::EmptyPlugin> EmtyClientPlugin;
+typedef PeerPlugin<EduNet::EmptyPlugin> EmtyServerPlugin;
+typedef ClientPlugin<EduNet::EmptyPlugin> EmtyClientPlugin;
 
 //-----------------------------------------------------------------------------
 ClientServerPlugin::ClientServerPlugin()

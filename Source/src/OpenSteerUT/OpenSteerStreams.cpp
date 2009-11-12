@@ -1,5 +1,3 @@
-#include "EduNetGui.h"
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,16 +26,4 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-using namespace EduNet;
-
-//-----------------------------------------------------------------------------
-OGLGui::OGLGui( void )
-{
-
-}
-
-//-----------------------------------------------------------------------------
-OGLGui::~OGLGui( void )
-{
-
-}
+#include "OpenSteerStreams.h"

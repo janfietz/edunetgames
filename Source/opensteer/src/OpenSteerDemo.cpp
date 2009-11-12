@@ -45,6 +45,7 @@
 #include "OpenSteer/Annotation.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/Vec3.h"
+#include "OpenSteer/SimpleVehicle.h"
 
 #include <algorithm>
 #include <sstream>
@@ -79,15 +80,6 @@ OpenSteer::Camera OpenSteer::OpenSteerDemo::camera;
 
 
 OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
-
-
-// ----------------------------------------------------------------------------
-// currently selected vehicle.  Generally the one the camera follows and
-// for which additional information may be displayed.  Clicking the mouse
-// near a vehicle causes it to become the Selected Vehicle.
-
-
-OpenSteer::AbstractVehicle* OpenSteer::OpenSteerDemo::selectedVehicle = NULL;
 
 
 // ----------------------------------------------------------------------------
@@ -251,7 +243,7 @@ void
 OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 {
     camera.reset ();
-    selectedVehicle = NULL;
+	SimpleVehicle::selectedVehicle = NULL;
     selectedPlugIn->open ();
 }
 
@@ -271,10 +263,10 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
     doDelayedResetPlugInXXX ();
 
     // if no vehicle is selected, and some exist, select the first one
-    if (selectedVehicle == NULL)
+    if (SimpleVehicle::selectedVehicle == NULL)
     {
         const AVGroup& vehicles = allVehiclesOfSelectedPlugIn();
-        if (vehicles.size() > 0) selectedVehicle = vehicles.front();
+        if (vehicles.size() > 0) SimpleVehicle::selectedVehicle = vehicles.front();
     }
 
     // invoke selected Plugin's Update method
@@ -316,7 +308,7 @@ void
 OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 {
     selectedPlugIn->close ();
-    selectedVehicle = NULL;
+    SimpleVehicle::selectedVehicle = NULL;
 }
 
 
@@ -383,7 +375,7 @@ OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 {
-    if (selectedVehicle != NULL)
+    if (SimpleVehicle::selectedVehicle != NULL)
     {
         // get a container of all vehicles
         const AVGroup& all = allVehiclesOfSelectedPlugIn ();
@@ -391,16 +383,16 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
         const AVIterator last = all.end();
 
         // find selected vehicle in container
-        const AVIterator s = std::find (first, last, selectedVehicle);
+        const AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
 
         // normally select the next vehicle in container
-        selectedVehicle = *(s+1);
+        SimpleVehicle::selectedVehicle = *(s+1);
 
         // if we are at the end of the container, select the first vehicle
-        if (s == last-1) selectedVehicle = *first;
+        if (s == last-1) SimpleVehicle::selectedVehicle = *first;
 
         // if the search failed, use NULL
-        if (s == last) selectedVehicle = NULL;
+        if (s == last) SimpleVehicle::selectedVehicle = NULL;
     }
 }
 
@@ -412,7 +404,7 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 void 
 OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (int x, int y)
 {
-    selectedVehicle = findVehicleNearestScreenPosition (x, y);
+    SimpleVehicle::selectedVehicle = findVehicleNearestScreenPosition (x, y);
 }
 
 
@@ -537,7 +529,7 @@ OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
                                             float distance,
                                             float /*elevation*/)
 {
-    selectedVehicle = &selected;
+    SimpleVehicle::selectedVehicle = &selected;
     if (&selected)
     {
         const Vec3 behind = selected.forward() * -distance;

@@ -5,6 +5,8 @@
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
+#include "../../../ThirdParty/iprof/prof.h" 
+
 //-----------------------------------------------------------------------------
 int EduNetMain (int argc, char **argv) 
 {

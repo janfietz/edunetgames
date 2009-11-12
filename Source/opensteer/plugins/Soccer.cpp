@@ -270,7 +270,7 @@ namespace {
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
             {
                 Player *pMicTest = new Player(TeamA, m_AllPlayers, m_Ball, true, i);
-                OpenSteerDemo::selectedVehicle = pMicTest;
+                SimpleVehicle::selectedVehicle = pMicTest;
                 TeamA.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);
             }
@@ -279,7 +279,7 @@ namespace {
             for(unsigned int i=0; i < m_PlayerCountB ; i++)
             {
                 Player *pMicTest = new Player(TeamB, m_AllPlayers, m_Ball, false, i);
-                OpenSteerDemo::selectedVehicle = pMicTest;
+                SimpleVehicle::selectedVehicle = pMicTest;
                 TeamB.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);
             }
@@ -347,7 +347,7 @@ namespace {
                 draw2dTextAt3dLocation (*"start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
             }
             // update camera, tracking test vehicle
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, *OpenSteerDemo::selectedVehicle);
+            OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);
 
             // draw "ground plane"
             OpenSteerDemo::gridUtility (Vec3(0,0,0));

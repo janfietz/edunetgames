@@ -2582,7 +2582,7 @@ namespace {
             // make new MapDriver
             vehicle = new MapDriver ();
             vehicles.push_back (vehicle);
-            OpenSteerDemo::selectedVehicle = vehicle;
+            SimpleVehicle::selectedVehicle = vehicle;
 
             // marks as obstacles map cells adjacent to the path
             usePathFences = true; 

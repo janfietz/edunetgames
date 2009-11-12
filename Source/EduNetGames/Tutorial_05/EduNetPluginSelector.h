@@ -55,11 +55,11 @@ public:
 		RakNet::RPC3 *rpcFromNetwork = 0);
 
 	void Initialize(RakNet::RPC3* rpc3Inst,
-		EduNetGames::PluginHost* pkPluginHost);
+		EduNet::PluginHost* pkPluginHost);
 
 private:
 	RakNet::RPC3* m_rpc3Inst;
-	EduNetGames::PluginHost* m_pkPluginHost;
+	EduNet::PluginHost* m_pkPluginHost;
 	
 };
 
@@ -68,7 +68,7 @@ class PluginSelectorClientConnection : public RakNet::Connection_RM3
 {
 public:
 	PluginSelectorClientConnection(RakNet::RPC3* rpc3Inst,
-		EduNetGames::PluginHost* pkPluginHost,
+		EduNet::PluginHost* pkPluginHost,
 		SystemAddress _systemAddress, RakNetGUID _guid) :
 		Connection_RM3(_systemAddress, _guid)
 	{
@@ -81,7 +81,7 @@ public:
 		RakNet::ReplicaManager3 *replicaManager3);
 private:
 	RakNet::RPC3* m_rpc3Inst;
-	EduNetGames::PluginHost* m_pkPluginHost;
+	EduNet::PluginHost* m_pkPluginHost;
 };
 
 // ----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ public:
 	  m_bIsClient(bIsClient), m_rpc3Inst(NULL), m_pkPluginHost(NULL){}
 
 	 void Initialize(RakNet::RPC3* rpc3Inst,
-		  EduNetGames::PluginHost* pkPluginHost,
+		  EduNet::PluginHost* pkPluginHost,
 		  bool bIsClient)
 	  {
 		  this->m_pkPluginHost = pkPluginHost;
@@ -138,7 +138,7 @@ public:
 private:
 	bool m_bIsClient;
 	RakNet::RPC3* m_rpc3Inst;
-	EduNetGames::PluginHost* m_pkPluginHost;
+	EduNet::PluginHost* m_pkPluginHost;
 };
 
 #endif // __EDUNETPLUGINSELECTOR_H__

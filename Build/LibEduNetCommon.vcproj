@@ -253,6 +253,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\OpenSteerUT\OpenSteerStreams.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\OpenSteerUT\OpenSteerStreams.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\OpenSteerUT\PluginArray.cpp"
 				>
 			</File>
