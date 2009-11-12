@@ -1,4 +1,4 @@
-#include "EduNetMain.h"
+#include "EduNetApplication/EduNetMain.h"
 
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
