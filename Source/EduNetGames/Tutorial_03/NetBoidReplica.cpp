@@ -18,6 +18,21 @@ NetBoidReplica::NetBoidReplica( OpenSteer::BoidsPlugin* pBoidPlugin  ):
 }
 
 //-----------------------------------------------------------------------------
+RakNet::RakString NetBoidReplica::GetName(void) const
+{
+	static OpenSteer::Boid kProtoType;
+	return kProtoType.getClassName();
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidReplica::SetNetworkID( NetworkID id )
+{
+	BaseClass::SetNetworkID( id );
+	OpenSteer::AbstractVehicle* pkVehicle = this->AccessVehicle();
+	pkVehicle->setNetworkId( id.guid.g );
+
+}
+//-----------------------------------------------------------------------------
 void NetBoidReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	m_pBoidPlugin->RemoveBoidFromFlock(this->m_pVehicle);

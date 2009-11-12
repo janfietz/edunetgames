@@ -1,7 +1,7 @@
 #ifndef __NETBOIDREPLICACONNECTION_H__
 #define __NETBOIDREPLICACONNECTION_H__
 
-#include "Boids.h"
+#include "BoidsPlugin.h"
 
 // ----------------------------------------------------------------------------
 class NetBoidReplicaConnection : public RakNet::Connection_RM3
