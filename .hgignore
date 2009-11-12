@@ -6,6 +6,9 @@ syntax: glob
 *.exe
 *.ilk
 *.pdb
+*.DS_Store
+*.pbxuser
+*.perspectivev3
 
 # switch to regexp syntax.
 syntax: regexp
