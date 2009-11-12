@@ -8,7 +8,7 @@
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 
-#include "EduNet/common/EduNetDraw.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrian* NetPedestrianFactory::CreateNetPedestrian( osProximityDatabase& pd )

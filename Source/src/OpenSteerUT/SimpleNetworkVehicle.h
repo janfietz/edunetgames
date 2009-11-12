@@ -2,9 +2,9 @@
 #define __SIMPLENETWORKVEHICLE_H__
 
 #include "NetworkVehicle.h"
-#include "EduNet/common/EduNetCommon.h"
-#include "EduNet/common/InstanceCount.h"
-#include "EduNet/templates/TUpdatePeriod.h"
+#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/InstanceCount.h"
+#include "EduNetCommon/TUpdatePeriod.h"
 
 namespace OpenSteer {
 

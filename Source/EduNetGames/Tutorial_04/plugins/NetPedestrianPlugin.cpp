@@ -6,7 +6,7 @@
 
 #include "EduNetGames.h"
 
-#include "EduNet/common/EduNetDraw.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 using namespace OpenSteer;
 

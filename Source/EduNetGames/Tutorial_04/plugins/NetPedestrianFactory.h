@@ -1,7 +1,7 @@
 #ifndef __NETPEDESTRIANFACTORY_H__
 #define __NETPEDESTRIANFACTORY_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 
 //-----------------------------------------------------------------------------

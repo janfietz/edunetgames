@@ -1,7 +1,7 @@
 #ifndef __NETPEDESTRIANREPLICACONNECTION_H__
 #define __NETPEDESTRIANREPLICACONNECTION_H__
 
-#include "EduNet/common/EduNetCommon.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 #include "NetPedestrianFactory.h"
 

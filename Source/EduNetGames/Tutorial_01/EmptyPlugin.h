@@ -2,9 +2,9 @@
 #define __EMPTYPLUGIN_H__
 //-----------------------------------------------------------------------------
 // implements a plugin doing nothing
-#include "EduNet/common/EduNetCommon.h"
-#include "EduNet/templates/TUpdatePeriod.h"
-#include "EduNet/common/InstanceCount.h"
+#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/TUpdatePeriod.h"
+#include "EduNetCommon/InstanceCount.h"
 
 #include "EduNetGames.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"

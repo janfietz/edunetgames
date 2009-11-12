@@ -3,8 +3,8 @@
 
 
 //-----------------------------------------------------------------------------
-#include "EduNet/common/EduNetCommon.h"
-#include "EduNet/templates/TUpdatePeriod.h"
+#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/TUpdatePeriod.h"
 
 
 
