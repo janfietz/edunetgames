@@ -51,7 +51,7 @@
 
 // 10-30-09 cp/jf: modified for educational purpose
 
-#include "EduNetGames.h"
+#include "EduNetApplication/EduNetGames.h"
 
 #include <iomanip>
 #include <sstream>

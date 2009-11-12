@@ -146,40 +146,32 @@
 	</References>
 	<Files>
 		<Filter
-			Name="EduNet"
+			Name="EduNetApplication"
 			>
-			<Filter
-				Name="application"
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetApplication.cpp"
 				>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetApplication.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetApplication.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetGames.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetGames.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetMain.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\EduNetMain.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\main.cpp"
-					>
-				</File>
-			</Filter>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetApplication.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetGames.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetGames.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetMain.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetApplication\EduNetMain.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="resources"

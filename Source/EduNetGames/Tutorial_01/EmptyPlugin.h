@@ -6,7 +6,7 @@
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/InstanceCount.h"
 
-#include "EduNetGames.h"
+#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 

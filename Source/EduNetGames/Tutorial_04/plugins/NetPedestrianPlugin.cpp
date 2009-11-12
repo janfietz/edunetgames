@@ -4,7 +4,7 @@
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 
-#include "EduNetGames.h"
+#include "EduNetApplication/EduNetGames.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 

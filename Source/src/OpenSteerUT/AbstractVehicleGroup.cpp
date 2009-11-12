@@ -1,5 +1,5 @@
 #include "AbstractVehicleGroup.h"
-#include "EduNetGames.h"
+#include "EduNetApplication/EduNetGames.h"
 #include <algorithm>
 
 namespace OpenSteer {
