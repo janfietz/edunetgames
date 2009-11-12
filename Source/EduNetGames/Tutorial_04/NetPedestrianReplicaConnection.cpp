@@ -4,7 +4,7 @@
 #include "NetPedestrianPlugin.h"
 
 #include "OpenSteerUT/PluginArray.h"
-#include "Tutorial_01/EmptyPlugin.h"
+#include "OpenSteerUT/EmptyPlugin.h"
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 

@@ -1,5 +1,7 @@
 #include "PluginSelectionPlugin.h"
-#include "Tutorial_03/NetBoidPlugin.h"
+
+// TODO: remove cross link
+#include "../../EduNetGames/Tutorial_03/NetBoidPlugin.h"
 
 namespace{
 

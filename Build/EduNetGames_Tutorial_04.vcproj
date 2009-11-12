@@ -182,51 +182,39 @@
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrian.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrian.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrian.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrian.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianFactory.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianFactory.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianPlugin.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianPlugin.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianPlugin.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplica.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplica.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplica.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplica.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplicaConnection.cpp"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplicaConnection.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\plugins\NetPedestrianReplicaConnection.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="from tutorial 1"
-				>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.h"
+					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplicaConnection.h"
 					>
 				</File>
 			</Filter>

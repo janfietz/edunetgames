@@ -178,22 +178,6 @@
 		<Filter
 			Name="plugins"
 			>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ShowIncludes="false"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\Source\EduNetGames\Tutorial_01\EmptyPlugin.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="config"
