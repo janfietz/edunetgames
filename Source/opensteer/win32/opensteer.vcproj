@@ -198,7 +198,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\PlugIn.cpp"
+				RelativePath="..\src\Plugin.cpp"
 				>
 			</File>
 			<File
@@ -319,7 +319,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\include\OpenSteer\PlugIn.h"
+				RelativePath="..\include\OpenSteer\Plugin.h"
 				>
 			</File>
 			<File
