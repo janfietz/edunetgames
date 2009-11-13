@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8,00"
+	Version="8.00"
 	Name="LibIProf"
 	ProjectGUID="{8A4F91C1-9D6C-4283-8037-EB485F7A1898}"
 	RootNamespace="LibIProf"
@@ -85,7 +85,7 @@
 			IntermediateDirectory="../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"

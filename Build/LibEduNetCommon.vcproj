@@ -86,7 +86,7 @@
 			ConfigurationType="4"
 			InheritedPropertySheets=".\EdunetCommonProperties.vsprops"
 			CharacterSet="1"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.cpp"
 				>
 			</File>
@@ -249,15 +253,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Source\src\OpenSteerUT\OpenSteerExtrasTypes.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Source\src\OpenSteerUT\OpenSteerStreams.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Source\src\OpenSteerUT\OpenSteerStreams.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\OpenSteerUT\OpenSteerUTTypes.h"
 				>
 			</File>
 			<File

@@ -1,5 +1,5 @@
-#ifndef __OPENSTEEREXTRASTYPES_H__
-#define __OPENSTEEREXTRASTYPES_H__
+#ifndef __OPENSTEERUTTYPES_H__
+#define __OPENSTEERUTTYPES_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -46,6 +46,8 @@ namespace OpenSteer{
 	float drawGetWindowHeight (void);
 	float drawGetWindowWidth (void);
 
+	class AbstractVehicle;
+
 }
 
 typedef OpenSteer::Vec3 osVector3;
@@ -54,4 +56,4 @@ typedef OpenSteer::AVGroup osAVGroup;
 typedef OpenSteer::ProximityDatabase osProximityDatabase;
 typedef OpenSteer::ProximityToken osProximityToken;
 
-#endif //  __OPENSTEEREXTRASTYPES_H__
+#endif //  __OPENSTEERUTTYPES_H__

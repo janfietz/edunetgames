@@ -76,7 +76,7 @@ namespace OpenSteer {
 
 
     // SimpleVehicle_1 adds concrete LocalSpace methods to AbstractVehicle
-    typedef LocalSpaceMixin<AbstractVehicle> SimpleVehicle_1;
+    typedef EntityLocalSpaceMixin<AbstractVehicle> SimpleVehicle_1;
 
 
     // SimpleVehicle_2 adds concrete annotation methods to SimpleVehicle_1
@@ -225,6 +225,7 @@ namespace OpenSteer {
 		// CP ++
 		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
 		virtual void newPD( ProximityDatabase& /*pd*/ ) {};
+		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) { return NULL; };
 
 		// currently selected vehicle.  Generally the one the camera follows and
 		// for which additional information may be displayed.  Clicking the mouse

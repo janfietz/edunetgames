@@ -375,8 +375,7 @@ OpenSteer::drawCircleOrDisk (const float radius,
                              const bool filled,
                              const bool in3d)
 {
-    static LocalSpace ls;
-	ls.resetLocalSpace();
+    LocalSpace ls;
     if (in3d)
     {
         // define a local space with "axis" as the Y/up direction

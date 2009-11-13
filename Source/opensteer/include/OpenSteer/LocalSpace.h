@@ -75,7 +75,7 @@
 namespace OpenSteer {
 
 
-	class AbstractLocalSpace : public AbstractEntity
+	class AbstractLocalSpace// : public AbstractEntity
     {
     public:
         virtual ~AbstractLocalSpace() { /* Nothing to do. */ }
@@ -147,8 +147,6 @@ namespace OpenSteer {
         // a 3x4 transformation matrix with [0 0 0 1] as the final column
 
     private:
-		Entity m_kEntity;
-
         Vec3 _side;     //    side-pointing unit basis vector
         Vec3 _up;       //  upward-pointing unit basis vector
         Vec3 _forward;  // forward-pointing unit basis vector
@@ -156,21 +154,6 @@ namespace OpenSteer {
 
     public:
 		OS_IMPLEMENT_CLASSNAME( Super )
-
-		virtual InstanceTracker::Id getEntityId( void ) const
-		{
-			return this->m_kEntity.getEntityId();
-		}
-
-		virtual NetworkId getNetworkId( void ) const
-		{
-			return this->m_kEntity.getNetworkId();
-		}
-
-		virtual void setNetworkId( NetworkId id )
-		{
-			this->m_kEntity.setNetworkId( id );
-		}
 
         // accessors (get and set) for side, up, forward and position
         const Vec3& side     (void) const {return _side;};
@@ -186,7 +169,6 @@ namespace OpenSteer {
         Vec3 setForward  (float x, float y, float z){return _forward.set (x,y,z);};
         Vec3 setPosition (float x, float y, float z){return _position.set(x,y,z);};
 
-
         // ------------------------------------------------------------------------
         // Global compile-time switch to control handedness/chirality: should
         // LocalSpace use a left- or right-handed coordinate system?  This can be
@@ -194,11 +176,8 @@ namespace OpenSteer {
 
         bool rightHanded (void) const {return true;}
 
-
         // ------------------------------------------------------------------------
         // constructors
-
-
         LocalSpaceMixin (void)
         {
             resetLocalSpace ();
@@ -282,8 +261,6 @@ namespace OpenSteer {
 
         // ------------------------------------------------------------------------
         // transform a direction in local space to its equivalent in global space
-
-
         Vec3 globalizeDirection (const Vec3& localDirection) const
         {
             return ((_side    * localDirection.x) +
@@ -294,9 +271,7 @@ namespace OpenSteer {
 
         // ------------------------------------------------------------------------
         // set "side" basis vector to normalized cross product of forward and up
-
-
-        void setUnitSideFromForwardAndUp (void)
+		void setUnitSideFromForwardAndUp (void)
         {
             // derive new unit side basis vector from forward and up
             if (rightHanded())
@@ -369,15 +344,77 @@ namespace OpenSteer {
         }
     };
 
+	//-------------------------------------------------------------------------
+	class AbstractEntityLocalSpace : public AbstractEntity, public AbstractLocalSpace
+	{
+	public:
+		virtual ~AbstractEntityLocalSpace() { /* Nothing to do. */ }
+	};
 
-    // ----------------------------------------------------------------------------
-    // Concrete LocalSpace class, and a global constant for the identity transform
+	//-------------------------------------------------------------------------
+	class AbstractEntityUpdatedLocalSpace : public AbstractEntity, public AbstractUpdatedLocalSpace
+	{
+	public:
+		virtual ~AbstractEntityUpdatedLocalSpace() { /* Nothing to do. */ }
+	};
 
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class EntityLocalSpaceMixin : public LocalSpaceMixin<Super>
+	{
+	private:
+		Entity m_kEntity;
+
+	public:
+		// --------------------------------------------------------------------
+		// constructors
+		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>()
+		{
+		};
+
+		EntityLocalSpaceMixin (const Vec3& Side,
+			const Vec3& Up,
+			const Vec3& Forward,
+			const Vec3& Position):LocalSpaceMixin<Super>( Side, Up, Forward, Position )
+		{
+		};
+
+		EntityLocalSpaceMixin (const Vec3& Up,
+			const Vec3& Forward,
+			const Vec3& Position):LocalSpaceMixin<Super>( Up, Forward, Position )
+		{
+		};
+
+		virtual ~EntityLocalSpaceMixin() { /* Nothing to do. */ }
+
+
+		OS_IMPLEMENT_CLASSNAME( Super )
+
+		virtual InstanceTracker::Id getEntityId( void ) const
+		{
+			return this->m_kEntity.getEntityId();
+		}
+
+		virtual NetworkId getNetworkId( void ) const
+		{
+			return this->m_kEntity.getNetworkId();
+		}
+
+		virtual void setNetworkId( NetworkId id )
+		{
+			this->m_kEntity.setNetworkId( id );
+		}
+	};
+
+	// ----------------------------------------------------------------------------
+	// Concrete LocalSpace class, and a global constant for the identity transform
 	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
+	const LocalSpace gGlobalSpace;
 
- //   typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
-
-    const LocalSpace gGlobalSpace;
+	// ----------------------------------------------------------------------------
+	// Concrete EntityLocalSpace class, and a global constant for the identity transform
+	typedef EntityLocalSpaceMixin<AbstractEntityLocalSpace> EntityLocalSpace;
+	const EntityLocalSpace gGlobalEntitySpace;
 
 } // namespace OpenSteer
 

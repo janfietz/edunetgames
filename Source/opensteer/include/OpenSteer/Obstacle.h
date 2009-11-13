@@ -57,16 +57,14 @@ namespace OpenSteer {
     // AbstractObstacle: a pure virtual base class for an abstract shape in
     // space, to be used with obstacle avoidance.  (Oops, its not "pure" since
     // I added a concrete method to PathIntersection 11-04-04 -cwr).
-
-
-    class AbstractObstacle
+    class AbstractObstacle : public AbstractEntityLocalSpace 
     {
     public:
 
         virtual ~AbstractObstacle() { /* Nothing to do. */ }
         
         
-        // compute steering for a vehicle to avoid this obstacle, if needed
+		// compute steering for a vehicle to avoid this obstacle, if needed
         virtual Vec3 steerToAvoid (const AbstractVehicle& v,
                                    const float minTimeToCollision) const = 0;
 
@@ -123,8 +121,6 @@ namespace OpenSteer {
 
     // ----------------------------------------------------------------------------
     // Obstacle is a utility base class providing some shared functionality
-
-
     class Obstacle : public AbstractObstacle
     {
     public:
@@ -161,12 +157,13 @@ namespace OpenSteer {
         seenFromState _seenFrom;
     };
 
-
     // ----------------------------------------------------------------------------
     // SphereObstacle a simple ball-shaped obstacle
+    // ----------------------------------------------------------------------------
+    // LocalSpaceObstacle: a mixture of LocalSpace and Obstacle methods
+    typedef EntityLocalSpaceMixin<Obstacle> LocalSpaceObstacle;
 
-
-    class SphereObstacle : public Obstacle
+    class SphereObstacle : public LocalSpaceObstacle
     {
     public:
         float radius;
@@ -184,20 +181,10 @@ namespace OpenSteer {
             const;
     };
 
-
-    // ----------------------------------------------------------------------------
-    // LocalSpaceObstacle: a mixture of LocalSpace and Obstacle methods
-
-
-     typedef LocalSpaceMixin<Obstacle> LocalSpaceObstacle;
-
-
     // ----------------------------------------------------------------------------
     // BoxObstacle: a box-shaped (cuboid) obstacle of a given height, width,
     // depth, position and orientation.  The box is centered on and aligned
     // with a local space.
-
-
     class BoxObstacle : public LocalSpaceObstacle
     {
     public:
@@ -218,7 +205,6 @@ namespace OpenSteer {
             const;
     };
 
-
     // ----------------------------------------------------------------------------
     // PlaneObstacle: a planar obstacle of a given position and orientation.
     // The plane is defined as the XY (aka side/up) plane of a local space.
@@ -228,9 +214,7 @@ namespace OpenSteer {
     // 2d shapes (rectangle, triangle, ...) arbitarily oriented and positioned
     // in 2d space.  They specialize this class via xyPointInsideShape which
     // tests if a given point on the XZ plane is inside the obstacle's shape.
-
-
-    class PlaneObstacle : public LocalSpaceObstacle
+	class PlaneObstacle : public LocalSpaceObstacle
     {
     public:
         // constructors
@@ -262,13 +246,10 @@ namespace OpenSteer {
         }
     };
 
-
     // ----------------------------------------------------------------------------
     // RectangleObstacle: a rectangular obstacle of a given height, width,
     // position and orientation.  It is a rectangle centered on the XY (aka
     // side/up) plane of a local space.
-
-
     class RectangleObstacle : public PlaneObstacle
     {
     public:

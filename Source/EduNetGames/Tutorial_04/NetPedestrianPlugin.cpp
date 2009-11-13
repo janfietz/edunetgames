@@ -32,17 +32,12 @@ float NetPedestrianPlugin::selectionOrderSortKey (void) const
 //-----------------------------------------------------------------------------
 NetPedestrianPlugin::~NetPedestrianPlugin() 
 {
-	this->setNetPedestrianFactory( NULL );
 	this->close();
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::open (void)
 {
-	if(0 == this->m_pkPedestrianFactory)
-	{
-		this->setNetPedestrianFactory( new NetPedestrianFactory() );
-	}
 
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
@@ -256,12 +251,12 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	NetPedestrian* pedestrian = this->m_pkPedestrianFactory->CreateNetPedestrian( *pd );
-	this->addPedestrianToCrowd( pedestrian );
+	osAbstractVehicle* pkPedestrian = this->m_kPedestrianFactory.createVehicle( pd );
+	this->addPedestrianToCrowd( pkPedestrian );
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianPlugin::addPedestrianToCrowd( NetPedestrian* pkVehicle )
+void NetPedestrianPlugin::addPedestrianToCrowd( osAbstractVehicle* pkVehicle )
 {
 	if( NULL == pkVehicle )
 	{
@@ -279,7 +274,7 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 	if (kVG.population() > 0)
 	{
 		// save pointer to last pedestrian, then remove it from the crowd
-		const AbstractVehicle* pedestrian = crowd.back();
+		AbstractVehicle* pedestrian = crowd.back();
 		crowd.pop_back();
 
 		// if it is OpenSteerDemo's selected vehicle, unselect it
@@ -287,7 +282,8 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 			SimpleVehicle::selectedVehicle = NULL;
 
 		// delete the Pedestrian
-		this->m_pkPedestrianFactory->DestroyNetPedestrian( pedestrian );
+		this->m_kPedestrianFactory.destroyVehicle( pedestrian );
+		pedestrian = NULL;
 	}
 }
 
@@ -368,15 +364,6 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 
 };
 
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::setNetPedestrianFactory( class NetPedestrianFactory* pkFactory )
-{
-	if( this->m_pkPedestrianFactory != pkFactory )
-	{
-		ET_SAFE_DELETE( this->m_pkPedestrianFactory );
-		this->m_pkPedestrianFactory = pkFactory;
-	}
-}
 
 NetPedestrianPlugin gPedestrianPlugin;
 
