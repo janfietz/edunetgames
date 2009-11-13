@@ -32,6 +32,14 @@
 // include configuration
 #include "EduNetConfig.h"
 
+//-----------------------------------------------------------------------------
+// profiling
+#if EDUNET_HAVE_PROFILE
+#include "../../../ThirdParty/iprof/prof.h" 
+#define ET_PROFILE(x) Prof(x) 
+#else
+#define ET_PROFILE(x) 
+#endif
 
 //-----------------------------------------------------------------------------
 // raknet

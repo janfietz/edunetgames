@@ -392,6 +392,43 @@ namespace OpenSteer {
 
     Vec3 directionFromCameraToScreenPosition (int x, int y, int h);
 
+	/*
+	*  Prof_draw_gl -- display the current report via OpenGL
+	*
+	*  You must provide a callable text-printing function.
+	*  Put the opengl state into a 2d rendering mode.
+	*
+	*  Parameters:
+	*    <sx,sy>         --  location where top line is drawn
+	*    <width, height> --  total size of display (if too small, text will overprint)
+	*    line_spacing    --  how much to move sy by after each line; use a
+	*                        negative value if y decreases down the screen
+	*    precision       --  decimal places of precision for time data, 1..4 (try 2)
+	*    print_text      --  function to display a line of text starting at the
+	*                        given coordinate; best if 0,1..9 are fixed-width
+	*    text_width      --  a function that computes the pixel-width of
+	*                        a given string before printing. you can fake with a
+	*                        simple approximation of width('0')*strlen(str)
+	*
+	*  to avoid overprinting, you can make print_text truncate long strings
+	*/
+	void profileDraw(float sx, float sy,
+		float width, float height,
+		float line_spacing,
+		int precision, float sw, float sh);
+
+	/*
+	*  Parameters
+	*    <sx, sy>      --  origin of the graph--location of (0,0)
+	*    x_spacing     --  screenspace size of each history sample; e.g.
+	*                         2.0 pixels
+	*    y_spacing     --  screenspace size of one millisecond of time;
+	*                         for an app with max of 20ms in any one zone,
+	*                         8.0 would produce a 160-pixel tall display,
+	*                         assuming screenspace is in pixels
+	*/
+	void profileDrawGraph(float sx, float sy,
+		float x_spacing, float y_spacing, float sw, float sh);
 
 
 } // namespace OpenSteer

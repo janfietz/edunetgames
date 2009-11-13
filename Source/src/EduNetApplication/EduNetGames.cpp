@@ -46,7 +46,6 @@
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
 
-#include "../../../ThirdParty/iprof/prof.h" 
 
 #include <algorithm>
 #include <sstream>
@@ -1472,28 +1471,12 @@ namespace {
 		}
 	}
 
-	void profPrintText(float x, float y, char *str)
-	{
-		OpenSteer::Vec3 screenLocation (x, y, 0);
-//		const OpenSteer::Color color = (usage >= 100) ? OpenSteer::gRed : OpenSteer::gWhite;
-//		const OpenSteer::Color color = OpenSteer::gRed;
-		const OpenSteer::Color color = OpenSteer::gGreen;
-		OpenSteer::Vec3 sp;
-		sp = screenLocation;
-		draw2dTextAt2dLocation (*str, sp, color, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
-
-	}
-
-	float profPrintTextText_width(char *str)
-	{
-		return strlen(str) * 9;
-	}
 
 	void 
 		displayFunc000 (void)
 	{
 		{
-			Prof(update);
+			ET_PROFILE(update);
 
 			// update global simulation clock
 			OpenSteer::OpenSteerDemo::clock.update ();
@@ -1510,7 +1493,7 @@ namespace {
 
 
 		{
-			Prof(draw);
+			ET_PROFILE(draw);
 		
 			// run simulation and draw associated graphics
 			//		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
@@ -1518,8 +1501,10 @@ namespace {
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// redraw selected Plugin (based on real time)
-			OpenSteer::OpenSteerDemo::redrawSelectedPlugin (OpenSteer::OpenSteerDemo::clock.getTotalRealTime (),
-				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime ());
+			OpenSteer::OpenSteerDemo::redrawSelectedPlugin ( 
+				OpenSteer::OpenSteerDemo::clock.getTotalRealTime(),
+				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime()
+				);
 
 			// draw text showing (smoothed, rounded) "frames per second" rate
 			drawDisplayFPS ();
@@ -1538,13 +1523,10 @@ namespace {
 
 		}
 		{
-			Prof_update(1);
-			Prof_draw_gl( 100, 250, 500, 500, -15, 2, profPrintText, profPrintTextText_width );
-//			Prof_draw_graph_gl( 0, 0, 2, 8 );
-
-//			Prof_draw_graph_gl(10.0, 300.0, 1.0, 8.0);
-
-
+			EduNet::Application::AccessApplication().drawProfile(  
+				OpenSteer::OpenSteerDemo::clock.getTotalRealTime(),
+				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime()
+				);
 		}
 		{
 			// double buffering, swap back and front buffers
@@ -1556,7 +1538,7 @@ namespace {
 	// ------------------------------------------------------------------------
 	void displayFunc( void )
 	{
-		Prof(displayFunc);
+		ET_PROFILE(displayFunc);
 
 		int current_window, new_window(0);
 		current_window = glutGetWindow();
@@ -1571,11 +1553,8 @@ namespace {
 		}
 
 		displayFunc000();
-		// 		if (demo)
-		// 			demo->moveAndDisplay();
 
 		glutSetWindow( current_window );
-
 	}
 	/*
 */
@@ -1703,14 +1682,14 @@ OpenSteer::runGraphics (void)
 float 
 OpenSteer::drawGetWindowHeight (void) 
 {
-	return glutGet (GLUT_WINDOW_HEIGHT);
+	return glutGet( GLUT_WINDOW_HEIGHT );
 }
 
 
 float 
 OpenSteer::drawGetWindowWidth  (void) 
 {
-	return glutGet (GLUT_WINDOW_WIDTH);
+	return glutGet( GLUT_WINDOW_WIDTH );
 }
 
 

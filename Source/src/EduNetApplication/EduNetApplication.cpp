@@ -77,6 +77,9 @@ m_fSimulationFPS(60.0f),
 m_fTimeFactor(1.0f),
 m_bFixedSimulationFPS(1),
 m_bEnableAnnotation(0),
+m_bShowCPUProfile(0),
+m_bShowCPUProfileGraph(0),
+m_bUpdateCPUProfile(0),
 m_fUpdateCPUTime( 0.0f )
 {
 	setDefaultSettings();
@@ -152,9 +155,15 @@ void Application::addGuiElements( GLUI* glui )
 	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteerDemo::selectedPlugin );
 	pluginList->do_selection( pluginSelection );
 
-
 	glui->add_button("Next Plugin", 0,(GLUI_Update_CB)gluiNextPlugin);
 
+#if EDUNET_HAVE_PROFILE
+	glui->add_separator();
+
+	glui->add_checkbox("Update CPU Profile", &this->m_bUpdateCPUProfile);
+	glui->add_checkbox("Show CPU Profile", &this->m_bShowCPUProfile);
+	glui->add_checkbox("Show CPU Profile Graph", &this->m_bShowCPUProfileGraph);
+#endif
 	glui->add_separator();
 
 	GLUI_Spinner* timefactorSpinner =
@@ -326,3 +335,23 @@ void Application::redrawSelectedPlugin (const float currentTime,
 	selectedPlugin->redraw (currentTime, elapsedTime);
 }
 
+//-----------------------------------------------------------------------------
+void Application::drawProfile (const float currentTime,
+				  const float elapsedTime)
+{
+#if EDUNET_HAVE_PROFILE
+	Prof_update( this->m_bUpdateCPUProfile );
+//	Prof_set_report_mode(Prof_CALL_GRAPH);
+	Prof_set_report_mode(Prof_HIERARCHICAL_TIME);
+	const float tw = OpenSteer::drawGetWindowWidth();
+	const float th = OpenSteer::drawGetWindowHeight();
+	if( ( 0 != this->m_bShowCPUProfile ) )
+	{
+		OpenSteer::profileDraw( 10, 300, 550, 500, -16, 2, tw, th );
+	}
+	if( ( 0 != this->m_bShowCPUProfileGraph ) )
+	{
+		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, 8.0, tw, th );
+	}
+#endif
+}

@@ -81,6 +81,10 @@
 #include "OpenSteer/Utilities.h"
 
 // ----------------------------------------------------------------------------
+#include "OpenSteer/OpenSteerMacros.h"
+#if OS_HAVE_PROFILE
+#include "../../../../../ThirdParty/iprof/prof.h" 
+#endif
 
 // GL interface
 // Collected the available abstractions here as a first step
@@ -1495,7 +1499,7 @@ OpenSteer::drawAllDeferredCirclesOrDisks (void)
 
 //     end2dDrawing (originalMatrixMode);
 // }
-
+bool _setTextColor = true;
 
 void 
 OpenSteer::draw2dTextAt3dLocation (const char& text,
@@ -1507,8 +1511,11 @@ OpenSteer::draw2dTextAt3dLocation (const char& text,
     // the 3d point.
 
     // set text color and raster position
-    glColor3f (color.r(), color.g(), color.b());
-    glRasterPos3f (location.x, location.y, location.z);
+	if( true == _setTextColor )
+	{
+		glColor4f (color.r(), color.g(), color.b(), color.a());
+	}
+	glRasterPos3f (location.x, location.y, location.z);
 
     // switch into 2d screen space in case we need to handle a new-line
     GLint rasterPosition[4];
@@ -1527,7 +1534,8 @@ OpenSteer::draw2dTextAt3dLocation (const char& text,
         {
             // handle new-line character, reset raster position
             lines++;
-            const int fontHeight = 15; // for GLUT_BITMAP_9_BY_15
+ //           const int fontHeight = 15; // for GLUT_BITMAP_9_BY_15
+			const int fontHeight = 13; // for GLUT_BITMAP_8_BY_13
             const int vOffset = lines * (fontHeight + 1);
             glRasterPos2i (rasterPosition[0], rasterPosition[1] - vOffset);
         }
@@ -1535,7 +1543,8 @@ OpenSteer::draw2dTextAt3dLocation (const char& text,
         {
             // otherwise draw character bitmap
             #ifndef HAVE_NO_GLUT
-                glutBitmapCharacter (GLUT_BITMAP_9_BY_15, *p);
+				glutBitmapCharacter (GLUT_BITMAP_8_BY_13, *p);
+ //               glutBitmapCharacter (GLUT_BITMAP_9_BY_15, *p);
             #else
                 // no character drawing with GLUT presently
             #endif
@@ -1839,6 +1848,49 @@ namespace OpenSteer {
                     filled, color, front, back, viewpoint);
     }
 
+	float _gw, _gh;
+	void profPrintText(float x, float y, char *str)
+	{
+		Color color( 1, 1, 1 );
+		OpenSteer::Vec3 sp(x, y, 0);
+		sp.y += 2;
+		_setTextColor = false;
+		draw2dTextAt2dLocation (*str, sp, color, _gw, _gh);
+		_setTextColor = true;
+	}
+
+	float profPrintTextText_width(char *str)
+	{
+		return strlen(str) * 8;
+	}
+
+	void 
+		OpenSteer::profileDraw(float sx, float sy,
+		float width, float height,
+		float line_spacing,
+		int precision, float sw, float sh)
+	{
+#if OS_HAVE_PROFILE
+		_gw = sw;
+		_gh = sh;;
+		const GLint originalMatrixMode = begin2dDrawing (sw, sh);
+
+		Prof_draw_gl( sx, sy, width, height, line_spacing, precision, profPrintText, profPrintTextText_width );
+
+		end2dDrawing (originalMatrixMode);
+#endif
+	}
+
+	void 
+		OpenSteer::profileDrawGraph(float sx, float sy,
+		float x_spacing, float y_spacing, float sw, float sh)
+	{
+#if OS_HAVE_PROFILE
+		const GLint originalMatrixMode = begin2dDrawing (sw, sh);
+		Prof_draw_graph_gl(sx, sy, x_spacing, y_spacing);
+		end2dDrawing (originalMatrixMode);
+#endif
+	}
 
 } // namespace OpenSteer
 
