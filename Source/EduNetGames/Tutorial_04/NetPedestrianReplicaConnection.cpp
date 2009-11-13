@@ -4,7 +4,8 @@
 #include "NetPedestrianPlugin.h"
 
 #include "OpenSteerUT/PluginArray.h"
-#include "OpenSteerUT/EmptyPlugin.h"
+//#include "OpenSteerUT/EmptyPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 
@@ -79,10 +80,9 @@ public:
 	PedestrianClientServerPlugin();
 	virtual ~PedestrianClientServerPlugin();
 
+	OS_IMPLEMENT_CLASSNAME( PedestrianClientServerPlugin )
 	//---------------------------------------------------------------------
 	// interface AbstractPlugin
-	virtual const char *name(void) const; 
-
 	virtual void initGui( void* pkUserdata );
 };
 
@@ -105,9 +105,9 @@ public:
 		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
-//		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkNetPedestrianFactory );
 	}
-	virtual const char* name() const { return "PedestrianPeerPlugin"; };
+	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
+	virtual const char* name() const { return this->getClassName(); };
 
 	//-----------------------------------------------------------------------------
 	void StartNetworkSession( void )
@@ -210,7 +210,8 @@ public:
 		this->m_pkBoidFactory = new NetPedestrianDummyFactory(&this->m_kReplicaManager);	
 	}
 
-	virtual const char* name() const { return "PedestrianClientPlugin"; };
+	OS_IMPLEMENT_CLASSNAME( PedestrianClientPlugin )
+	virtual const char* name() const { return this->getClassName(); };
 
 	//-----------------------------------------------------------------------------
 	void StartNetworkSession( void )
@@ -241,6 +242,7 @@ PedestrianClientServerPlugin::PedestrianClientServerPlugin()
 {
 	OpenSteer::Plugin::addToRegistry(this);
 
+	this->addPlugin( new OpenSteer::GridPlugin() );
 	this->addPlugin( new PedestrianPeerPlugin( false ) );
 	this->addPlugin( new PedestrianClientPlugin( false ) );
 }
@@ -252,12 +254,6 @@ PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
 }
 
 //-----------------------------------------------------------------------------
-const char* PedestrianClientServerPlugin::name(void) const
-{
-	return "PedestrianClientServerPlugin";
-}
-
-//-----------------------------------------------------------------------------
 void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
 {
 	BaseClass::initGui( pkUserdata );
@@ -265,10 +261,53 @@ void PedestrianClientServerPlugin::initGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 };
 
+//-----------------------------------------------------------------------------
+class OfflinePedestrianPlugin : public OpenSteer::PluginArray
+{
+	ET_DECLARE_BASE(OpenSteer::PluginArray)
+public:
+	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry )
+	{
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new NetPedestrianPlugin( false ) );
+	}
 
-PedestrianPeerPlugin gPedestrianPeerPlugin( true );
-PedestrianClientPlugin gPedestrianClientPlugin( true );
+	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
+};
+
+OfflinePedestrianPlugin gPedestrianPlugin;
+
+//-----------------------------------------------------------------------------
+class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin>
+{
+	ET_DECLARE_BASE( PluginArrayPluginMixin<PedestrianClientPlugin> )
+public:
+	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	{
+		this->addPlugin( new OpenSteer::GridPlugin() );
+	};
+	virtual ~PedestrianRenderClientPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( PedestrianRenderClientPlugin )
+};
+
+//-----------------------------------------------------------------------------
+class PedestrianRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianPeerPlugin>
+{
+	ET_DECLARE_BASE( PluginArrayPluginMixin<PedestrianPeerPlugin> )
+public:
+	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	{
+		this->addPlugin( new OpenSteer::GridPlugin() );
+	};
+	virtual ~PedestrianRenderPeerPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( PedestrianRenderPeerPlugin )
+};
+
+PedestrianRenderPeerPlugin gPedestrianPeerPlugin( true );
+PedestrianRenderClientPlugin gPedestrianClientPlugin( true );
 
 PedestrianClientServerPlugin gClientServerPlugin;
 
-EduNet::EmptyPlugin gEmptyPlugin;

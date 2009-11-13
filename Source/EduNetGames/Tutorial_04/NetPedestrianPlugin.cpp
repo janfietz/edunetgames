@@ -401,25 +401,6 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 
 };
 
-class OfflinePedestrianPlugin : public PluginArray
-{
-	ET_DECLARE_BASE(PluginArray)
-public:
-	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{
-		this->addPlugin( new GridPlugin() );
-		this->addPlugin( new NetPedestrianPlugin( false ) );
-	}
-
-	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
-
-	virtual const char* name() const { return this->getClassName(); };
-
-
-};
-
-OfflinePedestrianPlugin gPedestrianPlugin;
 
 
 

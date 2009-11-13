@@ -41,6 +41,8 @@ namespace OpenSteer
 	typedef std::vector<AbstractPluginPtr> TPluginArray;
 
 
+
+	//-------------------------------------------------------------------------
 	class PluginArray : public AbstractPlugin, protected TPluginArray
 	{
 	public:
@@ -91,6 +93,86 @@ namespace OpenSteer
 		AVGroup m_kVehicles;
 		AbstractPlugin* m_pkParentPlugin;
 
+	};
+
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class PluginArrayMixin : public Super
+	{
+		ET_DECLARE_BASE( Super )
+	public:
+		PluginArrayMixin(bool bAddToRegistry = true):Super( bAddToRegistry ),m_kPluginArray( false ) {};
+		virtual ~PluginArrayMixin() {};
+		//---------------------------------------------------------------------
+		// functionality PluginArray
+		void addPlugin( AbstractPlugin* pkPlugin )
+		{
+			m_kPluginArray.addPlugin( pkPlugin );
+		}
+		void removePlugin( AbstractPlugin* pkPlugin )
+		{
+			m_kPluginArray.removePlugin( );
+		}
+		void removeAllPlugins( void )
+		{
+			m_kPluginArray.removeAllPlugins( );
+		}
+		AbstractPlugin* findPlugin( AbstractPlugin* pkPlugin ) const
+		{
+			return m_kPluginArray.findPlugin( pkPlugin );
+		}
+		AbstractPlugin* getPlugin( size_t uiIdx ) const
+		{
+			return m_kPluginArray.getPlugin( uiIdx );
+		}
+	protected:
+		PluginArray m_kPluginArray;
+	};
+
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class PluginArrayPluginMixin : public PluginArrayMixin<Super>
+	{
+		ET_DECLARE_BASE( PluginArrayMixin<Super> )
+	public:
+		PluginArrayPluginMixin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) {};
+		virtual ~PluginArrayPluginMixin() {};
+
+		virtual void open(void)
+		{
+			this->m_kPluginArray.open(  );
+			Super::open();
+		}
+		virtual void update(const float currentTime, const float elapsedTime)
+		{
+			const char* pszClassName = this->name();
+			this->m_kPluginArray.update( currentTime, elapsedTime );
+			Super::update( currentTime, elapsedTime );
+		}
+		virtual void redraw(const float currentTime, const float elapsedTime)
+		{
+			this->m_kPluginArray.redraw( currentTime, elapsedTime );
+			Super::redraw( currentTime, elapsedTime );
+		}
+		virtual void close(void)
+		{
+			this->m_kPluginArray.close(  );
+			Super::close();
+		}
+
+		virtual void reset(void)
+		{
+			this->m_kPluginArray.reset(  );
+			Super::reset();
+		}
+
+		virtual void initGui( void* pkUserdata )
+		{
+			this->m_kPluginArray.initGui( pkUserdata );
+			Super::initGui( pkUserdata );
+		}
+
+	private:
 	};
 
 }
