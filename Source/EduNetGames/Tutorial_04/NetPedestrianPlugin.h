@@ -60,6 +60,10 @@ public:
 	// OpenSteerDemo user pushes a function key.
 	void nextPD (void);
 
+	// implement to create a vehicle of the specified class
+	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
+
+
 private:
 	OpenSteer::AbstractVehicleFactory m_kPedestrianFactory;
 

@@ -404,6 +404,17 @@ namespace OpenSteer {
 		{
 			this->m_kEntity.setNetworkId( id );
 		}
+
+		virtual void setIsRemoteObject( bool bIsRemote )
+		{
+			this->m_kEntity.setIsRemoteObject( bIsRemote );
+		}
+
+		virtual bool isRemoteObject( void ) const
+		{
+			return this->m_kEntity.isRemoteObject();
+		}
+
 	};
 
 	// ----------------------------------------------------------------------------

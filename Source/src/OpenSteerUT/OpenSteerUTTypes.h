@@ -56,4 +56,6 @@ typedef OpenSteer::AVGroup osAVGroup;
 typedef OpenSteer::ProximityDatabase osProximityDatabase;
 typedef OpenSteer::ProximityToken osProximityToken;
 
+typedef OpenSteer::EntityClassId osEntityClassId;
+
 #endif //  __OPENSTEERUTTYPES_H__

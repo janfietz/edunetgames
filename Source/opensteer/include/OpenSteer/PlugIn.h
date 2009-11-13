@@ -133,6 +133,9 @@ namespace OpenSteer {
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* /*pkUserdata*/ ) = 0;
 
+		// implement to create a vehicle of the specified class
+		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const = 0;
+
 		// format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
 		{
@@ -188,7 +191,10 @@ namespace OpenSteer {
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* /*pkUserdata*/ ) {};
 
-        // format instance to characters for printing to stream
+		// implement to create a vehicle of the specified class
+		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
+        
+		// format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {
             os << "<Plugin " << '"' << pi.name() << '"' << ">";

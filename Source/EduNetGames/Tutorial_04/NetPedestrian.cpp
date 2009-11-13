@@ -136,7 +136,7 @@ m_kEulerUpdate(*this)
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase )
+AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
 	return NULL == pkProximityDatabase ? new NetPedestrian() : new NetPedestrian( *pkProximityDatabase );
 }

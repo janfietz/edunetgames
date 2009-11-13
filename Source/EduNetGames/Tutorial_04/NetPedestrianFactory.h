@@ -9,7 +9,7 @@ class NetPedestrianFactory
 {
 public:
 
-	virtual class NetPedestrian* CreateNetPedestrian( osProximityDatabase& pd );
+	virtual class OpenSteer::AbstractVehicle* CreateNetPedestrian( osProximityDatabase& pd );
 
 	virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* boid );
 };

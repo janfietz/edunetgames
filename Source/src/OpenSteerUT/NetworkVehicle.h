@@ -47,11 +47,8 @@ namespace OpenSteer {
 
 		// AbstractNetworkVehicle interface
 		virtual void testFunction();
-		virtual void setIsRemoteObject( bool bIsRemote );
-		virtual bool isRemoteObject( void ) const;
 
 	private:
-		bool m_bIsRemoteObject;
 
 
 	};
@@ -61,7 +58,7 @@ namespace OpenSteer {
 	//----------------------------------------------------------------------------
 	// Constructor and destructor
 	template<class Super>
-	NetworkVehicleMixin<Super>::NetworkVehicleMixin(void):m_bIsRemoteObject( false )
+	NetworkVehicleMixin<Super>::NetworkVehicleMixin(void)
 	{
 	}
 
@@ -81,19 +78,6 @@ namespace OpenSteer {
 		btest = false;
 	}
 
-	template<class Super>
-	void
-	NetworkVehicleMixin<Super>::setIsRemoteObject( bool bIsRemote )
-	{
-		m_bIsRemoteObject = bIsRemote;
-	}
-
-	template<class Super>
-	bool
-	NetworkVehicleMixin<Super>::isRemoteObject( void ) const
-	{
-		return m_bIsRemoteObject;
-	}
 	// JF --
 
 } // namespace OpenSteer

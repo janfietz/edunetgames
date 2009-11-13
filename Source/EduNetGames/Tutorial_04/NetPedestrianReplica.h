@@ -4,9 +4,9 @@
 #include "EduNetConnect/OSReplicaTypes.h"
 
 //-----------------------------------------------------------------------------
-class NetPedestrianReplica : public OSReplica<class NetPedestrian>
+class NetPedestrianReplica : public OSReplica< OpenSteer::AbstractVehicle >
 {
-	ET_DECLARE_BASE( OSReplica<class NetPedestrian> )
+	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
 public:
 	NetPedestrianReplica();
 	NetPedestrianReplica( OpenSteer::ProximityDatabase& pd );

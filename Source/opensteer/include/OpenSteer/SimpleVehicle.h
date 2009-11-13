@@ -225,7 +225,7 @@ namespace OpenSteer {
 		// CP ++
 		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
 		virtual void newPD( ProximityDatabase& /*pd*/ ) {};
-		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) { return NULL; };
+		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const { return NULL; };
 
 		// currently selected vehicle.  Generally the one the camera follows and
 		// for which additional information may be displayed.  Clicking the mouse

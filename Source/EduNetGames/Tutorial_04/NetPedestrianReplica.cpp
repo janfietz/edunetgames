@@ -14,7 +14,7 @@ NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::ProximityDatabase& pd):
 m_pkHostPlugin( NULL )
 {
-	this->m_pVehicle = new NetPedestrian( pd );
+	this->m_pVehicle = this->m_pkHostPlugin->createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
 	this->m_pVehicle->setIsRemoteObject(false);
 };
 
@@ -22,8 +22,7 @@ m_pkHostPlugin( NULL )
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = new NetPedestrian( 
-		*this->m_pkHostPlugin->accessProximityDataBase() );
+	this->m_pVehicle = this->m_pkHostPlugin->createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
 	this->m_pVehicle->setIsRemoteObject(true);
 };
 
@@ -47,6 +46,8 @@ void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnecti
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
 	kVG.removeVehicle( this->m_pVehicle );
+	delete this->m_pVehicle;
+	this->m_pVehicle = NULL;
 	delete this;
 }
 
