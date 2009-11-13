@@ -36,7 +36,7 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-
+	using namespace OpenSteer;
 
 	typedef uint64_t NetworkId; 
 
@@ -59,6 +59,10 @@ namespace OpenSteer {
 	//-------------------------------------------------------------------------
 	class EntityInstance
 	{
+	  	private:
+		InstanceTracker::Id m_uiId;
+		NetworkId m_netWorkId;
+		static InstanceTracker ms_InstanceTracker;
 	public:
 		EntityInstance():
 		  m_uiId( ms_InstanceTracker.Constructor() ),
@@ -85,10 +89,7 @@ namespace OpenSteer {
 			m_netWorkId = id;
 		}
 
-	private:
-		InstanceTracker::Id m_uiId;
-		NetworkId m_netWorkId;
-		static InstanceTracker ms_InstanceTracker;
+
 	};
 
 	//-------------------------------------------------------------------------
