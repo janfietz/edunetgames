@@ -29,6 +29,19 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+
+//-----------------------------------------------------------------------------
+// some configuration macros
+// 
+#ifdef WIN32
+#define OS_HAVE_PROFILE 1
+#else
+#define OS_HAVE_PROFILE 0
+#endif
+
+
+//-----------------------------------------------------------------------------
+
 #define OS_ABSTRACT = 0
 
 #define OS_DECLARE_BASE( className ) typedef className BaseClass;

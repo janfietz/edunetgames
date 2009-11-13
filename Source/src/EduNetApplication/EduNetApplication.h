@@ -25,6 +25,9 @@ public:
 	void redrawSelectedPlugin (const float currentTime,
 		const float elapsedTime);
 
+	void drawProfile (const float currentTime,
+		const float elapsedTime);
+
 	void onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin );
 
 	static Application& AccessApplication( void );
@@ -38,6 +41,9 @@ public:
 	float m_fTimeFactor;
 	int m_bFixedSimulationFPS;
 	int m_bEnableAnnotation;
+	int m_bShowCPUProfile;
+	int m_bShowCPUProfileGraph;
+	int m_bUpdateCPUProfile;
 
 private:
 	Application( void );

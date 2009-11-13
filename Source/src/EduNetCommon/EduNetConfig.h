@@ -39,6 +39,14 @@
 #define EDUNET_HAVE_RAKNET 1
 #endif
 
+// profiling
+#ifndef WIN32
+#define EDUNET_HAVE_PROFILE 0
+#endif
+#ifndef EDUNET_HAVE_PROFILE
+#define EDUNET_HAVE_PROFILE 1
+#endif
+
 
 // opensteer
 #ifndef EDUNET_HAVE_OPENSTEER
