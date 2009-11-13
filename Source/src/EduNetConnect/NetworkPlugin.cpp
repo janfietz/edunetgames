@@ -319,7 +319,11 @@ void NetworkPlugin::CloseOpenConnections( void )
 		}
 		while(IsConnected())
 	{
+	#ifdef __WIN32__
 		Sleep(1);
+	#else
+	  sleep(1);
+	#endif
 	}
 	}
 }

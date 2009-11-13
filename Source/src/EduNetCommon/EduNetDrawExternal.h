@@ -16,7 +16,11 @@
 //-----------------------------------------------------------------------------
 // GLUI
 #if EDUNET_HAVE_GLUI
-#include "glui/GL/glui.h"
+  #if __WIN32__
+    #include "glui/GL/glui.h"
+  #else
+    #include "GL/glui.h"
+  #endif
 #endif
 
 #endif

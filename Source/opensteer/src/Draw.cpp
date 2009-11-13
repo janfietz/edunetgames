@@ -1864,7 +1864,7 @@ namespace OpenSteer {
 	}
 
 	void 
-		OpenSteer::profileDraw(float sx, float sy,
+		profileDraw(float sx, float sy,
 		float width, float height,
 		float line_spacing,
 		int precision, float sw, float sh)
@@ -1881,7 +1881,7 @@ namespace OpenSteer {
 	}
 
 	void 
-		OpenSteer::profileDrawGraph(float sx, float sy,
+		profileDrawGraph(float sx, float sy,
 		float x_spacing, float y_spacing, float sw, float sh)
 	{
 #if OS_HAVE_PROFILE

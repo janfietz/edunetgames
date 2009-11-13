@@ -4,7 +4,7 @@ SET(OPENTSTEER_LIB_SRC
  Obstacle.cpp
  OldPathway.cpp
  Path.cpp
- PlugIn.cpp
+ Plugin.cpp
  PolylineSegmentedPath.cpp
  PolylineSegmentedPathwaySegmentRadii.cpp
  PolylineSegmentedPathwaySingleRadius.cpp

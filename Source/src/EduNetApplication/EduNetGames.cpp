@@ -1572,12 +1572,12 @@ namespace {
 
 //-----------------------------------------------------------------------------
 // do all initialization related to graphics
-
+#ifdef WIN32
 extern "C" {
 int APIENTRY __glutCreateWindowWithExit(const char *title, void (__cdecl *exitfunc)(int));
 void APIENTRY __glutInitWithExit(int *argcp, char **argv, void (__cdecl *exitfunc)(int));
 }
-
+#endif //WIN32
 //-----------------------------------------------------------------------------
 void consoleExit( int i )
 {
@@ -1595,8 +1595,11 @@ void
 OpenSteer::initializeGraphics (int argc, char **argv)
 {
 	// initialize GLUT state based on command line arguments
-//	glutInit (&argc, argv);  
+	#ifndef WIN32
+	glutInit (&argc, argv);  
+	#else
 	__glutInitWithExit (&argc, argv, consoleExit);
+	#endif //WIN32
 
 	// display modes: RGB+Z and double buffered
 	GLint mode = GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE;
@@ -1612,8 +1615,14 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 	const int wh = (int) (sh * ws);
 	glutInitWindowPosition ((int) (sw * (1-ws)/2), (int) (sh * (1-ws)/2));
 	glutInitWindowSize (ww, wh);
-	windowID = __glutCreateWindowWithExit (appVersionName, windowExit);
-//	windowID = glutCreateWindow (appVersionName);
+	
+	#ifndef WIN32
+	  windowID = glutCreateWindow (appVersionName);
+	#else
+	  windowID = __glutCreateWindowWithExit (appVersionName, windowExit);
+	#endif //WIN32
+	
+
 	reshapeFunc (ww, wh);
 	initGL ();
 

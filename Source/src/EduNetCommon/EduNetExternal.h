@@ -35,7 +35,12 @@
 //-----------------------------------------------------------------------------
 // profiling
 #if EDUNET_HAVE_PROFILE
-#include "../../../ThirdParty/iprof/prof.h" 
+#ifdef WIN32
+  #include "../../../ThirdParty/iprof/prof.h" 
+#else
+  #include "iprof/prof.h" 
+#endif
+
 #define ET_PROFILE(x) Prof(x) 
 #else
 #define ET_PROFILE(x) 
@@ -60,7 +65,7 @@
 #include "NetworkIDManager.h"
 //#include <RakNetTypes.h>
 #include "SocketLayer.h"
-#include "Rpc3/RPC3.h"
+#include "RPC3/RPC3.h"
 
 #endif // EDUNET_HAVE_RAKNET
 
@@ -70,7 +75,7 @@
 
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/Clock.h"
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 #include "OpenSteer/Camera.h"
 //#include "OpenSteer/Utilities.h"
 #include "OpenSteer/AbstractVehicle.h"

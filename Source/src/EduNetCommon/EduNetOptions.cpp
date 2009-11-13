@@ -154,6 +154,7 @@ void EduNetOptions::setup( void )
 //-----------------------------------------------------------------------------
 const char* EduNetOptions::getAppName( void )
 {
+ #ifdef win32
 	static char pszFile[MAX_PATH + 1];
 	static bool bDone = false;
 	if( false == bDone )
@@ -181,4 +182,7 @@ const char* EduNetOptions::getAppName( void )
 		}
 	}
 	return pszFile;
+#else
+	return "EduNetGamesApp";
+#endif //win32
 }
