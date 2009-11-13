@@ -5,6 +5,7 @@
 
 
 #include "EduNetApplication/EduNetGames.h"
+#include "EduNetConnect/NetworkPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 
@@ -249,10 +250,35 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 }
 
 //-----------------------------------------------------------------------------
+AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId, ProximityDatabase* pd ) const
+{
+	static NetPedestrian kMasterPedestrian;
+	this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
+	AbstractVehicle* pkVehicle = this->m_kPedestrianFactory.createVehicle( pd );
+	this->m_kPedestrianFactory.setMasterVehicle( NULL );
+	return pkVehicle;
+}
+
+//-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
+	static NetPedestrian kMasterPedestrian;
+	if( this->getParentPlugin() != NULL )
+	{
+		NetworkPlugin* pkNetworkPlugin = static_cast<NetworkPlugin*>(this->getParentPlugin());
+		if( pkNetworkPlugin->getNetworkSessionType() == ENetworkSessionType_Peer )
+		{
+			this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
+		}
+	}
+	else
+	{
+		this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
+	}
 	osAbstractVehicle* pkPedestrian = this->m_kPedestrianFactory.createVehicle( pd );
 	this->addPedestrianToCrowd( pkPedestrian );
+
+	this->m_kPedestrianFactory.setMasterVehicle( NULL );
 }
 
 //-----------------------------------------------------------------------------

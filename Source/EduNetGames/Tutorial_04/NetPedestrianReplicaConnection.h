@@ -50,7 +50,7 @@ public:
 	NetPedestrianReplicaFactory(NetPedestrianReplicaManager* pkManager):
 	  m_pkReplicaManager(pkManager){}
 
-	  virtual class NetPedestrian* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd );
+	  virtual class OpenSteer::AbstractVehicle* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd );
 	  virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* );	
 
 private:
@@ -66,7 +66,7 @@ public:
 	NetPedestrianDummyFactory(NetPedestrianReplicaManager* pkManager):
 	  NetPedestrianReplicaFactory(pkManager){}
 
-	  virtual class NetPedestrian* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd )
+	  virtual class OpenSteer::AbstractVehicle* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd )
 	  {
 		  return NULL;
 	  };

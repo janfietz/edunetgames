@@ -39,6 +39,7 @@ namespace OpenSteer {
 
 
 	typedef uint64_t NetworkId; 
+	typedef uint64_t EntityClassId; 
 
 
 	//-------------------------------------------------------------------------
@@ -54,6 +55,8 @@ namespace OpenSteer {
 		virtual NetworkId getNetworkId( void ) const = 0;
 		virtual void setNetworkId( NetworkId ) = 0;
 
+		virtual void setIsRemoteObject( bool bIsRemote ) = 0;
+		virtual bool isRemoteObject( void ) const = 0;
 	};
 
 	//-------------------------------------------------------------------------
@@ -62,7 +65,8 @@ namespace OpenSteer {
 	public:
 		EntityInstance():
 		  m_uiId( ms_InstanceTracker.Constructor() ),
-		  m_netWorkId( NetworkId(0) )
+		  m_netWorkId( NetworkId(0) ),
+		  m_bIsRemoteObject( false )
 		{
 
 		}
@@ -85,9 +89,21 @@ namespace OpenSteer {
 			m_netWorkId = id;
 		}
 
+		void setIsRemoteObject( bool bIsRemote )
+		{
+			m_bIsRemoteObject = bIsRemote;
+		}
+
+		bool isRemoteObject( void ) const
+		{
+			return m_bIsRemoteObject;
+		}
+
 	private:
 		InstanceTracker::Id m_uiId;
 		NetworkId m_netWorkId;
+		bool m_bIsRemoteObject;
+
 		static InstanceTracker ms_InstanceTracker;
 	};
 
@@ -113,6 +129,15 @@ namespace OpenSteer {
 			this->m_kInstance.setNetworkId( id );
 		}
 
+		virtual void setIsRemoteObject( bool bIsRemote )
+		{
+			this->m_kInstance.setIsRemoteObject( bIsRemote );
+		}
+
+		virtual bool isRemoteObject( void ) const
+		{
+			return this->m_kInstance.isRemoteObject();
+		}
 	private:
 		EntityInstance m_kInstance;
 	};

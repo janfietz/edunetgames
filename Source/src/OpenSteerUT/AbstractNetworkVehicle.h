@@ -43,9 +43,6 @@ namespace OpenSteer {
 		virtual ~AbstractNetworkVehicle() { /* Nothing to do. */ };
 
 		virtual void testFunction() = 0;
-		virtual void setIsRemoteObject( bool bIsRemote ) = 0;
-		virtual bool isRemoteObject( void ) const = 0;
-
 	};
 } // namespace OpenSteer
 

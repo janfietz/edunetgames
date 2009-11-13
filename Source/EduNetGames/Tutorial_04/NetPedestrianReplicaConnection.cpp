@@ -11,7 +11,7 @@
 #include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
-class NetPedestrian* NetPedestrianFactory::CreateNetPedestrian( osProximityDatabase& pd )
+class OpenSteer::AbstractVehicle* NetPedestrianFactory::CreateNetPedestrian( osProximityDatabase& pd )
 {
 	return new NetPedestrian( pd );
 };
@@ -41,7 +41,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 }
 
 //-----------------------------------------------------------------------------
-NetPedestrian* NetPedestrianReplicaFactory::CreateNetPedestrian( 
+OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::CreateNetPedestrian( 
 	OpenSteer::ProximityDatabase& pd )	
 {	
 	NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pd );		
@@ -105,7 +105,7 @@ public:
 		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
-		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkNetPedestrianFactory );
+//		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkNetPedestrianFactory );
 	}
 	virtual const char* name() const { return "PedestrianPeerPlugin"; };
 
@@ -208,7 +208,7 @@ public:
 		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 		this->m_pkBoidFactory = new NetPedestrianDummyFactory(&this->m_kReplicaManager);	
-		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkBoidFactory );
+//		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkBoidFactory );
 	}
 
 	virtual const char* name() const { return "PedestrianClientPlugin"; };
@@ -264,9 +264,6 @@ void PedestrianClientServerPlugin::initGui( void* pkUserdata )
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-	// 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
-	// 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
 };
 
 

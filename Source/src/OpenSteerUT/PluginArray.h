@@ -83,6 +83,9 @@ namespace OpenSteer
 
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* pkUserdata );
+
+		// implement to create a vehicle of the specified class
+		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
 	private:
 		AVGroup m_kVehicles;
 		AbstractPlugin* m_pkParentPlugin;

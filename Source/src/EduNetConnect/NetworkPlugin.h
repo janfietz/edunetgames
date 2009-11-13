@@ -98,6 +98,11 @@ public:
 		return this->m_kAddress;
 	};
 
+	ENetworkSessionType getNetworkSessionType( void ) const
+	{
+		return this->m_eNetworkSessionType;
+	}
+
 protected:
 
 
