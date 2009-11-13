@@ -2,6 +2,8 @@
 #include "NetPedestrian.h"
 #include "NetPedestrianFactory.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/PluginArray.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 
 #include "EduNetApplication/EduNetGames.h"
@@ -113,9 +115,9 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	{
 		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
 
-		// draw "ground plane"
-		if (SimpleVehicle::selectedVehicle) gridCenter = selected->position();
-		OpenSteerDemo::gridUtility (gridCenter);
+// 		// draw "ground plane"
+// 		if (SimpleVehicle::selectedVehicle) gridCenter = selected->position();
+// 		OpenSteerDemo::gridUtility (gridCenter);
 	}
 
 	// draw and annotate each Pedestrian
@@ -265,10 +267,19 @@ void NetPedestrianPlugin::addPedestrianToCrowd (void)
 	static NetPedestrian kMasterPedestrian;
 	if( this->getParentPlugin() != NULL )
 	{
-		NetworkPlugin* pkNetworkPlugin = static_cast<NetworkPlugin*>(this->getParentPlugin());
-		if( pkNetworkPlugin->getNetworkSessionType() == ENetworkSessionType_Peer )
+		const char* pszPluginName = this->getParentPlugin()->name();
+		if( (  strcmp( pszPluginName, "PluginArray" ) == 0 ) ||
+			(  strcmp( pszPluginName, "OfflinePedestrianPlugin" ) == 0 ) )
 		{
 			this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
+		}
+		else
+		{
+			NetworkPlugin* pkNetworkPlugin = static_cast<NetworkPlugin*>(this->getParentPlugin());
+			if( pkNetworkPlugin->getNetworkSessionType() == ENetworkSessionType_Peer )
+			{
+				this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
+			}
 		}
 	}
 	else
@@ -390,8 +401,25 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 
 };
 
+class OfflinePedestrianPlugin : public PluginArray
+{
+	ET_DECLARE_BASE(PluginArray)
+public:
+	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry )
+	{
+		this->addPlugin( new GridPlugin() );
+		this->addPlugin( new NetPedestrianPlugin( false ) );
+	}
 
-NetPedestrianPlugin gPedestrianPlugin;
+	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
+
+	virtual const char* name() const { return this->getClassName(); };
+
+
+};
+
+OfflinePedestrianPlugin gPedestrianPlugin;
 
 
 

@@ -58,6 +58,7 @@ namespace OpenSteer
 		// unit test function
 		static void TestPluginArray( void );
 
+		OS_IMPLEMENT_CLASSNAME( PluginArray )
 		//---------------------------------------------------------------------
 		// AbstractPlugin interface
 		virtual void open(void);
@@ -65,7 +66,7 @@ namespace OpenSteer
 		virtual void redraw(const float currentTime, const float elapsedTime); 
 		virtual void close(void);
 		virtual void reset(void); 
-		virtual const char *name(void) const; 
+		const char* name (void) const {return this->getClassName();}
 		virtual float selectionOrderSortKey(void) const; 
 		virtual bool requestInitialSelection(void) const; 
 		virtual void handleFunctionKeys(int keyNumber); 
