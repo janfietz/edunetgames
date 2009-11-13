@@ -208,7 +208,6 @@ public:
 		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
 
 		this->m_pkBoidFactory = new NetPedestrianDummyFactory(&this->m_kReplicaManager);	
-//		this->m_kGamePlugin.setNetPedestrianFactory( this->m_pkBoidFactory );
 	}
 
 	virtual const char* name() const { return "PedestrianClientPlugin"; };

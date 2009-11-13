@@ -241,14 +241,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Source\src\OpenSteerUT\EmptyPlugin.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\EmptyPlugin.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Source\src\OpenSteerUT\NetworkVehicle.h"
 				>
 			</File>
@@ -280,6 +272,26 @@
 				RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.h"
 				>
 			</File>
+			<Filter
+				Name="plugins"
+				>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\EmptyPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\EmptyPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\GridPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\GridPlugin.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

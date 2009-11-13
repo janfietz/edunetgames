@@ -37,7 +37,10 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 PluginArray::PluginArray(bool bAddToRegistry):m_pkParentPlugin(NULL)
 {
-
+	if( true == bAddToRegistry )
+	{
+		OpenSteer::Plugin::addToRegistry( this );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -181,12 +184,6 @@ void PluginArray::reset(void)
 		++kIter;
 	}
 */
-}
-
-//-----------------------------------------------------------------------------
-const char* PluginArray::name(void) const
-{
-	return "PluginArray";
 }
 
 //-----------------------------------------------------------------------------
