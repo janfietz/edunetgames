@@ -82,7 +82,7 @@
 #include "OpenSteer/Proximity.h"
 #include "OpenSteer/PolylineSegmentedPathwaySingleRadius.h"
 
-#include "OpenSteerUT/OpenSteerExtrasTypes.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 #endif // EDUNET_HAVE_OPENSTEER
 

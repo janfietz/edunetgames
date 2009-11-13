@@ -31,7 +31,7 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteerExtrasTypes.h"
+#include "OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {

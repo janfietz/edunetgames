@@ -31,7 +31,7 @@
 
 // This is so that everything can be changed to double precision if needed:
 
-#define TRT_DOUBLE_PRECISION
+// #define TRT_DOUBLE_PRECISION
 
 
 // This controls whether or not the data set is transformed or just the query values are transformed

@@ -135,6 +135,11 @@ m_kEulerUpdate(*this)
 	const char* pszClassName = this->getClassName();
 }
 
+//-----------------------------------------------------------------------------
+AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase )
+{
+	return NULL == pkProximityDatabase ? new NetPedestrian() : new NetPedestrian( *pkProximityDatabase );
+}
 
 //-----------------------------------------------------------------------------
 // reset all instance state

@@ -56,7 +56,7 @@ namespace OpenSteer {
 	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
 	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 	
-    class AbstractVehicle : public AbstractUpdatedLocalSpace 
+    class AbstractVehicle : public AbstractEntityUpdatedLocalSpace 
     {
     public:
         virtual ~AbstractVehicle() { /* Nothing to do. */ }
@@ -116,6 +116,8 @@ namespace OpenSteer {
         // default is to disallow backward-facing steering at low speed.
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
                                              const float deltaTime) = 0;
+
+		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) = 0;
 		// CP --
    };
 

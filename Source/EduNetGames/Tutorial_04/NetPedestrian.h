@@ -65,6 +65,7 @@ public:
 
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
 	virtual void newPD( OpenSteer::ProximityDatabase& pd );
+	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* );
 
 	static bool gWanderSwitch;
 	static bool gUseDirectedPathFollowing;

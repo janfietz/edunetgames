@@ -86,7 +86,7 @@
 			ConfigurationType="4"
 			InheritedPropertySheets=".\EdunetCommonProperties.vsprops"
 			CharacterSet="2"
-			WholeProgramOptimization="1"
+			WholeProgramOptimization="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
