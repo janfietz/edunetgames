@@ -63,54 +63,7 @@ namespace OpenSteer
 		void setForce( const Vec3& kForce ){ m_kForce = kForce; }
 
 		//---------------------------------------------------------------------
-		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime )
-		{
-			// compute acceleration and velocity
-			Vec3 newAcceleration = (this->m_kForce / this->m_kVehicle.mass());
-			Vec3 newVelocity = this->m_kVehicle.velocity();
-
-			// damp out abrupt changes and oscillations in steering acceleration
-			// (rate is proportional to time step, then clipped into useful range)
-			if (elapsedTime > 0)
-			{
-				const float smoothRate = clip (9 * elapsedTime, 0.15f, 0.4f);
-				blendIntoAccumulator (smoothRate,
-					newAcceleration,
-					_smoothedAcceleration);
-			}
-
-			// Euler integrate (per frame) acceleration into velocity
-			newVelocity += _smoothedAcceleration * elapsedTime;
-
-			// enforce speed limit
-			newVelocity = newVelocity.truncateLength( this->m_kVehicle.maxSpeed () );
-
-			// update Speed
-			this->m_kVehicle.setSpeed (newVelocity.length());
-
-			// Euler integrate (per frame) velocity into position
-			this->m_kVehicle.setPosition (m_kVehicle.position() + (newVelocity * elapsedTime));
-
-			bool bInfiniteRotationSpeed = false;
-			if( true == bInfiniteRotationSpeed )
-			{
-				// regenerate local space (by default: align vehicle's forward axis with
-				// new velocity, but this behavior may be overridden by derived classes.)
-				this->m_kVehicle.regenerateLocalSpace (newVelocity, elapsedTime);			
-			}
-			else 
-			{
-				Vec3 newForward = this->m_kVehicle.forward();
-				if( this->m_kVehicle.speed() > 0 )
-				{
-					newForward += newVelocity.normalize();
-					newForward = newForward.normalize();
-				}
-				this->m_kVehicle.regenerateOrthonormalBasisUF( newForward );			
-			}
-
-		}
-
+		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
 
 	private:
 		Vec3 m_kForce;
@@ -131,15 +84,7 @@ namespace OpenSteer
 		const Vec3& getForce( void ){ return m_kForce; }
 
 		//---------------------------------------------------------------------
-		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime )
-		{
-			const Vec3 force = this->m_kVehicle.determineCombinedSteering (elapsedTime);
-			const Vec3 adjustedForce = this->m_kVehicle.adjustRawSteeringForce( force, elapsedTime );
-
-			// enforce limit on magnitude of steering force
-			this->m_kForce = adjustedForce.truncateLength( this->m_kVehicle.maxForce () );
-		}
-
+		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
 	private:
 		Vec3 m_kForce;
 	};

@@ -174,6 +174,21 @@ void NetPedestrian::reset (void)
 // per frame simulation update
 void NetPedestrian::update (const float currentTime, const float elapsedTime)
 {
+	if( this == SimpleVehicle::selectedVehicle )
+	{
+		if( false == this->isRemoteObject() )
+		{
+			this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
+		}
+		else
+		{
+			this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
+		}
+	}
+	else
+	{
+		this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
+	}
 	// apply steering force to our momentum
 //	applySteeringForce (determineCombinedSteering (elapsedTime),
 //		elapsedTime);
@@ -295,8 +310,27 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 // draw this pedestrian into scene
 void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 {
-	drawBasic2dCircularVehicle (*this, gGray50);
-	drawTrail ();
+	Color kColor;
+	Vec3 kPosition = this->position();
+	Vec3 kTempPosition = kPosition;
+	if( true == this->isRemoteObject() )
+	{
+		kColor = gGreen;
+		kPosition.y += 0.05f;
+	}
+	else
+	{
+		kColor = gRed;
+	}
+	kColor.setA( 0.5f );
+	this->setPosition( kPosition );
+	OpenSteer::drawBasic2dCircularVehicle (*this, kColor);
+	this->setPosition( kPosition );
+	kColor.setA( 1.0f );
+	OpenSteer::EAnnotationMode eMode = this->getAnnotationMode();
+	this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
+	this->drawTrail( kColor, gWhite );
+	this->setAnnotationMode( eMode );
 }
 
 //-----------------------------------------------------------------------------

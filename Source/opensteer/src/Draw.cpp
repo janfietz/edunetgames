@@ -107,7 +107,6 @@ namespace {
 
     // ------------------------------------------------------------------------
     // OpenGL-specific routine for error check, report, and exit
-
     void 
     checkForGLError (const char* locationDescription)
     {
@@ -137,8 +136,7 @@ namespace {
     }
 
     // ----------------------------------------------------------------------------
-    // draw 3d "graphical annotation" lines, used for debugging
-    
+    // draw 3d "graphical annotation" lines, used for debugging    
     inline void iDrawLine (const OpenSteer::Vec3& startPoint,
                            const OpenSteer::Vec3& endPoint,
                            const OpenSteer::Color& color)
@@ -160,7 +158,8 @@ namespace {
                                const OpenSteer::Color& color)
     {
         OpenSteer::warnIfInUpdatePhase ("iDrawTriangle");
-        glColor3f (color.r(), color.g(), color.b());
+//        glColor3f (color.r(), color.g(), color.b());
+		glColor4f (color.r(), color.g(), color.b(), color.a());
         glBegin (GL_TRIANGLES);
         {
             OpenSteer::glVertexVec3 (a);
@@ -172,8 +171,7 @@ namespace {
 
 
     // ------------------------------------------------------------------------
-    // Draw a single OpenGL quadrangle given four Vec3 vertices, and color.
-    
+    // Draw a single OpenGL quadrangle given four Vec3 vertices, and color.   
     inline void iDrawQuadrangle (const OpenSteer::Vec3& a,
                                  const OpenSteer::Vec3& b,
                                  const OpenSteer::Vec3& c,
@@ -181,7 +179,8 @@ namespace {
                                  const OpenSteer::Color& color)
     {
         OpenSteer::warnIfInUpdatePhase ("iDrawQuadrangle");
-        glColor3f (color.r(), color.g(), color.b());
+//        glColor3f (color.r(), color.g(), color.b());
+		glColor4f (color.r(), color.g(), color.b(), color.a());
         glBegin (GL_QUADS);
         {
             OpenSteer::glVertexVec3 (a);
@@ -194,8 +193,7 @@ namespace {
 
     // ------------------------------------------------------------------------
     // Between matched sets of these two calls, assert that all polygons
-    // will be drawn "double sided", that is, without back-face culling
-    
+    // will be drawn "double sided", that is, without back-face culling    
     inline void beginDoubleSidedDrawing (void)
     {
         glPushAttrib (GL_ENABLE_BIT);
@@ -245,21 +243,14 @@ namespace {
 
 }   // end anonymous namespace
 
-
-
 void 
 OpenSteer::glVertexVec3 (const Vec3& v)
 {
     iglVertexVec3 (v);
 }
 
-
-
-
 // ----------------------------------------------------------------------------
 // warn when draw functions are called during OpenSteerDemo's update phase
-
-
 void 
 OpenSteer::warnIfInUpdatePhase2 (const char* name)
 {
