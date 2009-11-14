@@ -4,6 +4,7 @@
 #include "EduNetCommon/EduNetCommon.h"
 
 #include "NetPedestrianFactory.h"
+#include "NetPedestrianPlugin.h"
 
 
 //-----------------------------------------------------------------------------
@@ -40,39 +41,30 @@ public:
 		this->m_pNetPedestrianPlugin = pPlugin;
 	}
 
+	OpenSteer::AbstractPlugin* getPlugin( void )
+	{
+		return this->m_pNetPedestrianPlugin;
+	}
+
 private:
 	class NetPedestrianPlugin* m_pNetPedestrianPlugin;
 };
+
 //-----------------------------------------------------------------------------
 class NetPedestrianReplicaFactory : public NetPedestrianFactory
 {
+	ET_DECLARE_BASE( NetPedestrianFactory );
 public:
 	NetPedestrianReplicaFactory(NetPedestrianReplicaManager* pkManager):
 	  m_pkReplicaManager(pkManager){}
 
-	  virtual class OpenSteer::AbstractVehicle* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd );
-	  virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* );	
+	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
+	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 private:
 
 	NetPedestrianReplicaManager* m_pkReplicaManager;
-	DataStructures::Map<OpenSteer::InstanceTracker::Id, RakNet::Replica3* > m_uidMap;
-};
-
-//-----------------------------------------------------------------------------
-class NetPedestrianDummyFactory : public NetPedestrianReplicaFactory
-{
-public:
-	NetPedestrianDummyFactory(NetPedestrianReplicaManager* pkManager):
-	  NetPedestrianReplicaFactory(pkManager){}
-
-	  virtual class OpenSteer::AbstractVehicle* CreateNetPedestrian( OpenSteer::ProximityDatabase& pd )
-	  {
-		  return NULL;
-	  };
-	  virtual void DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* )
-	  {
-	  }	
+	mutable DataStructures::Map<OpenSteer::InstanceTracker::Id, RakNet::Replica3* > m_uidMap;
 };
 
 
