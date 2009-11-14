@@ -36,7 +36,7 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-
+	using namespace OpenSteer;
 
 	typedef uint64_t NetworkId; 
 	typedef uint64_t EntityClassId; 

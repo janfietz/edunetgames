@@ -39,6 +39,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 #include <sstream>
 
@@ -46,7 +47,6 @@
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
-#include "glui/GL/glui.h"
 
 #ifdef WIN32
 // Windows defines these as macros :(

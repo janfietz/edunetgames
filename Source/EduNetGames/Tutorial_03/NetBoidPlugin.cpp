@@ -1,11 +1,11 @@
 #include "NetBoidPlugin.h"
+
+#include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/OSReplicaTypes.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 #include "NetBoidFactory.h"
 #include "NetBoidConditionReplica.h"
-
-#include "glui/GL/glui.h"
 
 
 NetPeerBoidPlugin gNetPeerBoidPlugin;
