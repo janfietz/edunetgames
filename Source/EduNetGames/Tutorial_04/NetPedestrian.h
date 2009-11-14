@@ -78,9 +78,7 @@ private:
 	// a pointer to this boid's interface object for the proximity database
 	OpenSteer::ProximityToken* proximityToken;
 
-	// allocate one and share amoung instances just to save memory usage
-	// (change to per-instance allocation to be more MP-safe)
-	static OpenSteer::AVGroup neighbors;
+	OpenSteer::AVGroup m_kNeighbors;
 
 	// path to be followed by this pedestrian
 	// XXX Ideally this should be a generic Pathway, but we use the

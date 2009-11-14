@@ -118,6 +118,9 @@ namespace OpenSteer {
                                              const float deltaTime) = 0;
 
 		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const = 0;
+
+		virtual const Vec3& lastSteeringForce( void ) const = 0;
+		virtual void setLastSteeringForce( const Vec3& ) = 0;
 		// CP --
    };
 
