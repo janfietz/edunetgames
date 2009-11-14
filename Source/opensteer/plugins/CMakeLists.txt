@@ -16,9 +16,9 @@ Boids.cpp
 
 IF(WIN32)
 	SET(opensteerDemoSrcs ${opensteerDemoSrcs}
-	../resources/resource.h
-	../resources/SteerTest.rc
-	../resources/OpenSteerDemo.ico)
+	../win32/resource.h
+	../win32/SteerTest.rc
+	../win32/OpenSteerDemo.ico)
 ENDIF(WIN32)
 
 if ( WIN32 )
