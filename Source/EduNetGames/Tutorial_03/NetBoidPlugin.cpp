@@ -17,7 +17,7 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegis
 	this->m_kReplicaManager.SetAutoSerializeInterval(
 		this->m_kReplicationSettings.interval);
 
-	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
+	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);	
 	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
@@ -106,7 +106,7 @@ void NetPeerBoidPlugin::DeleteContent( void )
 //-----------------------------------------------------------------------------
 NetClientBoidPlugin::NetClientBoidPlugin()
 {
-	this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
+	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 	this->m_pkBoidFactory = new BoidDummyFactory(&this->m_kReplicaManager);	
 	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );

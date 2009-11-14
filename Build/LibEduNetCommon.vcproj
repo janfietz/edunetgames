@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\OpenSteerUT\AbstractPluginUtilities.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
 				>
 			</File>
