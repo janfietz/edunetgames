@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="LibIProf"
 	ProjectGUID="{8A4F91C1-9D6C-4283-8037-EB485F7A1898}"
 	RootNamespace="LibIProf"
@@ -150,19 +150,19 @@
 			UniqueIdentifier="{584A5230-07D6-4431-BB98-AA0CD72E6717}"
 			>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_draw.c"
+				RelativePath="..\Source\iprof\prof_draw.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_gather.c"
+				RelativePath="..\Source\iprof\prof_gather.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_process.c"
+				RelativePath="..\Source\iprof\prof_process.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_win32.c"
+				RelativePath="..\Source\iprof\prof_win32.c"
 				>
 			</File>
 		</Filter>
@@ -172,32 +172,28 @@
 			UniqueIdentifier="{566E428C-9C3D-439e-9A1E-8DC96CE457C4}"
 			>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof.h"
+				RelativePath="..\Source\iprof\prof.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_gather.h"
+				RelativePath="..\Source\iprof\prof_gather.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_internal.h"
+				RelativePath="..\Source\iprof\prof_internal.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\ThirdParty\iprof\prof_win32.h"
+				RelativePath="..\Source\iprof\prof_win32.h"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="GL"
 			>
-			<File
-				RelativePath="..\..\ThirdParty\glui\GL\glui.h"
-				>
-			</File>
 		</Filter>
 		<File
-			RelativePath="..\..\ThirdParty\iprof\iprof.txt"
+			RelativePath="..\Source\iprof\iprof.txt"
 			>
 		</File>
 		<File
