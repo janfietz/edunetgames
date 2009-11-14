@@ -45,8 +45,6 @@ namespace
 
 }
 
-
-
 // ----------------------------------------------------------------------------
 /**
 * Creates a path of the form of an eight. Data provided by Nick Porcino.
@@ -94,9 +92,6 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 	return gTestPath;
 }
 
-
-
-
 AVGroup NetPedestrian::neighbors;
 bool NetPedestrian::gWanderSwitch = true;
 bool NetPedestrian::gUseDirectedPathFollowing = true;
@@ -104,35 +99,34 @@ bool NetPedestrian::gUseDirectedPathFollowing = true;
 //-----------------------------------------------------------------------------
 NetPedestrian::NetPedestrian():
 m_kSteeringForceUpdate(*this),
-m_kEulerUpdate(*this)
+m_kEulerUpdate(*this),
+proximityToken( NULL )
 {
 
 }
-
-
-//-----------------------------------------------------------------------------
-NetPedestrian::~NetPedestrian()
-{
-	// delete this boid's token in the proximity database
-	delete proximityToken;
-}
-
-
 
 //-----------------------------------------------------------------------------
 // constructor
 NetPedestrian::NetPedestrian( ProximityDatabase& pd ):
 m_kSteeringForceUpdate(*this),
-m_kEulerUpdate(*this)
+m_kEulerUpdate(*this),
+proximityToken( NULL )
 {
 	// allocate a token for this boid in the proximity database
-	proximityToken = NULL;
 	newPD (pd);
 
 	// reset Pedestrian state
 	reset ();
 
+	// for debugging
 	const char* pszClassName = this->getClassName();
+}
+
+//-----------------------------------------------------------------------------
+NetPedestrian::~NetPedestrian()
+{
+	// delete this boid's token in the proximity database
+	ET_SAFE_DELETE( proximityToken );
 }
 
 //-----------------------------------------------------------------------------
@@ -298,7 +292,6 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 	return steeringForce.setYtoZero ();
 }
 
-
 //-----------------------------------------------------------------------------
 // draw this pedestrian into scene
 void NetPedestrian::draw( const float currentTime, const float elapsedTime )
@@ -306,7 +299,6 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	drawBasic2dCircularVehicle (*this, gGray50);
 	drawTrail ();
 }
-
 
 //-----------------------------------------------------------------------------
 // called when steerToFollowPath decides steering is required
@@ -352,7 +344,6 @@ void NetPedestrian::annotateAvoidCloseNeighbor (const AbstractVehicle& other,
 		draw2dTextAt3dLocation (*string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
 }
 
-
 //-----------------------------------------------------------------------------
 // (parameter names commented out to prevent compiler warning from "-W")
 void NetPedestrian::annotateAvoidNeighbor (const AbstractVehicle& threat,
@@ -390,7 +381,7 @@ void NetPedestrian::annotateAvoidObstacle (const float minDistanceToCollision)
 
 //-----------------------------------------------------------------------------
 // switch to new proximity database -- just for demo purposes
-void NetPedestrian::newPD (ProximityDatabase& pd)
+void NetPedestrian::newPD( ProximityDatabase& pd )
 {
 	// delete this boid's token in the old proximity database
 	delete proximityToken;

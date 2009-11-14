@@ -82,8 +82,6 @@ public:
 	void drawPathAndObstacles (void);
 
 	void addPedestrianToCrowd(void);
-	void addPedestrianToCrowd( osAbstractVehicle* pkVehicle );
-
 	void removePedestrianFromCrowd (void);
 
 	// for purposes of demonstration, allow cycling through various
