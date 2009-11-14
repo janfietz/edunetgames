@@ -4,24 +4,12 @@
 #include "NetPedestrianPlugin.h"
 
 #include "OpenSteerUT/PluginArray.h"
-//#include "OpenSteerUT/EmptyPlugin.h"
 #include "OpenSteerUT/GridPlugin.h"
+
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
-
-//-----------------------------------------------------------------------------
-class OpenSteer::AbstractVehicle* NetPedestrianFactory::CreateNetPedestrian( osProximityDatabase& pd )
-{
-	return new NetPedestrian( pd );
-};
-
-//-----------------------------------------------------------------------------
-void NetPedestrianFactory::DestroyNetPedestrian( const class OpenSteer::AbstractVehicle* boid )
-{
-	delete boid;
-};
 
 //-----------------------------------------------------------------------------
 RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
@@ -32,7 +20,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
 	if ( typeName== kReplica.GetName() ){
-		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pNetPedestrianPlugin  );
+		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pNetPedestrianPlugin, true  );
 		// 		OpenSteer::AbstractVehicleGroup kVG( this->m_pNetPedestrianPlugin->allVehicles() );
 		// 		kVG.addVehicle( pkNewReplica->AccessVehicle() );
 		this->m_pNetPedestrianPlugin->addPedestrianToCrowd( pkNewReplica->AccessVehicle() );
@@ -42,11 +30,10 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::CreateNetPedestrian( 
-	OpenSteer::ProximityDatabase& pd )	
-{	
-	NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pd );		
-	this->m_pkReplicaManager->Reference(pkNewReplica);
+OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+{
+	NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
+	this->m_pkReplicaManager->Reference( pkNewReplica );
 
 	OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
 	this->m_uidMap.Set(pkVehicle->getEntityId(), pkNewReplica);
@@ -54,9 +41,9 @@ OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::CreateNetPedestrian(
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianReplicaFactory::DestroyNetPedestrian( const OpenSteer::AbstractVehicle* pkNetPedestrian)
-{	
-	const OpenSteer::InstanceTracker::Id uiEntityId = pkNetPedestrian->getEntityId();	
+void NetPedestrianReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+{
+	const OpenSteer::InstanceTracker::Id uiEntityId = pkVehicle->getEntityId();	
 	if(true == this->m_uidMap.Has( uiEntityId ))
 	{
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
@@ -64,12 +51,9 @@ void NetPedestrianReplicaFactory::DestroyNetPedestrian( const OpenSteer::Abstrac
 		this->m_uidMap.Set( uiEntityId, NULL );
 		delete pReplicaObject;
 	}
-
+// do not call the base class in this case !!!
+//	BaseClass::destroyVehicle( pkVehicle );
 }
-
-
-
-
 
 //-----------------------------------------------------------------------------
 class PedestrianClientServerPlugin : public OpenSteer::PluginArray
@@ -102,9 +86,10 @@ public:
 		this->m_kReplicaManager.SetAutoSerializeInterval(
 			this->m_kReplicationSettings.interval);
 
-		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
+		this->m_kReplicaManager.SetPlugin( &this->m_kGamePlugin );
 
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
+		this->m_kGamePlugin.setVehicleFactory( this->m_pkNetPedestrianFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
 	virtual const char* name() const { return this->getClassName(); };
@@ -205,9 +190,8 @@ public:
 	PedestrianClientPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-		this->m_kReplicaManager.SetPlugin(&this->m_kGamePlugin);
-
-		this->m_pkBoidFactory = new NetPedestrianDummyFactory(&this->m_kReplicaManager);	
+		this->m_kReplicaManager.SetPlugin( &this->m_kGamePlugin );
+		this->m_kGamePlugin.setVehicleFactory( NULL );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianClientPlugin )

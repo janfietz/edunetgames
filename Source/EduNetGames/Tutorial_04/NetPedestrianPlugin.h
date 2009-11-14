@@ -3,7 +3,7 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteerUT/AbstractVehicleFactory.h"
+#include "NetPedestrianFactory.h"
 
 
 //-----------------------------------------------------------------------------
@@ -12,16 +12,19 @@ class NetPedestrianPlugin : public OpenSteer::Plugin
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
 	NetPedestrianPlugin( bool bAddToRegistry = true ):
-	  BaseClass( bAddToRegistry ),pd(NULL){}
+	  BaseClass( bAddToRegistry ),pd(NULL)
+	{
+		this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
+	}
 
 	virtual ~NetPedestrianPlugin();
 
+	OS_IMPLEMENT_CLASSNAME( NetPedestrianPlugin )
 	//-----------------------------------------------------------------------------
 	// OpenSteer::Plugin interface
-	virtual const char* name (void) const;
+	virtual const char* name() const { return this->getClassName(); };
 
 	virtual float selectionOrderSortKey (void) const;
-
 
 	virtual void open (void);
 	virtual void update (const float currentTime, const float elapsedTime);
@@ -63,9 +66,8 @@ public:
 	// implement to create a vehicle of the specified class
 	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
 
-
 private:
-	OpenSteer::AbstractVehicleFactory m_kPedestrianFactory;
+	NetPedestrianFactory m_kOfflinePedestrianFactory;
 
 	osAVGroup crowd;
 

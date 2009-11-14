@@ -54,7 +54,8 @@ OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 // ----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
-	m_pkParentPlugin( NULL )
+	m_pkParentPlugin( NULL ),
+	m_pkVehicleFactory( NULL )
 {
     // save this new instance in the registry
 	if( true == bAddToRegistry )

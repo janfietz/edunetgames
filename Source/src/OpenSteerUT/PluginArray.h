@@ -89,6 +89,12 @@ namespace OpenSteer
 
 		// implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
+
+		// set an external vehicle factory
+		virtual void setVehicleFactory( AbstractVehicleFactory* ){};
+
+		virtual AbstractVehicleFactory* getVehicleFactory( void ) const {return NULL;};
+
 	private:
 		AVGroup m_kVehicles;
 		AbstractPlugin* m_pkParentPlugin;

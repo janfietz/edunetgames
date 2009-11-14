@@ -9,9 +9,7 @@ class NetPedestrianReplica : public OSReplica< OpenSteer::AbstractVehicle >
 	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
 public:
 	NetPedestrianReplica();
-	NetPedestrianReplica( OpenSteer::ProximityDatabase& pd );
-
-	NetPedestrianReplica( OpenSteer::AbstractPlugin* pPlugin );
+	NetPedestrianReplica( OpenSteer::AbstractPlugin* pPlugin, bool bIsRemoteObject );
 
 	//-------------------------------------------------------------------------
 	// replica interface
