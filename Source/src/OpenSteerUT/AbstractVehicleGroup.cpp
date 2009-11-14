@@ -98,10 +98,21 @@ void AbstractVehicleGroup::reset( void )
 //-----------------------------------------------------------------------------
 void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle )
 {
+	if( NULL == pkVehicle )
+	{
+		return;
+	}
 	m_kVehicles.push_back( pkVehicle );
  	if( m_kVehicles.size() == 1 )
 	{
  		SimpleVehicle::selectedVehicle = pkVehicle;
+	}
+	else
+	{
+		if( NULL == SimpleVehicle::selectedVehicle )
+		{
+			SimpleVehicle::selectedVehicle = pkVehicle;
+		}
 	}
 }
 

@@ -28,7 +28,7 @@ class NetBoidReplicaManager : public RakNet::ReplicaManager3
 		delete connection;
 	}	
 public:
-	void SetPlugin(OpenSteer::BoidsPlugin* pPlugin)
+	void setPlugin(OpenSteer::BoidsPlugin* pPlugin)
 	{
 		this->m_pBoidPlugin = pPlugin;
 	}
