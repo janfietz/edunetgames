@@ -79,8 +79,9 @@ RakNet::RM3SerializationResult NetPedestrianReplica::Serialize(RakNet::Serialize
 {
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 
-	kStream.WriteAlignedBytes((const unsigned char*)&m_pVehicle->position(),sizeof(OpenSteer::Vec3));
-	kStream.WriteAlignedBytes((const unsigned char*)&m_pVehicle->forward(),sizeof(OpenSteer::Vec3));
+	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->position(),sizeof(OpenSteer::Vec3));
+	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->forward(),sizeof(OpenSteer::Vec3));
+	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->lastSteeringForce(),sizeof(OpenSteer::Vec3));
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 }
@@ -92,9 +93,14 @@ void NetPedestrianReplica::Deserialize(RakNet::DeserializeParameters *deserializ
 
 	OpenSteer::Vec3 kVec;
 	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	m_pVehicle->setPosition(kVec);
+	this->m_pVehicle->setPosition(kVec);
 
 	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	m_pVehicle->setForward(kVec);	
+	this->m_pVehicle->setForward(kVec);	
+	this->m_pVehicle->regenerateOrthonormalBasisUF( kVec );			
+
+	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
+	this->m_pVehicle->setLastSteeringForce(kVec);	
+
 }
 

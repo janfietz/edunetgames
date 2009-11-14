@@ -33,16 +33,11 @@ using namespace OpenSteer;
 namespace
 {
 	// ----------------------------------------------------------------------------
-
-
 	// creates a path for the Plugin
 	PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
 	ObstacleGroup gObstacles;
 	osVector3 gEndpoint0;
 	osVector3 gEndpoint1;
-
-
-
 }
 
 // ----------------------------------------------------------------------------
@@ -92,7 +87,6 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 	return gTestPath;
 }
 
-AVGroup NetPedestrian::neighbors;
 bool NetPedestrian::gWanderSwitch = true;
 bool NetPedestrian::gUseDirectedPathFollowing = true;
 
@@ -221,6 +215,10 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 // or neighbors if needed, otherwise follow the path and wander
 osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 {
+	if( this->isRemoteObject() )
+	{
+		return this->lastSteeringForce();
+	}
 	// move forward
 	osVector3 steeringForce = forward();
 
@@ -258,12 +256,12 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 		// (radius is largest distance between vehicles traveling head-on
 		// where a collision is possible within caLeadTime seconds.)
 		const float maxRadius = caLeadTime * maxSpeed() * 2;
-		neighbors.clear();
-		proximityToken->findNeighbors (position(), maxRadius, neighbors);
+		m_kNeighbors.clear();
+		proximityToken->findNeighbors (position(), maxRadius, m_kNeighbors);
 
 		if (leakThrough < frandom01())
 			collisionAvoidance =
-			steerToAvoidNeighbors (caLeadTime, neighbors) * 10;
+			steerToAvoidNeighbors (caLeadTime, m_kNeighbors) * 10;
 
 		// if collision avoidance is needed, do it
 		if (collisionAvoidance != osVector3::zero)
@@ -287,9 +285,10 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 			steeringForce += pathFollow * 0.5;
 		}
 	}
+	this->setLastSteeringForce( steeringForce.setYtoZero () );
 
 	// return steering constrained to global XZ "ground" plane
-	return steeringForce.setYtoZero ();
+	return this->lastSteeringForce();
 }
 
 //-----------------------------------------------------------------------------

@@ -122,6 +122,8 @@ namespace OpenSteer {
             resetSmoothedPosition ();
             resetSmoothedCurvature ();
             resetSmoothedAcceleration ();
+
+			setLastSteeringForce( Vec3::zero );
         }
 
         // get/set mass
@@ -227,10 +229,15 @@ namespace OpenSteer {
 		virtual void newPD( ProximityDatabase& /*pd*/ ) {};
 		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const { return NULL; };
 
+		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
+		virtual void setLastSteeringForce( const Vec3& force ) { _lastSteeringForce = force; };
 		// currently selected vehicle.  Generally the one the camera follows and
 		// for which additional information may be displayed.  Clicking the mouse
 		// near a vehicle causes it to become the Selected Vehicle.
 		static AbstractVehicle* selectedVehicle;
+	protected:
+		Vec3 _lastSteeringForce;
+
 		// CP --
     private:
 
