@@ -263,10 +263,11 @@ public:
 	PedestrianClientServerPlugin(bool bAddToRegistry = true);
 	virtual ~PedestrianClientServerPlugin();
 
-	OS_IMPLEMENT_CLASSNAME( PedestrianClientServerPlugin )
-		//---------------------------------------------------------------------
-		// interface AbstractPlugin
-		virtual void initGui( void* pkUserdata );
+	OS_IMPLEMENT_CLASSNAME( PedestrianClientServerPlugin );
+
+	//---------------------------------------------------------------------
+	// interface AbstractPlugin
+	virtual void initGui( void* pkUserdata );
 };
 
 //-----------------------------------------------------------------------------

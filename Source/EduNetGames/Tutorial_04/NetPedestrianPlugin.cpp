@@ -136,10 +136,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	if( NULL != selected )
 	{
 		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
-
-// 		// draw "ground plane"
-// 		if (SimpleVehicle::selectedVehicle) gridCenter = selected->position();
-// 		OpenSteerDemo::gridUtility (gridCenter);
 	}
 
 	// draw and annotate each Pedestrian
@@ -147,7 +143,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	kVG.redraw( currentTime, elapsedTime );
 
 	// draw the path they follow and obstacles they avoid
-	drawPathAndObstacles ();
+	this->drawPathAndObstacles ();
 
 	if( ( NULL != nearMouse ) && ( NULL != selected ) )
 	{
@@ -288,20 +284,9 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, Prox
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	osAbstractVehicle* pkPedestrian = this->createVehicle( 0, pd );
-	this->addPedestrianToCrowd( pkPedestrian );
-}
-
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::addPedestrianToCrowd( osAbstractVehicle* pkVehicle )
-{
-	if( NULL == pkVehicle )
-	{
-		return;
-	}
-	crowd.push_back( pkVehicle );
+	osAbstractVehicle* pkVehicle = this->createVehicle( 0, pd );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	if (kVG.population() == 1) SimpleVehicle::selectedVehicle = pkVehicle;
+	kVG.addVehicle( pkVehicle );
 }
 
 //-----------------------------------------------------------------------------
@@ -387,22 +372,25 @@ void removePedestrian(GLUI_Control* pkControl )
 	pkPlugin->removePedestrianFromCrowd();
 }
 
-
 //-----------------------------------------------------------------------------
 // implement to initialize additional gui functionality
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
 {
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	// test if a vehicle can be created
+	AbstractVehicle* pkVehicle = this->createVehicle( 0, NULL );
+	if( NULL != pkVehicle )
+	{
+		ET_SAFE_DELETE( pkVehicle );
 
-	GLUI_Control* pkControl;
-	pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addPedestrian );
-	pkControl->set_ptr_val( this );
-	pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removePedestrian  );
-	pkControl->set_ptr_val( this );
+		GLUI* glui = ::getRootGLUI();
+		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
-
-
+		GLUI_Control* pkControl;
+		pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addPedestrian );
+		pkControl->set_ptr_val( this );
+		pkControl = glui->add_button_to_panel( pluginPanel, "Remove", -1, removePedestrian  );
+		pkControl->set_ptr_val( this );
+	}
 };
 
 
