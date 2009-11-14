@@ -82,7 +82,7 @@ FooPlugin gFooPlugin;
 
 namespace OpenSteer {
 
-
+	class AbstractVehicleFactory;
 
     class AbstractPlugin
     {
@@ -132,6 +132,11 @@ namespace OpenSteer {
 
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* /*pkUserdata*/ ) = 0;
+
+		// set an external vehicle factory
+		virtual void setVehicleFactory( AbstractVehicleFactory* ) = 0;
+
+		virtual AbstractVehicleFactory* getVehicleFactory( void ) const = 0;
 
 		// implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const = 0;
@@ -191,6 +196,11 @@ namespace OpenSteer {
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* /*pkUserdata*/ ) {};
 
+		// set an external vehicle factory
+		virtual void setVehicleFactory( AbstractVehicleFactory* pkVehicleFactory ) { this->m_pkVehicleFactory = pkVehicleFactory; }
+
+		virtual AbstractVehicleFactory* getVehicleFactory( void ) const { return this->m_pkVehicleFactory; };
+
 		// implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
         
@@ -223,6 +233,8 @@ namespace OpenSteer {
 		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
 		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
 		static int getPluginIdx( const AbstractPlugin* pkPlugin );
+	protected:
+		AbstractVehicleFactory* m_pkVehicleFactory;
 
     private:
 		AbstractPlugin* m_pkParentPlugin;

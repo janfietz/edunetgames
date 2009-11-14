@@ -21,12 +21,6 @@ namespace
 }
 
 //-----------------------------------------------------------------------------
-const char* NetPedestrianPlugin::name (void) const 
-{
-	return "NetPedestrians";
-}
-
-//-----------------------------------------------------------------------------
 float NetPedestrianPlugin::selectionOrderSortKey (void) const 
 {
 	return 98.0f;
@@ -252,44 +246,22 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId, ProximityDatabase* pd ) const
+AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, ProximityDatabase* pd ) const
 {
-	static NetPedestrian kMasterPedestrian;
-	this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
-	AbstractVehicle* pkVehicle = this->m_kPedestrianFactory.createVehicle( pd );
-	this->m_kPedestrianFactory.setMasterVehicle( NULL );
+	AbstractVehicle* pkVehicle = NULL;
+	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	if( NULL != pkFactory )
+	{
+		pkVehicle = pkFactory->createVehicle( classId, pd );
+	}
 	return pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	static NetPedestrian kMasterPedestrian;
-	if( this->getParentPlugin() != NULL )
-	{
-		const char* pszPluginName = this->getParentPlugin()->name();
-		if( (  strcmp( pszPluginName, "PluginArray" ) == 0 ) ||
-			(  strcmp( pszPluginName, "OfflinePedestrianPlugin" ) == 0 ) )
-		{
-			this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
-		}
-		else
-		{
-			NetworkPlugin* pkNetworkPlugin = static_cast<NetworkPlugin*>(this->getParentPlugin());
-			if( pkNetworkPlugin->getNetworkSessionType() == ENetworkSessionType_Peer )
-			{
-				this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
-			}
-		}
-	}
-	else
-	{
-		this->m_kPedestrianFactory.setMasterVehicle( &kMasterPedestrian );
-	}
-	osAbstractVehicle* pkPedestrian = this->m_kPedestrianFactory.createVehicle( pd );
+	osAbstractVehicle* pkPedestrian = this->createVehicle( 0, pd );
 	this->addPedestrianToCrowd( pkPedestrian );
-
-	this->m_kPedestrianFactory.setMasterVehicle( NULL );
 }
 
 //-----------------------------------------------------------------------------
@@ -319,7 +291,11 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 			SimpleVehicle::selectedVehicle = NULL;
 
 		// delete the Pedestrian
-		this->m_kPedestrianFactory.destroyVehicle( pedestrian );
+		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		if( NULL != pkFactory )
+		{
+			pkFactory->destroyVehicle( pedestrian );
+		}
 		pedestrian = NULL;
 	}
 }

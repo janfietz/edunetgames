@@ -1,8 +1,12 @@
 #include "NetPedestrianReplica.h"
 #include "NetPedestrian.h"
+#include "NetPedestrianFactory.h"
+
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 using namespace OpenSteer;
+
+NetPedestrianFactory gNetPedestrianFactory;
 
 //-----------------------------------------------------------------------------
 NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
@@ -11,19 +15,11 @@ NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
 }
 
 //-----------------------------------------------------------------------------
-NetPedestrianReplica::NetPedestrianReplica( OpenSteer::ProximityDatabase& pd):
-m_pkHostPlugin( NULL )
-{
-	this->m_pVehicle = this->m_pkHostPlugin->createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
-	this->m_pVehicle->setIsRemoteObject(false);
-};
-
-//-----------------------------------------------------------------------------
-NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin  ):
+NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = this->m_pkHostPlugin->createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
-	this->m_pVehicle->setIsRemoteObject(true);
+	this->m_pVehicle = gNetPedestrianFactory.createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
+	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );
 };
 
 //-----------------------------------------------------------------------------
@@ -46,8 +42,7 @@ void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnecti
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
 	kVG.removeVehicle( this->m_pVehicle );
-	delete this->m_pVehicle;
-	this->m_pVehicle = NULL;
+	ET_SAFE_DELETE( this->m_pVehicle );
 	delete this;
 }
 
