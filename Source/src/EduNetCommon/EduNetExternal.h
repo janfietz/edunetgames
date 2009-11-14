@@ -36,7 +36,7 @@
 // profiling
 #if EDUNET_HAVE_PROFILE
 #ifdef WIN32
-  #include "../../../ThirdParty/iprof/prof.h" 
+  #include "iprof/prof.h" 
 #else
   #include "iprof/prof.h" 
 #endif

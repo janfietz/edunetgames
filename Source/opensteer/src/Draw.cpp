@@ -89,7 +89,7 @@
 // ----------------------------------------------------------------------------
 #include "OpenSteer/OpenSteerMacros.h"
 #if OS_HAVE_PROFILE
-#include "../../../../../ThirdParty/iprof/prof.h" 
+#include "iprof/prof.h" 
 #endif
 
 // GL interface
