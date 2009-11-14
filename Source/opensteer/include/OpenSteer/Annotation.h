@@ -56,6 +56,13 @@
 
 namespace OpenSteer {
 
+	enum EAnnotationMode
+	{
+		EAnnotationMode_global,
+		EAnnotationMode_local,
+		EAnnotationMode_count,
+	};
+
     extern bool enableAnnotation;
     extern bool drawPhaseActive;
 
@@ -89,7 +96,7 @@ namespace OpenSteer {
 
         // draw the trail as a dotted line, fading away with age
         void drawTrail (void) {drawTrail (grayColor (0.7f), gWhite);}
-        void drawTrail  (const Color& trailColor, const Color& tickColor);
+        void drawTrail (const Color& trailColor, const Color& tickColor);
 
         // set trail parameters: the amount of time it represents and the
         // number of samples along its length.  re-allocates internal buffers.
@@ -201,6 +208,21 @@ namespace OpenSteer {
                                      const bool filled,
                                      const bool in3d) const;
 
+		void setAnnotationMode( EAnnotationMode eMode )
+		{
+			this->m_eAnnotationMode = eMode;
+		}
+
+		EAnnotationMode getAnnotationMode( void ) const
+		{
+			return this->m_eAnnotationMode;
+		}
+
+		bool isAnnotated( void ) const
+		{
+			return ( ( this->m_eAnnotationMode == OpenSteer::EAnnotationMode_local ) || OpenSteer::enableAnnotation );
+		}
+
         // ------------------------------------------------------------------------
     private:
 
@@ -214,6 +236,10 @@ namespace OpenSteer {
         Vec3 curPosition;           // last reported position of vehicle
         Vec3* trailVertices;        // array (ring) of recent points along trail
         char* trailFlags;           // array (ring) of flag bits for trail points
+
+		EAnnotationMode m_eAnnotationMode;
+
+		
     };
 
 } // namespace OpenSteer
@@ -222,13 +248,12 @@ namespace OpenSteer {
 
 // ----------------------------------------------------------------------------
 // Constructor and destructor
-
-
 template<class Super>
-OpenSteer::AnnotationMixin<Super>::AnnotationMixin (void)
+OpenSteer::AnnotationMixin<Super>::AnnotationMixin (void):
+m_eAnnotationMode( OpenSteer::EAnnotationMode_global ),
+trailVertices( NULL ),
+trailFlags( NULL )
 {
-    trailVertices = NULL;
-    trailFlags = NULL;
 
     // xxx I wonder if it makes more sense to NOT do this here, see if the
     // xxx vehicle class calls it to set custom parameters, and if not, set
@@ -246,12 +271,9 @@ OpenSteer::AnnotationMixin<Super>::~AnnotationMixin (void)
     delete[] trailFlags;
 }
 
-
 // ----------------------------------------------------------------------------
 // set trail parameters: the amount of time it represents and the number of
 // samples along its length.  re-allocates internal buffers.
-
-
 template<class Super>
 void 
 OpenSteer::AnnotationMixin<Super>::setTrailParameters (const float duration, 
@@ -283,10 +305,8 @@ OpenSteer::AnnotationMixin<Super>::setTrailParameters (const float duration,
 // ----------------------------------------------------------------------------
 // forget trail history: used to prevent long streaks due to teleportation
 //
-// XXX perhaps this coudl be made automatic: triggered when the change in
+// XXX perhaps this could be made automatic: triggered when the change in
 // XXX position is well out of the range of the vehicles top velocity
-
-
 template<class Super>
 void 
 OpenSteer::AnnotationMixin<Super>::clearTrailHistory (void)
@@ -295,11 +315,8 @@ OpenSteer::AnnotationMixin<Super>::clearTrailHistory (void)
     setTrailParameters (trailDuration, trailVertexCount);
 }
 
-
 // ----------------------------------------------------------------------------
 // record a position for the current time, called once per update
-
-
 template<class Super>
 void 
 OpenSteer::AnnotationMixin<Super>::recordTrailVertex (const float currentTime,
@@ -322,14 +339,12 @@ OpenSteer::AnnotationMixin<Super>::recordTrailVertex (const float currentTime,
 
 // ----------------------------------------------------------------------------
 // draw the trail as a dotted line, fading away with age
-
-
 template<class Super>
 void 
 OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
                                               const Color& tickColor)
 {
-    if (enableAnnotation)
+    if ( this->isAnnotated() )
     {
         int index = trailIndex;
         for (int j = 0; j < trailVertexCount; j++)
@@ -386,7 +401,7 @@ OpenSteer::AnnotationMixin<Super>::annotationLine (const Vec3& startPoint,
                                                    const Vec3& endPoint,
                                                    const Color& color) const
 {
-    if (enableAnnotation)
+	if ( this->isAnnotated() )
     {
         if (drawPhaseActive)
         {
@@ -423,7 +438,7 @@ OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (const float radius,
                                                            const bool filled,
                                                            const bool in3d) const
 {
-    if (enableAnnotation)
+	if ( this->isAnnotated() )
     {
         if (drawPhaseActive)
         {
