@@ -85,9 +85,9 @@ void NetPedestrianPlugin::open (void)
 			OpenSteerDemo::init3dCamera( firstPedestrian );
 		}
 	}
-	OpenSteerDemo::camera.mode = Camera::cmFixedDistanceOffset;
-	OpenSteerDemo::camera.fixedTarget.set (15, 0, 30);
-	OpenSteerDemo::camera.fixedPosition.set (15, 70, -70);
+	Camera::camera.mode = Camera::cmFixedDistanceOffset;
+	Camera::camera.fixedTarget.set (15, 0, 30);
+	Camera::camera.fixedPosition.set (15, 70, -70);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ void NetPedestrianPlugin::reset (void)
 	}
 
 	// make camera jump immediately to new position
-	OpenSteerDemo::camera.doNotSmoothNextMove ();
+	Camera::camera.doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------
@@ -131,12 +131,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 
 	// Pedestrian nearest mouse (to be highlighted)
 	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
-
-	// update camera
-	if( NULL != selected )
-	{
-		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
-	}
 
 	// draw and annotate each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
@@ -160,7 +154,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
 		const osVector3 textPosition = selected->position() + textOffset;
-		const osVector3 camPosition = OpenSteerDemo::camera.position();
+		const osVector3 camPosition = Camera::camera.position();
 		const float camDistance = osVector3::distance (selected->position(),
 			camPosition);
 		const char* spacer = "      ";

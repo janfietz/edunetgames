@@ -176,7 +176,16 @@ namespace OpenSteer {
 
         // "offset POV" camera mode parameters
         Vec3 povOffset;
+
+		// on static camera instance that automatically tracks selected vehicle
+		static Camera camera;
+
+		static void updateCamera ( const float currentTime,
+			const float elapsedTime,
+			const AbstractVehicle& selected, const bool simulationPaused );
+
     };
+
 
 } // namespace OpenSteer
 

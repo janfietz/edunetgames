@@ -26,51 +26,20 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EmptyPlugin.h"
+#include "CameraPlugin.h"
 
-#include "EduNetCommon/EduNetDraw.h"
-#include "EduNetApplication/EduNetGames.h"
-
-
-OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
-
-
-using namespace EduNet;
-//-----------------------------------------------------------------------------
-void EmptyPlugin::initGui( void* pkUserdata )
-{
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	glui->add_statictext_to_panel( pluginPanel, "no options" );
-}
-
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-void EmptyPlugin::open (void)
-{
-	m_kVehicle.reset();
-	SimpleVehicle::selectedVehicle = &m_kVehicle;
-	m_kVehicles.push_back( &m_kVehicle );
-
-	// initialize camera
-	OpenSteerDemo::init2dCamera( *SimpleVehicle::selectedVehicle );
-	Camera::camera.setPosition (
-		10,
-		OpenSteerDemo::camera2dElevation,
-		10);
-	Camera::camera.fixedPosition.set( 40, 40, 40 );
-}
-
-//-----------------------------------------------------------------------------
-void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
-{
-	AbstractVehicleGroup kVehicles( m_kVehicles );
-	kVehicles.redraw( currentTime, elapsedTime );
-	if( NULL != SimpleVehicle::selectedVehicle )
+void CameraPlugin::redraw( const float currentTime, const float elapsedTime ) 
+{ 
+	// selected Pedestrian (user can mouse click to select another)
+	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
+	// update camera
+	if( NULL != selected )
 	{
-		// update camera, tracking test vehicle
-		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
-		// draw "ground plane"
-		OpenSteerDemo::gridUtility( SimpleVehicle::selectedVehicle->position() );
+		// TODO: determine paused state
+		const bool simulationPaused = false;
+		Camera::updateCamera( currentTime, elapsedTime, *selected, simulationPaused );
 	}
 }

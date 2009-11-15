@@ -31,6 +31,7 @@
 
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
@@ -203,6 +204,7 @@ public:
 	{
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetPedestrianPlugin( false ) );
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
@@ -222,6 +224,7 @@ public:
 	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
 		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 	};
 	virtual ~PedestrianRenderClientPlugin() {};
 
@@ -242,6 +245,7 @@ public:
 	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
 		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 	};
 	virtual ~PedestrianRenderPeerPlugin() {};
 
@@ -277,6 +281,7 @@ BaseClass( bAddToRegistry )
 	this->addPlugin( new OpenSteer::GridPlugin() );
 	this->addPlugin( new PedestrianPeerPlugin( false ) );
 	this->addPlugin( new PedestrianClientPlugin( false ) );
+	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
 //-----------------------------------------------------------------------------

@@ -847,9 +847,9 @@ namespace {
 
             // initialize camera
             OpenSteerDemo::init2dCamera (*ctfSeeker);
-            OpenSteerDemo::camera.mode = Camera::cmFixedDistanceOffset;
-            OpenSteerDemo::camera.fixedTarget.set (15, 0, 0);
-            OpenSteerDemo::camera.fixedPosition.set (80, 60, 0);
+            Camera::camera.mode = Camera::cmFixedDistanceOffset;
+            Camera::camera.fixedTarget.set (15, 0, 0);
+            Camera::camera.fixedPosition.set (80, 60, 0);
 
             CtfBase::initializeObstacles ();
         }
@@ -878,9 +878,9 @@ namespace {
             OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
 
             // draw "ground plane" centered between base and selected vehicle
-            const Vec3 goalOffset = gHomeBaseCenter-OpenSteerDemo::camera.position();
+            const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
             const Vec3 goalDirection = goalOffset.normalize ();
-            const Vec3 cameraForward = OpenSteerDemo::camera.xxxls().forward();
+            const Vec3 cameraForward = Camera::camera.xxxls().forward();
             const float goalDot = cameraForward.dot (goalDirection);
             const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
             const Vec3 gridCenter = interpolate (blend,
@@ -930,7 +930,7 @@ namespace {
             OpenSteerDemo::position2dCamera (*ctfSeeker);
 
             // make camera jump immediately to new position
-            OpenSteerDemo::camera.doNotSmoothNextMove ();
+            Camera::camera.doNotSmoothNextMove ();
         }
 
         void handleFunctionKeys (int keyNumber)

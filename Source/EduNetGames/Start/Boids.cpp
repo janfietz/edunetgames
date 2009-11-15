@@ -229,7 +229,7 @@ namespace {
                 {
                     OpenSteerDemo::position3dCamera
                         (*SimpleVehicle::selectedVehicle); 
-                    OpenSteerDemo::camera.doNotSmoothNextMove ();
+                    Camera::camera.doNotSmoothNextMove ();
                 }
             }
         }
@@ -355,12 +355,12 @@ namespace {
 
             // initialize camera
             OpenSteerDemo::init3dCamera (*SimpleVehicle::selectedVehicle);
-            OpenSteerDemo::camera.mode = Camera::cmFixed;
-            OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
-            OpenSteerDemo::camera.fixedDistVOffset = 0;
-            OpenSteerDemo::camera.lookdownDistance = 20;
-            OpenSteerDemo::camera.aimLeadTime = 0.5;
-            OpenSteerDemo::camera.povOffset.set (0, 0.5, -2);
+            Camera::camera.mode = Camera::cmFixed;
+            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::camera.fixedDistVOffset = 0;
+            Camera::camera.lookdownDistance = 20;
+            Camera::camera.aimLeadTime = 0.5;
+            Camera::camera.povOffset.set (0, 0.5, -2);
 
             // set up obstacles
             initObstacles ();
@@ -458,7 +458,7 @@ namespace {
             OpenSteerDemo::position3dCamera (*SimpleVehicle::selectedVehicle);
 
             // make camera jump immediately to new position
-            OpenSteerDemo::camera.doNotSmoothNextMove ();
+            Camera::camera.doNotSmoothNextMove ();
         }
 
         // for purposes of demonstration, allow cycling through various
@@ -731,7 +731,7 @@ namespace {
                             ((*o == &insideBigSphere) ?
                              Color (0.2f, 0.2f, 0.4f) :
                              Color (0.1f, 0.1f, 0.2f)),
-                            OpenSteerDemo::camera.position ());
+                            Camera::camera.position ());
             }
         }
 

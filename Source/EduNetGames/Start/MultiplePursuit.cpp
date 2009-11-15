@@ -188,9 +188,9 @@ namespace {
 
             // initialize camera
             SimpleVehicle::selectedVehicle = wanderer;
-            OpenSteerDemo::camera.mode = Camera::cmStraightDown;
-            OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
-            OpenSteerDemo::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
+            Camera::camera.mode = Camera::cmStraightDown;
+            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
         }
 
         void update (const float currentTime, const float elapsedTime)
@@ -242,8 +242,8 @@ namespace {
             for (iterator i = pBegin; i != pEnd; i++) ((MpPursuer&)(**i)).reset ();
 
             // immediately jump to default camera position
-            OpenSteerDemo::camera.doNotSmoothNextMove ();
-            OpenSteerDemo::camera.resetLocalSpace ();
+            Camera::camera.doNotSmoothNextMove ();
+            Camera::camera.resetLocalSpace ();
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) allMP;}
