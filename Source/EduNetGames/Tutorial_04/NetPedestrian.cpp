@@ -114,6 +114,9 @@ proximityToken( NULL )
 
 	// for debugging
 	const char* pszClassName = this->getClassName();
+
+	TNetPedestrian kTestPedestrian;
+	OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
 }
 
 //-----------------------------------------------------------------------------

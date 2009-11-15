@@ -1,5 +1,5 @@
-#ifndef __OPENSTEERMACROS_H__
-#define __OPENSTEERMACROS_H__
+#ifndef __VEHICLECLASSIDS_H__
+#define __VEHICLECLASSIDS_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,27 +29,21 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "EduNetCommon/EduNetCommon.h"
 
 //-----------------------------------------------------------------------------
-// some configuration macros
-// 
-#ifdef WIN32
-#define OS_HAVE_PROFILE 1
-#else
-#define OS_HAVE_PROFILE 0
-#endif
+namespace OpenSteer
+{
+	using namespace OpenSteer;
 
+	//-------------------------------------------------------------------------
+	// implement entity class id
+	static const EntityClassId g_clasId_NetPedestrian(1);
+}
 
 //-----------------------------------------------------------------------------
-
-#define OS_ABSTRACT = 0
-
-#define OS_DECLARE_BASE( className ) typedef className BaseClass;
-
-#define OS_DECLARE_CLASSNAME virtual const char* getClassName( void ) const OS_ABSTRACT;
-
-#define OS_IMPLEMENT_CLASSNAME( className ) virtual const char* getClassName( void ) const { return #className; }
+// define entity class id
+#define ET_CID_NETPEDESTRIAN OpenSteer::g_clasId_NetPedestrian
 
 
-
-#endif //  __OPENSTEERMACROS_H__
+#endif // __VEHICLECLASSIDS_H__
