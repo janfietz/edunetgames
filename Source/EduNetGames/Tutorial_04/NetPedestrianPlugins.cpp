@@ -129,6 +129,7 @@ public:
 		GLUI_Spinner* repSpinner =
 			glui->add_spinner_to_panel(pluginPanel, "ReplicationDelay", GLUI_SPINNER_INT, &m_kReplicationSettings.interval, -1, changeReplicationDelay);
 		repSpinner->set_int_limits(5, 1000000);
+		repSpinner->set_speed(0.01f);
 		repSpinner->set_ptr_val( this );
 	};
 

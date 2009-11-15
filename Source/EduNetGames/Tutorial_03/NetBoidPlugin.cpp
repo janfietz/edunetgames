@@ -3,15 +3,14 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/OSReplicaTypes.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/PluginArray.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "NetBoidConditionReplica.h"
 
-
-NetPeerBoidPlugin gNetPeerBoidPlugin;
-NetClientBoidPlugin gNetClientBoidPlugin;
-
 //-----------------------------------------------------------------------------
-NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegistry )
+NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
+	BaseClass( bAddToRegistry )
 {
 	this->m_kReplicaManager.SetAutoSerializeInterval(
 		this->m_kReplicationSettings.interval);
@@ -100,13 +99,14 @@ void NetPeerBoidPlugin::initGui( void* pkUserdata )
 void NetPeerBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);
-	delete m_pkConditionReplic;	
+	//delete m_pkConditionReplic;	
 	BaseClass::DeleteContent();
 }
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-NetClientBoidPlugin::NetClientBoidPlugin()
+NetClientBoidPlugin::NetClientBoidPlugin(bool bAddToRegistry):
+	BaseClass(bAddToRegistry)
 {
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
 	this->m_kGamePlugin.setVehicleFactory( NULL  );
@@ -133,6 +133,94 @@ void NetClientBoidPlugin::CreateContent( void )
 void NetClientBoidPlugin::DeleteContent( void )
 {	
 	m_kReplicaManager.Dereference(m_pkConditionReplic);
-	delete m_pkConditionReplic;	
+	//delete m_pkConditionReplic;	
 	BaseClass::DeleteContent();
 }
+//-----------------------------------------------------------------------------
+// render client plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class NetBoidRenderClientPlugin : 
+	public OpenSteer::PluginArrayPluginMixin<NetClientBoidPlugin>
+{
+	ET_DECLARE_BASE( PluginArrayPluginMixin<NetClientBoidPlugin> )
+public:
+	NetBoidRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+	};
+	virtual ~NetBoidRenderClientPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( NetBoidRenderClientPlugin )
+};
+
+NetBoidRenderClientPlugin gNetBoidClientPlugin( true );
+
+//-----------------------------------------------------------------------------
+// render server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class NetBoidRenderPeerPlugin : 
+	public OpenSteer::PluginArrayPluginMixin<NetPeerBoidPlugin>
+{
+	ET_DECLARE_BASE( PluginArrayPluginMixin<NetPeerBoidPlugin> )
+public:
+	NetBoidRenderPeerPlugin( bool bAddToRegistry = true ):
+		BaseClass( bAddToRegistry ) 
+	{		
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+	};
+
+	virtual ~NetBoidRenderPeerPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( NetBoidRenderPeerPlugin )
+};
+
+NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );
+
+//-----------------------------------------------------------------------------
+// client server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class NetBoidClientServerPlugin : public OpenSteer::PluginArray
+{
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
+public:
+
+	NetBoidClientServerPlugin(bool bAddToRegistry = true);
+	virtual ~NetBoidClientServerPlugin();
+
+	OS_IMPLEMENT_CLASSNAME( NetBoidClientServerPlugin );
+
+	//---------------------------------------------------------------------
+	// interface AbstractPlugin
+	virtual void initGui( void* pkUserdata );
+};
+
+//-----------------------------------------------------------------------------
+NetBoidClientServerPlugin::NetBoidClientServerPlugin( bool bAddToRegistry ):
+BaseClass( bAddToRegistry )
+{
+	this->addPlugin( new NetPeerBoidPlugin( false ) );
+	this->addPlugin( new NetClientBoidPlugin( false ) );
+	//this->addPlugin( new OpenSteer::CameraPlugin() );
+}
+
+//-----------------------------------------------------------------------------
+NetBoidClientServerPlugin::~NetBoidClientServerPlugin()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidClientServerPlugin::initGui( void* pkUserdata ) 
+{
+	BaseClass::initGui( pkUserdata );
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+};
+
+NetBoidClientServerPlugin gClientServerPlugin;
