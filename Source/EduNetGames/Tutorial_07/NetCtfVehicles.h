@@ -56,12 +56,15 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfBaseVehicle )
 
+	// create a clone
+	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+
 	// reset state
 	virtual void reset( void );
 
 	virtual void update( const float currentTime, const float elapsedTime )
 	{
-		BaseClass::update( currentTime, elapsedTime );
+//		BaseClass::update( currentTime, elapsedTime );
 	}
 
 	// draw this character/vehicle into the scene
@@ -106,6 +109,9 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfSeekerVehicle )
 
+	// create a clone
+	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+
 	// reset state
 	virtual void reset( void );
 
@@ -144,6 +150,9 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfOEnemyVehicle )
 
+	// create a clone
+	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+	
 	// reset state
 	virtual void reset( void );
 
