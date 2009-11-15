@@ -181,8 +181,7 @@ void BoidsPlugin::close (void)
     while (kVG.population() > 0) removeBoidFromFlock ();
 
     // delete the proximity database
-    delete pd;
-    pd = NULL;
+	ET_SAFE_DELETE( pd );    
 }
 
 // ----------------------------------------------------------------------------
