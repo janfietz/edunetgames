@@ -287,9 +287,9 @@ namespace {
             }
             // initialize camera
             OpenSteerDemo::init2dCamera (*m_Ball);
-            OpenSteerDemo::camera.setPosition (10, OpenSteerDemo::camera2dElevation, 10);
-            OpenSteerDemo::camera.fixedPosition.set (40, 40, 40);
-            OpenSteerDemo::camera.mode = Camera::cmFixed;
+            Camera::camera.setPosition (10, OpenSteerDemo::camera2dElevation, 10);
+            Camera::camera.fixedPosition.set (40, 40, 40);
+            Camera::camera.mode = Camera::cmFixed;
             m_redScore = 0;
             m_blueScore = 0;
         }

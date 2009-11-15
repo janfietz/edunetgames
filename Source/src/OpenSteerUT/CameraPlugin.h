@@ -1,3 +1,6 @@
+#ifndef __CAMERAPLUGIN_H__
+#define __CAMERAPLUGIN_H__
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -25,52 +28,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
-#include "EmptyPlugin.h"
-
-#include "EduNetCommon/EduNetDraw.h"
-#include "EduNetApplication/EduNetGames.h"
+#include "EduNetCommon/EduNetCommon.h"
 
 
-OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
-
-
-using namespace EduNet;
-//-----------------------------------------------------------------------------
-void EmptyPlugin::initGui( void* pkUserdata )
+namespace OpenSteer
 {
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	glui->add_statictext_to_panel( pluginPanel, "no options" );
-}
-
-
-//-----------------------------------------------------------------------------
-void EmptyPlugin::open (void)
-{
-	m_kVehicle.reset();
-	SimpleVehicle::selectedVehicle = &m_kVehicle;
-	m_kVehicles.push_back( &m_kVehicle );
-
-	// initialize camera
-	OpenSteerDemo::init2dCamera( *SimpleVehicle::selectedVehicle );
-	Camera::camera.setPosition (
-		10,
-		OpenSteerDemo::camera2dElevation,
-		10);
-	Camera::camera.fixedPosition.set( 40, 40, 40 );
-}
-
-//-----------------------------------------------------------------------------
-void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
-{
-	AbstractVehicleGroup kVehicles( m_kVehicles );
-	kVehicles.redraw( currentTime, elapsedTime );
-	if( NULL != SimpleVehicle::selectedVehicle )
+	//-----------------------------------------------------------------------------
+	class CameraPlugin : public Plugin
 	{
-		// update camera, tracking test vehicle
-		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
-		// draw "ground plane"
-		OpenSteerDemo::gridUtility( SimpleVehicle::selectedVehicle->position() );
-	}
+		ET_DECLARE_BASE(OpenSteer::Plugin);
+	public:
+		CameraPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
+			m_kGridCenter( osVector3::zero )
+		{};
+
+		OS_IMPLEMENT_CLASSNAME( CameraPlugin )
+			// required methods:
+			const char* name (void) const {return this->getClassName();}
+		void open (void) { }
+		void update (const float currentTime, const float elapsedTime) { }
+		void redraw (const float currentTime, const float elapsedTime);
+		void close (void) { }
+		const AVGroup& allVehicles (void) const { return m_kVehicles; }
+
+		// optional methods (see comments in AbstractPlugin for explanation):
+		void reset (void) { } // default is to reset by doing close-then-open
+		float selectionOrderSortKey (void) const {return 1000000;}
+		bool requestInitialSelection (void) const {return true;}
+		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
+		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
+	private:
+		AVGroup m_kVehicles;
+		osVector3 m_kGridCenter;
+		ET_IMPLEMENT_CLASS_NO_COPY(CameraPlugin);
+
+	};
+
 }
+
+
+#endif  // __CAMERAPLUGIN_H__

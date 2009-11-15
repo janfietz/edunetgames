@@ -68,9 +68,6 @@ namespace OpenSteer {
         // clock keeps track of both "real time" and "simulation time"
         static Clock clock;
 
-        // camera automatically tracks selected vehicle
-        static Camera camera;
-
         // ------------------------------------------ addresses of selected objects
 
         // currently selected plug-in (user can choose or cycle through them)

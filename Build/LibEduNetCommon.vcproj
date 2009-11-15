@@ -232,6 +232,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\CameraPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\CameraPlugin.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\EmptyPlugin.cpp"
 					>
 				</File>
