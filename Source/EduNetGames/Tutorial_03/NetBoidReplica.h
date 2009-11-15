@@ -57,6 +57,8 @@ public:
 	
 private:
 	OpenSteer::BoidsPlugin* m_pBoidPlugin;
+
+	void SetSendParameter( RakNet::PRO& kPro ) const;
 };
 
 #endif // __BOIDREPLICA_H__
