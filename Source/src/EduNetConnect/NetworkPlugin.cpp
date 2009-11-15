@@ -86,6 +86,59 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		pkControl->set_ptr_val( this );
 	}
 
+	this->AddNetworkSimulator( pluginPanel );
+
+}
+
+//-----------------------------------------------------------------------------
+void changeNetworkSimulatorData(GLUI_Control* pkControl )
+{
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	pkPlugin->UpdateNetworkSimulatorSettings();
+
+}
+//-----------------------------------------------------------------------------
+void NetworkPlugin::AddNetworkSimulator( void* pkUserdata )
+{
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	GLUI_Panel* simulatorPanel = glui->add_panel_to_panel( pluginPanel, "Network Simulator" );
+
+	glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", &m_kSimulatorData.enabled, -1 , changeNetworkSimulatorData );
+	GLUI_Spinner* repSpinner =
+		glui->add_spinner_to_panel(simulatorPanel, "Packetloss", GLUI_SPINNER_FLOAT, &m_kSimulatorData.packetloss, -1, changeNetworkSimulatorData);
+	repSpinner->set_float_limits(0.0f, 1.0f);
+	repSpinner->set_ptr_val( this );
+
+	GLUI_EditText* pkTextControl = glui->add_edittext_to_panel( simulatorPanel, "MinPing", GLUI_EDITTEXT_INT,
+		&m_kSimulatorData.minExtraPing, -1, changeNetworkSimulatorData );
+	pkTextControl->set_int_limits(0, (unsigned short)-1 );
+	pkTextControl->set_ptr_val( this );
+
+	pkTextControl = glui->add_edittext_to_panel( simulatorPanel, "PingVariance", GLUI_EDITTEXT_INT,
+		&m_kSimulatorData.extraPingVariance, -1, changeNetworkSimulatorData );
+	pkTextControl->set_int_limits(0, (unsigned short)-1 );
+	pkTextControl->set_ptr_val( this );
+
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
+{
+	if (NULL != this->m_pNetInterface)
+	{
+		if (1 == this->m_kSimulatorData.enabled)
+		{
+			this->m_pNetInterface->ApplyNetworkSimulator(
+				this->m_kSimulatorData.packetloss,
+				this->m_kSimulatorData.minExtraPing,
+				this->m_kSimulatorData.extraPingVariance);
+		}else
+		{
+			this->m_pNetInterface->ApplyNetworkSimulator(0.0f, 0, 0);
+		}
+	}
+	
 }
 
 //-----------------------------------------------------------------------------
