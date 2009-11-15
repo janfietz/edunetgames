@@ -50,6 +50,10 @@ int OpenSteer::Plugin::itemsInRegistry = 0;
 const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 
+//-----------------------------------------------------------------------------
+// currently selected plug-in (user can choose or cycle through them)
+OpenSteer::AbstractPlugin* OpenSteer::Plugin::selectedPlugin = NULL;
+
 
 //-----------------------------------------------------------------------------
 // constructor
@@ -68,6 +72,10 @@ OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 // destructor
 OpenSteer::Plugin::~Plugin() 
 {
+	if( this == OpenSteer::Plugin::selectedPlugin )
+	{
+		OpenSteer::Plugin::selectedPlugin = NULL;
+	}
 }
 
 

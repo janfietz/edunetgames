@@ -74,8 +74,6 @@ namespace OpenSteer {
 
         // ------------------------------------------ addresses of selected objects
 
-        // currently selected plug-in (user can choose or cycle through them)
-        static AbstractPlugin* selectedPlugin;
 
 
         // -------------------------------------------- initialize, update and exit
