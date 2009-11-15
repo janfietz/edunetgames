@@ -51,7 +51,7 @@ class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugin>
 {
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugin>);
 public:
-	NetClientBoidPlugin();
+	NetClientBoidPlugin(bool bAddToRegistry = true);
 	virtual ~NetClientBoidPlugin(){};
 
 	virtual const char* name (void) const {return "NetClientBoidPlugin";};

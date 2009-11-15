@@ -24,4 +24,4 @@ namespace OpenSteer {
 	};
 }
 
-#endif  // __ABSTRACTUPDATED_H__
+#endif  //! __ABSTRACTUPDATED_H__

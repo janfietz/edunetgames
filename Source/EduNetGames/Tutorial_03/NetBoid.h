@@ -2,6 +2,7 @@
 #define __NETBOID_H__
 
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
+#include "OpenSteerUT/AbstractVehicleUtilities.h"
 
 namespace OpenSteer{
 
@@ -70,6 +71,7 @@ namespace OpenSteer{
 		class BoidsPlugin* m_pkParentPlugin;
 
 	};
+	typedef OpenSteer::VehicleClassIdMixin<Boid, ET_CID_NETBOID> TNetBoid;
 }
 
 #endif // __NETBOID_H__

@@ -50,14 +50,14 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
 	if (typeName==kReplica.GetName()){
-		NetBoidReplica* pkNewReplica = new NetBoidReplica( this->m_pBoidPlugin, true  );
+		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( this->m_pBoidPlugin, true  );
 		OpenSteer::AbstractVehicleGroup kVG( this->m_pBoidPlugin->allVehicles() );
 		kVG.addVehicle( pkNewReplica->AccessVehicle() );
 		return pkNewReplica; 
 	}
 	if (typeName==kReplicaCondition.GetName()){
 		NetBoidConditionReplica* pkNewReplica = 
-			new NetBoidConditionReplica( this->m_pBoidPlugin  );
+			ET_NEW NetBoidConditionReplica( this->m_pBoidPlugin  );
 		return pkNewReplica; 
 	}
 	return 0;
@@ -65,16 +65,17 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* NetBoidReplicaFactory::createVehicle( 
+	OpenSteer::EntityClassId classId,
 	OpenSteer::ProximityDatabase* pkProximityDatabase ) const
 {
 	if( NULL == pkProximityDatabase )
 	{
 		// can not be a replicated object in this case
-		return BaseClass::createVehicle( pkProximityDatabase );
+		return BaseClass::createVehicle( classId, pkProximityDatabase );
 	}
 	else
 	{
-		NetBoidReplica* pkNewReplica = new NetBoidReplica( 
+		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( 
 			this->m_pkReplicaManager->accessPlugin(), false );		
 		this->m_pkReplicaManager->Reference( pkNewReplica );
 
