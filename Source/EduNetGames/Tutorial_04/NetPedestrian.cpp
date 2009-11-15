@@ -129,7 +129,7 @@ NetPedestrian::~NetPedestrian()
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
-	return NULL == pkProximityDatabase ? new NetPedestrian() : new NetPedestrian( *pkProximityDatabase );
+	return NULL == pkProximityDatabase ? ET_NEW NetPedestrian() : ET_NEW NetPedestrian( *pkProximityDatabase );
 }
 
 //-----------------------------------------------------------------------------

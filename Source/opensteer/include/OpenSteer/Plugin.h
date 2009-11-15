@@ -153,6 +153,9 @@ namespace OpenSteer {
 	class Plugin : public AbstractPlugin
     {
     public:
+		// currently selected plug-in (user can choose or cycle through them)
+		static AbstractPlugin* selectedPlugin;
+
         //! prototypes for function pointers used with Plugins
         typedef void (* plugInCallBackFunction) (AbstractPlugin& clientObject);
         typedef void (* voidCallBackFunction) (void);

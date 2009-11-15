@@ -75,14 +75,6 @@ namespace
 // keeps track of both "real time" and "simulation time"
 OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
 
-
-//-----------------------------------------------------------------------------
-// currently selected plug-in (user can choose or cycle through them)
-OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugin = NULL;
-
-
-
-
 //-----------------------------------------------------------------------------
 // phase: identifies current phase of the per-frame update cycle
 int OpenSteer::OpenSteerDemo::phase = OpenSteer::OpenSteerDemo::overheadPhase;
@@ -125,9 +117,9 @@ OpenSteer::OpenSteerDemo::initialize (void)
 		std::cout << std::endl;                                    // xxx?
 
 		// identify default Plugin
-		if (!selectedPlugin) errorExit ("no default Plugin");
+		if (!OpenSteer::Plugin::selectedPlugin) errorExit ("no default Plugin");
 		std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
-		std::cout << " " << *selectedPlugin << std::endl;          // xxx?
+		std::cout << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;          // xxx?
 		std::cout << std::endl;                                    // xxx?
 	}
 
@@ -175,10 +167,10 @@ OpenSteer::OpenSteerDemo::errorExit (const char* message)
 void 
 OpenSteer::OpenSteerDemo::exit (int exitCode)
 {
-	if(NULL != selectedPlugin)
+	if(NULL != OpenSteer::Plugin::selectedPlugin)
 	{
-		selectedPlugin->close();
-		selectedPlugin = NULL;
+		OpenSteer::Plugin::selectedPlugin->close();
+		OpenSteer::Plugin::selectedPlugin = NULL;
 	}
 	::exit (exitCode);
 }
@@ -189,11 +181,11 @@ void
 OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 {
 	const char* pszPluginName = OpenSteer::OpenSteerDemo::options.getSelectedPlugin();
-	selectedPlugin = Plugin::findByName (pszPluginName);
-	if (NULL == selectedPlugin)
+	OpenSteer::Plugin::selectedPlugin = Plugin::findByName (pszPluginName);
+	if (NULL == OpenSteer::Plugin::selectedPlugin)
 	{
 		Plugin::sortBySelectionOrder ();
-		selectedPlugin = Plugin::findDefault ();
+		OpenSteer::Plugin::selectedPlugin = Plugin::findDefault ();
 	}
 }
 
@@ -201,13 +193,13 @@ OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 void 
 OpenSteer::OpenSteerDemo::selectPlugin( AbstractPlugin* pkPlugin )
 {
-	if( pkPlugin == selectedPlugin )
+	if( pkPlugin == OpenSteer::Plugin::selectedPlugin )
 	{
 		return;
 	}
 	closeSelectedPlugin();
-	selectedPlugin = pkPlugin;
-	EduNet::Application::AccessApplication().onPluginSelected( selectedPlugin );
+	OpenSteer::Plugin::selectedPlugin = pkPlugin;
+	EduNet::Application::AccessApplication().onPluginSelected( OpenSteer::Plugin::selectedPlugin );
 	openSelectedPlugin();
 }
 
@@ -216,7 +208,7 @@ OpenSteer::OpenSteerDemo::selectPlugin( AbstractPlugin* pkPlugin )
 void 
 OpenSteer::OpenSteerDemo::selectNextPlugin (void)
 {
-	OpenSteerDemo::selectPlugin( selectedPlugin->next () );
+	OpenSteerDemo::selectPlugin( OpenSteer::Plugin::selectedPlugin->next () );
 }
 
 //-----------------------------------------------------------------------------
@@ -224,7 +216,7 @@ OpenSteer::OpenSteerDemo::selectNextPlugin (void)
 void OpenSteer::OpenSteerDemo::selectPluginByIndex (size_t idx)
 {
 	AbstractPlugin* p = Plugin::getPluginAt( idx );
-	if( ( NULL != p ) && (p != selectedPlugin) )
+	if( ( NULL != p ) && (p != OpenSteer::Plugin::selectedPlugin) )
 	{
 		OpenSteerDemo::selectPlugin( p );
 	}
@@ -235,7 +227,7 @@ void OpenSteer::OpenSteerDemo::selectPluginByIndex (size_t idx)
 void 
 OpenSteer::OpenSteerDemo::functionKeyForPlugin (int keyNumber)
 {
-	selectedPlugin->handleFunctionKeys (keyNumber);
+	OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
 }
 
 
@@ -244,7 +236,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugin (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugin (void)
 {
-	return (selectedPlugin ? selectedPlugin->name() : "no Plugin");
+	return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->name() : "no Plugin");
 }
 
 
@@ -258,7 +250,7 @@ OpenSteer::OpenSteerDemo::openSelectedPlugin (void)
 {
 	OpenSteer::Camera::camera.reset ();
 	SimpleVehicle::selectedVehicle = NULL;
-	selectedPlugin->open ();
+	OpenSteer::Plugin::selectedPlugin->open ();
 /*
 	if( windowID )
 	{
@@ -307,7 +299,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	}
 
 	// invoke selected Plugin's Update method
-//	selectedPlugin->update (currentTime, elapsedTime);
+//	OpenSteer::Plugin::selectedPlugin->update (currentTime, elapsedTime);
 	EduNet::Application::AccessApplication().updateSelectedPlugin( currentTime, elapsedTime );
 
 	// return to previous phase
@@ -327,7 +319,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 	pushPhase (drawPhase);
 
 	// invoke selected Plugin's Draw method
-//	selectedPlugin->redraw (currentTime, elapsedTime);
+//	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
 	EduNet::Application::AccessApplication().redrawSelectedPlugin( currentTime, elapsedTime );
 
 	// draw any annotation queued up during selected Plugin's Update method
@@ -346,7 +338,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 void 
 OpenSteer::OpenSteerDemo::closeSelectedPlugin (void)
 {
-	selectedPlugin->close ();
+	OpenSteer::Plugin::selectedPlugin->close ();
 }
 
 
@@ -357,7 +349,7 @@ OpenSteer::OpenSteerDemo::closeSelectedPlugin (void)
 void 
 OpenSteer::OpenSteerDemo::resetSelectedPlugin (void)
 {
-	selectedPlugin->reset ();
+	OpenSteer::Plugin::selectedPlugin->reset ();
 }
 
 
@@ -401,7 +393,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 const OpenSteer::AVGroup& 
 OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugin (void)
 {
-	return selectedPlugin->allVehicles ();
+	return OpenSteer::Plugin::selectedPlugin->allVehicles ();
 }
 
 
@@ -765,7 +757,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 	printMessage ("");
 
 	// allow Plugin to print mini help for the function keys it handles
-	selectedPlugin->printMiniHelpForFunctionKeys ();
+	OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
 }
 
 
@@ -1385,10 +1377,10 @@ namespace {
 					int glutWindow = glutGetWindow();
 					GLUI_Master.close_all();
 					//glui->close();
-					// 					if( OpenSteer::OpenSteerDemo::selectedPlugin )
+					// 					if( OpenSteer::Plugin::selectedPlugin )
 					// 					{
-					// 						OpenSteer::OpenSteerDemo::selectedPlugin->close();
-					// 						OpenSteer::OpenSteerDemo::selectedPlugin = NULL;
+					// 						OpenSteer::Plugin::selectedPlugin->close();
+					// 						OpenSteer::Plugin::selectedPlugin = NULL;
 					// 					}
 					//OpenSteer::OpenSteerDemo::exit (0);
 				}

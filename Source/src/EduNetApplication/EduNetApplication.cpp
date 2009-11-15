@@ -51,7 +51,7 @@ void gluiNextPlugin()
 //-----------------------------------------------------------------------------
 void gluiSelectPlugin()
 {
-	AbstractPlugin* currentPlugin = OpenSteerDemo::selectedPlugin;
+	AbstractPlugin* currentPlugin = OpenSteer::Plugin::selectedPlugin;
 	if( pluginSelection != pluginIndex )
 	{
 		OpenSteerDemo::selectPluginByIndex( pluginSelection );	
@@ -115,11 +115,10 @@ void Application::_SDMCleanup( void )
 		return;
 	}
 	bCleanedup = true;
-	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
-	if( NULL != selectedPlugin )
+	if( NULL != OpenSteer::Plugin::selectedPlugin )
 	{
-		selectedPlugin->close();
-		OpenSteerDemo::selectedPlugin = NULL;
+		OpenSteer::Plugin::selectedPlugin->close();
+		OpenSteer::Plugin::selectedPlugin = NULL;
 	}
 }
 
@@ -152,7 +151,7 @@ void Application::addGuiElements( GLUI* glui )
 		const char* s = pi->name();
 		pluginList->add_item(i, s);
 	}
-	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteerDemo::selectedPlugin );
+	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteer::Plugin::selectedPlugin );
 	pluginList->do_selection( pluginSelection );
 
 	glui->add_button("Next Plugin", 0,(GLUI_Update_CB)gluiNextPlugin);
@@ -182,7 +181,7 @@ void Application::addGuiElements( GLUI* glui )
 	glui->add_separator();
 
 	// initially add the specific plugin panel
-	this->onPluginSelected( OpenSteerDemo::selectedPlugin );
+	this->onPluginSelected( OpenSteer::Plugin::selectedPlugin );
 }
 
 //-----------------------------------------------------------------------------
@@ -228,8 +227,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 
 	// opensteer demo options update
 
-	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
-	if( ( NULL == selectedPlugin ) || ( elapsedTime <= 0.0f ) )
+	if( ( NULL == OpenSteer::Plugin::selectedPlugin ) || ( elapsedTime <= 0.0f ) )
 	{
 		return;
 	}
@@ -302,7 +300,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 				{
 					OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
 				}
-				selectedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
+				OpenSteer::Plugin::selectedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
 				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
 				--uiTicks;
 			}
@@ -311,7 +309,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 		{
 			OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
 			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
-			selectedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
+			OpenSteer::Plugin::selectedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
 		}
 
 		this->m_kUpdateClock.update();
@@ -327,12 +325,11 @@ void Application::updateSelectedPlugin (const float currentTime,
 void Application::redrawSelectedPlugin (const float currentTime,
 						   const float elapsedTime )
 {
-	AbstractPlugin* selectedPlugin = OpenSteerDemo::selectedPlugin;
-	if( NULL == selectedPlugin )
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
 	{
 		return;
 	}
-	selectedPlugin->redraw (currentTime, elapsedTime);
+	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
