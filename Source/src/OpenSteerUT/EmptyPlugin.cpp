@@ -54,11 +54,11 @@ void EmptyPlugin::open (void)
 
 	// initialize camera
 	OpenSteerDemo::init2dCamera( *SimpleVehicle::selectedVehicle );
-	OpenSteerDemo::camera.setPosition (
+	Camera::camera.setPosition (
 		10,
 		OpenSteerDemo::camera2dElevation,
 		10);
-	OpenSteerDemo::camera.fixedPosition.set( 40, 40, 40 );
+	Camera::camera.fixedPosition.set( 40, 40, 40 );
 }
 
 //-----------------------------------------------------------------------------

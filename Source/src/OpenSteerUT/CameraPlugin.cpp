@@ -1,6 +1,3 @@
-#ifndef __OPENSTEERMACROS_H__
-#define __OPENSTEERMACROS_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,27 +26,20 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "CameraPlugin.h"
+
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-// some configuration macros
-// 
-#ifdef WIN32
-#define OS_HAVE_PROFILE 1
-#else
-#define OS_HAVE_PROFILE 0
-#endif
-
-
-//-----------------------------------------------------------------------------
-
-#define OS_ABSTRACT = 0
-
-#define OS_DECLARE_BASE( className ) typedef className BaseClass;
-
-#define OS_DECLARE_CLASSNAME virtual const char* getClassName( void ) const OS_ABSTRACT;
-
-#define OS_IMPLEMENT_CLASSNAME( className ) virtual const char* getClassName( void ) const { return #className; }
-
-
-
-#endif //  __OPENSTEERMACROS_H__
+void CameraPlugin::redraw( const float currentTime, const float elapsedTime ) 
+{ 
+	// selected Pedestrian (user can mouse click to select another)
+	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
+	// update camera
+	if( NULL != selected )
+	{
+		// TODO: determine paused state
+		const bool simulationPaused = false;
+		Camera::updateCamera( currentTime, elapsedTime, *selected, simulationPaused );
+	}
+}

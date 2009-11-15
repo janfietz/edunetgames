@@ -32,6 +32,7 @@
 
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "OpenSteerUT/AbstractVehicleUtilities.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrian : public OpenSteer::SimpleNetworkVehicle
@@ -94,6 +95,8 @@ private:
 };
 
 OpenSteer::PolylineSegmentedPathwaySingleRadius* getTestPath (void);
+
+typedef OpenSteer::VehicleClassIdMixin<NetPedestrian, 1> TNetPedestrian;
 
 
 #endif //  __NETPEDESTRIAN_H__

@@ -213,38 +213,6 @@
 			Name="OpenSteerUT"
 			>
 			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\NetworkVehicle.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Source\src\OpenSteerUT\OpenSteerStreams.cpp"
 				>
 			</File>
@@ -256,27 +224,19 @@
 				RelativePath="..\Source\src\OpenSteerUT\OpenSteerUTTypes.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\PluginArray.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\PluginArray.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.h"
-				>
-			</File>
 			<Filter
 				Name="plugins"
 				>
 				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractPluginUtilities.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\CameraPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\CameraPlugin.h"
 					>
 				</File>
 				<File
@@ -293,6 +253,66 @@
 				</File>
 				<File
 					RelativePath="..\Source\src\OpenSteerUT\GridPlugin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\PluginArray.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\PluginArray.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="vehicles"
+				>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractNetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUtilities.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\NetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\VehicleClassIds.h"
 					>
 				</File>
 			</Filter>

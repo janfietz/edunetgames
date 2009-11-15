@@ -1,5 +1,5 @@
-#ifndef __OPENSTEERMACROS_H__
-#define __OPENSTEERMACROS_H__
+#ifndef __CAMERAPLUGIN_H__
+#define __CAMERAPLUGIN_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -28,28 +28,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "EduNetCommon/EduNetCommon.h"
 
 
-//-----------------------------------------------------------------------------
-// some configuration macros
-// 
-#ifdef WIN32
-#define OS_HAVE_PROFILE 1
-#else
-#define OS_HAVE_PROFILE 0
-#endif
+namespace OpenSteer
+{
+	//-----------------------------------------------------------------------------
+	class CameraPlugin : public Plugin
+	{
+		ET_DECLARE_BASE(OpenSteer::Plugin);
+	public:
+		CameraPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
+			m_kGridCenter( osVector3::zero )
+		{};
+
+		OS_IMPLEMENT_CLASSNAME( CameraPlugin )
+			// required methods:
+			const char* name (void) const {return this->getClassName();}
+		void open (void) { }
+		void update (const float currentTime, const float elapsedTime) { }
+		void redraw (const float currentTime, const float elapsedTime);
+		void close (void) { }
+		const AVGroup& allVehicles (void) const { return m_kVehicles; }
+
+		// optional methods (see comments in AbstractPlugin for explanation):
+		void reset (void) { } // default is to reset by doing close-then-open
+		float selectionOrderSortKey (void) const {return 1000000;}
+		bool requestInitialSelection (void) const {return true;}
+		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
+		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
+	private:
+		AVGroup m_kVehicles;
+		osVector3 m_kGridCenter;
+		ET_IMPLEMENT_CLASS_NO_COPY(CameraPlugin);
+
+	};
+
+}
 
 
-//-----------------------------------------------------------------------------
-
-#define OS_ABSTRACT = 0
-
-#define OS_DECLARE_BASE( className ) typedef className BaseClass;
-
-#define OS_DECLARE_CLASSNAME virtual const char* getClassName( void ) const OS_ABSTRACT;
-
-#define OS_IMPLEMENT_CLASSNAME( className ) virtual const char* getClassName( void ) const { return #className; }
-
-
-
-#endif //  __OPENSTEERMACROS_H__
+#endif  // __CAMERAPLUGIN_H__

@@ -50,6 +50,8 @@ namespace OpenSteer {
 
 		OS_DECLARE_CLASSNAME
 
+		virtual EntityClassId getClassId( void ) const = 0;
+
 		virtual InstanceTracker::Id getEntityId( void ) const = 0;
 
 		virtual NetworkId getNetworkId( void ) const = 0;
@@ -70,11 +72,18 @@ namespace OpenSteer {
 		{
 
 		}
+
 		virtual ~EntityInstance()
 		{
-			ms_InstanceTracker.Destructor();
+		  ms_InstanceTracker.Destructor();
 		}
-		InstanceTracker::Id getId( void ) const
+
+		virtual EntityClassId getClassId( void ) const
+		{
+		  return EntityClassId( 0 );
+		}
+
+		InstanceTracker::Id getEntityId( void ) const
 		{
 			return m_uiId; 
 		}
@@ -112,11 +121,20 @@ namespace OpenSteer {
 	class EntityMixin : public Super
 	{
 	public:
+		virtual ~EntityMixin()
+		{
+		}
+
 		OS_IMPLEMENT_CLASSNAME( Super )
+
+		virtual EntityClassId getClassId( void ) const
+		{
+			return this->m_kInstance.getClassId( );
+		}
 
 		virtual InstanceTracker::Id getEntityId( void ) const
 		{
-			return this->m_kInstance.getId();
+			return this->m_kInstance.getEntityId();
 		}
 
 		virtual NetworkId getNetworkId( void ) const
@@ -138,8 +156,31 @@ namespace OpenSteer {
 		{
 			return this->m_kInstance.isRemoteObject();
 		}
+
 	private:
 		EntityInstance m_kInstance;
+	};
+
+	//-------------------------------------------------------------------------
+	template <class Super, EntityClassId classId = 0>
+	class EntityClassIdMixin : public Super
+	{
+	public:
+		EntityClassIdMixin()
+		{
+		}
+
+		virtual ~EntityClassIdMixin()
+		{
+		}
+
+		virtual EntityClassId getClassId( void ) const
+		{
+			static EntityClassId sClassId = classId;
+			return sClassId;
+		}
+	private:
+
 	};
 
 	typedef EntityMixin<AbstractEntity> Entity;

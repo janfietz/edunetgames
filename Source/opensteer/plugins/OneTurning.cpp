@@ -107,10 +107,10 @@ namespace {
 
             // initialize camera
             OpenSteerDemo::init2dCamera (*gOneTurning);
-            OpenSteerDemo::camera.setPosition (10,
+            Camera::camera.setPosition (10,
                                                OpenSteerDemo::camera2dElevation,
                                                10);
-            OpenSteerDemo::camera.fixedPosition.set (40, 40, 40);
+            Camera::camera.fixedPosition.set (40, 40, 40);
         }
 
         void update (const float currentTime, const float elapsedTime)

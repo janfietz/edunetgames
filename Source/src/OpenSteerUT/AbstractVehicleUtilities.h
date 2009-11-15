@@ -1,5 +1,5 @@
-#ifndef __OPENSTEERMACROS_H__
-#define __OPENSTEERMACROS_H__
+#ifndef __ABSTRACTVEHICLEUTILITIES_H__
+#define __ABSTRACTVEHICLEUTILITIES_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,27 +29,50 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "EduNetCommon/EduNetCommon.h"
 
 //-----------------------------------------------------------------------------
-// some configuration macros
-// 
-#ifdef WIN32
-#define OS_HAVE_PROFILE 1
-#else
-#define OS_HAVE_PROFILE 0
-#endif
+namespace OpenSteer
+{
+	using namespace OpenSteer;
+
+	//-------------------------------------------------------------------------
+	template <class Super, EntityClassId classId = 0>
+	class VehicleClassIdMixin : public Super
+	{
+	public:
+		
+		VehicleClassIdMixin()
+		{
+		}
+
+		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
+		{
+
+		}
+
+		virtual ~VehicleClassIdMixin()
+		{
+		}
+
+		// important implement new clone functionality
+		//-----------------------------------------------------------------------------
+		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+		{
+			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
+		}
+
+		virtual EntityClassId getClassId( void ) const
+		{
+			static EntityClassId sClassId = classId;
+			return sClassId;
+		}
+
+	private:
+
+	};
+
+}
 
 
-//-----------------------------------------------------------------------------
-
-#define OS_ABSTRACT = 0
-
-#define OS_DECLARE_BASE( className ) typedef className BaseClass;
-
-#define OS_DECLARE_CLASSNAME virtual const char* getClassName( void ) const OS_ABSTRACT;
-
-#define OS_IMPLEMENT_CLASSNAME( className ) virtual const char* getClassName( void ) const { return #className; }
-
-
-
-#endif //  __OPENSTEERMACROS_H__
+#endif // __ABSTRACTVEHICLEUTILITIES_H__
