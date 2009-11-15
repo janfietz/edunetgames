@@ -43,6 +43,11 @@ namespace OpenSteer{
 		void newPD (ProximityDatabase& pd);
 		void annotateAvoidObstacle (const float minDistanceToCollision);
 
+		virtual AbstractVehicle* cloneVehicle( 
+			ProximityDatabase* ) const;
+
+	
+
 	#ifndef NO_LQ_BIN_STATS
 		static size_t minNeighbors, maxNeighbors, totalNeighbors;
 	#endif // NO_LQ_BIN_STATS
@@ -51,15 +56,12 @@ namespace OpenSteer{
 		ProximityToken* proximityToken;
 
 		static float worldRadius;
-		//private:
+		void setParentPlugin( class BoidsPlugin* pPlugin);		
+	private:
 		// group of all obstacles to be avoided by each Boid
 		//        static ObstacleGroup obstacles;
 		const ObstacleGroup& obstacles(void) const;
 		ObstacleGroup& obstacles(void);
-
-
-
-
 		// allocate one and share amoung instances just to save memory usage
 		// (change to per-instance allocation to be more MP-safe)
 		//static AVGroup neighbors;

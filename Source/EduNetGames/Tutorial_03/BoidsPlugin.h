@@ -3,32 +3,13 @@
 
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
 #include "NetBoid.h"
+#include "NetBoidFactory.h"
 namespace OpenSteer{
 
     // Include names declared in the OpenSteer namespace into the
     // namespaces to search to find names.
     using namespace OpenSteer;
-
 	
-
-	 // ----------------------------------------------------------------------------
-	// JF ++
-	class BoidFactory
-	{
-	public:
-
-		virtual Boid* CreateBoid( ProximityDatabase& pd )
-		{
-			return new Boid(pd);
-		};
-
-		virtual void DestroyBoid( const Boid* boid )
-		{
-			delete boid;
-		};
-
-	};
-	// JF --
 
 	// enumerate demos of various constraints on the flock
 	enum EBoidConstraintType {
@@ -49,7 +30,11 @@ namespace OpenSteer{
     {
 		ET_DECLARE_BASE(Plugin);
     public:
-		BoidsPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
+		BoidsPlugin (bool bAddToRegistry = true):
+		BaseClass(bAddToRegistry)
+		{
+			this->setVehicleFactory( &this->m_kOfflineBoidFactory );
+		};
 		virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
 		
 		const char* name (void) const {return "Boids";}
@@ -77,15 +62,7 @@ namespace OpenSteer{
 		virtual ProximityDatabase* accessProximityDataBase( void ) const
 		{
 			return this->pd;
-		}
-
-		void AddBoidToFlock( Boid* pkBoid );
-		void RemoveBoidFromFlock( const Boid* pkBoid );
-
-		void SetBoidFactory( BoidFactory* pBoidFactory )
-		{
-			this->m_pBoidFactory = pBoidFactory;
-		}
+		}		
 
 		const EBoidConstraintType GetCurrentBoundaryCondition( void ) const
 		{
@@ -103,6 +80,9 @@ namespace OpenSteer{
 		void initGui( void* pkUserdata );
 		void addBoidToFlock (void);
 		void removeBoidFromFlock (void);
+
+		virtual osAbstractVehicle* createVehicle( osEntityClassId,
+			osProximityDatabase* ) const;
 		// JF --
 
 	private:
@@ -159,7 +139,7 @@ namespace OpenSteer{
         SO insideBigSphere, outsideSphere0, outsideSphere1, outsideSphere2,
            outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
-		BoidFactory* m_pBoidFactory;
+		NetBoidFactory m_kOfflineBoidFactory;
 		ObstacleGroup m_kObstacles;
 	
 	};
