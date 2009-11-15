@@ -29,6 +29,7 @@
 #include "NetPedestrianReplicaConnection.h"
 #include "NetPedestrianReplica.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/VehicleClassIds.h"
 
 //-----------------------------------------------------------------------------
 // replica connection client
@@ -64,22 +65,26 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
 {
 	if( NULL == pkProximityDatabase )
 	{
 		// can not be a replicated object in this case
-		return BaseClass::createVehicle( pkProximityDatabase );
+		return BaseClass::createVehicle( classId, pkProximityDatabase );
 	}
 	else
 	{
-		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
-		this->m_pkReplicaManager->Reference( pkNewReplica );
+		if( classId == ET_CID_NETPEDESTRIAN )
+		{
+			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
+			this->m_pkReplicaManager->Reference( pkNewReplica );
 
-		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
-		this->m_uidMap.Set(pkVehicle->getEntityId(), pkNewReplica);
-		return pkNewReplica->AccessVehicle();
+			OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
+			this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
+			return pkNewReplica->AccessVehicle();
+		}
 	}
+	return NULL;
 }
 
 //-----------------------------------------------------------------------------

@@ -167,7 +167,7 @@ void Boid::sphericalWrapAround (void)
 		{
 			OpenSteerDemo::position3dCamera
 				(*SimpleVehicle::selectedVehicle); 
-			OpenSteerDemo::camera.doNotSmoothNextMove ();
+			Camera::camera.doNotSmoothNextMove ();
 		}
 	}
 }

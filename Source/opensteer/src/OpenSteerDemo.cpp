@@ -69,13 +69,6 @@ OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
 
 
 // ----------------------------------------------------------------------------
-// camera automatically tracks selected vehicle
-
-
-OpenSteer::Camera OpenSteer::OpenSteerDemo::camera;
-
-
-// ----------------------------------------------------------------------------
 // currently selected plug-in (user can choose or cycle through them)
 
 
@@ -242,7 +235,7 @@ OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 {
-    camera.reset ();
+    OpenSteer::Camera::camera.reset ();
 	SimpleVehicle::selectedVehicle = NULL;
     selectedPlugIn->open ();
 }
@@ -453,7 +446,7 @@ OpenSteer::OpenSteerDemo::findVehicleNearestScreenPosition (int x, int y)
     {
         // distance from this vehicle's center to the selection line:
         const float d = distanceFromLine ((**i).position(),
-                                          camera.position(),
+                                          OpenSteer::Camera::camera.position(),
                                           direction);
 
         // if this vehicle-to-line distance is the smallest so far,
@@ -494,9 +487,9 @@ OpenSteer::OpenSteerDemo::init3dCamera (AbstractVehicle& selected,
                                   float elevation)
 {
     position3dCamera (selected, distance, elevation);
-    camera.fixedDistDistance = distance;
-    camera.fixedDistVOffset = elevation;
-    camera.mode = Camera::cmFixedDistanceOffset;
+    OpenSteer::Camera::camera.fixedDistDistance = distance;
+    OpenSteer::Camera::camera.fixedDistVOffset = elevation;
+    OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
 }
 
 
@@ -512,9 +505,9 @@ OpenSteer::OpenSteerDemo::init2dCamera (AbstractVehicle& selected,
                                   float elevation)
 {
     position2dCamera (selected, distance, elevation);
-    camera.fixedDistDistance = distance;
-    camera.fixedDistVOffset = elevation;
-    camera.mode = Camera::cmFixedDistanceOffset;
+    OpenSteer::Camera::camera.fixedDistDistance = distance;
+    OpenSteer::Camera::camera.fixedDistVOffset = elevation;
+    OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
 }
 
 
@@ -533,8 +526,8 @@ OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
     if (&selected)
     {
         const Vec3 behind = selected.forward() * -distance;
-        camera.setPosition (selected.position() + behind);
-        camera.target = selected.position();
+        OpenSteer::Camera::camera.setPosition (selected.position() + behind);
+        OpenSteer::Camera::camera.target = selected.position();
     }
 }
 
@@ -554,23 +547,20 @@ OpenSteer::OpenSteerDemo::position2dCamera (AbstractVehicle& selected,
     position3dCamera (selected, distance, elevation);
 
     // then adjust for 3d:
-    Vec3 position3d = camera.position();
+    Vec3 position3d = OpenSteer::Camera::camera.position();
     position3d.y += elevation;
-    camera.setPosition (position3d);
+    OpenSteer::Camera::camera.setPosition (position3d);
 }
 
 
 // ----------------------------------------------------------------------------
 // camera updating utility used by several plug-ins
-
-
 void 
 OpenSteer::OpenSteerDemo::updateCamera (const float currentTime,
                                         const float elapsedTime,
                                         const AbstractVehicle& selected)
 {
-    camera.vehicleToTrack = &selected;
-    camera.update (currentTime, elapsedTime, clock.getPausedState ());
+	OpenSteer::Camera::updateCamera (currentTime, elapsedTime, selected, clock.getPausedState ());
 }
 
 
@@ -667,7 +657,7 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
 {
     if (&v)
     {
-        const Vec3& cPosition = camera.position();
+        const Vec3& cPosition = OpenSteer::Camera::camera.position();
         draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
                        v.position(),                   // center
                        v.position() - cPosition,       // view axis
@@ -995,7 +985,7 @@ namespace {
             }
 
             // pass adjustment vector to camera's mouse adjustment routine
-            OpenSteer::OpenSteerDemo::camera.mouseAdjustOffset (cameraAdjustment);
+            OpenSteer::Camera::camera.mouseAdjustOffset (cameraAdjustment);
         }
     }
 
@@ -1047,7 +1037,7 @@ namespace {
     drawDisplayCameraModeName (void)
     {
         std::ostringstream message;
-        message << "Camera: " << OpenSteer::OpenSteerDemo::camera.modeName () << std::ends;
+        message << "Camera: " << OpenSteer::Camera::camera.modeName () << std::ends;
         const OpenSteer::Vec3 screenLocation (10, 10, 0);
         OpenSteer::draw2dTextAt2dLocation (message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
     }
@@ -1277,9 +1267,9 @@ namespace {
 
         // camera mode cycle
         case 'c':
-            OpenSteer::OpenSteerDemo::camera.selectNextMode ();
+            OpenSteer::Camera::camera.selectNextMode ();
             message << "select camera mode "
-                    << '"' << OpenSteer::OpenSteerDemo::camera.modeName () << '"' << std::ends;
+                    << '"' << OpenSteer::Camera::camera.modeName () << '"' << std::ends;
             OpenSteer::OpenSteerDemo::printMessage (message);
             break;
 

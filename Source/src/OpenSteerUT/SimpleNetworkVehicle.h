@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetworkVehicle.h"
+#include "VehicleClassIds.h"
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetCommon/TUpdatePeriod.h"
 

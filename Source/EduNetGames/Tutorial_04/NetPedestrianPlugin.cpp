@@ -85,9 +85,9 @@ void NetPedestrianPlugin::open (void)
 			OpenSteerDemo::init3dCamera( firstPedestrian );
 		}
 	}
-	OpenSteerDemo::camera.mode = Camera::cmFixedDistanceOffset;
-	OpenSteerDemo::camera.fixedTarget.set (15, 0, 30);
-	OpenSteerDemo::camera.fixedPosition.set (15, 70, -70);
+	Camera::camera.mode = Camera::cmFixedDistanceOffset;
+	Camera::camera.fixedTarget.set (15, 0, 30);
+	Camera::camera.fixedPosition.set (15, 70, -70);
 }
 
 //-----------------------------------------------------------------------------
@@ -112,7 +112,7 @@ void NetPedestrianPlugin::reset (void)
 	}
 
 	// make camera jump immediately to new position
-	OpenSteerDemo::camera.doNotSmoothNextMove ();
+	Camera::camera.doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------
@@ -132,18 +132,16 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	// Pedestrian nearest mouse (to be highlighted)
 	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
 
-	// update camera
-	if( NULL != selected )
-	{
-		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *selected);
-	}
-
 	// draw and annotate each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.redraw( currentTime, elapsedTime );
 
 	// draw the path they follow and obstacles they avoid
-	this->drawPathAndObstacles ();
+	// but only once
+	if( this->m_fLastRenderTime != currentTime )
+	{
+		this->drawPathAndObstacles ();
+	}
 
 	if( ( NULL != nearMouse ) && ( NULL != selected ) )
 	{
@@ -155,12 +153,12 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	}
 
 	// textual annotation for selected Pedestrian
-	if (SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn())
+	if( SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn() )
 	{
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
 		const osVector3 textPosition = selected->position() + textOffset;
-		const osVector3 camPosition = OpenSteerDemo::camera.position();
+		const osVector3 camPosition = Camera::camera.position();
 		const float camDistance = osVector3::distance (selected->position(),
 			camPosition);
 		const char* spacer = "      ";
@@ -176,24 +174,36 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 
 	// display status in the upper left corner of the window
 	std::ostringstream status;
-	status << "[F1/F2] Crowd size: " << kVG.population();
-	status << "\n[F3] PD type: ";
-	switch (cyclePD)
-	{
-	case 0: status << "LQ bin lattice"; break;
-	case 1: status << "brute force";    break;
-	}
-	status << "\n[F4] ";
-	if (NetPedestrian::gUseDirectedPathFollowing)
-		status << "Directed path following.";
-	else
-		status << "Stay on the path.";
-	status << "\n[F5] Wander: ";
-	if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
-	status << std::endl;
 	const float h = drawGetWindowHeight ();
-	const osVector3 screenLocation (10, h-50, 0);
-	draw2dTextAt2dLocation (status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
+	osVector3 screenLocation (10, h - 50, 0);
+	Color kColor = gGray80;
+	if( this->m_bCreatesVehicles )
+	{
+		status << "[F1/F2] Crowd size: " << kVG.population();
+		status << "\n[F3] PD type: ";
+		switch (cyclePD)
+		{
+		case 0: status << "LQ bin lattice"; break;
+		case 1: status << "brute force";    break;
+		}
+		status << "\n[F4] ";
+		if (NetPedestrian::gUseDirectedPathFollowing)
+			status << "Directed path following.";
+		else
+			status << "Stay on the path.";
+		status << "\n[F5] Wander: ";
+		if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
+		status << std::endl;
+	}
+	else
+	{
+		status << "Client Crowd size: " << kVG.population();
+		screenLocation.y -= 80.0f;
+		kColor = gGray50;
+	}
+	draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
+
+	this->m_fLastRenderTime = currentTime;
 }
 
 //-----------------------------------------------------------------------------
@@ -284,7 +294,7 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, Prox
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	osAbstractVehicle* pkVehicle = this->createVehicle( 0, pd );
+	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, pd );
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicle( pkVehicle );
 }
@@ -377,10 +387,12 @@ void removePedestrian(GLUI_Control* pkControl )
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
 {
 	// test if a vehicle can be created
-	AbstractVehicle* pkVehicle = this->createVehicle( 0, NULL );
+	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, NULL );
 	if( NULL != pkVehicle )
 	{
 		ET_SAFE_DELETE( pkVehicle );
+		
+		this->m_bCreatesVehicles = true;
 
 		GLUI* glui = ::getRootGLUI();
 		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

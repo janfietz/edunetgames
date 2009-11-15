@@ -157,14 +157,14 @@ namespace {
             SimpleVehicle::selectedVehicle = *all.begin();
 
             // initialize camera
-            OpenSteerDemo::camera.mode = Camera::cmFixed;
-            OpenSteerDemo::camera.fixedUp = lstPlusZ;
-            OpenSteerDemo::camera.fixedTarget = lstViewCenter;
-            OpenSteerDemo::camera.fixedPosition = lstViewCenter;
-            OpenSteerDemo::camera.fixedPosition.y += lstLookDownDistance;
-            OpenSteerDemo::camera.lookdownDistance = lstLookDownDistance;
-            OpenSteerDemo::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
-            OpenSteerDemo::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::camera.mode = Camera::cmFixed;
+            Camera::camera.fixedUp = lstPlusZ;
+            Camera::camera.fixedTarget = lstViewCenter;
+            Camera::camera.fixedPosition = lstViewCenter;
+            Camera::camera.fixedPosition.y += lstLookDownDistance;
+            Camera::camera.lookdownDistance = lstLookDownDistance;
+            Camera::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
+            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
         }
 
         void update (const float currentTime, const float elapsedTime)

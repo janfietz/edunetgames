@@ -46,7 +46,7 @@ NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = gNetPedestrianFactory.createVehicle( 0, this->m_pkHostPlugin->accessProximityDataBase() );
+	this->m_pVehicle = gNetPedestrianFactory.createVehicle( ET_CID_NETPEDESTRIAN, this->m_pkHostPlugin->accessProximityDataBase() );
 	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );
 };
 
