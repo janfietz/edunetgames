@@ -131,7 +131,17 @@ namespace OpenSteer
 		void addVehicleFactory( AbstractVehicleFactory* pkFactory )
 		{
 			OpenSteer::EntityClassId classId(0);
-			OpenSteer::AbstractVehicle* pkMasterVehicle = pkFactory->getMasterVehicle( );
+			// force initialize
+			OpenSteer::AbstractVehicle* pkMasterVehicle = NULL;
+			OpenSteer::AbstractVehicle* pkFactoryMasterVehicle = pkFactory->accessMasterVehicle( classId );
+			if( NULL == pkFactoryMasterVehicle )
+			{
+				pkMasterVehicle = pkFactory->getMasterVehicle( );
+			}
+			else
+			{
+				pkMasterVehicle = pkFactoryMasterVehicle;
+			}
 			if( NULL != pkMasterVehicle )
 			{
 				if( NULL == this->findVehicleFactory( pkMasterVehicle->getClassId() ) )
@@ -217,12 +227,6 @@ namespace OpenSteer
 	public:
 		TVehicleFactory()
 		{
-			// force initialize
-			OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( 0 );
-			if( NULL == pkMasterVehicle )
-			{
-				pkMasterVehicle = this->getMasterVehicle();
-			}
 		};
 
 		virtual ~TVehicleFactory() 

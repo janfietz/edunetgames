@@ -68,11 +68,6 @@
 OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
 
 
-//-----------------------------------------------------------------------------
-// currently selected plug-in (user can choose or cycle through them)
-
-
-OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
 
 
 //-----------------------------------------------------------------------------
@@ -123,9 +118,9 @@ OpenSteer::OpenSteerDemo::initialize (void)
         std::cout << std::endl;                                    // xxx?
 
         // identify default Plugin
-        if (!selectedPlugIn) errorExit ("no default Plugin");
+        if (!OpenSteer::Plugin::selectedPlugin) errorExit ("no default Plugin");
         std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
-        std::cout << " " << *selectedPlugIn << std::endl;          // xxx?
+        std::cout << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;          // xxx?
         std::cout << std::endl;                                    // xxx?
     }
 
@@ -189,7 +184,7 @@ void
 OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 {
     Plugin::sortBySelectionOrder ();
-    selectedPlugIn = Plugin::findDefault ();
+    OpenSteer::Plugin::selectedPlugin = Plugin::findDefault ();
 }
 
 
@@ -201,7 +196,7 @@ void
 OpenSteer::OpenSteerDemo::selectNextPlugIn (void)
 {
     closeSelectedPlugIn ();
-    selectedPlugIn = selectedPlugIn->next ();
+    OpenSteer::Plugin::selectedPlugin = OpenSteer::Plugin::selectedPlugin->next ();
     openSelectedPlugIn ();
 }
 
@@ -213,7 +208,7 @@ OpenSteer::OpenSteerDemo::selectNextPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 {
-    selectedPlugIn->handleFunctionKeys (keyNumber);
+    OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
 }
 
 
@@ -224,7 +219,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 {
-    return (selectedPlugIn ? selectedPlugIn->name() : "no Plugin");
+    return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->name() : "no Plugin");
 }
 
 
@@ -237,7 +232,7 @@ OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 {
     OpenSteer::Camera::camera.reset ();
 	SimpleVehicle::selectedVehicle = NULL;
-    selectedPlugIn->open ();
+    OpenSteer::Plugin::selectedPlugin->open ();
 }
 
 
@@ -263,7 +258,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
     }
 
     // invoke selected Plugin's Update method
-    selectedPlugIn->update (currentTime, elapsedTime);
+    OpenSteer::Plugin::selectedPlugin->update (currentTime, elapsedTime);
 
     // return to previous phase
     popPhase ();
@@ -282,7 +277,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
     pushPhase (drawPhase);
 
     // invoke selected Plugin's Draw method
-    selectedPlugIn->redraw (currentTime, elapsedTime);
+    OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
 
     // draw any annotation queued up during selected Plugin's Update method
     drawAllDeferredLines ();
@@ -300,7 +295,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
 void 
 OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 {
-    selectedPlugIn->close ();
+    OpenSteer::Plugin::selectedPlugin->close ();
     SimpleVehicle::selectedVehicle = NULL;
 }
 
@@ -312,7 +307,7 @@ OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::resetSelectedPlugIn (void)
 {
-    selectedPlugIn->reset ();
+    OpenSteer::Plugin::selectedPlugin->reset ();
 }
 
 
@@ -356,7 +351,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPlugInXXX (void)
 const OpenSteer::AVGroup& 
 OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugIn (void)
 {
-    return selectedPlugIn->allVehicles ();
+    return OpenSteer::Plugin::selectedPlugin->allVehicles ();
 }
 
 
@@ -722,7 +717,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
     printMessage ("");
 
     // allow Plugin to print mini help for the function keys it handles
-    selectedPlugIn->printMiniHelpForFunctionKeys ();
+    OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
 }
 
 
