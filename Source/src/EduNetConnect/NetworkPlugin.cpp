@@ -307,16 +307,15 @@ void NetworkPlugin::CloseOpenConnections( void )
 	DataStructures::List<RakNetGUID> kGuids;
 	if( NULL != this->m_pNetInterface )
 	{
-		unsigned short usCount = this->m_pNetInterface->NumberOfConnections();
-		if( 0 < usCount )
+		
+		this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
+		unsigned int usCount = kAddresses.Size();
+		for(unsigned int us = 0; us < usCount; ++us)
 		{
-			this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
-			for(unsigned short us = 0; us < usCount; ++us)
-			{
-				this->m_pNetInterface->CloseConnection(
-					kAddresses[us], true );
-			}			
+			this->m_pNetInterface->CloseConnection(
+				kAddresses[us], true );
 		}
+
 		while(IsConnected())
 	{
 	#ifdef WIN32

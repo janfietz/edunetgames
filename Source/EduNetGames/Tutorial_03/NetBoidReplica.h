@@ -29,23 +29,23 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "BoidsPlugin.h"
 #include "EduNetConnect/OSReplicaTypes.h"
+#include "BoidsPlugin.h"
 
 //-----------------------------------------------------------------------------
-class NetBoidReplica : public OSReplica<OpenSteer::Boid>
+class NetBoidReplica : public OSReplica<OpenSteer::AbstractVehicle>
 {
-	ET_DECLARE_BASE( OSReplica<OpenSteer::Boid> )
+	ET_DECLARE_BASE(OSReplica<OpenSteer::AbstractVehicle> )
 public:
+
+	NetBoidReplica();
+	NetBoidReplica( OpenSteer::BoidsPlugin* pBoidPlugin, bool bIsRemoteObject  );
+
+	//-------------------------------------------------------------------------
+	// replica interface
 	virtual RakNet::RakString GetName(void) const;
 
-	virtual void SetNetworkID( NetworkID id );
-
-	NetBoidReplica(){}
-
-	NetBoidReplica( OpenSteer::ProximityDatabase& pd);
-
-	NetBoidReplica( OpenSteer::BoidsPlugin* pBoidPlugin  );
+	virtual void SetNetworkID( NetworkID id );	
 
 	virtual void DeallocReplica(RakNet::Connection_RM3 *sourceConnection);
 

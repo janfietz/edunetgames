@@ -63,8 +63,7 @@ public:
 	virtual void DeleteContent( void );
 
 private:
-
-	class NetBoidReplicaFactory* m_pkBoidFactory;
+	
 	class NetBoidConditionReplica* m_pkConditionReplic;
 	NetBoidReplicaManager m_kReplicaManager;
 	
