@@ -57,20 +57,20 @@ namespace OpenSteer {
         
     protected:
         ExtractPathDistance() : distanceOnPathFlag_( 0.0f ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         explicit ExtractPathDistance( float distance ) : distanceOnPathFlag_( distance ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         ~ExtractPathDistance() {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
     private:
         float distanceOnPathFlag_;
-    }; // class ExtractPathDistance
+    }; //! class ExtractPathDistance
     
     
     /**
@@ -82,7 +82,7 @@ namespace OpenSteer {
     class DontExtractPathDistance {
     public:
         void setDistanceOnPathFlag( float ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         float distanceOnPathFlag() const {
@@ -91,12 +91,12 @@ namespace OpenSteer {
         
     protected:
         ~DontExtractPathDistance() {
-            // Nothing to do.
+            //! Nothing to do.
         }
-    }; // class DontExtractPathDistance
+    }; //! class DontExtractPathDistance
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_QUERYPATHALIKEUTILITIES_H
+#endif //! OPENSTEER_QUERYPATHALIKEUTILITIES_H

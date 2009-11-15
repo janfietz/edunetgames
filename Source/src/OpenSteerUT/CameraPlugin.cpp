@@ -35,11 +35,15 @@ void CameraPlugin::redraw( const float currentTime, const float elapsedTime )
 { 
 	// selected Pedestrian (user can mouse click to select another)
 	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
+	// TODO: determine paused state
+	const bool simulationPaused = false;
 	// update camera
 	if( NULL != selected )
 	{
-		// TODO: determine paused state
-		const bool simulationPaused = false;
 		Camera::updateCamera( currentTime, elapsedTime, *selected, simulationPaused );
+	}
+	else
+	{
+		Camera::camera.update( currentTime, elapsedTime, simulationPaused );
 	}
 }

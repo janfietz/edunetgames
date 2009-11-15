@@ -33,11 +33,11 @@
 #define OPENSTEER_SEGMENTEDPATHALIKEUTILITIES_H
 
 
-// Include assert
+//! Include assert
 #include <cassert>
 
 
-// Include OpenSteer::size_t
+//! Include OpenSteer::size_t
 #include "OpenSteer/StandardTypes.h"
 
 
@@ -105,7 +105,7 @@ namespace OpenSteer {
     
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_SEGMENTEDPATHALIKEUTILITIES_H
+#endif //! OPENSTEER_SEGMENTEDPATHALIKEUTILITIES_H
