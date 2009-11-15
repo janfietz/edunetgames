@@ -32,10 +32,10 @@
 #ifndef OPENSTEER_SEGMENTEDPATH_H
 #define OPENSTEER_SEGMENTEDPATH_H
 
-// Include OpenSteer::Path
+//! Include OpenSteer::Path
 #include "OpenSteer/Path.h"
 
-// Include OpenSteer::size_t
+//! Include OpenSteer::size_t
 #include "OpenSteer/StandardTypes.h"
 
 namespace OpenSteer {
@@ -146,12 +146,12 @@ namespace OpenSteer {
          *
          * @todo Should this be added or not? Have to read a bit...
          */
-        // SegmentedPath& operator=( SegmentedPath const& );
+        //! SegmentedPath& operator=( SegmentedPath const& );
         
-    }; // class SegmentedPath
+    }; //! class SegmentedPath
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_SEGMENTEDPATH_H
+#endif //! OPENSTEER_SEGMENTEDPATH_H

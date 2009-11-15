@@ -127,8 +127,8 @@ namespace OpenSteer {
 	};
 	
 
-	// idee: leave definiert target state - implementiert statechange
-	//       leaveConition() boolean
+	//! idee: leave definiert target state - implementiert statechange
+	//!       leaveConition() boolean
 	
 	
 	
@@ -138,4 +138,4 @@ namespace OpenSteer {
 
 
 
-#endif //  __ABSTRACTSTATE_H__
+#endif //!  __ABSTRACTSTATE_H__

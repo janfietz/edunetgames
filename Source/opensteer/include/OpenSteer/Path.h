@@ -36,7 +36,7 @@
 
 namespace OpenSteer {
 
-    // Forward declaration.
+    //! Forward declaration.
     class Vec3;
     
     
@@ -99,11 +99,11 @@ namespace OpenSteer {
          *
          * @todo Should this be added or not? Have to read a bit...
          */
-        // Path& operator=( Path const& );
+        //! Path& operator=( Path const& );
         
-    }; // class Path
+    }; //! class Path
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_PATH_H
+#endif //! OPENSTEER_PATH_H

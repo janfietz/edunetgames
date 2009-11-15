@@ -34,24 +34,24 @@
 #define OPENSTEER_POLYLINESEGMENTEDPATHWAYSEGMENTRADII_H
 
 
-// Include std::vector
+//! Include std::vector
 #include <vector>
 
 
 
-// Include OpenSteer::SegmentedPathway
+//! Include OpenSteer::SegmentedPathway
 #include "OpenSteer/SegmentedPathway.h"
 
-// Include OpenSteer::PolylineSegmentedPath
+//! Include OpenSteer::PolylineSegmentedPath
 #include "OpenSteer/PolylineSegmentedPath.h"
 
-// Include OpenSteer::PointToPathAlikeBaseDataExtractionPolicy
+//! Include OpenSteer::PointToPathAlikeBaseDataExtractionPolicy
 #include "OpenSteer/QueryPathAlikeBaseDataExtractionPolicies.h"
 
-// Include OpenSteer::Vec3
+//! Include OpenSteer::Vec3
 #include "OpenSteer/Vec3.h"
 
-// Include OpenSteer::distance
+//! Include OpenSteer::distance
 #include "OpenSteer/Vec3Utilities.h"
 
 
@@ -204,7 +204,7 @@ namespace OpenSteer {
     private:
         PolylineSegmentedPath path_;
         std::vector< float > segmentRadii_; 
-    }; // class PolylineSegmentedPathwaySegmentRadii
+    }; //! class PolylineSegmentedPathwaySegmentRadii
     
     
     /**
@@ -235,7 +235,7 @@ namespace OpenSteer {
             distancePointToPath = distance( point, pointOnPathCenterLine ) - radius;
         }
         
-    }; // class PointToPathAlikeBaseDataExtractionPolicy
+    }; //! class PointToPathAlikeBaseDataExtractionPolicy
     
     
     /**
@@ -254,8 +254,8 @@ namespace OpenSteer {
         }
         
         
-    }; // DistanceToPathAlikeBaseDataExtractionPolicy 
-} // namespace OpenSteer
+    }; //! DistanceToPathAlikeBaseDataExtractionPolicy 
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_POLYLINESEGMENTEDPATHWAYSEGMENTRADII_H
+#endif //! OPENSTEER_POLYLINESEGMENTEDPATHWAYSEGMENTRADII_H

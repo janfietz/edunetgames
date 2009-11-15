@@ -65,7 +65,7 @@ namespace OpenSteer {
     template< class PathAlike >
     class DistanceToPathAlikeBaseDataExtractionPolicy;
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_QUERYPATHALIKEBASEDATAEXTRACTIONPOLICY_H
+#endif //! OPENSTEER_QUERYPATHALIKEBASEDATAEXTRACTIONPOLICY_H

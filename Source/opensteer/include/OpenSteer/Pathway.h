@@ -32,8 +32,8 @@
 
 namespace OpenSteer {
     
-    // Forward declaration, include Vec3.h if needed.
-    // @todo Include Vec3.h?
+    //! Forward declaration, include Vec3.h if needed.
+    //! @todo Include Vec3.h?
     class Vec3;
     
     
@@ -93,11 +93,11 @@ namespace OpenSteer {
          *
          * @todo Should this be added or not? Have to read a bit...
          */
-        // Pathway& operator=( Pathway const& );    
+        //! Pathway& operator=( Pathway const& );    
         
-    }; // class Pathway
+    }; //! class Pathway
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_PATHWAY_H
+#endif //! OPENSTEER_PATHWAY_H

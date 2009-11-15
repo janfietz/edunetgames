@@ -1,36 +1,36 @@
 //-----------------------------------------------------------------------------
 //
 //
-// OpenSteer -- Steering Behaviors for Autonomous Characters
+//! OpenSteer -- Steering Behaviors for Autonomous Characters
 //
-// Copyright (c) 2002-2005, Sony Computer Entertainment America
-// Original author: Craig Reynolds <craig_reynolds@playstation.sony.com>
+//! Copyright (c) 2002-2005, Sony Computer Entertainment America
+//! Original author: Craig Reynolds <craig_reynolds@playstation.sony.com>
 //
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the "Software"),
-// to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense,
-// and/or sell copies of the Software, and to permit persons to whom the
-// Software is furnished to do so, subject to the following conditions:
+//! Permission is hereby granted, free of charge, to any person obtaining a
+//! copy of this software and associated documentation files (the "Software"),
+//! to deal in the Software without restriction, including without limitation
+//! the rights to use, copy, modify, merge, publish, distribute, sublicense,
+//! and/or sell copies of the Software, and to permit persons to whom the
+//! Software is furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
+//! The above copyright notice and this permission notice shall be included in
+//! all copies or substantial portions of the Software.
 //
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
+//! THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//! IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//! FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+//! THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//! LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//! FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+//! DEALINGS IN THE SOFTWARE.
 //
 //
 //-----------------------------------------------------------------------------
 //
 //
-// Color class and predefined colors.
+//! Color class and predefined colors.
 //
-// May 05, 2005 bk:  created 
+//! May 05, 2005 bk:  created 
 //
 //
 //-----------------------------------------------------------------------------
@@ -44,7 +44,7 @@
 
 namespace OpenSteer {
     
-    // Forward declaration. Full declaration in Vec3.h
+    //! Forward declaration. Full declaration in Vec3.h
     class Vec3;
     
     
@@ -68,9 +68,9 @@ namespace OpenSteer {
         
         Vec3 convertToVec3() const;
     
-		// this is necessary so that graphics API's such as DirectX
-		// requiring a pointer to colors can do their conversion
-		// without a lot of copying.
+		//! this is necessary so that graphics API's such as DirectX
+		//! requiring a pointer to colors can do their conversion
+		//! without a lot of copying.
 		float const*const colorFloatArray() const { return &r_; }
 
         Color& operator+=( Color const& other );
@@ -95,8 +95,8 @@ namespace OpenSteer {
         float r_;
         float g_;
         float b_;
-		 float a_;	// provided for API's which require four components        
-    }; // class Color
+		 float a_;	//! provided for API's which require four components        
+    }; //! class Color
     
     
     Color operator+( Color const& lhs, Color const& rhs );
@@ -151,7 +151,7 @@ namespace OpenSteer {
     extern Color const gGray80;
     extern Color const gGray90;
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_COLOR_H
+#endif //! OPENSTEER_COLOR_H

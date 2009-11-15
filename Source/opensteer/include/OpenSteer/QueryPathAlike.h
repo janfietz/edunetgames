@@ -34,21 +34,21 @@
 #define OPENSTEER_QUERYPATHALIKE_H
 
 
-// Include std::numeric_limits< float >::max
+//! Include std::numeric_limits< float >::max
 #include <limits>
 
 
 
-// Include OpenSteer::Vec3
+//! Include OpenSteer::Vec3
 #include "OpenSteer/Vec3.h"
 
-// Include OpenSteer::distance
+//! Include OpenSteer::distance
 #include "OpenSteer/Vec3Utilities.h"
 
-// Include OpenSteer::clamp, OpenSteer::modulo
+//! Include OpenSteer::clamp, OpenSteer::modulo
 #include "OpenSteer/Utilities.h"
 
-// Include OpenSteer::PointToPathAlikeBaseDataExtractionPolicy, OpenSteer::DistanceToPathAlikeBaseDataExtractionPolicy
+//! Include OpenSteer::PointToPathAlikeBaseDataExtractionPolicy, OpenSteer::DistanceToPathAlikeBaseDataExtractionPolicy
 #include "OpenSteer/QueryPathAlikeBaseDataExtractionPolicies.h"
 
 #ifdef _MSC_VER
@@ -132,7 +132,7 @@ namespace OpenSteer {
             }
         }
         
-    }; // class PointToPathAlikeMapping
+    }; //! class PointToPathAlikeMapping
     
     /**
      * Maps @a point to @a pathAlike and returns the data extracted in 
@@ -175,13 +175,13 @@ namespace OpenSteer {
         static void map( PathAlike const& pathAlike, float distanceOnPath, Mapping& mapping ) {
             float const pathLength = pathAlike.length();
             
-            // Modify @c distanceOnPath to applicable values.
+            //! Modify @c distanceOnPath to applicable values.
             if ( pathAlike.isCyclic() ) {
                 distanceOnPath = modulo( distanceOnPath, pathLength );       
             }
             distanceOnPath = clamp( distanceOnPath, 0.0f, pathLength );
             
-            // Which path alike segment is reached by @c distanceOnPath?
+            //! Which path alike segment is reached by @c distanceOnPath?
             float remainingDistance = distanceOnPath;
             typedef typename PathAlike::size_type size_type;
             size_type segmentIndex = 0;        
@@ -192,14 +192,14 @@ namespace OpenSteer {
                 ++segmentIndex;
             }
             
-            // Extract the path related data associated with the segment reached
-            // by @c distanceOnPath.
+            //! Extract the path related data associated with the segment reached
+            //! by @c distanceOnPath.
             Vec3 pointOnPathCenterLine( 0.0f, 0.0f, 0.0f );
             Vec3 tangent( 0.0f, 0.0f, 0.0f );
             float radius = 0.0f;
             BaseDataExtractionPolicy::extract( pathAlike, segmentIndex, remainingDistance, pointOnPathCenterLine, tangent, radius );
             
-            // Store the extracted data in @c mapping to return it to the caller.
+            //! Store the extracted data in @c mapping to return it to the caller.
             mapping.setPointOnPathCenterLine( pointOnPathCenterLine );
             mapping.setRadius( radius );
             mapping.setTangent( tangent );
@@ -208,7 +208,7 @@ namespace OpenSteer {
             mapping.setDistanceOnSegment( remainingDistance );            
         }
         
-    }; // class DistanceToPathAlikeMapping
+    }; //! class DistanceToPathAlikeMapping
     
     
     
@@ -224,6 +224,6 @@ namespace OpenSteer {
     }
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
-#endif // OPENSTEER_QUERYPATHALIKE_H
+#endif //! OPENSTEER_QUERYPATHALIKE_H
