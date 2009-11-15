@@ -101,7 +101,13 @@ NetCtfBaseVehicle::~NetCtfBaseVehicle()
 
 }
 
+//-----------------------------------------------------------------------------
+AbstractVehicle* NetCtfBaseVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+{
+	return NULL == pkProximityDatabase ? ET_NEW NetCtfBaseVehicle() : ET_NEW NetCtfBaseVehicle( *pkProximityDatabase );
+}
 
+//-----------------------------------------------------------------------------
 void NetCtfBaseVehicle::reset( void )
 {
 	BaseClass::reset();  // reset the vehicle 
@@ -254,6 +260,12 @@ void NetCtfBaseVehicle::annotateAvoidObstacle(const float minDistanceToCollision
 	annotationLine(FL, BL, white);
 	annotationLine(BL, BR, white);
 	annotationLine(BR, FR, white);
+}
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* NetCtfSeekerVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+{
+	return NULL == pkProximityDatabase ? ET_NEW NetCtfSeekerVehicle() : ET_NEW NetCtfSeekerVehicle( *pkProximityDatabase );
 }
 
 //-----------------------------------------------------------------------------
@@ -609,6 +621,12 @@ void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTim
 	// annotation
 	annotationVelocityAcceleration();
 	recordTrailVertex(currentTime, position());
+}
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* NetCtfEnemyVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+{
+	return NULL == pkProximityDatabase ? ET_NEW NetCtfEnemyVehicle() : ET_NEW NetCtfEnemyVehicle( *pkProximityDatabase );
 }
 
 //-----------------------------------------------------------------------------

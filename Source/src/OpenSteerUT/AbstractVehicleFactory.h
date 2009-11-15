@@ -42,12 +42,14 @@ namespace OpenSteer
 
 		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId ) const ET_ABSTRACT;
 
+		virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const ET_ABSTRACT;
 		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const ET_ABSTRACT;
 
 		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId, OpenSteer::ProximityDatabase* ) const ET_ABSTRACT;
 		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const ET_ABSTRACT;
 
 		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const ET_ABSTRACT;
+	protected:
 	};
 
 	//-----------------------------------------------------------------------------
@@ -68,6 +70,11 @@ namespace OpenSteer
 				  return this->m_pkMasterVehicle;
 			  }
 			  return NULL;
+		  }
+
+		  virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const
+		  {
+			  return this->m_pkMasterVehicle;
 		  }
 
 		  virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
@@ -100,8 +107,103 @@ namespace OpenSteer
 		  {
 			  ET_SAFE_DELETE( pkVehicle );
 		  }
-	protected:
+			protected:
+
+
 		mutable OpenSteer::AbstractVehicle* m_pkMasterVehicle;
+	};
+
+	//-----------------------------------------------------------------------------
+	// TODO: use map ?
+	typedef std::vector<AbstractVehicleFactory*> TVehicleFactoryArray;
+
+	//-----------------------------------------------------------------------------
+	class VehicleFactoryArray : protected TVehicleFactoryArray, public AbstractVehicleFactory
+	{
+		ET_DECLARE_BASE( AbstractVehicleFactory );
+	public:
+		VehicleFactoryArray()
+		{
+		}
+
+		virtual ~VehicleFactoryArray() {}
+
+		void addVehicleFactory( AbstractVehicleFactory* pkFactory )
+		{
+			OpenSteer::EntityClassId classId(0);
+			OpenSteer::AbstractVehicle* pkMasterVehicle = pkFactory->getMasterVehicle( );
+			if( NULL != pkMasterVehicle )
+			{
+				if( NULL == this->findVehicleFactory( pkMasterVehicle->getClassId() ) )
+				{
+					this->push_back( pkFactory );
+				}
+			}
+			return;
+		}
+
+		AbstractVehicleFactory* findVehicleFactory( OpenSteer::EntityClassId classId ) const
+		{
+//			TVehicleFactoryArray::const_iterator kFound = std::find( this->begin(), this->end(), classId );
+			TVehicleFactoryArray::const_iterator kIter = this->begin();
+			TVehicleFactoryArray::const_iterator kEnd = this->end();
+			while( kIter != kEnd )
+			{
+				OpenSteer::AbstractVehicle* pkMasterVehicle = (*kIter)->accessMasterVehicle( classId );
+				if( NULL != pkMasterVehicle )
+				{
+					return (*kIter);
+				}
+				++kIter;
+			}
+			return NULL;
+		}
+
+		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
+		{
+			AbstractVehicleFactory* pkFactory = this->findVehicleFactory( classId );
+			if( NULL != pkFactory )
+			{
+				return pkFactory->accessMasterVehicle( classId );
+			}
+			return NULL;
+		}
+
+		virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const
+		{
+			// a vehicle factory array does not have an own mastervehicle
+			return NULL;
+		}
+
+		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+		{
+			AbstractVehicleFactory* pkFactory = this->findVehicleFactory( pkVehicle->getClassId() );
+			if( NULL != pkFactory )
+			{
+				return pkFactory->setMasterVehicle( pkVehicle );
+			}
+		}
+
+		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+		{
+			OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
+			if( NULL != pkMasterVehicle )
+			{
+				return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+			}
+			return NULL;
+		}
+
+		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+		{
+			return NULL;
+		};
+
+		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+		{
+			ET_SAFE_DELETE( pkVehicle );
+		}
+	protected:
 	};
 
 	//-------------------------------------------------------------------------
@@ -115,7 +217,12 @@ namespace OpenSteer
 	public:
 		TVehicleFactory()
 		{
-			
+			// force initialize
+			OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( 0 );
+			if( NULL == pkMasterVehicle )
+			{
+				pkMasterVehicle = this->getMasterVehicle();
+			}
 		};
 
 		virtual ~TVehicleFactory() 
