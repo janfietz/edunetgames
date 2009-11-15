@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // SimpleVehicle
@@ -57,7 +57,7 @@
 // 01-29-03 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/SimpleVehicle.h"
@@ -69,7 +69,7 @@
 // near a vehicle causes it to become the Selected Vehicle.
 OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // constructor
 OpenSteer::SimpleVehicle::SimpleVehicle (void)
 {
@@ -84,7 +84,7 @@ OpenSteer::SimpleVehicle::SimpleVehicle (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // destructor
 OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 {
@@ -95,7 +95,7 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // adjust the steering force passed to applySteeringForce.
 //
 // allows a specific vehicle class to redefine this adjustment.
@@ -131,7 +131,7 @@ OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // xxx experimental 9-6-02
 //
 // apply a given braking force (for a given dt) to our momentum.
@@ -157,7 +157,7 @@ OpenSteer::SimpleVehicle::applyBrakingForce (const float rate, const float delta
     setSpeed (speed () - (clipBraking * deltaTime));
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // determine a raw steering force
 OpenSteer::Vec3
 OpenSteer::SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/)
@@ -165,7 +165,7 @@ OpenSteer::SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/
 	return OpenSteer::Vec3::zero;
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // apply a given steering force to our momentum,
 // adjusting our orientation to maintain velocity-alignment.
 void 
@@ -218,7 +218,7 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // the default version: keep FORWARD parallel to velocity, change UP as
 // little as possible.
 //
@@ -234,7 +234,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newVelocity,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // alternate version: keep FORWARD parallel to velocity, adjust UP according
 // to a no-basis-in-reality "banking" behavior, something like what birds and
 // airplanes do
@@ -273,7 +273,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocit
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // measure path curvature (1/turning-radius), maintain smoothed version
 
 
@@ -296,7 +296,7 @@ OpenSteer::SimpleVehicle::measurePathCurvature (const float elapsedTime)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw lines from vehicle's position showing its velocity and acceleration
 
 
@@ -316,7 +316,7 @@ OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // predict position of this vehicle at some time in the future
 // (assumes velocity remains constant, hence path is a straight line)
 //
@@ -333,4 +333,4 @@ OpenSteer::SimpleVehicle::predictFuturePosition (const float predictionTime) con
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

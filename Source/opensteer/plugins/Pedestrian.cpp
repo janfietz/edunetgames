@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // An autonomous "pedestrian":
@@ -34,7 +34,7 @@
 // 10-29-01 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include <iomanip>
@@ -50,14 +50,14 @@ namespace {
     using namespace OpenSteer;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     typedef AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
     typedef AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     // How many pedestrians to create when the plugin starts first?
@@ -71,15 +71,15 @@ namespace {
     Vec3 gEndpoint0;
     Vec3 gEndpoint1;
     bool gUseDirectedPathFollowing = true;
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
     RectangleObstacle gObstacle3 (7,7);
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
 
     // this was added for debugging tool, but I might as well leave it in
     bool gWanderSwitch = true;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     class Pedestrian : public SimpleVehicle
@@ -196,13 +196,13 @@ namespace {
             if (leakThrough < frandom01())
             {
                 const float oTime = 6; // minTimeToCollision = 6 seconds
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
     // just for testing
     //             obstacleAvoidance = steerToAvoidObstacles (oTime, gObstacles);
     //             obstacleAvoidance = steerToAvoidObstacle (oTime, gObstacle1);
     //             obstacleAvoidance = steerToAvoidObstacle (oTime, gObstacle3);
                 obstacleAvoidance = steerToAvoidObstacles (oTime, gObstacles);
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
             }
 
             // if obstacle avoidance is needed, do it
@@ -371,7 +371,7 @@ namespace {
     AVGroup Pedestrian::neighbors;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // create path for Plugin 
     //
     //
@@ -420,7 +420,7 @@ namespace {
             gObstacle2.radius = 5;
             gObstacles.push_back (&gObstacle1);
             gObstacles.push_back (&gObstacle2);
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
 
             gObstacles.push_back (&gObstacle3);
 
@@ -450,7 +450,7 @@ namespace {
     //         gObstacle3.setSeenFrom (Obstacle::inside);
             gObstacle3.setSeenFrom (Obstacle::both);
 
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
 
             gEndpoint0 = pathPoints[0];
             gEndpoint1 = pathPoints[pathPointCount-1];
@@ -464,7 +464,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // OpenSteerDemo Plugin
 
 
@@ -618,7 +618,7 @@ namespace {
             // draw obstacles
             drawXZCircle (gObstacle1.radius, gObstacle1.center, gWhite, 40);
             drawXZCircle (gObstacle2.radius, gObstacle2.center, gWhite, 40);
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
             {
                 float w = gObstacle3.width * 0.5f;
                 Vec3 p = gObstacle3.position ();
@@ -635,7 +635,7 @@ namespace {
                 drawLine (v3, v4, gWhite);
                 drawLine (v4, v1, gWhite);
             }
-    // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+    //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
         }
 
         void close (void)
@@ -774,6 +774,6 @@ namespace {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 } // anonymous namespace

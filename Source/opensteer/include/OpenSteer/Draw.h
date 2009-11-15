@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Draw
@@ -45,7 +45,7 @@
 // 06-25-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_DRAW_H
@@ -61,7 +61,7 @@
 namespace OpenSteer {
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // warn when draw functions are called during OpenSteerDemo's update phase
     //
     // XXX perhaps this should be made to "melt away" when not in debug mode?
@@ -82,7 +82,7 @@ namespace OpenSteer {
         }
     }
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // this is a typedef for a triangle draw routine which can be passed in
     // when using rendering API's of the user's choice.
     typedef void (*drawTriangleRoutine) (const Vec3& a,
@@ -90,7 +90,7 @@ namespace OpenSteer {
                                          const Vec3& c,
                                          const Color& color);
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // draw the three axes of a LocalSpace: three lines parallel to the
     // basis vectors of the space, centered at its origin, of lengths
     // given by the coordinates of "size".
@@ -101,7 +101,7 @@ namespace OpenSteer {
                     const Color& color);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // draw the edges of a box with a given position, orientation, size
     // and color.  The box edges are aligned with the axes of the given
     // LocalSpace, and it is centered at the origin of that LocalSpace.
@@ -113,7 +113,7 @@ namespace OpenSteer {
                           const Color& color);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // draw a (filled-in, polygon-based) square checkerboard grid on the XZ
     // (horizontal) plane.
     //
@@ -130,7 +130,7 @@ namespace OpenSteer {
                                  const Color& color2);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // draw a square grid of lines on the XZ (horizontal) plane.
     //
     // ("size" is the length of a side of the overall grid, "subsquares" is the
@@ -145,7 +145,7 @@ namespace OpenSteer {
                          const Color& color);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Circle/disk drawing utilities
 
 
@@ -220,7 +220,7 @@ namespace OpenSteer {
                     const Color& color);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Sphere drawing utilities
 
 
@@ -242,7 +242,7 @@ namespace OpenSteer {
                              const Vec3& viewpoint);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // draw a reticle at the center of the window.  Currently it is small
     // crosshair with a gap at the center, drawn in white with black borders
     // width and height of screen are passed in
@@ -251,7 +251,7 @@ namespace OpenSteer {
     void drawReticle (float w, float h);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 
 
     void drawBasic2dCircularVehicle (const AbstractVehicle& bv,
@@ -263,7 +263,7 @@ namespace OpenSteer {
     void drawBasic3dSphericalVehicle (drawTriangleRoutine, const AbstractVehicle& bv,
                                       const Color& color);
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // 2d text drawing requires w, h since retrieving viewport w and h differs
     // for every graphics API
 
@@ -283,14 +283,14 @@ namespace OpenSteer {
                                  const Vec3 location,
                                  const Color& color, float w, float h);
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // emit an OpenGL vertex based on a Vec3
 
 
     void glVertexVec3 (const Vec3& v);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw 3d "graphical annotation" lines, used for debugging
 
 
@@ -299,7 +299,7 @@ namespace OpenSteer {
                    const Color& color);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw 2d lines in screen space: x and y are the relevant coordinates
     // w and h are the dimensions of the viewport in pixels
     void draw2dLine (const Vec3& startPoint,
@@ -308,7 +308,7 @@ namespace OpenSteer {
                     float w, float h);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw a line with alpha blending
 
     void drawLineAlpha (const Vec3& startPoint,
@@ -317,7 +317,7 @@ namespace OpenSteer {
                         const float alpha);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // deferred drawing of lines, circles and (filled) disks
 
 
@@ -337,7 +337,7 @@ namespace OpenSteer {
     void drawAllDeferredCirclesOrDisks (void);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Draw a single OpenGL triangle given three Vec3 vertices.
 
 
@@ -347,7 +347,7 @@ namespace OpenSteer {
                        const Color& color);
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Draw a single OpenGL quadrangle given four Vec3 vertices, and color.
 
 
@@ -358,7 +358,7 @@ namespace OpenSteer {
                          const Color& color);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draws a "wide line segment": a rectangle of the given width and color
     // whose mid-line connects two given endpoints
 
@@ -369,7 +369,7 @@ namespace OpenSteer {
                          float width);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     void drawCameraLookAt (const Vec3& cameraPosition,
@@ -377,7 +377,7 @@ namespace OpenSteer {
                            const Vec3& up);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // check for errors during redraw, report any and then exit
 
 
@@ -385,7 +385,7 @@ namespace OpenSteer {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // return a normalized direction vector pointing from the camera towards a
     // given point on the screen: the ray that would be traced for that pixel
 
@@ -434,5 +434,5 @@ namespace OpenSteer {
 } // namespace OpenSteer
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_DRAW_H

@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Draw
@@ -45,7 +45,7 @@
 // 06-25-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 #include "OpenSteer/Draw.h"
 
@@ -86,7 +86,7 @@
 // To include OpenSteer::round.
 #include "OpenSteer/Utilities.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #include "OpenSteer/OpenSteerMacros.h"
 #if OS_HAVE_PROFILE
 #include "iprof/prof.h" 
@@ -97,7 +97,7 @@
 // to swapping in different graphics libraries
 
 namespace {
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // emit an OpenGL vertex based on a Vec3
     
     inline void iglVertexVec3 (const OpenSteer::Vec3& v)
@@ -105,7 +105,7 @@ namespace {
         glVertex3f (v.x, v.y, v.z);
     }
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // OpenGL-specific routine for error check, report, and exit
     void 
     checkForGLError (const char* locationDescription)
@@ -135,7 +135,7 @@ namespace {
         //OpenSteer::OpenSteerDemo::exit (1);
     }
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw 3d "graphical annotation" lines, used for debugging    
     inline void iDrawLine (const OpenSteer::Vec3& startPoint,
                            const OpenSteer::Vec3& endPoint,
@@ -149,7 +149,7 @@ namespace {
         glEnd ();
     }
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Draw a single OpenGL triangle given three Vec3 vertices.
     
     inline void iDrawTriangle (const OpenSteer::Vec3& a,
@@ -170,7 +170,7 @@ namespace {
     }
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Draw a single OpenGL quadrangle given four Vec3 vertices, and color.   
     inline void iDrawQuadrangle (const OpenSteer::Vec3& a,
                                  const OpenSteer::Vec3& b,
@@ -191,7 +191,7 @@ namespace {
         glEnd ();
     }
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Between matched sets of these two calls, assert that all polygons
     // will be drawn "double sided", that is, without back-face culling    
     inline void beginDoubleSidedDrawing (void)
@@ -249,7 +249,7 @@ OpenSteer::glVertexVec3 (const Vec3& v)
     iglVertexVec3 (v);
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // warn when draw functions are called during OpenSteerDemo's update phase
 void 
 OpenSteer::warnIfInUpdatePhase2 (const char* name)
@@ -274,7 +274,7 @@ OpenSteer::drawLine (const Vec3& startPoint,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw a line with alpha blending
 
 // see also glAlphaFunc
@@ -325,7 +325,7 @@ OpenSteer::drawQuadrangle (const Vec3& a,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draws a "wide line segment": a rectangle of the given width and color
 // whose mid-line connects two given endpoints
 
@@ -356,7 +356,7 @@ OpenSteer::drawXZWideLine (const Vec3& startPoint,
 
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // General purpose circle/disk drawing routine.  Draws circles or disks (as
 // specified by "filled" argument) and handles both special case 2d circles
 // on the XZ plane or arbitrary circles in 3d space (as specified by "in3d"
@@ -422,7 +422,7 @@ OpenSteer::drawCircleOrDisk (const float radius,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
 
 void 
@@ -438,7 +438,7 @@ OpenSteer::draw3dCircleOrDisk (const float radius,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // drawing utility used by both drawXZCircle and drawXZDisk
 
 
@@ -454,7 +454,7 @@ OpenSteer::drawXZCircleOrDisk (const float radius,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw a circular arc on the XZ plane, from a start point, around a center,
 // for a given arc length, in a given number of segments and color.  The
 // sign of arcLength determines the direction in which the arc is drawn.
@@ -506,7 +506,7 @@ OpenSteer::drawXZArc (const Vec3& start,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // a simple 2d vehicle on the XZ plane
 
 
@@ -541,7 +541,7 @@ OpenSteer::drawBasic2dCircularVehicle (const AbstractVehicle& vehicle,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // a simple 3d vehicle
 
 
@@ -639,7 +639,7 @@ OpenSteer::drawBasic3dSphericalVehicle (drawTriangleRoutine draw, const Abstract
 
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw a (filled-in, polygon-based) square checkerboard grid on the XZ
 // (horizontal) plane.
 //
@@ -688,7 +688,7 @@ OpenSteer::drawXZCheckerboardGrid (const float size,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw a square grid of lines on the XZ (horizontal) plane.
 //
 // ("size" is the length of a side of the overall grid, "subsquares" is the
@@ -732,7 +732,7 @@ OpenSteer::drawXZLineGrid (const float size,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw the three axes of a LocalSpace: three lines parallel to the
 // basis vectors of the space, centered at its origin, of lengths
 // given by the coordinates of "size".
@@ -753,7 +753,7 @@ OpenSteer::drawAxes  (const AbstractLocalSpace& ls,
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw the edges of a box with a given position, orientation, size
 // and color.  The box edges are aligned with the axes of the given
 // LocalSpace, and it is centered at the origin of that LocalSpace.
@@ -808,7 +808,7 @@ OpenSteer::drawBoxOutline  (const AbstractLocalSpace& localSpace,
 
 namespace {
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // this comes up often enough to warrant its own warning function
 
     inline void drawCameraLookAtCheck (const OpenSteer::Vec3& cameraPosition,
@@ -823,7 +823,7 @@ namespace {
 
 } // anonymous namespace
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // Define scene's camera (viewing transformation) in terms of the camera's
 // position, the point to look at (an "aim point" in the scene which will
 // end up at the center of the camera's view), and an "up" vector defining
@@ -862,7 +862,7 @@ OpenSteer::draw2dLine (const Vec3& startPoint,
     end2dDrawing (originalMatrixMode);
 }
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // draw a reticle at the center of the window.  Currently it is small
 // crosshair with a gap at the center, drawn in white with black borders
 
@@ -887,7 +887,7 @@ OpenSteer::drawReticle (float w, float h)
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
 
 // code (from main.cpp) used to draw "forward ruler" on vehicle
@@ -906,7 +906,7 @@ OpenSteer::drawReticle (float w, float h)
 //     // xxx --------------------------------------------------
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // check for errors during redraw, report any and then exit
 
 
@@ -917,7 +917,7 @@ OpenSteer::checkForDrawError (const char * locationDescription)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // return a normalized direction vector pointing from the camera towards a
 // given point on the screen: the ray that would be traced for that pixel
 
@@ -947,7 +947,7 @@ OpenSteer::directionFromCameraToScreenPosition (int x, int y, int h)
 
 namespace {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // deferred draw line
     //
     // For use during simulation phase.
@@ -1021,7 +1021,7 @@ OpenSteer::drawAllDeferredLines (void)
 
 namespace {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // deferred draw circle
     // XXX for now, just a modified copy of DeferredLine
     //
@@ -1111,7 +1111,7 @@ OpenSteer::drawAllDeferredCirclesOrDisks (void)
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // Functions for drawing text (in GLUT's 9x15 bitmap font) in a given
 // color, starting at a location on the screen which can be specified
 // in screen space (draw2dTextAt2dLocation) or as the screen space
@@ -1132,7 +1132,7 @@ OpenSteer::drawAllDeferredCirclesOrDisks (void)
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw string s right-justified in the upper righthand corner
 
 
@@ -1587,7 +1587,7 @@ OpenSteer::draw2dTextAt2dLocation (const std::ostringstream& text,
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 namespace OpenSteer {
@@ -1891,4 +1891,4 @@ namespace OpenSteer {
 } // namespace OpenSteer
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

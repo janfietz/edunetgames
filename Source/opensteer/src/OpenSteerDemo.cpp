@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteerDemo
@@ -38,7 +38,7 @@
 // 11-14-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/OpenSteerDemo.h"
@@ -61,35 +61,35 @@
 #else
 #include <GL/glut.h>     // for Linux and Windows
 #endif
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"
 
 
 OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // currently selected plug-in (user can choose or cycle through them)
 
 
 OpenSteer::AbstractPlugin* OpenSteer::OpenSteerDemo::selectedPlugIn = NULL;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // phase: identifies current phase of the per-frame update cycle
 
 
 int OpenSteer::OpenSteerDemo::phase = OpenSteer::OpenSteerDemo::overheadPhase;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // graphical annotation: master on/off switch
 
 
 bool OpenSteer::enableAnnotation = true;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // XXX apparently MS VC6 cannot handle initialized static const members,
 // XXX so they have to be initialized not-inline.
 
@@ -99,7 +99,7 @@ const int OpenSteer::OpenSteerDemo::updatePhase = 1;
 const int OpenSteer::OpenSteerDemo::drawPhase = 2;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // initialize OpenSteerDemo application
 
 namespace {
@@ -134,7 +134,7 @@ OpenSteer::OpenSteerDemo::initialize (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // main update function: step simulation forward and redraw scene
 
 
@@ -159,7 +159,7 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // exit OpenSteerDemo with a given text message or error code
 
 
@@ -181,7 +181,7 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // select the default Plugin
 
 
@@ -193,7 +193,7 @@ OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // select the "next" plug-in, cycling through "plug-in selection order"
 
 
@@ -206,7 +206,7 @@ OpenSteer::OpenSteerDemo::selectNextPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // handle function keys an a per-plug-in basis
 
 
@@ -217,7 +217,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // return name of currently selected plug-in
 
 
@@ -228,7 +228,7 @@ OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // open the currently selected plug-in
 
 
@@ -241,7 +241,7 @@ OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // do a simulation update for the currently selected plug-in
 
 
@@ -270,7 +270,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // redraw graphics for the currently selected plug-in
 
 
@@ -293,7 +293,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // close the currently selected plug-in
 
 
@@ -305,7 +305,7 @@ OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // reset the currently selected plug-in
 
 
@@ -318,7 +318,7 @@ OpenSteer::OpenSteerDemo::resetSelectedPlugIn (void)
 
 namespace {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // XXX this is used by CaptureTheFlag
     // XXX it was moved here from main.cpp on 12-4-02
     // XXX I'm not sure if this is a useful feature or a bogus hack
@@ -348,7 +348,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPlugInXXX (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // return a group (an STL vector of AbstractVehicle pointers) of all
 // vehicles(/agents/characters) defined by the currently selected Plugin
 
@@ -360,7 +360,7 @@ OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugIn (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // select the "next" vehicle: the one listed after the currently selected one
 // in allVehiclesOfSelectedPlugIn
 
@@ -390,7 +390,7 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // select vehicle nearest the given screen position (e.g.: of the mouse)
 
 
@@ -401,7 +401,7 @@ OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (int x, int y)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Find the AbstractVehicle whose screen position is nearest the current the
 // mouse position.  Returns NULL if mouse is outside this window or if
 // there are no AbstractVehicle.
@@ -416,7 +416,7 @@ OpenSteer::OpenSteerDemo::vehicleNearestToMouse (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Find the AbstractVehicle whose screen position is nearest the given window
 // coordinates, typically the mouse position.  Returns NULL if there are no
 // AbstractVehicles.
@@ -462,7 +462,7 @@ OpenSteer::OpenSteerDemo::findVehicleNearestScreenPosition (int x, int y)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // for storing most recent mouse state
 
 
@@ -471,7 +471,7 @@ int OpenSteer::OpenSteerDemo::mouseY = 0;
 bool OpenSteer::OpenSteerDemo::mouseInWindow = false;
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // set a certain initial camera state used by several plug-ins
 
 
@@ -553,7 +553,7 @@ OpenSteer::OpenSteerDemo::position2dCamera (AbstractVehicle& selected,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // camera updating utility used by several plug-ins
 void 
 OpenSteer::OpenSteerDemo::updateCamera (const float currentTime,
@@ -564,7 +564,7 @@ OpenSteer::OpenSteerDemo::updateCamera (const float currentTime,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // some camera-related default constants
 
 
@@ -574,7 +574,7 @@ const OpenSteer::Vec3 OpenSteer::OpenSteerDemo::cameraTargetOffset (0, OpenSteer
                                                                     0);
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // ground plane grid-drawing utility used by several plug-ins
 
 
@@ -600,7 +600,7 @@ OpenSteer::OpenSteerDemo::gridUtility (const Vec3& gridTarget)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draws a gray disk on the XZ plane under a given vehicle
 
 
@@ -612,7 +612,7 @@ OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicl
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draws a gray circle on the XZ plane under a given vehicle
 
 
@@ -626,7 +626,7 @@ OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& 
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw a box around a vehicle aligned with its local space
 // xxx not used as of 11-20-02
 
@@ -644,7 +644,7 @@ OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draws a colored circle (perpendicular to view axis) around the center
 // of a given vehicle.  The circle's radius is the vehicle's radius times
 // radiusMultiplier.
@@ -667,7 +667,7 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 void 
@@ -698,7 +698,7 @@ OpenSteer::OpenSteerDemo::printWarning (const std::ostringstream& message)
 }
 
 
-// ------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 // print list of known commands
 //
 // XXX this list should be assembled automatically,
@@ -726,7 +726,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // manage OpenSteerDemo phase transitions (xxx and maintain phase timers)
 
 
@@ -772,7 +772,7 @@ OpenSteer::OpenSteerDemo::popPhase (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 float OpenSteer::OpenSteerDemo::phaseTimerBase = 0;
@@ -798,7 +798,7 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 namespace {
@@ -816,7 +816,7 @@ namespace {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // initialize GL mode settings
 
 
@@ -855,7 +855,7 @@ namespace {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // handler for window resizing
 
 
@@ -881,7 +881,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // This is called (by GLUT) each time a mouse button pressed or released.
 
 
@@ -949,7 +949,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // called when mouse moves and any buttons are down
 
 
@@ -990,7 +990,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // called when mouse moves and no buttons are down
 
 
@@ -1002,7 +1002,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // called when mouse enters or exits the window
 
 
@@ -1014,7 +1014,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw PlugI name in upper lefthand corner of screen
 
 
@@ -1029,7 +1029,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw camera mode name in lower lefthand corner of screen
 
 
@@ -1043,7 +1043,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // helper for drawDisplayFPS
 
 
@@ -1079,7 +1079,7 @@ namespace {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // draw text showing (smoothed, rounded) "frames per second" rate
     // (and later a bunch of related stuff was dumped here, a reorg would be nice)
     //
@@ -1188,7 +1188,7 @@ namespace {
     }
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // cycle through frame rate presets  (XXX move this to OpenSteerDemo)
 
 
@@ -1230,7 +1230,7 @@ namespace {
     }
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // This function is called (by GLUT) each time a key is pressed.
     //
     // XXX the bulk of this should be moved to OpenSteerDemo
@@ -1336,7 +1336,7 @@ namespace {
     }
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // handles "special" keys,
     // function keys are handled by the Plugin
     //
@@ -1374,7 +1374,7 @@ namespace {
     }
 
 
-    // ------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     // Main drawing function for OpenSteerDemo application,
     // drives simulation as a side effect
 
@@ -1413,7 +1413,7 @@ namespace {
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // do all initialization related to graphics
 
 
@@ -1465,7 +1465,7 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // run graphics event loop
 
 
@@ -1477,7 +1477,7 @@ OpenSteer::runGraphics (void)
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // accessors for GLUT's window dimensions
 
 

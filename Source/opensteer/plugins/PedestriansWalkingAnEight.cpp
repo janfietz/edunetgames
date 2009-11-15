@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Pedestrian following path tests with one pedestrian following a pathway of
@@ -34,7 +34,7 @@
 // 06-20-05 bk: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include <iomanip>
@@ -50,14 +50,14 @@ namespace {
     using namespace OpenSteer;
     
     
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     
     
     typedef AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
     typedef AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
     
     
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     
     
     // How many pedestrians to create when the plugin starts first?
@@ -74,7 +74,7 @@ namespace {
     bool gWanderSwitch = true;
     
     
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     class Pedestrian : public SimpleVehicle
     {
 public:
@@ -189,13 +189,13 @@ public:
             if (leakThrough < frandom01())
             {
                 const float oTime = 6; // minTimeToCollision = 6 seconds
-                                       // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+                                       //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
                                        // just for testing
                                        //             obstacleAvoidance = steerToAvoidObstacles (oTime, gObstacles);
                                        //             obstacleAvoidance = steerToAvoidObstacle (oTime, gObstacle1);
                                        //             obstacleAvoidance = steerToAvoidObstacle (oTime, gObstacle3);
                 obstacleAvoidance = steerToAvoidObstacles (oTime, gObstacles);
-                // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+                //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
             }
             
             // if obstacle avoidance is needed, do it
@@ -398,7 +398,7 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
         
 
         
-        // ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+        //------------------------------------- xxxcwr11-1-04 fixing steerToAvoid
         
         gEndpoint0 = pathPoints[0];
         gEndpoint1 = pathPoints[pathPointCount-1];
@@ -412,7 +412,7 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // OpenSteerDemo Plugin
 
 
@@ -701,6 +701,6 @@ PedestrianPlugIn gPedestrianPlugIn;
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 } // anonymous namespace

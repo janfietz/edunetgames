@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Vec3: OpenSteer's generic type for 3d vectors
 //
@@ -44,7 +44,7 @@
 // 03-26-03 cwr: created to replace for Hiranabe-san's execellent but larger
 //               vecmath package (http://objectclub.esm.co.jp/vecmath/)
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_VEC3_H
@@ -56,14 +56,14 @@
 
 namespace OpenSteer {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     class Vec3
     {
     public:
 
-        // ----------------------------------------- generic 3d vector operations
+        //------------------------------------------ generic 3d vector operations
 
         // three-dimensional Cartesian coordinates
         float x, y, z;
@@ -141,7 +141,7 @@ namespace OpenSteer {
         // XXX "Vec3 distance (vec3, Vec3)" collided with STL's distance template.
         static float distance (const Vec3& a, const Vec3& b){ return(a-b).length();}
 
-        // --------------------------- utility member functions used in OpenSteer
+        //---------------------------- utility member functions used in OpenSteer
 
         // return component of vector parallel to a unit basis vector
         // (IMPORTANT NOTE: assumes "basis" has unit magnitude (length==1))
@@ -224,7 +224,7 @@ namespace OpenSteer {
     };
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // scalar times vector product ("float * Vec3")
 
 
@@ -241,7 +241,7 @@ namespace OpenSteer {
 	}
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // default character stream output method
 
 #ifndef NOT_OPENSTEERDEMO  // only when building OpenSteerDemo
@@ -253,7 +253,7 @@ namespace OpenSteer {
 
 #endif // NOT_OPENSTEERDEMO
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Returns a position randomly distributed inside a sphere of unit radius
     // centered at the origin.  Orientation will be random and length will range
     // between 0 and 1
@@ -262,7 +262,7 @@ namespace OpenSteer {
     Vec3 RandomVectorInUnitRadiusSphere (void);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Returns a position randomly distributed on a disk of unit radius
     // on the XZ (Y=0) plane, centered at the origin.  Orientation will be
     // random and length will range between 0 and 1
@@ -271,7 +271,7 @@ namespace OpenSteer {
     Vec3 randomVectorOnUnitRadiusXZDisk (void);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Returns a position randomly distributed on the surface of a sphere
     // of unit radius centered at the origin.  Orientation will be random
     // and length will be 1
@@ -283,7 +283,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Returns a position randomly distributed on a circle of unit radius
     // on the XZ (Y=0) plane, centered at the origin.  Orientation will be
     // random and length will be 1
@@ -295,7 +295,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // used by limitMaxDeviationAngle / limitMinDeviationAngle below
 
 
@@ -305,7 +305,7 @@ namespace OpenSteer {
                                         const Vec3& basis);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Enforce an upper bound on the angle by which a given arbitrary vector
     // diviates from a given reference direction (specified by a unit basis
     // vector).  The effect is to clip the "source" vector to be inside a cone
@@ -323,7 +323,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Enforce a lower bound on the angle by which a given arbitrary vector
     // diviates from a given reference direction (specified by a unit basis
     // vector).  The effect is to clip the "source" vector to be outside a cone
@@ -341,7 +341,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Returns the distance between a point and a line.  The line is defined in
     // terms of a point on the line ("lineOrigin") and a UNIT vector parallel to
     // the line ("lineUnitTangent")
@@ -357,7 +357,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // given a vector, return a vector perpendicular to it (note that this
     // arbitrarily selects one of the infinitude of perpendicular vectors)
 
@@ -365,7 +365,7 @@ namespace OpenSteer {
     Vec3 findPerpendicularIn3d (const Vec3& direction);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // candidates for global utility functions
     //
     // dot
@@ -378,5 +378,5 @@ namespace OpenSteer {
 } // namespace OpenSteer
     
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_VEC3_H

@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer Boids
@@ -33,7 +33,7 @@
 // 09-26-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include <sstream>
@@ -62,14 +62,14 @@ namespace {
     using namespace OpenSteer;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
     typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     class Boid : public OpenSteer::SimpleVehicle
@@ -231,7 +231,7 @@ namespace {
         }
 
 
-    // ---------------------------------------------- xxxcwr111704_terrain_following
+    //----------------------------------------------- xxxcwr111704_terrain_following
         // control orientation for this boid
         void regenerateLocalSpace (const Vec3& newVelocity,
                                    const float elapsedTime)
@@ -268,7 +268,7 @@ namespace {
             setForward (newFor);
             setUnitSideFromForwardAndUp ();
         }
-    // ---------------------------------------------- xxxcwr111704_terrain_following
+    //----------------------------------------------- xxxcwr111704_terrain_following
 
         // switch to new proximity database -- just for demo purposes
         void newPD (ProximityDatabase& pd)
@@ -325,7 +325,7 @@ namespace {
     #endif // NO_LQ_BIN_STATS
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Plugin for OpenSteerDemo
 
 
@@ -580,9 +580,9 @@ namespace {
         // which of the various proximity databases is currently in use
         int cyclePD;
 
-        // --------------------------------------------------------
+        //---------------------------------------------------------
         // the rest of this plug-in supports the various obstacles:
-        // --------------------------------------------------------
+        //---------------------------------------------------------
 
         // enumerate demos of various constraints on the flock
         enum ConstraintType {none, insideSphere,
@@ -791,6 +791,6 @@ namespace {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 } // anonymous namespace

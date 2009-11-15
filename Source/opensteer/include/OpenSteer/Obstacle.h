@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Obstacles for use with obstacle avoidance
@@ -34,7 +34,7 @@
 // 09-05-02 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_OBSTACLE_H
@@ -53,7 +53,7 @@ namespace OpenSteer {
     class Color;
     
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // AbstractObstacle: a pure virtual base class for an abstract shape in
     // space, to be used with obstacle avoidance.  (Oops, its not "pure" since
     // I added a concrete method to PathIntersection 11-04-04 -cwr).
@@ -119,7 +119,7 @@ namespace OpenSteer {
     typedef ObstacleGroup::const_iterator ObstacleIterator;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Obstacle is a utility base class providing some shared functionality
     class Obstacle : public AbstractObstacle
     {
@@ -157,9 +157,9 @@ namespace OpenSteer {
         seenFromState _seenFrom;
     };
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // SphereObstacle a simple ball-shaped obstacle
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // LocalSpaceObstacle: a mixture of LocalSpace and Obstacle methods
     typedef EntityLocalSpaceMixin<Obstacle> LocalSpaceObstacle;
 
@@ -181,7 +181,7 @@ namespace OpenSteer {
             const;
     };
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // BoxObstacle: a box-shaped (cuboid) obstacle of a given height, width,
     // depth, position and orientation.  The box is centered on and aligned
     // with a local space.
@@ -205,7 +205,7 @@ namespace OpenSteer {
             const;
     };
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // PlaneObstacle: a planar obstacle of a given position and orientation.
     // The plane is defined as the XY (aka side/up) plane of a local space.
     // The +Z (forward) half-space is considered "outside" the obstacle.  
@@ -246,7 +246,7 @@ namespace OpenSteer {
         }
     };
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // RectangleObstacle: a rectangular obstacle of a given height, width,
     // position and orientation.  It is a rectangle centered on the XY (aka
     // side/up) plane of a local space.
@@ -283,5 +283,5 @@ namespace OpenSteer {
 } // namespace OpenSteer
     
     
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_OBSTACLE_H

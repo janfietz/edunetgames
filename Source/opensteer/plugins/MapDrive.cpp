@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Driving through map-based obstacles    (OpenSteerDemo Plugin)
@@ -47,7 +47,7 @@
 // 10-15-03 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include <iomanip>
@@ -84,7 +84,7 @@
 #include "OpenSteer/TerrainMap.h"
 #endif
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 namespace {
@@ -565,7 +565,7 @@ namespace {
      * Use PolylineSegmentedPathwaySegmentRadii instead!
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // A variation on PolylinePathway (whose path tube radius is constant)
     // GCRoute (Grand Challenge Route) has an array of radii-per-segment
     //
@@ -740,7 +740,7 @@ namespace {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     class MapDriver : public SimpleVehicle
@@ -1343,9 +1343,9 @@ namespace {
             if (JS && cancelJS) QQQoaJustScraping = false;
 
 
-            // ----------------------------------------------------------
+            //-----------------------------------------------------------
             // now we have measured everything, decide which way to steer
-            // ----------------------------------------------------------
+            //-----------------------------------------------------------
 
 
             // no obstacles found on path, return zero steering
@@ -2289,7 +2289,7 @@ namespace {
         {
             const Vec3 trimmedLinear = linear.truncateLength (maxForce ());
 
-            // ---------- this block imported from steerToAvoidObstaclesOnMap
+            //----------- this block imported from steerToAvoidObstaclesOnMap
             const float signedRadius = 1 / (nonZeroCurvatureQQQ() /*QQQ*/ * 1);
             const Vec3 localCenterOfCurvature = side () * signedRadius;
             const Vec3 center = position () + localCenterOfCurvature;
@@ -2300,14 +2300,14 @@ namespace {
             const float twoPi = 2 * OPENSTEER_M_PI;
             const float circumference = twoPi * arcRadius;
             const float arcAngle = twoPi * arcLength / circumference;
-            // ---------- this block imported from steerToAvoidObstaclesOnMap
+            //----------- this block imported from steerToAvoidObstaclesOnMap
 
-            // ---------- this block imported from scanObstacleMap
+            //----------- this block imported from scanObstacleMap
             // vector from center of curvature to position of vehicle
             const Vec3 initialSpoke = position () - center;
             // rotate by signed arc angle
             const Vec3 spoke = initialSpoke.rotateAboutGlobalY (arcAngle * sign);
-            // ---------- this block imported from scanObstacleMap
+            //----------- this block imported from scanObstacleMap
 
             const Vec3 fromCenter = -localCenterOfCurvature.normalize ();
             const float dRadius = trimmedLinear.dot (fromCenter);
@@ -2558,7 +2558,7 @@ namespace {
     float MapDriver::savedNearestWL = 0;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Plugin for OpenSteerDemo
 
 
@@ -3022,6 +3022,6 @@ namespace {
     MapDrivePlugIn gMapDrivePlugIn;
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 } // anonymous namespace
