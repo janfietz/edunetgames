@@ -66,11 +66,7 @@ using namespace OpenSteer;
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 void BoidsPlugin::open (void)
-{
-	if(0 == this->m_pBoidFactory)
-	{
-		this->m_pBoidFactory = new BoidFactory();
-	}
+{	
     // make the database used to accelerate proximity queries
     cyclePD = -1;
 	this->pd = NULL;
@@ -103,7 +99,9 @@ void BoidsPlugin::update (const float currentTime, const float elapsedTime)
     // update flock simulation for each boid
     for (iterator i = flock.begin(); i != flock.end(); i++)
     {
-        (**i).update (currentTime, elapsedTime);
+		Boid* pkBoid = (*i);
+		pkBoid->setParentPlugin( this );
+        pkBoid->update (currentTime, elapsedTime);
     }
 }
 
@@ -178,12 +176,6 @@ void BoidsPlugin::close (void)
     // delete the proximity database
     delete pd;
     pd = NULL;
-
-	if(NULL < this->m_pBoidFactory)
-	{
-		delete this->m_pBoidFactory;
-		this->m_pBoidFactory = NULL;
-	}
 }
 
 // ----------------------------------------------------------------------------
@@ -316,26 +308,47 @@ void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
 // ----------------------------------------------------------------------------
 void BoidsPlugin::addBoidToFlock (void)
 {    
-	Boid* boid = this->m_pBoidFactory->CreateBoid( *pd );
-	if(NULL != boid)
-	{
-		boid->m_pkParentPlugin = this;
-		this->AddBoidToFlock( boid );
-	}
+	osAbstractVehicle* pkVehicle = this->createVehicle( 0, pd );
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.addVehicle( pkVehicle );
 }
+
+
 // ----------------------------------------------------------------------------
-// JF ++ 
-void BoidsPlugin::AddBoidToFlock( Boid* pkBoid )
-{
-	flock.push_back (pkBoid);
-    if (flock.size() == 1) 
-		SimpleVehicle::selectedVehicle = pkBoid;
-}
-// ----------------------------------------------------------------------------
-void BoidsPlugin::RemoveBoidFromFlock( const Boid* pkBoid )
+void BoidsPlugin::removeBoidFromFlock (void)
 {
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.removeVehicle( pkBoid );
+	if (kVG.population() > 0)
+	{
+		// save pointer to last pedestrian, then remove it from the crowd
+		AbstractVehicle* boid = flock.back();
+		flock.pop_back();
+
+		// if it is OpenSteerDemo's selected vehicle, unselect it
+		if (boid == SimpleVehicle::selectedVehicle)
+			SimpleVehicle::selectedVehicle = NULL;
+
+		// delete the Pedestrian
+		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		if( NULL != pkFactory )
+		{
+			pkFactory->destroyVehicle( boid );
+		}
+		boid = NULL;
+	}
+}  
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* BoidsPlugin::createVehicle( 
+	EntityClassId classId, ProximityDatabase* pd ) const
+{
+	AbstractVehicle* pkVehicle = NULL;
+	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	if( NULL != pkFactory )
+	{
+		pkVehicle = pkFactory->createVehicle( classId, pd );
+	}	
+	return pkVehicle;
 }
 // ----------------------------------------------------------------------------
 Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )
@@ -352,19 +365,7 @@ Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )
 	}
 	return kIterEnd;
 }
-// JF --
-// ----------------------------------------------------------------------------
-void BoidsPlugin::removeBoidFromFlock (void)
-{
-    if (flock.size() > 0)
-    {
-        // save a pointer to the last boid, then remove it from the flock
-        const Boid* boid = flock.back();
-		this->RemoveBoidFromFlock( boid );
-
-		this->m_pBoidFactory->DestroyBoid( boid );
-    }
-}    
+  
 
 // ----------------------------------------------------------------------------
 void BoidsPlugin::nextBoundaryCondition (void)

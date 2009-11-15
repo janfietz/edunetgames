@@ -4,7 +4,6 @@
 #include "EduNetConnect/OSReplicaTypes.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
-#include "NetBoidFactory.h"
 #include "NetBoidConditionReplica.h"
 
 
@@ -19,8 +18,11 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):BaseClass( bAddToRegis
 
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
-	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);	
-	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
+	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);
+	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
+	pkBoid->setParentPlugin( &this->m_kGamePlugin );
+	this->m_pkBoidFactory->setMasterVehicle( pkBoid );
+	this->m_kGamePlugin.setVehicleFactory( this->m_pkBoidFactory );
 }
 
 //-----------------------------------------------------------------------------
@@ -106,10 +108,8 @@ void NetPeerBoidPlugin::DeleteContent( void )
 //-----------------------------------------------------------------------------
 NetClientBoidPlugin::NetClientBoidPlugin()
 {
-	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-
-	this->m_pkBoidFactory = new BoidDummyFactory(&this->m_kReplicaManager);	
-	this->m_kGamePlugin.SetBoidFactory( this->m_pkBoidFactory );
+	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
+	this->m_kGamePlugin.setVehicleFactory( NULL  );
 }
 
 //-----------------------------------------------------------------------------

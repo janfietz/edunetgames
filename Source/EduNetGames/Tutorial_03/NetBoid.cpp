@@ -31,6 +31,12 @@ Boid::~Boid ()
 	// delete this boid's token in the proximity database
 	delete proximityToken;
 }
+
+void Boid::setParentPlugin( BoidsPlugin* pPlugin)
+{
+	this->m_pkParentPlugin = pPlugin;
+}
+
 // ----------------------------------------------------------------------------
 // reset state
 void Boid::reset (void)
@@ -238,3 +244,13 @@ void Boid::annotateAvoidObstacle (const float minDistanceToCollision)
 
 const ObstacleGroup& Boid::obstacles(void) const { return m_pkParentPlugin->obstacles(); }
 ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* Boid::cloneVehicle(
+	ProximityDatabase* pkProximityDatabase ) const
+{
+	Boid* pkNewBoid = (NULL == pkProximityDatabase) ? new Boid() : new Boid( *pkProximityDatabase );
+	pkNewBoid->setParentPlugin( this->m_pkParentPlugin );
+
+	 return pkNewBoid;
+}
