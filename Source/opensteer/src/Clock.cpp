@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // discrete time simulation clock for OpenSteerDemo
@@ -45,13 +45,13 @@
 // 06-26-02 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Clock.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // XXX This is a bit ad hoc.  Need to revisit conditionalization on operating
 // XXX system.  As of 5-5-03, this module knows about Win32 (code thanks to
 // XXX Leaf Garland and Bruce Mitchener) and Linux/Unix (Craig's original
@@ -68,7 +68,7 @@
 #endif
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Constructor
 
 
@@ -122,7 +122,7 @@ OpenSteer::Clock::Clock (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // update this clock, called once per simulation step ("frame") to:
 //
 //     track passage of real time
@@ -186,7 +186,7 @@ OpenSteer::Clock::update (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // "wait" until next frame time (actually spin around this tight loop)
 //
 //
@@ -216,7 +216,7 @@ OpenSteer::Clock::frameRateSync (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // force simulation time ahead, ignoring passage of real time.
 // Used for OpenSteerDemo's "single step forward" and animation mode
 
@@ -252,7 +252,7 @@ OpenSteer::Clock::advanceSimulationTime (const float seconds)
 
 namespace {
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Returns the number of seconds of real time (represented as a float) since
 // the clock was first updated.
 //
@@ -307,4 +307,4 @@ OpenSteer::Clock::realTimeSinceFirstClockUpdate (void)
 #endif
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

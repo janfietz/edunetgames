@@ -1,6 +1,6 @@
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -27,7 +27,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteerDemo
@@ -40,7 +40,7 @@
 // 06-26-02 cwr: App class created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_OPENSTEERDEMO_H
@@ -63,17 +63,17 @@ namespace OpenSteer {
     class OpenSteerDemo
     {
     public:
-        // ------------------------------------------------------ component objects
+        //------------------------------------------------------- component objects
 
         // clock keeps track of both "real time" and "simulation time"
         static Clock clock;
 
-        // ------------------------------------------ addresses of selected objects
+        //------------------------------------------- addresses of selected objects
 
         // currently selected plug-in (user can choose or cycle through them)
         static AbstractPlugin* selectedPlugIn;
 
-        // -------------------------------------------- initialize, update and exit
+        //--------------------------------------------- initialize, update and exit
 
         // initialize OpenSteerDemo
         //     XXX  if I switch from "totally static" to "singleton"
@@ -87,7 +87,7 @@ namespace OpenSteer {
         static void errorExit (const char* message);
         static void exit (int exitCode);
 
-        // ------------------------------------------------------- Plugin interface
+        //-------------------------------------------------------- Plugin interface
 
         // select the default Plugin
         static void selectDefaultPlugIn (void);
@@ -120,7 +120,7 @@ namespace OpenSteer {
 
         static const AVGroup& allVehiclesOfSelectedPlugIn(void);
 
-        // ---------------------------------------------------- OpenSteerDemo phase
+        //----------------------------------------------------- OpenSteerDemo phase
 
         static bool phaseIsDraw     (void) {return phase == drawPhase;}
         static bool phaseIsUpdate   (void) {return phase == updatePhase;}
@@ -137,13 +137,13 @@ namespace OpenSteer {
                     (phaseTimerDraw() + phaseTimerUpdate()));
         }
 
-        // ------------------------------------------------------ delayed reset XXX
+        //------------------------------------------------------- delayed reset XXX
 
         // XXX to be reconsidered
         static void queueDelayedResetPlugInXXX (void);
         static void doDelayedResetPlugInXXX (void);
 
-        // ------------------------------------------------------ vehicle selection
+        //------------------------------------------------------- vehicle selection
 
         // select the "next" vehicle: cycle through the registry
         static void selectNextVehicle (void);
@@ -151,7 +151,7 @@ namespace OpenSteer {
         // select vehicle nearest the given screen position (e.g.: of the mouse)
         static void selectVehicleNearestScreenPosition (int x, int y);
 
-        // ---------------------------------------------------------- mouse support
+        //----------------------------------------------------------- mouse support
 
         // Find the AbstractVehicle whose screen position is nearest the
         // current the mouse position.  Returns NULL if mouse is outside
@@ -168,7 +168,7 @@ namespace OpenSteer {
         static int mouseY;
         static bool mouseInWindow;
 
-        // ------------------------------------------------------- camera utilities
+        //-------------------------------------------------------- camera utilities
 
         // set a certain initial camera state used by several plug-ins
         static void init2dCamera (AbstractVehicle& selected);
@@ -200,7 +200,7 @@ namespace OpenSteer {
         static const float cameraTargetDistance;
         static const Vec3 cameraTargetOffset;
 
-        // ------------------------------------------------ graphics and annotation
+        //------------------------------------------------- graphics and annotation
 
         // do all initialization related to graphics
         static void initializeGraphics (void);
@@ -226,7 +226,7 @@ namespace OpenSteer {
                                                   const float radiusMultiplier,
                                                   const Color& color);
 
-        // ----------------------------------------------------------- console text
+        //------------------------------------------------------------ console text
 
         // print a line on the console with "OpenSteerDemo: " then the given ending
         static void printMessage (const char* message);
@@ -239,7 +239,7 @@ namespace OpenSteer {
         // print list of known commands
         static void keyboardMiniHelp (void);
 
-        // ---------------------------------------------------------------- private
+        //----------------------------------------------------------------- private
 
     private:
         static int phase;
@@ -263,21 +263,21 @@ namespace OpenSteer {
         static const int overheadPhase;
     };
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // do all initialization related to graphics
 
 
     void initializeGraphics (int argc, char **argv);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // run graphics event loop
 
 
     void runGraphics (void);
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // accessors for GLUT's window dimensions
 
 
@@ -287,11 +287,11 @@ namespace OpenSteer {
 } // namespace OpenSteer
     
     
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Draw.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_OPENSTEERDEMO_H

@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // AbstractVehicle: pure virtual base class for generic steerable vehicles
@@ -34,7 +34,7 @@
 // 01-30-03 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 #ifndef OPENSTEER_ABSTRACTVEHICLE_H
 #define OPENSTEER_ABSTRACTVEHICLE_H
@@ -48,7 +48,7 @@
 #include <vector>
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 namespace OpenSteer {
 	
@@ -84,7 +84,7 @@ namespace OpenSteer {
         // (assumes velocity remains constant)
         virtual Vec3 predictFuturePosition (const float predictionTime) const = 0;
 
-        // ----------------------------------------------------------------------
+        //-----------------------------------------------------------------------
         // XXX this vehicle-model-specific functionality functionality seems out
         // XXX of place on the abstract base class, but for now it is expedient
 
@@ -132,5 +132,5 @@ namespace OpenSteer {
 } // namespace OpenSteer
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_ABSTRACTVEHICLE_H

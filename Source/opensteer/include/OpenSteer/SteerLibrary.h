@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // SteerLibraryMixin
@@ -40,7 +40,7 @@
 // 11-21-01 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_STEERLIBRARY_H
@@ -57,7 +57,7 @@
 
 namespace OpenSteer {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     template <class Super>
@@ -95,7 +95,7 @@ namespace OpenSteer {
             gaudyPursuitAnnotation = false;
         }
 
-        // -------------------------------------------------- steering behaviors
+        //--------------------------------------------------- steering behaviors
 
         // Wander behavior
         float WanderSide;
@@ -118,7 +118,7 @@ namespace OpenSteer {
                                 Pathway& path);
         Vec3 steerToStayOnPath (const float predictionTime, Pathway& path);
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // Obstacle Avoidance behavior
         //
         // Returns a steering force to avoid a given obstacle.  The purely
@@ -140,7 +140,7 @@ namespace OpenSteer {
                                     const ObstacleGroup& obstacles);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // Unaligned collision avoidance behavior: avoid colliding with other
         // nearby vehicles moving in unconstrained directions.  Determine which
         // (if any) other other vehicle we would collide with first, then steers
@@ -168,7 +168,7 @@ namespace OpenSteer {
         Vec3 ourPositionAtNearestApproach;
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // avoidance of "close neighbors" -- used only by steerToAvoidNeighbors
         //
         // XXX  Does a hard steer away from any other agent who comes withing a
@@ -180,7 +180,7 @@ namespace OpenSteer {
                                          const AVGroup& others);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // used by boid behaviors
 
 
@@ -190,7 +190,7 @@ namespace OpenSteer {
                                  const float cosMaxAngle);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // Separation behavior -- determines the direction away from nearby boids
 
 
@@ -199,7 +199,7 @@ namespace OpenSteer {
                                  const AVGroup& flock);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // Alignment behavior
 
         Vec3 steerForAlignment (const float maxDistance,
@@ -207,7 +207,7 @@ namespace OpenSteer {
                                 const AVGroup& flock);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // Cohesion behavior
 
 
@@ -216,7 +216,7 @@ namespace OpenSteer {
                                const AVGroup& flock);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // pursuit of another vehicle (& version with ceiling on prediction time)
 
 
@@ -229,7 +229,7 @@ namespace OpenSteer {
         bool gaudyPursuitAnnotation;
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // evasion of another vehicle
 
 
@@ -237,7 +237,7 @@ namespace OpenSteer {
                               const float maxPredictionTime);
 
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // tries to maintain a given speed, returns a maxForce-clipped steering
         // force along the forward/backward axis
 
@@ -245,7 +245,7 @@ namespace OpenSteer {
         Vec3 steerForTargetSpeed (const float targetSpeed);
 
 
-        // ----------------------------------------------------------- utilities
+        //------------------------------------------------------------ utilities
         // XXX these belong somewhere besides the steering library
         // XXX above AbstractVehicle, below SimpleVehicle
         // XXX ("utility vehicle"?)
@@ -273,7 +273,7 @@ namespace OpenSteer {
         };
 
 
-        // ------------------------------------------------ graphical annotation
+        //------------------------------------------------- graphical annotation
         // (parameter names commented out to prevent compiler warning from "-W")
 
 
@@ -312,7 +312,7 @@ namespace OpenSteer {
     
 } // namespace OpenSteer
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 template<class Super>
@@ -330,7 +330,7 @@ steerForWander (float dt)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Seek behavior
 
 
@@ -344,7 +344,7 @@ steerForSeek (const Vec3& target)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Flee behavior
 
 
@@ -358,7 +358,7 @@ steerForFlee (const Vec3& target)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // xxx proposed, experimental new seek/flee [cwr 9-16-02]
 
 
@@ -386,7 +386,7 @@ xxxsteerForSeek (const Vec3& target)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Path Following behaviors
 
 
@@ -480,7 +480,7 @@ steerToFollowPath (const int direction,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Obstacle Avoidance behavior
 //
 // Returns a steering force to avoid a given obstacle.  The purely lateral
@@ -537,7 +537,7 @@ steerToAvoidObstacles (const float minTimeToCollision,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Unaligned collision avoidance behavior: avoid colliding with other nearby
 // vehicles moving in unconstrained directions.  Determine which (if any)
 // other other vehicle we would collide with first, then steers to avoid the
@@ -712,7 +712,7 @@ computeNearestApproachPositions (AbstractVehicle& otherVehicle,
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // avoidance of "close neighbors" -- used only by steerToAvoidNeighbors
 //
 // XXX  Does a hard steer away from any other agent who comes withing a
@@ -750,7 +750,7 @@ steerToAvoidCloseNeighbors (const float minSeparationDistance,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // used by boid behaviors: is a given vehicle within this boid's neighborhood?
 
 
@@ -795,7 +795,7 @@ inBoidNeighborhood (const AbstractVehicle& otherVehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Separation behavior: steer away from neighbors
 
 
@@ -844,7 +844,7 @@ steerForSeparation (const float maxDistance,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Alignment behavior: steer to head in same direction as neighbors
 
 
@@ -880,7 +880,7 @@ steerForAlignment (const float maxDistance,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Cohesion behavior: to to move toward center of neighbors
 
 
@@ -917,7 +917,7 @@ steerForCohesion (const float maxDistance,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // pursuit of another vehicle (& version with ceiling on prediction time)
 
 
@@ -1031,7 +1031,7 @@ steerForPursuit (const AbstractVehicle& quarry,
     return steerForSeek (target);
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // evasion of another vehicle
 
 
@@ -1056,7 +1056,7 @@ steerForEvasion (const AbstractVehicle& menace,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // tries to maintain a given speed, returns a maxForce-clipped steering
 // force along the forward/backward axis
 
@@ -1072,5 +1072,5 @@ steerForTargetSpeed (const float targetSpeed)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_STEERLIBRARY_H

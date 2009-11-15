@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer Obstacle classes
@@ -33,13 +33,13 @@
 // 10-28-04 cwr: split off from Obstacle.h 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Obstacle.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Obstacle
 // compute steering for a vehicle to avoid this obstacle, if needed 
 
@@ -57,7 +57,7 @@ OpenSteer::Obstacle::steerToAvoid (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Obstacle
 // static method to apply steerToAvoid to nearest obstacle in an ObstacleGroup
 
@@ -79,7 +79,7 @@ steerToAvoidObstacles (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Obstacle
 // static method to find first vehicle path intersection in an ObstacleGroup
 //
@@ -114,7 +114,7 @@ firstPathIntersectionWithObstacleGroup (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // PathIntersection
 // determine steering once path intersections have been found
 
@@ -141,7 +141,7 @@ steerToAvoidIfNeeded (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // SphereObstacle
 // find first intersection of a vehicle's path with this obstacle
 
@@ -230,7 +230,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // BoxObstacle
 // find first intersection of a vehicle's path with this obstacle
 
@@ -285,7 +285,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // PlaneObstacle
 // find first intersection of a vehicle's path with this obstacle
 
@@ -336,7 +336,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // RectangleObstacle
 // determines if a given point on XY plane is inside obstacle shape
 
@@ -352,4 +352,4 @@ xyPointInsideShape (const Vec3& point, float radius) const
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

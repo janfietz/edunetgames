@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // AnnotationMixin
@@ -39,7 +39,7 @@
 // 07-01-02 cwr: created (as Annotation.h) 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_ANNOTATION_H
@@ -51,7 +51,7 @@
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/Color.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 namespace OpenSteer {
@@ -83,7 +83,7 @@ namespace OpenSteer {
         // destructor
         virtual ~AnnotationMixin ();
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // trails / streamers
         //
         // these routines support visualization of a vehicle's recent path
@@ -105,7 +105,7 @@ namespace OpenSteer {
         // forget trail history: used to prevent long streaks due to teleportation
         void clearTrailHistory (void);
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // drawing of lines, circles and (filled) disks to annotate steering
         // behaviors.  When called during OpenSteerDemo's simulation update phase,
         // these functions call a "deferred draw" routine which buffer the
@@ -165,7 +165,7 @@ namespace OpenSteer {
 
         //
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
         // support for annotation circles
 
         void annotationXZCircleOrDisk (const float radius,
@@ -223,7 +223,7 @@ namespace OpenSteer {
 			return ( ( this->m_eAnnotationMode == OpenSteer::EAnnotationMode_local ) || OpenSteer::enableAnnotation );
 		}
 
-        // ------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
     private:
 
         // trails
@@ -246,7 +246,7 @@ namespace OpenSteer {
 
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Constructor and destructor
 template<class Super>
 OpenSteer::AnnotationMixin<Super>::AnnotationMixin (void):
@@ -271,7 +271,7 @@ OpenSteer::AnnotationMixin<Super>::~AnnotationMixin (void)
     delete[] trailFlags;
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // set trail parameters: the amount of time it represents and the number of
 // samples along its length.  re-allocates internal buffers.
 template<class Super>
@@ -302,7 +302,7 @@ OpenSteer::AnnotationMixin<Super>::setTrailParameters (const float duration,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // forget trail history: used to prevent long streaks due to teleportation
 //
 // XXX perhaps this could be made automatic: triggered when the change in
@@ -315,7 +315,7 @@ OpenSteer::AnnotationMixin<Super>::clearTrailHistory (void)
     setTrailParameters (trailDuration, trailVertexCount);
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // record a position for the current time, called once per update
 template<class Super>
 void 
@@ -337,7 +337,7 @@ OpenSteer::AnnotationMixin<Super>::recordTrailVertex (const float currentTime,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw the trail as a dotted line, fading away with age
 template<class Super>
 void 
@@ -386,7 +386,7 @@ OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // request (deferred) drawing of a line for graphical annotation
 //
 // This is called during OpenSteerDemo's simulation phase to annotate behavioral
@@ -419,7 +419,7 @@ template<class Super> void OpenSteer::AnnotationMixin<Super>::annotationLine
 #endif // NOT_OPENSTEERDEMO
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // request (deferred) drawing of a circle (or disk) for graphical annotation
 //
 // This is called during OpenSteerDemo's simulation phase to annotate behavioral
@@ -460,5 +460,5 @@ void OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk
 #endif // NOT_OPENSTEERDEMO
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_ANNOTATION_H

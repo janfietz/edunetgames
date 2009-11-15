@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Pathway and PolylinePathway, for path following.
@@ -35,13 +35,13 @@
 // 06-03-02 cwr: created
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/OldPathway.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // construct a PolylinePathway given the number of points (vertices),
 // an array of points, and a path radius.
 
@@ -55,7 +55,7 @@ OpenSteer::Old::PolylinePathway::PolylinePathway (const int _pointCount,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // utility for constructors
 
 
@@ -85,7 +85,7 @@ OpenSteer::Old::PolylinePathway::initialize (const int _pointCount,
 	setupLengths();
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // utility for constructors
 
 void 
@@ -111,7 +111,7 @@ OpenSteer::Old::PolylinePathway::setupLengths ()
     }
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // move existing points safely
 
 void 
@@ -134,7 +134,7 @@ OpenSteer::Old::PolylinePathway::movePoints (const int _firstPoint,
 	setupLengths();
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Given an arbitrary point ("A"), returns the nearest point ("P") on
 // this path.  Also returns, via output arguments, the path tangent at
 // P and a measure of how far A is outside the Pathway's "tube".  Note
@@ -172,7 +172,7 @@ OpenSteer::Old::PolylinePathway::mapPointToPath (const Vec3& point,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // given an arbitrary point, convert it to a distance along the path
 
 
@@ -202,7 +202,7 @@ OpenSteer::Old::PolylinePathway::mapPointToPathDistance (const Vec3& point)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // given a distance along the path, convert it to a point on the path
 
 
@@ -243,7 +243,7 @@ OpenSteer::Old::PolylinePathway::mapPathDistanceToPoint (float pathDistance)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // computes distance from a point to a line segment 
 //
 // (I considered moving this to the vector library, but its too
@@ -283,4 +283,4 @@ OpenSteer::Old::PolylinePathway::pointToSegmentDistance (const Vec3& point,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

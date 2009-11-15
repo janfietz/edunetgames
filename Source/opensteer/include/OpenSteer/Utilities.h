@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Utilities for OpenSteering
@@ -36,7 +36,7 @@
 // 07-09-02 cwr: created 
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #ifndef OPENSTEER_UTILITIES_H
@@ -51,7 +51,7 @@
 #include <cassert>   // for assert
 #include <limits>    // for numeric_limits
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // For the sake of Windows, apparently this is a "Linux/Unix thing"
 
 
@@ -67,7 +67,7 @@
 
 namespace OpenSteer {
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Generic interpolation
 
 
@@ -77,7 +77,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Random number utilities
 
 
@@ -97,7 +97,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Constrain a given value (x) to be between two (ordered) bounds: min
     // and max.  Returns x if it is between the bounds, otherwise returns
     // the nearer bound.
@@ -111,7 +111,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // remap a value specified relative to a pair of bounding values
     // to the corresponding value relative to another pair of bounds.
     // Inspired by (dyna:remap-interval y y0 y1 z0 z1)
@@ -145,7 +145,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // classify a value relative to the interval between two bounds:
     //     returns -1 when below the lower bound
     //     returns  0 when between the bounds (inside the interval)
@@ -161,7 +161,7 @@ namespace OpenSteer {
 
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     inline float scalarRandomWalk (const float initial, 
@@ -176,7 +176,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
 
 
     inline float square (float x)
@@ -185,7 +185,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // for debugging: prints one line with a given C expression, an equals sign,
     // and the value of the expression.  For example "angle = 35.6"
 
@@ -193,7 +193,7 @@ namespace OpenSteer {
     #define debugPrint(e) (std::cout << #e" = " << (e) << std::endl << std::flush)
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // blends new values into an accumulator to produce a smoothed time series
     //
     // Modifies its third argument, a reference to the float accumulator holding
@@ -219,7 +219,7 @@ namespace OpenSteer {
     }
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // given a new Angle and an old angle, adjust the new for angle wraparound (the
     // 0->360 flip), returning a value equivalent to newAngle, but closest in
     // absolute value to oldAngle.  For radians fullCircle = OPENSTEER_M_PI*2, for degrees
@@ -256,7 +256,7 @@ namespace OpenSteer {
     */
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // Functions to encapsulate cross-platform differences for several <cmath>
     // functions.  Specifically, the C++ standard says that these functions are
     // in the std namespace (std::sqrt, etc.)  Apparently the MS VC6 compiler (or
@@ -290,7 +290,7 @@ namespace OpenSteer {
     #endif
 
 
-    // ----------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------
     // round (x)  "round off" x to the nearest integer (as a float value)
     //
     // This is a Gnu-sanctioned(?) post-ANSI-Standard(?) extension (as in
@@ -510,5 +510,5 @@ namespace OpenSteer {
 } // namespace OpenSteer
     
     
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 #endif // OPENSTEER_UTILITIES_H
