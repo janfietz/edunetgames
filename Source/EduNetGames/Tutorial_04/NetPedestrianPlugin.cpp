@@ -284,7 +284,7 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, Prox
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	osAbstractVehicle* pkVehicle = this->createVehicle( 0, pd );
+	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, pd );
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicle( pkVehicle );
 }
@@ -377,7 +377,7 @@ void removePedestrian(GLUI_Control* pkControl )
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
 {
 	// test if a vehicle can be created
-	AbstractVehicle* pkVehicle = this->createVehicle( 0, NULL );
+	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, NULL );
 	if( NULL != pkVehicle )
 	{
 		ET_SAFE_DELETE( pkVehicle );

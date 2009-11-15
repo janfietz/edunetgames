@@ -61,9 +61,13 @@ namespace OpenSteer
 
 		  virtual ~VehicleFactory() {}
 
-		  virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId ) const
+		  virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
 		  {
-			  return this->m_pkMasterVehicle;
+			  if( ( NULL != this->m_pkMasterVehicle ) && ( classId == this->m_pkMasterVehicle->getClassId() ) )
+			  {
+				  return this->m_pkMasterVehicle;
+			  }
+			  return NULL;
 		  }
 
 		  virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
@@ -71,16 +75,22 @@ namespace OpenSteer
 			  this->m_pkMasterVehicle = pkVehicle;
 		  }
 
-		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
 		  {
-			  return this->createVehicle( pkProximityDatabase );
+			  OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
+			  if( NULL != pkMasterVehicle )
+			  {
+				  return this->m_pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+			  }
+			  return NULL;
 		  }
 
 		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
 		  {
-			  OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( 0 );
-			  if( NULL != pkMasterVehicle )
+			  if( NULL != this->m_pkMasterVehicle )
 			  {
+				  // for debugging
+				  const OpenSteer::EntityClassId classId = this->m_pkMasterVehicle->getClassId();
 				  return this->m_pkMasterVehicle->cloneVehicle( pkProximityDatabase );
 			  }
 			  return NULL;
@@ -101,7 +111,7 @@ namespace OpenSteer
 	template <class VehicleClass>
 	class TVehicleFactory : public VehicleFactory
 	{
-		ET_DECLARE_BASE( TVehicleFactory )
+		ET_DECLARE_BASE( VehicleFactory )
 	public:
 		TVehicleFactory()
 		{
@@ -113,11 +123,11 @@ namespace OpenSteer
 
 		};
 
-		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId ) const
+		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
 		{
 			static VehicleClass kMasterVehicle;
 			this->m_pkMasterVehicle = &kMasterVehicle;
-			return this->m_pkMasterVehicle;
+			return BaseClass::accessMasterVehicle( classId );
 		}
 	};
 
