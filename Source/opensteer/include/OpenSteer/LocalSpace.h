@@ -422,12 +422,12 @@ namespace OpenSteer {
 
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	//! Concrete LocalSpace class, and a global constant for the identity transform
 	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 	const LocalSpace gGlobalSpace;
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	//! Concrete EntityLocalSpace class, and a global constant for the identity transform
 	typedef EntityLocalSpaceMixin<AbstractEntityLocalSpace> EntityLocalSpace;
 	const EntityLocalSpace gGlobalEntitySpace;

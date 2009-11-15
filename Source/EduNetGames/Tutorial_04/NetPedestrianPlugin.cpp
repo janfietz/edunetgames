@@ -33,11 +33,11 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
 
-
-#include "EduNetApplication/EduNetGames.h"
+#include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/NetworkPlugin.h"
 
-#include "EduNetCommon/EduNetDraw.h"
+#include "EduNetApplication/EduNetGames.h"
+
 
 using namespace OpenSteer;
 

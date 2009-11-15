@@ -8,7 +8,7 @@
 
 #include "OpenSteerUT/PluginArray.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 template < class PluginClass = OpenSteer::Plugin  >
 class PluginServerPlugin : public PeerPlugin<PluginClass>,
 	public EduNet::PluginHost
@@ -95,7 +95,7 @@ const char* PluginServerPlugin<PluginClass>::GetCurrentPluginName( void ) const
 	return this->m_kGamePlugin.name();	
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class PluginClientPlugin : public ClientPlugin<OpenSteer::PluginArray>,
 	public EduNet::PluginHost
 {

@@ -30,7 +30,7 @@
 
 #include "NetBoidFactory.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class NetBoidReplicaConnection : public RakNet::Connection_RM3
 {
 public:
@@ -44,7 +44,7 @@ private:
 	class OpenSteer::BoidsPlugin* m_pBoidPlugin;
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class NetBoidReplicaManager : public RakNet::ReplicaManager3
 {
 	virtual RakNet::Connection_RM3* AllocConnection(SystemAddress systemAddress, RakNetGUID rakNetGUID) const 

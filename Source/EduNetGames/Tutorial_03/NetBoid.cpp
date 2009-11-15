@@ -15,7 +15,7 @@ size_t Boid::minNeighbors = 0;
 size_t Boid::maxNeighbors = 0;
 size_t Boid::totalNeighbors = 0;
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 Boid::Boid (ProximityDatabase& pd)
 {
 	// allocate a token for this boid in the proximity database
@@ -25,7 +25,7 @@ Boid::Boid (ProximityDatabase& pd)
 	// reset all boid state
 	reset ();	
 }
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 Boid::~Boid ()
 {
 	// delete this boid's token in the proximity database
@@ -37,7 +37,7 @@ void Boid::setParentPlugin( BoidsPlugin* pPlugin)
 	this->m_pkParentPlugin = pPlugin;
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // reset state
 void Boid::reset (void)
 {
@@ -63,7 +63,7 @@ void Boid::reset (void)
 	proximityToken->updateForNewPosition (position());
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // draw this boid into the scene
 void Boid::draw (void)
 {
@@ -72,7 +72,7 @@ void Boid::draw (void)
 	// drawTrail ();
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // per frame simulation update
 void Boid::update (const float currentTime, const float elapsedTime)
 {
@@ -91,7 +91,7 @@ void Boid::update (const float currentTime, const float elapsedTime)
 	proximityToken->updateForNewPosition (position());
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // basic flocking
 Vec3 Boid::steerToFlock (void)
 {
@@ -153,7 +153,7 @@ Vec3 Boid::steerToFlock (void)
 	return separationW + alignmentW + cohesionW;
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // constrain this boid to stay within sphereical boundary.
 void Boid::sphericalWrapAround (void)
 {
@@ -185,7 +185,7 @@ void Boid::regenerateLocalSpace (const Vec3& newVelocity,
 	// regenerateLocalSpaceForTerrainFollowing (newVelocity, elapsedTime);
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // XXX experiment:
 // XXX   herd with terrain following
 // XXX   special case terrain: a sphere at the origin, radius 40
@@ -222,7 +222,7 @@ void Boid::newPD (ProximityDatabase& pd)
 	proximityToken = pd.allocateToken (this);
 }       
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // xxx perhaps this should be a call to a general purpose annotation for
 // xxx "local xxx axis aligned box in XZ plane" -- same code in in
 // xxx CaptureTheFlag.cpp

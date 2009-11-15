@@ -1,6 +1,5 @@
-#ifndef __GRIDPLUGIN_H__
-#define __GRIDPLUGIN_H__
-
+#ifndef __NETCTFPLUGIN_H__
+#define __NETCTFPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,43 +27,49 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
 
-
-namespace OpenSteer
+//-----------------------------------------------------------------------------
+class NetCtfPlugin : public OpenSteer::Plugin
 {
+	ET_DECLARE_BASE(OpenSteer::Plugin);
+public:
+	virtual ~NetCtfPlugin() {} // be more "nice" to avoid a compiler warning
+
+	OS_IMPLEMENT_CLASSNAME( NetCtfPlugin )
 	//-------------------------------------------------------------------------
-	class GridPlugin : public Plugin
-	{
-		ET_DECLARE_BASE(OpenSteer::Plugin);
-	public:
-		GridPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
-			m_kGridCenter( osVector3::zero )
-		{};
+	// OpenSteer::Plugin interface
+	virtual const char* name() const { return this->getClassName(); };
 
-		OS_IMPLEMENT_CLASSNAME( GridPlugin )
-		// required methods:
-		const char* name (void) const {return this->getClassName();}
-		void open (void) { }
-		void update (const float currentTime, const float elapsedTime) { }
-		void redraw (const float currentTime, const float elapsedTime);
-		void close (void) { }
-		const AVGroup& allVehicles (void) const { return m_kVehicles; }
+	virtual float selectionOrderSortKey (void) const {return 0.01f;}
 
-		// optional methods (see comments in AbstractPlugin for explanation):
-		void reset (void) { } // default is to reset by doing close-then-open
-		float selectionOrderSortKey (void) const {return 1000000;}
-		bool requestInitialSelection (void) const {return true;}
-		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
-		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
-	private:
-		AVGroup m_kVehicles;
-		osVector3 m_kGridCenter;
-		ET_IMPLEMENT_CLASS_NO_COPY(GridPlugin);
+	virtual void open (void);
 
-	};
+	virtual void update (const float currentTime, const float elapsedTime);
 
-}
+	virtual void redraw (const float currentTime, const float elapsedTime);
+
+	virtual void close (void);
+
+	virtual void reset (void);
+
+	virtual void handleFunctionKeys (int keyNumber);
+
+	virtual void printMiniHelpForFunctionKeys (void) const;
+
+	virtual const osAVGroup& allVehicles (void) const {return (const osAVGroup&) all;}
+
+	//-------------------------------------------------------------------------
+	void drawHomeBase (void);
+
+	void drawObstacles (void);
+
+	// a group (STL vector) of all vehicles in the Plugin
+	std::vector<class NetCtfBaseVehicle*> all;
+};
 
 
-#endif  // __GRIDPLUGIN_H__
+
+#endif // __NETCTFPLUGIN_H__

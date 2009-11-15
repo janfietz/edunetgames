@@ -37,7 +37,7 @@
 namespace OpenSteer {
 
 
-	// ----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class AbstractSimpleNetworkVehicle : public SimpleVehicle, public AbstractNetworkVehicle
 	{
 	public:

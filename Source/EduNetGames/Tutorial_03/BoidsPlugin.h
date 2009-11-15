@@ -24,7 +24,7 @@ namespace OpenSteer{
 		EBoidConstraintType_insideBox
 	};
 
-	// ----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
     // Plugin for OpenSteerDemo
 	class BoidsPlugin : public Plugin
     {

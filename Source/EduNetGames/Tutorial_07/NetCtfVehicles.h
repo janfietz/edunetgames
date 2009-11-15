@@ -33,7 +33,7 @@
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/VehicleClassIds.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // short names for STL vectors (iterators) of SphereObstacle pointers
 // (obsolete? replace with ObstacleGroup/ObstacleIterator ?)
 
