@@ -65,21 +65,21 @@ public:
 	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
 		virtual const char* name() const { return this->getClassName(); };
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void StartNetworkSession( void )
 	{
 		BaseClass::StartNetworkSession();
 		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void CreateContent( void )
 	{
 		BaseClass::CreateContent();
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void handleFunctionKeys (int keyNumber)
 	{
 		switch (keyNumber)
@@ -90,7 +90,7 @@ public:
 		}	
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ChangeReplicationInterval( RakNetTime additionalTime )
 	{
 		m_kReplicationSettings.interval += additionalTime;
@@ -105,21 +105,21 @@ public:
 		this->UpdateReplicationValue();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	static void changeReplicationDelay(GLUI_Control* pkControl )
 	{
 		PedestrianPeerPlugin* pkPlugin = (PedestrianPeerPlugin*)pkControl->ptr_val;
 		pkPlugin->UpdateReplicationValue();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void UpdateReplicationValue( void )
 	{
 		this->m_kReplicaManager.SetAutoSerializeInterval(
 			this->m_kReplicationSettings.interval);
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	virtual void initGui( void* pkUserdata ) 
 	{
 		BaseClass::initGui( pkUserdata );
@@ -133,7 +133,7 @@ public:
 		repSpinner->set_ptr_val( this );
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void DeleteContent( void )
 	{	
 		BaseClass::DeleteContent();
@@ -167,20 +167,20 @@ public:
 	OS_IMPLEMENT_CLASSNAME( PedestrianClientPlugin )
 		virtual const char* name() const { return this->getClassName(); };
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void StartNetworkSession( void )
 	{
 		BaseClass::StartNetworkSession();
 		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void CreateContent( void )
 	{
 		BaseClass::CreateContent();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void DeleteContent( void )
 	{	
 		BaseClass::DeleteContent();

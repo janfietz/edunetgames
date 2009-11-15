@@ -5,7 +5,7 @@
 #include "NetBoidReplicaConnection.h"
 #include "BoidsPlugin.h"
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugin>
 {
 	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugin>);
@@ -46,7 +46,7 @@ private:
 	ReplicationParams m_kReplicationSettings;
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugin>
 {
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugin>);

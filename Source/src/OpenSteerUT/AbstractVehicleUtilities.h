@@ -56,7 +56,7 @@ namespace OpenSteer
 		}
 
 		// important implement new clone functionality
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 		{
 			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );

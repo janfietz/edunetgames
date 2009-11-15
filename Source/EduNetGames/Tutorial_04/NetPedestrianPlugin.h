@@ -51,7 +51,7 @@ public:
 	virtual ~NetPedestrianPlugin();
 
 	OS_IMPLEMENT_CLASSNAME( NetPedestrianPlugin )
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// OpenSteer::Plugin interface
 	virtual const char* name() const { return this->getClassName(); };
 

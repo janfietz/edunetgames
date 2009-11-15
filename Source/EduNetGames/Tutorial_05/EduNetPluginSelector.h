@@ -63,7 +63,7 @@ private:
 	
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class PluginSelectorClientConnection : public RakNet::Connection_RM3
 {
 public:
@@ -84,7 +84,7 @@ private:
 	EduNet::PluginHost* m_pkPluginHost;
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class PluginSelectorConnection : public RakNet::Connection_RM3
 {
 public:
@@ -102,7 +102,7 @@ public:
 	};
 };
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class PluginSelectorReplicaManager : public RakNet::ReplicaManager3
 {
 	virtual RakNet::Connection_RM3* AllocConnection(SystemAddress systemAddress, RakNetGUID rakNetGUID) const 

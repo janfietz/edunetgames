@@ -36,7 +36,7 @@ TNetCtfEnemyVehicle gNetCtfEnemyVehicle;
 
 //-----------------------------------------------------------------------------
 namespace	{
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// globals
 	//(perhaps these should be member variables of a Vehicle or Plugin class)
 
@@ -68,16 +68,16 @@ namespace	{
 	int resetCount = 0;
 
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// state for OpenSteerDemo Plugin
 	//
 	// XXX consider moving this inside CtfPlugin
 	// XXX consider using STL(any advantage? consistency?)
 
 
-	NetCtfSeekerVehicle* ctfSeeker;
-	const int ctfEnemyCount = 4;
-	NetCtfEnemyVehicle* ctfEnemies [ctfEnemyCount];
+// 	NetCtfSeekerVehicle* ctfSeeker;
+ 	const int ctfEnemyCount = 4;
+	NetCtfEnemyVehicle* ctfEnemies [ctfEnemyCount] = {NULL, NULL, NULL, NULL};
 
 }
 
@@ -297,6 +297,10 @@ bool NetCtfSeekerVehicle::clearPathToGoal( void )
 	// loop over enemies
 	for(int i = 0; i < ctfEnemyCount; i++)
 	{
+		if( NULL == ctfEnemies[i] )
+		{
+			continue;
+		}
 		// short name for this enemy
 		const NetCtfEnemyVehicle& e = *ctfEnemies[i];
 		const float eDistance = Vec3::distance(position(), e.position());
@@ -639,6 +643,20 @@ void NetCtfEnemyVehicle::reset( void )
 //-----------------------------------------------------------------------------
 void NetCtfEnemyVehicle::update(const float currentTime, const float elapsedTime)
 {
+	// add to enemy database
+	for( int i = 0; i < ctfEnemyCount; ++i )
+	{
+		if( ctfEnemies [ctfEnemyCount] == this )
+		{
+			break;
+		}
+		if( ctfEnemies [ctfEnemyCount] == NULL )
+		{
+			ctfEnemies [ctfEnemyCount] = this;
+			break;
+		}
+	}
+
 	BaseClass::update( currentTime, elapsedTime );
 	// determine upper bound for pursuit prediction time
 	const float seekerToGoalDist = Vec3::distance(gHomeBaseCenter,

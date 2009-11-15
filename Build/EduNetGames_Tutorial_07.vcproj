@@ -186,6 +186,14 @@
 				Name="net"
 				>
 				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_07\NetCtfPlugin.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_07\NetCtfPlugin.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_07\NetCtfVehicleFactory.cpp"
 					>
 				</File>

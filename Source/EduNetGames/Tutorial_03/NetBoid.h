@@ -9,7 +9,7 @@ namespace OpenSteer{
 		// Include names declared in the OpenSteer namespace into the
 		// namespaces to search to find names.
 		using namespace OpenSteer;
-	// ----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 
 
 	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
@@ -17,7 +17,7 @@ namespace OpenSteer{
 
 
 
-	// ----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 
 	class Boid : public SimpleNetworkVehicle
 	{

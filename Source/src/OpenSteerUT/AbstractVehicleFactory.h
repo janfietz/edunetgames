@@ -34,7 +34,7 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class AbstractVehicleFactory
 	{
 	public:
@@ -52,7 +52,7 @@ namespace OpenSteer
 	protected:
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class VehicleFactory : public AbstractVehicleFactory
 	{
 		ET_DECLARE_BASE( AbstractVehicleFactory );
@@ -113,11 +113,11 @@ namespace OpenSteer
 		mutable OpenSteer::AbstractVehicle* m_pkMasterVehicle;
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// TODO: use map ?
 	typedef std::vector<AbstractVehicleFactory*> TVehicleFactoryArray;
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class VehicleFactoryArray : protected TVehicleFactoryArray, public AbstractVehicleFactory
 	{
 		ET_DECLARE_BASE( AbstractVehicleFactory );

@@ -32,7 +32,7 @@ using namespace OpenSteer;
 
 namespace
 {
-	// ----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// creates a path for the Plugin
 	PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
 	ObstacleGroup gObstacles;
@@ -40,7 +40,7 @@ namespace
 	osVector3 gEndpoint1;
 }
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 /**
 * Creates a path of the form of an eight. Data provided by Nick Porcino.
 */
