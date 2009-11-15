@@ -178,9 +178,21 @@
 		<Filter
 			Name="plugins"
 			>
+			<File
+				RelativePath="..\Source\EduNetGames\Start\CaptureTheFlag.cpp"
+				>
+			</File>
 			<Filter
 				Name="net"
 				>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_07\NetCtfVehicles.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_07\NetCtfVehicles.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<File

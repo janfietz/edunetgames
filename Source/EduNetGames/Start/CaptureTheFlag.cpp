@@ -664,15 +664,13 @@ namespace {
 
 
     // ----------------------------------------------------------------------------
-
-
     void CtfSeeker::draw (void)
     {
         // first call the draw method in the base class
         CtfBase::draw();
 
         // select string describing current seeker state
-        char* seekerStateString = "";
+        const char* seekerStateString = "";
         switch (state)
         {
         case running:
