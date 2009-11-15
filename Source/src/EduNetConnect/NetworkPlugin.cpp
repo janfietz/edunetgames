@@ -91,12 +91,40 @@ void NetworkPlugin::initGui( void* pkUserdata )
 }
 
 //-----------------------------------------------------------------------------
-void changeNetworkSimulatorData(GLUI_Control* pkControl )
+void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
 {
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	if(NULL == pkPlugin)
+	{
+		return;
+	}
+	
+	NetworkSimulatorData& kData = pkPlugin->GetNetworkSimulatorSettings();
+	switch( pkControl->get_id() )
+	{
+	case 1: 
+		{
+			GLUI_Checkbox* pkCheckBox = (GLUI_Checkbox*)pkControl;
+			kData.enabled = pkCheckBox->get_int_val();
+		}break;
+	case 2: 
+		{
+			kData.packetloss = pkControl->get_float_val();
+		}break;
+	case 3:
+		{		
+			kData.minExtraPing = pkControl->get_int_val();
+		}break;
+	case 4:
+		{			
+			kData.extraPingVariance = pkControl->get_int_val();
+		}break; break;
+	}
+	
 	pkPlugin->UpdateNetworkSimulatorSettings();
 
 }
+
 //-----------------------------------------------------------------------------
 void NetworkPlugin::AddNetworkSimulator( void* pkUserdata )
 {
@@ -104,20 +132,26 @@ void NetworkPlugin::AddNetworkSimulator( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 	GLUI_Panel* simulatorPanel = glui->add_panel_to_panel( pluginPanel, "Network Simulator" );
 
-	glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", &m_kSimulatorData.enabled, -1 , changeNetworkSimulatorData );
+	GLUI_Checkbox* pkControl = 
+		glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", NULL, 1, changeNetworkSimulatorSettings );
+	pkControl->set_ptr_val( this );
+
 	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(simulatorPanel, "Packetloss", GLUI_SPINNER_FLOAT, &m_kSimulatorData.packetloss, -1, changeNetworkSimulatorData);
+		glui->add_spinner_to_panel(simulatorPanel, "Packetloss",
+		GLUI_SPINNER_FLOAT, NULL, 2, changeNetworkSimulatorSettings);
 	repSpinner->set_float_limits(0.0f, 1.0f);
 	repSpinner->set_ptr_val( this );
 
-	GLUI_EditText* pkTextControl = glui->add_edittext_to_panel( simulatorPanel, "MinPing", GLUI_EDITTEXT_INT,
-		&m_kSimulatorData.minExtraPing, -1, changeNetworkSimulatorData );
+	GLUI_EditText* pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
+		"MinPing", GLUI_EDITTEXT_INT, NULL, 3, changeNetworkSimulatorSettings );
 	pkTextControl->set_int_limits(0, (unsigned short)-1 );
+	pkTextControl->set_int_val( m_kSimulatorData.minExtraPing );
 	pkTextControl->set_ptr_val( this );
 
-	pkTextControl = glui->add_edittext_to_panel( simulatorPanel, "PingVariance", GLUI_EDITTEXT_INT,
-		&m_kSimulatorData.extraPingVariance, -1, changeNetworkSimulatorData );
+	pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
+		"PingVariance", GLUI_EDITTEXT_INT, NULL, 4, changeNetworkSimulatorSettings );
 	pkTextControl->set_int_limits(0, (unsigned short)-1 );
+	pkTextControl->set_int_val( m_kSimulatorData.extraPingVariance );
 	pkTextControl->set_ptr_val( this );
 
 }
@@ -131,8 +165,8 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 		{
 			this->m_pNetInterface->ApplyNetworkSimulator(
 				this->m_kSimulatorData.packetloss,
-				this->m_kSimulatorData.minExtraPing,
-				this->m_kSimulatorData.extraPingVariance);
+				(unsigned short)this->m_kSimulatorData.minExtraPing,
+				(unsigned short)this->m_kSimulatorData.extraPingVariance);
 		}else
 		{
 			this->m_pNetInterface->ApplyNetworkSimulator(0.0f, 0, 0);

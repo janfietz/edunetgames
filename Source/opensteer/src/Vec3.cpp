@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // OpenSteer -- Steering Behaviors for Autonomous Characters
@@ -25,7 +25,7 @@
 // DEALINGS IN THE SOFTWARE.
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 //
 // Vec3: OpenSteer's generic type for 3d vectors
@@ -46,13 +46,13 @@
 //               vecmath package (http://objectclub.esm.co.jp/vecmath/)
 //
 //
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 
 #include "OpenSteer/Vec3.h"
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // names for frequently used vector constants
 
 
@@ -67,7 +67,7 @@ const OpenSteer::Vec3 OpenSteer::Vec3::forward (0, 0, 1);
 
 const OpenSteer::Vec3 OpenSteer::Vec3::side    (-1, 0, 0);
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Returns a position randomly distributed inside a sphere of unit radius
 // centered at the origin.  Orientation will be random and length will range
 // between 0 and 1
@@ -90,7 +90,7 @@ OpenSteer::RandomVectorInUnitRadiusSphere (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Returns a position randomly distributed on a disk of unit radius
 // on the XZ (Y=0) plane, centered at the origin.  Orientation will be
 // random and length will range between 0 and 1
@@ -113,7 +113,7 @@ OpenSteer::randomVectorOnUnitRadiusXZDisk (void)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Does a "ceiling" or "floor" operation on the angle by which a given vector
 // deviates from a given reference basis vector.  Consider a cone with "basis"
 // as its axis and slope of "cosineOfConeAngle".  The first argument controls
@@ -166,7 +166,7 @@ OpenSteer::vecLimitDeviationAngleUtility (const bool insideOrOutside,
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // given a vector, return a vector perpendicular to it.  arbitrarily selects
 // one of the infinitely many perpendicular vectors.  a zero vector maps to
 // itself, otherwise length is irrelevant (empirically, output length seems to
@@ -210,4 +210,4 @@ OpenSteer::findPerpendicularIn3d (const Vec3& direction)
 }
 
 
-// ----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

@@ -33,16 +33,16 @@
 #define OPENSTEER_SHAREDPOINTER_H
 
 
-// Include std::swap
+//! Include std::swap
 #include <algorithm>
 
-// Include assert
+//! Include assert
 #include <cassert>
 
 
 
 
-// Include OpenSteer::size_t
+//! Include OpenSteer::size_t
 #include "OpenSteer/StandardTypes.h"
 
 
@@ -57,7 +57,7 @@ namespace OpenSteer {
         
         
         explicit SharedPointerReferenceCount(): referenceCount_( 1 ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         size_type referenceCount_;
@@ -107,7 +107,7 @@ namespace OpenSteer {
          * @throw @c std::bad_alloc if memory could not be obtained.
          */
         SharedPointer() : data_( 0 ), referenceCount_( new SharedPointerReferenceCount() ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         /**
@@ -118,7 +118,7 @@ namespace OpenSteer {
          * @throw @c std::bad_alloc if memory could not be obtained.
          */
         explicit SharedPointer( T* _data ) : data_( _data ), referenceCount_( new SharedPointerReferenceCount() ) {
-            // Nothing to do.
+            //! Nothing to do.
         }
         
         /**
@@ -257,41 +257,41 @@ namespace OpenSteer {
          * Catches comparisons with @c 0. See Andrei Alexandrescu, 
          * Modern C++ Design, Addison-Wesley, 2002, p. 176.
          */
-        // inline friend bool operator==( SharedPointer const& lhs, T const* rhs ) {
-        //     return lhs.get() == rhs;
-        // }
+        //! inline friend bool operator==( SharedPointer const& lhs, T const* rhs ) {
+        //!     return lhs.get() == rhs;
+        //! }
         
         
         /**
          * Catches comparisons with @c 0. See Andrei Alexandrescu, 
          * Modern C++ Design, Addison-Wesley, 2002, p. 176.
          */
-        // inline friend bool operator==( T const* lhs, SharedPointer const& rhs ) {
-        //     return lhs == rhs.get();
-        // }
+        //! inline friend bool operator==( T const* lhs, SharedPointer const& rhs ) {
+        //!     return lhs == rhs.get();
+        //! }
         
         /**
          * Catches comparisons with @c 0. See Andrei Alexandrescu, 
          * Modern C++ Design, Addison-Wesley, 2002, p. 176.
          */        
-        // inline friend bool operator!=( SharedPointer const& lhs, T const* rhs ) {
-        //     return !( lhs == rhs )
-        // }
+        //! inline friend bool operator!=( SharedPointer const& lhs, T const* rhs ) {
+        //!     return !( lhs == rhs )
+        //! }
             
         /**
          * Catches comparisons with @c 0. See Andrei Alexandrescu, 
          * Modern C++ Design, Addison-Wesley, 2002, p. 176.
          */
-        // inline friend bool operator!=( T const* lhs, SharedPointer const& rhs ) {
-        //     return !( lhs == rhs );
-        // }
+        //! inline friend bool operator!=( T const* lhs, SharedPointer const& rhs ) {
+        //!     return !( lhs == rhs );
+        //! }
 
         
         template< typename U >
             bool operator<( SharedPointer< U > const& rhs ) {
-                // Because of sub-typing two different pointers might
-                // nonetheless point to the same class instance. Therefore use
-                // the reference count pointer for comparisons.
+                //! Because of sub-typing two different pointers might
+                //! nonetheless point to the same class instance. Therefore use
+                //! the reference count pointer for comparisons.
                 return referenceCount_ < rhs.referenceCount_;
             }
      
@@ -337,7 +337,7 @@ namespace OpenSteer {
     private:
         pointer data_;
         SharedPointerReferenceCount* referenceCount_;
-    }; // class SharedPointer
+    }; //! class SharedPointer
     
 
  
@@ -347,15 +347,15 @@ namespace OpenSteer {
             return lhs.get() == rhs.get();
         }
     
-    // template< typename T, typename U >
-    //     bool operator==( SharedPointer< T > const& lhs, U const* rhs ) {
-    //         return lhs.get == rhs;
-    //     }
+    //! template< typename T, typename U >
+    //!     bool operator==( SharedPointer< T > const& lhs, U const* rhs ) {
+    //!         return lhs.get == rhs;
+    //!     }
     
-    // template< typename T, typename U >
-    //     bool operator==( T const* lhs, SharedPointer< U > const& rhs ) {
-    //         return lhs == rhs.get();
-    //     }
+    //! template< typename T, typename U >
+    //!     bool operator==( T const* lhs, SharedPointer< U > const& rhs ) {
+    //!         return lhs == rhs.get();
+    //!     }
     
     
     template< typename T, typename U >
@@ -363,15 +363,15 @@ namespace OpenSteer {
             return !( lhs == rhs );
         }
     
-    // template< typename T, typename U >
-    //     bool operator!=( SharedPointer< T > const& lhs, U const* rhs ) {
-    //         return !( lhs == rhs );
-    //     }
+    //! template< typename T, typename U >
+    //!     bool operator!=( SharedPointer< T > const& lhs, U const* rhs ) {
+    //!         return !( lhs == rhs );
+    //!     }
     
-    // template< typename T, typename U >
-    //     bool operator!=( T const* lhs, SharedPointer< U > const& rhs ) {
-    //         return !( lhs == rhs );
-    //     }
+    //! template< typename T, typename U >
+    //!     bool operator!=( T const* lhs, SharedPointer< U > const& rhs ) {
+    //!         return !( lhs == rhs );
+    //!     }
     
     
     
@@ -381,10 +381,10 @@ namespace OpenSteer {
         }
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
 
 
 
-#endif // OPENSTEER_SHAREDPOINTER_H
+#endif //! OPENSTEER_SHAREDPOINTER_H

@@ -35,13 +35,13 @@
 #define OPENSTEER_QUERYPATHALIKEMAPPINGS_H
 
 
-// Include OpenSteer::HasNoRadius, OpenSteer::ExtractPathDistance, OpenSteer::DontExtractPathDistance
+//! Include OpenSteer::HasNoRadius, OpenSteer::ExtractPathDistance, OpenSteer::DontExtractPathDistance
 #include "OpenSteer/QueryPathAlikeUtilities.h"
 
-// Include OpenSteer::Vec3
+//! Include OpenSteer::Vec3
 #include "OpenSteer/Vec3.h"
 
-// Include OpenSteer::size_t
+//! Include OpenSteer::size_t
 #include "OpenSteer/StandardTypes.h"
 
 
@@ -63,7 +63,7 @@ namespace OpenSteer {
             pointOnPathCenterLine = point;
         }
         void setPointOnPathBoundary( Vec3 const& ) {
-            // pointOnPathBoundary = point;
+            //! pointOnPathBoundary = point;
         }
         void setRadius( float ) {}
         void setTangent( Vec3 const& t) {
@@ -78,12 +78,12 @@ namespace OpenSteer {
         void setDistanceOnSegment( float ) {}
             
         Vec3 pointOnPathCenterLine;
-        // Vec3 pointOnPathBoundary; 
+        //! Vec3 pointOnPathBoundary; 
         Vec3 tangent;
         float distancePointToPath;
             
             
-    }; // class PointToPathMapping
+    }; //! class PointToPathMapping
     
     
     /**
@@ -108,7 +108,7 @@ namespace OpenSteer {
         Vec3 pointOnPathCenterLine; 
             
             
-    }; // class PathDistanceToPointMapping
+    }; //! class PathDistanceToPointMapping
     
     
     
@@ -134,11 +134,11 @@ namespace OpenSteer {
         void setDistanceOnSegment( float ) {}
             
         float distanceOnPath;
-    }; // class PointToPathDistanceMapping
+    }; //! class PointToPathDistanceMapping
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
 
-#endif // OPENSTEER_QUERYPATHALIKEMAPPINGS_H
+#endif //! OPENSTEER_QUERYPATHALIKEMAPPINGS_H

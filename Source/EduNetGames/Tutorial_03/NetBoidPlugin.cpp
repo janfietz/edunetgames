@@ -206,7 +206,7 @@ BaseClass( bAddToRegistry )
 {
 	this->addPlugin( new NetPeerBoidPlugin( false ) );
 	this->addPlugin( new NetClientBoidPlugin( false ) );
-	//this->addPlugin( new OpenSteer::CameraPlugin() );
+	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
 //-----------------------------------------------------------------------------

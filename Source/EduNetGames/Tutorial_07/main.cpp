@@ -1,6 +1,3 @@
-#ifndef __OPENSTEERUTTYPES_H__
-#define __OPENSTEERUTTYPES_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,34 +26,12 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "EduNetApplication/EduNetMain.h"
+
 //-----------------------------------------------------------------------------
-namespace OpenSteer{
-
-	// Include names declared in the OpenSteer namespace into the
-	// namespace to search to find names.
-	using namespace OpenSteer;
-
-	//-------------------------------------------------------------------------
-	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
-	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
-
-
-
-
-	float drawGetWindowHeight (void);
-	float drawGetWindowWidth (void);
-
-	class AbstractVehicle;
-
+int main (int argc, char **argv) 
+{
+	return ::EduNetMain( argc, argv );
 }
 
-typedef OpenSteer::Vec3 osVector3;
-typedef OpenSteer::AbstractVehicle osAbstractVehicle;
-typedef OpenSteer::AVGroup osAVGroup;
-typedef OpenSteer::ProximityDatabase osProximityDatabase;
-typedef OpenSteer::ProximityToken osProximityToken;
-typedef OpenSteer::Color osColor;
 
-typedef OpenSteer::EntityClassId osEntityClassId;
-
-#endif //  __OPENSTEERUTTYPES_H__

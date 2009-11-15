@@ -46,14 +46,14 @@ typedef struct TNetworkSimulatorData
 {
 public:
 	TNetworkSimulatorData():
-		enabled(false),
+		enabled(0),
 		packetloss(0.0f),
 		minExtraPing(0),
 		extraPingVariance(0){}
 	int enabled;
 	float packetloss;
-	unsigned short minExtraPing;
-	unsigned short extraPingVariance;
+	int minExtraPing;
+	int extraPingVariance;
 }NetworkSimulatorData;
 
 //-----------------------------------------------------------------------------
@@ -119,6 +119,11 @@ public:
 	}
 
 	void UpdateNetworkSimulatorSettings( void );
+	NetworkSimulatorData& GetNetworkSimulatorSettings( void )
+	{
+		return this->m_kSimulatorData;
+	}
+
 
 protected:
 

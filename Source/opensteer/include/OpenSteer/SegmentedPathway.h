@@ -33,16 +33,16 @@
 #define OPENSTEER_SEGMENTEDPATHWAY_H
 
 
-// Include OpenSteer::Pathway
+//! Include OpenSteer::Pathway
 #include "OpenSteer/Pathway.h"
 
-// Include OpenSteer::size_t
+//! Include OpenSteer::size_t
 #include "OpenSteer/StandardTypes.h"
 
 
 namespace OpenSteer {
 
-    // Forward declaration
+    //! Forward declaration
     class Vec3;
     
     /**
@@ -165,12 +165,12 @@ namespace OpenSteer {
          *
          * @todo Should this be added or not? Have to read a bit...
          */
-        // SegmentedPathway& operator=( SegmentedPathway const& );    
-    }; // class SegmentedPathway
+        //! SegmentedPathway& operator=( SegmentedPathway const& );    
+    }; //! class SegmentedPathway
     
     
     
-} // namespace OpenSteer
+} //! namespace OpenSteer
 
 
-#endif // OPENSTEER_SEGMENTEDPATHWAY_H
+#endif //! OPENSTEER_SEGMENTEDPATHWAY_H

@@ -30,9 +30,10 @@ namespace OpenSteer{
     {
 		ET_DECLARE_BASE(Plugin);
     public:
-		BoidsPlugin (bool bAddToRegistry = true):
+		BoidsPlugin (bool bAddToRegistry = false):
 		BaseClass(bAddToRegistry)
 		{
+			pd = NULL;
 			this->setVehicleFactory( &this->m_kOfflineBoidFactory );
 		};
 		virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
