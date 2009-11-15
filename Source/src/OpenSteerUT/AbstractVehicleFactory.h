@@ -80,7 +80,7 @@ namespace OpenSteer
 			  OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
 			  if( NULL != pkMasterVehicle )
 			  {
-				  return this->m_pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+				  return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
 			  }
 			  return NULL;
 		  }
