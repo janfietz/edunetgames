@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
-	Name="EduNetGames_Tutorial_04"
-	ProjectGUID="{9FF3BFB6-B65D-46AF-A766-66F2C4C30B02}"
+	Name="EduNetGames_Tutorial_07"
+	ProjectGUID="{FDE6539B-80FB-48D3-AC12-434C6E9DB9A9}"
 	RootNamespace="EduNetGames"
 	Keyword="Win32Proj"
 	>
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_04&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_07&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_DLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_04&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\Source\EduNetGames\Tutorial_07&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_DLL"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -181,54 +181,10 @@
 			<Filter
 				Name="net"
 				>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrian.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrian.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianPlugin.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianPlugins.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplica.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplica.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplicaConnection.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_04\NetPedestrianReplicaConnection.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<File
-			RelativePath="..\Source\EduNetGames\Tutorial_04\main.cpp"
+			RelativePath="..\Source\EduNetGames\Tutorial_07\main.cpp"
 			>
 		</File>
 	</Files>
