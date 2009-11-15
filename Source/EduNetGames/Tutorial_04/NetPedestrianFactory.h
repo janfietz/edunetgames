@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 class NetPedestrianFactory : public OpenSteer::TVehicleFactory<TNetPedestrian>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<NetPedestrian> );
+	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<TNetPedestrian> );
 public:
 	NetPedestrianFactory();
 	virtual ~NetPedestrianFactory();
