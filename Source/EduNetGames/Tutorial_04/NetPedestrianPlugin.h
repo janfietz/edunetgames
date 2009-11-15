@@ -40,7 +40,10 @@ class NetPedestrianPlugin : public OpenSteer::Plugin
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
 	NetPedestrianPlugin( bool bAddToRegistry = true ):
-	  BaseClass( bAddToRegistry ),pd(NULL)
+	  BaseClass( bAddToRegistry ),
+		  pd(NULL),
+		  m_bCreatesVehicles(false),
+		  m_fLastRenderTime(0.0f)
 	{
 		this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
 	}
@@ -104,6 +107,9 @@ private:
 
 	// which of the various proximity databases is currently in use
 	int cyclePD;
+
+	bool m_bCreatesVehicles;
+	float m_fLastRenderTime;
 };
 
 

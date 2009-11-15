@@ -165,7 +165,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	}
 	const float h = drawGetWindowHeight();
 	osVector3 screenLocation( 10, h, 0);
-	float fOffset = 50.0f;
+	float fOffset = 100.0f;
 	fOffset += bIsClient ? 50.0f : 100.0f;
 	screenLocation.y -= fOffset;
 	draw2dTextAt2dLocation(
