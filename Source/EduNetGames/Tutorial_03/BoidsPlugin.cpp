@@ -112,10 +112,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
     AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
     // vehicle nearest mouse (to be highlighted)
-    AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
-
-    // update camera
-    OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+    AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();	
 
     // draw each boid in flock
     for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ();
@@ -126,42 +123,52 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
     // highlight selected vehicle
     OpenSteerDemo::drawCircleHighlightOnVehicle (selected, 1, gGray50);
 
-    // display status in the upper left corner of the window
-    std::ostringstream status;
+	std::ostringstream status;
+	const float h = drawGetWindowHeight ();
+	Vec3 screenLocation (10, h-50, 0);
 	AbstractVehicleGroup kVG( this->allVehicles() );
-    status << "[F1/F2] " << kVG.population() << " boids";
-    status << "\n[F3]    PD type: ";
-    switch (cyclePD)
-    {
-    case 0: status << "LQ bin lattice"; break;
-    case 1: status << "brute force";    break;
-    }
-    status << "\n[F4]    Obstacles: ";
-    switch (constraint)
-    {
-    case EBoidConstraintType_none:
-        status << "none (wrap-around at sphere boundary)" ; break;
-    case EBoidConstraintType_insideSphere:
-        status << "inside a sphere" ; break;
-    case EBoidConstraintType_outsideSphere:
-        status << "inside a sphere, outside another" ; break;
-    case EBoidConstraintType_outsideSpheres:
-        status << "inside a sphere, outside several" ; break;
-    case EBoidConstraintType_outsideSpheresNoBig:
-        status << "outside several spheres, with wrap-around" ; break;
-    case EBoidConstraintType_rectangle:
-        status << "inside a sphere, with a rectangle" ; break;
-    case EBoidConstraintType_rectangleNoBig:
-        status << "a rectangle, with wrap-around" ; break;
-    case EBoidConstraintType_outsideBox:
-        status << "inside a sphere, outside a box" ; break;
-    case EBoidConstraintType_insideBox:
-        status << "inside a box" ; break;
-    }
-    status << std::endl;
-    const float h = drawGetWindowHeight ();
-    const Vec3 screenLocation (10, h-50, 0);
-    draw2dTextAt2dLocation (status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
+	Color kColor = gGray80;
+	if (NULL != this->getVehicleFactory())
+	{
+		// display status in the upper left corner of the window		
+		status << "[F1/F2] " << kVG.population() << " boids";
+		status << "\n[F3]    PD type: ";
+		switch (cyclePD)
+		{
+		case 0: status << "LQ bin lattice"; break;
+		case 1: status << "brute force";    break;
+		}
+		status << "\n[F4]    Obstacles: ";
+		switch (constraint)
+		{
+		case EBoidConstraintType_none:
+			status << "none (wrap-around at sphere boundary)" ; break;
+		case EBoidConstraintType_insideSphere:
+			status << "inside a sphere" ; break;
+		case EBoidConstraintType_outsideSphere:
+			status << "inside a sphere, outside another" ; break;
+		case EBoidConstraintType_outsideSpheres:
+			status << "inside a sphere, outside several" ; break;
+		case EBoidConstraintType_outsideSpheresNoBig:
+			status << "outside several spheres, with wrap-around" ; break;
+		case EBoidConstraintType_rectangle:
+			status << "inside a sphere, with a rectangle" ; break;
+		case EBoidConstraintType_rectangleNoBig:
+			status << "a rectangle, with wrap-around" ; break;
+		case EBoidConstraintType_outsideBox:
+			status << "inside a sphere, outside a box" ; break;
+		case EBoidConstraintType_insideBox:
+			status << "inside a box" ; break;
+		}
+		status << std::endl;
+	} else
+	{
+		status << "Client boids: " << kVG.population();
+		screenLocation.y -= 80;
+		kColor = gGray50;
+	}
+    
+    draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
 
     drawObstacles ();
 }

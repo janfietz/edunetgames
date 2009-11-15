@@ -42,7 +42,7 @@ NetBoidReplica::NetBoidReplica():
 NetBoidReplica::NetBoidReplica( OpenSteer::BoidsPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 	m_pBoidPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = gNetBoidFactory.createVehicle( 0,
+	this->m_pVehicle = gNetBoidFactory.createVehicle( ET_CID_NETBOID,
 	this->m_pBoidPlugin->accessProximityDataBase() );
 	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );	
 }
@@ -75,6 +75,8 @@ void NetBoidReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 RakNet::RM3SerializationResult NetBoidReplica::Serialize(
 	RakNet::SerializeParameters *serializeParameters)
 {
+	this->SetSendParameter( serializeParameters->pro );
+
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 
 	kStream.WriteAlignedBytes((const unsigned char*)&m_pVehicle->position(),sizeof(OpenSteer::Vec3));
@@ -83,6 +85,14 @@ RakNet::RM3SerializationResult NetBoidReplica::Serialize(
 
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidReplica::SetSendParameter( RakNet::PRO& kPro ) const
+{
+	kPro.priority = LOW_PRIORITY;
+	kPro.reliability = UNRELIABLE;
+	kPro.orderingChannel = 1;
 }
 
 //-----------------------------------------------------------------------------

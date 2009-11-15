@@ -34,12 +34,13 @@ ENDIF (OPENGL_FOUND)
 
 FIND_PACKAGE(GLU)
 
-FIND_PACKAGE(GLUT REQUIRED)
+FIND_PACKAGE(GLUT)
 IF (GLUT_FOUND)
 MESSAGE("GLUT FOUND")
 MESSAGE(${GLUT_glut_LIBRARY})
 ELSE (GLUT_FOUND)
-MESSAGE("GLUT NOT FOUND")
+	MESSAGE("GLUT NOT FOUND")
+	Set( GLUT_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/glut)
 ENDIF (GLUT_FOUND)
 
 FIND_PACKAGE(RakNet)
@@ -47,14 +48,14 @@ IF (RakNet_FOUND)
 MESSAGE("RakNet FOUND")
 MESSAGE(${RakNet_LIBRARY})
 ELSE (RakNet_FOUND)
-MESSAGE("Raknet NOT FOUND")
-Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
-MESSAGE("Raknet include " ${RakNet_INCLUDES} )
-IF(DEBUG)
-Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStatic.lib )
-ELSE(DEBUG)
-Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStaticDebug.lib )
-ENDIF(DEBUG)
+	MESSAGE("Raknet NOT FOUND")
+	Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
+	MESSAGE("Raknet include " ${RakNet_INCLUDES} )
+	IF(DEBUG)
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStatic.lib )
+	ELSE(DEBUG)
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStaticDebug.lib )
+	ENDIF(DEBUG)
 ENDIF (RakNet_FOUND)
 Set( RakNet_SOURCES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet )
 
@@ -70,6 +71,12 @@ IF (Argtable_FOUND)
 MESSAGE(${Argtable_LIBRARY})
 ELSE (Argtable_FOUND)
 MESSAGE("ArtableNOT FOUND")
+	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src )
+	IF(DEBUG)
+		Set( Argtable_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src/argtable.lib )
+	ELSE(DEBUG)
+		Set( Argtable_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src/argtabled.lib )
+	ENDIF(DEBUG)
 ENDIF (Argtable_FOUND)
 
 
@@ -83,12 +90,17 @@ MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
 SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/Glut/glut32.lib)
 ENDIF (MSVC)
 
+INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source
+${GLUT_INCLUDE_DIR}
+${RakNet_INCLUDES}/raknet
+${Argtable_INCLUDES}
+ ) 
 
-IF (WIN32)
-  INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Glut)
+IF (WIN32)  
+  #INCLUDE_DIRECTORIES(${GLUT_INCLUDE_DIR} ${RakNet_INCLUDES}/raknet ${Argtable_INCLUDES} ) 
 ELSE (WIN32)
   # This is the lines for linux.  This should always work if everything is installed and working fine.
-  INCLUDE_DIRECTORIES(/usr/include /usr/local/include ${GLUT_INCLUDE_DIR} ${RakNet_INCLUDES}/raknet) 
+  INCLUDE_DIRECTORIES(/usr/include /usr/local/include ) 
 ENDIF (WIN32)
 
 SUBDIRS(Source)

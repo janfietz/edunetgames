@@ -70,7 +70,9 @@ public:
 	NetBoidReplicaFactory(NetBoidReplicaManager* pkManager):
 	  m_pkReplicaManager(pkManager){}
 
-	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
+	   virtual OpenSteer::AbstractVehicle* createVehicle( 
+		   OpenSteer::EntityClassId classId,
+		   OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
 	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 private:

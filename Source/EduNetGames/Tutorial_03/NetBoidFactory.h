@@ -34,9 +34,9 @@
 
 
 //-----------------------------------------------------------------------------
-class NetBoidFactory : public OpenSteer::TVehicleFactory<OpenSteer::Boid>
+class NetBoidFactory : public OpenSteer::TVehicleFactory<OpenSteer::TNetBoid>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<OpenSteer::Boid> );
+	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<OpenSteer::TNetBoid> );
 public:
 	NetBoidFactory();
 	virtual ~NetBoidFactory();
