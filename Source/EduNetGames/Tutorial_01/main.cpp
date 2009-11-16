@@ -27,6 +27,9 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
+#include "OpenSteerUT/EmptyPlugin.h"
+
+EduNet::EmptyPlugin gEmptyPlugin;
 
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 

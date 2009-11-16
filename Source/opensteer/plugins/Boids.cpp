@@ -252,7 +252,7 @@ namespace {
         {
 
             // XXX this is special case code, these should be derived from arguments //
-            const Vec3 surfaceNormal = position().normalize();                       //
+            const Vec3 surfaceNormal = position().normalized();                       //
             const Vec3 surfacePoint = surfaceNormal * 40.0f;                         //
             // XXX this is special case code, these should be derived from arguments //
 
@@ -644,9 +644,9 @@ namespace {
             outsideSphere5.center.set (z, z, p);
             outsideSphere6.center.set (z, z, m);
 
-            const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalize ();
+            const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalized ();
             const Vec3 tiltS (0.0f, 0.0f, 1.0f);
-            const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalize ();
+            const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalized ();
 
             bigRectangle.width = 50.0f;
             bigRectangle.height = 80.0f;

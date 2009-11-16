@@ -1,5 +1,6 @@
 #include "NetBoid.h"
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteer/UnusedParameter.h"
 #include "BoidsPlugin.h"
 
@@ -165,7 +166,7 @@ void Boid::sphericalWrapAround (void)
 			worldRadius));
 		if (this == SimpleVehicle::selectedVehicle)
 		{
-			OpenSteerDemo::position3dCamera
+			CameraPlugin::position3dCamera
 				(*SimpleVehicle::selectedVehicle); 
 			Camera::camera.doNotSmoothNextMove ();
 		}
@@ -194,7 +195,7 @@ void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newVelocity,
 {
 
 	// XXX this is special case code, these should be derived from arguments //
-	const Vec3 surfaceNormal = position().normalize();                       //
+	const Vec3 surfaceNormal = position().normalized();                       //
 	const Vec3 surfacePoint = surfaceNormal * 40.0f;                         //
 	// XXX this is special case code, these should be derived from arguments //
 

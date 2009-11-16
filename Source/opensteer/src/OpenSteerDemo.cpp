@@ -61,11 +61,10 @@
 #else
 #include <GL/glut.h>     // for Linux and Windows
 #endif
+
 //-----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"
-
-
-OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
+OpenSteer::Clock& OpenSteer::OpenSteerDemo::clock = OpenSteer::Clock::processClock();
 
 
 

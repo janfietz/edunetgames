@@ -276,7 +276,7 @@ public:
             // draw a two-toned line between the future test point and its
             // projection onto the path, the change from dark to light color
             // indicates the boundary of the tube.
-            const Vec3 boundaryOffset = (onPath - future).normalize() * outside;
+            const Vec3 boundaryOffset = (onPath - future).normalized() * outside;
             const Vec3 onPathBoundary = future + boundaryOffset;
             annotationLine (onPath, onPathBoundary, darkOrange);
             annotationLine (onPathBoundary, future, lightOrange);

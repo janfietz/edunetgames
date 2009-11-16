@@ -30,6 +30,7 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 
 OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
@@ -53,10 +54,10 @@ void EmptyPlugin::open (void)
 	m_kVehicles.push_back( &m_kVehicle );
 
 	// initialize camera
-	OpenSteerDemo::init2dCamera( *SimpleVehicle::selectedVehicle );
+	CameraPlugin::init2dCamera( *SimpleVehicle::selectedVehicle );
 	Camera::camera.setPosition (
 		10,
-		OpenSteerDemo::camera2dElevation,
+		CameraPlugin::camera2dElevation,
 		10);
 	Camera::camera.fixedPosition.set( 40, 40, 40 );
 }
@@ -69,7 +70,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
 		// update camera, tracking test vehicle
-		OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
+		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
 		// draw "ground plane"
 		OpenSteerDemo::gridUtility( SimpleVehicle::selectedVehicle->position() );
 	}

@@ -52,6 +52,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include <iomanip>
 #include <sstream>
@@ -1110,7 +1111,7 @@ namespace {
                             const bool usableHint = obstacleDistance>farThreshold;
                             if (usableHint)
                             {
-                                const Vec3 q = p + (offset.normalize() * 5);
+                                const Vec3 q = p + (offset.normalized() * 5);
                                 annotationLine (p, q, gMagenta);
                                 annotationCircleOrDisk (0.4f, up(), o, gWhite,
                                                         12, false, false);
@@ -2012,7 +2013,7 @@ namespace {
             // indicates the boundary of the tube.
 
             const float o = outside + radius () + (curvedSteering ? 1.0f : 0.0f);
-            const Vec3 boundaryOffset = ((onPath - future).normalize() * o);
+            const Vec3 boundaryOffset = ((onPath - future).normalized() * o);
 
             const Vec3 onPathBoundary = future + boundaryOffset;
             annotationLine (onPath, onPathBoundary, insidePathColor);
@@ -2313,7 +2314,7 @@ namespace {
             const Vec3 spoke = initialSpoke.rotateAboutGlobalY (arcAngle * sign);
             // ---------- this block imported from scanObstacleMap
 
-            const Vec3 fromCenter = -localCenterOfCurvature.normalize ();
+            const Vec3 fromCenter = -localCenterOfCurvature.normalized ();
             const float dRadius = trimmedLinear.dot (fromCenter);
             const float radiusChangeFactor = (dRadius + arcRadius) / arcRadius;
             const Vec3 resultLocation = center + (spoke * radiusChangeFactor);
@@ -2430,7 +2431,7 @@ namespace {
         Vec3 steerTowardHeading (const Vec3& desiredGlobalHeading)
         {
             const Vec3 headingError = desiredGlobalHeading - forward ();
-            return headingError.normalize () * maxForce ();
+            return headingError.normalized () * maxForce ();
         }
 
 
@@ -2593,7 +2594,7 @@ namespace {
             // init OpenSteerDemo camera
             initCamDist = 30;
             initCamElev = 15;
-            OpenSteerDemo::init2dCamera (*vehicle, initCamDist, initCamElev);
+            CameraPlugin::init2dCamera (*vehicle, initCamDist, initCamElev);
             // "look straight down at vehicle" camera mode parameters
             Camera::camera.lookdownDistance = 50;
             // "static" camera mode parameters
@@ -2626,7 +2627,7 @@ namespace {
         void redraw (const float currentTime, const float elapsedTime)
         {
             // update camera, tracking test vehicle
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, *vehicle);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, *vehicle);
 
             // draw "ground plane"  (make it 4x map size)
             const float s = MapDriver::worldSize * 2;
@@ -2774,7 +2775,7 @@ namespace {
             Camera::camera.doNotSmoothNextMove ();
 
             // reset camera position
-            OpenSteerDemo::position2dCamera (*vehicle, initCamDist, initCamElev);
+            CameraPlugin::position2dCamera (*vehicle, initCamDist, initCamElev);
         }
 
         void handleFunctionKeys (int keyNumber)

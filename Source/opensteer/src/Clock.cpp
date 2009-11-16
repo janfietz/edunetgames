@@ -69,9 +69,14 @@
 
 
 //-----------------------------------------------------------------------------
+OpenSteer::Clock& OpenSteer::Clock::processClock( void )
+{
+	static Clock processClock;
+	return processClock;
+}
+
+//-----------------------------------------------------------------------------
 // Constructor
-
-
 OpenSteer::Clock::Clock (void)
 {
     // default is "real time, variable frame rate" and not paused
@@ -129,8 +134,6 @@ OpenSteer::Clock::Clock (void)
 //     manage passage of simulation time (modified by Paused state)
 //     measure time elapsed between time updates ("frame rate")
 //     optionally: "wait" for next realtime frame boundary
-
-
 void 
 OpenSteer::Clock::update (void)
 {
@@ -185,15 +188,12 @@ OpenSteer::Clock::update (void)
     newAdvanceTime = 0;
 }
 
-
 //-----------------------------------------------------------------------------
 // "wait" until next frame time (actually spin around this tight loop)
 //
 //
 // (xxx there are probably a smarter ways to do this (using events or
 // thread waits (eg usleep)) but they are likely to be unportable. xxx)
-
-
 void 
 OpenSteer::Clock::frameRateSync (void)
 {
@@ -215,12 +215,9 @@ OpenSteer::Clock::frameRateSync (void)
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // force simulation time ahead, ignoring passage of real time.
 // Used for OpenSteerDemo's "single step forward" and animation mode
-
-
 float 
 OpenSteer::Clock::advanceSimulationTimeOneFrame (void)
 {
@@ -236,7 +233,6 @@ OpenSteer::Clock::advanceSimulationTimeOneFrame (void)
     // return the time value used (for OpenSteerDemo)
     return frameTime; 
 }
-
 
 void 
 OpenSteer::Clock::advanceSimulationTime (const float seconds)

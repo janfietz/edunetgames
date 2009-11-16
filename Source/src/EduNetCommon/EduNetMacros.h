@@ -73,6 +73,7 @@
 // sample 2
 //#pragma message( ET_SOURCE_MESSAGE "Warning: Unicode disabled! Check your project settings!")
 
-
+// Macro to supress warning that parameters aren't used.
+#define ET_UNUSED_PARAMETER(expr) (void)expr
 
 #endif // __EDUNETMACROS_H__

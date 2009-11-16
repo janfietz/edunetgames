@@ -48,7 +48,7 @@
 #define TRT_PRECOMPUTE_NORMALS
 
 
-// If you do not precompute the normals, you may not want the tester to normalize the collision
+// If you do not precompute the normals, you may not want the tester to normalized the collision
 //	normals if you have to rescale them later. This will save you a little computation for every
 //	collision. If you want the ray test normals pre-normalized, define the following:
 

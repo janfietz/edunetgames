@@ -57,6 +57,38 @@ namespace OpenSteer
 		bool requestInitialSelection (void) const {return true;}
 		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
 		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
+
+		// ------------------------------------------------------- camera utilities
+		// set a certain initial camera state used by several plug-ins
+		static void init2dCamera (AbstractVehicle& selected);
+		static void init2dCamera (AbstractVehicle& selected,
+			float distance,
+			float elevation);
+		static void init3dCamera (AbstractVehicle& selected);
+		static void init3dCamera (AbstractVehicle& selected,
+			float distance,
+			float elevation);
+
+		// set initial position of camera based on a vehicle
+		static void position3dCamera (AbstractVehicle& selected);
+		static void position3dCamera (AbstractVehicle& selected,
+			float distance,
+			float elevation);
+		static void position2dCamera (AbstractVehicle& selected);
+		static void position2dCamera (AbstractVehicle& selected,
+			float distance,
+			float elevation);
+
+		// camera updating utility used by several (all?) plug-ins
+		static void updateCamera (const float currentTime,
+			const float elapsedTime,
+			const AbstractVehicle& selected);
+
+		// some camera-related default constants
+		static const float camera2dElevation;
+		static const float cameraTargetDistance;
+		static const Vec3 cameraTargetOffset;
+
 	private:
 		AVGroup m_kVehicles;
 		osVector3 m_kGridCenter;

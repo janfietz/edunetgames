@@ -40,6 +40,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include <iomanip>
 #include <sstream>
@@ -286,8 +287,8 @@ namespace {
                 m_AllPlayers.push_back(pMicTest);
             }
             // initialize camera
-            OpenSteerDemo::init2dCamera (*m_Ball);
-            Camera::camera.setPosition (10, OpenSteerDemo::camera2dElevation, 10);
+            CameraPlugin::init2dCamera (*m_Ball);
+            Camera::camera.setPosition (10, CameraPlugin::camera2dElevation, 10);
             Camera::camera.fixedPosition.set (40, 40, 40);
             Camera::camera.mode = Camera::cmFixed;
             m_redScore = 0;
@@ -349,7 +350,7 @@ namespace {
                 draw2dTextAt3dLocation (*"start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
             }
             // update camera, tracking test vehicle
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);
 
             // draw "ground plane"
             OpenSteerDemo::gridUtility (Vec3(0,0,0));

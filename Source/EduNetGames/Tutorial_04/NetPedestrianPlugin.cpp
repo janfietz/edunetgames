@@ -37,6 +37,7 @@
 #include "EduNetConnect/NetworkPlugin.h"
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 
 using namespace OpenSteer;
@@ -69,22 +70,23 @@ void NetPedestrianPlugin::open (void)
 	this->nextPD ();
 
 	// create the specified number of Pedestrians
-	for (int i = 0; i < gPedestrianStartCount; i++)
+	for( int i = 0; i < gPedestrianStartCount; i++ )
 	{
 		this->addPedestrianToCrowd();
 	}
 
 	// initialize camera and selectedVehicle
-	const AVGroup& kAllVehicles = this->allVehicles();
-	if( kAllVehicles.size() > 0 )
-	{
-		AbstractVehicle* pkVehicle = *kAllVehicles.begin();
-		if( NULL != pkVehicle )
-		{
-			AbstractVehicle& firstPedestrian = *pkVehicle;
-			OpenSteerDemo::init3dCamera( firstPedestrian );
-		}
-	}
+	CameraPlugin::init3dCamera( *SimpleVehicle::selectedVehicle );
+// 	const AVGroup& kAllVehicles = this->allVehicles();
+// 	if( kAllVehicles.size() > 0 )
+// 	{
+// 		AbstractVehicle* pkVehicle = *kAllVehicles.begin();
+// 		if( NULL != pkVehicle )
+// 		{
+// 			AbstractVehicle& firstPedestrian = *pkVehicle;
+// 			CameraPlugin::init3dCamera( firstPedestrian );
+// 		}
+// 	}
 	Camera::camera.mode = Camera::cmFixedDistanceOffset;
 	Camera::camera.fixedTarget.set (15, 0, 30);
 	Camera::camera.fixedPosition.set (15, 70, -70);
@@ -106,10 +108,7 @@ void NetPedestrianPlugin::reset (void)
 	kVG.reset();
 
 	// reset camera position
-	if( NULL != SimpleVehicle::selectedVehicle )
-	{
-		OpenSteerDemo::position2dCamera (*SimpleVehicle::selectedVehicle);
-	}
+	CameraPlugin::position2dCamera( *SimpleVehicle::selectedVehicle );
 
 	// make camera jump immediately to new position
 	Camera::camera.doNotSmoothNextMove ();

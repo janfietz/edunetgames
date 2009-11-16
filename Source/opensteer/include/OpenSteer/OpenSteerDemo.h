@@ -66,7 +66,7 @@ namespace OpenSteer {
         //------------------------------------------------------- component objects
 
         //! clock keeps track of both "real time" and "simulation time"
-        static Clock clock;
+        static Clock& clock;
 
         //------------------------------------------- addresses of selected objects
 

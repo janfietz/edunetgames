@@ -118,7 +118,7 @@ namespace OpenSteer {
                 if ( distancePointToPath < minDistancePointToPath ) {
                     minDistancePointToPath = distancePointToPath;
                     mapping.setPointOnPathCenterLine( pointOnPathCenterLine );
-                    mapping.setPointOnPathBoundary( pointOnPathCenterLine + ( ( queryPoint - pointOnPathCenterLine ).normalize() * radius ) );
+                    mapping.setPointOnPathBoundary( pointOnPathCenterLine + ( ( queryPoint - pointOnPathCenterLine ).normalized() * radius ) );
                     mapping.setRadius( radius );
                     mapping.setTangent( tangent );
                     mapping.setSegmentIndex( segmentIndex );

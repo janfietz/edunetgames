@@ -90,10 +90,12 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 bool NetPedestrian::gWanderSwitch = true;
 bool NetPedestrian::gUseDirectedPathFollowing = true;
 
+#pragma warning(push)
+#pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 //-----------------------------------------------------------------------------
 NetPedestrian::NetPedestrian():
-m_kSteeringForceUpdate(*this),
-m_kEulerUpdate(*this),
+m_kSteeringForceUpdate(this),
+m_kEulerUpdate(this),
 proximityToken( NULL )
 {
 
@@ -102,8 +104,8 @@ proximityToken( NULL )
 //-----------------------------------------------------------------------------
 // constructor
 NetPedestrian::NetPedestrian( ProximityDatabase& pd ):
-m_kSteeringForceUpdate(*this),
-m_kEulerUpdate(*this),
+m_kSteeringForceUpdate(this),
+m_kEulerUpdate(this),
 proximityToken( NULL )
 {
 	// allocate a token for this boid in the proximity database
@@ -118,6 +120,7 @@ proximityToken( NULL )
 	TNetPedestrian kTestPedestrian;
 	OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
 }
+#pragma warning(pop)
 
 //-----------------------------------------------------------------------------
 NetPedestrian::~NetPedestrian()
@@ -357,7 +360,7 @@ void NetPedestrian::annotatePathFollowing (const osVector3& future,
 	// draw a two-toned line between the future test point and its
 	// projection onto the path, the change from dark to light color
 	// indicates the boundary of the tube.
-	const osVector3 boundaryOffset = (onPath - future).normalize() * outside;
+	const osVector3 boundaryOffset = (onPath - future).normalized() * outside;
 	const osVector3 onPathBoundary = future + boundaryOffset;
 	annotationLine (onPath, onPathBoundary, darkOrange);
 	annotationLine (onPathBoundary, future, lightOrange);

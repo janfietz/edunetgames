@@ -96,8 +96,8 @@ namespace OpenSteer {
         //! length squared
         float lengthSquared (void) const {return this->dot (*this);}
 
-        //! normalize: returns normalized version (parallel to this, length = 1)
-        Vec3 normalize (void) const
+        //! normalized: returns normalized version (parallel to this, length = 1)
+        Vec3 normalized (void) const
         {
             //! skip divide if length is zero
             const float len = length ();
@@ -279,7 +279,7 @@ namespace OpenSteer {
 
     inline Vec3 RandomUnitVector (void)
     {
-        return RandomVectorInUnitRadiusSphere().normalize();
+        return RandomVectorInUnitRadiusSphere().normalized();
     }
 
 
@@ -291,7 +291,7 @@ namespace OpenSteer {
 
     inline Vec3 RandomUnitVectorOnXZPlane (void)
     {
-        return RandomVectorInUnitRadiusSphere().setYtoZero().normalize();
+        return RandomVectorInUnitRadiusSphere().setYtoZero().normalized();
     }
 
 
