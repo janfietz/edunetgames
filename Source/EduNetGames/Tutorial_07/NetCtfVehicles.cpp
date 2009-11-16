@@ -57,17 +57,26 @@ namespace	{
 
 const int NetCtfBaseVehicle::maxObstacleCount = 100;
 
+#pragma warning(push)
+#pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
+
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle()
+NetCtfBaseVehicle::NetCtfBaseVehicle():
+m_kSteeringForceUpdate(this),
+m_kEulerUpdate(this)
 {
 	reset();
 }
 
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd )
+NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd ):
+m_kSteeringForceUpdate(this),
+m_kEulerUpdate(this)
 {
 
 }
+
+#pragma warning(pop)
 
 //-----------------------------------------------------------------------------
 NetCtfBaseVehicle::~NetCtfBaseVehicle()
@@ -104,6 +113,19 @@ void NetCtfBaseVehicle::draw( const float currentTime, const float elapsedTime )
 	BaseClass::draw( currentTime, elapsedTime );
 	drawBasic2dCircularVehicle(*this, bodyColor);
 	drawTrail();
+}
+
+//-----------------------------------------------------------------------------
+// update
+void  NetCtfBaseVehicle::update( const float currentTime, const float elapsedTime )
+{
+	// alternative way
+	// now we can switch of steering force computation on the client
+	this->m_kSteeringForceUpdate.update( osScalar(0), elapsedTime );
+	const Vec3& kSteeringForce = this->m_kSteeringForceUpdate.getForce();
+	this->m_kEulerUpdate.setForce( kSteeringForce );
+	this->m_kEulerUpdate.update( osScalar(0), elapsedTime );
+	//		BaseClass::update( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
@@ -595,24 +617,39 @@ void NetCtfSeekerVehicle::drawHomeBase( void ) const
 }
 
 //-----------------------------------------------------------------------------
-// update method for goal seeker
-void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTime)
+// compute combined steering force: move forward, avoid obstacles
+// or neighbors if needed, otherwise follow the path and wander
+osVector3 NetCtfSeekerVehicle::determineCombinedSteering (const float elapsedTime)
 {
-	BaseClass::update( currentTime, elapsedTime );
-	// do behavioral state transitions, as needed
-	updateState(currentTime);
+	if( this->isRemoteObject() )
+	{
+		return this->lastSteeringForce();
+	}
 
 	// determine and apply steering/braking forces
-	Vec3 steer(0, 0, 0);
+	osVector3 steeringForce(0, 0, 0);;
 	if(state == running)
 	{
-		steer = steeringForSeeker();
+		steeringForce = steeringForSeeker();
 	}
 	else
 	{
-		applyBrakingForce(gBrakingRate, elapsedTime);
+		applyBrakingForce( gBrakingRate, elapsedTime );
 	}
-	applySteeringForce(steer, elapsedTime);
+
+	this->setLastSteeringForce( steeringForce.setYtoZero () );
+
+	// return steering constrained to global XZ "ground" plane
+	return this->lastSteeringForce();
+}
+
+//-----------------------------------------------------------------------------
+// update method for goal seeker
+void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTime)
+{
+	// do behavioral state transitions, as needed
+	this->updateState(currentTime);
+	BaseClass::update( currentTime, elapsedTime );
 
 	// annotation
 	annotationVelocityAcceleration();
@@ -634,60 +671,86 @@ void NetCtfEnemyVehicle::reset( void )
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfEnemyVehicle::update( const float currentTime, const float elapsedTime )
+// compute combined steering force: move forward, avoid obstacles
+// or neighbors if needed, otherwise follow the path and wander
+osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime)
 {
-	BaseClass::update( currentTime, elapsedTime );
-	// determine upper bound for pursuit prediction time
-	const float seekerToGoalDist = Vec3::distance( NetCtfGameLogic::ms_kHomeBaseCenter,
-		this->m_pkSeeker->position() );
-	const float adjustedDistance = seekerToGoalDist - radius()-NetCtfGameLogic::ms_fHomeBaseRadius;
-	const float seekerToGoalTime =((adjustedDistance < 0 ) ?
-		0 :
-	(adjustedDistance/this->m_pkSeeker->speed()));
-	const float maxPredictionTime = seekerToGoalTime * 0.9f;
-
-	// determine steering(pursuit, obstacle avoidance, or braking)
-	Vec3 steer(0, 0, 0);
-	if(this->m_pkSeeker->state == running)
+	if( this->isRemoteObject() )
 	{
-		const Vec3 avoidance =
-			steerToAvoidObstacles(gAvoidancePredictTimeMin,
-			(ObstacleGroup&) allObstacles);
+		return this->lastSteeringForce();
+	}
+	osVector3 steeringForce(0, 0, 0);
 
-		// saved for annotation
-		avoiding =(avoidance == Vec3::zero);
-
-		if(avoiding)
-			steer = steerForPursuit(*this->m_pkSeeker, maxPredictionTime);
-		else
-			steer = avoidance;
+	if( NULL == this->m_pkSeeker )
+	{
+		applyBrakingForce( gBrakingRate, elapsedTime );
 	}
 	else
 	{
-		applyBrakingForce(gBrakingRate, elapsedTime);
+		// determine upper bound for pursuit prediction time
+		const float seekerToGoalDist = Vec3::distance( NetCtfGameLogic::ms_kHomeBaseCenter,
+			this->m_pkSeeker->position() );
+		const float adjustedDistance = seekerToGoalDist - radius()-NetCtfGameLogic::ms_fHomeBaseRadius;
+		const float seekerToGoalTime =((adjustedDistance < 0 ) ?
+			0 :
+		(adjustedDistance/this->m_pkSeeker->speed()));
+		const float maxPredictionTime = seekerToGoalTime * 0.9f;
+
+		// determine steering(pursuit, obstacle avoidance, or braking)
+		if(this->m_pkSeeker->state == running)
+		{
+			const Vec3 avoidance =
+				steerToAvoidObstacles(gAvoidancePredictTimeMin,
+				(ObstacleGroup&) allObstacles);
+
+			// saved for annotation
+			avoiding =(avoidance == Vec3::zero);
+
+			if(avoiding)
+				steeringForce = steerForPursuit(*this->m_pkSeeker, maxPredictionTime);
+			else
+				steeringForce = avoidance;
+		}
+		else
+		{
+			applyBrakingForce( gBrakingRate, elapsedTime );
+		}
 	}
-	applySteeringForce(steer, elapsedTime);
+
+	this->setLastSteeringForce( steeringForce.setYtoZero () );
+
+	// return steering constrained to global XZ "ground" plane
+	return this->lastSteeringForce();
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfEnemyVehicle::update( const float currentTime, const float elapsedTime )
+{
+	BaseClass::update( currentTime, elapsedTime );
 
 	// annotation
 	annotationVelocityAcceleration();
 	recordTrailVertex( currentTime, position() );
 
 	// detect and record interceptions("tags") of seeker
-	const float seekerToMeDist = Vec3::distance(position(), 
-		this->m_pkSeeker->position());
-	const float sumOfRadii = radius() + this->m_pkSeeker->radius();
-	if(seekerToMeDist < sumOfRadii)
+	if( NULL != this->m_pkSeeker )
 	{
-		if(this->m_pkSeeker->state == running) this->m_pkSeeker->state = tagged;
-
-		// annotation:
-		if(this->m_pkSeeker->state == tagged)
+		const float seekerToMeDist = Vec3::distance(position(), 
+			this->m_pkSeeker->position());
+		const float sumOfRadii = radius() + this->m_pkSeeker->radius();
+		if(seekerToMeDist < sumOfRadii)
 		{
-			const Color color(0.8f, 0.5f, 0.5f);
-			annotationXZDisk(sumOfRadii,
-				(position() + this->m_pkSeeker->position()) / 2,
-				color,
-				20);
+			if(this->m_pkSeeker->state == running) this->m_pkSeeker->state = tagged;
+
+			// annotation:
+			if(this->m_pkSeeker->state == tagged)
+			{
+				const Color color(0.8f, 0.5f, 0.5f);
+				annotationXZDisk(sumOfRadii,
+					(position() + this->m_pkSeeker->position()) / 2,
+					color,
+					20);
+			}
 		}
 	}
 }

@@ -199,7 +199,7 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 //	applySteeringForce (determineCombinedSteering (elapsedTime),
 //		elapsedTime);
 	// alternative way
-	// now we can switch of steeringforce computation on the client
+	// now we can switch of steering force computation on the client
 	this->m_kSteeringForceUpdate.update( osScalar(0), elapsedTime );
 	const Vec3& kSteeringForce = this->m_kSteeringForceUpdate.getForce();
 	this->m_kEulerUpdate.setForce( kSteeringForce );

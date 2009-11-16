@@ -1,5 +1,5 @@
-#ifndef __VEHICLECLASSIDS_H__
-#define __VEHICLECLASSIDS_H__
+#ifndef __ABSTRACTVEHICLEREPLICA_H__
+#define __ABSTRACTVEHICLEREPLICA_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,31 +29,37 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetConnect/OSReplicaTypes.h"
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+class AbstractVehicleReplica : public OSReplica< OpenSteer::AbstractVehicle >
 {
-	using namespace OpenSteer;
+	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
+public:
+	AbstractVehicleReplica();
+	AbstractVehicleReplica( OpenSteer::AbstractPlugin* pPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject );
 
 	//-------------------------------------------------------------------------
-	// implement entity class id
-	static const EntityClassId g_clasId_Unknown(0);	
-	static const EntityClassId g_clasId_NetPedestrian(1);	
-	static const EntityClassId g_clasId_CtfBaseVehicle(2);
-	static const EntityClassId g_clasId_CtfSeekerVehicle(3);
-	static const EntityClassId g_clasId_CtfEnemyVehicle(4);
-	static const EntityClassId g_clasId_NetBoid(5);
-}
+	// replica interface
+	virtual RakNet::RakString GetName(void) const;
 
-//-----------------------------------------------------------------------------
-// define entity class id
-#define ET_CID_UNKNOWN OpenSteer::g_clasId_Unknown
-#define ET_CID_NETPEDESTRIAN OpenSteer::g_clasId_NetPedestrian
-#define ET_CID_CTF_BASE_VEHICLE OpenSteer::g_clasId_CtfBaseVehicle
-#define ET_CID_CTF_ENEMY_VEHICLE OpenSteer::g_clasId_CtfSeekerVehicle
-#define ET_CID_CTF_SEEKER_VEHICLE OpenSteer::g_clasId_CtfEnemyVehicle
-#define ET_CID_NETBOID OpenSteer::g_clasId_NetBoid
+	virtual void SetNetworkID( NetworkID id );
+
+	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
+
+	virtual RakNet::RM3SerializationResult Serialize( RakNet::SerializeParameters *serializeParameters );
+
+	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
+
+	static void setAbstractVehicleFactory( OpenSteer::AbstractVehicleFactory* pkFactory );
+
+private:
+	OpenSteer::AbstractPlugin* m_pkHostPlugin;
+	static OpenSteer::AbstractVehicleFactory* ms_pkFactory;
+	RakNet::RakString m_kClassName;
+
+	ET_IMPLEMENT_CLASS_NO_COPY( AbstractVehicleReplica );
+};
 
 
-#endif // __VEHICLECLASSIDS_H__
+#endif //  __ABSTRACTVEHICLEREPLICA_H__

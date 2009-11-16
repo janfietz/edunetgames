@@ -26,8 +26,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-//#include "NetCtfReplicaConnection.h"
 #include "NetCtfPlugin.h"
+#include "NetCtfVehicleFactory.h"
 
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
@@ -35,17 +35,20 @@
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
+#include "EduNetConnect/AbstractVehicleReplica.h"
+#include "EduNetConnect/AbstractVehicleReplicaConnection.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
 // now the basic network plugins
 //-----------------------------------------------------------------------------
+// now 1 global vehicle factory
+NetCtfVehicleFactory gOnlineNetCtfVehicleFactory;
 
 typedef PeerPlugin<NetCtfPlugin> TCtfPeerPlugin;
 typedef ClientPlugin<NetCtfPlugin> TCtfClientPlugin;
 
-#if 0
 //-----------------------------------------------------------------------------
 class CtfPeerPlugin : public TCtfPeerPlugin
 {
@@ -60,7 +63,8 @@ public:
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 		// attach vehicle factory
-		this->m_pkNetCtfFactory = new NetCtfReplicaFactory( &this->m_kReplicaManager );	
+		this->m_pkNetCtfFactory = new AbstractVehicleReplicaFactory( &this->m_kReplicaManager );
+		AbstractVehicleReplica::setAbstractVehicleFactory( &gOnlineNetCtfVehicleFactory );
 		this->m_kGamePlugin.setVehicleFactory( this->m_pkNetCtfFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( CtfPeerPlugin )
@@ -147,11 +151,12 @@ private:
 	interval(30){}		
 	RakNetTime interval;
 	};
-	NetCtfReplicaFactory* m_pkNetCtfFactory;
-	NetCtfReplicaManager m_kReplicaManager;
+	AbstractVehicleReplicaFactory* m_pkNetCtfFactory;
+	AbstractVehicleReplicaManager m_kReplicaManager;
 
 	ReplicationParams m_kReplicationSettings;
 };
+
 
 //-----------------------------------------------------------------------------
 class CtfClientPlugin : public TCtfClientPlugin
@@ -163,6 +168,7 @@ public:
 	{
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setVehicleFactory( NULL );
+		AbstractVehicleReplica::setAbstractVehicleFactory( &gOnlineNetCtfVehicleFactory );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( CtfClientPlugin )
@@ -188,10 +194,10 @@ public:
 	}
 private:
 
-	NetCtfReplicaFactory* m_pkBoidFactory;
-	NetCtfReplicaManager m_kReplicaManager;
+	AbstractVehicleReplicaFactory* m_pkBoidFactory;
+	AbstractVehicleReplicaManager m_kReplicaManager;
 };
-#endif
+
 //-----------------------------------------------------------------------------
 // offline client
 //-----------------------------------------------------------------------------
@@ -214,7 +220,6 @@ public:
 
 OfflineCtfPlugin gCtfPlugin;
 
-#if 0
 //-----------------------------------------------------------------------------
 // render client plugin
 //-----------------------------------------------------------------------------
@@ -302,4 +307,3 @@ void CtfClientServerPlugin::initGui( void* pkUserdata )
 };
 
 CtfClientServerPlugin gClientServerPlugin;
-#endif
