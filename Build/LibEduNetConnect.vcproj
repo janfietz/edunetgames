@@ -212,6 +212,22 @@
 				Name="replication"
 				>
 				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplica.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplica.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplicaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplicaConnection.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\EduNetConnect\OSReplica.h"
 					>
 				</File>

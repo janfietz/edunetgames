@@ -96,7 +96,6 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // adjust the steering force passed to applySteeringForce.
 //
@@ -107,8 +106,6 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 // xxx experimental 8-20-02
 //
 // parameter names commented out to prevent compiler warning from "-W"
-
-
 OpenSteer::Vec3 
 OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
                                                   const float /* deltaTime */)
@@ -132,7 +129,6 @@ OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // xxx experimental 9-6-02
 //
@@ -146,8 +142,6 @@ OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
 //
 // maybe the guts of applySteeringForce should be split off into a subroutine
 // used by both applySteeringForce and applyBrakingForce?
-
-
 void 
 OpenSteer::SimpleVehicle::applyBrakingForce (const float rate, const float deltaTime)
 {
@@ -219,14 +213,11 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
                           _smoothedPosition);
 }
 
-
 //-----------------------------------------------------------------------------
 // the default version: keep FORWARD parallel to velocity, change UP as
 // little as possible.
 //
 // parameter names commented out to prevent compiler warning from "-W"
-
-
 void 
 OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newVelocity,
                                                 const float /* elapsedTime */)
@@ -235,15 +226,12 @@ OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newVelocity,
     if (speed() > 0) regenerateOrthonormalBasisUF (newVelocity / speed());
 }
 
-
 //-----------------------------------------------------------------------------
 // alternate version: keep FORWARD parallel to velocity, adjust UP according
 // to a no-basis-in-reality "banking" behavior, something like what birds and
 // airplanes do
 
 // XXX experimental cwr 6-5-03
-
-
 void 
 OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocity,
                                                           const float elapsedTime)
@@ -277,8 +265,6 @@ OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocit
 
 //-----------------------------------------------------------------------------
 // measure path curvature (1/turning-radius), maintain smoothed version
-
-
 void 
 OpenSteer::SimpleVehicle::measurePathCurvature (const float elapsedTime)
 {
@@ -300,8 +286,6 @@ OpenSteer::SimpleVehicle::measurePathCurvature (const float elapsedTime)
 
 //-----------------------------------------------------------------------------
 // draw lines from vehicle's position showing its velocity and acceleration
-
-
 void 
 OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA, 
                                                           float maxLengthV)
@@ -317,7 +301,6 @@ OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
     annotationLine (p, p + (_smoothedAcceleration * aScale), aColor);
 }
 
-
 //-----------------------------------------------------------------------------
 // predict position of this vehicle at some time in the future
 // (assumes velocity remains constant, hence path is a straight line)
@@ -326,8 +309,6 @@ OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
 // XXX non-linear predictors.  Maybe predictFutureLocalSpace ?
 //
 // XXX move to a vehicle utility mixin?
-
-
 OpenSteer::Vec3 
 OpenSteer::SimpleVehicle::predictFuturePosition (const float predictionTime) const
 {

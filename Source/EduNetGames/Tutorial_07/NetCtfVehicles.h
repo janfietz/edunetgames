@@ -62,11 +62,7 @@ public:
 	// reset state
 	virtual void reset( void );
 
-	virtual void update( const float currentTime, const float elapsedTime )
-	{
-//		BaseClass::update( currentTime, elapsedTime );
-	}
-
+	virtual void update( const float currentTime, const float elapsedTime );
 	// draw this character/vehicle into the scene
 	virtual void draw( const float currentTime, const float elapsedTime );
 
@@ -93,6 +89,9 @@ public:
 	static const int maxObstacleCount;
 	static OpenSteer::SOG allObstacles;
 private:
+	OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
+	OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
+
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfBaseVehicle )
 
 };
@@ -117,6 +116,7 @@ public:
 
 	// per frame simulation update
 	virtual void update( const float currentTime, const float elapsedTime );
+	virtual osVector3 determineCombinedSteering( const float elapsedTime );
 
 	// is there a clear path to the goal?
 	bool clearPathToGoal( void );
@@ -159,7 +159,7 @@ public:
 	NetCtfEnemyVehicle ():m_pkSeeker( NULL ) {reset ();}
 	NetCtfEnemyVehicle( OpenSteer::ProximityDatabase& pd ):BaseClass( pd ){reset();};
 
-	OS_IMPLEMENT_CLASSNAME( NetCtfOEnemyVehicle )
+	OS_IMPLEMENT_CLASSNAME( NetCtfEnemyVehicle )
 
 	// create a clone
 	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
@@ -169,6 +169,7 @@ public:
 
 	// per frame simulation update
 	virtual void update( const float currentTime, const float elapsedTime );
+	virtual osVector3 determineCombinedSteering( const float elapsedTime );
 
 	void setSeeker( NetCtfSeekerVehicle* pkSeeker )
 	{
