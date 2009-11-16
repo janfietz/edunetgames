@@ -227,6 +227,18 @@ void PluginArray::printMiniHelpForFunctionKeys(void) const
 //-----------------------------------------------------------------------------
 const AVGroup& PluginArray::allVehicles(void) const
 {
+	TPluginArray::const_iterator kIter = this->begin();
+	TPluginArray::const_iterator kEnd = this->end();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		const AVGroup& kVehicles = pkPlugin->allVehicles();
+		if( kVehicles.size() > 0 )
+		{
+			return kVehicles;
+		}
+		++kIter;
+	}
 	return this->m_kVehicles;
 }
 

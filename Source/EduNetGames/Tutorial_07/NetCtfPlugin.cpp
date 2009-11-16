@@ -151,9 +151,10 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	// vehicle nearest mouse (to be highlighted)
 	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
-
+#if 1
 	// update camera
 	CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
+#endif
 
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
@@ -168,7 +169,6 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 			gHomeBaseCenter);
 		OpenSteerDemo::gridUtility (gridCenter);
 	}
-
 	// draw the seeker, obstacles and home base
 	ctfSeeker->draw( currentTime, elapsedTime );
 	drawObstacles ();
@@ -198,6 +198,7 @@ void NetCtfPlugin::close (void)
 	all.clear();
 }
 
+//-----------------------------------------------------------------------------
 void NetCtfPlugin::reset (void)
 {
 	// count resets
@@ -214,6 +215,7 @@ void NetCtfPlugin::reset (void)
 	Camera::camera.doNotSmoothNextMove ();
 }
 
+//-----------------------------------------------------------------------------
 void NetCtfPlugin::handleFunctionKeys (int keyNumber)
 {
 	switch (keyNumber)
@@ -223,6 +225,7 @@ void NetCtfPlugin::handleFunctionKeys (int keyNumber)
 	}
 }
 
+//-----------------------------------------------------------------------------
 void NetCtfPlugin::printMiniHelpForFunctionKeys (void) const
 {
 	std::ostringstream message;
@@ -234,6 +237,7 @@ void NetCtfPlugin::printMiniHelpForFunctionKeys (void) const
 	OpenSteerDemo::printMessage ("");
 }
 
+//-----------------------------------------------------------------------------
 void NetCtfPlugin::drawObstacles (void)
 {
 	const Color color (0.8f, 0.6f, 0.4f);
