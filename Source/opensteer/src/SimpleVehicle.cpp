@@ -71,7 +71,8 @@ OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 
 //-----------------------------------------------------------------------------
 // constructor
-OpenSteer::SimpleVehicle::SimpleVehicle (void)
+OpenSteer::SimpleVehicle::SimpleVehicle (void):
+m_pkCustomUpdated( NULL )
 {
     // set inital state
     reset ();

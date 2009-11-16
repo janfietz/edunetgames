@@ -35,14 +35,26 @@ namespace OpenSteer {
 
 //-----------------------------------------------------------------------------
 // a utility class to handle common vehicle related topics
-class AbstractVehicleGroup
+class AbstractVehicleGroup : public OpenSteer::AbstractUpdated
 {
 public:
 	AbstractVehicleGroup( AVGroup& kAVGroup );
 	AbstractVehicleGroup( const AVGroup& kAVGroup );
 	virtual ~AbstractVehicleGroup( void ){};
 
+	//-------------------------------------------------------------------
+	// interface AbstractUpdated
 	virtual void update (const float currentTime, const float elapsedTime);
+
+	virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
+	{
+		this->m_pkCustomUpdated = pkUpdated;
+	}
+	virtual AbstractUpdated* getCustomUpdated( void ) const
+	{
+		return this->m_pkCustomUpdated;
+	}
+
 
 	virtual void redraw (const float currentTime, const float elapsedTime);
 	virtual void reset( void );
@@ -56,6 +68,7 @@ public:
 private:
 	AbstractVehicleGroup( void );
 	AVGroup& m_kVehicles;
+	AbstractUpdated* m_pkCustomUpdated;
 
 };
 

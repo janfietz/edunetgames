@@ -53,6 +53,8 @@ namespace OpenSteer{
 typedef OpenSteer::Vec3 osVector3;
 typedef OpenSteer::AbstractVehicle osAbstractVehicle;
 typedef OpenSteer::AVGroup osAVGroup;
+typedef OpenSteer::AVGroup::iterator osAVIterator;
+typedef OpenSteer::AVGroup::const_iterator osAVCIterator;
 typedef OpenSteer::ProximityDatabase osProximityDatabase;
 typedef OpenSteer::ProximityToken osProximityToken;
 typedef OpenSteer::Color osColor;

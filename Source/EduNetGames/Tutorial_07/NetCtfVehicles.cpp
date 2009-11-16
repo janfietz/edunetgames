@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetCtfVehicles.h"
+#include "NetCtfGameLogic.h"
 
 using namespace OpenSteer;
 
@@ -40,11 +41,6 @@ namespace	{
 	// globals
 	//(perhaps these should be member variables of a Vehicle or Plugin class)
 
-
-
-	const Vec3 gHomeBaseCenter(0, 0, 0);
-	const float gHomeBaseRadius = 1.5;
-
 	const float gMinStartRadius = 30;
 	const float gMaxStartRadius = 40;
 
@@ -57,28 +53,6 @@ namespace	{
 	const float gAvoidancePredictTimeMin  = 0.9f;
 	const float gAvoidancePredictTimeMax  = 2;
 	float gAvoidancePredictTime = gAvoidancePredictTimeMin;
-
-	bool enableAttackSeek  = true; // for testing(perhaps retain for UI control?)
-	bool enableAttackEvade = true; // for testing(perhaps retain for UI control?)
-
-	NetCtfSeekerVehicle* gSeeker = NULL;
-
-
-	// count the number of times the simulation has reset(e.g. for overnight runs)
-	int resetCount = 0;
-
-
-	//-------------------------------------------------------------------------
-	// state for OpenSteerDemo Plugin
-	//
-	// XXX consider moving this inside CtfPlugin
-	// XXX consider using STL(any advantage? consistency?)
-
-
-// 	NetCtfSeekerVehicle* ctfSeeker;
- 	const int ctfEnemyCount = 4;
-	NetCtfEnemyVehicle* ctfEnemies [ctfEnemyCount] = {NULL, NULL, NULL, NULL};
-
 }
 
 const int NetCtfBaseVehicle::maxObstacleCount = 100;
@@ -139,7 +113,7 @@ void NetCtfBaseVehicle::randomizeStartingPositionAndHeading( void )
 	// centered around the home base
 	const float rRadius = frandom2(gMinStartRadius, gMaxStartRadius);
 	const Vec3 randomOnRing = RandomUnitVectorOnXZPlane() * rRadius;
-	setPosition(gHomeBaseCenter + randomOnRing);
+	setPosition(NetCtfGameLogic::ms_kHomeBaseCenter + randomOnRing);
 
 	// are we are too close to an obstacle?
 	if(minDistanceToObstacle(position()) < radius()*5)
@@ -197,7 +171,7 @@ void NetCtfBaseVehicle::addOneObstacle( void )
 		float r;
 		Vec3 c;
 		float minClearance;
-		const float requiredClearance = gSeeker->radius() * 4; // 2 x diameter
+		const float requiredClearance = gNetCtfSeekerVehicle.radius() * 4; // 2 x diameter
 		do
 		{
 			r = frandom2(1.5, 4);
@@ -209,8 +183,8 @@ void NetCtfBaseVehicle::addOneObstacle( void )
 				testOneObstacleOverlap((**so).radius,(**so).center);
 			}
 
-			testOneObstacleOverlap(gHomeBaseRadius - requiredClearance,
-				gHomeBaseCenter);
+			testOneObstacleOverlap(NetCtfGameLogic::ms_fHomeBaseRadius - requiredClearance,
+				NetCtfGameLogic::ms_kHomeBaseCenter);
 		}
 		while(minClearance < requiredClearance);
 
@@ -273,7 +247,6 @@ void NetCtfSeekerVehicle::reset( void )
 {
 	BaseClass::reset();
 	bodyColor.set(0.4f, 0.4f, 0.6f); // blueish
-	gSeeker = this;
 	state = running;
 	evading = false;
 }
@@ -285,24 +258,22 @@ bool NetCtfSeekerVehicle::clearPathToGoal( void )
 	const float sideThreshold = radius() * 8.0f;
 	const float behindThreshold = radius() * 2.0f;
 
-	const Vec3 goalOffset = gHomeBaseCenter - position();
+	const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - position();
 	const float goalDistance = goalOffset.length();
 	const Vec3 goalDirection = goalOffset / goalDistance;
 
-	const bool goalIsAside = isAside(gHomeBaseCenter, 0.5);
+	const bool goalIsAside = isAside(NetCtfGameLogic::ms_kHomeBaseCenter, 0.5);
 
 	// for annotation: loop over all and save result, instead of early return 
 	bool xxxReturn = true;
 
+	size_t uiEnemyCount = this->m_kEnemies.size();
+
 	// loop over enemies
-	for(int i = 0; i < ctfEnemyCount; i++)
+	for(size_t i = 0; i < uiEnemyCount; ++i)
 	{
-		if( NULL == ctfEnemies[i] )
-		{
-			continue;
-		}
 		// short name for this enemy
-		const NetCtfEnemyVehicle& e = *ctfEnemies[i];
+		const AbstractVehicle& e = *this->m_kEnemies[i];
 		const float eDistance = Vec3::distance(position(), e.position());
 		const float timeEstimate = 0.3f * eDistance / e.speed(); //xxx
 		const Vec3 eFuture = e.predictFuturePosition(timeEstimate);
@@ -368,7 +339,7 @@ void NetCtfSeekerVehicle::clearPathAnnotation(const float sideThreshold,
 	const Vec3 pbb = position() + behindBack;
 	const Vec3 gun = localRotateForwardToSide(goalDirection);
 	const Vec3 gn = gun * sideThreshold;
-	const Vec3 hbc = gHomeBaseCenter;
+	const Vec3 hbc = NetCtfGameLogic::ms_kHomeBaseCenter;
 	annotationLine(pbb + gn,         hbc + gn,         clearPathColor);
 	annotationLine(pbb - gn,         hbc - gn,         clearPathColor);
 	annotationLine(hbc - gn,         hbc + gn,         clearPathColor);
@@ -379,12 +350,14 @@ void NetCtfSeekerVehicle::clearPathAnnotation(const float sideThreshold,
 Vec3 NetCtfSeekerVehicle::steerToEvadeAllDefenders( void )
 {
 	Vec3 evade(0, 0, 0);
-	const float goalDistance = Vec3::distance(gHomeBaseCenter, position());
+	const float goalDistance = Vec3::distance(NetCtfGameLogic::ms_kHomeBaseCenter, position());
 
+	size_t uiEnemyCount = this->m_kEnemies.size();
 	// sum up weighted evasion
-	for(int i = 0; i < ctfEnemyCount; i++)
+	// loop over enemies
+	for(size_t i = 0; i < uiEnemyCount; ++i)
 	{
-		const NetCtfEnemyVehicle& e = *ctfEnemies[i];
+		const AbstractVehicle& e = *this->m_kEnemies[i];
 		const Vec3 eOffset = e.position() - position();
 		const float eDistance = eOffset.length();
 
@@ -418,9 +391,13 @@ Vec3 NetCtfSeekerVehicle::XXXsteerToEvadeAllDefenders( void )
 {
 	// sum up weighted evasion
 	Vec3 evade(0, 0, 0);
-	for(int i = 0; i < ctfEnemyCount; i++)
+	size_t uiEnemyCount = this->m_kEnemies.size();
+
+	// loop over enemies
+	for(size_t i = 0; i < uiEnemyCount; ++i)
 	{
-		const NetCtfEnemyVehicle& e = *ctfEnemies[i];
+		// short name for this enemy
+		const AbstractVehicle& e = *this->m_kEnemies[i];
 		const Vec3 eOffset = e.position() - position();
 		const float eDistance = eOffset.length();
 
@@ -469,7 +446,7 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 	else
 	{
 		// otherwise seek home base and perhaps evade defenders
-		const Vec3 seek = xxxsteerForSeek(gHomeBaseCenter);
+		const Vec3 seek = xxxsteerForSeek(NetCtfGameLogic::ms_kHomeBaseCenter);
 		if(clearPath)
 		{
 			// we have a clear path(defender-free corridor), use pure seek
@@ -519,8 +496,8 @@ void NetCtfSeekerVehicle::adjustObstacleAvoidanceLookAhead(const bool clearPath)
 	if(clearPath)
 	{
 		evading = false;
-		const float goalDistance = Vec3::distance(gHomeBaseCenter,position());
-		const bool headingTowardGoal = isAhead(gHomeBaseCenter, 0.98f);
+		const float goalDistance = Vec3::distance(NetCtfGameLogic::ms_kHomeBaseCenter,position());
+		const bool headingTowardGoal = isAhead(NetCtfGameLogic::ms_kHomeBaseCenter, 0.98f);
 		const bool isNear =(goalDistance/speed()) < gAvoidancePredictTimeMax;
 		const bool useMax = headingTowardGoal && !isNear;
 		gAvoidancePredictTime =
@@ -539,8 +516,8 @@ void NetCtfSeekerVehicle::updateState(const float currentTime)
 	// if we reach the goal before being tagged, switch to atGoal state
 	if(state == running)
 	{
-		const float baseDistance = Vec3::distance(position(),gHomeBaseCenter);
-		if(baseDistance <(radius() + gHomeBaseRadius)) state = atGoal;
+		const float baseDistance = Vec3::distance(position(),NetCtfGameLogic::ms_kHomeBaseCenter);
+		if(baseDistance <(radius() + NetCtfGameLogic::ms_fHomeBaseRadius)) state = atGoal;
 	}
 
 	// update lastRunningTime(holds off reset time)
@@ -563,11 +540,8 @@ void NetCtfSeekerVehicle::updateState(const float currentTime)
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime )
+const char* NetCtfSeekerVehicle::getSeekerStateString( void ) const
 {
-	// first call the draw method in the base class
-	BaseClass::draw( currentTime, elapsedTime );
-
 	// select string describing current seeker state
 	const char* seekerStateString = "";
 	switch(state)
@@ -580,26 +554,29 @@ void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime
 		else
 			seekerStateString = "seek goal";
 		break;
-	case tagged: seekerStateString = "tagged"; break;
-	case atGoal: seekerStateString = "reached goal"; break;
+	case tagged: 
+		seekerStateString = "tagged"; 
+		break;
+	case atGoal: 
+		seekerStateString = "reached goal"; 
+		break;
 	}
+	return seekerStateString;
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime )
+{
+	// first call the draw method in the base class
+	BaseClass::draw( currentTime, elapsedTime );
 
 	// annote seeker with its state as text
 	const Vec3 textOrigin = position() + Vec3(0, 0.25, 0);
 	std::ostringstream annote;
-	annote << seekerStateString << std::endl;
+	annote << this->getSeekerStateString() << std::endl;
 	annote << std::setprecision(2) << std::setiosflags(std::ios::fixed)
 		<< speed() << std::ends;
-	draw2dTextAt3dLocation(annote, textOrigin, gWhite, drawGetWindowWidth(), drawGetWindowHeight());
-
-	// display status in the upper left corner of the window
-	std::ostringstream status;
-	status << seekerStateString << std::endl;
-	status << obstacleCount << " obstacles [F1/F2]" << std::endl;
-	status << resetCount << " restarts" << std::ends;
-	const float h = drawGetWindowHeight();
-	const Vec3 screenLocation(10, h-50, 0);
-	draw2dTextAt2dLocation(status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
+	draw2dTextAt3dLocation( annote, textOrigin, gWhite, drawGetWindowWidth(), drawGetWindowHeight());
 
 	this->drawHomeBase();
 }
@@ -613,8 +590,8 @@ void NetCtfSeekerVehicle::drawHomeBase( void ) const
 	// TODO move to seeker himself
 	const bool reached = this->state == NetCtfSeekerVehicle::atGoal;
 	const Color baseColor = (reached ? atColor : noColor);
-	drawXZDisk( gHomeBaseRadius,    gHomeBaseCenter, baseColor, 40 );
-	drawXZDisk( gHomeBaseRadius/15, gHomeBaseCenter + up, gBlack, 20 );
+	drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius,    NetCtfGameLogic::ms_kHomeBaseCenter, baseColor, 40 );
+	drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius/15, NetCtfGameLogic::ms_kHomeBaseCenter + up, gBlack, 20 );
 }
 
 //-----------------------------------------------------------------------------
@@ -653,38 +630,25 @@ void NetCtfEnemyVehicle::reset( void )
 {
 	BaseClass::reset();
 	bodyColor.set(0.6f, 0.4f, 0.4f); // redish
+	this->m_pkSeeker = NULL;
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfEnemyVehicle::update(const float currentTime, const float elapsedTime)
+void NetCtfEnemyVehicle::update( const float currentTime, const float elapsedTime )
 {
-	// add to enemy database
-	for( int i = 0; i < ctfEnemyCount; ++i )
-	{
-		if( ctfEnemies [ctfEnemyCount] == this )
-		{
-			break;
-		}
-		if( ctfEnemies [ctfEnemyCount] == NULL )
-		{
-			ctfEnemies [ctfEnemyCount] = this;
-			break;
-		}
-	}
-
 	BaseClass::update( currentTime, elapsedTime );
 	// determine upper bound for pursuit prediction time
-	const float seekerToGoalDist = Vec3::distance(gHomeBaseCenter,
-		gSeeker->position());
-	const float adjustedDistance = seekerToGoalDist - radius()-gHomeBaseRadius;
+	const float seekerToGoalDist = Vec3::distance( NetCtfGameLogic::ms_kHomeBaseCenter,
+		this->m_pkSeeker->position() );
+	const float adjustedDistance = seekerToGoalDist - radius()-NetCtfGameLogic::ms_fHomeBaseRadius;
 	const float seekerToGoalTime =((adjustedDistance < 0 ) ?
 		0 :
-	(adjustedDistance/gSeeker->speed()));
+	(adjustedDistance/this->m_pkSeeker->speed()));
 	const float maxPredictionTime = seekerToGoalTime * 0.9f;
 
 	// determine steering(pursuit, obstacle avoidance, or braking)
 	Vec3 steer(0, 0, 0);
-	if(gSeeker->state == running)
+	if(this->m_pkSeeker->state == running)
 	{
 		const Vec3 avoidance =
 			steerToAvoidObstacles(gAvoidancePredictTimeMin,
@@ -694,7 +658,7 @@ void NetCtfEnemyVehicle::update(const float currentTime, const float elapsedTime
 		avoiding =(avoidance == Vec3::zero);
 
 		if(avoiding)
-			steer = steerForPursuit(*gSeeker, maxPredictionTime);
+			steer = steerForPursuit(*this->m_pkSeeker, maxPredictionTime);
 		else
 			steer = avoidance;
 	}
@@ -706,23 +670,22 @@ void NetCtfEnemyVehicle::update(const float currentTime, const float elapsedTime
 
 	// annotation
 	annotationVelocityAcceleration();
-	recordTrailVertex(currentTime, position());
-
+	recordTrailVertex( currentTime, position() );
 
 	// detect and record interceptions("tags") of seeker
 	const float seekerToMeDist = Vec3::distance(position(), 
-		gSeeker->position());
-	const float sumOfRadii = radius() + gSeeker->radius();
+		this->m_pkSeeker->position());
+	const float sumOfRadii = radius() + this->m_pkSeeker->radius();
 	if(seekerToMeDist < sumOfRadii)
 	{
-		if(gSeeker->state == running) gSeeker->state = tagged;
+		if(this->m_pkSeeker->state == running) this->m_pkSeeker->state = tagged;
 
 		// annotation:
-		if(gSeeker->state == tagged)
+		if(this->m_pkSeeker->state == tagged)
 		{
 			const Color color(0.8f, 0.5f, 0.5f);
 			annotationXZDisk(sumOfRadii,
-				(position() + gSeeker->position()) / 2,
+				(position() + this->m_pkSeeker->position()) / 2,
 				color,
 				20);
 		}

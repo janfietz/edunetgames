@@ -30,19 +30,39 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
 
 //-----------------------------------------------------------------------------
-class NetCtfGameLogic
+class NetCtfGameLogic : public OpenSteer::AbstractVehicleUpdate
 {
-//	ET_DECLARE_BASE(OpenSteer::Plugin);
+	ET_DECLARE_BASE( OpenSteer::AbstractVehicleUpdate );
 public:
-	NetCtfGameLogic();
+	NetCtfGameLogic( osAbstractVehicle* pkVehicle = NULL);
 	virtual ~NetCtfGameLogic();
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfGameLogic )
 
+	//-------------------------------------------------------------------------
+	// interface AbstractUpdated
 	virtual void update (const float currentTime, const float elapsedTime);
 
+	//-------------------------------------------------------------------------
+	void setPlugin( class NetCtfPlugin* pkPlugin )
+	{
+		this->m_pkPlugin = pkPlugin;
+	}
+
+	bool isGameOver( void )
+	{
+		return m_bGameOver;
+	}
+
+	static osVector3 ms_kHomeBaseCenter;
+	static float ms_fHomeBaseRadius;
+
+protected:
+	class NetCtfPlugin* m_pkPlugin;
+	bool m_bGameOver;
 };
 
 

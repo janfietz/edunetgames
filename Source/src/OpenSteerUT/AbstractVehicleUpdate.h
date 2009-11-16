@@ -38,18 +38,42 @@ namespace OpenSteer
 	class AbstractVehicleUpdate : public AbstractUpdated {
 	public:
 		AbstractVehicleUpdate( AbstractVehicle* pkVehicle ):
-		  m_pkVehicle( pkVehicle )
+		  m_pkVehicle( pkVehicle ), m_pkCustomUpdated(NULL)
 		  {
 		  }
 		  virtual ~AbstractVehicleUpdate(){}
+
+		  //-------------------------------------------------------------------
+		  // interface AbstractUpdated
+		  virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
+		  {
+			  this->m_pkCustomUpdated = pkUpdated;
+		  }
+		  virtual AbstractUpdated* getCustomUpdated( void ) const
+		  {
+			  return this->m_pkCustomUpdated;
+		  }
+
+		  //-------------------------------------------------------------------
+		  bool isVehicleUpdate( void ) const
+		  {
+			  return (NULL != this->m_pkVehicle);
+		  }
+
+		  void setVehicle( AbstractVehicle* pkVehicle )
+		  {
+			  this->m_pkVehicle = pkVehicle;
+		  }
 
 		  AbstractVehicle& vehicle( void ) 
 		  {
 			  assert( NULL != this->m_pkVehicle );
 			  return *this->m_pkVehicle;
 		  }
+
 	protected:
 		AbstractVehicle* m_pkVehicle;
+		AbstractUpdated* m_pkCustomUpdated;
 
 	};
 

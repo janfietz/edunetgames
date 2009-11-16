@@ -29,12 +29,15 @@
 #include "NetCtfPlugin.h"
 #include "NetCtfVehicles.h"
 #include "NetCtfVehicleFactory.h"
+#include "NetCtfGameLogic.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/NetworkPlugin.h"
 
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 using namespace OpenSteer;
 
@@ -44,53 +47,18 @@ namespace	{
 	//-------------------------------------------------------------------------
 	// globals
 	//(perhaps these should be member variables of a Vehicle or Plugin class)
-	const Vec3 gHomeBaseCenter(0, 0, 0);
-	const float gHomeBaseRadius = 1.5;
-
-	const float gMinStartRadius = 30;
-	const float gMaxStartRadius = 40;
-
-	const float gBrakingRate = 0.75;
-
-	const Color evadeColor    (0.6f, 0.6f, 0.3f); // annotation
-	const Color seekColor     (0.3f, 0.6f, 0.6f); // annotation
-	const Color clearPathColor(0.3f, 0.6f, 0.3f); // annotation
-
-	const float gAvoidancePredictTimeMin  = 0.9f;
-	const float gAvoidancePredictTimeMax  = 2;
-	float gAvoidancePredictTime = gAvoidancePredictTimeMin;
-
-	bool enableAttackSeek  = true; // for testing(perhaps retain for UI control?)
-	bool enableAttackEvade = true; // for testing(perhaps retain for UI control?)
-
-//	NetCtfSeekerVehicle* gSeeker = NULL;
-
-
-	// count the number of times the simulation has reset(e.g. for overnight runs)
-	int resetCount = 0;
-
 
 	//-------------------------------------------------------------------------
-	//-------------------------------------------------------------------------
-
-	// state for OpenSteerDemo Plugin
-	//
-	// XXX consider moving this inside CtfPlugin
-	// XXX consider using STL(any advantage? consistency?)
-
-
-	AbstractVehicle* ctfSeeker;
 	const int ctfEnemyCount = 4;
-	AbstractVehicle* ctfEnemies [ctfEnemyCount];
 }
 
 //-----------------------------------------------------------------------------
-// now 1 global vehicle factory for unit tests
+// now 1 global vehicle factory
 NetCtfVehicleFactory gOfflineNetCtfVehicleFactory;
 
 //-----------------------------------------------------------------------------
 NetCtfPlugin::NetCtfPlugin( bool bAddToRegistry ):
-	BaseClass( bAddToRegistry )
+BaseClass( bAddToRegistry ),resetCount(0),m_pkSeeker(NULL)
 {
 	this->setVehicleFactory( &gOfflineNetCtfVehicleFactory );
 }
@@ -107,39 +75,68 @@ AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId, ProximityDa
 }
 
 //-----------------------------------------------------------------------------
+void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
+{
+	if( NULL == pkVehicle )
+	{
+		return;
+	}
+	NetCtfSeekerVehicle* pkSeeker = dynamic_cast<NetCtfSeekerVehicle*>( pkVehicle );
+	if( NULL != pkSeeker )
+	{
+		this->m_pkSeeker = pkSeeker;
+		// initialize camera
+		CameraPlugin::init2dCamera( *this->m_pkSeeker );
+		Camera::camera.mode = Camera::cmFixedDistanceOffset;
+		Camera::camera.fixedTarget.set(15, 0, 0);
+		Camera::camera.fixedPosition.set(80, 60, 0);
+	}
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.addVehicle( pkVehicle );
+}
+
+//-----------------------------------------------------------------------------
 void NetCtfPlugin::open (void)
 {
+	// a client does not do anything here
 	// create the seeker ("hero"/"attacker")
-	ctfSeeker = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL );
-	all.push_back( ctfSeeker );
-
+	this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL ) );
 	// create the specified number of enemies, 
 	// storing pointers to them in an array.
 	for (int i = 0; i < ctfEnemyCount; ++i)
 	{
-		ctfEnemies[i] = this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL );
-		all.push_back (ctfEnemies[i]);
+		this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL ) );
 	}
 
 	// initialize camera
-	CameraPlugin::init2dCamera(*ctfSeeker);
-	Camera::camera.mode = Camera::cmFixedDistanceOffset;
-	Camera::camera.fixedTarget.set (15, 0, 0);
-	Camera::camera.fixedPosition.set (80, 60, 0);
+	// in case no seeker has been created
+	// this might happen on the client side
+	if( NULL == this->m_pkSeeker )
+	{
+		CameraPlugin::init2dCamera( *this->m_pkSeeker );
+		Camera::camera.mode = Camera::cmFixedDistanceOffset;
+		Camera::camera.fixedTarget.set(15, 0, 0);
+		Camera::camera.fixedPosition.set(80, 60, 0);
+	}
 
-	NetCtfBaseVehicle::initializeObstacles ();
+	NetCtfBaseVehicle::initializeObstacles();
 }
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 {
+	NetCtfGameLogic kGameLogic;
+	kGameLogic.setPlugin( this );
+	kGameLogic.update( currentTime, elapsedTime );
 	// update the seeker
-	ctfSeeker->update (currentTime, elapsedTime);
-
 	// update each enemy
-	for (int i = 0; i < ctfEnemyCount; i++)
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.setCustomUpdated( &kGameLogic );
+	kVG.update( currentTime, elapsedTime );
+
+	if( true == kGameLogic.isGameOver() )
 	{
-		ctfEnemies[i]->update (currentTime, elapsedTime);
+		this->reset();
 	}
 }
 
@@ -151,7 +148,7 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	// vehicle nearest mouse (to be highlighted)
 	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
-#if 1
+#if 0
 	// update camera
 	CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 #endif
@@ -159,57 +156,86 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
 		// draw "ground plane" centered between base and selected vehicle
-		const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
+		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::camera.position();
 		const Vec3 goalDirection = goalOffset.normalized ();
 		const Vec3 cameraForward = Camera::camera.xxxls().forward();
 		const float goalDot = cameraForward.dot (goalDirection);
 		const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
 		const Vec3 gridCenter = interpolate (blend,
 			selected.position(),
-			gHomeBaseCenter);
-		OpenSteerDemo::gridUtility (gridCenter);
+			NetCtfGameLogic::ms_kHomeBaseCenter);
+		GridPlugin::setGridCenter( gridCenter );
 	}
 	// draw the seeker, obstacles and home base
-	ctfSeeker->draw( currentTime, elapsedTime );
 	drawObstacles ();
 
-	// draw each enemy
-	for (int i = 0; i < ctfEnemyCount; i++) ctfEnemies[i]->draw( currentTime, elapsedTime );
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.redraw( currentTime, elapsedTime );
 
 	// highlight vehicle nearest mouse
 	OpenSteerDemo::highlightVehicleUtility (nearMouse);
+
+	// display status in the upper left corner of the window
+	std::ostringstream status;
+	if( NULL != this->m_pkSeeker )
+	{
+		status << this->m_pkSeeker->getSeekerStateString() << std::endl;
+	}
+	status << NetCtfBaseVehicle::allObstacles.size() << " obstacles [F1/F2]" << std::endl;
+	status << this->resetCount << " restarts" << std::ends;
+	const float h = drawGetWindowHeight();
+	const Vec3 screenLocation(10, h-50, 0);
+	draw2dTextAt2dLocation( status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
+
 }
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::close (void)
 {
-	// delete seeker
-	delete (ctfSeeker);
-	ctfSeeker = NULL;
-
-	// delete each enemy
-	for (int i = 0; i < ctfEnemyCount; i++)
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	// delete all Pedestrians
+	while( kVG.population() > 0 )
 	{
-		delete (ctfEnemies[i]);
-		ctfEnemies[i] = NULL;
-	}
+		// save pointer to last pedestrian, then remove it from the crowd
+		AbstractVehicle* pkVehicle = all.back();
+		all.pop_back();
 
-	// clear the group of all vehicles
-	all.clear();
+		// if it is SimpleVehicle's selected vehicle, unselect it
+		if (pkVehicle == SimpleVehicle::selectedVehicle)
+		{
+			SimpleVehicle::selectedVehicle = NULL;
+		}
+		if( pkVehicle == this->m_pkSeeker )
+		{
+			this->m_pkSeeker = NULL;
+		}
+
+		// delete the Pedestrian
+		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		if( NULL != pkFactory )
+		{
+			pkFactory->destroyVehicle( pkVehicle );
+		}
+		else
+		{
+			ET_SAFE_DELETE( pkVehicle );
+		}
+		pkVehicle = NULL;
+	}
 }
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::reset (void)
 {
+	// count the number of times the simulation has reset(e.g. for overnight runs)
 	// count resets
-	resetCount++;
+	++this->resetCount;
 
-	// reset the seeker ("hero"/"attacker") and enemies
-	ctfSeeker->reset ();
-	for (int i = 0; i<ctfEnemyCount; i++) ctfEnemies[i]->reset ();
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.reset( );
 
 	// reset camera position
-	CameraPlugin::position2dCamera (*ctfSeeker);
+	CameraPlugin::position2dCamera( *SimpleVehicle::selectedVehicle );
 
 	// make camera jump immediately to new position
 	Camera::camera.doNotSmoothNextMove ();
@@ -248,5 +274,4 @@ void NetCtfPlugin::drawObstacles (void)
 	}
 }
 
-NetCtfPlugin gCtfPlugin;
 

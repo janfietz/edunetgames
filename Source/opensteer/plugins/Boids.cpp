@@ -555,7 +555,7 @@ namespace {
                 flock.pop_back();
                 population--;
 
-                // if it is OpenSteerDemo's selected vehicle, unselect it
+                // if it is SimpleVehicle's selected vehicle, unselect it
                 if (boid == SimpleVehicle::selectedVehicle)
                     SimpleVehicle::selectedVehicle = NULL;
 

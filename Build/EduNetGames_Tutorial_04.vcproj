@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;.\EdunetCommonProperties.vsprops;.\EdunetDebugProperties .vsprops"
+			InheritedPropertySheets=".\EdunetCommonProperties.vsprops;.\EdunetDebugProperties .vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -93,7 +93,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;.\EdunetCommonProperties.vsprops;.\EdunetReleaseProperties.vsprops"
+			InheritedPropertySheets=".\EdunetCommonProperties.vsprops;.\EdunetReleaseProperties.vsprops"
 			CharacterSet="2"
 			>
 			<Tool

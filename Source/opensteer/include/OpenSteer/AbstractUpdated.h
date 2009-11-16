@@ -21,6 +21,8 @@ namespace OpenSteer {
     public:
         virtual ~AbstractUpdated( void ) { /* Nothing to do. */ }
 		virtual void update( const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ ) OS_ABSTRACT;
+		virtual void setCustomUpdated( AbstractUpdated* ) OS_ABSTRACT;
+		virtual AbstractUpdated* getCustomUpdated( void ) const OS_ABSTRACT; 
 	};
 }
 

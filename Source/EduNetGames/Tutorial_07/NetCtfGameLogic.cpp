@@ -27,9 +27,15 @@
 //-----------------------------------------------------------------------------
 
 #include "NetCtfGameLogic.h"
+#include "NetCtfPlugin.h"
+#include "NetCtfVehicles.h"
+
+osVector3 NetCtfGameLogic::ms_kHomeBaseCenter(0, 0, 0);
+float NetCtfGameLogic::ms_fHomeBaseRadius = 1.5f;
 
 //-----------------------------------------------------------------------------
-NetCtfGameLogic::NetCtfGameLogic()
+NetCtfGameLogic::NetCtfGameLogic( osAbstractVehicle* pkVehicle ):
+	BaseClass(pkVehicle), m_pkPlugin(NULL),m_bGameOver(false)
 {
 
 }
@@ -41,7 +47,73 @@ NetCtfGameLogic::~NetCtfGameLogic()
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfGameLogic::update (const float currentTime, const float elapsedTime)
+void NetCtfGameLogic::update( const float currentTime, const float elapsedTime )
 {
+	if( this->isVehicleUpdate() )
+	{
+		osAbstractVehicle& kVehicle = this->vehicle();
+		kVehicle.update( currentTime, elapsedTime );
+		NetCtfSeekerVehicle* pkSeeker = dynamic_cast<NetCtfSeekerVehicle*>( &kVehicle );
+		if( NULL != pkSeeker )
+		{
+			if( pkSeeker->state != NetCtfSeekerVehicle::running )
+			{
+				this->m_bGameOver = true;
+			}
+		}
+		else
+		{
 
+		}
+	}
+	else
+	{
+		// game logic update
+		// query seeker vehicle
+		NetCtfSeekerVehicle* pkSeeker = NULL;
+		NetCtfEnemyVehicle* pkEnemy = NULL;
+		osAVGroup kEnemies;
+		const osAVGroup& kVehicles = this->m_pkPlugin->allVehicles();
+		{
+			osAVCIterator kIter = kVehicles.begin();
+			osAVCIterator kEnd = kVehicles.end();
+			while( kIter != kEnd )
+			{
+				osAbstractVehicle* pkVehicle = (*kIter);
+				// right now only one seeker
+				if( NULL == pkSeeker )
+				{
+					pkSeeker = dynamic_cast<NetCtfSeekerVehicle*>( pkVehicle );
+				}
+				pkEnemy = dynamic_cast<NetCtfEnemyVehicle*>( pkVehicle );
+				if( NULL != pkEnemy )
+				{
+					kEnemies.push_back( pkEnemy );
+				}
+				++kIter;
+			}
+		}
+
+		// pass seeker to enemies and enemies to seeker
+		{
+			osAVCIterator kIter = kEnemies.begin();
+			osAVCIterator kEnd = kEnemies.end();
+			while( kIter != kEnd )
+			{
+				osAbstractVehicle* pkVehicle = (*kIter);
+				pkEnemy = dynamic_cast<NetCtfEnemyVehicle*>( pkVehicle );
+				if( NULL != pkEnemy )
+				{
+					pkEnemy->setSeeker( pkSeeker );
+				}
+				++kIter;
+			}
+
+			if( pkSeeker != NULL )
+			{
+				pkSeeker->accessEnemies().swap( kEnemies );
+			}
+		}
+
+	}
 }

@@ -231,6 +231,18 @@ namespace OpenSteer {
 
 		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
 		virtual void setLastSteeringForce( const Vec3& force ) { _lastSteeringForce = force; };
+
+
+		virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
+		{
+			this->m_pkCustomUpdated = pkUpdated;
+		}
+
+		virtual AbstractUpdated* getCustomUpdated( void ) const
+		{
+			return this->m_pkCustomUpdated;
+		}
+
 		//! currently selected vehicle.  Generally the one the camera follows and
 		//! for which additional information may be displayed.  Clicking the mouse
 		//! near a vehicle causes it to become the Selected Vehicle.
@@ -241,25 +253,27 @@ namespace OpenSteer {
 		//! CP --
     private:
 
-        float _mass;       //! mass (defaults to unity so acceleration=force)
-
-        float _radius;     //! size of bounding sphere, for obstacle avoidance, etc.
-
-        float _speed;      //! speed along Forward direction.  Because local space
-                           //! is velocity-aligned, velocity = Forward * Speed
-
-        float _maxForce;   //! the maximum steering force this vehicle can apply
-                           //! (steering force is clipped to this magnitude)
-
-        float _maxSpeed;   //! the maximum speed this vehicle is allowed to move
-                           //! (velocity is clipped to this magnitude)
-
-        float _curvature;
         Vec3 _lastForward;
         Vec3 _lastPosition;
         Vec3 _smoothedPosition;
+		Vec3 _smoothedAcceleration;
+		float _mass;       //! mass (defaults to unity so acceleration=force)
+
+		float _radius;     //! size of bounding sphere, for obstacle avoidance, etc.
+
+		float _speed;      //! speed along Forward direction.  Because local space
+		//! is velocity-aligned, velocity = Forward * Speed
+
+		float _maxForce;   //! the maximum steering force this vehicle can apply
+		//! (steering force is clipped to this magnitude)
+
+		float _maxSpeed;   //! the maximum speed this vehicle is allowed to move
+		//! (velocity is clipped to this magnitude)
+
+		float _curvature;
         float _smoothedCurvature;
-        Vec3 _smoothedAcceleration;
+		AbstractUpdated* m_pkCustomUpdated;
+
 
         //! measure path curvature (1/turning-radius), maintain smoothed version
         void measurePathCurvature (const float elapsedTime);

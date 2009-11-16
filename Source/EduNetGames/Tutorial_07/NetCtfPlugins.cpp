@@ -204,9 +204,9 @@ public:
 	OfflineCtfPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-//		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetCtfPlugin( false ) );
-//		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflineCtfPlugin )
