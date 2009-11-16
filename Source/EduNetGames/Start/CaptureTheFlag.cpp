@@ -878,16 +878,19 @@ namespace {
             // update camera
             CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
-            // draw "ground plane" centered between base and selected vehicle
-            const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
-            const Vec3 goalDirection = goalOffset.normalized ();
-            const Vec3 cameraForward = Camera::camera.xxxls().forward();
-            const float goalDot = cameraForward.dot (goalDirection);
-            const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
-            const Vec3 gridCenter = interpolate (blend,
-                                                 selected.position(),
-                                                 gHomeBaseCenter);
-            OpenSteerDemo::gridUtility (gridCenter);
+			if( NULL != SimpleVehicle::selectedVehicle )
+			{
+				// draw "ground plane" centered between base and selected vehicle
+				const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
+				const Vec3 goalDirection = goalOffset.normalized ();
+				const Vec3 cameraForward = Camera::camera.xxxls().forward();
+				const float goalDot = cameraForward.dot (goalDirection);
+				const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
+				const Vec3 gridCenter = interpolate (blend,
+													 selected.position(),
+													 gHomeBaseCenter);
+				OpenSteerDemo::gridUtility (gridCenter);
+			}
 
             // draw the seeker, obstacles and home base
             ctfSeeker->draw();

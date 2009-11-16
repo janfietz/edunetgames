@@ -1,5 +1,3 @@
-#ifndef __NETCTFPLUGIN_H__
-#define __NETCTFPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,50 +26,22 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
+#include "NetCtfGameLogic.h"
 
 //-----------------------------------------------------------------------------
-class NetCtfPlugin : public OpenSteer::Plugin
+NetCtfGameLogic::NetCtfGameLogic()
 {
-	ET_DECLARE_BASE(OpenSteer::Plugin);
-public:
-	NetCtfPlugin( bool bAddToRegistry = true );
-	virtual ~NetCtfPlugin() {} // be more "nice" to avoid a compiler warning
 
-	OS_IMPLEMENT_CLASSNAME( NetCtfPlugin )
-	//-------------------------------------------------------------------------
-	// OpenSteer::Plugin interface
-	virtual const char* name() const { return this->getClassName(); };
+}
 
-	virtual float selectionOrderSortKey (void) const {return 0.01f;}
+//-----------------------------------------------------------------------------
+NetCtfGameLogic::~NetCtfGameLogic()
+{
 
-	virtual void open (void);
+}
 
-	virtual void update (const float currentTime, const float elapsedTime);
+//-----------------------------------------------------------------------------
+void NetCtfGameLogic::update (const float currentTime, const float elapsedTime)
+{
 
-	virtual void redraw (const float currentTime, const float elapsedTime);
-
-	virtual void close (void);
-
-	virtual void reset (void);
-
-	virtual void handleFunctionKeys (int keyNumber);
-
-	virtual void printMiniHelpForFunctionKeys (void) const;
-
-	virtual const osAVGroup& allVehicles (void) const {return (const osAVGroup&) all;}
-
-	// implement to create a vehicle of the specified class
-	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
-
-	//-------------------------------------------------------------------------
-	void drawObstacles (void);
-
-	// a group (STL vector) of all vehicles in the Plugin
-	std::vector<osAbstractVehicle*> all;
-};
-
-
-
-#endif // __NETCTFPLUGIN_H__
+}

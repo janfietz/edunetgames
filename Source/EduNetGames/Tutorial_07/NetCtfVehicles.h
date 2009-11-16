@@ -135,6 +135,9 @@ public:
 	bool evading; // xxx store steer sub-state for anotation
 	float lastRunningTime; // for auto-reset
 private:
+
+	void drawHomeBase( void ) const;
+
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfSeekerVehicle )
 };
 

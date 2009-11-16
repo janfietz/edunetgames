@@ -600,6 +600,21 @@ void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime
 	const float h = drawGetWindowHeight();
 	const Vec3 screenLocation(10, h-50, 0);
 	draw2dTextAt2dLocation(status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
+
+	this->drawHomeBase();
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfSeekerVehicle::drawHomeBase( void ) const
+{
+	const Vec3 up (0, 0.01f, 0);
+	const Color atColor (0.3f, 0.3f, 0.5f);
+	const Color noColor = gGray50;
+	// TODO move to seeker himself
+	const bool reached = this->state == NetCtfSeekerVehicle::atGoal;
+	const Color baseColor = (reached ? atColor : noColor);
+	drawXZDisk( gHomeBaseRadius,    gHomeBaseCenter, baseColor, 40 );
+	drawXZDisk( gHomeBaseRadius/15, gHomeBaseCenter + up, gBlack, 20 );
 }
 
 //-----------------------------------------------------------------------------
