@@ -45,6 +45,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
@@ -167,8 +168,8 @@ namespace {
             Camera::camera.fixedPosition = lstViewCenter;
             Camera::camera.fixedPosition.y += lstLookDownDistance;
             Camera::camera.lookdownDistance = lstLookDownDistance;
-            Camera::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
-            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::camera.fixedDistVOffset = CameraPlugin::camera2dElevation;
+            Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
         }
 
         void update (const float currentTime, const float elapsedTime)
@@ -189,7 +190,7 @@ namespace {
             AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
 
             // update camera
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
             // draw "ground plane"
             OpenSteerDemo::gridUtility (selected.position());

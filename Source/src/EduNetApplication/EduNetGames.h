@@ -70,7 +70,7 @@ namespace OpenSteer {
         // ------------------------------------------------------ component objects
 
         // clock keeps track of both "real time" and "simulation time"
-        static Clock clock;
+        static Clock& clock;
 
         // ------------------------------------------ addresses of selected objects
 
@@ -175,38 +175,6 @@ namespace OpenSteer {
         static int mouseX;
         static int mouseY;
         static bool mouseInWindow;
-
-        // ------------------------------------------------------- camera utilities
-
-        // set a certain initial camera state used by several plug-ins
-        static void init2dCamera (AbstractVehicle& selected);
-        static void init2dCamera (AbstractVehicle& selected,
-                                  float distance,
-                                  float elevation);
-        static void init3dCamera (AbstractVehicle& selected);
-        static void init3dCamera (AbstractVehicle& selected,
-                                  float distance,
-                                  float elevation);
-
-        // set initial position of camera based on a vehicle
-        static void position3dCamera (AbstractVehicle& selected);
-        static void position3dCamera (AbstractVehicle& selected,
-                                      float distance,
-                                      float elevation);
-        static void position2dCamera (AbstractVehicle& selected);
-        static void position2dCamera (AbstractVehicle& selected,
-                                      float distance,
-                                      float elevation);
-
-        // camera updating utility used by several (all?) plug-ins
-        static void updateCamera (const float currentTime,
-                                  const float elapsedTime,
-                                  const AbstractVehicle& selected);
-
-        // some camera-related default constants
-        static const float camera2dElevation;
-        static const float cameraTargetDistance;
-        static const Vec3 cameraTargetOffset;
 
         // ------------------------------------------------ graphics and annotation
 

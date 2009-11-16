@@ -109,7 +109,6 @@ OpenSteer::Camera::reset (void)
     povOffset.set (0, 1, -3);
 }
 
-
 //-----------------------------------------------------------------------------
 // called once per frame to update camera state according to currently
 // selected mode and per-mode parameters.  Works in position/target/up
@@ -222,7 +221,7 @@ OpenSteer::Camera::smoothCameraMove (const Vec3& newPosition,
         if (up() == Vec3::zero)
             setUp (Vec3::up);
         else
-            setUp (up().normalize ());
+            setUp (up().normalized ());
     }
     else
     {
@@ -233,7 +232,6 @@ OpenSteer::Camera::smoothCameraMove (const Vec3& newPosition,
         setUp (newUp);
     }
 }
-
 
 //-----------------------------------------------------------------------------
 // computes a new camera position which follows "target" at distant of
@@ -277,7 +275,6 @@ OpenSteer::Camera::constDistHelper (const float /*elapsedTime*/)
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // select next camera mode, used by OpenSteerDemo
 void 
@@ -296,7 +293,6 @@ OpenSteer::Camera::successorMode (const cameraMode cm) const
     return (cameraMode)(((int)cm) + 1);
 }
 
-
 //-----------------------------------------------------------------------------
 // string naming current camera mode, used by OpenSteerDemo
 const char* 
@@ -312,7 +308,6 @@ OpenSteer::Camera::modeName (void)
     default:                     return "?";
     }
 }
-
 
 //-----------------------------------------------------------------------------
 // adjust the offest vector of the current camera mode based on a

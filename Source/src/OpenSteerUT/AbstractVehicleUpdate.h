@@ -37,14 +37,19 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	class AbstractVehicleUpdate : public AbstractUpdated {
 	public:
-		AbstractVehicleUpdate( AbstractVehicle& kVehicle ):
-		  m_kVehicle( kVehicle )
+		AbstractVehicleUpdate( AbstractVehicle* pkVehicle ):
+		  m_pkVehicle( pkVehicle )
 		  {
 		  }
 		  virtual ~AbstractVehicleUpdate(){}
 
+		  AbstractVehicle& vehicle( void ) 
+		  {
+			  assert( NULL != this->m_pkVehicle );
+			  return *this->m_pkVehicle;
+		  }
 	protected:
-		AbstractVehicle& m_kVehicle;
+		AbstractVehicle* m_pkVehicle;
 
 	};
 
@@ -52,8 +57,8 @@ namespace OpenSteer
 	class EulerVehicleUpdate : public AbstractVehicleUpdate {
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
-		EulerVehicleUpdate( AbstractVehicle& kVehicle ):
-		BaseClass( kVehicle ),
+		EulerVehicleUpdate( AbstractVehicle* pkVehicle ):
+		BaseClass( pkVehicle ),
 			m_kForce(Vec3::zero),
 			_smoothedAcceleration(Vec3::zero)
 		{
@@ -74,8 +79,8 @@ namespace OpenSteer
 	class SteeringForceVehicleUpdate : public AbstractVehicleUpdate {
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
-		SteeringForceVehicleUpdate( AbstractVehicle& kVehicle ):
-		BaseClass( kVehicle ),
+		SteeringForceVehicleUpdate( AbstractVehicle* pkVehicle ):
+		BaseClass( pkVehicle ),
 			m_kForce(Vec3::zero)
 		{
 		}

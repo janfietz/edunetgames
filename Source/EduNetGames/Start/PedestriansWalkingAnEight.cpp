@@ -43,6 +43,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "OpenSteer/PolylineSegmentedPathwaySingleRadius.h"
 #include "OpenSteer/SimpleVehicle.h"
@@ -282,7 +283,7 @@ public:
             // draw a two-toned line between the future test point and its
             // projection onto the path, the change from dark to light color
             // indicates the boundary of the tube.
-            const Vec3 boundaryOffset = (onPath - future).normalize() * outside;
+            const Vec3 boundaryOffset = (onPath - future).normalized() * outside;
             const Vec3 onPathBoundary = future + boundaryOffset;
             annotationLine (onPath, onPathBoundary, darkOrange);
             annotationLine (onPathBoundary, future, lightOrange);
@@ -444,7 +445,7 @@ public:
         
         // initialize camera and selectedVehicle
         Pedestrian& firstPedestrian = **crowd.begin();
-        OpenSteerDemo::init3dCamera (firstPedestrian);
+        CameraPlugin::init3dCamera (firstPedestrian);
         Camera::camera.mode = Camera::cmFixedDistanceOffset;
         Camera::camera.fixedTarget.set (15, 0, 30);
         Camera::camera.fixedPosition.set (15, 70, -70);
@@ -468,7 +469,7 @@ public:
         AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
         
         // update camera
-        OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+        CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
         
         // draw "ground plane"
         if (SimpleVehicle::selectedVehicle) gridCenter = selected.position();
@@ -583,7 +584,7 @@ public:
         for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).reset ();
         
         // reset camera position
-        OpenSteerDemo::position2dCamera (*SimpleVehicle::selectedVehicle);
+        CameraPlugin::position2dCamera (*SimpleVehicle::selectedVehicle);
         
         // make camera jump immediately to new position
         Camera::camera.doNotSmoothNextMove ();

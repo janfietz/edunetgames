@@ -879,7 +879,7 @@ namespace {
 
             // draw "ground plane" centered between base and selected vehicle
             const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
-            const Vec3 goalDirection = goalOffset.normalize ();
+            const Vec3 goalDirection = goalOffset.normalized ();
             const Vec3 cameraForward = Camera::camera.xxxls().forward();
             const float goalDot = cameraForward.dot (goalDirection);
             const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);

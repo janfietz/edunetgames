@@ -34,6 +34,7 @@
 #include "EduNetConnect/NetworkPlugin.h"
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 using namespace OpenSteer;
 
@@ -99,7 +100,7 @@ void NetCtfPlugin::open (void)
 	}
 
 	// initialize camera
-	OpenSteerDemo::init2dCamera(*ctfSeeker);
+	CameraPlugin::init2dCamera(*ctfSeeker);
 	Camera::camera.mode = Camera::cmFixedDistanceOffset;
 	Camera::camera.fixedTarget.set (15, 0, 0);
 	Camera::camera.fixedPosition.set (80, 60, 0);
@@ -130,11 +131,11 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
 
 	// update camera
-	OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+	CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
 	// draw "ground plane" centered between base and selected vehicle
 	const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
-	const Vec3 goalDirection = goalOffset.normalize ();
+	const Vec3 goalDirection = goalOffset.normalized ();
 	const Vec3 cameraForward = Camera::camera.xxxls().forward();
 	const float goalDot = cameraForward.dot (goalDirection);
 	const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
@@ -183,7 +184,7 @@ void NetCtfPlugin::reset (void)
 	for (int i = 0; i<ctfEnemyCount; i++) ctfEnemies[i]->reset ();
 
 	// reset camera position
-	OpenSteerDemo::position2dCamera (*ctfSeeker);
+	CameraPlugin::position2dCamera (*ctfSeeker);
 
 	// make camera jump immediately to new position
 	Camera::camera.doNotSmoothNextMove ();

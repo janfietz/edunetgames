@@ -278,7 +278,7 @@ namespace OpenSteer {
                 _side.cross (_forward, _up);
             else
                 _side.cross (_up, _forward);
-            _side = _side.normalize ();
+            _side = _side.normalized ();
         }
 
 
@@ -308,7 +308,7 @@ namespace OpenSteer {
 
         void regenerateOrthonormalBasis (const Vec3& newForward)
         {
-            regenerateOrthonormalBasisUF (newForward.normalize());
+            regenerateOrthonormalBasisUF (newForward.normalized());
         }
 
 
@@ -318,7 +318,7 @@ namespace OpenSteer {
                                          const Vec3& newUp)
         {
             _up = newUp;
-            regenerateOrthonormalBasis (newForward.normalize());
+            regenerateOrthonormalBasis (newForward.normalized());
         }
 
 

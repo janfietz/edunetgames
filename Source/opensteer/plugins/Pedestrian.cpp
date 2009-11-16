@@ -283,7 +283,7 @@ namespace {
             // draw a two-toned line between the future test point and its
             // projection onto the path, the change from dark to light color
             // indicates the boundary of the tube.
-            const Vec3 boundaryOffset = (onPath - future).normalize() * outside;
+            const Vec3 boundaryOffset = (onPath - future).normalized() * outside;
             const Vec3 onPathBoundary = future + boundaryOffset;
             annotationLine (onPath, onPathBoundary, darkOrange);
             annotationLine (onPathBoundary, future, lightOrange);
@@ -441,9 +441,9 @@ namespace {
     //         gObstacle3.setPosition (20, 0, h);
 
             // tilted 45 degrees
-            gObstacle3.setForward (Vec3(1,1,0).normalize());
+            gObstacle3.setForward (Vec3(1,1,0).normalized());
             gObstacle3.setSide (0,0,1);
-            gObstacle3.setUp (Vec3(-1,1,0).normalize());
+            gObstacle3.setUp (Vec3(-1,1,0).normalized());
             gObstacle3.setPosition (20, 0, h);
 
     //         gObstacle3.setSeenFrom (Obstacle::outside);

@@ -152,8 +152,8 @@ OpenSteer::vecLimitDeviationAngleUtility (const bool insideOrOutside,
     // find the portion of "source" that is perpendicular to "basis"
     const Vec3 perp = source.perpendicularComponent (basis);
 
-    // normalize that perpendicular
-    const Vec3 unitPerp = perp.normalize ();
+    // normalized that perpendicular
+    const Vec3 unitPerp = perp.normalized ();
 
     // construct a new vector whose length equals the source vector,
     // and lies on the intersection of a plane (formed the source and

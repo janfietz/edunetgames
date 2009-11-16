@@ -87,6 +87,8 @@ namespace OpenSteer {
         //! "wait" until next frame time
         void frameRateSync (void);
 
+		static Clock& processClock( void );
+
 
         //! main clock modes: variable or fixed frame rate, real-time or animation
         //! mode, running or paused.

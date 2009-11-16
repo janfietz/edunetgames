@@ -132,7 +132,7 @@ steerToAvoidIfNeeded (const AbstractVehicle& vehicle,
         // steerHint which is lateral (perpendicular to vehicle's
         // forward direction), set its length to vehicle's maxForce
         Vec3 lateral = steerHint.perpendicularComponent (vehicle.forward ());
-        return lateral.normalize () * vehicle.maxForce ();
+        return lateral.normalized () * vehicle.maxForce ();
     }
     else
     {
@@ -175,7 +175,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
 	{
 		pi.intersect = true;
 		pi.distance = 0.0f;
-		pi.steerHint = (center - vehicle.position()).normalize();
+		pi.steerHint = (center - vehicle.position()).normalized();
 		return;
 	}
 	
@@ -214,7 +214,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
          ((p > 0) ? p : q));
     pi.surfacePoint =
         vehicle.position() + (vehicle.forward() * pi.distance);
-    pi.surfaceNormal = (pi.surfacePoint-center).normalize();
+    pi.surfaceNormal = (pi.surfacePoint-center).normalized();
     switch (seenFrom ())
     {
     case outside:
@@ -279,7 +279,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
     if (pi.intersect)
     {
         pi.obstacle = this;
-        pi.steerHint = ((pi.surfacePoint - position ()).normalize () *
+        pi.steerHint = ((pi.surfacePoint - position ()).normalized () *
                         (pi.vehicleOutside ? 1.0f : -1.0f));
     }
 }
@@ -322,7 +322,7 @@ findIntersectionWithVehiclePath (const AbstractVehicle& vehicle,
     if (!xyPointInsideShape (planeIntersection, vehicle.radius ())) return;
 
     // otherwise, the vehicle path DOES intersect this rectangle
-    const Vec3 localXYradial = planeIntersection.normalize ();
+    const Vec3 localXYradial = planeIntersection.normalized ();
     const Vec3 radial = globalizeDirection (localXYradial);
     const float sideSign = (lp.z > 0.0f) ? +1.0f : -1.0f;
     const Vec3 opposingNormal = forward () * sideSign;

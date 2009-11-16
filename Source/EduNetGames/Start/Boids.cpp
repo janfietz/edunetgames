@@ -41,6 +41,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Proximity.h"
@@ -227,7 +228,7 @@ namespace {
                                                              worldRadius));
                 if (this == SimpleVehicle::selectedVehicle)
                 {
-                    OpenSteerDemo::position3dCamera
+                    CameraPlugin::position3dCamera
                         (*SimpleVehicle::selectedVehicle); 
                     Camera::camera.doNotSmoothNextMove ();
                 }
@@ -256,7 +257,7 @@ namespace {
         {
 
             // XXX this is special case code, these should be derived from arguments //
-            const Vec3 surfaceNormal = position().normalize();                       //
+            const Vec3 surfaceNormal = position().normalized();                       //
             const Vec3 surfacePoint = surfaceNormal * 40.0f;                         //
             // XXX this is special case code, these should be derived from arguments //
 
@@ -354,9 +355,9 @@ namespace {
             for (int i = 0; i < 200; i++) addBoidToFlock ();
 
             // initialize camera
-            OpenSteerDemo::init3dCamera (*SimpleVehicle::selectedVehicle);
+            CameraPlugin::init3dCamera (*SimpleVehicle::selectedVehicle);
             Camera::camera.mode = Camera::cmFixed;
-            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
             Camera::camera.fixedDistVOffset = 0;
             Camera::camera.lookdownDistance = 20;
             Camera::camera.aimLeadTime = 0.5;
@@ -389,7 +390,7 @@ namespace {
             AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
 
             // update camera
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, selected);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
             // draw each boid in flock
             for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ();
@@ -455,7 +456,7 @@ namespace {
             for (iterator i = flock.begin(); i != flock.end(); i++) (**i).reset();
 
             // reset camera position
-            OpenSteerDemo::position3dCamera (*SimpleVehicle::selectedVehicle);
+            CameraPlugin::position3dCamera (*SimpleVehicle::selectedVehicle);
 
             // make camera jump immediately to new position
             Camera::camera.doNotSmoothNextMove ();
@@ -648,9 +649,9 @@ namespace {
             outsideSphere5.center.set (z, z, p);
             outsideSphere6.center.set (z, z, m);
 
-            const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalize ();
+            const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalized ();
             const Vec3 tiltS (0.0f, 0.0f, 1.0f);
-            const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalize ();
+            const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalized ();
 
             bigRectangle.width = 50.0f;
             bigRectangle.height = 80.0f;

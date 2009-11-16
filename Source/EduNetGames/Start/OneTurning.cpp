@@ -42,6 +42,7 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "EduNetApplication/EduNetGames.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
@@ -110,9 +111,9 @@ namespace {
             theVehicle.push_back (gOneTurning);
 
             // initialize camera
-            OpenSteerDemo::init2dCamera (*gOneTurning);
+            CameraPlugin::init2dCamera (*gOneTurning);
             Camera::camera.setPosition (10,
-                                               OpenSteerDemo::camera2dElevation,
+                                               CameraPlugin::camera2dElevation,
                                                10);
             Camera::camera.fixedPosition.set (40, 40, 40);
         }
@@ -136,7 +137,7 @@ namespace {
             draw2dTextAt3dLocation (*"start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
 
             // update camera, tracking test vehicle
-            OpenSteerDemo::updateCamera (currentTime, elapsedTime, *gOneTurning);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, *gOneTurning);
 
             // draw "ground plane"
             OpenSteerDemo::gridUtility (gOneTurning->position());

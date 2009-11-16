@@ -76,11 +76,12 @@ OpenSteer::SimpleVehicle::SimpleVehicle (void)
     // set inital state
     reset ();
 
-	// set a global selected vehicle in case there is none
-	if( NULL == SimpleVehicle::selectedVehicle )
-	{
-		SimpleVehicle::selectedVehicle = this;
-	}
+	// note: do not set a global selected vehicle in case there is none
+	//       a vehicle is not nessecarily part of the current scene
+// 	if( NULL == SimpleVehicle::selectedVehicle )
+// 	{
+// 		SimpleVehicle::selectedVehicle = this;
+// 	}
 }
 
 
@@ -261,7 +262,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocit
     const float smoothRate = elapsedTime * 3;
     Vec3 tempUp = up();
     blendIntoAccumulator (smoothRate, bankUp, tempUp);
-    setUp (tempUp.normalize());
+    setUp (tempUp.normalized());
 
 //  annotationLine (position(), position() + (globalUp * 4), gWhite);  // XXX
 //  annotationLine (position(), position() + (bankUp   * 4), gOrange); // XXX

@@ -40,6 +40,7 @@
 
 #include "EduNetApplication/EduNetGames.h"
 #include "EduNetCommon/EduNetDraw.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 #include <sstream>
 
@@ -76,9 +77,9 @@ void BoidsPlugin::open (void)
     for (int i = 0; i < 100; i++) addBoidToFlock ();
 
     // initialize camera
-    OpenSteerDemo::init3dCamera (*SimpleVehicle::selectedVehicle);
+    CameraPlugin::init3dCamera( *SimpleVehicle::selectedVehicle );
     Camera::camera.mode = Camera::cmFixed;
-    Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+    Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
     Camera::camera.fixedDistVOffset = 0;
     Camera::camera.lookdownDistance = 20;
     Camera::camera.aimLeadTime = 0.5;
@@ -191,7 +192,7 @@ void BoidsPlugin::reset (void)
     for (iterator i = flock.begin(); i != flock.end(); i++) (**i).reset();
 
     // reset camera position
-    OpenSteerDemo::position3dCamera (*SimpleVehicle::selectedVehicle);
+    CameraPlugin::position3dCamera( *SimpleVehicle::selectedVehicle );
 
     // make camera jump immediately to new position
     Camera::camera.doNotSmoothNextMove ();
@@ -419,9 +420,9 @@ void BoidsPlugin::initObstacles (void)
     outsideSphere5.center.set (z, z, p);
     outsideSphere6.center.set (z, z, m);
 
-    const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalize ();
+    const Vec3 tiltF = Vec3 (1.0f, 1.0f, 0.0f).normalized ();
     const Vec3 tiltS (0.0f, 0.0f, 1.0f);
-    const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalize ();
+    const Vec3 tiltU = Vec3 (-1.0f, 1.0f, 0.0f).normalized ();
 
     bigRectangle.width = 50.0f;
     bigRectangle.height = 80.0f;

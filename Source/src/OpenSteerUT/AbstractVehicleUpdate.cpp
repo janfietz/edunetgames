@@ -35,8 +35,8 @@ using namespace OpenSteer;
 void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
 {
 	// compute acceleration and velocity
-	Vec3 newAcceleration = (this->m_kForce / this->m_kVehicle.mass());
-	Vec3 newVelocity = this->m_kVehicle.velocity();
+	Vec3 newAcceleration = (this->m_kForce / this->vehicle().mass());
+	Vec3 newVelocity = this->vehicle().velocity();
 
 	// damp out abrupt changes and oscillations in steering acceleration
 	// (rate is proportional to time step, then clipped into useful range)
@@ -52,30 +52,30 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 	newVelocity += _smoothedAcceleration * elapsedTime;
 
 	// enforce speed limit
-	newVelocity = newVelocity.truncateLength( this->m_kVehicle.maxSpeed () );
+	newVelocity = newVelocity.truncateLength( this->vehicle().maxSpeed () );
 
 	// update Speed
-	this->m_kVehicle.setSpeed (newVelocity.length());
+	this->vehicle().setSpeed (newVelocity.length());
 
 	// Euler integrate (per frame) velocity into position
-	this->m_kVehicle.setPosition (m_kVehicle.position() + (newVelocity * elapsedTime));
+	this->vehicle().setPosition (vehicle().position() + (newVelocity * elapsedTime));
 
 	bool bInfiniteRotationSpeed = false;
 	if( true == bInfiniteRotationSpeed )
 	{
 		// regenerate local space (by default: align vehicle's forward axis with
 		// new velocity, but this behavior may be overridden by derived classes.)
-		this->m_kVehicle.regenerateLocalSpace (newVelocity, elapsedTime);			
+		this->vehicle().regenerateLocalSpace (newVelocity, elapsedTime);			
 	}
 	else 
 	{
-		Vec3 newForward = this->m_kVehicle.forward();
-		if( this->m_kVehicle.speed() > 0 )
+		Vec3 newForward = this->vehicle().forward();
+		if( this->vehicle().speed() > 0 )
 		{
-			newForward += newVelocity.normalize();
-			newForward = newForward.normalize();
+			newForward += newVelocity.normalized();
+			newForward = newForward.normalized();
 		}
-		this->m_kVehicle.regenerateOrthonormalBasisUF( newForward );			
+		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
 	}
 
 }
@@ -83,11 +83,11 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 //-------------------------------------------------------------------------
 void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
 {
-	const Vec3 force = this->m_kVehicle.determineCombinedSteering (elapsedTime);
-	const Vec3 adjustedForce = this->m_kVehicle.adjustRawSteeringForce( force, elapsedTime );
+	const Vec3 force = this->vehicle().determineCombinedSteering (elapsedTime);
+	const Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
 
 	// enforce limit on magnitude of steering force
-	this->m_kForce = adjustedForce.truncateLength( this->m_kVehicle.maxForce () );
+	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 
 //-------------------------------------------------------------------------

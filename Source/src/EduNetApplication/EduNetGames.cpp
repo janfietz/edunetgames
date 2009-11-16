@@ -73,7 +73,7 @@ namespace
 
 //-----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"
-OpenSteer::Clock OpenSteer::OpenSteerDemo::clock;
+OpenSteer::Clock& OpenSteer::OpenSteerDemo::clock = OpenSteer::Clock::processClock();
 
 //-----------------------------------------------------------------------------
 // phase: identifies current phase of the per-frame update cycle
@@ -507,112 +507,8 @@ int OpenSteer::OpenSteerDemo::mouseX = 0;
 int OpenSteer::OpenSteerDemo::mouseY = 0;
 bool OpenSteer::OpenSteerDemo::mouseInWindow = false;
 
-
-//-----------------------------------------------------------------------------
-// set a certain initial camera state used by several plug-ins
-
-
-void 
-OpenSteer::OpenSteerDemo::init3dCamera (AbstractVehicle& selected)
-{
-	init3dCamera (selected, cameraTargetDistance, camera2dElevation);
-}
-
-void 
-OpenSteer::OpenSteerDemo::init3dCamera (AbstractVehicle& selected,
-										float distance,
-										float elevation)
-{
-	position3dCamera (selected, distance, elevation);
-	OpenSteer::Camera::camera.fixedDistDistance = distance;
-	OpenSteer::Camera::camera.fixedDistVOffset = elevation;
-	OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::init2dCamera (AbstractVehicle& selected)
-{
-	init2dCamera (selected, cameraTargetDistance, camera2dElevation);
-}
-
-void 
-OpenSteer::OpenSteerDemo::init2dCamera (AbstractVehicle& selected,
-										float distance,
-										float elevation)
-{
-	position2dCamera (selected, distance, elevation);
-	OpenSteer::Camera::camera.fixedDistDistance = distance;
-	OpenSteer::Camera::camera.fixedDistVOffset = elevation;
-	OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected)
-{
-	position3dCamera (selected, cameraTargetDistance, camera2dElevation);
-}
-
-void 
-OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
-											float distance,
-											float /*elevation*/)
-{
-	SimpleVehicle::selectedVehicle = &selected;
-	if (&selected)
-	{
-		const Vec3 behind = selected.forward() * -distance;
-		OpenSteer::Camera::camera.setPosition (selected.position() + behind);
-		OpenSteer::Camera::camera.target = selected.position();
-	}
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::position2dCamera (AbstractVehicle& selected)
-{
-	position2dCamera (selected, cameraTargetDistance, camera2dElevation);
-}
-
-void 
-OpenSteer::OpenSteerDemo::position2dCamera (AbstractVehicle& selected,
-											float distance,
-											float elevation)
-{
-	// position the camera as if in 3d:
-	position3dCamera (selected, distance, elevation);
-
-	// then adjust for 3d:
-	Vec3 position3d = OpenSteer::Camera::camera.position();
-	position3d.y += elevation;
-	OpenSteer::Camera::camera.setPosition (position3d);
-}
-
-
-//-----------------------------------------------------------------------------
-// camera updating utility used by several plug-ins
-void 
-OpenSteer::OpenSteerDemo::updateCamera (const float currentTime,
-										const float elapsedTime,
-										const AbstractVehicle& selected)
-{
-	OpenSteer::Camera::updateCamera (currentTime, elapsedTime, selected, clock.getPausedState ());
-}
-
-
-//-----------------------------------------------------------------------------
-// some camera-related default constants
-const float OpenSteer::OpenSteerDemo::camera2dElevation = 8;
-const float OpenSteer::OpenSteerDemo::cameraTargetDistance = 13;
-const OpenSteer::Vec3 OpenSteer::OpenSteerDemo::cameraTargetOffset (0, OpenSteer::OpenSteerDemo::camera2dElevation, 
-																	0);
-
-
 //-----------------------------------------------------------------------------
 // ground plane grid-drawing utility used by several plug-ins
-
-
 void 
 OpenSteer::OpenSteerDemo::gridUtility (const Vec3& gridTarget)
 {
@@ -637,8 +533,6 @@ OpenSteer::OpenSteerDemo::gridUtility (const Vec3& gridTarget)
 
 //-----------------------------------------------------------------------------
 // draws a gray disk on the XZ plane under a given vehicle
-
-
 void 
 OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicle)
 {
@@ -649,8 +543,6 @@ OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicl
 
 //-----------------------------------------------------------------------------
 // draws a gray circle on the XZ plane under a given vehicle
-
-
 void 
 OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& vehicle)
 {
@@ -664,8 +556,6 @@ OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& 
 //-----------------------------------------------------------------------------
 // draw a box around a vehicle aligned with its local space
 // xxx not used as of 11-20-02
-
-
 void 
 OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
 													 const Color& color)
@@ -683,8 +573,6 @@ OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
 // draws a colored circle (perpendicular to view axis) around the center
 // of a given vehicle.  The circle's radius is the vehicle's radius times
 // radiusMultiplier.
-
-
 void 
 OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
 														const float radiusMultiplier,
@@ -703,8 +591,6 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
 
 
 //-----------------------------------------------------------------------------
-
-
 void 
 OpenSteer::OpenSteerDemo::printMessage (const char* message)
 {
@@ -763,8 +649,6 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 
 //-----------------------------------------------------------------------------
 // manage OpenSteerDemo phase transitions (xxx and maintain phase timers)
-
-
 int OpenSteer::OpenSteerDemo::phaseStackIndex = 0;
 const int OpenSteer::OpenSteerDemo::phaseStackSize = 5;
 int OpenSteer::OpenSteerDemo::phaseStack [OpenSteer::OpenSteerDemo::phaseStackSize];

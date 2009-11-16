@@ -1106,7 +1106,7 @@ namespace {
                             const bool usableHint = obstacleDistance>farThreshold;
                             if (usableHint)
                             {
-                                const Vec3 q = p + (offset.normalize() * 5);
+                                const Vec3 q = p + (offset.normalized() * 5);
                                 annotationLine (p, q, gMagenta);
                                 annotationCircleOrDisk (0.4f, up(), o, gWhite,
                                                         12, false, false);
@@ -2008,7 +2008,7 @@ namespace {
             // indicates the boundary of the tube.
 
             const float o = outside + radius () + (curvedSteering ? 1.0f : 0.0f);
-            const Vec3 boundaryOffset = ((onPath - future).normalize() * o);
+            const Vec3 boundaryOffset = ((onPath - future).normalized() * o);
 
             const Vec3 onPathBoundary = future + boundaryOffset;
             annotationLine (onPath, onPathBoundary, insidePathColor);
@@ -2309,7 +2309,7 @@ namespace {
             const Vec3 spoke = initialSpoke.rotateAboutGlobalY (arcAngle * sign);
             //----------- this block imported from scanObstacleMap
 
-            const Vec3 fromCenter = -localCenterOfCurvature.normalize ();
+            const Vec3 fromCenter = -localCenterOfCurvature.normalized ();
             const float dRadius = trimmedLinear.dot (fromCenter);
             const float radiusChangeFactor = (dRadius + arcRadius) / arcRadius;
             const Vec3 resultLocation = center + (spoke * radiusChangeFactor);
@@ -2426,7 +2426,7 @@ namespace {
         Vec3 steerTowardHeading (const Vec3& desiredGlobalHeading)
         {
             const Vec3 headingError = desiredGlobalHeading - forward ();
-            return headingError.normalize () * maxForce ();
+            return headingError.normalized () * maxForce ();
         }
 
 

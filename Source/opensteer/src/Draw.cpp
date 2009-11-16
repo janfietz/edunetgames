@@ -339,7 +339,7 @@ OpenSteer::drawXZWideLine (const Vec3& startPoint,
     warnIfInUpdatePhase ("drawXZWideLine");
 
     const Vec3 offset = endPoint - startPoint;
-    const Vec3 along = offset.normalize();
+    const Vec3 along = offset.normalized();
     const Vec3 perp = gGlobalSpace.localRotateForwardToSide (along);
     const Vec3 radius = perp * width / 2;
 
@@ -377,8 +377,8 @@ OpenSteer::drawCircleOrDisk (const float radius,
     {
         // define a local space with "axis" as the Y/up direction
         // (XXX should this be a method on  LocalSpace?)
-        const Vec3 unitAxis = axis.normalize ();
-        const Vec3 unitPerp = findPerpendicularIn3d (axis).normalize ();
+        const Vec3 unitAxis = axis.normalized ();
+        const Vec3 unitPerp = findPerpendicularIn3d (axis).normalized ();
         ls.setUp (unitAxis);
         ls.setForward (unitPerp);
         ls.setPosition (center);
@@ -818,7 +818,7 @@ namespace {
         const OpenSteer::Vec3 view = pointToLookAt - cameraPosition;
         const OpenSteer::Vec3 perp = view.perpendicularComponent (up);
         if (perp == OpenSteer::Vec3::zero)
-            std::cerr << "OpenSteer - LookAt: degenerate camera";
+            std::cerr << "OpenSteer - LookAt: degenerate camera\n";
     }
 
 } // anonymous namespace
@@ -940,7 +940,7 @@ OpenSteer::directionFromCameraToScreenPosition (int x, int y, int h)
     // "direction" is the normalized difference between these far and near
     // unprojected points.  Its parallel to the "eye-mouse" selection line.
     const Vec3 diffNearFar (un1x-un0x, un1y-un0y, un1z-un0z);
-    const Vec3 direction = diffNearFar.normalize ();
+    const Vec3 direction = diffNearFar.normalized ();
     return direction;
 }
 
@@ -1699,7 +1699,7 @@ namespace OpenSteer {
         inline Vec3 midpointOnSphere (const Vec3& a, const Vec3& b) const
         {
             const Vec3 midpoint = (a + b) * 0.5f;
-            const Vec3 unitRadial = (midpoint - center).normalize ();
+            const Vec3 unitRadial = (midpoint - center).normalized ();
             return center + (unitRadial * radius);
         }
 
@@ -1762,7 +1762,7 @@ namespace OpenSteer {
                     // draw triangle edges (use trick to avoid drawing each
                     // edge twice (for each adjacent triangle) unless we are
                     // culling and this tri is near the sphere's silhouette)
-                    const float unitDot = view.dot (triNormal.normalize ());
+                    const float unitDot = view.dot (triNormal.normalized ());
                     const float t = 0.05f; // near threshold
                     const bool nearSilhouette = (unitDot<t) || (unitDot>-t);
                     if (nearSilhouette && !(drawBackFacing&&drawFrontFacing))
