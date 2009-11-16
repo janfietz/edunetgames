@@ -400,8 +400,6 @@ OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugin (void)
 //-----------------------------------------------------------------------------
 // select the "next" vehicle: the one listed after the currently selected one
 // in allVehiclesOfSelectedPlugin
-
-
 void 
 OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 {
@@ -413,16 +411,27 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 		const AVIterator last = all.end();
 
 		// find selected vehicle in container
-		const AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
-
-		// normally select the next vehicle in container
-		SimpleVehicle::selectedVehicle = *(s+1);
-
-		// if we are at the end of the container, select the first vehicle
-		if (s == last-1) SimpleVehicle::selectedVehicle = *first;
-
-		// if the search failed, use NULL
-		if (s == last) SimpleVehicle::selectedVehicle = NULL;
+		AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
+		if( s == last )
+		{
+			// if the search failed, use NULL
+			SimpleVehicle::selectedVehicle = NULL;
+			if( all.size() > 0 )
+			{
+				SimpleVehicle::selectedVehicle = all[0];
+			}
+		}
+		else
+		{
+			// normally select the next vehicle in container
+			++s;
+			if( s == last )
+			{
+				// if we are at the end of the container, select the first vehicle
+				s = first;
+			}
+			SimpleVehicle::selectedVehicle = (*s);
+		}
 	}
 }
 
