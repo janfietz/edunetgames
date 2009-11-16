@@ -38,6 +38,7 @@
 
 using namespace OpenSteer;
 
+
 //-----------------------------------------------------------------------------
 namespace	{
 	//-------------------------------------------------------------------------
@@ -78,24 +79,45 @@ namespace	{
 	// XXX consider using STL(any advantage? consistency?)
 
 
-	NetCtfSeekerVehicle* ctfSeeker;
+	AbstractVehicle* ctfSeeker;
 	const int ctfEnemyCount = 4;
-	NetCtfEnemyVehicle* ctfEnemies [ctfEnemyCount];
+	AbstractVehicle* ctfEnemies [ctfEnemyCount];
 }
 
+//-----------------------------------------------------------------------------
+// now 1 global vehicle factory for unit tests
+NetCtfVehicleFactory gOfflineNetCtfVehicleFactory;
+
+//-----------------------------------------------------------------------------
+NetCtfPlugin::NetCtfPlugin( bool bAddToRegistry ):
+	BaseClass( bAddToRegistry )
+{
+	this->setVehicleFactory( &gOfflineNetCtfVehicleFactory );
+}
+//-----------------------------------------------------------------------------
+AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId, ProximityDatabase* pd ) const
+{
+	AbstractVehicle* pkVehicle = NULL;
+	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	if( NULL != pkFactory )
+	{
+		pkVehicle = pkFactory->createVehicle( classId, pd );
+	}
+	return pkVehicle;
+}
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::open (void)
 {
 	// create the seeker ("hero"/"attacker")
-	ctfSeeker = new NetCtfSeekerVehicle();
+	ctfSeeker = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL );
 	all.push_back( ctfSeeker );
 
 	// create the specified number of enemies, 
 	// storing pointers to them in an array.
-	for (int i = 0; i<ctfEnemyCount; i++)
+	for (int i = 0; i < ctfEnemyCount; ++i)
 	{
-		ctfEnemies[i] = new NetCtfEnemyVehicle();
+		ctfEnemies[i] = this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL );
 		all.push_back (ctfEnemies[i]);
 	}
 
@@ -133,21 +155,23 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	// update camera
 	CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
-	// draw "ground plane" centered between base and selected vehicle
-	const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
-	const Vec3 goalDirection = goalOffset.normalized ();
-	const Vec3 cameraForward = Camera::camera.xxxls().forward();
-	const float goalDot = cameraForward.dot (goalDirection);
-	const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
-	const Vec3 gridCenter = interpolate (blend,
-		selected.position(),
-		gHomeBaseCenter);
-	OpenSteerDemo::gridUtility (gridCenter);
+	if( NULL != SimpleVehicle::selectedVehicle )
+	{
+		// draw "ground plane" centered between base and selected vehicle
+		const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
+		const Vec3 goalDirection = goalOffset.normalized ();
+		const Vec3 cameraForward = Camera::camera.xxxls().forward();
+		const float goalDot = cameraForward.dot (goalDirection);
+		const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
+		const Vec3 gridCenter = interpolate (blend,
+			selected.position(),
+			gHomeBaseCenter);
+		OpenSteerDemo::gridUtility (gridCenter);
+	}
 
 	// draw the seeker, obstacles and home base
 	ctfSeeker->draw( currentTime, elapsedTime );
 	drawObstacles ();
-	drawHomeBase();
 
 	// draw each enemy
 	for (int i = 0; i < ctfEnemyCount; i++) ctfEnemies[i]->draw( currentTime, elapsedTime );
@@ -208,18 +232,6 @@ void NetCtfPlugin::printMiniHelpForFunctionKeys (void) const
 	OpenSteerDemo::printMessage ("  F1     add one obstacle.");
 	OpenSteerDemo::printMessage ("  F2     remove one obstacle.");
 	OpenSteerDemo::printMessage ("");
-}
-
-
-void NetCtfPlugin::drawHomeBase (void)
-{
-	const Vec3 up (0, 0.01f, 0);
-	const Color atColor (0.3f, 0.3f, 0.5f);
-	const Color noColor = gGray50;
-	const bool reached = ctfSeeker->state == NetCtfSeekerVehicle::atGoal;
-	const Color baseColor = (reached ? atColor : noColor);
-	drawXZDisk (gHomeBaseRadius,    gHomeBaseCenter, baseColor, 40);
-	drawXZDisk (gHomeBaseRadius/15, gHomeBaseCenter+up, gBlack, 20);
 }
 
 void NetCtfPlugin::drawObstacles (void)

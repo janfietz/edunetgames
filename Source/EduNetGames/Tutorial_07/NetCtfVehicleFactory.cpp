@@ -56,19 +56,19 @@ public:
 	virtual ~NetCtfEnemyVehicleFactory(){};
 };
 
-//-----------------------------------------------------------------------------
-// now 3 global vehicle factories
-NetCtfBaseVehicleFactory gNetCtfBaseVehicleFactory;
-NetCtfSeekerVehicleFactory gNetCtfSeekerVehicleFactory;
-NetCtfEnemyVehicleFactory gNetCtfEnemyVehicleFactory;
 
 //-----------------------------------------------------------------------------
 NetCtfVehicleFactory::NetCtfVehicleFactory()
 {
+	//-----------------------------------------------------------------------------
+	// now 3 global vehicle factories
+	static NetCtfBaseVehicleFactory gNetCtfBaseVehicleFactory;
+	static NetCtfSeekerVehicleFactory gNetCtfSeekerVehicleFactory;
+	static NetCtfEnemyVehicleFactory gNetCtfEnemyVehicleFactory;
 	this->addVehicleFactory( &gNetCtfBaseVehicleFactory );
 	this->addVehicleFactory( &gNetCtfSeekerVehicleFactory );
 	this->addVehicleFactory( &gNetCtfEnemyVehicleFactory );
-
+#ifdef _DEBUG
 	// test the 3 vehicle classes
 	OpenSteer::AbstractVehicle* pkVehicle = NULL;
 	pkVehicle = this->createVehicle( ET_CID_CTF_BASE_VEHICLE, NULL );
@@ -77,6 +77,7 @@ NetCtfVehicleFactory::NetCtfVehicleFactory()
 	this->destroyVehicle( pkVehicle );
 	pkVehicle = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL );
 	this->destroyVehicle( pkVehicle );
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -85,7 +86,4 @@ NetCtfVehicleFactory::~NetCtfVehicleFactory()
 
 }
 
-//-----------------------------------------------------------------------------
-// now 1 global vehicle factory for unit tests
-NetCtfVehicleFactory gNetCtfVehicleFactory;
 

@@ -596,8 +596,6 @@ OpenSteer::OpenSteerDemo::gridUtility (const Vec3& gridTarget)
 
 //-----------------------------------------------------------------------------
 // draws a gray disk on the XZ plane under a given vehicle
-
-
 void 
 OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicle)
 {
@@ -608,8 +606,6 @@ OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicl
 
 //-----------------------------------------------------------------------------
 // draws a gray circle on the XZ plane under a given vehicle
-
-
 void 
 OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& vehicle)
 {
@@ -623,8 +619,6 @@ OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& 
 //-----------------------------------------------------------------------------
 // draw a box around a vehicle aligned with its local space
 // xxx not used as of 11-20-02
-
-
 void 
 OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
                                                const Color& color)
@@ -642,8 +636,6 @@ OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
 // draws a colored circle (perpendicular to view axis) around the center
 // of a given vehicle.  The circle's radius is the vehicle's radius times
 // radiusMultiplier.
-
-
 void 
 OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
                                                   const float radiusMultiplier,
@@ -660,31 +652,28 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
     }
 }
 
-
 //-----------------------------------------------------------------------------
-
-
 void 
 OpenSteer::OpenSteerDemo::printMessage (const char* message)
 {
     std::cout << "OpenSteerDemo: " <<  message << std::endl << std::flush;
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::printMessage (const std::ostringstream& message)
 {
     printMessage (message.str().c_str());
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::printWarning (const char* message)
 {
     std::cout << "OpenSteerDemo: Warning: " <<  message << std::endl << std::flush;
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::printWarning (const std::ostringstream& message)
 {
@@ -697,8 +686,6 @@ OpenSteer::OpenSteerDemo::printWarning (const std::ostringstream& message)
 //
 // XXX this list should be assembled automatically,
 // XXX perhaps from a list of "command" objects created at initialization
-
-
 void 
 OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
@@ -733,6 +720,7 @@ bool updatePhaseActive = false;
 bool drawPhaseActive = false;
 }
 
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 {
@@ -753,6 +741,7 @@ OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 }
 
 
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::popPhase (void)
 {
@@ -772,7 +761,7 @@ OpenSteer::OpenSteerDemo::popPhase (void)
 float OpenSteer::OpenSteerDemo::phaseTimerBase = 0;
 float OpenSteer::OpenSteerDemo::phaseTimers [drawPhase+1];
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::initPhaseTimers (void)
 {
@@ -782,7 +771,7 @@ OpenSteer::OpenSteerDemo::initPhaseTimers (void)
     phaseTimerBase = clock.getTotalRealTime ();
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 {
@@ -793,8 +782,6 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 
 
 //-----------------------------------------------------------------------------
-
-
 namespace {
 
     const char* appVersionName = "OpenSteerDemo 0.8.2";

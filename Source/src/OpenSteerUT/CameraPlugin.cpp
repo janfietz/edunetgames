@@ -135,7 +135,7 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 		forward = forward.normalized();
 		const Vec3 behind = forward * -distance;
 		OpenSteer::Camera::camera.setPosition( behind );
-		OpenSteer::Camera::camera.target = position;
+		OpenSteer::Camera::camera.target = Vec3::zero;
 	}
 }
 
