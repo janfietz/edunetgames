@@ -27,16 +27,49 @@
 //-----------------------------------------------------------------------------
 
 #include "GridPlugin.h"
+#include "EduNetCommon/EduNetDraw.h"
 
-#include "EduNetApplication/EduNetGames.h"
-// TODO: move gridUtility to other source file
 using namespace OpenSteer;
+
+//-----------------------------------------------------------------------------
+osVector3 GridPlugin::ms_kGridCenter(osVector3::zero);
+int GridPlugin::ms_iSolid(1);
+//-----------------------------------------------------------------------------
+void GridPlugin::gridUtility( const Vec3& gridTarget )
+{
+	// round off target to the nearest multiple of 2 (because the
+	// checkerboard grid with a pitch of 1 tiles with a period of 2)
+	// then lower the grid a bit to put it under 2d annotation lines
+	const Vec3 gridCenter ((round (gridTarget.x * 0.5f) * 2),
+		(round (gridTarget.y * 0.5f) * 2) - .05f,
+		(round (gridTarget.z * 0.5f) * 2));
+
+	if( 1 == GridPlugin::ms_iSolid )
+	{
+		// colors for checkerboard
+		const Color gray1(0.27f);
+		const Color gray2(0.30f);
+		// draw 50x50 checkerboard grid with 50 squares along each side
+		drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
+	}
+	else
+	{
+		// alternate style
+		drawXZLineGrid (50, 50, gridCenter, gBlack);
+	}
+}
+
+//-----------------------------------------------------------------------------
+void GridPlugin::initGui( void* pkUserdata )
+{
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	glui->add_checkbox_to_panel( pluginPanel, "Solid", &GridPlugin::ms_iSolid);
+}
 
 //-----------------------------------------------------------------------------
 void GridPlugin::redraw (const float currentTime, const float elapsedTime) 
 { 
 	// draw "ground plane"
-	if( NULL != SimpleVehicle::selectedVehicle ) 
-		this->m_kGridCenter = SimpleVehicle::selectedVehicle->position();
-	OpenSteerDemo::gridUtility( this->m_kGridCenter );
+	GridPlugin::gridUtility( GridPlugin::ms_kGridCenter );
 }

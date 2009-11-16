@@ -131,10 +131,18 @@ public:
 		const float behindcThreshold,
 		const osVector3& goalDirection );
 
+	const char* getSeekerStateString( void ) const;
+
+	osAVGroup& accessEnemies( void )
+	{
+		return m_kEnemies;
+	}
+
 	seekerState state;
 	bool evading; // xxx store steer sub-state for anotation
 	float lastRunningTime; // for auto-reset
 private:
+	osAVGroup m_kEnemies;
 
 	void drawHomeBase( void ) const;
 
@@ -148,7 +156,7 @@ class NetCtfEnemyVehicle : public NetCtfBaseVehicle
 public:
 
 	// constructor
-	NetCtfEnemyVehicle () {reset ();}
+	NetCtfEnemyVehicle ():m_pkSeeker( NULL ) {reset ();}
 	NetCtfEnemyVehicle( OpenSteer::ProximityDatabase& pd ):BaseClass( pd ){reset();};
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfOEnemyVehicle )
@@ -161,7 +169,13 @@ public:
 
 	// per frame simulation update
 	virtual void update( const float currentTime, const float elapsedTime );
+
+	void setSeeker( NetCtfSeekerVehicle* pkSeeker )
+	{
+		this->m_pkSeeker = pkSeeker;
+	}
 private:
+	NetCtfSeekerVehicle* m_pkSeeker;
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfEnemyVehicle )
 };
 

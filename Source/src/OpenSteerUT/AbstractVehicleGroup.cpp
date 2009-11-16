@@ -27,22 +27,28 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleGroup.h"
+#include "AbstractVehicleUpdate.h"
+
 #include "OpenSteer/SimpleVehicle.h"
 
 #include <algorithm>
 
 namespace OpenSteer {
 
+using namespace OpenSteer;
+
 //-----------------------------------------------------------------------------
 AbstractVehicleGroup::AbstractVehicleGroup( AVGroup& kAVGroup ):
-m_kVehicles(kAVGroup)
+m_kVehicles(kAVGroup),
+m_pkCustomUpdated( NULL )
 {
 	
 }
 
 //-----------------------------------------------------------------------------
 AbstractVehicleGroup::AbstractVehicleGroup( const AVGroup& kAVGroup ):
-m_kVehicles((AVGroup&)kAVGroup)
+m_kVehicles((AVGroup&)kAVGroup),
+m_pkCustomUpdated( NULL )
 {
 
 }
@@ -66,7 +72,28 @@ void AbstractVehicleGroup::update( const float currentTime, const float elapsedT
 	AVIterator last = m_kVehicles.end();
 	while( iter != last )
 	{
-		(*iter)->update( currentTime, elapsedTime );
+		AbstractVehicle* pkVehicle = (*iter);
+		pkVehicle->setCustomUpdated( this->getCustomUpdated() );
+		AbstractUpdated* pkCustomUpdate = pkVehicle->getCustomUpdated();
+		if( NULL != pkCustomUpdate )
+		{
+			AbstractVehicleUpdate* pkVehicleUpdate = dynamic_cast<AbstractVehicleUpdate*>( pkCustomUpdate );
+			if( NULL != pkVehicleUpdate )
+			{
+				pkVehicleUpdate->setVehicle( pkVehicle );
+				pkVehicleUpdate->update( currentTime, elapsedTime );
+				pkVehicleUpdate->setVehicle( NULL );
+			}
+			else
+			{
+				pkVehicle->update( currentTime, elapsedTime );
+			}
+		}
+		else
+		{
+			pkVehicle->update( currentTime, elapsedTime );
+		}
+		pkVehicle->setCustomUpdated( NULL );
 		++iter;
 	}
 }
@@ -98,6 +125,7 @@ void AbstractVehicleGroup::reset( void )
 //-----------------------------------------------------------------------------
 void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle )
 {
+	// do not add NULL vehicles
 	if( NULL == pkVehicle )
 	{
 		return;
@@ -123,7 +151,7 @@ void AbstractVehicleGroup::removeVehicle( const AbstractVehicle* pkVehicle )
 	if(kIter != m_kVehicles.end())
 	{
 		m_kVehicles.erase( kIter );
- 		// if it is OpenSteerDemo's selected vehicle, unselect it
+ 		// if it is SimpleVehicle's selected vehicle, unselect it
  		if( pkVehicle == SimpleVehicle::selectedVehicle )
 		{
  			SimpleVehicle::selectedVehicle = NULL;

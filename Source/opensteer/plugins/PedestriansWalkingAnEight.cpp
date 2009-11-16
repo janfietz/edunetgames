@@ -629,7 +629,7 @@ public:
             crowd.pop_back();
             population--;
             
-            // if it is OpenSteerDemo's selected vehicle, unselect it
+            // if it is SimpleVehicle's selected vehicle, unselect it
             if (pedestrian == SimpleVehicle::selectedVehicle)
                 SimpleVehicle::selectedVehicle = NULL;
             

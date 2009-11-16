@@ -38,28 +38,39 @@ namespace OpenSteer
 	{
 		ET_DECLARE_BASE(OpenSteer::Plugin);
 	public:
-		GridPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
-			m_kGridCenter( osVector3::zero )
+		GridPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry)
 		{};
 
 		OS_IMPLEMENT_CLASSNAME( GridPlugin )
+		//----------------------------------------------------------------------------
+		// OpenSteer::Plugin interface
+		virtual void initGui( void* pkUserdata );
 		// required methods:
-		const char* name (void) const {return this->getClassName();}
-		void open (void) { }
-		void update (const float currentTime, const float elapsedTime) { }
-		void redraw (const float currentTime, const float elapsedTime);
-		void close (void) { }
-		const AVGroup& allVehicles (void) const { return m_kVehicles; }
+		const char* name( void ) const {return this->getClassName();}
+		void open( void ) { }
+		void update( const float currentTime, const float elapsedTime ) { }
+		void redraw( const float currentTime, const float elapsedTime );
+		void close( void ) { }
+		const AVGroup& allVehicles( void ) const { return m_kVehicles; }
 
 		// optional methods (see comments in AbstractPlugin for explanation):
 		void reset (void) { } // default is to reset by doing close-then-open
-		float selectionOrderSortKey (void) const {return 1000000;}
-		bool requestInitialSelection (void) const {return true;}
-		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
-		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
+		float selectionOrderSortKey( void ) const {return 1000000;}
+		bool requestInitialSelection( void ) const {return true;}
+		void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
+		void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
+
+		static void setGridCenter( const osVector3& kGridCenter )
+		{
+			GridPlugin::ms_kGridCenter = kGridCenter;
+		}
+
+		static int ms_iSolid;
 	private:
+		static void gridUtility( const Vec3& gridTarget );
+
 		AVGroup m_kVehicles;
-		osVector3 m_kGridCenter;
+		static osVector3 ms_kGridCenter;
 		ET_IMPLEMENT_CLASS_NO_COPY(GridPlugin);
 
 	};

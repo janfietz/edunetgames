@@ -64,12 +64,16 @@ public:
 
 	// implement to create a vehicle of the specified class
 	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
+	virtual void addVehicle( osAbstractVehicle* pkVehicle );
 
 	//-------------------------------------------------------------------------
 	void drawObstacles (void);
 
 	// a group (STL vector) of all vehicles in the Plugin
 	std::vector<osAbstractVehicle*> all;
+	int resetCount;
+	class NetCtfSeekerVehicle* m_pkSeeker;
+
 };
 
 

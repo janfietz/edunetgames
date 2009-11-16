@@ -128,6 +128,13 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	// selected Pedestrian (user can mouse click to select another)
 	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
 
+	// update grid center
+	if( NULL != SimpleVehicle::selectedVehicle ) 
+	{
+		GridPlugin::setGridCenter( SimpleVehicle::selectedVehicle->position() );
+	}
+
+
 	// Pedestrian nearest mouse (to be highlighted)
 	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
 
@@ -308,7 +315,7 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 		AbstractVehicle* pedestrian = crowd.back();
 		crowd.pop_back();
 
-		// if it is OpenSteerDemo's selected vehicle, unselect it
+		// if it is SimpleVehicle's selected vehicle, unselect it
 		if (pedestrian == SimpleVehicle::selectedVehicle)
 			SimpleVehicle::selectedVehicle = NULL;
 

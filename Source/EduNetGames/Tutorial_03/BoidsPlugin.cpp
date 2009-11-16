@@ -331,7 +331,7 @@ void BoidsPlugin::removeBoidFromFlock (void)
 		AbstractVehicle* boid = flock.back();
 		flock.pop_back();
 
-		// if it is OpenSteerDemo's selected vehicle, unselect it
+		// if it is SimpleVehicle's selected vehicle, unselect it
 		if (boid == SimpleVehicle::selectedVehicle)
 			SimpleVehicle::selectedVehicle = NULL;
 

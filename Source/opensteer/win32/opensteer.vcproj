@@ -20,7 +20,6 @@
 			OutputDirectory="../../../Bin/$(PlatformName)/lib"
 			IntermediateDirectory="../../../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -87,7 +86,6 @@
 			OutputDirectory="../../../Bin/$(PlatformName)/lib"
 			IntermediateDirectory="../../../Temp/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
