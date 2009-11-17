@@ -69,6 +69,10 @@ public:
 	virtual void newPD( OpenSteer::ProximityDatabase& pd );
 	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
 
+
+	void annotationUtility( void ) const;
+
+
 	static bool gWanderSwitch;
 	static bool gUseDirectedPathFollowing;
 

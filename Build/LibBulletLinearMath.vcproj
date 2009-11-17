@@ -152,6 +152,28 @@
 			UniqueIdentifier="{584A5230-07D6-4431-BB98-AA0CD72E6717}"
 			>
 			<File
+				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAlignedAllocator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btConvexHull.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btGeometryUtil.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuickprof.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{566E428C-9C3D-439e-9A1E-8DC96CE457C4}"
+			>
+			<File
 				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAabbUtil2.h"
 				>
 			</File>
@@ -237,28 +259,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btVector3.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{566E428C-9C3D-439e-9A1E-8DC96CE457C4}"
-			>
-			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAlignedAllocator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btConvexHull.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btGeometryUtil.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuickprof.cpp"
 				>
 			</File>
 		</Filter>

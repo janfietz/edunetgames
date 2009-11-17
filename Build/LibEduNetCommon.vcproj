@@ -288,6 +288,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleMath.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleMath.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.cpp"
 					>
 				</File>

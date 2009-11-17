@@ -59,6 +59,10 @@
 #define OPENSTEER_M_PI 3.14159265358979323846f
 #endif
 
+#ifndef OPENSTEER_M_2PI
+#define OPENSTEER_M_2PI 2.0f * 3.14159265358979323846f
+#endif
+
 #ifdef _MSC_VER
 #undef min
 #undef max

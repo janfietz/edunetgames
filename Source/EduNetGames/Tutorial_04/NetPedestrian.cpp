@@ -160,8 +160,7 @@ void NetPedestrian::reset (void)
 	const float d = path->length() * frandom01();
 	const float r = path->radius();
 	const osVector3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
-	setPosition (path->mapPathDistanceToPoint (d) + randomOffset);
-
+	setPosition( path->mapPathDistanceToPoint (d) + randomOffset );
 
 	// randomize 2D heading
 	randomizeHeadingOnXZPlane ();
@@ -174,6 +173,10 @@ void NetPedestrian::reset (void)
 
 	// notify proximity database that our position has changed
 	proximityToken->updateForNewPosition (position());
+
+	// notify the update states
+	this->m_kSteeringForceUpdate.setVehicle( this );
+	this->m_kEulerUpdate.setVehicle( this );
 }
 
 //-----------------------------------------------------------------------------
@@ -337,6 +340,75 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
 	this->drawTrail( kColor, gWhite );
 	this->setAnnotationMode( eMode );
+}
+
+//-----------------------------------------------------------------------------
+void NetPedestrian::annotationUtility( void ) const
+{
+	osVector3 kLinearVelocity = this->m_kEulerUpdate.getMotionState().m_kLinearVelocity;
+	kLinearVelocity *= 3.6f;
+	osVector3 kAngularVelocity = this->m_kEulerUpdate.getMotionState().m_kAngularVelocity;
+	kAngularVelocity /= OPENSTEER_M_2PI;
+
+
+	osVector3 kLocalLinearVelocity = this->m_kEulerUpdate.getMotionState().m_kLocalLinearVelocity;
+	kLocalLinearVelocity *= 3.6f;
+	osVector3 kLocalAngularVelocity = this->m_kEulerUpdate.getMotionState().m_kLocalAngularVelocity;
+	kLocalAngularVelocity /= OPENSTEER_M_2PI;
+
+	std::ostringstream sn;
+	sn << "#"
+		<< this->getEntityId()
+		<< std::endl;
+	if( this == SimpleVehicle::selectedVehicle )
+	{
+		sn << std::setprecision(2) << std::setiosflags(std::ios::fixed);
+		sn << "--Worldspace--"
+			<< std::endl;
+		sn << "Position:" << this->position()
+			<< std::endl;
+		sn << "Linear  Vel:" << kLinearVelocity
+			<< std::endl;
+		sn << "Angular Vel:" << kAngularVelocity
+			<< std::endl;
+
+		sn << "--Localspace--"
+			<< std::endl;
+		sn << "Linear  Vel:" << kLocalLinearVelocity
+			<< std::endl;
+		sn << "Angular Vel:" << kLocalAngularVelocity
+			<< std::endl;
+
+	}
+	sn << std::ends;
+	const Color textColor (0.8f, 1, 0.8f);
+	const osVector3 textOffset (0, 0.25f, 0);
+	const osVector3 textPos = this->position() + textOffset;
+	draw2dTextAt3dLocation( sn, textPos, textColor, drawGetWindowWidth(), drawGetWindowHeight() );
+
+
+#if 0
+	// textual annotation for selected Pedestrian
+	if( SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn() )
+	{
+		const Color color (0.8f, 0.8f, 1.0f);
+		const osVector3 textOffset (0, 0.25f, 0);
+		const osVector3 textPosition = selected->position() + textOffset;
+		const osVector3 camPosition = Camera::camera.position();
+		const float camDistance = osVector3::distance (selected->position(),
+			camPosition);
+		const char* spacer = "      ";
+		std::ostringstream annote;
+		annote << std::setprecision (2);
+		annote << std::setiosflags (std::ios::fixed);
+		annote << spacer << "1: speed: " << selected->speed() << std::endl;
+		annote << std::setprecision (1);
+		annote << spacer << "2: cam dist: " << camDistance << std::endl;
+		annote << spacer << "3: no third thing" << std::ends;
+		draw2dTextAt3dLocation (annote, textPosition, color, drawGetWindowWidth(), drawGetWindowHeight());
+	}
+
+#endif
 }
 
 //-----------------------------------------------------------------------------

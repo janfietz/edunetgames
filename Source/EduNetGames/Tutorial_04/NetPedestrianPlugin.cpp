@@ -158,26 +158,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		serialNumberAnnotationUtility(*selected, *nearMouse);
 	}
 
-	// textual annotation for selected Pedestrian
-	if( SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn() )
-	{
-		const Color color (0.8f, 0.8f, 1.0f);
-		const osVector3 textOffset (0, 0.25f, 0);
-		const osVector3 textPosition = selected->position() + textOffset;
-		const osVector3 camPosition = Camera::camera.position();
-		const float camDistance = osVector3::distance (selected->position(),
-			camPosition);
-		const char* spacer = "      ";
-		std::ostringstream annote;
-		annote << std::setprecision (2);
-		annote << std::setiosflags (std::ios::fixed);
-		annote << spacer << "1: speed: " << selected->speed() << std::endl;
-		annote << std::setprecision (1);
-		annote << spacer << "2: cam dist: " << camDistance << std::endl;
-		annote << spacer << "3: no third thing" << std::ends;
-		draw2dTextAt3dLocation (annote, textPosition, color, drawGetWindowWidth(), drawGetWindowHeight());
-	}
-
 	// display status in the upper left corner of the window
 	std::ostringstream status;
 	const float h = drawGetWindowHeight ();
@@ -231,14 +211,11 @@ void NetPedestrianPlugin::serialNumberAnnotationUtility (const AbstractVehicle& 
 				||
 				(&nearMouse && (osVector3::distance (vp, np) < nearDistance)))
 			{
-				std::ostringstream sn;
-				sn << "#"
-					<< vehicle->getEntityId()
-					<< std::ends;
-				const Color textColor (0.8f, 1, 0.8f);
-				const osVector3 textOffset (0, 0.25f, 0);
-				const osVector3 textPos = vehicle->position() + textOffset;
-				draw2dTextAt3dLocation (sn, textPos, textColor, drawGetWindowWidth(), drawGetWindowHeight());
+				NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(vehicle);
+				if( NULL != pkPedestrian )
+				{
+					pkPedestrian->annotationUtility();
+				}
 			}
 		}
 	}
