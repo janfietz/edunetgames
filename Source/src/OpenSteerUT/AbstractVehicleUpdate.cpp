@@ -32,10 +32,24 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
+void EulerVehicleUpdate::setVehicle( AbstractVehicle* pkVehicle )
+{
+	this->m_pkVehicle = pkVehicle;
+	if( NULL != this->m_pkVehicle )
+	{
+		// store current world transform
+		writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
+	}
+}
+
+//-----------------------------------------------------------------------------
 void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
 {
+	// store current world transform
+//	writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
+
 	// compute acceleration and velocity
-	Vec3 newAcceleration = (this->m_kForce / this->vehicle().mass());
+	Vec3 newAcceleration = (this->getForce() / this->vehicle().mass());
 	Vec3 newVelocity = this->vehicle().velocity();
 
 	// damp out abrupt changes and oscillations in steering acceleration
@@ -80,6 +94,18 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
 	}
 
+	this->updateMotionState( elapsedTime );
+}
+
+//-------------------------------------------------------------------------
+void EulerVehicleUpdate::updateMotionState( 
+					   const osScalar elapsedTime
+					   )
+{
+	// store new world transform
+	btTransform kWorldTransform1;
+	writeToMatrix( this->vehicle(), kWorldTransform1 );
+	this->m_kMotionState.updateMotionState( kWorldTransform1, elapsedTime );
 }
 
 //-------------------------------------------------------------------------

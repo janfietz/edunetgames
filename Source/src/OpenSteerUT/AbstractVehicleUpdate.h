@@ -30,6 +30,9 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
+#include "AbstractVehicleMath.h"
+
+class btTransform;
 
 namespace OpenSteer
 {
@@ -55,14 +58,14 @@ namespace OpenSteer
 		  }
 
 		  //-------------------------------------------------------------------
+		  virtual void setVehicle( AbstractVehicle* pkVehicle )
+		  {
+			  this->m_pkVehicle = pkVehicle;
+		  }
+
 		  bool isVehicleUpdate( void ) const
 		  {
 			  return (NULL != this->m_pkVehicle);
-		  }
-
-		  void setVehicle( AbstractVehicle* pkVehicle )
-		  {
-			  this->m_pkVehicle = pkVehicle;
 		  }
 
 		  AbstractVehicle& vehicle( void ) 
@@ -77,25 +80,30 @@ namespace OpenSteer
 
 	};
 
+
 	//-------------------------------------------------------------------------
 	class EulerVehicleUpdate : public AbstractVehicleUpdate {
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
 		EulerVehicleUpdate( AbstractVehicle* pkVehicle ):
 		BaseClass( pkVehicle ),
-			m_kForce(Vec3::zero),
 			_smoothedAcceleration(Vec3::zero)
 		{
 		}
 		virtual ~EulerVehicleUpdate(){}
 
-		void setForce( const Vec3& kForce ){ m_kForce = kForce; }
+		void setForce( const Vec3& kForce ){ m_kMotionState.m_kForce = kForce; }
+		const Vec3& getForce( void ) const { return m_kMotionState.m_kForce; }
+		const PhysicsMotionState& getMotionState( void ) const { return m_kMotionState; }
 
 		//---------------------------------------------------------------------
 		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
 
+		virtual void setVehicle( AbstractVehicle* pkVehicle );
+
 	private:
-		Vec3 m_kForce;
+		void updateMotionState( const osScalar elapsedTime );
+		PhysicsMotionState m_kMotionState;
 		Vec3 _smoothedAcceleration;
 	};
 
