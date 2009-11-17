@@ -58,7 +58,9 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 	this->vehicle().setSpeed (newVelocity.length());
 
 	// Euler integrate (per frame) velocity into position
-	this->vehicle().setPosition (vehicle().position() + (newVelocity * elapsedTime));
+	osVector3 kNewPosition = vehicle().position() + (newVelocity * elapsedTime);
+	kNewPosition.y = 0.0f;
+	this->vehicle().setPosition( kNewPosition );
 
 	bool bInfiniteRotationSpeed = false;
 	if( true == bInfiniteRotationSpeed )
