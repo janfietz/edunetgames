@@ -62,6 +62,7 @@ RakNet::Replica3* AbstractVehicleReplicaConnection::AllocReplica(
 		{
 			bool bTest = true;
 			bTest = false;
+			assert( classId != ET_CID_UNKNOWN );
 		}
 		else
 		{
