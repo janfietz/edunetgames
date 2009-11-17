@@ -1844,6 +1844,9 @@ namespace OpenSteer {
                     filled, color, front, back, viewpoint);
     }
 
+	void profPrintText(float x, float y, char *str);
+	float profPrintTextText_width(char *str);
+	
 	float _gw, _gh;
 	void profPrintText(float x, float y, char *str)
 	{
@@ -1870,9 +1873,7 @@ namespace OpenSteer {
 		_gw = sw;
 		_gh = sh;;
 		const GLint originalMatrixMode = begin2dDrawing (sw, sh);
-
 		Prof_draw_gl( sx, sy, width, height, line_spacing, precision, profPrintText, profPrintTextText_width );
-
 		end2dDrawing (originalMatrixMode);
 #endif
 	}

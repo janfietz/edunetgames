@@ -98,13 +98,13 @@ namespace EduNet{
 		EduNet::UpdatePeriodFloat m_kUpdatePeriod;
 		static OpenSteer::InstanceTracker ms_kInstanceCount;
 		size_t m_uiId;
-		ET_IMPLEMENT_CLASS_NO_COPY( EmptyVehicle );
+		ET_IMPLEMENT_CLASS_NO_COPY( EmptyVehicle )
 	};
 
 
 	class EmptyPlugin : public Plugin
 	{
-		ET_DECLARE_BASE(Plugin);
+		ET_DECLARE_BASE(Plugin)
 	public:
 
 		// construction / destruction
@@ -142,7 +142,7 @@ namespace EduNet{
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;
-		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugin );
+		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugin )
 	};
 }
 #endif //__EMPTYPLUGIN_H__

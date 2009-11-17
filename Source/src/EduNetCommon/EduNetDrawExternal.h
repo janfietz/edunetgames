@@ -36,7 +36,11 @@
   #ifdef WIN32
     #include "glui/GL/glui.h"
   #else
+#if __APPLE__ && __MACH__
+	#include "glui/GL/glui.h"
+#else
     #include "GL/glui.h"
+#endif
   #endif
 #endif
 

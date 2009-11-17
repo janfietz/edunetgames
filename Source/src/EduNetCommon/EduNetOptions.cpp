@@ -29,10 +29,17 @@
 #include "EduNetOptions.h"
 
 // command line parsing
+#if __APPLE__ && __MACH__
+#else
 #include "../../../ThirdParty/argtable2-11/src/argtable2.h" 
-
+#endif //
 // To include EXIT_SUCCESS
 #include <cstdlib>
+
+int setOptions( EduNetOptions& kOptions, 
+			   const char **defines, int ndefines
+			   );
+
 
 //-----------------------------------------------------------------------------
 EduNetOptions::EduNetOptions():m_bContinueProcess(true)
@@ -65,6 +72,10 @@ int setOptions( EduNetOptions& kOptions,
 //-----------------------------------------------------------------------------
 int EduNetOptions::parseCommandLine(int argc, char **argv)
 {
+	int exitcode=0;
+#if __APPLE__ && __MACH__
+	exitcode = EXIT_SUCCESS;
+#else	
 	struct arg_str  *defines = arg_strn("pP","define","PLUGIN",0,argc+2,  "plugin selection");
 	struct arg_lit  *help    = arg_lit0(NULL,"help",                    "print this help and exit");
 	struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
@@ -72,7 +83,6 @@ int EduNetOptions::parseCommandLine(int argc, char **argv)
 	void* argtable[] = {defines,help,version,end};
 	const char* progname = EduNetOptions::getAppName();
 	int nerrors;
-	int exitcode=0;
 
 	/* verify the argtable[] entries were allocated sucessfully */
 	if (arg_nullcheck(argtable) != 0)
@@ -141,8 +151,8 @@ exit:
 	/* deallocate each non-null entry in argtable[] */
 	arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
 
+#endif
 	return exitcode;
-
 }
 
 //-----------------------------------------------------------------------------

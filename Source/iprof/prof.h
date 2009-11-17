@@ -64,7 +64,7 @@ typedef enum
 {
    Prof_SELF_TIME,
    Prof_HIERARCHICAL_TIME,
-   Prof_CALL_GRAPH,
+   Prof_CALL_GRAPH
 } Prof_Report_Mode;
 
 extern void Prof_set_report_mode(Prof_Report_Mode e);
@@ -89,5 +89,5 @@ extern void Prof_set_recursion(Prof_Recursion_Mode e);
 }
 #endif
 
-#endif // Prof_INC_PROF_H
+#endif /* Prof_INC_PROF_H */
 

@@ -36,7 +36,7 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	class CameraPlugin : public Plugin
 	{
-		ET_DECLARE_BASE(OpenSteer::Plugin);
+		ET_DECLARE_BASE(OpenSteer::Plugin)
 	public:
 		CameraPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
 			m_kGridCenter( osVector3::zero )
@@ -92,7 +92,7 @@ namespace OpenSteer
 	private:
 		AVGroup m_kVehicles;
 		osVector3 m_kGridCenter;
-		ET_IMPLEMENT_CLASS_NO_COPY(CameraPlugin);
+		ET_IMPLEMENT_CLASS_NO_COPY(CameraPlugin)
 
 	};
 

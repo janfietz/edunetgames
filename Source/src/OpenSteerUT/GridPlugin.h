@@ -36,7 +36,7 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	class GridPlugin : public Plugin
 	{
-		ET_DECLARE_BASE(OpenSteer::Plugin);
+		ET_DECLARE_BASE(OpenSteer::Plugin)
 	public:
 		GridPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry)
 		{};
@@ -71,7 +71,7 @@ namespace OpenSteer
 
 		AVGroup m_kVehicles;
 		static osVector3 ms_kGridCenter;
-		ET_IMPLEMENT_CLASS_NO_COPY(GridPlugin);
+		ET_IMPLEMENT_CLASS_NO_COPY(GridPlugin)
 
 	};
 

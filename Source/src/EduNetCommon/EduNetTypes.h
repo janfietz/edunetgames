@@ -35,8 +35,10 @@
 #include <sstream>
 #include <iomanip>
 
+#if __APPLE__ && __MACH__
+#else
 #include <hash_map>
-
+#endif
 
 
 

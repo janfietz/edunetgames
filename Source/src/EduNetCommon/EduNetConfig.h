@@ -34,6 +34,10 @@
 #define EDUNET_APPNAME EduNetOptions::getAppName()
 #endif
 
+#if __APPLE__ && __MACH__
+#define EDUNET_HAVE_RAKNET 0 // not jet
+#endif
+
 // raknet
 #ifndef EDUNET_HAVE_RAKNET
 #define EDUNET_HAVE_RAKNET 1
@@ -41,7 +45,11 @@
 
 // profiling
 #ifndef WIN32
+#if __APPLE__ && __MACH__
+#define EDUNET_HAVE_PROFILE 1
+#else
 #define EDUNET_HAVE_PROFILE 0
+#endif
 #endif
 #ifndef EDUNET_HAVE_PROFILE
 #define EDUNET_HAVE_PROFILE 1
@@ -128,7 +136,7 @@
 #if _MSC_VER >= 1400
 
 #endif
-//#include <windows.h>
+
 #endif  // WIN32
 
 

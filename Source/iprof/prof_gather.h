@@ -14,7 +14,7 @@
 #ifdef WIN32
   #include "prof_win32.h"
 #else
- // #error "need to define Prof_get_timestamp() and Prof_Int64"
+ /* #error "need to define Prof_get_timestamp() and Prof_Int64" */
   #include "prof_unix.h"
 #endif
 
@@ -45,11 +45,11 @@ typedef struct Prof_Zone_Stack
 } Prof_Zone_Stack;
 
 
-extern Prof_C Prof_Zone_Stack * Prof_stack; // current Zone stack
-extern Prof_C Prof_Zone_Stack   Prof_dummy; // parent never matches
+extern Prof_C Prof_Zone_Stack * Prof_stack; /* current Zone stack */
+extern Prof_C Prof_Zone_Stack   Prof_dummy; /* parent never matches */
 
 extern Prof_C Prof_Zone_Stack * Prof_StackAppend(Prof_Zone *zone);
-// return the zone stack created by pushing 'zone' on the current
+/* return the zone stack created by pushing 'zone' on the current */
 
 
 #ifdef Prof_ENABLED
@@ -134,7 +134,7 @@ static Prof_Int64 Prof_time;
 
 
 
-#else  // ifdef Prof_ENABLED
+#else  /* ifdef Prof_ENABLED */
 
 #ifdef __cplusplus
 #define Prof(x)
@@ -149,4 +149,4 @@ static Prof_Int64 Prof_time;
 
 #endif
 
-#endif // INC_PROFILER_LOWLEVEL_H
+#endif /* INC_PROFILER_LOWLEVEL_H */
