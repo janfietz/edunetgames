@@ -6,29 +6,38 @@
 #include "prof.h"
 #include "prof_internal.h"
 
+/*
 // whether zone-self-data is kept to allow the history graph
+*/
 #define Prof_ZONE_HISTORY
 
+/*
 // whether full detailed (and large) 
+*/
 #define Prof_CALL_HISTORY
-
+/*
 // number of frames of history to keep
+*/
 #define NUM_FRAME_SLOTS                    128
 
-
+/*
 // number of unique zones allowed in the entire application
 // @TODO: remove MAX_PROFILING_ZONES and make it dynamic
+*/
 #define MAX_PROFILING_ZONES                512
 
+/*
 ////////////////////////////////////////////////////////////////////////
-
 // the number of moving averages
+*/
 #define NUM_PROFILE_TRACKER_HISTORY_SLOTS  3
-
+/*
 // the number of frames to ignore before starting the moving averages
+*/
 #define NUM_THROWAWAY_UPDATES              3
-
+/*
 // threshhold for a moving average of an integer to be at zero
+*/
 #define INT_ZERO_THRESHHOLD                0.25
 
 Prof_Zone *Prof_zones[MAX_PROFILING_ZONES];
@@ -37,7 +46,9 @@ Prof_Zone *Prof_zones[MAX_PROFILING_ZONES];
 static float zone_history[MAX_PROFILING_ZONES][NUM_FRAME_SLOTS]; // 256K
 #endif
 
+/*
 // these structures are used solely to track data over time
+*/
 typedef struct
 {
    double values[NUM_PROFILE_TRACKER_HISTORY_SLOTS];
@@ -60,7 +71,9 @@ static History_Scalar frame_time;
 static double  times_to_reach_90_percent[NUM_PROFILE_TRACKER_HISTORY_SLOTS];
 static double  precomputed_factors      [NUM_PROFILE_TRACKER_HISTORY_SLOTS];
 
+/*
 static int        num_active_zones;
+*/
 static int        update_index;     // 2^31 at 100fps = 280 days
 static double     last_update_time;
 static Prof_Report_Mode displayed_quantity;
@@ -295,7 +308,6 @@ Prof_extern_C void Prof_update(int record_data)
       ss_val = integer_timestamps_per_second.values[ss_slot];
       ss_variance = integer_timestamps_per_second.variances[ss_slot] - ss_val*ss_val;
       ss_stdev = sqrt(fabs(ss_variance));
-      ss_ratio;
       if (ss_val) {
          ss_ratio = ss_stdev / fabs(ss_val);
       } else {
@@ -569,7 +581,7 @@ Prof_Report *Prof_create_report(void)
 
    pob->title[0] = (char *)  malloc(BUFSIZ);
    sprintf(pob->title[0],
-          "%3.3lf ms/frame (fps: %3.2lf)  %s",
+          "%3.3f ms/frame (fps: %3.2f)  %s",
            avg_frame_time * 1000, fps, displayed_quantity_name);
 
 #ifdef Prof_CALL_HISTORY
@@ -582,8 +594,11 @@ Prof_Report *Prof_create_report(void)
 #endif
 
    if (speedstep_warning)
+#if 0	   
       pob->title[1] = _strdup("WARNING: SpeedStep-like timer inconsistencies detected.  Results are unreliable!");
-
+#else
+	pob->title[1] = "";
+#endif	
    if (displayed_quantity == Prof_CALL_GRAPH) {
       Prof_Report_Record *r = (Prof_Report_Record *) expand->highlevel;
       int j=0;
@@ -633,7 +648,7 @@ Prof_Report *Prof_create_report(void)
       }
       update_cursor = 0;
    }
-
+#if 0 // define _strdup strdup
    pob->header[0] = _strdup("zone");
    if (displayed_quantity == Prof_HIERARCHICAL_TIME) {
       pob->header[1] = _strdup("hier");
@@ -643,7 +658,17 @@ Prof_Report *Prof_create_report(void)
       pob->header[2] = _strdup("hier");
    }
    pob->header[3] = _strdup("count");
-
+#else
+	pob->header[0] = "";
+	if (displayed_quantity == Prof_HIERARCHICAL_TIME) {
+		pob->header[1] = "";
+		pob->header[2] = "";
+	} else {
+		pob->header[1] = "";
+		pob->header[2] = "";
+	}
+	pob->header[3] = "";
+#endif
    if (cursor < 0) cursor = 0;
    if (cursor >= pob->num_record) cursor = pob->num_record-1;
    pob->hilight = cursor;

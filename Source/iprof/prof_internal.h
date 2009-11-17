@@ -1,7 +1,7 @@
 #ifndef Prof_INC_PROF_INTERNAL_H
 #define Prof_INC_PROF_INTERNAL_H
 
-// report functions
+/* report functions */
 
 #define NUM_VALUES 4
 #define NUM_TITLE 2
@@ -16,7 +16,7 @@ typedef struct {
    double values[NUM_VALUES];
    double heat;
 
-   // used internally
+   /* used internally */
    void *zone;
 } Prof_Report_Record;
 
@@ -33,7 +33,7 @@ extern void         Prof_free_report(Prof_Report *z);
 extern Prof_Report *Prof_create_report(void);
 
 
-// really internal functions
+/* really internal functions */
 
 extern void Prof_graph(int num_frames, 
                        void (*callback)(int id, int x0, int x1, float *values, void *data),

@@ -36,7 +36,7 @@
 #ifdef WIN32
 #define OS_HAVE_PROFILE 1
 #else
-#define OS_HAVE_PROFILE 0
+#define OS_HAVE_PROFILE 1
 #endif
 
 

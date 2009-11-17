@@ -2,7 +2,15 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
+#if __APPLE__ && __MACH__
+#include <OpenGL/gl.h>   /* for Mac OS X */
+#include <OpenGL/glu.h>   /* for Mac OS X */
+#ifndef HAVE_NO_GLUT
+#include <GLUT/glut.h>   /* for Mac OS X */
+#endif
+#else
 #include <GL/gl.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "prof.h"
@@ -10,7 +18,7 @@
 
 #pragma warning(disable:4305; disable:4244)
 
-// use factor to compute a glow amount
+/* use factor to compute a glow amount */
 static int get_colors(int id, float factor,
                        float text_color_ret[3],
                        float glow_color_ret[3],
@@ -20,10 +28,12 @@ static int get_colors(int id, float factor,
    const float GLOW_ALPHA_MAX = 0.5f;
    float glow_alpha;
    int i;
+#if 0	
    float hot[3] = {1, 1.0, 0.9};
    float cold[3] = {0.15, 0.9, 0.15};
    float glow_cold[3] = {0.5f, 0.5f, 0};
    float glow_hot[3] = {1.0f, 1.0f, 0};
+#endif
    float fr, fg, fb;
    float id_color[3];
 
@@ -50,27 +60,15 @@ static int get_colors(int id, float factor,
 	   text_color_ret[0] = fr * 0.8f;
 	   text_color_ret[1] = fg * 0.8f;
 	   text_color_ret[2] = fb * 0.8f;
-// 	   cold[0] = hot[0] = r;
-// 	   cold[1] = hot[1] = g;
-// 	   cold[2] = hot[2] = b;
-// 	   cold[0] *= 0.5f;
-// 	   cold[1] *= 0.5f;
-// 	   cold[2] *= 0.5f;
-#pragma warning(disable:4761)
-//	   glColor3ub((r & 127) + 80, (g & 127) + 80, (b & 127) + 80);
    }
-
-
 
    if (factor < 0) factor = 0;
    if (factor > 1) factor = 1;
 
    for (i=0; i < 3; ++i)
 	   text_color_ret[i] = id_color[i] * 0.7f + id_color[i] * ( 0.2f * factor );
-//    for (i=0; i < 3; ++i)
-//       text_color_ret[i] = cold[i] + (hot[i] - cold[i]) * factor;
 
-   // Figure out whether to start up the glow as well.
+   /* Figure out whether to start up the glow as well. */
    glow_alpha = (factor - GLOW_RANGE) / (1 - GLOW_RANGE);
    if (glow_alpha < 0) {
       *glow_alpha_ret = 0;
@@ -79,8 +77,6 @@ static int get_colors(int id, float factor,
 
    for (i=0; i < 3; ++i)
       glow_color_ret[i] = id_color[i] * 0.8f + id_color[i] * ( 0.2f * factor );
-//   for (i=0; i < 3; ++i)
-//      glow_color_ret[i] = glow_cold[i] + (glow_hot[i] - glow_cold[i]) * factor;
 
    *glow_alpha_ret = glow_alpha * GLOW_ALPHA_MAX;
    return 1;
@@ -88,7 +84,7 @@ static int get_colors(int id, float factor,
 
 static void draw_rectangle(float x0, float y0, float x1, float y1)
 {
-   // FACE_CULL is disabled so winding doesn't matter
+   /* FACE_CULL is disabled so winding doesn't matter */
    glVertex2f(x0, y0);
    glVertex2f(x1, y0);
    glVertex2f(x1, y1);
@@ -106,7 +102,7 @@ static void graph_func(int id, int x0, int x1, float *values, void *data)
    GraphLocation *loc = (GraphLocation *) data;
    int i, r,g,b;
 
-   // trim out values that are under 0.2 ms to accelerate rendering
+   /* trim out values that are under 0.2 ms to accelerate rendering */
    while (x0 < x1 && (*values < 0.0002f)) { ++x0; ++values; }
    while (x1 > x0 && (values[x1-1-x0] < 0.0002f)) --x1;
 
@@ -212,6 +208,12 @@ static void float_to_string(char *buf, float num, int precision)
    sprintf(buf, formats[precision], num);
 }
 
+void Prof_draw_gl_background(Prof_Report *pob,
+							 float sx, float sy,
+							 float full_width, float height,
+							 float line_spacing, int precision,
+							 void (*printText)(float x, float y, char *str), float (*textWidth)(char *str));
+
 
 void Prof_draw_gl_background(Prof_Report *pob,
 							 float sx, float sy,
@@ -314,6 +316,12 @@ void Prof_draw_gl_background(Prof_Report *pob,
 	Prof_End
 #endif
 }
+
+void Prof_draw_gl_text(Prof_Report *pob,
+					   float sx, float sy,
+					   float full_width, float height,
+					   float line_spacing, int precision,
+					   void (*printText)(float x, float y, char *str), float (*textWidth)(char *str));
 
 void Prof_draw_gl_text(Prof_Report *pob,
 					   float sx, float sy,

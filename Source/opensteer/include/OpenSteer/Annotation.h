@@ -60,7 +60,7 @@ namespace OpenSteer {
 	{
 		EAnnotationMode_global,
 		EAnnotationMode_local,
-		EAnnotationMode_count,
+		EAnnotationMode_count
 	};
 
     extern bool enableAnnotation;

@@ -117,7 +117,7 @@ namespace OpenSteer
 		}
 		void removePlugin( AbstractPlugin* pkPlugin )
 		{
-			m_kPluginArray.removePlugin( );
+			m_kPluginArray.removePlugin( pkPlugin );
 		}
 		void removeAllPlugins( void )
 		{

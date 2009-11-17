@@ -5,9 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>OpenSteerDemo</string>
+	<string>EduNetDemo</string>
 	<key>CFBundleIconFile</key>
-	<string>OpenSteer.icns</string>
+	<string>EduNet</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.sony.OpenSteerDemo</string>
 	<key>CFBundleInfoDictionaryVersion</key>

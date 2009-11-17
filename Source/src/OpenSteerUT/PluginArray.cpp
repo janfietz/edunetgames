@@ -246,7 +246,7 @@ const AVGroup& PluginArray::allVehicles(void) const
 AbstractPlugin* PluginArray::next(void) const 
 { 
 	return OpenSteer::Plugin::findNextPlugin( this );
-};
+}
 
 // implement to initialize additional gui functionality
 //-----------------------------------------------------------------------------
@@ -264,12 +264,12 @@ void PluginArray::initGui( void* pkUserdata )
 		pkPlugin->initGui( subPluginPanel );
 		++kIter;
 	}
-};
+}
 
 //-----------------------------------------------------------------------------
 class FooPlugin : public Plugin
 {
-	ET_DECLARE_BASE(OpenSteer::Plugin);
+	ET_DECLARE_BASE(OpenSteer::Plugin)
 public:
 	FooPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry){};
 
@@ -289,7 +289,7 @@ public:
 	void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
 private:
 	AVGroup m_kVehicles;
-	ET_IMPLEMENT_CLASS_NO_COPY(FooPlugin);
+	ET_IMPLEMENT_CLASS_NO_COPY(FooPlugin)
 
 };
 
