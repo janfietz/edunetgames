@@ -393,7 +393,11 @@ OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 const OpenSteer::AVGroup& 
 OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugin (void)
 {
-	return OpenSteer::Plugin::selectedPlugin->allVehicles ();
+	static OpenSteer::AVGroup kTrash;
+	if(OpenSteer::Plugin::selectedPlugin )
+		return OpenSteer::Plugin::selectedPlugin->allVehicles ();
+	else
+		return kTrash;
 }
 
 
