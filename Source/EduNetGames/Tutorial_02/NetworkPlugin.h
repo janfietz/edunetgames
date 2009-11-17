@@ -93,9 +93,18 @@ public:
 
 	void ConnectToAddress( const NetworkAddress& kAddress );
 
-	NetworkAddress& GetCurrentAddress( void )
+	const NetworkAddress& getCurrentAddress( void ) const
 	{
-		return this->m_kAddress;
+		return ((NetworkPlugin*)this)->accessCurrentAddress();
+	};
+
+	NetworkAddress& accessCurrentAddress( void )
+	{
+		if( NULL == this->m_pkAddress )
+		{
+			this->m_pkAddress = ET_NEW NetworkAddress();
+		}
+		return *this->m_pkAddress;
 	};
 
 protected:
@@ -108,7 +117,7 @@ protected:
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
 
 	RakPeerInterface* m_pNetInterface;
-	NetworkIDManager m_kNetworkIdManager;
+	NetworkIDManager* m_pkNetworkIdManager;
 
 	unsigned int m_uiStartPort;
 	unsigned int m_uiPortPongCount;
@@ -139,7 +148,7 @@ private:
 	void CloseOpenConnections( void );
 	bool WaitForPong( void ) const;	
 
-	NetworkAddress m_kAddress;
+	NetworkAddress* m_pkAddress;
 
 };
 
