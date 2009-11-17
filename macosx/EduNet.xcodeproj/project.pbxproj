@@ -40,6 +40,74 @@
 		6EBC233E10AC6F9A00728FA0 /* SimpleVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232410AC6F9A00728FA0 /* SimpleVehicle.cpp */; };
 		6EBC234110AC6F9A00728FA0 /* Vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232810AC6F9A00728FA0 /* Vec3.cpp */; };
 		6EBC234210AC6F9A00728FA0 /* Vec3Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBC232910AC6F9A00728FA0 /* Vec3Utilities.cpp */; };
+		6EBE2C4A10B2BE4700FDE0E3 /* egl_cpx.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2BFD10B2BE4600FDE0E3 /* egl_cpx.h */; };
+		6EBE2C4B10B2BE4700FDE0E3 /* egl_defs.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2BFE10B2BE4600FDE0E3 /* egl_defs.h */; };
+		6EBE2C4C10B2BE4700FDE0E3 /* egl_logged.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2BFF10B2BE4600FDE0E3 /* egl_logged.h */; };
+		6EBE2C4D10B2BE4700FDE0E3 /* egl_tokens.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0010B2BE4600FDE0E3 /* egl_tokens.h */; };
+		6EBE2C4E10B2BE4700FDE0E3 /* egl_void.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0110B2BE4600FDE0E3 /* egl_void.h */; };
+		6EBE2C4F10B2BE4700FDE0E3 /* gl.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0210B2BE4600FDE0E3 /* gl.h */; };
+		6EBE2C5010B2BE4700FDE0E3 /* glu.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0310B2BE4600FDE0E3 /* glu.h */; };
+		6EBE2C5110B2BE4700FDE0E3 /* glut.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0410B2BE4600FDE0E3 /* glut.h */; };
+		6EBE2C5210B2BE4700FDE0E3 /* glew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0510B2BE4600FDE0E3 /* glew.h */; };
+		6EBE2C5310B2BE4700FDE0E3 /* glext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0610B2BE4600FDE0E3 /* glext.h */; };
+		6EBE2C5410B2BE4700FDE0E3 /* glut.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0710B2BE4600FDE0E3 /* glut.h */; };
+		6EBE2C5510B2BE4700FDE0E3 /* glxew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0810B2BE4600FDE0E3 /* glxew.h */; };
+		6EBE2C5610B2BE4700FDE0E3 /* glxext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0910B2BE4600FDE0E3 /* glxext.h */; };
+		6EBE2C5710B2BE4700FDE0E3 /* wglew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0A10B2BE4600FDE0E3 /* wglew.h */; };
+		6EBE2C5810B2BE4700FDE0E3 /* wglext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0B10B2BE4600FDE0E3 /* wglext.h */; };
+		6EBE2C5910B2BE4700FDE0E3 /* algebra3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C0D10B2BE4600FDE0E3 /* algebra3.cpp */; };
+		6EBE2C5A10B2BE4700FDE0E3 /* algebra3.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C0E10B2BE4600FDE0E3 /* algebra3.h */; };
+		6EBE2C5B10B2BE4700FDE0E3 /* arcball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C0F10B2BE4600FDE0E3 /* arcball.cpp */; };
+		6EBE2C5C10B2BE4700FDE0E3 /* arcball.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C1010B2BE4600FDE0E3 /* arcball.h */; };
+		6EBE2C5D10B2BE4700FDE0E3 /* glui.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C1310B2BE4600FDE0E3 /* glui.h */; };
+		6EBE2C5E10B2BE4700FDE0E3 /* glui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1410B2BE4600FDE0E3 /* glui.cpp */; };
+		6EBE2C5F10B2BE4700FDE0E3 /* glui_add_controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1510B2BE4600FDE0E3 /* glui_add_controls.cpp */; };
+		6EBE2C6010B2BE4700FDE0E3 /* glui_bitmaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1610B2BE4600FDE0E3 /* glui_bitmaps.cpp */; };
+		6EBE2C6110B2BE4700FDE0E3 /* glui_bitmap_img_data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1710B2BE4600FDE0E3 /* glui_bitmap_img_data.cpp */; };
+		6EBE2C6210B2BE4700FDE0E3 /* glui_button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1810B2BE4600FDE0E3 /* glui_button.cpp */; };
+		6EBE2C6310B2BE4700FDE0E3 /* glui_checkbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1910B2BE4600FDE0E3 /* glui_checkbox.cpp */; };
+		6EBE2C6410B2BE4700FDE0E3 /* glui_column.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1A10B2BE4600FDE0E3 /* glui_column.cpp */; };
+		6EBE2C6510B2BE4700FDE0E3 /* glui_commandline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1B10B2BE4600FDE0E3 /* glui_commandline.cpp */; };
+		6EBE2C6610B2BE4700FDE0E3 /* glui_control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1C10B2BE4600FDE0E3 /* glui_control.cpp */; };
+		6EBE2C6710B2BE4700FDE0E3 /* glui_edittext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1D10B2BE4600FDE0E3 /* glui_edittext.cpp */; };
+		6EBE2C6810B2BE4700FDE0E3 /* glui_filebrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C1E10B2BE4600FDE0E3 /* glui_filebrowser.cpp */; };
+		6EBE2C6910B2BE4700FDE0E3 /* glui_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C1F10B2BE4600FDE0E3 /* glui_internal.h */; };
+		6EBE2C6A10B2BE4700FDE0E3 /* glui_internal_control.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C2010B2BE4600FDE0E3 /* glui_internal_control.h */; };
+		6EBE2C6B10B2BE4700FDE0E3 /* glui_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2110B2BE4600FDE0E3 /* glui_list.cpp */; };
+		6EBE2C6C10B2BE4700FDE0E3 /* glui_listbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2210B2BE4600FDE0E3 /* glui_listbox.cpp */; };
+		6EBE2C6D10B2BE4700FDE0E3 /* glui_mouse_iaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2310B2BE4600FDE0E3 /* glui_mouse_iaction.cpp */; };
+		6EBE2C6E10B2BE4700FDE0E3 /* glui_node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2410B2BE4600FDE0E3 /* glui_node.cpp */; };
+		6EBE2C6F10B2BE4700FDE0E3 /* glui_panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2510B2BE4600FDE0E3 /* glui_panel.cpp */; };
+		6EBE2C7010B2BE4700FDE0E3 /* glui_radio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2610B2BE4600FDE0E3 /* glui_radio.cpp */; };
+		6EBE2C7110B2BE4700FDE0E3 /* glui_rollout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2710B2BE4600FDE0E3 /* glui_rollout.cpp */; };
+		6EBE2C7210B2BE4700FDE0E3 /* glui_rotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2810B2BE4600FDE0E3 /* glui_rotation.cpp */; };
+		6EBE2C7310B2BE4700FDE0E3 /* glui_scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2910B2BE4600FDE0E3 /* glui_scrollbar.cpp */; };
+		6EBE2C7410B2BE4700FDE0E3 /* glui_separator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2A10B2BE4600FDE0E3 /* glui_separator.cpp */; };
+		6EBE2C7510B2BE4700FDE0E3 /* glui_spinner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2B10B2BE4600FDE0E3 /* glui_spinner.cpp */; };
+		6EBE2C7610B2BE4700FDE0E3 /* glui_statictext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2C10B2BE4600FDE0E3 /* glui_statictext.cpp */; };
+		6EBE2C7710B2BE4700FDE0E3 /* glui_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2D10B2BE4600FDE0E3 /* glui_string.cpp */; };
+		6EBE2C7810B2BE4700FDE0E3 /* glui_textbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2E10B2BE4600FDE0E3 /* glui_textbox.cpp */; };
+		6EBE2C7910B2BE4700FDE0E3 /* glui_translation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C2F10B2BE4600FDE0E3 /* glui_translation.cpp */; };
+		6EBE2C7A10B2BE4700FDE0E3 /* glui_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C3010B2BE4600FDE0E3 /* glui_tree.cpp */; };
+		6EBE2C7B10B2BE4700FDE0E3 /* glui_treepanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C3110B2BE4600FDE0E3 /* glui_treepanel.cpp */; };
+		6EBE2C7C10B2BE4700FDE0E3 /* glui_window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C3210B2BE4600FDE0E3 /* glui_window.cpp */; };
+		6EBE2C7E10B2BE4700FDE0E3 /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EBE2C3410B2BE4600FDE0E3 /* quaternion.cpp */; };
+		6EBE2C7F10B2BE4700FDE0E3 /* quaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3510B2BE4600FDE0E3 /* quaternion.h */; };
+		6EBE2C8010B2BE4700FDE0E3 /* egl_cpx.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3B10B2BE4600FDE0E3 /* egl_cpx.h */; };
+		6EBE2C8110B2BE4700FDE0E3 /* egl_defs.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3C10B2BE4600FDE0E3 /* egl_defs.h */; };
+		6EBE2C8210B2BE4700FDE0E3 /* egl_logged.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3D10B2BE4600FDE0E3 /* egl_logged.h */; };
+		6EBE2C8310B2BE4700FDE0E3 /* egl_tokens.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3E10B2BE4600FDE0E3 /* egl_tokens.h */; };
+		6EBE2C8410B2BE4700FDE0E3 /* egl_void.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C3F10B2BE4700FDE0E3 /* egl_void.h */; };
+		6EBE2C8510B2BE4700FDE0E3 /* gl.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4010B2BE4700FDE0E3 /* gl.h */; };
+		6EBE2C8610B2BE4700FDE0E3 /* glu.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4110B2BE4700FDE0E3 /* glu.h */; };
+		6EBE2C8710B2BE4700FDE0E3 /* glut.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4210B2BE4700FDE0E3 /* glut.h */; };
+		6EBE2C8810B2BE4700FDE0E3 /* glew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4310B2BE4700FDE0E3 /* glew.h */; };
+		6EBE2C8910B2BE4700FDE0E3 /* glext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4410B2BE4700FDE0E3 /* glext.h */; };
+		6EBE2C8A10B2BE4700FDE0E3 /* glut.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4510B2BE4700FDE0E3 /* glut.h */; };
+		6EBE2C8B10B2BE4700FDE0E3 /* glxew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4610B2BE4700FDE0E3 /* glxew.h */; };
+		6EBE2C8C10B2BE4700FDE0E3 /* glxext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4710B2BE4700FDE0E3 /* glxext.h */; };
+		6EBE2C8D10B2BE4700FDE0E3 /* wglew.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4810B2BE4700FDE0E3 /* wglew.h */; };
+		6EBE2C8E10B2BE4700FDE0E3 /* wglext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EBE2C4910B2BE4700FDE0E3 /* wglext.h */; };
 		6EC34D6710B26E30001987FF /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		6EC34D6810B26E30001987FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		6EC34D6910B26E30001987FF /* EduNet.icns in Resources */ = {isa = PBXBuildFile; fileRef = 32FFF58006E9CF3800E1D8A3 /* EduNet.icns */; };
@@ -65,39 +133,6 @@
 		6EC34D8A10B26E30001987FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 		6EC34D8B10B26E30001987FF /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FFF49106E90A9F00E1D8A3 /* GLUT.framework */; };
 		6EC34D8C10B26E30001987FF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32FFF49206E90A9F00E1D8A3 /* OpenGL.framework */; };
-		6EC34DF410B2732E001987FF /* algebra3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DBB10B27326001987FF /* algebra3.cpp */; };
-		6EC34DF610B2732E001987FF /* arcball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DBD10B27326001987FF /* arcball.cpp */; };
-		6EC34DF810B2732E001987FF /* glui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC010B27326001987FF /* glui.cpp */; };
-		6EC34DF910B2732E001987FF /* glui_add_controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC110B27327001987FF /* glui_add_controls.cpp */; };
-		6EC34DFA10B2732E001987FF /* glui_bitmaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC210B27327001987FF /* glui_bitmaps.cpp */; };
-		6EC34DFB10B2732E001987FF /* glui_bitmap_img_data.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC310B27327001987FF /* glui_bitmap_img_data.cpp */; };
-		6EC34DFC10B2732E001987FF /* glui_button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC410B27327001987FF /* glui_button.cpp */; };
-		6EC34DFD10B2732E001987FF /* glui_checkbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC510B27327001987FF /* glui_checkbox.cpp */; };
-		6EC34DFE10B2732E001987FF /* glui_column.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC610B27328001987FF /* glui_column.cpp */; };
-		6EC34DFF10B2732E001987FF /* glui_commandline.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC710B27328001987FF /* glui_commandline.cpp */; };
-		6EC34E0010B2732E001987FF /* glui_control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC810B27328001987FF /* glui_control.cpp */; };
-		6EC34E0110B2732E001987FF /* glui_edittext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DC910B27328001987FF /* glui_edittext.cpp */; };
-		6EC34E0210B2732E001987FF /* glui_filebrowser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DCA10B27328001987FF /* glui_filebrowser.cpp */; };
-		6EC34E0510B2732E001987FF /* glui_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DCD10B27329001987FF /* glui_list.cpp */; };
-		6EC34E0610B2732E001987FF /* glui_listbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DCE10B27329001987FF /* glui_listbox.cpp */; };
-		6EC34E0710B2732E001987FF /* glui_mouse_iaction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DCF10B27329001987FF /* glui_mouse_iaction.cpp */; };
-		6EC34E0810B2732E001987FF /* glui_node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD010B2732A001987FF /* glui_node.cpp */; };
-		6EC34E0910B2732E001987FF /* glui_panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD110B2732A001987FF /* glui_panel.cpp */; };
-		6EC34E0A10B2732E001987FF /* glui_radio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD210B2732A001987FF /* glui_radio.cpp */; };
-		6EC34E0B10B2732E001987FF /* glui_rollout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD310B2732A001987FF /* glui_rollout.cpp */; };
-		6EC34E0C10B2732E001987FF /* glui_rotation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD410B2732B001987FF /* glui_rotation.cpp */; };
-		6EC34E0D10B2732E001987FF /* glui_scrollbar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD510B2732B001987FF /* glui_scrollbar.cpp */; };
-		6EC34E0E10B2732E001987FF /* glui_separator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD610B2732B001987FF /* glui_separator.cpp */; };
-		6EC34E0F10B2732E001987FF /* glui_spinner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD710B2732B001987FF /* glui_spinner.cpp */; };
-		6EC34E1010B2732E001987FF /* glui_statictext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD810B2732B001987FF /* glui_statictext.cpp */; };
-		6EC34E1110B2732E001987FF /* glui_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DD910B2732C001987FF /* glui_string.cpp */; };
-		6EC34E1210B2732E001987FF /* glui_textbox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DDA10B2732C001987FF /* glui_textbox.cpp */; };
-		6EC34E1310B2732E001987FF /* glui_translation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DDB10B2732C001987FF /* glui_translation.cpp */; };
-		6EC34E1410B2732E001987FF /* glui_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DDC10B2732C001987FF /* glui_tree.cpp */; };
-		6EC34E1510B2732E001987FF /* glui_treepanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DDD10B2732D001987FF /* glui_treepanel.cpp */; };
-		6EC34E1610B2732E001987FF /* glui_window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DDE10B2732D001987FF /* glui_window.cpp */; };
-		6EC34E1810B2732E001987FF /* quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34DE010B2732D001987FF /* quaternion.cpp */; };
-		6EC34E1A10B2732E001987FF /* glui.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EC34DE410B2732E001987FF /* glui.h */; };
 		6EC34E1D10B27410001987FF /* libLibGlui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EC34DA010B271C3001987FF /* libLibGlui.a */; };
 		6EC34FA110B275B8001987FF /* prof_draw.c in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34EB010B275B8001987FF /* prof_draw.c */; };
 		6EC34FA210B275B8001987FF /* prof_gather.c in Sources */ = {isa = PBXBuildFile; fileRef = 6EC34EB110B275B8001987FF /* prof_gather.c */; };
@@ -138,14 +173,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6EC34D9F10B271C3001987FF /* LibGlui */;
+			remoteGlobalIDString = 6EC34D9F10B271C3001987FF;
 			remoteInfo = LibGlui;
 		};
 		6EC34E5310B2751A001987FF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 6EC34E2410B274BB001987FF /* LibIProf */;
+			remoteGlobalIDString = 6EC34E2410B274BB001987FF;
 			remoteInfo = LibIProf;
 		};
 /* End PBXContainerItemProxy section */
@@ -226,50 +261,81 @@
 		6EBC238710AC6FEB00728FA0 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
 		6EBC238810AC6FEB00728FA0 /* Vec3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3.h; sourceTree = "<group>"; };
 		6EBC238910AC6FEB00728FA0 /* Vec3Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec3Utilities.h; sourceTree = "<group>"; };
+		6EBE2BFD10B2BE4600FDE0E3 /* egl_cpx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_cpx.h; sourceTree = "<group>"; };
+		6EBE2BFE10B2BE4600FDE0E3 /* egl_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_defs.h; sourceTree = "<group>"; };
+		6EBE2BFF10B2BE4600FDE0E3 /* egl_logged.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_logged.h; sourceTree = "<group>"; };
+		6EBE2C0010B2BE4600FDE0E3 /* egl_tokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_tokens.h; sourceTree = "<group>"; };
+		6EBE2C0110B2BE4600FDE0E3 /* egl_void.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_void.h; sourceTree = "<group>"; };
+		6EBE2C0210B2BE4600FDE0E3 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
+		6EBE2C0310B2BE4600FDE0E3 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glu.h; sourceTree = "<group>"; };
+		6EBE2C0410B2BE4600FDE0E3 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBE2C0510B2BE4600FDE0E3 /* glew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glew.h; sourceTree = "<group>"; };
+		6EBE2C0610B2BE4600FDE0E3 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
+		6EBE2C0710B2BE4600FDE0E3 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBE2C0810B2BE4600FDE0E3 /* glxew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxew.h; sourceTree = "<group>"; };
+		6EBE2C0910B2BE4600FDE0E3 /* glxext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxext.h; sourceTree = "<group>"; };
+		6EBE2C0A10B2BE4600FDE0E3 /* wglew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglew.h; sourceTree = "<group>"; };
+		6EBE2C0B10B2BE4600FDE0E3 /* wglext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglext.h; sourceTree = "<group>"; };
+		6EBE2C0D10B2BE4600FDE0E3 /* algebra3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = algebra3.cpp; sourceTree = "<group>"; };
+		6EBE2C0E10B2BE4600FDE0E3 /* algebra3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = algebra3.h; sourceTree = "<group>"; };
+		6EBE2C0F10B2BE4600FDE0E3 /* arcball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arcball.cpp; sourceTree = "<group>"; };
+		6EBE2C1010B2BE4600FDE0E3 /* arcball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arcball.h; sourceTree = "<group>"; };
+		6EBE2C1110B2BE4600FDE0E3 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		6EBE2C1310B2BE4600FDE0E3 /* glui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui.h; sourceTree = "<group>"; };
+		6EBE2C1410B2BE4600FDE0E3 /* glui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui.cpp; sourceTree = "<group>"; };
+		6EBE2C1510B2BE4600FDE0E3 /* glui_add_controls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_add_controls.cpp; sourceTree = "<group>"; };
+		6EBE2C1610B2BE4600FDE0E3 /* glui_bitmaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_bitmaps.cpp; sourceTree = "<group>"; };
+		6EBE2C1710B2BE4600FDE0E3 /* glui_bitmap_img_data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_bitmap_img_data.cpp; sourceTree = "<group>"; };
+		6EBE2C1810B2BE4600FDE0E3 /* glui_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_button.cpp; sourceTree = "<group>"; };
+		6EBE2C1910B2BE4600FDE0E3 /* glui_checkbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_checkbox.cpp; sourceTree = "<group>"; };
+		6EBE2C1A10B2BE4600FDE0E3 /* glui_column.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_column.cpp; sourceTree = "<group>"; };
+		6EBE2C1B10B2BE4600FDE0E3 /* glui_commandline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_commandline.cpp; sourceTree = "<group>"; };
+		6EBE2C1C10B2BE4600FDE0E3 /* glui_control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_control.cpp; sourceTree = "<group>"; };
+		6EBE2C1D10B2BE4600FDE0E3 /* glui_edittext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_edittext.cpp; sourceTree = "<group>"; };
+		6EBE2C1E10B2BE4600FDE0E3 /* glui_filebrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_filebrowser.cpp; sourceTree = "<group>"; };
+		6EBE2C1F10B2BE4600FDE0E3 /* glui_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui_internal.h; sourceTree = "<group>"; };
+		6EBE2C2010B2BE4600FDE0E3 /* glui_internal_control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui_internal_control.h; sourceTree = "<group>"; };
+		6EBE2C2110B2BE4600FDE0E3 /* glui_list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_list.cpp; sourceTree = "<group>"; };
+		6EBE2C2210B2BE4600FDE0E3 /* glui_listbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_listbox.cpp; sourceTree = "<group>"; };
+		6EBE2C2310B2BE4600FDE0E3 /* glui_mouse_iaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_mouse_iaction.cpp; sourceTree = "<group>"; };
+		6EBE2C2410B2BE4600FDE0E3 /* glui_node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_node.cpp; sourceTree = "<group>"; };
+		6EBE2C2510B2BE4600FDE0E3 /* glui_panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_panel.cpp; sourceTree = "<group>"; };
+		6EBE2C2610B2BE4600FDE0E3 /* glui_radio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_radio.cpp; sourceTree = "<group>"; };
+		6EBE2C2710B2BE4600FDE0E3 /* glui_rollout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_rollout.cpp; sourceTree = "<group>"; };
+		6EBE2C2810B2BE4600FDE0E3 /* glui_rotation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_rotation.cpp; sourceTree = "<group>"; };
+		6EBE2C2910B2BE4600FDE0E3 /* glui_scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_scrollbar.cpp; sourceTree = "<group>"; };
+		6EBE2C2A10B2BE4600FDE0E3 /* glui_separator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_separator.cpp; sourceTree = "<group>"; };
+		6EBE2C2B10B2BE4600FDE0E3 /* glui_spinner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_spinner.cpp; sourceTree = "<group>"; };
+		6EBE2C2C10B2BE4600FDE0E3 /* glui_statictext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_statictext.cpp; sourceTree = "<group>"; };
+		6EBE2C2D10B2BE4600FDE0E3 /* glui_string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_string.cpp; sourceTree = "<group>"; };
+		6EBE2C2E10B2BE4600FDE0E3 /* glui_textbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_textbox.cpp; sourceTree = "<group>"; };
+		6EBE2C2F10B2BE4600FDE0E3 /* glui_translation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_translation.cpp; sourceTree = "<group>"; };
+		6EBE2C3010B2BE4600FDE0E3 /* glui_tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_tree.cpp; sourceTree = "<group>"; };
+		6EBE2C3110B2BE4600FDE0E3 /* glui_treepanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_treepanel.cpp; sourceTree = "<group>"; };
+		6EBE2C3210B2BE4600FDE0E3 /* glui_window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_window.cpp; sourceTree = "<group>"; };
+		6EBE2C3310B2BE4600FDE0E3 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
+		6EBE2C3410B2BE4600FDE0E3 /* quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quaternion.cpp; sourceTree = "<group>"; };
+		6EBE2C3510B2BE4600FDE0E3 /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quaternion.h; sourceTree = "<group>"; };
+		6EBE2C3610B2BE4600FDE0E3 /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
+		6EBE2C3B10B2BE4600FDE0E3 /* egl_cpx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_cpx.h; sourceTree = "<group>"; };
+		6EBE2C3C10B2BE4600FDE0E3 /* egl_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_defs.h; sourceTree = "<group>"; };
+		6EBE2C3D10B2BE4600FDE0E3 /* egl_logged.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_logged.h; sourceTree = "<group>"; };
+		6EBE2C3E10B2BE4600FDE0E3 /* egl_tokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_tokens.h; sourceTree = "<group>"; };
+		6EBE2C3F10B2BE4700FDE0E3 /* egl_void.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = egl_void.h; sourceTree = "<group>"; };
+		6EBE2C4010B2BE4700FDE0E3 /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
+		6EBE2C4110B2BE4700FDE0E3 /* glu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glu.h; sourceTree = "<group>"; };
+		6EBE2C4210B2BE4700FDE0E3 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBE2C4310B2BE4700FDE0E3 /* glew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glew.h; sourceTree = "<group>"; };
+		6EBE2C4410B2BE4700FDE0E3 /* glext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glext.h; sourceTree = "<group>"; };
+		6EBE2C4510B2BE4700FDE0E3 /* glut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glut.h; sourceTree = "<group>"; };
+		6EBE2C4610B2BE4700FDE0E3 /* glxew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxew.h; sourceTree = "<group>"; };
+		6EBE2C4710B2BE4700FDE0E3 /* glxext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glxext.h; sourceTree = "<group>"; };
+		6EBE2C4810B2BE4700FDE0E3 /* wglew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglew.h; sourceTree = "<group>"; };
+		6EBE2C4910B2BE4700FDE0E3 /* wglext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wglext.h; sourceTree = "<group>"; };
 		6EC34D9110B26E30001987FF /* EduNetDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EduNetDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6EC34D9310B26E30001987FF /* Info-EduNetBase.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-EduNetBase.plist"; sourceTree = "<group>"; };
 		6EC34DA010B271C3001987FF /* libLibGlui.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLibGlui.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6EC34DBB10B27326001987FF /* algebra3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = algebra3.cpp; sourceTree = "<group>"; };
-		6EC34DBC10B27326001987FF /* algebra3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = algebra3.h; sourceTree = "<group>"; };
-		6EC34DBD10B27326001987FF /* arcball.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arcball.cpp; sourceTree = "<group>"; };
-		6EC34DBE10B27326001987FF /* arcball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arcball.h; sourceTree = "<group>"; };
-		6EC34DC010B27326001987FF /* glui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui.cpp; sourceTree = "<group>"; };
-		6EC34DC110B27327001987FF /* glui_add_controls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_add_controls.cpp; sourceTree = "<group>"; };
-		6EC34DC210B27327001987FF /* glui_bitmaps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_bitmaps.cpp; sourceTree = "<group>"; };
-		6EC34DC310B27327001987FF /* glui_bitmap_img_data.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_bitmap_img_data.cpp; sourceTree = "<group>"; };
-		6EC34DC410B27327001987FF /* glui_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_button.cpp; sourceTree = "<group>"; };
-		6EC34DC510B27327001987FF /* glui_checkbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_checkbox.cpp; sourceTree = "<group>"; };
-		6EC34DC610B27328001987FF /* glui_column.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_column.cpp; sourceTree = "<group>"; };
-		6EC34DC710B27328001987FF /* glui_commandline.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_commandline.cpp; sourceTree = "<group>"; };
-		6EC34DC810B27328001987FF /* glui_control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_control.cpp; sourceTree = "<group>"; };
-		6EC34DC910B27328001987FF /* glui_edittext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_edittext.cpp; sourceTree = "<group>"; };
-		6EC34DCA10B27328001987FF /* glui_filebrowser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_filebrowser.cpp; sourceTree = "<group>"; };
-		6EC34DCB10B27329001987FF /* glui_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui_internal.h; sourceTree = "<group>"; };
-		6EC34DCC10B27329001987FF /* glui_internal_control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui_internal_control.h; sourceTree = "<group>"; };
-		6EC34DCD10B27329001987FF /* glui_list.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_list.cpp; sourceTree = "<group>"; };
-		6EC34DCE10B27329001987FF /* glui_listbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_listbox.cpp; sourceTree = "<group>"; };
-		6EC34DCF10B27329001987FF /* glui_mouse_iaction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_mouse_iaction.cpp; sourceTree = "<group>"; };
-		6EC34DD010B2732A001987FF /* glui_node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_node.cpp; sourceTree = "<group>"; };
-		6EC34DD110B2732A001987FF /* glui_panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_panel.cpp; sourceTree = "<group>"; };
-		6EC34DD210B2732A001987FF /* glui_radio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_radio.cpp; sourceTree = "<group>"; };
-		6EC34DD310B2732A001987FF /* glui_rollout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_rollout.cpp; sourceTree = "<group>"; };
-		6EC34DD410B2732B001987FF /* glui_rotation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_rotation.cpp; sourceTree = "<group>"; };
-		6EC34DD510B2732B001987FF /* glui_scrollbar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_scrollbar.cpp; sourceTree = "<group>"; };
-		6EC34DD610B2732B001987FF /* glui_separator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_separator.cpp; sourceTree = "<group>"; };
-		6EC34DD710B2732B001987FF /* glui_spinner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_spinner.cpp; sourceTree = "<group>"; };
-		6EC34DD810B2732B001987FF /* glui_statictext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_statictext.cpp; sourceTree = "<group>"; };
-		6EC34DD910B2732C001987FF /* glui_string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_string.cpp; sourceTree = "<group>"; };
-		6EC34DDA10B2732C001987FF /* glui_textbox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_textbox.cpp; sourceTree = "<group>"; };
-		6EC34DDB10B2732C001987FF /* glui_translation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_translation.cpp; sourceTree = "<group>"; };
-		6EC34DDC10B2732C001987FF /* glui_tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_tree.cpp; sourceTree = "<group>"; };
-		6EC34DDD10B2732D001987FF /* glui_treepanel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_treepanel.cpp; sourceTree = "<group>"; };
-		6EC34DDE10B2732D001987FF /* glui_window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = glui_window.cpp; sourceTree = "<group>"; };
-		6EC34DE010B2732D001987FF /* quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quaternion.cpp; sourceTree = "<group>"; };
-		6EC34DE110B2732D001987FF /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = quaternion.h; sourceTree = "<group>"; };
-		6EC34DE210B2732E001987FF /* readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
-		6EC34DE410B2732E001987FF /* glui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glui.h; sourceTree = "<group>"; };
 		6EC34E5210B274BB001987FF /* libLibIProf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLibIProf.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6EC34E6210B275B8001987FF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		6EC34E6510B275B8001987FF /* Boids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Boids.cpp; sourceTree = "<group>"; };
 		6EC34E6610B275B8001987FF /* CaptureTheFlag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CaptureTheFlag.cpp; sourceTree = "<group>"; };
 		6EC34E6710B275B8001987FF /* LowSpeedTurn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LowSpeedTurn.cpp; sourceTree = "<group>"; };
@@ -560,7 +626,7 @@
 			isa = PBXGroup;
 			children = (
 				32FFF59206EB3F9A00E1D8A3 /* Documents */,
-				6EC34DA710B27321001987FF /* External */,
+				6EBE2BF910B2BE4600FDE0E3 /* External */,
 				6EC34E6110B275B8001987FF /* Source */,
 				84FACBA506EFC297000A998A /* Source Code */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -701,64 +767,153 @@
 			path = OpenSteer;
 			sourceTree = "<group>";
 		};
-		6EC34DA710B27321001987FF /* External */ = {
+		6EBE2BF910B2BE4600FDE0E3 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				6EC34DBA10B27325001987FF /* glui */,
+				6EBE2BFA10B2BE4600FDE0E3 /* GL */,
+				6EBE2C0C10B2BE4600FDE0E3 /* glui */,
+				6EBE2C3710B2BE4600FDE0E3 /* glut */,
 			);
-			path = External;
+			name = External;
+			path = ../External;
+			sourceTree = SOURCE_ROOT;
+		};
+		6EBE2BFA10B2BE4600FDE0E3 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2BFB10B2BE4600FDE0E3 /* EmptyGL */,
+				6EBE2C0510B2BE4600FDE0E3 /* glew.h */,
+				6EBE2C0610B2BE4600FDE0E3 /* glext.h */,
+				6EBE2C0710B2BE4600FDE0E3 /* glut.h */,
+				6EBE2C0810B2BE4600FDE0E3 /* glxew.h */,
+				6EBE2C0910B2BE4600FDE0E3 /* glxext.h */,
+				6EBE2C0A10B2BE4600FDE0E3 /* wglew.h */,
+				6EBE2C0B10B2BE4600FDE0E3 /* wglext.h */,
+			);
+			path = GL;
 			sourceTree = "<group>";
 		};
-		6EC34DBA10B27325001987FF /* glui */ = {
+		6EBE2BFB10B2BE4600FDE0E3 /* EmptyGL */ = {
 			isa = PBXGroup;
 			children = (
-				6EC34DBB10B27326001987FF /* algebra3.cpp */,
-				6EC34DBC10B27326001987FF /* algebra3.h */,
-				6EC34DBD10B27326001987FF /* arcball.cpp */,
-				6EC34DBE10B27326001987FF /* arcball.h */,
-				6EC34DC010B27326001987FF /* glui.cpp */,
-				6EC34DC110B27327001987FF /* glui_add_controls.cpp */,
-				6EC34DC210B27327001987FF /* glui_bitmaps.cpp */,
-				6EC34DC310B27327001987FF /* glui_bitmap_img_data.cpp */,
-				6EC34DC410B27327001987FF /* glui_button.cpp */,
-				6EC34DC510B27327001987FF /* glui_checkbox.cpp */,
-				6EC34DC610B27328001987FF /* glui_column.cpp */,
-				6EC34DC710B27328001987FF /* glui_commandline.cpp */,
-				6EC34DC810B27328001987FF /* glui_control.cpp */,
-				6EC34DC910B27328001987FF /* glui_edittext.cpp */,
-				6EC34DCA10B27328001987FF /* glui_filebrowser.cpp */,
-				6EC34DCB10B27329001987FF /* glui_internal.h */,
-				6EC34DCC10B27329001987FF /* glui_internal_control.h */,
-				6EC34DCD10B27329001987FF /* glui_list.cpp */,
-				6EC34DCE10B27329001987FF /* glui_listbox.cpp */,
-				6EC34DCF10B27329001987FF /* glui_mouse_iaction.cpp */,
-				6EC34DD010B2732A001987FF /* glui_node.cpp */,
-				6EC34DD110B2732A001987FF /* glui_panel.cpp */,
-				6EC34DD210B2732A001987FF /* glui_radio.cpp */,
-				6EC34DD310B2732A001987FF /* glui_rollout.cpp */,
-				6EC34DD410B2732B001987FF /* glui_rotation.cpp */,
-				6EC34DD510B2732B001987FF /* glui_scrollbar.cpp */,
-				6EC34DD610B2732B001987FF /* glui_separator.cpp */,
-				6EC34DD710B2732B001987FF /* glui_spinner.cpp */,
-				6EC34DD810B2732B001987FF /* glui_statictext.cpp */,
-				6EC34DD910B2732C001987FF /* glui_string.cpp */,
-				6EC34DDA10B2732C001987FF /* glui_textbox.cpp */,
-				6EC34DDB10B2732C001987FF /* glui_translation.cpp */,
-				6EC34DDC10B2732C001987FF /* glui_tree.cpp */,
-				6EC34DDD10B2732D001987FF /* glui_treepanel.cpp */,
-				6EC34DDE10B2732D001987FF /* glui_window.cpp */,
-				6EC34DE010B2732D001987FF /* quaternion.cpp */,
-				6EC34DE110B2732D001987FF /* quaternion.h */,
-				6EC34DE210B2732E001987FF /* readme.txt */,
-				6EC34DE310B2732E001987FF /* GL */,
+				6EBE2BFC10B2BE4600FDE0E3 /* GL */,
+			);
+			path = EmptyGL;
+			sourceTree = "<group>";
+		};
+		6EBE2BFC10B2BE4600FDE0E3 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2BFD10B2BE4600FDE0E3 /* egl_cpx.h */,
+				6EBE2BFE10B2BE4600FDE0E3 /* egl_defs.h */,
+				6EBE2BFF10B2BE4600FDE0E3 /* egl_logged.h */,
+				6EBE2C0010B2BE4600FDE0E3 /* egl_tokens.h */,
+				6EBE2C0110B2BE4600FDE0E3 /* egl_void.h */,
+				6EBE2C0210B2BE4600FDE0E3 /* gl.h */,
+				6EBE2C0310B2BE4600FDE0E3 /* glu.h */,
+				6EBE2C0410B2BE4600FDE0E3 /* glut.h */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		6EBE2C0C10B2BE4600FDE0E3 /* glui */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2C0D10B2BE4600FDE0E3 /* algebra3.cpp */,
+				6EBE2C0E10B2BE4600FDE0E3 /* algebra3.h */,
+				6EBE2C0F10B2BE4600FDE0E3 /* arcball.cpp */,
+				6EBE2C1010B2BE4600FDE0E3 /* arcball.h */,
+				6EBE2C1110B2BE4600FDE0E3 /* CMakeLists.txt */,
+				6EBE2C1210B2BE4600FDE0E3 /* GL */,
+				6EBE2C1410B2BE4600FDE0E3 /* glui.cpp */,
+				6EBE2C1510B2BE4600FDE0E3 /* glui_add_controls.cpp */,
+				6EBE2C1610B2BE4600FDE0E3 /* glui_bitmaps.cpp */,
+				6EBE2C1710B2BE4600FDE0E3 /* glui_bitmap_img_data.cpp */,
+				6EBE2C1810B2BE4600FDE0E3 /* glui_button.cpp */,
+				6EBE2C1910B2BE4600FDE0E3 /* glui_checkbox.cpp */,
+				6EBE2C1A10B2BE4600FDE0E3 /* glui_column.cpp */,
+				6EBE2C1B10B2BE4600FDE0E3 /* glui_commandline.cpp */,
+				6EBE2C1C10B2BE4600FDE0E3 /* glui_control.cpp */,
+				6EBE2C1D10B2BE4600FDE0E3 /* glui_edittext.cpp */,
+				6EBE2C1E10B2BE4600FDE0E3 /* glui_filebrowser.cpp */,
+				6EBE2C1F10B2BE4600FDE0E3 /* glui_internal.h */,
+				6EBE2C2010B2BE4600FDE0E3 /* glui_internal_control.h */,
+				6EBE2C2110B2BE4600FDE0E3 /* glui_list.cpp */,
+				6EBE2C2210B2BE4600FDE0E3 /* glui_listbox.cpp */,
+				6EBE2C2310B2BE4600FDE0E3 /* glui_mouse_iaction.cpp */,
+				6EBE2C2410B2BE4600FDE0E3 /* glui_node.cpp */,
+				6EBE2C2510B2BE4600FDE0E3 /* glui_panel.cpp */,
+				6EBE2C2610B2BE4600FDE0E3 /* glui_radio.cpp */,
+				6EBE2C2710B2BE4600FDE0E3 /* glui_rollout.cpp */,
+				6EBE2C2810B2BE4600FDE0E3 /* glui_rotation.cpp */,
+				6EBE2C2910B2BE4600FDE0E3 /* glui_scrollbar.cpp */,
+				6EBE2C2A10B2BE4600FDE0E3 /* glui_separator.cpp */,
+				6EBE2C2B10B2BE4600FDE0E3 /* glui_spinner.cpp */,
+				6EBE2C2C10B2BE4600FDE0E3 /* glui_statictext.cpp */,
+				6EBE2C2D10B2BE4600FDE0E3 /* glui_string.cpp */,
+				6EBE2C2E10B2BE4600FDE0E3 /* glui_textbox.cpp */,
+				6EBE2C2F10B2BE4600FDE0E3 /* glui_translation.cpp */,
+				6EBE2C3010B2BE4600FDE0E3 /* glui_tree.cpp */,
+				6EBE2C3110B2BE4600FDE0E3 /* glui_treepanel.cpp */,
+				6EBE2C3210B2BE4600FDE0E3 /* glui_window.cpp */,
+				6EBE2C3310B2BE4600FDE0E3 /* Jamfile */,
+				6EBE2C3410B2BE4600FDE0E3 /* quaternion.cpp */,
+				6EBE2C3510B2BE4600FDE0E3 /* quaternion.h */,
+				6EBE2C3610B2BE4600FDE0E3 /* readme.txt */,
 			);
 			path = glui;
 			sourceTree = "<group>";
 		};
-		6EC34DE310B2732E001987FF /* GL */ = {
+		6EBE2C1210B2BE4600FDE0E3 /* GL */ = {
 			isa = PBXGroup;
 			children = (
-				6EC34DE410B2732E001987FF /* glui.h */,
+				6EBE2C1310B2BE4600FDE0E3 /* glui.h */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		6EBE2C3710B2BE4600FDE0E3 /* glut */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2C3810B2BE4600FDE0E3 /* GL */,
+			);
+			path = glut;
+			sourceTree = "<group>";
+		};
+		6EBE2C3810B2BE4600FDE0E3 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2C3910B2BE4600FDE0E3 /* EmptyGL */,
+				6EBE2C4310B2BE4700FDE0E3 /* glew.h */,
+				6EBE2C4410B2BE4700FDE0E3 /* glext.h */,
+				6EBE2C4510B2BE4700FDE0E3 /* glut.h */,
+				6EBE2C4610B2BE4700FDE0E3 /* glxew.h */,
+				6EBE2C4710B2BE4700FDE0E3 /* glxext.h */,
+				6EBE2C4810B2BE4700FDE0E3 /* wglew.h */,
+				6EBE2C4910B2BE4700FDE0E3 /* wglext.h */,
+			);
+			path = GL;
+			sourceTree = "<group>";
+		};
+		6EBE2C3910B2BE4600FDE0E3 /* EmptyGL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2C3A10B2BE4600FDE0E3 /* GL */,
+			);
+			path = EmptyGL;
+			sourceTree = "<group>";
+		};
+		6EBE2C3A10B2BE4600FDE0E3 /* GL */ = {
+			isa = PBXGroup;
+			children = (
+				6EBE2C3B10B2BE4600FDE0E3 /* egl_cpx.h */,
+				6EBE2C3C10B2BE4600FDE0E3 /* egl_defs.h */,
+				6EBE2C3D10B2BE4600FDE0E3 /* egl_logged.h */,
+				6EBE2C3E10B2BE4600FDE0E3 /* egl_tokens.h */,
+				6EBE2C3F10B2BE4700FDE0E3 /* egl_void.h */,
+				6EBE2C4010B2BE4700FDE0E3 /* gl.h */,
+				6EBE2C4110B2BE4700FDE0E3 /* glu.h */,
+				6EBE2C4210B2BE4700FDE0E3 /* glut.h */,
 			);
 			path = GL;
 			sourceTree = "<group>";
@@ -766,7 +921,6 @@
 		6EC34E6110B275B8001987FF /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				6EC34E6210B275B8001987FF /* CMakeLists.txt */,
 				6EC34E6310B275B8001987FF /* EduNetGames */,
 				6EC34EAC10B275B8001987FF /* iprof */,
 				6EC34EB910B275B8001987FF /* opensteer */,
@@ -1188,7 +1342,42 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6EC34E1A10B2732E001987FF /* glui.h in Headers */,
+				6EBE2C4A10B2BE4700FDE0E3 /* egl_cpx.h in Headers */,
+				6EBE2C4B10B2BE4700FDE0E3 /* egl_defs.h in Headers */,
+				6EBE2C4C10B2BE4700FDE0E3 /* egl_logged.h in Headers */,
+				6EBE2C4D10B2BE4700FDE0E3 /* egl_tokens.h in Headers */,
+				6EBE2C4E10B2BE4700FDE0E3 /* egl_void.h in Headers */,
+				6EBE2C4F10B2BE4700FDE0E3 /* gl.h in Headers */,
+				6EBE2C5010B2BE4700FDE0E3 /* glu.h in Headers */,
+				6EBE2C5110B2BE4700FDE0E3 /* glut.h in Headers */,
+				6EBE2C5210B2BE4700FDE0E3 /* glew.h in Headers */,
+				6EBE2C5310B2BE4700FDE0E3 /* glext.h in Headers */,
+				6EBE2C5410B2BE4700FDE0E3 /* glut.h in Headers */,
+				6EBE2C5510B2BE4700FDE0E3 /* glxew.h in Headers */,
+				6EBE2C5610B2BE4700FDE0E3 /* glxext.h in Headers */,
+				6EBE2C5710B2BE4700FDE0E3 /* wglew.h in Headers */,
+				6EBE2C5810B2BE4700FDE0E3 /* wglext.h in Headers */,
+				6EBE2C5A10B2BE4700FDE0E3 /* algebra3.h in Headers */,
+				6EBE2C5C10B2BE4700FDE0E3 /* arcball.h in Headers */,
+				6EBE2C5D10B2BE4700FDE0E3 /* glui.h in Headers */,
+				6EBE2C6910B2BE4700FDE0E3 /* glui_internal.h in Headers */,
+				6EBE2C6A10B2BE4700FDE0E3 /* glui_internal_control.h in Headers */,
+				6EBE2C7F10B2BE4700FDE0E3 /* quaternion.h in Headers */,
+				6EBE2C8010B2BE4700FDE0E3 /* egl_cpx.h in Headers */,
+				6EBE2C8110B2BE4700FDE0E3 /* egl_defs.h in Headers */,
+				6EBE2C8210B2BE4700FDE0E3 /* egl_logged.h in Headers */,
+				6EBE2C8310B2BE4700FDE0E3 /* egl_tokens.h in Headers */,
+				6EBE2C8410B2BE4700FDE0E3 /* egl_void.h in Headers */,
+				6EBE2C8510B2BE4700FDE0E3 /* gl.h in Headers */,
+				6EBE2C8610B2BE4700FDE0E3 /* glu.h in Headers */,
+				6EBE2C8710B2BE4700FDE0E3 /* glut.h in Headers */,
+				6EBE2C8810B2BE4700FDE0E3 /* glew.h in Headers */,
+				6EBE2C8910B2BE4700FDE0E3 /* glext.h in Headers */,
+				6EBE2C8A10B2BE4700FDE0E3 /* glut.h in Headers */,
+				6EBE2C8B10B2BE4700FDE0E3 /* glxew.h in Headers */,
+				6EBE2C8C10B2BE4700FDE0E3 /* glxext.h in Headers */,
+				6EBE2C8D10B2BE4700FDE0E3 /* wglew.h in Headers */,
+				6EBE2C8E10B2BE4700FDE0E3 /* wglext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1376,38 +1565,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6EC34DF410B2732E001987FF /* algebra3.cpp in Sources */,
-				6EC34DF610B2732E001987FF /* arcball.cpp in Sources */,
-				6EC34DF810B2732E001987FF /* glui.cpp in Sources */,
-				6EC34DF910B2732E001987FF /* glui_add_controls.cpp in Sources */,
-				6EC34DFA10B2732E001987FF /* glui_bitmaps.cpp in Sources */,
-				6EC34DFB10B2732E001987FF /* glui_bitmap_img_data.cpp in Sources */,
-				6EC34DFC10B2732E001987FF /* glui_button.cpp in Sources */,
-				6EC34DFD10B2732E001987FF /* glui_checkbox.cpp in Sources */,
-				6EC34DFE10B2732E001987FF /* glui_column.cpp in Sources */,
-				6EC34DFF10B2732E001987FF /* glui_commandline.cpp in Sources */,
-				6EC34E0010B2732E001987FF /* glui_control.cpp in Sources */,
-				6EC34E0110B2732E001987FF /* glui_edittext.cpp in Sources */,
-				6EC34E0210B2732E001987FF /* glui_filebrowser.cpp in Sources */,
-				6EC34E0510B2732E001987FF /* glui_list.cpp in Sources */,
-				6EC34E0610B2732E001987FF /* glui_listbox.cpp in Sources */,
-				6EC34E0710B2732E001987FF /* glui_mouse_iaction.cpp in Sources */,
-				6EC34E0810B2732E001987FF /* glui_node.cpp in Sources */,
-				6EC34E0910B2732E001987FF /* glui_panel.cpp in Sources */,
-				6EC34E0A10B2732E001987FF /* glui_radio.cpp in Sources */,
-				6EC34E0B10B2732E001987FF /* glui_rollout.cpp in Sources */,
-				6EC34E0C10B2732E001987FF /* glui_rotation.cpp in Sources */,
-				6EC34E0D10B2732E001987FF /* glui_scrollbar.cpp in Sources */,
-				6EC34E0E10B2732E001987FF /* glui_separator.cpp in Sources */,
-				6EC34E0F10B2732E001987FF /* glui_spinner.cpp in Sources */,
-				6EC34E1010B2732E001987FF /* glui_statictext.cpp in Sources */,
-				6EC34E1110B2732E001987FF /* glui_string.cpp in Sources */,
-				6EC34E1210B2732E001987FF /* glui_textbox.cpp in Sources */,
-				6EC34E1310B2732E001987FF /* glui_translation.cpp in Sources */,
-				6EC34E1410B2732E001987FF /* glui_tree.cpp in Sources */,
-				6EC34E1510B2732E001987FF /* glui_treepanel.cpp in Sources */,
-				6EC34E1610B2732E001987FF /* glui_window.cpp in Sources */,
-				6EC34E1810B2732E001987FF /* quaternion.cpp in Sources */,
+				6EBE2C5910B2BE4700FDE0E3 /* algebra3.cpp in Sources */,
+				6EBE2C5B10B2BE4700FDE0E3 /* arcball.cpp in Sources */,
+				6EBE2C5E10B2BE4700FDE0E3 /* glui.cpp in Sources */,
+				6EBE2C5F10B2BE4700FDE0E3 /* glui_add_controls.cpp in Sources */,
+				6EBE2C6010B2BE4700FDE0E3 /* glui_bitmaps.cpp in Sources */,
+				6EBE2C6110B2BE4700FDE0E3 /* glui_bitmap_img_data.cpp in Sources */,
+				6EBE2C6210B2BE4700FDE0E3 /* glui_button.cpp in Sources */,
+				6EBE2C6310B2BE4700FDE0E3 /* glui_checkbox.cpp in Sources */,
+				6EBE2C6410B2BE4700FDE0E3 /* glui_column.cpp in Sources */,
+				6EBE2C6510B2BE4700FDE0E3 /* glui_commandline.cpp in Sources */,
+				6EBE2C6610B2BE4700FDE0E3 /* glui_control.cpp in Sources */,
+				6EBE2C6710B2BE4700FDE0E3 /* glui_edittext.cpp in Sources */,
+				6EBE2C6810B2BE4700FDE0E3 /* glui_filebrowser.cpp in Sources */,
+				6EBE2C6B10B2BE4700FDE0E3 /* glui_list.cpp in Sources */,
+				6EBE2C6C10B2BE4700FDE0E3 /* glui_listbox.cpp in Sources */,
+				6EBE2C6D10B2BE4700FDE0E3 /* glui_mouse_iaction.cpp in Sources */,
+				6EBE2C6E10B2BE4700FDE0E3 /* glui_node.cpp in Sources */,
+				6EBE2C6F10B2BE4700FDE0E3 /* glui_panel.cpp in Sources */,
+				6EBE2C7010B2BE4700FDE0E3 /* glui_radio.cpp in Sources */,
+				6EBE2C7110B2BE4700FDE0E3 /* glui_rollout.cpp in Sources */,
+				6EBE2C7210B2BE4700FDE0E3 /* glui_rotation.cpp in Sources */,
+				6EBE2C7310B2BE4700FDE0E3 /* glui_scrollbar.cpp in Sources */,
+				6EBE2C7410B2BE4700FDE0E3 /* glui_separator.cpp in Sources */,
+				6EBE2C7510B2BE4700FDE0E3 /* glui_spinner.cpp in Sources */,
+				6EBE2C7610B2BE4700FDE0E3 /* glui_statictext.cpp in Sources */,
+				6EBE2C7710B2BE4700FDE0E3 /* glui_string.cpp in Sources */,
+				6EBE2C7810B2BE4700FDE0E3 /* glui_textbox.cpp in Sources */,
+				6EBE2C7910B2BE4700FDE0E3 /* glui_translation.cpp in Sources */,
+				6EBE2C7A10B2BE4700FDE0E3 /* glui_tree.cpp in Sources */,
+				6EBE2C7B10B2BE4700FDE0E3 /* glui_treepanel.cpp in Sources */,
+				6EBE2C7C10B2BE4700FDE0E3 /* glui_window.cpp in Sources */,
+				6EBE2C7E10B2BE4700FDE0E3 /* quaternion.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
