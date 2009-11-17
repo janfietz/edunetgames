@@ -61,7 +61,7 @@ void ClientPlugin<PluginClass>::StartNetworkSession( void )
 template < class PluginClass >
 bool ClientPlugin<PluginClass>::Connect( void )
 {
-	this->ConnectToAddress( this->GetCurrentAddress() );
+	this->ConnectToAddress( this->getCurrentAddress() );
 	return true;
 }
 

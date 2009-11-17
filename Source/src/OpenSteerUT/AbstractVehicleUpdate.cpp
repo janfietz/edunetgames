@@ -87,6 +87,8 @@ void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const o
 	const Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
 
 	// enforce limit on magnitude of steering force
+	// for a 2d vehicle set y to zero
+	this->m_kForce.y = 0.0f;
 	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 

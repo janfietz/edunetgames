@@ -13,6 +13,8 @@ using namespace OpenSteer;
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry ),
 		m_pNetInterface( NULL ),
+		m_pkNetworkIdManager( NULL ),
+		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1)
 
@@ -32,7 +34,7 @@ void setPort(GLUI_Control* pkControl )
 	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
 	
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
+	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
 	kAddress.port = pkTextBox->get_int_val();
 }
 //-----------------------------------------------------------------------------
@@ -41,15 +43,15 @@ void setAddress(GLUI_Control* pkControl )
 	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
 	
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
+	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
 	kAddress.addressString = pkTextBox->get_text();	
 }
 //-----------------------------------------------------------------------------
 void connectToAddress(GLUI_Control* pkControl )
 {
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	const NetworkAddress& kAddress = pkPlugin->GetCurrentAddress();
-	pkPlugin->ConnectToAddress(kAddress);
+	const NetworkAddress& kAddress = pkPlugin->getCurrentAddress();
+	pkPlugin->ConnectToAddress( kAddress );
 }
 //-----------------------------------------------------------------------------
 void NetworkPlugin::initGui( void* pkUserdata )
@@ -68,16 +70,17 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
 	if(true == this->AddConnectBox())
 	{
+		const NetworkAddress& kAddress = this->getCurrentAddress();
 		
 		GLUI_EditText* pkTextControl;
 		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Address", GLUI_EDITTEXT_TEXT,
 			NULL, -1, setAddress );
-		pkTextControl->set_text(this->m_kAddress.addressString.C_String());
+		pkTextControl->set_text( kAddress.addressString.C_String() );
 		pkTextControl->set_ptr_val( this );
 
 		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Port", GLUI_EDITTEXT_INT,
 			NULL, -1, setPort );
-		pkTextControl->set_int_val(this->m_kAddress.port);
+		pkTextControl->set_int_val( kAddress.port );
 		pkTextControl->set_int_limits(0, (unsigned short)-1 );
 		pkTextControl->set_ptr_val( this );
 		
@@ -333,9 +336,18 @@ void NetworkPlugin::CreateNetworkInterface( void )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::DestroyNetworkInterface( void )
 {
-	RakNetworkFactory::DestroyRakPeerInterface(this->m_pNetInterface);
-	this->m_pNetInterface = NULL;
-	printf("Destroyed peer.\n");
+	if( NULL != this->m_pNetInterface )
+	{
+		this->m_pNetInterface->SetNetworkIDManager( NULL );
+	}
+	ET_SAFE_DELETE( this->m_pkNetworkIdManager );
+	if( NULL != this->m_pNetInterface )
+	{
+		RakNetworkFactory::DestroyRakPeerInterface( this->m_pNetInterface );
+		this->m_pNetInterface = NULL;
+		printf("Destroyed peer.\n");
+	}
+	ET_SAFE_DELETE( this->m_pkAddress );
 }
 
 //-----------------------------------------------------------------------------
@@ -542,8 +554,10 @@ bool NetworkPlugin::PingForOtherPeers( const int iPort )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::AttachNetworkIdManager( void )
 {
-	this->m_pNetInterface->SetNetworkIDManager(&this->m_kNetworkIdManager);
-	this->m_kNetworkIdManager.SetIsNetworkIDAuthority( this->HasIdAuthority() );
+	ET_SAFE_DELETE( this->m_pkNetworkIdManager );
+	this->m_pkNetworkIdManager = ET_NEW NetworkIDManager();
+	this->m_pNetInterface->SetNetworkIDManager( this->m_pkNetworkIdManager );
+	this->m_pkNetworkIdManager->SetIsNetworkIDAuthority( this->HasIdAuthority() );
 }
 
 //-----------------------------------------------------------------------------

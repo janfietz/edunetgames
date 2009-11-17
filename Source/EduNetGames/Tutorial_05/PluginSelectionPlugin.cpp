@@ -16,7 +16,7 @@ void PluginClientPlugin::StartNetworkSession( void )
 //-----------------------------------------------------------------------------
 void PluginClientPlugin::InitializeRpcSystem( void )
 {
-	this->m_kRpc3Inst.SetNetworkIDManager(&this->m_kNetworkIdManager);	
+	this->m_kRpc3Inst.SetNetworkIDManager( this->m_pkNetworkIdManager );	
 	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, true);	
 
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
