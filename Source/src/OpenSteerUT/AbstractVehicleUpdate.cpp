@@ -43,7 +43,7 @@ void EulerVehicleUpdate::setVehicle( AbstractVehicle* pkVehicle )
 }
 
 //-----------------------------------------------------------------------------
-void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
+void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
 	// store current world transform
 //	writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
@@ -93,18 +93,18 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
 	}
 
-	this->updateMotionState( elapsedTime );
+	this->updateMotionState( currentTime, elapsedTime );
 }
 
 //-------------------------------------------------------------------------
-void EulerVehicleUpdate::updateMotionState( 
+void EulerVehicleUpdate::updateMotionState( const osScalar currentTime, 
 					   const osScalar elapsedTime
 					   )
 {
 	// store new world transform
 	btTransform kWorldTransform1;
 	writeToMatrix( this->vehicle(), kWorldTransform1 );
-	this->m_kMotionState.updateMotionState( kWorldTransform1, elapsedTime );
+	this->m_kMotionState.updateMotionState( kWorldTransform1, currentTime, elapsedTime );
 }
 
 //-------------------------------------------------------------------------

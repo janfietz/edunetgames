@@ -53,6 +53,14 @@ namespace OpenSteer {
 		SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkVehicle);
 		if( pkNetworkVehicle != NULL )
 		{
+			// a hack ...
+			{
+				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkNetworkVehicle->accessEulerUpdate();
+				PhysicsMotionState& kUpdateState = kEulerUpdateAccess.accessMotionState();
+				kUpdateState.updateMotionState( pkNetworkVehicle, currentTime, elapsedTime );
+
+			}
+
 			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkNetworkVehicle->getEulerUpdate();
 			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
 
