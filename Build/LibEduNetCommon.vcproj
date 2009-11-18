@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\EduNetCommon\EduNetMath.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\EduNetCommon\EduNetOptions.cpp"
 				>
 			</File>
@@ -324,6 +328,18 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="EduNetProfile"
+			>
+			<File
+				RelativePath="..\Source\src\EduNetProfile\GraphPlot.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetProfile\GraphPlot.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

@@ -94,8 +94,6 @@ bool NetPedestrian::gUseDirectedPathFollowing = true;
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 //-----------------------------------------------------------------------------
 NetPedestrian::NetPedestrian():
-m_kSteeringForceUpdate(this),
-m_kEulerUpdate(this),
 proximityToken( NULL )
 {
 
@@ -104,8 +102,6 @@ proximityToken( NULL )
 //-----------------------------------------------------------------------------
 // constructor
 NetPedestrian::NetPedestrian( ProximityDatabase& pd ):
-m_kSteeringForceUpdate(this),
-m_kEulerUpdate(this),
 proximityToken( NULL )
 {
 	// allocate a token for this boid in the proximity database
@@ -325,14 +321,14 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	if( true == this->isRemoteObject() )
 	{
 		kColor = gGreen;
-		kPosition.y += 0.05f;
+		kTempPosition.y += 0.05f;
 	}
 	else
 	{
 		kColor = gRed;
 	}
 	kColor.setA( 0.5f );
-	this->setPosition( kPosition );
+	this->setPosition( kTempPosition );
 	OpenSteer::drawBasic2dCircularVehicle (*this, kColor);
 	this->setPosition( kPosition );
 	kColor.setA( 1.0f );

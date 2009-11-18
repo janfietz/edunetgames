@@ -89,9 +89,6 @@ public:
 	static const int maxObstacleCount;
 	static OpenSteer::SOG allObstacles;
 private:
-	OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-	OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
-
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfBaseVehicle )
 
 };

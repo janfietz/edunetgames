@@ -29,8 +29,11 @@
 #include "EmptyPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
+#include "EduNetProfile/GraphPlot.h"
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+
+#include <math.h>
 
 
 OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
@@ -74,4 +77,55 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw "ground plane"
 		OpenSteerDemo::gridUtility( SimpleVehicle::selectedVehicle->position() );
 	}
+
+	const float fGraphHeight = 175;
+	// draw a test graph
+	{
+		Profile::GraphValues kValues;
+		const size_t uiMaxRecords = kValues.getMaxRecords();
+		float fX(0), fY(0);
+		for( size_t i = 0; i < uiMaxRecords; ++i )
+		{
+			fY = fX * fX;
+			fY = sinf( fX );
+			//		fY = sinf( fX ) * ( ( 0.5f * fX ) * ( 0.5f * fX ) );
+			kValues.addValue( fX, fY );
+			fX += 0.10f;
+		}
+		Profile::GraphPlot kPlot;
+		kPlot.draw( kValues, 50, 175, 300, fGraphHeight );
+	}
+
+	// draw a test graph
+	{
+		Profile::GraphValuesArray kValuesArray;
+
+		for( size_t i = 0; i < 3; ++i )
+		{
+			Profile::GraphValues& kValues = kValuesArray.accessValues(i);
+			const size_t uiMaxRecords = kValues.getMaxRecords();
+			float fX(0), fY(0);
+			for( size_t j = 0; j < uiMaxRecords; ++j )
+			{
+				fY = fX * fX;
+				switch( i )
+				{
+				case(0):
+					fY = sinf( fX ) * fX;
+					break;
+				case(1):
+					fY = cos( fX ) * fX;
+					break;
+				case(2):
+					fY = ( sinf( fX ) * ( ( 0.5f * fX ) * ( 0.5f * fX ) ) );
+					break;
+				}
+				kValues.addValue( fX, fY );
+				fX += 0.10f;
+			}
+		}
+		Profile::GraphPlot kPlot;
+		kPlot.draw( kValuesArray, 50, 175 + fGraphHeight + 10, 300, fGraphHeight );
+	}
+
 }

@@ -203,9 +203,9 @@ public:
 	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetPedestrianPlugin( false ) );
-		this->addPlugin( new OpenSteer::CameraPlugin() );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
@@ -224,8 +224,8 @@ class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<Pe
 public:
 	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~PedestrianRenderClientPlugin() {};
 
@@ -245,8 +245,8 @@ class PedestrianRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<Pede
 public:
 	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~PedestrianRenderPeerPlugin() {};
 
@@ -279,10 +279,10 @@ public:
 PedestrianClientServerPlugin::PedestrianClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
+	this->addPlugin( new OpenSteer::CameraPlugin() );
 	this->addPlugin( new OpenSteer::GridPlugin() );
 	this->addPlugin( new PedestrianPeerPlugin( false ) );
 	this->addPlugin( new PedestrianClientPlugin( false ) );
-	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
 //-----------------------------------------------------------------------------

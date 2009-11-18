@@ -201,12 +201,14 @@ namespace {
     }
 
 
-    inline void endDoubleSidedDrawing (void)
+    inline 
+	void endDoubleSidedDrawing (void)
     {
         glPopAttrib ();
     }
 
-    inline GLint begin2dDrawing (float w, float h)
+	inline
+    GLint begin2dDrawing (float w, float h)
     {
         // store OpenGL matrix mode
         GLint originalMatrixMode;
@@ -229,8 +231,8 @@ namespace {
         return originalMatrixMode;
     }
 
-
-    inline void end2dDrawing (GLint originalMatrixMode)
+	inline
+    void end2dDrawing (GLint originalMatrixMode)
     {
         // restore previous model/projection transformation state
         glPopMatrix ();
@@ -242,6 +244,41 @@ namespace {
     }
 
 }   // end anonymous namespace
+
+
+GLint OpenSteer::begin2dDrawing (float w, float h)
+{
+	// store OpenGL matrix mode
+	GLint originalMatrixMode;
+	glGetIntegerv (GL_MATRIX_MODE, &originalMatrixMode);
+
+	// clear projection transform
+	glMatrixMode (GL_PROJECTION);
+	glPushMatrix ();
+	glLoadIdentity ();
+
+	// set up orthogonal projection onto window's screen space
+	glOrtho (0.0f, w, 0.0f, h, -1.0f, 1.0f);
+
+	// clear model transform
+	glMatrixMode (GL_MODELVIEW);
+	glPushMatrix ();
+	glLoadIdentity ();
+
+	// return original matrix mode for saving (stacking)
+	return originalMatrixMode;
+}
+
+void OpenSteer::end2dDrawing (GLint originalMatrixMode)
+{
+	// restore previous model/projection transformation state
+	glPopMatrix ();
+	glMatrixMode (GL_PROJECTION);
+	glPopMatrix ();
+
+	// restore OpenGL matrix mode
+	glMatrixMode (originalMatrixMode);
+}
 
 void 
 OpenSteer::glVertexVec3 (const Vec3& v)

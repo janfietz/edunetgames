@@ -33,9 +33,26 @@
 #include "VehicleClassIds.h"
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetCommon/TUpdatePeriod.h"
+#include "EduNetProfile/GraphPlot.h"
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
 
 namespace OpenSteer {
 
+	//-------------------------------------------------------------------------
+	class AbstractVehicleMotionStatePlot
+	{
+	public:
+		AbstractVehicleMotionStatePlot();
+		virtual ~AbstractVehicleMotionStatePlot();
+
+		void recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
+		void draw( void ) const;
+
+		Profile::GraphValuesArray m_kLinearVelocity;
+		Profile::GraphValuesArray m_kAngularVelocity;
+		Profile::GraphValuesArray m_kSteeringForce;
+
+	};
 
 	//-------------------------------------------------------------------------
 	class AbstractSimpleNetworkVehicle : public SimpleVehicle, public AbstractNetworkVehicle
@@ -57,6 +74,15 @@ namespace OpenSteer {
 		virtual ~SimpleNetworkVehicle();
 
 		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
+
+		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void )
+		{
+			return this->m_kEulerUpdate;
+		}
+
+	protected:
+		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
+		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
 
 	private:
 

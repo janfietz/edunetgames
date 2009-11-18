@@ -75,9 +75,12 @@ namespace OpenSteer
 
 			getVector3( kLocalLinearVelocity, kState.m_kLocalLinearVelocity );
 			getVector3( kLocalAngularVelocity, kState.m_kLocalAngularVelocity );
+			kState.m_fLinearVelocity = kState.m_kLinearVelocity.length();
+			kState.m_fAngularVelocity = kState.m_kAngularVelocity.length();
+
 		}
 
-		this->m_kWorldTransform = kWorldTransform1;
+		kState.m_kWorldTransform = kWorldTransform1;
 	}
 
 	//-----------------------------------------------------------------------------
