@@ -95,14 +95,15 @@ namespace OpenSteer
 		void setForce( const Vec3& kForce ){ m_kMotionState.m_kForce = kForce; }
 		const Vec3& getForce( void ) const { return m_kMotionState.m_kForce; }
 		const PhysicsMotionState& getMotionState( void ) const { return m_kMotionState; }
+		PhysicsMotionState& accessMotionState( void ) { return m_kMotionState; }
 
 		//---------------------------------------------------------------------
-		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
 
 		virtual void setVehicle( AbstractVehicle* pkVehicle );
 
 	private:
-		void updateMotionState( const osScalar elapsedTime );
+		void updateMotionState( const osScalar currentTime, const osScalar elapsedTime );
 		PhysicsMotionState m_kMotionState;
 		Vec3 _smoothedAcceleration;
 	};

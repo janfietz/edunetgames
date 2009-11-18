@@ -75,7 +75,11 @@ namespace OpenSteer {
 
 		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
 
-		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void )
+		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
+		{
+			return this->m_kEulerUpdate;
+		}
+		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
 		{
 			return this->m_kEulerUpdate;
 		}

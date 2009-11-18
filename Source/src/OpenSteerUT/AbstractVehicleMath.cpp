@@ -36,13 +36,36 @@ namespace OpenSteer
 	//-----------------------------------------------------------------------------
 	using namespace OpenSteer;
 
+	//-------------------------------------------------------------------------
+	void TPhysicsMotionState::updateMotionState( AbstractVehicle* pkVehicle, const osScalar currentTime, 
+		const osScalar elapsedTime
+		)
+	{
+		if( NULL == pkVehicle )
+		{
+			return;
+		}
+		// store new world transform
+		btTransform kWorldTransform1;
+		writeToMatrix( *pkVehicle, kWorldTransform1 );
+		this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+	}
+
 
 	//-----------------------------------------------------------------------------
 	void TPhysicsMotionState::updateMotionState( 
 		const class btTransform& kWorldTransform1,
+		const osScalar currentTime,
 		const osScalar elapsedTime
 		)
 	{
+		// do not do this twice
+		if( this->m_fLastUpdateTime == currentTime )
+		{
+			return;
+		}
+		this->m_fLastUpdateTime = currentTime;
+
 		const class btTransform& kWorldTransform0 = this->m_kWorldTransform;
 		// compute motion state data
 		// in world space
