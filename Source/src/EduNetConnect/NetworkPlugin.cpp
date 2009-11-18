@@ -16,7 +16,8 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_pkNetworkIdManager( NULL ),
 		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
-		m_bAutoConnect(1)
+		m_bAutoConnect(1),
+		m_bShowMotionStatePlot(0)
 
 {
 
@@ -68,6 +69,8 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	}
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
+	glui->add_checkbox_to_panel( pluginPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
+
 	if(true == this->AddConnectBox())
 	{
 		const NetworkAddress& kAddress = this->getCurrentAddress();
@@ -260,6 +263,15 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	screenLocation.y -= fOffset;
 	draw2dTextAt2dLocation(
 		status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
+
+	if( 0 != this->m_bShowMotionStatePlot )
+	{
+		// draw motion state plot
+		if( NULL != SimpleVehicle::selectedVehicle )
+		{
+			this->m_kMotionStateProfile.draw();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

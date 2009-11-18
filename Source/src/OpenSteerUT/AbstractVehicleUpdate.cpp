@@ -73,7 +73,6 @@ void EulerVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar 
 
 	// Euler integrate (per frame) velocity into position
 	osVector3 kNewPosition = vehicle().position() + (newVelocity * elapsedTime);
-	kNewPosition.y = 0.0f;
 	this->vehicle().setPosition( kNewPosition );
 
 	bool bInfiniteRotationSpeed = false;
@@ -116,7 +115,6 @@ void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const o
 
 	// enforce limit on magnitude of steering force
 	// for a 2d vehicle set y to zero
-	this->m_kForce.y = 0.0f;
 	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 

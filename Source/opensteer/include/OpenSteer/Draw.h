@@ -57,9 +57,12 @@
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
 
+typedef int GLint;
 
 namespace OpenSteer {
 
+	GLint begin2dDrawing (float w, float h);
+	void end2dDrawing (GLint originalMatrixMode);
 
     //-------------------------------------------------------------------------
     //! warn when draw functions are called during OpenSteerDemo's update phase

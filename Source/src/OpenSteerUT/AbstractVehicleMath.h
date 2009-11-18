@@ -52,7 +52,11 @@ namespace OpenSteer
 	{
 		TPhysicsMotionState():m_kForce(Vec3::zero),
 			m_kLinearVelocity(Vec3::zero),
-			m_kAngularVelocity(Vec3::zero)
+			m_kLocalLinearVelocity(Vec3::zero),
+			m_kAngularVelocity(Vec3::zero),
+			m_kLocalAngularVelocity(Vec3::zero),
+			m_fLinearVelocity(0),
+			m_fAngularVelocity(0)
 		{
 			m_kWorldTransform.setIdentity();
 		}
@@ -62,6 +66,8 @@ namespace OpenSteer
 		Vec3 m_kLocalLinearVelocity;
 		Vec3 m_kAngularVelocity;
 		Vec3 m_kLocalAngularVelocity;
+		float m_fLinearVelocity;
+		float m_fAngularVelocity;
 		void updateMotionState( 
 			const btTransform& kWorldTransform1,
 			const osScalar elapsedTime

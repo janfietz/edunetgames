@@ -83,7 +83,7 @@ CameraPlugin::init3dCamera (AbstractVehicle& selected,
 										float distance,
 										float elevation)
 {
-	position3dCamera (selected, distance, elevation);
+	CameraPlugin::position3dCamera (selected, distance, elevation);
 	OpenSteer::Camera::camera.fixedDistDistance = distance;
 	OpenSteer::Camera::camera.fixedDistVOffset = elevation;
 	OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
@@ -93,7 +93,7 @@ CameraPlugin::init3dCamera (AbstractVehicle& selected,
 void 
 CameraPlugin::init2dCamera( AbstractVehicle& selected )
 {
-	init2dCamera( selected, cameraTargetDistance, camera2dElevation );
+	CameraPlugin::init2dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ CameraPlugin::init2dCamera( AbstractVehicle& selected,
 										float distance,
 										float elevation )
 {
-	position2dCamera (selected, distance, elevation);
+	CameraPlugin::position2dCamera (selected, distance, elevation);
 	OpenSteer::Camera::camera.fixedDistDistance = distance;
 	OpenSteer::Camera::camera.fixedDistVOffset = elevation;
 	OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
@@ -112,7 +112,7 @@ CameraPlugin::init2dCamera( AbstractVehicle& selected,
 void 
 CameraPlugin::position3dCamera( AbstractVehicle& selected )
 {
-	position3dCamera( selected, cameraTargetDistance, camera2dElevation );
+	CameraPlugin::position3dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -143,7 +143,7 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 void 
 CameraPlugin::position2dCamera( AbstractVehicle& selected )
 {
-	position2dCamera (selected, cameraTargetDistance, camera2dElevation);
+	CameraPlugin::position2dCamera (selected, cameraTargetDistance, camera2dElevation);
 }
 
 //-----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ CameraPlugin::position2dCamera( AbstractVehicle& selected,
 											float elevation )
 {
 	// position the camera as if in 3d:
-	position3dCamera (selected, distance, elevation);
+	CameraPlugin::position3dCamera (selected, distance, elevation);
 
 	// then adjust for 3d:
 	Vec3 position3d = OpenSteer::Camera::camera.position();
@@ -168,8 +168,12 @@ CameraPlugin::updateCamera (const float currentTime,
 										const float elapsedTime,
 										const AbstractVehicle& selected)
 {
-	OpenSteer::Camera::updateCamera (currentTime, elapsedTime, selected, OpenSteer::Clock::processClock().getPausedState ());
+	OpenSteer::Camera::updateCamera( 
+		currentTime, elapsedTime, selected, OpenSteer::Clock::processClock().getPausedState () );
 }
+
+// note: the camera plugin does not have an update implementation
+//       the camera is updated within the redraw function
 
 //-----------------------------------------------------------------------------
 void CameraPlugin::redraw( const float currentTime, const float elapsedTime ) 

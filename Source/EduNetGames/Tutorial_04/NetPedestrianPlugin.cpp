@@ -32,6 +32,7 @@
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
+#include "OpenSteerUT/AbstractVehicleMath.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/NetworkPlugin.h"
@@ -53,6 +54,17 @@ namespace
 float NetPedestrianPlugin::selectionOrderSortKey (void) const 
 {
 	return 98.0f;
+}
+
+//-----------------------------------------------------------------------------
+NetPedestrianPlugin::NetPedestrianPlugin( bool bAddToRegistry ):
+BaseClass( bAddToRegistry ),
+pd(NULL),
+m_bCreatesVehicles(false),
+m_fLastRenderTime(0.0f)
+{
+	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -120,6 +132,7 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 	// update each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.update( currentTime, elapsedTime );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -188,6 +201,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		kColor = gGray50;
 	}
 	draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
+
 
 	this->m_fLastRenderTime = currentTime;
 }

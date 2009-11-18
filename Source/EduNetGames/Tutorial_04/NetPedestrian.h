@@ -31,7 +31,6 @@
 
 
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/VehicleClassIds.h"
 
@@ -72,13 +71,10 @@ public:
 
 	void annotationUtility( void ) const;
 
-
 	static bool gWanderSwitch;
 	static bool gUseDirectedPathFollowing;
 
 private:
-	OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-	OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
 
 
 	// a pointer to this boid's interface object for the proximity database

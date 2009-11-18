@@ -1,5 +1,5 @@
-#ifndef __OPENSTEERUTTYPES_H__
-#define __OPENSTEERUTTYPES_H__
+#ifndef __EDUNETMATH_H__
+#define __EDUNETMATH_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,36 +29,65 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include <math.h>
+
+#include "EduNetMacros.h"
+
 //-----------------------------------------------------------------------------
-namespace OpenSteer{
-
-	// Include names declared in the OpenSteer namespace into the
-	// namespace to search to find names.
-	using namespace OpenSteer;
-
-	//-------------------------------------------------------------------------
-	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
-	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
-
-
-
-
-	float drawGetWindowHeight(void);
-	float drawGetWindowWidth(void);
-
-	class AbstractVehicle;
-
+template <class T>
+EF_FORCEINLINE
+const T& etMin(const T& a, const T& b) 
+{
+	return a < b ? a : b ;
 }
 
-typedef OpenSteer::Vec3 osVector3;
-typedef OpenSteer::AbstractVehicle osAbstractVehicle;
-typedef OpenSteer::AVGroup osAVGroup;
-typedef OpenSteer::AVGroup::iterator osAVIterator;
-typedef OpenSteer::AVGroup::const_iterator osAVCIterator;
-typedef OpenSteer::ProximityDatabase osProximityDatabase;
-typedef OpenSteer::ProximityToken osProximityToken;
-typedef OpenSteer::Color osColor;
+//-----------------------------------------------------------------------------
+template <class T>
+EF_FORCEINLINE
+const T& etMax(const T& a, const T& b) 
+{
+	return  a > b ? a : b;
+}
 
-typedef OpenSteer::EntityClassId osEntityClassId;
+//-----------------------------------------------------------------------------
+template <class T>
+EF_FORCEINLINE
+T etClamp(const T& fValue, const T& fMin, const T& fMax) {
+	assert( fMin <= fMax );
+	T fValueOut = etMax( fValue, fMin );
+	fValueOut = etMin( fValueOut, fMax );
+	return fValueOut;
+}
 
-#endif //  __OPENSTEERUTTYPES_H__
+//-----------------------------------------------------------------------------
+template <class T>
+EF_FORCEINLINE
+T etClampSave(const T& fValue, const T& fMin, const T& fMax) {
+	T _fMin = etMin( fMin, fMax );
+	T _fMax = etMax( fMin, fMax );
+	T fValueOut = etMax( fValue, _fMin );
+	fValueOut = etMin( fValueOut, _fMax );
+	return fValueOut;
+}
+
+//-----------------------------------------------------------------------------
+template <class T>
+EF_FORCEINLINE
+T etSign(const T& fValue)
+{
+	return ( fValue > T( 0.0 ) ? T( +1.0 ) : ( fValue < T( 0.0 ) ? T( -1.0 ) : T( 0.0 ) ) );
+}	
+
+//-----------------------------------------------------------------------------
+template <class T>
+EF_FORCEINLINE
+T etInterval(const T& fMin, const T& fMax)
+{
+	assert( fMin <= fMax );
+	return ( fMax - fMin );
+}	
+
+
+
+
+#endif // __EDUNETMATH_H__

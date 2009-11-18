@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/SimpleNetworkVehicle.h"
 
 #define CLIENT_PORT  23456
 #define SERVER_PORT  12345
@@ -135,13 +136,13 @@ public:
 
 
 protected:
-
-
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
+
+	OpenSteer::AbstractVehicleMotionStatePlot m_kMotionStateProfile;
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager* m_pkNetworkIdManager;
@@ -150,6 +151,7 @@ protected:
 	unsigned int m_uiPortPongCount;
 
 	int m_iWaitForPongPort;
+	int m_bShowMotionStatePlot;
 	SocketDescriptor m_kSocketDescriptor;
 
 	RakNetTime m_kPongEndTime;
@@ -179,6 +181,7 @@ private:
 
 	NetworkAddress* m_pkAddress;
 	NetworkSimulatorData m_kSimulatorData;
+
 
 };
 
@@ -229,6 +232,12 @@ void TNetworkPlugin< PluginClass >::update (const float currentTime, const float
 {
 	BaseClass::update( currentTime, elapsedTime );
 	m_kGamePlugin.update(currentTime, elapsedTime);
+
+	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
+	{
+		// update motion state plot
+		this->m_kMotionStateProfile.recordUpdate( OpenSteer::SimpleVehicle::selectedVehicle, currentTime, elapsedTime );
+	}
 }
 
 //-----------------------------------------------------------------------------

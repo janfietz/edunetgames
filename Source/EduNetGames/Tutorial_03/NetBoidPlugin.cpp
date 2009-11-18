@@ -204,9 +204,9 @@ public:
 NetBoidClientServerPlugin::NetBoidClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
+	this->addPlugin( new OpenSteer::CameraPlugin() );
 	this->addPlugin( new NetPeerBoidPlugin( false ) );
 	this->addPlugin( new NetClientBoidPlugin( false ) );
-	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
 //-----------------------------------------------------------------------------

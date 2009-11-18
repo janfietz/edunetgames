@@ -61,17 +61,13 @@ const int NetCtfBaseVehicle::maxObstacleCount = 100;
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle():
-m_kSteeringForceUpdate(this),
-m_kEulerUpdate(this)
+NetCtfBaseVehicle::NetCtfBaseVehicle()
 {
 	reset();
 }
 
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd ):
-m_kSteeringForceUpdate(this),
-m_kEulerUpdate(this)
+NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd )
 {
 
 }

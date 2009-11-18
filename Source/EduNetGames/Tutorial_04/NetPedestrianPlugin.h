@@ -39,14 +39,7 @@ class NetPedestrianPlugin : public OpenSteer::Plugin
 {
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
-	NetPedestrianPlugin( bool bAddToRegistry = true ):
-	  BaseClass( bAddToRegistry ),
-		  pd(NULL),
-		  m_bCreatesVehicles(false),
-		  m_fLastRenderTime(0.0f)
-	{
-		this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
-	}
+	NetPedestrianPlugin( bool bAddToRegistry = true );
 
 	virtual ~NetPedestrianPlugin();
 
@@ -97,6 +90,8 @@ public:
 
 private:
 	NetPedestrianFactory m_kOfflinePedestrianFactory;
+
+
 
 	osAVGroup crowd;
 
