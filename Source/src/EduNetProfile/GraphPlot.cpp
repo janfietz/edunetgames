@@ -64,7 +64,7 @@ void GraphPlot::setGraphColor( const GraphValues& kValues )
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::setGraphColor( size_t uiId )
+void GraphPlot::setGraphColor( size_t uiId, OpenSteer::Color* pkColor )
 {
 	if (uiId == 0)
 	{
@@ -76,7 +76,17 @@ void GraphPlot::setGraphColor( size_t uiId )
 		GLubyte r = static_cast<GLubyte>( uiId * 37 );
 		GLubyte g = static_cast<GLubyte>( uiId * 59 );
 		GLubyte b = static_cast<GLubyte>( uiId * 45 );
-		glColor3ub((r & 127) + 80, (g & 127) + 80, (b & 127) + 80);
+		if( NULL != pkColor )
+		{
+			pkColor->setR( ((r & 127) + 80) / 255.0f );
+			pkColor->setG( ((g & 127) + 80) / 255.0f );
+			pkColor->setB( ((b & 127) + 80) / 255.0f );
+			pkColor->setA( 1.0f );
+		}
+		else
+		{
+			glColor3ub((r & 127) + 80, (g & 127) + 80, (b & 127) + 80);
+		}
 	}
 }
 
@@ -184,6 +194,7 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 		{
 			const GraphValues& kGraphValues = *kIter;
 			this->drawSingleGraph( kGraphValues, kGraphLocation );
+			kGraphLocation.fGraphIndex += 1.0f;
 			++kIter;
 		}
 	}
@@ -232,6 +243,21 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 	}
 }
 
+//-----------------------------------------------------------------------------
+void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height ) const
+{
+	const float sw( OpenSteer::drawGetWindowHeight() ), 
+		sh( OpenSteer::drawGetWindowWidth() );
+	const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
+	GraphLocation kGraphLocation;
+	kGraphLocation.sx = sx;
+	kGraphLocation.sy = sy;
+	kGraphLocation.width = width;
+	kGraphLocation.height = height;
+	kGraphLocation.kMin.y = 0;
+	this->drawGraphFrame( kGraphLocation );
+	OpenSteer::end2dDrawing (originalMatrixMode);
+}
 
 //-----------------------------------------------------------------------------
 void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation ) const
@@ -277,8 +303,6 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	{
 		const GraphValue& kEndValue = kValues[kValues.size() - 1];
 
-		const float sw( OpenSteer::drawGetWindowHeight() ), 
-			sh( OpenSteer::drawGetWindowWidth() );
 
 		OpenSteer::Color kColor = OpenSteer::gGray80;
 		if( kValues.hasColor() )
@@ -289,7 +313,13 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			kColor.setB( pColor[2] );
 			kColor.setA( pColor[3] );
 		}
+		else
+		{
+			GraphPlot::setGraphColor( kValues.getId(), &kColor );
+		}
 
+		const float sw( OpenSteer::drawGetWindowHeight() ), 
+			sh( OpenSteer::drawGetWindowWidth() );
 		const char* pszName = kValues.getName();
 		if( NULL != pszName )
 		{
@@ -302,7 +332,10 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 				<< " Interval: " << kInterval.y
 				<< std::ends;
 
-			osVector3 screenLocation( kGraphLocation.sx, kGraphLocation.sy - 23, 0 );
+			osVector3 screenLocation( 
+				kGraphLocation.sx, 
+				kGraphLocation.sy - ( 23 * -kGraphLocation.fGraphIndex), 
+				0 );
 			OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
 		}
 

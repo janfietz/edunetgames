@@ -125,7 +125,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 			}
 		}
 		Profile::GraphPlot kPlot;
-		kPlot.draw( kValuesArray, 50, 175 + fGraphHeight + 10, 300, fGraphHeight );
+		kPlot.draw( kValuesArray, 50, 175 + fGraphHeight + 20, 300, fGraphHeight );
 	}
 
 }

@@ -31,6 +31,13 @@
 
 #include <vector>
 
+//-----------------------------------------------------------------------------
+namespace OpenSteer
+{
+	class Color;
+}
+
+//-----------------------------------------------------------------------------
 namespace Profile
 {
 	//-------------------------------------------------------------------------
@@ -155,7 +162,11 @@ namespace Profile
 			TGraphValuesArray::iterator kEnd = this->end();
 			while( kIter != kEnd )
 			{
-				(*kIter).setColor( r, g, b, a );
+				GraphValues& kValues = (*kIter);
+				if( false == kValues.hasColor() )
+				{
+					kValues.setColor( r, g, b, a );
+				}
 				++kIter;
 			}
 		}
@@ -175,8 +186,13 @@ namespace Profile
 		void draw( const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const;
 		void draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const;
 		void draw( const GraphValues& kValues, float sx, float sy, float width, float height ) const;
-		typedef struct
+		void drawGraphFrame( float sx, float sy, float width, float height ) const;
+	private:
+		typedef struct TGraphLocation
 		{
+			TGraphLocation():fGraphIndex(0)
+			{
+			}
 			float sx,sy;
 			float width, height;
 			GraphValue kMin;
@@ -186,17 +202,17 @@ namespace Profile
 			GraphValue kScale;
 			GraphValue kMinDraw;
 			GraphValue kMaxDraw;
+			float fGraphIndex;
 
 		} GraphLocation;
-	private:
 		void computeGraphLocation( const GraphValues& kValues, GraphLocation& kGraphLocation ) const;
 		void drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
 		void drawGraphFrame( const GraphLocation& kGraphLocation ) const;
 
 		static void drawRectangle( float x0, float y0, float x1, float y1);
 		static void drawQuad( float x0, float y0, float x1, float y1);
-		static void setGraphColor( size_t uiId );
 		static void setGraphColor( const GraphValues& kValues );
+		static void setGraphColor( size_t uiId, OpenSteer::Color* pkColor = NULL );
 	};
 
 

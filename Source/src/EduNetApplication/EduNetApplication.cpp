@@ -2,6 +2,7 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "EduNetProfile/GraphPlot.h"
 #include "EduNetGames.h"
 
 
@@ -348,6 +349,8 @@ void Application::drawProfile (const float currentTime,
 	}
 	if( ( 0 != this->m_bShowCPUProfileGraph ) )
 	{
+		Profile::GraphPlot kPlot;
+		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, 8.0 * 50 );
 		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, 8.0, tw, th );
 	}
 #endif
