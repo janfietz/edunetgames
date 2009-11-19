@@ -48,9 +48,9 @@ namespace OpenSteer {
 		void recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 		void draw( void ) const;
 
-		Profile::GraphValuesArray m_kLinearVelocity;
-		Profile::GraphValuesArray m_kAngularVelocity;
-		Profile::GraphValuesArray m_kSteeringForce;
+		mutable Profile::GraphValuesArray m_kLinearVelocity;
+		mutable Profile::GraphValuesArray m_kAngularVelocity;
+		mutable Profile::GraphValuesArray m_kSteeringForce;
 
 	};
 

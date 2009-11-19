@@ -117,10 +117,10 @@ void  NetCtfBaseVehicle::update( const float currentTime, const float elapsedTim
 {
 	// alternative way
 	// now we can switch of steering force computation on the client
-	this->m_kSteeringForceUpdate.update( osScalar(0), elapsedTime );
+	this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
 	const Vec3& kSteeringForce = this->m_kSteeringForceUpdate.getForce();
 	this->m_kEulerUpdate.setForce( kSteeringForce );
-	this->m_kEulerUpdate.update( osScalar(0), elapsedTime );
+	this->m_kEulerUpdate.update( currentTime, elapsedTime );
 	//		BaseClass::update( currentTime, elapsedTime );
 }
 
