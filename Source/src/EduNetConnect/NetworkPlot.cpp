@@ -30,14 +30,20 @@
 //-----------------------------------------------------------------------------
 NetworkPlot::NetworkPlot()
 {
-	this->m_kBandwith.accessValues(0).setName( "BytesPerSecondSend" );
-	this->m_kBandwith.accessValues(0).setName( "BytesPerSecondReceveid" );
+	this->m_kBandwith.accessValues(0).
+		setName( "Bytes/sec Send    " ).
+		setColor( 0.75f, 0.25, 0.25 );
+	this->m_kBandwith.accessValues(1).
+		setName( "Bytes/sec Received" ).
+		setColor( 0.25f, 0.75, 0.25 );
 }
+
 //-----------------------------------------------------------------------------
 NetworkPlot::~NetworkPlot()
 {
 
 }
+
 //-----------------------------------------------------------------------------
 void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
 	const float currentTime, const float elapsedTime )
@@ -46,12 +52,12 @@ void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
 	float fBytesPerSecondSend = (float)(kStats.bitsPerSecondSent / 8.0);
 	float fBytesPerSecontReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
 	Profile::GraphValues& kBandWidthValuesSend = 
-		this->m_kBandwith.accessValues(0);		
+		this->m_kBandwith.accessValues(0);
 	kBandWidthValuesSend.addValue( currentTime, fBytesPerSecondSend);
 
 	Profile::GraphValues& kBandWidthValuesReceive = 
 		this->m_kBandwith.accessValues(1);
-	kBandWidthValuesReceive.addValue( currentTime+0.01f, fBytesPerSecontReceived);
+	kBandWidthValuesReceive.addValue( currentTime, fBytesPerSecontReceived);
 }
 							   
 //-----------------------------------------------------------------------------
@@ -59,7 +65,7 @@ void NetworkPlot::draw( void ) const
 {
 	// draw bandwidth state plot
 	const float fGraphStart = 220;
-	const float fGraphHeight = 175;
+	const float fGraphHeight = 200;
 	const float fGraphWidth = 400;
 	Profile::GraphPlot kPlot;
 	Profile::TGraphPointerArray kGraphArray;

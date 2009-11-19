@@ -33,9 +33,10 @@ namespace OpenSteer {
 
 	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot()
 	{
-		this->m_kLinearVelocity.accessValues(0).setName( "LinearVelocity" );
-		this->m_kAngularVelocity.accessValues(0).setName( "AngularVelocity" );
+		this->m_kLinearVelocity.accessValues(0).setName( "LinearVel" );
+		this->m_kAngularVelocity.accessValues(0).setName( "AngularVel" );
 		this->m_kSteeringForce.accessValues(0).setName( "SteeringForce" );
+//		this->m_kLinearVelocity.accessValues(1);
 	}
 
 	AbstractVehicleMotionStatePlot::~AbstractVehicleMotionStatePlot()
@@ -68,6 +69,12 @@ namespace OpenSteer {
 			Profile::GraphValues& kLinearVelocityValues = 
 				this->m_kLinearVelocity.accessValues(0);
 			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
+// 			{
+// 				Profile::GraphValues& kLinearVelocityValues = 
+// 					this->m_kLinearVelocity.accessValues(1);
+// 				kLinearVelocityValues.addValue( currentTime, sinf(currentTime) );
+// 			}
+
 			Profile::GraphValues& kAngularVelocityValues = 
 				this->m_kAngularVelocity.accessValues(0);
 			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );

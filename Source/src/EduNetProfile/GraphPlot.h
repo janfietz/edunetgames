@@ -74,7 +74,13 @@ namespace Profile
 			this->reserve( uiMaxRecords + 1 );
 		}
 
-		void addValue( float x, float y )
+		virtual ~GraphValues()
+		{
+			bool bTest = true;
+			bTest = false;
+		}
+
+		GraphValues& addValue( float x, float y )
 		{
 			// prevent adding two values for one x value
 			const size_t uiSize = this->size();
@@ -83,7 +89,7 @@ namespace Profile
 				const GraphValue& cv = (*this)[ uiSize - 1 ];
 				if( cv.x == x )
 				{
-					return;
+					return (*this);
 				}
 			}
 			GraphValue v( x, y, 0 );
@@ -92,16 +98,22 @@ namespace Profile
 			{
 				this->erase( this->begin() );
 			}
+			return (*this);
 		}
 
 		size_t getMaxRecords( void ) const { return m_uiMaxRecords; }
 
-		void setId( size_t id ) { m_uiId = id; }
+		GraphValues& setId( size_t id ) 
+		{ 
+			m_uiId = id; 
+			return (*this);
+		}
 		size_t getId( void ) const { return m_uiId; }
 
-		void setName( const char* pszName )
+		GraphValues& setName( const char* pszName )
 		{
 			this->m_kName.assign( pszName );
+			return (*this);
 		}
 
 		const char* getName( void ) const
@@ -126,12 +138,13 @@ namespace Profile
 			return this->m_fColor;
 		}
 
-		void setColor( float r, float g, float b, float a = 1.0f )
+		GraphValues& setColor( float r, float g, float b, float a = 1.0f )
 		{
 			this->m_fColor[0] = r;
 			this->m_fColor[1] = g;
 			this->m_fColor[2] = b;
 			this->m_fColor[3] = a;
+			return (*this);
 		}
 	private:
 		float m_fColor[4];
@@ -145,8 +158,13 @@ namespace Profile
 	class GraphValuesArray : public TGraphValuesArray
 	{
 	public:
+		GraphValuesArray()
+		{
+//			this->reserve( 10 );
+		}
 		GraphValues& accessValues( size_t uiIdx )
 		{
+			size_t uiSize = this->size();
 			while( this->size() < uiIdx + 1 )
 			{
 				this->push_back( GraphValues() );
