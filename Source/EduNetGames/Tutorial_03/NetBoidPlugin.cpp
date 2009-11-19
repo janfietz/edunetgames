@@ -12,10 +12,8 @@
 NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry )
 {
-	this->m_kReplicaManager.SetAutoSerializeInterval(
-		this->m_kReplicationSettings.interval);
-
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
+	this->setLocalReplicaParamsFromManager(&this->m_kReplicaManager);
 
 	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);
 	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
@@ -46,39 +44,22 @@ void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
 {
 	switch (keyNumber)
     {
-    case 101:  ChangeReplicationInterval(5);         break; //GLUT_KEY_UP
-    case 103:  ChangeReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
+    case 101:  setReplicationInterval(5);         break; //GLUT_KEY_UP
+    case 103:  setReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
 	default: BaseClass::handleFunctionKeys(keyNumber);
     }	
 }
 
 //-----------------------------------------------------------------------------
-void NetPeerBoidPlugin::ChangeReplicationInterval( RakNetTime additionalTime )
-{
-	m_kReplicationSettings.interval += additionalTime;
-	//clamp interval
-	if( 5 > m_kReplicationSettings.interval )
-	{
-		m_kReplicationSettings.interval = 5;
-	}
-	printf("Changed replication interval to: %d ms\n",
-		m_kReplicationSettings.interval);
-
-	this->m_kReplicaManager.SetAutoSerializeInterval(
-		this->m_kReplicationSettings.interval);
-}
-//-----------------------------------------------------------------------------
-void NetPeerBoidPlugin::UpdateReplicationValue( void )
+void NetPeerBoidPlugin::onChangedReplicationParams( 
+	const ReplicationParams& kParams )
 {
 	this->m_kReplicaManager.SetAutoSerializeInterval(
-		this->m_kReplicationSettings.interval);
-}
-
-//-----------------------------------------------------------------------------
-void changeReplicationDelay(GLUI_Control* pkControl )
-{
-	NetPeerBoidPlugin* pkPlugin = (NetPeerBoidPlugin*)pkControl->ptr_val;
-	pkPlugin->UpdateReplicationValue();
+		kParams.interval);
+	this->m_kReplicaManager.SetDefaultPacketReliability(
+		kParams.sendParameter.reliability);
+	this->m_kReplicaManager.SetDefaultPacketPriority(
+		kParams.sendParameter.priority);
 }
 
 //-----------------------------------------------------------------------------
@@ -88,10 +69,7 @@ void NetPeerBoidPlugin::initGui( void* pkUserdata )
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
-	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(pluginPanel, "ReplicationDelay", GLUI_SPINNER_INT, &m_kReplicationSettings.interval, -1, changeReplicationDelay);
-	repSpinner->set_int_limits(5, 1000000);
-	repSpinner->set_ptr_val( this );
+	this->addReplicaGuiWithManager(pkUserdata);
 };
 
 

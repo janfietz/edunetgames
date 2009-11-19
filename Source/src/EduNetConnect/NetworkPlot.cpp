@@ -1,5 +1,3 @@
-#ifndef __EDUNETAPPLICATION_H__
-#define	__EDUNETAPPLICATION_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,61 +25,44 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/TUpdatePeriod.h"
-
-
-
-namespace EduNet	{
+#include "NetworkPlot.h"
 
 //-----------------------------------------------------------------------------
-class Application
+NetworkPlot::NetworkPlot()
 {
-public:
-
-	void addGuiElements( GLUI *glui );
-
-	// do a simulation update for the currently selected plug-in
-	void updateSelectedPlugin (const float currentTime,
-		const float elapsedTime);
-
-	// redraw graphics for the currently selected plug-in
-	void redrawSelectedPlugin (const float currentTime,
-		const float elapsedTime);
-
-	void drawProfile (const float currentTime,
-		const float elapsedTime);
-
-	void onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin );
-
-	static Application& AccessApplication( void );
-
-	static void _SDMInit( void );
-	static void _SDMCleanup( void );
-	static void _SDMShutdown( void );
-
-
-	float m_fSimulationFPS;
-	float m_fTimeFactor;
-	int m_bFixedSimulationFPS;
-	int m_bEnableAnnotation;
-	int m_bShowCPUProfile;
-	int m_bShowCPUProfileGraph;
-	int m_bUpdateCPUProfile;
-
-private:
-	Application( void );
-	virtual ~Application( void );
-
-	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
-	OpenSteer::Clock m_kUpdateClock;
-	osScalar m_fUpdateCPUTime;
-
-};
+	this->m_kBandwith.accessValues(0).setName( "BytesPerSecondSend" );
+	this->m_kBandwith.accessValues(0).setName( "BytesPerSecondReceveid" );
+}
+//-----------------------------------------------------------------------------
+NetworkPlot::~NetworkPlot()
+{
 
 }
+//-----------------------------------------------------------------------------
+void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
+	const float currentTime, const float elapsedTime )
+{
 
-#endif // __EDUNETAPPLICATION_H__
+	float fBytesPerSecondSend = (float)(kStats.bitsPerSecondSent / 8.0);
+	float fBytesPerSecontReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
+	Profile::GraphValues& kBandWidthValuesSend = 
+		this->m_kBandwith.accessValues(0);		
+	kBandWidthValuesSend.addValue( currentTime, fBytesPerSecondSend);
+
+	Profile::GraphValues& kBandWidthValuesReceive = 
+		this->m_kBandwith.accessValues(1);
+	kBandWidthValuesReceive.addValue( currentTime+0.01f, fBytesPerSecontReceived);
+}
+							   
+//-----------------------------------------------------------------------------
+void NetworkPlot::draw( void ) const
+{
+	// draw bandwidth state plot
+	const float fGraphStart = 220;
+	const float fGraphHeight = 175;
+	const float fGraphWidth = 400;
+	Profile::GraphPlot kPlot;
+	Profile::TGraphPointerArray kGraphArray;
+	kGraphArray.push_back( &this->m_kBandwith );
+	kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
+}

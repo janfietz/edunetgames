@@ -17,8 +17,8 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1),
-		m_bShowMotionStatePlot(0)
-
+		m_bShowMotionStatePlot(0),
+		m_bDrawNetworkPlot(0)
 {
 
 }
@@ -70,6 +70,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
 	glui->add_checkbox_to_panel( pluginPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
+	glui->add_checkbox_to_panel( pluginPanel, "Plot Network", &this->m_bDrawNetworkPlot);
 
 	if(true == this->AddConnectBox())
 	{
@@ -175,12 +176,112 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 				(unsigned short)this->m_kSimulatorData.extraPingVariance);
 		}else
 		{
-			this->m_pNetInterface->ApplyNetworkSimulator(0.0f, 0, 0);
+			this->m_pNetInterface->ApplyNetworkSimulator(0.0, 0, 0);
 		}
+	}	
+}
+//-----------------------------------------------------------------------------
+void NetworkPlugin::setReplicationInterval( RakNetTime additionalTime )
+{
+	ReplicationParams& kReplicationParams = this->getReplicationParams();	
+	kReplicationParams.interval += additionalTime;
+	//clamp interval
+	if( 5 > kReplicationParams.interval )
+	{
+		kReplicationParams.interval = 5;
 	}
-	
+	printf("Changed replication interval to: %d ms\n",
+		kReplicationParams.interval);
+	this->onChangedReplicationParams( kReplicationParams );
 }
 
+//-----------------------------------------------------------------------------
+void NetworkPlugin::setLocalReplicaParamsFromManager( 
+	RakNet::ReplicaManager3* pkReplicaManager )
+{
+	this->m_kReplicationParams.sendParameter = 
+		pkReplicaManager->GetDefaultSendParameters();
+}
+
+//-----------------------------------------------------------------------------
+void changeReplicationDelay(GLUI_Control* pkControl )
+{
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	if (NULL == pkPlugin)
+	{
+		return;
+	}
+	ReplicationParams& kReplicationParams = pkPlugin->getReplicationParams();	
+	kReplicationParams.interval = pkControl->get_int_val();
+	pkPlugin->onChangedReplicationParams(kReplicationParams);
+}
+
+//-----------------------------------------------------------------------------
+void changeReplicationSendParams(GLUI_Control* pkControl )
+{
+	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
+	if (NULL == pkPlugin)
+	{
+		return;
+	}
+	ReplicationParams& kReplicationParams = pkPlugin->getReplicationParams();	
+	GLUI_Listbox* pkList = pkControl->dynamicCastGLUI_Listbox();
+	if (NULL == pkList)
+	{
+		return;
+	}
+	GLUI_Listbox_Item* pkItem = pkList->get_item_ptr( pkList->curr_text.c_str() );
+	switch( pkControl->get_id() )
+	{
+	case 1: 
+		{
+			kReplicationParams.sendParameter.reliability = (PacketReliability)pkItem->id;
+		}break;
+	case 2: 
+		{
+			kReplicationParams.sendParameter.priority = (PacketPriority)pkItem->id;
+		}break;
+	}
+	
+	pkPlugin->onChangedReplicationParams(kReplicationParams);
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::addReplicaGuiWithManager( void* pkUserdata  )
+{
+	BaseClass::initGui( pkUserdata );
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	GLUI_Panel* replicaPanel = glui->add_panel_to_panel( pluginPanel,
+		"Replication Settings" );
+
+
+	GLUI_Spinner* repSpinner =
+		glui->add_spinner_to_panel(replicaPanel, "ReplicationDelay",
+			GLUI_SPINNER_INT, NULL, -1, changeReplicationDelay);
+	repSpinner->set_int_limits(5, 1000000);
+	repSpinner->set_int_val(this->m_kReplicationParams.interval);
+	repSpinner->set_speed(0.01f);
+	repSpinner->set_ptr_val( this );
+
+	GLUI_Listbox* pluginList = 
+		glui->add_listbox_to_panel( replicaPanel, "Default Reliability", NULL, 1, changeReplicationSendParams );
+	pluginList->add_item( UNRELIABLE, "Unreliable" );
+	pluginList->add_item( UNRELIABLE_SEQUENCED, "Unreliable Sequenced" );
+	pluginList->add_item( RELIABLE, "Reliable" );
+	pluginList->add_item( RELIABLE_ORDERED, "Reliable Ordered" );
+	pluginList->add_item( RELIABLE_SEQUENCED, "Reliable Sequenced" );
+	pluginList->do_selection( this->m_kReplicationParams.sendParameter.reliability );
+	pluginList->set_ptr_val( this );
+
+	pluginList = 
+		glui->add_listbox_to_panel( replicaPanel,"Default Priority", NULL, 2, changeReplicationSendParams );
+	pluginList->add_item( HIGH_PRIORITY, "High" );
+	pluginList->add_item( MEDIUM_PRIORITY, "Medium" );
+	pluginList->add_item( LOW_PRIORITY, "Low" );
+	pluginList->do_selection( this->m_kReplicationParams.sendParameter.priority );
+	pluginList->set_ptr_val( this );
+}
 //-----------------------------------------------------------------------------
 void NetworkPlugin::open( void )
 {	
@@ -217,6 +318,11 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 	}
 
 	this->ReceivePackets();
+
+	if( 0 != this->m_bDrawNetworkPlot )
+	{
+		this->recordNetworkStatistics( currentTime, elapsedTime );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -271,6 +377,11 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		{
 			this->m_kMotionStateProfile.draw();
 		}
+	}
+
+	if( 0 != this->m_bDrawNetworkPlot )
+	{
+		this->drawNetworkPlot(currentTime, elapsedTime);
 	}
 }
 
@@ -576,5 +687,47 @@ void NetworkPlugin::AttachNetworkIdManager( void )
 bool NetworkPlugin::IsConnected() const
 {
 	return 0 < this->m_pNetInterface->NumberOfConnections();
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::recordNetworkStatistics(const float currentTime,
+	const float elapsedTime)
+{
+	RakNetStatistics kStats;
+	this->getNetworkStatistics( kStats );
+	this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::getNetworkStatistics(RakNetStatistics& kStats)
+{
+
+	DataStructures::List<SystemAddress> kAddresses;
+	DataStructures::List<RakNetGUID> kGuids;
+	if( NULL != this->m_pNetInterface )
+	{
+		// collect statistics of all connected and active systems
+		this->m_pNetInterface->GetStatistics(UNASSIGNED_SYSTEM_ADDRESS, &kStats);
+
+		/*this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
+		unsigned int usCount = kAddresses.Size();
+		for(unsigned int us = 0; us < usCount; ++us)
+		{
+			RakNetStatistics kSystemStats;
+			RakNetStatistics* pkResult = 
+				this->m_pNetInterface->GetStatistics(kAddresses[us], &kSystemStats);
+			if (NULL != pkResult)
+			{
+				kStats += kSystemStats;
+			}			
+		}	*/
+	}	
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::drawNetworkPlot(const float currentTime,
+					 const float elapsedTime)
+{
+	this->m_kNetworkPlot.draw();
 }
 

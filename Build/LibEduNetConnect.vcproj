@@ -172,6 +172,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkPlot.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkPlot.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\EduNetConnect\NetworkPlugin.cpp"
 					>
 				</File>
