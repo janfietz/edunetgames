@@ -177,17 +177,15 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 	while( kIter != kEnd )
 	{
 		const GraphValues& kGraphValues = *kIter;
+		const size_t i = kGraphValues.size();
 		this->computeGraphLocation( kGraphValues, kGraphLocation );
 		++kIter;
 	}
 
-	if( kInterval.x > 0 )
+//	if( kInterval.x > 0 )
 	{
 		float sw( OpenSteer::drawGetWindowHeight() ), 
 			sh( OpenSteer::drawGetWindowWidth() );
-		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation );
-		OpenSteer::end2dDrawing (originalMatrixMode);
 
 		kIter = kValues.begin();
 		while( kIter != kEnd )
@@ -197,6 +195,9 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 			kGraphLocation.fGraphIndex += 1.0f;
 			++kIter;
 		}
+		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
+		this->drawGraphFrame( kGraphLocation );
+		OpenSteer::end2dDrawing (originalMatrixMode);
 	}
 }
 
@@ -299,46 +300,74 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	const GraphValue& kInterval = kGraphLocation.kInterval;
 	const GraphValue& kScale = kGraphLocation.kScale;
 
-	if( kInterval.x > 0 )
+	const GraphValue& kEndValue = kValues[kValues.size() - 1];
+
+
+	OpenSteer::Color kColor = OpenSteer::gGray80;
+	if( kValues.hasColor() )
 	{
-		const GraphValue& kEndValue = kValues[kValues.size() - 1];
+		const float* pColor = kValues.getColor();
+		kColor.setR( pColor[0] );
+		kColor.setG( pColor[1] );
+		kColor.setB( pColor[2] );
+		kColor.setA( pColor[3] );
+	}
+	else
+	{
+		GraphPlot::setGraphColor( kValues.getId(), &kColor );
+	}
 
-
-		OpenSteer::Color kColor = OpenSteer::gGray80;
-		if( kValues.hasColor() )
+	const float sw( OpenSteer::drawGetWindowHeight() ), 
+		sh( OpenSteer::drawGetWindowWidth() );
+	const char* pszName = kValues.getName();
+	if( NULL != pszName )
+	{
+		TGraphValues::const_iterator kIter = kValues.begin();
+		TGraphValues::const_iterator kEnd = kValues.end();
+		float fAvg = 0;
+		while( kIter != kEnd )
 		{
-			const float* pColor = kValues.getColor();
-			kColor.setR( pColor[0] );
-			kColor.setG( pColor[1] );
-			kColor.setB( pColor[2] );
-			kColor.setA( pColor[3] );
+			const GraphValue& kValue = (*kIter);
+			fAvg += kValue.y;
+			++kIter;
+		}
+		if( kValues.size() )
+		{
+			fAvg /= kValues.size();
+		}
+
+		std::ostringstream sn;
+		sn << pszName;
+//		sn	<< "(" << kValues.size() << ")";
+		sn << std::setprecision(2) << std::setiosflags(std::ios::fixed);
+		const bool bLegendXY = false;
+		if( true == bLegendXY )
+		{
+			sn	<< " X/Y: " << kInterval.x << ";"  << kInterval.y;
+			sn	<< " Min: " << kMin.x << ";" << kMin.y;
+			sn	<< " Max: " << kMax.x << ";"  << kMax.y;
+			sn	<< " Avg: " << fAvg;
+			sn	<< " Cur: " << kEndValue.x << ";"  << kEndValue.y;
 		}
 		else
 		{
-			GraphPlot::setGraphColor( kValues.getId(), &kColor );
+			sn	<< " X: " << kInterval.x;
+			sn	<< " Min: " << kMin.y;
+			sn	<< " Max: " << kMax.y;
+			sn	<< " Avg: " << fAvg;
+			sn	<< " Cur: " << kEndValue.y;
 		}
+		sn	<< std::ends;
 
-		const float sw( OpenSteer::drawGetWindowHeight() ), 
-			sh( OpenSteer::drawGetWindowWidth() );
-		const char* pszName = kValues.getName();
-		if( NULL != pszName )
-		{
-			std::ostringstream sn;
-			sn << std::setprecision(2);
-			sn << pszName
-				<< " Min: " << kMin.y
-				<< " Max: " << kMax.y
-				<< " Current: " << kEndValue.y
-				<< " Interval: " << kInterval.y
-				<< std::ends;
+		osVector3 screenLocation( 
+			kGraphLocation.sx, 
+			kGraphLocation.sy - ( 19 * ( 1 - kGraphLocation.fGraphIndex ) ), 
+			0 );
+		OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
+	}
 
-			osVector3 screenLocation( 
-				kGraphLocation.sx, 
-				kGraphLocation.sy - ( 23 * -kGraphLocation.fGraphIndex), 
-				0 );
-			OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
-		}
-
+	if( kInterval.x > 0 )
+	{
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
 		GraphPlot::setGraphColor( kValues );
 		glBegin(GL_LINE_STRIP);
@@ -422,13 +451,23 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 		}
 	}
 
-	kIntervalDraw.x = ::etInterval( kMinDraw.x, kMaxDraw.x );
-	kIntervalDraw.y = ::etInterval( kMinDraw.y, kMaxDraw.y );
-	kIntervalDraw.z = ::etInterval( kMinDraw.z, kMaxDraw.z );
+	GraphValue kIntervalDrawLocal, kIntervalLocal;
 
-	kInterval.x = ::etInterval( kMin.x, kMax.x );
-	kInterval.y = ::etInterval( kMin.y, kMax.y );
-	kInterval.z = ::etInterval( kMin.z, kMax.z );
+	kIntervalDrawLocal.x = ::etInterval( kMinDraw.x, kMaxDraw.x );
+	kIntervalDrawLocal.y = ::etInterval( kMinDraw.y, kMaxDraw.y );
+	kIntervalDrawLocal.z = ::etInterval( kMinDraw.z, kMaxDraw.z );
+
+	kIntervalLocal.x = ::etInterval( kMin.x, kMax.x );
+	kIntervalLocal.y = ::etInterval( kMin.y, kMax.y );
+	kIntervalLocal.z = ::etInterval( kMin.z, kMax.z );
+
+	kIntervalDraw.x = ::etMax( kIntervalDraw.x, kIntervalDrawLocal.x );
+	kIntervalDraw.y = ::etMax( kIntervalDraw.y, kIntervalDrawLocal.y );
+	kIntervalDraw.z = ::etMax( kIntervalDraw.z, kIntervalDrawLocal.z );
+
+	kInterval.x = ::etMax( kInterval.x, kIntervalLocal.x );
+	kInterval.y = ::etMax( kInterval.y, kIntervalLocal.y );
+	kInterval.z = ::etMax( kInterval.z, kIntervalLocal.z );
 
 	if( kIntervalDraw.x > 0 )
 	{
