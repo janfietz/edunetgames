@@ -1,6 +1,35 @@
-#pragma once
+#ifndef __NETWORKPLUGIN_H__
+#define __NETWORKPLUGIN_H__
+//-----------------------------------------------------------------------------
+// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// All rights reserved.
+// 
+// Redistribution and use in source and binary forms, with or without modification, 
+// are permitted provided that the following conditions are met:
+// 
+// * Redistributions of source code must retain the above copyright notice, 
+//   this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice, 
+//   this list of conditions and the following disclaimer in the documentation 
+//   and/or other materials provided with the distribution.
+// * Neither the name of EduNetGames nor the names of its contributors
+//   may be used to endorse or promote products derived from this software
+//   without specific prior written permission.
+// 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
+#include "EduNetConnect/NetworkPlot.h"
 #include "OpenSteerUT/SimpleNetworkVehicle.h"
 
 #define CLIENT_PORT  23456
@@ -57,6 +86,15 @@ public:
 	int extraPingVariance;
 }NetworkSimulatorData;
 
+typedef struct TReplicationParams
+{
+public:
+	TReplicationParams():
+		interval(30){}		
+	RakNetTime interval;
+	RakNet::PRO sendParameter;
+}ReplicationParams;
+
 //-----------------------------------------------------------------------------
 class AbstractNetworkPlugin
 {
@@ -69,7 +107,6 @@ public:
 	virtual bool DoAutoConnect( void ) const = 0;
 	virtual bool Connect() = 0;
 	virtual void Disconnect() = 0;
-
 
 };
 
@@ -135,9 +172,25 @@ public:
 	}
 
 
+	void setReplicationInterval( RakNetTime additionalTime );
+	ReplicationParams& getReplicationParams( void )
+	{
+		return this->m_kReplicationParams;
+	}
+	virtual void onChangedReplicationParams(
+		const ReplicationParams& kParams ){};
+
+	void getNetworkStatistics(RakNetStatistics& kStats);
+
+
 protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
+
+	void setLocalReplicaParamsFromManager( 
+		class RakNet::ReplicaManager3* pkReplicaManager );
+
+	void addReplicaGuiWithManager( void* pkUserdata );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
@@ -157,6 +210,7 @@ protected:
 	RakNetTime m_kPongEndTime;
 	ENetworkSessionType m_eNetworkSessionType;
 	NetworkStats m_kStats;
+	ReplicationParams m_kReplicationParams;
 
 	// settings
 	int m_bAutoConnect;
@@ -175,13 +229,20 @@ private:
 	void ReceivedPongPacket( Packet* pPacket );
 	void CheckPongTimeout( void );
 	void CloseOpenConnections( void );
-	bool WaitForPong( void ) const;	
+	bool WaitForPong( void ) const;
+	
+	void recordNetworkStatistics(const float currentTime,
+		const float elapsedTime);
+	void drawNetworkPlot(const float currentTime,
+		const float elapsedTime);
 
 	void AddNetworkSimulator( void* pkUserdata );
 
 	NetworkAddress* m_pkAddress;
 	NetworkSimulatorData m_kSimulatorData;
-
+	
+	int m_bDrawNetworkPlot;
+	NetworkPlot m_kNetworkPlot;
 
 };
 
@@ -254,3 +315,5 @@ void TNetworkPlugin<PluginClass>::printMiniHelpForFunctionKeys (void) const
 	BaseClass::printMiniHelpForFunctionKeys( );
 	this->m_kGamePlugin.printMiniHelpForFunctionKeys();
 }
+
+#endif // __NETWORKPLUGIN_H__

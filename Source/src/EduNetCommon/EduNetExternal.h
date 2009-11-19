@@ -63,6 +63,7 @@
 #include "GetTime.h"
 #include "BitStream.h"
 #include "NetworkIDManager.h"
+#include "RakNetStatistics.h"
 //#include <RakNetTypes.h>
 #include "SocketLayer.h"
 #include "RPC3/RPC3.h"

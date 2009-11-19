@@ -1,5 +1,5 @@
-#ifndef __EDUNETAPPLICATION_H__
-#define	__EDUNETAPPLICATION_H__
+#ifndef __NETWORKCONNECTIONPLOT_H__
+#define __NETWORKCONNECTIONPLOT_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,61 +27,23 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/TUpdatePeriod.h"
-
-
-
-namespace EduNet	{
-
-//-----------------------------------------------------------------------------
-class Application
+#include "EduNetProfile/GraphPlot.h"
+//-------------------------------------------------------------------------
+class NetworkPlot
 {
 public:
+	NetworkPlot();
+	virtual ~NetworkPlot();
 
-	void addGuiElements( GLUI *glui );
+	void recordUpdate( RakNetStatistics& kStats,
+		const float currentTime, const float elapsedTime );
+	void draw( void ) const;
 
-	// do a simulation update for the currently selected plug-in
-	void updateSelectedPlugin (const float currentTime,
-		const float elapsedTime);
-
-	// redraw graphics for the currently selected plug-in
-	void redrawSelectedPlugin (const float currentTime,
-		const float elapsedTime);
-
-	void drawProfile (const float currentTime,
-		const float elapsedTime);
-
-	void onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin );
-
-	static Application& AccessApplication( void );
-
-	static void _SDMInit( void );
-	static void _SDMCleanup( void );
-	static void _SDMShutdown( void );
-
-
-	float m_fSimulationFPS;
-	float m_fTimeFactor;
-	int m_bFixedSimulationFPS;
-	int m_bEnableAnnotation;
-	int m_bShowCPUProfile;
-	int m_bShowCPUProfileGraph;
-	int m_bUpdateCPUProfile;
-
-private:
-	Application( void );
-	virtual ~Application( void );
-
-	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
-	OpenSteer::Clock m_kUpdateClock;
-	osScalar m_fUpdateCPUTime;
+	mutable Profile::GraphValuesArray m_kBandwith;
+	mutable Profile::GraphValuesArray m_kMessageQueues;
 
 };
 
-}
 
-#endif // __EDUNETAPPLICATION_H__
+#endif //__NETWORKCONNECTIONPLOT_H__
