@@ -54,6 +54,7 @@ namespace OpenSteer {
 		if( pkNetworkVehicle != NULL )
 		{
 			// a hack ...
+			if( false )
 			{
 				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkNetworkVehicle->accessEulerUpdate();
 				PhysicsMotionState& kUpdateState = kEulerUpdateAccess.accessMotionState();
@@ -73,6 +74,20 @@ namespace OpenSteer {
 			Profile::GraphValues& kSteeringForceValues = 
 				this->m_kSteeringForce.accessValues(0);
 			kSteeringForceValues.addValue( currentTime, kState.m_kForce.length() );
+
+			Color kColor;
+			if( true == pkNetworkVehicle->isRemoteObject() )
+			{
+				kColor = gGreen;
+			}
+			else
+			{
+				kColor = gRed;
+			}
+			this->m_kLinearVelocity.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
+			this->m_kAngularVelocity.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
+			this->m_kSteeringForce.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
+
 		}
 	}
 
@@ -83,14 +98,14 @@ namespace OpenSteer {
 		const float fGraphHeight = 175;
 		const float fGraphWidth = 400;
 		Profile::GraphPlot kPlot;
-		kPlot.draw( this->m_kLinearVelocity, 
-			50, fGraphStart, fGraphWidth, fGraphHeight );
-		kPlot.draw( this->m_kAngularVelocity, 
-			50, fGraphStart + fGraphHeight + 30, fGraphWidth, fGraphHeight );
-		kPlot.draw( this->m_kSteeringForce, 
-			50, fGraphStart + fGraphHeight * 2 + 30, fGraphWidth, fGraphHeight );
+		Profile::TGraphPointerArray kGraphArray;
+		kGraphArray.push_back( &this->m_kLinearVelocity );
+		kGraphArray.push_back( &this->m_kAngularVelocity );
+		kGraphArray.push_back( &this->m_kSteeringForce );
+		kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
 	}
 
+	//-------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 	SimpleNetworkVehicle::SimpleNetworkVehicle():

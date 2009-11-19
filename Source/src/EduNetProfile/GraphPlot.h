@@ -59,6 +59,11 @@ namespace Profile
 	public:
 		GraphValues( size_t uiMaxRecords = 128 ):m_uiMaxRecords( uiMaxRecords )
 		{
+			this->m_fColor[0] = 
+				this->m_fColor[1] = 
+				this->m_fColor[2] = 
+				this->m_fColor[3] = 
+				0;
 			this->reserve( uiMaxRecords + 1 );
 		}
 
@@ -81,6 +86,7 @@ namespace Profile
 				this->erase( this->begin() );
 			}
 		}
+
 		size_t getMaxRecords( void ) const { return m_uiMaxRecords; }
 
 		void setId( size_t id ) { m_uiId = id; }
@@ -95,7 +101,33 @@ namespace Profile
 		{
 			return this->m_kName.c_str();
 		}
+
+		bool hasColor( void ) const
+		{
+			if( ( this->m_fColor[0] != 0 ) ||
+				( this->m_fColor[1] != 0 ) ||
+				( this->m_fColor[2] != 0 ) ||
+				( this->m_fColor[3] != 0 ) )
+			{
+				return true;
+			}
+			return false;
+		}
+
+		float const* const getColor( void ) const
+		{
+			return this->m_fColor;
+		}
+
+		void setColor( float r, float g, float b, float a = 1.0f )
+		{
+			this->m_fColor[0] = r;
+			this->m_fColor[1] = g;
+			this->m_fColor[2] = b;
+			this->m_fColor[3] = a;
+		}
 	private:
+		float m_fColor[4];
 		size_t m_uiMaxRecords;
 		size_t m_uiId;
 		std::string m_kName;
@@ -116,7 +148,22 @@ namespace Profile
 			}
 			return (*this)[uiIdx];
 		}
+
+		void setColor( float r, float g, float b, float a = 1.0f )
+		{
+			TGraphValuesArray::iterator kIter = this->begin();
+			TGraphValuesArray::iterator kEnd = this->end();
+			while( kIter != kEnd )
+			{
+				(*kIter).setColor( r, g, b, a );
+				++kIter;
+			}
+		}
+
 	};
+
+	typedef std::vector<GraphValuesArray*> TGraphPointerArray;
+
 
 	//-------------------------------------------------------------------------
 	class GraphPlot
@@ -125,7 +172,8 @@ namespace Profile
 		GraphPlot( void );
 		virtual ~GraphPlot();
 
-		void draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height );
+		void draw( const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const;
+		void draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const;
 		void draw( const GraphValues& kValues, float sx, float sy, float width, float height ) const;
 		typedef struct
 		{
@@ -148,6 +196,7 @@ namespace Profile
 		static void drawRectangle( float x0, float y0, float x1, float y1);
 		static void drawQuad( float x0, float y0, float x1, float y1);
 		static void setGraphColor( size_t uiId );
+		static void setGraphColor( const GraphValues& kValues );
 	};
 
 

@@ -50,6 +50,20 @@ GraphPlot::~GraphPlot()
 }
 
 //-----------------------------------------------------------------------------
+void GraphPlot::setGraphColor( const GraphValues& kValues )
+{
+	if( kValues.hasColor() )
+	{
+		const float* pColor = kValues.getColor();
+		glColor4f( pColor[0], pColor[1], pColor[2], pColor[3] );
+	}
+	else
+	{
+		GraphPlot::setGraphColor( kValues.getId() );
+	}
+}
+
+//-----------------------------------------------------------------------------
 void GraphPlot::setGraphColor( size_t uiId )
 {
 	if (uiId == 0)
@@ -126,7 +140,7 @@ void GraphPlot::draw( const GraphValues& kValues, float sx, float sy, float widt
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height )
+void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const
 {
 	if( kValues.size() == 0 )
 	{
@@ -172,9 +186,52 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 			this->drawSingleGraph( kGraphValues, kGraphLocation );
 			++kIter;
 		}
-
 	}
 }
+
+//-----------------------------------------------------------------------------
+void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const
+{
+	if( kValues.size() == 0 )
+	{
+		return;
+	}
+
+	GraphLocation kGraphLocation;
+	kGraphLocation.sx = sx;
+	kGraphLocation.sy = sy;
+	kGraphLocation.width = width;
+	kGraphLocation.height = height /= kValues.size();
+
+	float fGraphOffSet = kGraphLocation.height;
+
+	kGraphLocation.sy += 30;
+	kGraphLocation.height -= 30;
+
+	TGraphPointerArray::const_iterator kIter = kValues.begin();
+	TGraphPointerArray::const_iterator kEnd = kValues.end();
+	while( kIter != kEnd )
+	{
+		const GraphValuesArray* pkGraphValues = *kIter;
+		if( NULL != pkGraphValues )
+		{
+			GraphValue& kMin = kGraphLocation.kMin;
+			GraphValue& kMax = kGraphLocation.kMax;
+			GraphValue& kInterval = kGraphLocation.kInterval;
+			GraphValue& kScale = kGraphLocation.kScale;
+			kMin = GraphValue::ms_Max;
+			kMax = GraphValue::ms_Min;
+			kInterval = GraphValue::ms_Min;
+			kScale = GraphValue::ms_Min;
+
+			this->draw( *pkGraphValues, kGraphLocation.sx, kGraphLocation.sy, kGraphLocation.width, kGraphLocation.height );
+
+			kGraphLocation.sy += fGraphOffSet;
+		}
+		++kIter;
+	}
+}
+
 
 //-----------------------------------------------------------------------------
 void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation ) const
@@ -222,6 +279,17 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 
 		const float sw( OpenSteer::drawGetWindowHeight() ), 
 			sh( OpenSteer::drawGetWindowWidth() );
+
+		OpenSteer::Color kColor = OpenSteer::gGray80;
+		if( kValues.hasColor() )
+		{
+			const float* pColor = kValues.getColor();
+			kColor.setR( pColor[0] );
+			kColor.setG( pColor[1] );
+			kColor.setB( pColor[2] );
+			kColor.setA( pColor[3] );
+		}
+
 		const char* pszName = kValues.getName();
 		if( NULL != pszName )
 		{
@@ -235,12 +303,11 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 				<< std::ends;
 
 			osVector3 screenLocation( kGraphLocation.sx, kGraphLocation.sy - 23, 0 );
-			OpenSteer::Color kColor = OpenSteer::gGray80;
 			OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
 		}
 
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		GraphPlot::setGraphColor( kValues.getId() );
+		GraphPlot::setGraphColor( kValues );
 		glBegin(GL_LINE_STRIP);
 
 		GraphValue kRenderValue;
