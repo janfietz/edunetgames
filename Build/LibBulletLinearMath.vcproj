@@ -152,19 +152,19 @@
 			UniqueIdentifier="{584A5230-07D6-4431-BB98-AA0CD72E6717}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAlignedAllocator.cpp"
+				RelativePath="..\External\bullet\src\LinearMath\btAlignedAllocator.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btConvexHull.cpp"
+				RelativePath="..\External\bullet\src\LinearMath\btConvexHull.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btGeometryUtil.cpp"
+				RelativePath="..\External\bullet\src\LinearMath\btGeometryUtil.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuickprof.cpp"
+				RelativePath="..\External\bullet\src\LinearMath\btQuickprof.cpp"
 				>
 			</File>
 		</Filter>
@@ -174,91 +174,91 @@
 			UniqueIdentifier="{566E428C-9C3D-439e-9A1E-8DC96CE457C4}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAabbUtil2.h"
+				RelativePath="..\External\bullet\src\LinearMath\btAabbUtil2.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAlignedAllocator.h"
+				RelativePath="..\External\bullet\src\LinearMath\btAlignedAllocator.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btAlignedObjectArray.h"
+				RelativePath="..\External\bullet\src\LinearMath\btAlignedObjectArray.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btConvexHull.h"
+				RelativePath="..\External\bullet\src\LinearMath\btConvexHull.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btDefaultMotionState.h"
+				RelativePath="..\External\bullet\src\LinearMath\btDefaultMotionState.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btGeometryUtil.h"
+				RelativePath="..\External\bullet\src\LinearMath\btGeometryUtil.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btHashMap.h"
+				RelativePath="..\External\bullet\src\LinearMath\btHashMap.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btIDebugDraw.h"
+				RelativePath="..\External\bullet\src\LinearMath\btIDebugDraw.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btList.h"
+				RelativePath="..\External\bullet\src\LinearMath\btList.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btMatrix3x3.h"
+				RelativePath="..\External\bullet\src\LinearMath\btMatrix3x3.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btMinMax.h"
+				RelativePath="..\External\bullet\src\LinearMath\btMinMax.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btMotionState.h"
+				RelativePath="..\External\bullet\src\LinearMath\btMotionState.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btPoolAllocator.h"
+				RelativePath="..\External\bullet\src\LinearMath\btPoolAllocator.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuadWord.h"
+				RelativePath="..\External\bullet\src\LinearMath\btQuadWord.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuaternion.h"
+				RelativePath="..\External\bullet\src\LinearMath\btQuaternion.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btQuickprof.h"
+				RelativePath="..\External\bullet\src\LinearMath\btQuickprof.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btRandom.h"
+				RelativePath="..\External\bullet\src\LinearMath\btRandom.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btScalar.h"
+				RelativePath="..\External\bullet\src\LinearMath\btScalar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btStackAlloc.h"
+				RelativePath="..\External\bullet\src\LinearMath\btStackAlloc.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btTransform.h"
+				RelativePath="..\External\bullet\src\LinearMath\btTransform.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btTransformUtil.h"
+				RelativePath="..\External\bullet\src\LinearMath\btTransformUtil.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\_sourceforge\_svn\bullet\trunk\src\LinearMath\btVector3.h"
+				RelativePath="..\External\bullet\src\LinearMath\btVector3.h"
 				>
 			</File>
 		</Filter>
