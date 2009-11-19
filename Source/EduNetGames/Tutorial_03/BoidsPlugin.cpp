@@ -315,7 +315,7 @@ void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
 //-----------------------------------------------------------------------------
 void BoidsPlugin::addBoidToFlock (void)
 {    
-	osAbstractVehicle* pkVehicle = this->createVehicle( 0, pd );
+	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETBOID, pd );
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicle( pkVehicle );
 }

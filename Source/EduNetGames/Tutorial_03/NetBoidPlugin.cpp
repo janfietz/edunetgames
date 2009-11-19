@@ -136,6 +136,26 @@ void NetClientBoidPlugin::DeleteContent( void )
 	//delete m_pkConditionReplic;	
 	BaseClass::DeleteContent();
 }
+
+//-----------------------------------------------------------------------------
+class NetBoidRenderOfflinePlugin : 
+	public OpenSteer::PluginArrayPluginMixin<OpenSteer::BoidsPlugin>
+{
+	ET_DECLARE_BASE( PluginArrayPluginMixin<OpenSteer::BoidsPlugin> )
+public:
+	NetBoidRenderOfflinePlugin( bool bAddToRegistry = true ):
+		BaseClass( bAddToRegistry ) 
+	{		
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+	};
+
+	virtual ~NetBoidRenderOfflinePlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( NetBoidRenderOfflinePlugin )
+};
+
+NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( );
+
 //-----------------------------------------------------------------------------
 // render client plugin
 //-----------------------------------------------------------------------------
@@ -146,7 +166,8 @@ class NetBoidRenderClientPlugin :
 {
 	ET_DECLARE_BASE( PluginArrayPluginMixin<NetClientBoidPlugin> )
 public:
-	NetBoidRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	NetBoidRenderClientPlugin( bool bAddToRegistry = true ):
+		BaseClass( bAddToRegistry ) 
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 	};
@@ -155,7 +176,7 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderClientPlugin )
 };
 
-NetBoidRenderClientPlugin gNetBoidClientPlugin( true );
+NetBoidRenderClientPlugin gNetBoidRenderClientPlugin( true );
 
 //-----------------------------------------------------------------------------
 // render server plugin
