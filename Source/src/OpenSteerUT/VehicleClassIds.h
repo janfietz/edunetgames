@@ -40,10 +40,10 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	// implement entity class id
 	static const EntityClassId g_clasId_NetPedestrian( 1 + OS_CID_LASTRESERVED );	
-	static const EntityClassId g_clasId_CtfBaseVehicle( 1 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_CtfSeekerVehicle( 1 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_CtfEnemyVehicle( 1 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_NetBoid( 1 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_CtfBaseVehicle( 2 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_CtfSeekerVehicle( 3 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_CtfEnemyVehicle( 4 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_NetBoid( 5 + OS_CID_LASTRESERVED );
 }
 
 //-----------------------------------------------------------------------------

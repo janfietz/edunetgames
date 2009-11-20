@@ -80,7 +80,13 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	float newSpeed = newVelocity.length();
 	if( newSpeed > 0 )
 	{
-		Vec3 newForward = newVelocity / newSpeed;
+		//Vec3 newForward = newVelocity / newSpeed;
+		Vec3 newForward = this->vehicle().forward();
+		if( this->vehicle().speed() > 0 )
+		{
+			newForward += newVelocity.normalized();
+			newForward = newForward.normalized();
+		}
 		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
 	}
 	else
