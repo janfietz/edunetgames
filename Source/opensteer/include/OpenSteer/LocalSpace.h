@@ -141,6 +141,13 @@ namespace OpenSteer {
 	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {
     public:
         virtual ~AbstractUpdatedLocalSpace() { /* Nothing to do. */ }
+
+		virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+		{
+			// nothing to do here
+			return;
+		}
+
 	};
 	
 
@@ -429,6 +436,10 @@ namespace OpenSteer {
 			return this->m_kEntity.isRemoteObject();
 		}
 
+		virtual const char* name (void) const
+		{
+			return this->m_kEntity.name();
+		}
 	};
 
 	//-------------------------------------------------------------------------

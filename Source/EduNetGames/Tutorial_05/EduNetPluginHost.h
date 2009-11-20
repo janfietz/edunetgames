@@ -7,7 +7,7 @@ namespace EduNet
 	{
 	public:
 
-		virtual const char* GetCurrentPluginName( void ) const = 0;
+		virtual const char* getCurrentPluginName( void ) const = 0;
 		virtual void SelectPluginByName( const char* pszPluginName ) = 0;
 	};
 };

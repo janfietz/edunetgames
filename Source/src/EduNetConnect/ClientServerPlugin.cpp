@@ -6,7 +6,7 @@
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
 
-EduNet::EmptyPlugin gEmptyPlugin;
+EduNet::EmptyPlugin gEmptyPlugin(false);
 
 using namespace OpenSteer;
 

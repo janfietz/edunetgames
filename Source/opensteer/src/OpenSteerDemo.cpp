@@ -218,7 +218,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 {
-    return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->name() : "no Plugin");
+    return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
 }
 
 
