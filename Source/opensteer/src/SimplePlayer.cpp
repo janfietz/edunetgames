@@ -43,7 +43,7 @@ SimpleController::~SimpleController()
 }
 
 //-----------------------------------------------------------------------------
-SimplePlayer::SimplePlayer()
+SimplePlayer::SimplePlayer():m_pkController(NULL)
 {
 
 }
