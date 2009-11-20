@@ -30,6 +30,7 @@
 #include "AbstractVehicleReplica.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/VehicleClassIds.h"
+#include "OpenSteer/Plugin.h"
 
 //-----------------------------------------------------------------------------
 // replica connection client

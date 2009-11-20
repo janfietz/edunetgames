@@ -47,30 +47,6 @@
 #endif
 
 //-----------------------------------------------------------------------------
-// raknet
-#if EDUNET_HAVE_RAKNET
-
-#include "ReplicaManager3.h"
-#include "FullyConnectedMesh2.h"
-#include "ConnectionGraph2.h"
-#include "BitStream.h"
-
-#include "MessageIdentifiers.h"
-#include "RakNetworkFactory.h"
-#include "RakPeerInterface.h"
-#include "RakPeerInterface.h"
-#include "RakNetTypes.h"
-#include "GetTime.h"
-#include "BitStream.h"
-#include "NetworkIDManager.h"
-#include "RakNetStatistics.h"
-//#include <RakNetTypes.h>
-#include "SocketLayer.h"
-#include "RPC3/RPC3.h"
-
-#endif // EDUNET_HAVE_RAKNET
-
-//-----------------------------------------------------------------------------
 // opensteer
 #if EDUNET_HAVE_OPENSTEER
 

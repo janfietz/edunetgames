@@ -28,6 +28,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "EduNetCommon/EduNetMacros.h"
+
+#include "OpenSteer/OpenSteerTypes.h"
+#include "OpenSteer/Proximity.h"
+#include "OpenSteer/AbstractVehicle.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer{
@@ -37,16 +42,30 @@ namespace OpenSteer{
 	using namespace OpenSteer;
 
 	//-------------------------------------------------------------------------
+//	class AbstractVehicle;
+	class AbstractPlugin;
+	class AbstractPlayer;
+	class AbstractController;
+
+	class Color;
+
+	typedef uint64_t NetworkId; 
+	typedef uint64_t EntityClassId;
+
+	//-------------------------------------------------------------------------
 	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
 	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
 
 
-
+	class PolylineSegmentedPathwaySingleRadius;
 
 	float drawGetWindowHeight(void);
 	float drawGetWindowWidth(void);
 
-	class AbstractVehicle;
+	//-------------------------------------------------------------------------
+	// OpenSteerUT types
+	class AbstractVehicleFactory;
+
 
 }
 

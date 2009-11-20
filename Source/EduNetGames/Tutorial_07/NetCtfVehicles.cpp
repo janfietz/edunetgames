@@ -122,6 +122,9 @@ void  NetCtfBaseVehicle::update( const float currentTime, const float elapsedTim
 	this->m_kEulerUpdate.setForce( kSteeringForce );
 	this->m_kEulerUpdate.update( currentTime, elapsedTime );
 	//		BaseClass::update( currentTime, elapsedTime );
+	// annotation
+	annotationVelocityAcceleration();
+	recordTrailVertex(currentTime, position());
 }
 
 //-----------------------------------------------------------------------------
@@ -646,10 +649,6 @@ void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTim
 	// do behavioral state transitions, as needed
 	this->updateState(currentTime);
 	BaseClass::update( currentTime, elapsedTime );
-
-	// annotation
-	annotationVelocityAcceleration();
-	recordTrailVertex(currentTime, position());
 }
 
 //-----------------------------------------------------------------------------
@@ -679,7 +678,7 @@ osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime
 
 	if( NULL == this->m_pkSeeker )
 	{
-		applyBrakingForce( gBrakingRate, elapsedTime );
+		this->applyBrakingForce( gBrakingRate, elapsedTime );
 	}
 	else
 	{
@@ -723,11 +722,6 @@ osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime
 void NetCtfEnemyVehicle::update( const float currentTime, const float elapsedTime )
 {
 	BaseClass::update( currentTime, elapsedTime );
-
-	// annotation
-	annotationVelocityAcceleration();
-	recordTrailVertex( currentTime, position() );
-
 	// detect and record interceptions("tags") of seeker
 	if( NULL != this->m_pkSeeker )
 	{

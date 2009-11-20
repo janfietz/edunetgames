@@ -272,6 +272,10 @@
 				Name="vehicles"
 				>
 				<File
+					RelativePath="..\..\local_clone\Source\src\OpenSteerUT\AbstractVehicleFactory.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
 					>
 				</File>

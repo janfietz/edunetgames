@@ -1,7 +1,7 @@
 #ifndef REPLICAMANAGER
 #define REPLICAMANAGER
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetConnect/EduNetConnect.h"
 
 template< class ReplicaConnectionClass >
 class OSReplicaManager : public RakNet::ReplicaManager3
