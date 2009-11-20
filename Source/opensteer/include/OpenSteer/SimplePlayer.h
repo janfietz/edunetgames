@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEGROUP_H__
-#define __ABSTRACTVEHICLEGROUP_H__
+#ifndef __SIMPLEPLAYER_H__
+#define __SIMPLEPLAYER_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,52 +29,60 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
-
-namespace OpenSteer {
+#include "OpenSteer/AbstractPlayer.h"
+#include "OpenSteer/Vec3.h"
 
 //-----------------------------------------------------------------------------
-// a utility class to handle common vehicle related topics
-class AbstractVehicleGroup : public OpenSteer::AbstractUpdated
+namespace OpenSteer
 {
-public:
-	AbstractVehicleGroup( AVGroup& kAVGroup );
-	AbstractVehicleGroup( const AVGroup& kAVGroup );
-	virtual ~AbstractVehicleGroup( void ){};
 
-	//-------------------------------------------------------------------
-	// interface AbstractUpdated
-	//-------------------------------------------------------------------
-	// interface AbstractUpdated
-	virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
-	virtual void update (const osScalar currentTime, const osScalar elapsedTime);
+	typedef EntityMixin<AbstractController> TAbstractController_0;
+	typedef EntityMixin<AbstractPlayer> TAbstractPlayer_0;
 
-	virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
+	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
+	typedef AbstractUpdatedMixin<TAbstractPlayer_0> TAbstractPlayer;
+
+	//-------------------------------------------------------------------------
+	class SimpleController : public TAbstractController
 	{
-		this->m_pkCustomUpdated = pkUpdated;
-	}
-	virtual AbstractUpdated* getCustomUpdated( void ) const
+		OS_DECLARE_BASE( TAbstractController )
+	public:
+		SimpleController();
+		virtual ~SimpleController();
+		OS_IMPLEMENT_CLASSNAME( SimpleController )
+
+		virtual const Vec3& getOutputForce( void ) const
+		{
+			return this->m_kOutput;
+		}
+
+	private:
+		Vec3 m_kOutput;
+	};
+
+	//-------------------------------------------------------------------------
+	class SimplePlayer : public TAbstractPlayer
 	{
-		return this->m_pkCustomUpdated;
-	}
+		OS_DECLARE_BASE( TAbstractPlayer )
+	public:
+		SimplePlayer();
+		virtual ~SimplePlayer();
+		OS_IMPLEMENT_CLASSNAME( SimplePlayer )
 
+		virtual void setController( AbstractController* pkController)
+		{
+			this->m_pkController = pkController;
+		}
 
-	virtual void redraw (const float currentTime, const float elapsedTime);
-	virtual void reset( void );
-	virtual void newPD( ProximityDatabase& pd );
+		virtual AbstractController const* const getController( AbstractController* ) const
+		{
+			return this->m_pkController;
+		}
 
-	virtual void addVehicle( AbstractVehicle* pkVehicle );
- 	virtual void removeVehicle( const AbstractVehicle* pkVehicle );
- 	virtual AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
+	private:
+		AbstractController* m_pkController;
+	};
 
-	size_t population() const { return m_kVehicles.size(); }
-private:
-	AbstractVehicleGroup( void );
-	AVGroup& m_kVehicles;
-	AbstractUpdated* m_pkCustomUpdated;
+}
 
-};
-
-} // namespace OpenSteer
-
-#endif //  __ABSTRACTVEHICLEGROUP_H__
+#endif //  __ABSTRACTPLAYER_H__

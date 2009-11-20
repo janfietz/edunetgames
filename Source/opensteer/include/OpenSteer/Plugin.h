@@ -96,7 +96,7 @@ namespace OpenSteer {
         virtual void reset (void) = 0;
 
         //! return a pointer to this instance's character string name
-        virtual const char* name (void) const = 0;
+        virtual const char* pluginName (void) const = 0;
 
         //! numeric sort key used to establish user-visible Plugin ordering
         //! ("built ins" have keys greater than 0 and less than 1)
@@ -145,7 +145,7 @@ namespace OpenSteer {
 		//! format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
 		{
-			os << "<Plugin " << '"' << pi.name() << '"' << ">";
+			os << "<Plugin " << '"' << pi.pluginName() << '"' << ">";
 			return os;
 		}
 	
@@ -170,7 +170,13 @@ namespace OpenSteer {
         //! destructor
         virtual ~Plugin();
 
-        //! default reset method is to do a close then an open
+		//! return a pointer to this instance's character string name
+		virtual const char* pluginName (void) const
+		{
+			return this->name();
+		}
+
+       //! default reset method is to do a close then an open
 		void reset (void) {close (); open ();}
 
         //! default sort key (after the "built ins")
@@ -217,7 +223,7 @@ namespace OpenSteer {
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {
-            os << "<Plugin " << '"' << pi.name() << '"' << ">";
+            os << "<Plugin " << '"' << pi.pluginName() << '"' << ">";
             return os;
         }
 

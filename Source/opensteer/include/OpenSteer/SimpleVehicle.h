@@ -244,6 +244,13 @@ namespace OpenSteer {
 			return this->m_pkCustomUpdated;
 		}
 
+		//-------------------------------------------------------------------
+		// interface AbstractUpdated
+		virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+		{
+			// nothing to do here
+			return;
+		}
 		//! currently selected vehicle.  Generally the one the camera follows and
 		//! for which additional information may be displayed.  Clicking the mouse
 		//! near a vehicle causes it to become the Selected Vehicle.

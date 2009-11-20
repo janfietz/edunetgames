@@ -49,18 +49,26 @@ namespace OpenSteer {
 
 	static const EntityClassId g_clasId_LocalSpace(2);
 
+	// player control interface ids
+	static const EntityClassId g_clasId_Player(3);
+	static const EntityClassId g_clasId_PlayerController(4);
+
+
 	// obstacle interface ids
-	static const EntityClassId g_clasId_Obstacle(3);
-	static const EntityClassId g_clasId_SphereObstacle(4);
-	static const EntityClassId g_clasId_BoxObstacle(5);
-	static const EntityClassId g_clasId_PlaneObstacle(6);
-	static const EntityClassId g_clasId_RectangleObstacle(7);
+	static const EntityClassId g_clasId_Obstacle(5);
+	static const EntityClassId g_clasId_SphereObstacle(6);
+	static const EntityClassId g_clasId_BoxObstacle(7);
+	static const EntityClassId g_clasId_PlaneObstacle(8);
+	static const EntityClassId g_clasId_RectangleObstacle(9);
 	static const EntityClassId g_clasId_LastReserved(1000);
 }
 
 #define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
 #define OS_CID_ENTITY OpenSteer::g_clasId_Entity
 #define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
+
+#define OS_CID_PLAYER OpenSteer::g_clasId_Player
+#define OS_CID_PLAYERCONTROLLER OpenSteer::g_clasId_PlayerController
 
 #define OS_CID_OBSTACLE OpenSteer::g_clasId_Obstacle
 #define OS_CID_SPHEREOBSTACLE OpenSteer::g_clasId_SphereObstacle
@@ -82,17 +90,30 @@ namespace OpenSteer {
 
 		OS_DECLARE_CLASSNAME
 
+		//! return a pointer to a cloned instance of this entity
 		virtual AbstractEntity* cloneEntity( void ) const = 0;
 
+		//! return the unique class id of this object
 		virtual EntityClassId getClassId( void ) const = 0;
 
+		//! return the unique instance id of this object
 		virtual InstanceTracker::Id getEntityId( void ) const = 0;
 
+		//! return the unique network id of this object
 		virtual NetworkId getNetworkId( void ) const = 0;
+
+		//! set the unique network id of this object
 		virtual void setNetworkId( NetworkId ) = 0;
 
+		//! set if this object is a remote object or not
 		virtual void setIsRemoteObject( bool bIsRemote ) = 0;
+
+		//! return if this object is a remote object
 		virtual bool isRemoteObject( void ) const = 0;
+
+		//! return a pointer to this instance's character string name
+		virtual const char* name (void) const = 0;
+
 	};
 
 	//-------------------------------------------------------------------------
@@ -142,6 +163,10 @@ namespace OpenSteer {
 			return m_bIsRemoteObject;
 		}
 
+		virtual const char* name (void) const
+		{
+			return "Unknown";
+		}
 	private:
 		InstanceTracker::Id m_uiId;
 		NetworkId m_netWorkId;
@@ -196,6 +221,10 @@ namespace OpenSteer {
 			return this->m_kInstance.isRemoteObject();
 		}
 
+		virtual const char* name (void) const
+		{
+			return this->m_kInstance.name();
+		}
 	private:
 		EntityInstance m_kInstance;
 	};

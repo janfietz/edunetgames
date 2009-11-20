@@ -149,7 +149,7 @@ void Application::addGuiElements( GLUI* glui )
 	for (int i = 0; i < numPlugins; ++i)
 	{
 		AbstractPlugin* pi = Plugin::getPluginAt(i);
-		const char* s = pi->name();
+		const char* s = pi->pluginName();
 		pluginList->add_item(i, s);
 	}
 	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteer::Plugin::selectedPlugin );
@@ -214,7 +214,7 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 		}
 		if( pluginPanel == NULL )
 		{
-			GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->name() : "Plugin", false );	
+			GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
 			pluginPanel = pluginRollout;
 			//pluginPanel = appGlui->add_panel( pkPlugin ? pkPlugin->name() : "Plugin" );
 			pkPlugin->initGui( pluginPanel );

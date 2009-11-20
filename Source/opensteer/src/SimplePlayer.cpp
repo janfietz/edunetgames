@@ -1,6 +1,3 @@
-#ifndef __ABSTRACTVEHICLEGROUP_H__
-#define __ABSTRACTVEHICLEGROUP_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,52 +26,32 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/SimplePlayer.h"
 
-namespace OpenSteer {
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-// a utility class to handle common vehicle related topics
-class AbstractVehicleGroup : public OpenSteer::AbstractUpdated
+SimpleController::SimpleController()
 {
-public:
-	AbstractVehicleGroup( AVGroup& kAVGroup );
-	AbstractVehicleGroup( const AVGroup& kAVGroup );
-	virtual ~AbstractVehicleGroup( void ){};
 
-	//-------------------------------------------------------------------
-	// interface AbstractUpdated
-	//-------------------------------------------------------------------
-	// interface AbstractUpdated
-	virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
-	virtual void update (const osScalar currentTime, const osScalar elapsedTime);
+}
 
-	virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
-	{
-		this->m_pkCustomUpdated = pkUpdated;
-	}
-	virtual AbstractUpdated* getCustomUpdated( void ) const
-	{
-		return this->m_pkCustomUpdated;
-	}
+//-----------------------------------------------------------------------------
+SimpleController::~SimpleController()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+SimplePlayer::SimplePlayer()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+SimplePlayer::~SimplePlayer()
+{
+
+}
 
 
-	virtual void redraw (const float currentTime, const float elapsedTime);
-	virtual void reset( void );
-	virtual void newPD( ProximityDatabase& pd );
-
-	virtual void addVehicle( AbstractVehicle* pkVehicle );
- 	virtual void removeVehicle( const AbstractVehicle* pkVehicle );
- 	virtual AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
-
-	size_t population() const { return m_kVehicles.size(); }
-private:
-	AbstractVehicleGroup( void );
-	AVGroup& m_kVehicles;
-	AbstractUpdated* m_pkCustomUpdated;
-
-};
-
-} // namespace OpenSteer
-
-#endif //  __ABSTRACTVEHICLEGROUP_H__

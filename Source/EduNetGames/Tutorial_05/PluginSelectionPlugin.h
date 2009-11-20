@@ -33,7 +33,7 @@ public:
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );
 
-	const char* GetCurrentPluginName( void ) const;
+	const char* getCurrentPluginName( void ) const;
 	virtual void SelectPluginByName( const char* pszPluginName ){ };
 
 private:
@@ -81,7 +81,7 @@ void PluginServerPlugin<PluginClass>::CreateContent ( void )
 //-----------------------------------------------------------------------------
 template < class PluginClass>
 const char* PluginServerPlugin<PluginClass>::name (void) const {
-	const char* pszCurrentPluginName = this->GetCurrentPluginName();
+	const char* pszCurrentPluginName = this->getCurrentPluginName();
 	if(NULL != pszCurrentPluginName )
 	{
 		return pszCurrentPluginName ;
@@ -90,7 +90,7 @@ const char* PluginServerPlugin<PluginClass>::name (void) const {
 }
 //-----------------------------------------------------------------------------
 template < class PluginClass>
-const char* PluginServerPlugin<PluginClass>::GetCurrentPluginName( void ) const
+const char* PluginServerPlugin<PluginClass>::getCurrentPluginName( void ) const
 {	
 	return this->m_kGamePlugin.name();	
 }
@@ -115,7 +115,7 @@ public:
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
 
-	const char* GetCurrentPluginName( void ) const;
+	const char* getCurrentPluginName( void ) const;
 	void SelectPluginByName( const char* pszPluginName );
 
 private:

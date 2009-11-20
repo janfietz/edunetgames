@@ -66,6 +66,13 @@ void AbstractVehicleGroup::newPD( ProximityDatabase& pd )
 }
 
 //-----------------------------------------------------------------------------
+void AbstractVehicleGroup::updateCustom( 
+	AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
+{
+	assert( true == false );
+}
+
+//-----------------------------------------------------------------------------
 void AbstractVehicleGroup::update( const float currentTime, const float elapsedTime )
 {
 	AVIterator iter = m_kVehicles.begin();
