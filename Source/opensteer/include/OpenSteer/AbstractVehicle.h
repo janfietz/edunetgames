@@ -103,7 +103,7 @@ namespace OpenSteer {
 		virtual void reset( void ) = 0;
 		virtual void newPD( ProximityDatabase& pd ) = 0;
 
-		virtual void regenerateLocalSpace (const Vec3& newVelocity,
+		virtual void regenerateLocalSpace( const Vec3& newForward,
                                            const float elapsedTime) = 0;
 		
 		virtual void applySteeringForce (const Vec3& force,
@@ -121,6 +121,7 @@ namespace OpenSteer {
 
 		virtual const Vec3& lastSteeringForce( void ) const = 0;
 		virtual void setLastSteeringForce( const Vec3& ) = 0;
+		virtual bool movesPlanar( void ) const = 0;
 		//! CP --
    };
 

@@ -49,7 +49,7 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 //	writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
 
 	// compute acceleration and velocity
-	Vec3 newAcceleration = (this->getForce() / this->vehicle().mass());
+	Vec3 newAcceleration = ( this->getForce() / this->vehicle().mass() );
 	Vec3 newVelocity = this->vehicle().velocity();
 
 	// damp out abrupt changes and oscillations in steering acceleration
@@ -69,30 +69,43 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	newVelocity = newVelocity.truncateLength( this->vehicle().maxSpeed () );
 
 	// update Speed
-	this->vehicle().setSpeed (newVelocity.length());
+	this->vehicle().setSpeed( newVelocity.length() );
 
 	// Euler integrate (per frame) velocity into position
 	osVector3 kNewPosition = vehicle().position() + (newVelocity * elapsedTime);
 	this->vehicle().setPosition( kNewPosition );
 
-	bool bInfiniteRotationSpeed = false;
-	if( true == bInfiniteRotationSpeed )
+	// regenerate local space (by default: align vehicle's forward axis with
+	// new velocity, but this behavior may be overridden by derived classes.)
+	float newSpeed = newVelocity.length();
+	if( newSpeed > 0 )
 	{
-		// regenerate local space (by default: align vehicle's forward axis with
-		// new velocity, but this behavior may be overridden by derived classes.)
-		this->vehicle().regenerateLocalSpace (newVelocity, elapsedTime);			
+		Vec3 newForward = newVelocity / newSpeed;
+		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
 	}
-	else 
+	else
 	{
-		Vec3 newForward = this->vehicle().forward();
-		if( this->vehicle().speed() > 0 )
-		{
-			newForward += newVelocity.normalized();
-			newForward = newForward.normalized();
-		}
-		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
+		// maybe smth to turn at zero speed ?
 	}
 
+// 	bool bInfiniteRotationSpeed = false;
+// 	if( true == bInfiniteRotationSpeed )
+// 	{
+// 		// regenerate local space (by default: align vehicle's forward axis with
+// 		// new velocity, but this behavior may be overridden by derived classes.)
+// 		this->vehicle().regenerateLocalSpace( newVelocity, elapsedTime );			
+// 	}
+// 	else 
+// 	{
+// 		Vec3 newForward = this->vehicle().forward();
+// 		if( this->vehicle().speed() > 0 )
+// 		{
+// 			newForward += newVelocity.normalized();
+// 			newForward = newForward.normalized();
+// 		}
+// 		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
+// 	}
+// 
 	this->updateMotionState( currentTime, elapsedTime );
 }
 
@@ -110,11 +123,31 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 //-------------------------------------------------------------------------
 void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
 {
-	const Vec3 force = this->vehicle().determineCombinedSteering (elapsedTime);
-	const Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
+	const Vec3 force = this->vehicle().determineCombinedSteering( elapsedTime );
+	Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
 
 	// enforce limit on magnitude of steering force
 	// for a 2d vehicle set y to zero
+	if( this->vehicle().movesPlanar() )
+	{
+#if OPENSTEER_Z_ISUP
+		float& fForceCorrection = adjustedForce.z;
+#else
+		float& fForceCorrection = adjustedForce.y;
+#endif
+		if( fForceCorrection != 0 )
+		{
+			const float adjust = ::fabs( fForceCorrection );
+			fForceCorrection = 0;
+			float adjustedForceLength = adjustedForce.length();
+			if( adjustedForceLength > 0 )
+			{
+				adjustedForce = adjustedForce / adjustedForceLength; // normalize
+				adjustedForceLength += adjust; // adjust
+				adjustedForce = adjustedForce * adjustedForceLength;
+			}
+		}
+	}
 	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 

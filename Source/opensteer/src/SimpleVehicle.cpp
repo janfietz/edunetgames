@@ -72,6 +72,7 @@ OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 //-----------------------------------------------------------------------------
 // constructor
 OpenSteer::SimpleVehicle::SimpleVehicle (void):
+_movesPlanar(true),
 m_pkCustomUpdated( NULL )
 {
     // set inital state
@@ -202,7 +203,16 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 
     // regenerate local space (by default: align vehicle's forward axis with
     // new velocity, but this behavior may be overridden by derived classes.)
-    regenerateLocalSpace (newVelocity, elapsedTime);
+	float newSpeed = newVelocity.length();
+	if( newSpeed > 0 )
+	{
+		Vec3 newForward = newVelocity / newSpeed;
+		this->regenerateLocalSpace( newForward, elapsedTime );
+	}
+	else
+	{
+		// maybe smth to turn at zero speed ?
+	}
 
     // maintain path curvature information
     measurePathCurvature (elapsedTime);
@@ -219,11 +229,11 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 //
 // parameter names commented out to prevent compiler warning from "-W"
 void 
-OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newVelocity,
+OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newForward,
                                                 const float /* elapsedTime */)
 {
     // adjust orthonormal basis vectors to be aligned with new velocity
-    if (speed() > 0) regenerateOrthonormalBasisUF (newVelocity / speed());
+    this->regenerateOrthonormalBasisUF( newForward );
 }
 
 //-----------------------------------------------------------------------------
@@ -233,7 +243,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newVelocity,
 
 // XXX experimental cwr 6-5-03
 void 
-OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocity,
+OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newForward,
                                                           const float elapsedTime)
 {
     // the length of this global-upward-pointing vector controls the vehicle's
@@ -259,7 +269,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newVelocit
 //  annotationLine (position(), position() + (up ()    * 1), gYellow); // XXX
 
     // adjust orthonormal basis vectors to be aligned with new velocity
-    if (speed() > 0) regenerateOrthonormalBasisUF (newVelocity / speed());
+    this->regenerateOrthonormalBasisUF( newForward );
 }
 
 

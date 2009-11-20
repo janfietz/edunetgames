@@ -93,10 +93,10 @@ namespace OpenSteer {
     public:
 
         //! constructor
-        SimpleVehicle ();
+        SimpleVehicle();
 
         //! destructor
-        ~SimpleVehicle ();
+        ~SimpleVehicle();
 
 		OS_IMPLEMENT_CLASSNAME( SimpleVehicle )
 
@@ -161,13 +161,13 @@ namespace OpenSteer {
 		
         //! the default version: keep FORWARD parallel to velocity, change
         //! UP as little as possible.
-        virtual void regenerateLocalSpace (const Vec3& newVelocity,
+        virtual void regenerateLocalSpace( const Vec3& newForward,
                                            const float elapsedTime);
 
         //! alternate version: keep FORWARD parallel to velocity, adjust UP
         //! according to a no-basis-in-reality "banking" behavior, something
         //! like what birds and airplanes do.  (XXX experimental cwr 6-5-03)
-        void regenerateLocalSpaceForBanking (const Vec3& newVelocity,
+        void regenerateLocalSpaceForBanking (const Vec3& newForward,
                                              const float elapsedTime);
 
         //! adjust the steering force passed to applySteeringForce.
@@ -232,6 +232,7 @@ namespace OpenSteer {
 		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
 		virtual void setLastSteeringForce( const Vec3& force ) { _lastSteeringForce = force; };
 
+		virtual bool movesPlanar( void ) const { return _movesPlanar; };
 
 		virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
 		{
@@ -249,6 +250,7 @@ namespace OpenSteer {
 		static AbstractVehicle* selectedVehicle;
 	protected:
 		Vec3 _lastSteeringForce;
+		bool _movesPlanar;
 
 		//! CP --
     private:
