@@ -1441,6 +1441,11 @@ namespace {
 	// ------------------------------------------------------------------------
 	void idleFunc( void )
 	{
+#ifdef _DEBUG
+		EduNet::Application::sleep( 10 );
+#else
+		EduNet::Application::sleep( 1 );
+#endif
 		displayFunc();
 //		glutSetWindow(windowID);
 //		glutPostRedisplay();

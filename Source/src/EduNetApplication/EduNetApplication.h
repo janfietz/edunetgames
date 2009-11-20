@@ -63,6 +63,8 @@ public:
 	static void _SDMCleanup( void );
 	static void _SDMShutdown( void );
 
+	static void sleep( size_t uiMilliseconds );
+
 
 	float m_fSimulationFPS;
 	float m_fTimeFactor;

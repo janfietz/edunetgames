@@ -214,7 +214,9 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 		}
 		if( pluginPanel == NULL )
 		{
-			pluginPanel = appGlui->add_panel( pkPlugin ? pkPlugin->name() : "Plugin" );
+			GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->name() : "Plugin", false );	
+			pluginPanel = pluginRollout;
+			//pluginPanel = appGlui->add_panel( pkPlugin ? pkPlugin->name() : "Plugin" );
 			pkPlugin->initGui( pluginPanel );
 		}
 	}
@@ -331,6 +333,16 @@ void Application::redrawSelectedPlugin (const float currentTime,
 		return;
 	}
 	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
+}
+
+//-----------------------------------------------------------------------------
+void Application::sleep( size_t uiMilliseconds )
+{
+#ifdef WIN32
+	::Sleep(uiMilliseconds);
+#else
+	::sleep(uiMilliseconds);
+#endif
 }
 
 //-----------------------------------------------------------------------------
