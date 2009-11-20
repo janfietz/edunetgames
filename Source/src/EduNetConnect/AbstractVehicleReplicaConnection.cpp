@@ -68,7 +68,7 @@ RakNet::Replica3* AbstractVehicleReplicaConnection::AllocReplica(
 		{
 			AbstractVehicleReplica* pkNewReplica = new AbstractVehicleReplica( pkPlugin, classId, true  );
 			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-			kVG.addVehicle( pkNewReplica->AccessVehicle() );
+			kVG.addVehicle( pkNewReplica->accessEntity() );
 			return pkNewReplica; 
 		}
 	}
@@ -86,7 +86,7 @@ OpenSteer::AbstractVehicle* AbstractVehicleReplicaFactory::createVehicle( OpenSt
 	if( NULL != pkNewReplica )
 	{
 		this->m_pkReplicaManager->Reference( pkNewReplica );
-		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
+		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
 		if( NULL != pkVehicle )
 		{
 			this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );

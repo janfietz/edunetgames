@@ -42,9 +42,9 @@ NetBoidReplica::NetBoidReplica():
 NetBoidReplica::NetBoidReplica( OpenSteer::BoidsPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 	m_pBoidPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = gNetBoidFactory.createVehicle( ET_CID_NETBOID,
-	this->m_pBoidPlugin->accessProximityDataBase() );
-	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );	
+	this->setEntity( gNetBoidFactory.createVehicle( ET_CID_NETBOID,
+	this->m_pBoidPlugin->accessProximityDataBase() ) );
+	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );	
 }
 
 //-----------------------------------------------------------------------------
@@ -55,56 +55,31 @@ RakNet::RakString NetBoidReplica::GetName(void) const
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidReplica::SetNetworkID( NetworkID id )
-{
-	BaseClass::SetNetworkID( id );
-	OpenSteer::AbstractVehicle* pkVehicle = this->AccessVehicle();
-	pkVehicle->setNetworkId( id.guid.g );
-
-}
-//-----------------------------------------------------------------------------
 void NetBoidReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	OpenSteer::AbstractVehicleGroup kVG( m_pBoidPlugin->allVehicles() );
-	kVG.removeVehicle( this->m_pVehicle );
-	ET_SAFE_DELETE( this->m_pVehicle );
-	delete this;
+	kVG.removeVehicle( this->accessEntity() );
+	this->releaseEntity();
+	ET_DELETE this;
 }
 
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult NetBoidReplica::Serialize(
 	RakNet::SerializeParameters *serializeParameters)
 {
-	this->SetSendParameter( serializeParameters->pro );
-
-	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
-
-	kStream.WriteAlignedBytes((const unsigned char*)&m_pVehicle->position(),sizeof(OpenSteer::Vec3));
-
-	kStream.WriteAlignedBytes((const unsigned char*)&m_pVehicle->forward(),sizeof(OpenSteer::Vec3));
-
-
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
-}
-
-//-----------------------------------------------------------------------------
-void NetBoidReplica::SetSendParameter( RakNet::PRO& kPro ) const
-{
-	kPro.priority = LOW_PRIORITY;
-	kPro.reliability = UNRELIABLE;
-	kPro.orderingChannel = 1;
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	int nResult = kSerializer.serialize( serializeParameters );
+	if( nResult >= 0 )
+	{
+		return static_cast<RakNet::RM3SerializationResult>(nResult);
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 //-----------------------------------------------------------------------------
 void NetBoidReplica::Deserialize(
 	RakNet::DeserializeParameters *deserializeParameters)
 {
-	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
-
-	OpenSteer::Vec3 kVec;
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	m_pVehicle->setPosition(kVec);
-
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	m_pVehicle->setForward(kVec);
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	kSerializer.deserialize( deserializeParameters );
 }

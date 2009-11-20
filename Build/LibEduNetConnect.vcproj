@@ -220,6 +220,14 @@
 				Name="replication"
 				>
 				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractReplica.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractReplica.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplica.cpp"
 					>
 				</File>
@@ -240,15 +248,35 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Source\src\EduNetConnect\OSReplicaConnection.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\OSReplicaConnection.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Source\src\EduNetConnect\OSReplicaTypes.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="vehicles"
+				>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.h"
 					>
 				</File>
 			</Filter>

@@ -28,10 +28,10 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteerUT/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/VehicleClassIds.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
 
 //-----------------------------------------------------------------------------
 // short names for STL vectors (iterators) of SphereObstacle pointers

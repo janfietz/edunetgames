@@ -27,10 +27,11 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleReplica.h"
-#include "OpenSteerUT/AbstractVehicleFactory.h"
+#include "NetworkVehicle.h"
 
+#include "OpenSteerUT/AbstractVehicleFactory.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
-#include "OpenSteerUT/VehicleClassIds.h"
+// #include "OpenSteerUT/VehicleClassIds.h"
 
 using namespace OpenSteer;
 
@@ -47,10 +48,10 @@ AbstractVehicleReplica::AbstractVehicleReplica( OpenSteer::AbstractPlugin* pkHos
 m_pkHostPlugin(pkHostPlugin)
 {
 	assert( NULL != AbstractVehicleReplica::ms_pkFactory );
-	this->m_pVehicle = AbstractVehicleReplica::ms_pkFactory->createVehicle( classId, this->m_pkHostPlugin->accessProximityDataBase() );
-	assert( NULL != this->m_pVehicle );
-	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );
-	this->m_kClassName = this->m_pVehicle->getClassName();
+	this->setEntity( AbstractVehicleReplica::ms_pkFactory->createVehicle( classId, this->m_pkHostPlugin->accessProximityDataBase() ) );
+	assert( NULL != this->getEntity() );
+	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
+	this->m_kClassName = this->accessEntity()->getClassName();
 };
 
 //-----------------------------------------------------------------------------
@@ -60,19 +61,11 @@ void AbstractVehicleReplica::setAbstractVehicleFactory( OpenSteer::AbstractVehic
 }
 
 //-----------------------------------------------------------------------------
-void AbstractVehicleReplica::SetNetworkID( NetworkID id )
-{
-	BaseClass::SetNetworkID( id );
-	OpenSteer::AbstractVehicle* pkVehicle = this->AccessVehicle();
-	pkVehicle->setNetworkId( id.guid.g );
-}
-
-//-----------------------------------------------------------------------------
 RakNet::RakString AbstractVehicleReplica::GetName(void) const
 {
-	if( NULL != this->m_pVehicle )
+	if( NULL != this->accessEntity() )
 	{
-		return this->m_pVehicle->getClassName();
+		return this->accessEntity()->getClassName();
 	}
 	return this->m_kClassName;
 }
@@ -81,38 +74,27 @@ RakNet::RakString AbstractVehicleReplica::GetName(void) const
 void AbstractVehicleReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
-	kVG.removeVehicle( this->m_pVehicle );
-	ET_SAFE_DELETE( this->m_pVehicle );
-	delete this;
+	kVG.removeVehicle( this->accessEntity() );
+	this->releaseEntity();
+	ET_DELETE this;
 }
 
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult AbstractVehicleReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
-
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->position(),sizeof(OpenSteer::Vec3));
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->forward(),sizeof(OpenSteer::Vec3));
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->lastSteeringForce(),sizeof(OpenSteer::Vec3));
-
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	int nResult = kSerializer.serialize( serializeParameters );
+	if( nResult >= 0 )
+	{
+		return static_cast<RakNet::RM3SerializationResult>(nResult);
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 //-----------------------------------------------------------------------------
 void AbstractVehicleReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
-
-	OpenSteer::Vec3 kVec;
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setPosition(kVec);
-
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setForward(kVec);	
-	this->m_pVehicle->regenerateOrthonormalBasisUF( kVec );			
-
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setLastSteeringForce(kVec);	
-
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	kSerializer.deserialize( deserializeParameters );
 }
 

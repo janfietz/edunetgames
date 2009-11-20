@@ -1,5 +1,3 @@
-#include "SimpleNetworkVehicle.h"
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,6 +26,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "AbstractVehicleMotionStatePlot.h"
+#include "SimplePhysicsVehicle.h"
+
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
@@ -36,7 +37,6 @@ namespace OpenSteer {
 		this->m_kLinearVelocity.accessValues(0).setName( "LinearVel" );
 		this->m_kAngularVelocity.accessValues(0).setName( "AngularVel" );
 		this->m_kSteeringForce.accessValues(0).setName( "SteeringForce" );
-//		this->m_kLinearVelocity.accessValues(1);
 	}
 
 	AbstractVehicleMotionStatePlot::~AbstractVehicleMotionStatePlot()
@@ -49,31 +49,25 @@ namespace OpenSteer {
 		{
 			return;
 		}
-
 		// update motion state plot
-		SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkVehicle);
-		if( pkNetworkVehicle != NULL )
+		SimplePhysicsVehicle* pkPhysicsVehicle = dynamic_cast<SimplePhysicsVehicle*>(pkVehicle);
+		if( pkPhysicsVehicle != NULL )
 		{
 			// a hack ...
 			if( false )
 			{
-				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkNetworkVehicle->accessEulerUpdate();
+				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkPhysicsVehicle->accessEulerUpdate();
 				PhysicsMotionState& kUpdateState = kEulerUpdateAccess.accessMotionState();
-				kUpdateState.updateMotionState( pkNetworkVehicle, currentTime, elapsedTime );
+				kUpdateState.updateMotionState( pkPhysicsVehicle, currentTime, elapsedTime );
 
 			}
 
-			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkNetworkVehicle->getEulerUpdate();
+			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
 			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
 
 			Profile::GraphValues& kLinearVelocityValues = 
 				this->m_kLinearVelocity.accessValues(0);
 			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
-// 			{
-// 				Profile::GraphValues& kLinearVelocityValues = 
-// 					this->m_kLinearVelocity.accessValues(1);
-// 				kLinearVelocityValues.addValue( currentTime, sinf(currentTime) );
-// 			}
 
 			Profile::GraphValues& kAngularVelocityValues = 
 				this->m_kAngularVelocity.accessValues(0);
@@ -83,7 +77,7 @@ namespace OpenSteer {
 			kSteeringForceValues.addValue( currentTime, kState.m_kForce.length() );
 
 			Color kColor;
-			if( true == pkNetworkVehicle->isRemoteObject() )
+			if( true == pkPhysicsVehicle->isRemoteObject() )
 			{
 				kColor = gGreen;
 			}
@@ -112,36 +106,7 @@ namespace OpenSteer {
 		kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
 	}
 
-	//-------------------------------------------------------------------------
-#pragma warning(push)
-#pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
-	SimpleNetworkVehicle::SimpleNetworkVehicle():
-		m_kEulerUpdate(this),
-		m_kSteeringForceUpdate(this)
-	{ 
-	}
-#pragma warning(pop)
-
-	SimpleNetworkVehicle::~SimpleNetworkVehicle() 
-	{ 
-	}
 
 
 } // namespace OpenSteer
 
-
-//-----------------------------------------------------------------------------
-class TestNetworkVehicle : public OpenSteer::SimpleNetworkVehicle
-{
-public:
-	virtual void update(const float,const float)
-	{
-
-	}
-};
-
-//-----------------------------------------------------------------------------
-void testSimpleNetWorkVehicle(  )
-{
-	TestNetworkVehicle kVehicle;
-}

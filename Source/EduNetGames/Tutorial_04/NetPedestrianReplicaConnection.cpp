@@ -53,7 +53,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 		{
 			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pkPlugin, true  );
 			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-			kVG.addVehicle( pkNewReplica->AccessVehicle() );
+			kVG.addVehicle( pkNewReplica->accessEntity() );
 			return pkNewReplica; 
 		}
 	}
@@ -79,9 +79,9 @@ OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenStee
 			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
 			this->m_pkReplicaManager->Reference( pkNewReplica );
 
-			OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
+			OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
 			this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
-			return pkNewReplica->AccessVehicle();
+			return pkNewReplica->accessEntity();
 		}
 	}
 	return NULL;

@@ -30,7 +30,7 @@
 
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetConnect/NetworkPlot.h"
-#include "OpenSteerUT/SimpleNetworkVehicle.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
 
 #define CLIENT_PORT  23456
 #define SERVER_PORT  12345

@@ -52,7 +52,7 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 	if (typeName==kReplica.GetName()){
 		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( this->m_pBoidPlugin, true  );
 		OpenSteer::AbstractVehicleGroup kVG( this->m_pBoidPlugin->allVehicles() );
-		kVG.addVehicle( pkNewReplica->AccessVehicle() );
+		kVG.addVehicle( pkNewReplica->accessEntity() );
 		return pkNewReplica; 
 	}
 	if (typeName==kReplicaCondition.GetName()){
@@ -79,9 +79,9 @@ OpenSteer::AbstractVehicle* NetBoidReplicaFactory::createVehicle(
 			this->m_pkReplicaManager->accessPlugin(), false );		
 		this->m_pkReplicaManager->Reference( pkNewReplica );
 
-		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->AccessVehicle();
+		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
 		this->m_uidMap.Set(pkVehicle->getEntityId(), pkNewReplica);
-		return pkNewReplica->AccessVehicle();
+		return pkNewReplica->accessEntity();
 	}
 }
 

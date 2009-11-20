@@ -1,5 +1,6 @@
-#ifndef __SIMPLENETWORKVEHICLE_H__
-#define __SIMPLENETWORKVEHICLE_H__
+
+#ifndef __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
+#define __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,14 +30,13 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetworkVehicle.h"
-#include "VehicleClassIds.h"
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetProfile/GraphPlot.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
 
+
+//-----------------------------------------------------------------------------
 namespace OpenSteer {
+
+	class AbstractVehicle;
 
 	//-------------------------------------------------------------------------
 	class AbstractVehicleMotionStatePlot
@@ -53,47 +53,7 @@ namespace OpenSteer {
 		mutable Profile::GraphValuesArray m_kSteeringForce;
 
 	};
-
-	//-------------------------------------------------------------------------
-	class AbstractSimpleNetworkVehicle : public SimpleVehicle, public AbstractNetworkVehicle
-	{
-	public:
-		AbstractSimpleNetworkVehicle() { /* Nothing to do. */ }
-		virtual ~AbstractSimpleNetworkVehicle() { /* Nothing to do. */ }
-	};
+}
 
 
-	// SimpleVehicle_1 adds concrete LocalSpace methods to AbstractVehicle
-	typedef NetworkVehicleMixin<AbstractSimpleNetworkVehicle> SimpleNetworkVehicle_1;
-
-	class SimpleNetworkVehicle : public SimpleNetworkVehicle_1
-	{
-		ET_DECLARE_BASE( SimpleNetworkVehicle_1 )
-	public:
-		SimpleNetworkVehicle();
-		virtual ~SimpleNetworkVehicle();
-
-		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
-
-		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
-		{
-			return this->m_kEulerUpdate;
-		}
-		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
-		{
-			return this->m_kEulerUpdate;
-		}
-
-	protected:
-		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
-		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-
-	private:
-
-
-	};
-
-
-} // namespace OpenSteer
-
-#endif
+#endif // __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__

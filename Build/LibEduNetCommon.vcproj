@@ -300,6 +300,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleMotionStatePlot.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleMotionStatePlot.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUpdate.cpp"
 					>
 				</File>
@@ -312,15 +320,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Source\src\OpenSteerUT\NetworkVehicle.h"
+					RelativePath="..\Source\src\OpenSteerUT\SimplePhysicsVehicle.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\OpenSteerUT\SimpleNetworkVehicle.h"
+					RelativePath="..\Source\src\OpenSteerUT\SimplePhysicsVehicle.h"
 					>
 				</File>
 				<File
