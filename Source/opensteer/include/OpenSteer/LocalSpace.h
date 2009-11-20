@@ -498,6 +498,7 @@ namespace OpenSteer {
 			if( NULL != this->m_pkPossessor )
 			{
 				this->m_pkPossessor->play( NULL );
+				this->m_pkPossessor = NULL;
 			}
 			if( NULL == this->m_pkPossessor )
 			{
