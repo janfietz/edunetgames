@@ -28,7 +28,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
+#include "EduNetConnect/EduNetConnect.h"
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 

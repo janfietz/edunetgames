@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
+#ifndef __EDUNETCONNECTEXTERNAL_H__
+#define __EDUNETCONNECTEXTERNAL_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,56 +29,34 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+// include configuration
+#include "EduNetConnectConfig.h"
+
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
-{
-	using namespace OpenSteer;
+// raknet
+#if EDUNET_HAVE_RAKNET
 
-	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
-	{
-	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
+#include "ReplicaManager3.h"
+#include "FullyConnectedMesh2.h"
+#include "ConnectionGraph2.h"
+#include "BitStream.h"
 
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
-		{
+#include "MessageIdentifiers.h"
+#include "RakNetworkFactory.h"
+#include "RakPeerInterface.h"
+#include "RakPeerInterface.h"
+#include "RakNetTypes.h"
+#include "GetTime.h"
+#include "BitStream.h"
+#include "NetworkIDManager.h"
+#include "RakNetStatistics.h"
+//#include <RakNetTypes.h>
+#include "SocketLayer.h"
+#include "RPC3/RPC3.h"
 
-		}
-
-		virtual ~VehicleClassIdMixin()
-		{
-		}
-
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
-
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
-		}
-
-	private:
-
-	};
-
-}
+#endif // EDUNET_HAVE_RAKNET
 
 
-#endif // __ABSTRACTVEHICLEUTILITIES_H__
+
+#endif // __EDUNETCONNECTEXTERNAL_H__

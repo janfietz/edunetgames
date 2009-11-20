@@ -135,7 +135,7 @@ namespace OpenSteer {
 
 		virtual EntityClassId getClassId( void ) const
 		{
-		  return EntityClassId( 0 );
+		  return OS_CID_UNKNOWN;
 		}
 
 		InstanceTracker::Id getEntityId( void ) const
@@ -240,6 +240,13 @@ namespace OpenSteer {
 
 		virtual ~EntityClassIdMixin()
 		{
+		}
+
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return new VehicleClassIdMixin();
 		}
 
 		virtual EntityClassId getClassId( void ) const

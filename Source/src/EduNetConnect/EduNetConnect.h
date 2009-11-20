@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
+#ifndef __EDUNETCONNECT_H__
+#define __EDUNETCONNECT_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,56 +29,16 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+// do not include OpenSteer everywhere
+#ifndef EDUNET_NO_OPENSTEER_INCLUDES
+#define EDUNET_NO_OPENSTEER_INCLUDES 1
+#endif
+
 #include "EduNetCommon/EduNetCommon.h"
+#include "EduNetConnectConfig.h"
+#include "EduNetConnectExternal.h"
+// #include "EduNetConnectTypes.h"
+// #include "EduNetConnectMacros.h"
 
-//-----------------------------------------------------------------------------
-namespace OpenSteer
-{
-	using namespace OpenSteer;
+#endif // __EDUNETCONNECT_H__
 
-	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
-	{
-	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
-
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
-		{
-
-		}
-
-		virtual ~VehicleClassIdMixin()
-		{
-		}
-
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
-
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
-		}
-
-	private:
-
-	};
-
-}
-
-
-#endif // __ABSTRACTVEHICLEUTILITIES_H__

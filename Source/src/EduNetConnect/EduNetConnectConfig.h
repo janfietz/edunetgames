@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
+#ifndef __EDUNETCONNECTCONFIG_H__
+#define __EDUNETCONNECTCONFIG_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,56 +29,26 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#if __APPLE__ && __MACH__
+#define EDUNET_HAVE_RAKNET 0 // not jet
+#endif
 
-//-----------------------------------------------------------------------------
-namespace OpenSteer
-{
-	using namespace OpenSteer;
-
-	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
-	{
-	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
-
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
-		{
-
-		}
-
-		virtual ~VehicleClassIdMixin()
-		{
-		}
-
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
-
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
-		}
-
-	private:
-
-	};
-
-}
+// raknet
+#ifndef EDUNET_HAVE_RAKNET
+#define EDUNET_HAVE_RAKNET 1
+#endif
 
 
-#endif // __ABSTRACTVEHICLEUTILITIES_H__
+#if EDUNET_SHOW_CONFIG
+#pragma message( "-------------------------------------------------------------------------------" )
+#pragma message( " Build Configuration" )
+#pragma message( "-------------------------------------------------------------------------------" )
+
+#if EDUNET_HAVE_RAKNET
+#pragma message( " - EDUNET_HAVE_RAKNET" )
+#endif
+
+#pragma message( "-------------------------------------------------------------------------------" )
+#endif // EDUNET_SHOW_CONFIG
+
+#endif // __EDUNETCONNECTCONFIG_H__

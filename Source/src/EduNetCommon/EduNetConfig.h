@@ -34,15 +34,6 @@
 #define EDUNET_APPNAME EduNetOptions::getAppName()
 #endif
 
-#if __APPLE__ && __MACH__
-#define EDUNET_HAVE_RAKNET 0 // not jet
-#endif
-
-// raknet
-#ifndef EDUNET_HAVE_RAKNET
-#define EDUNET_HAVE_RAKNET 1
-#endif
-
 // profiling
 #ifndef WIN32
 #if __APPLE__ && __MACH__
@@ -70,10 +61,6 @@
 #pragma message( "-------------------------------------------------------------------------------" )
 #pragma message( " Build Configuration" )
 #pragma message( "-------------------------------------------------------------------------------" )
-
-#if EDUNET_HAVE_RAKNET
-#pragma message( " - EDUNET_HAVE_RAKNET" )
-#endif
 
 #if EDUNET_HAVE_OPENSTEER
 #pragma message( " - EDUNET_HAVE_OPENSTEER" )
