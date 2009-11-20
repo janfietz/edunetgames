@@ -30,9 +30,9 @@
 //-----------------------------------------------------------------------------
 
 
-#include "OpenSteerUT/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/VehicleClassIds.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
 
 //-----------------------------------------------------------------------------
 class NetPedestrian : public OpenSteer::SimpleNetworkVehicle

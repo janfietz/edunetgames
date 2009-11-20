@@ -45,8 +45,6 @@ public:
 	// replica interface
 	virtual RakNet::RakString GetName(void) const;
 
-	virtual void SetNetworkID( NetworkID id );	
-
 	virtual void DeallocReplica(RakNet::Connection_RM3 *sourceConnection);
 
 	virtual RakNet::RM3SerializationResult Serialize(
@@ -57,8 +55,6 @@ public:
 	
 private:
 	OpenSteer::BoidsPlugin* m_pBoidPlugin;
-
-	void SetSendParameter( RakNet::PRO& kPro ) const;
 };
 
 #endif // __BOIDREPLICA_H__

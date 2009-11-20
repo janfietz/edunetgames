@@ -1,5 +1,5 @@
-#ifndef __NETPEDESTRIANREPLICA_H__
-#define __NETPEDESTRIANREPLICA_H__
+#ifndef __NETWORKVEHICLE_H__
+#define __NETWORKVEHICLE_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,31 +29,70 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetConnect/OSReplicaTypes.h"
+#include "AbstractNetworkVehicle.h"
 
-//-----------------------------------------------------------------------------
-class NetPedestrianReplica : public OSReplica< OpenSteer::AbstractVehicle >
-{
-	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
-public:
-	NetPedestrianReplica();
-	NetPedestrianReplica( OpenSteer::AbstractPlugin* pPlugin, bool bIsRemoteObject );
+namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
-	// replica interface
-	virtual RakNet::RakString GetName(void) const;
+	class NetworkVehicleSerializer
+	{
+	public:
+		NetworkVehicleSerializer( OpenSteer::AbstractVehicle* pkVehicle ):m_pkVehicle(pkVehicle){};
+		virtual ~NetworkVehicleSerializer(){};
+		void querySendParameters( OpenSteer::AbstractNetworkVehicle* pkVehicle, RakNet::PRO& kPro ) const;
+		int serialize( RakNet::SerializeParameters *serializeParameters ) const;
+		void deserialize( RakNet::DeserializeParameters *deserializeParameters );
+	private:
+		OpenSteer::AbstractVehicle* m_pkVehicle;
 
-	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
+	};
 
-	virtual RakNet::RM3SerializationResult Serialize( RakNet::SerializeParameters *serializeParameters );
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class NetworkVehicleMixin : public Super, public AbstractNetworkVehicle
+	{
+	public:
 
-	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
+		// constructor
+		NetworkVehicleMixin ();
 
-private:
-	OpenSteer::AbstractPlugin* m_pkHostPlugin;
+		// destructor
+		virtual ~NetworkVehicleMixin ();
 
-	ET_IMPLEMENT_CLASS_NO_COPY( NetPedestrianReplica );
-};
+		// AbstractNetworkVehicle interface
+		virtual void testFunction();
+
+	private:
 
 
-#endif //  __NETPEDESTRIANREPLICA_H__
+	};
+
+
+
+	//----------------------------------------------------------------------------
+	// Constructor and destructor
+	template<class Super>
+	NetworkVehicleMixin<Super>::NetworkVehicleMixin(void)
+	{
+	}
+
+
+	template<class Super>
+	NetworkVehicleMixin<Super>::~NetworkVehicleMixin(void)
+	{
+	}
+
+	//----------------------------------------------------------------------------
+	// interface
+	template<class Super>
+	void
+	NetworkVehicleMixin<Super>::testFunction(void)
+	{
+		bool btest = true;
+		btest = false;
+	}
+
+
+} // namespace OpenSteer
+
+#endif

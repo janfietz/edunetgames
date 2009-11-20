@@ -1,3 +1,6 @@
+#ifndef __SIMPLEPHYSICSVEHICLE_H__
+#define __SIMPLEPHYSICSVEHICLE_H__
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -26,4 +29,35 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "AbstractNetworkVehicle.h"
+#include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
+
+//-----------------------------------------------------------------------------
+namespace OpenSteer
+{
+	//-------------------------------------------------------------------------
+	class SimplePhysicsVehicle : public SimpleVehicle
+	{
+	public:
+		SimplePhysicsVehicle();
+		virtual ~SimplePhysicsVehicle();
+
+		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
+		{
+			return this->m_kEulerUpdate;
+		}
+
+		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
+		{
+			return this->m_kEulerUpdate;
+		}
+	protected:
+		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
+		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
+
+	};
+}
+
+
+#endif // __SIMPLEPHYSICSVEHICLE_H__

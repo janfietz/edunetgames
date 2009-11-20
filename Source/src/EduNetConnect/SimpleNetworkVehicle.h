@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTNETWORKVEHICLE_H__
-#define __ABSTRACTNETWORKVEHICLE_H__
+#ifndef __SIMPLENETWORKVEHICLE_H__
+#define __SIMPLENETWORKVEHICLE_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,24 +29,42 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteerUTTypes.h"
+#include "NetworkVehicle.h"
+#include "OpenSteerUT/SimplePhysicsVehicle.h"
+
+// #include "EduNetCommon/EduNetCommon.h"
+// #include "EduNetCommon/TUpdatePeriod.h"
+// #include "EduNetProfile/GraphPlot.h"
+
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	class AbstractNetworkVehicle
+
+	// SimpleNetworkVehicle_1 adds concrete NetworkVehicle methods to SimpleVehicle
+	typedef NetworkVehicleMixin<SimplePhysicsVehicle> SimpleNetworkVehicle_1;
+
+	//-------------------------------------------------------------------------
+	class SimpleNetworkVehicle : public SimpleNetworkVehicle_1
 	{
+		ET_DECLARE_BASE( SimpleNetworkVehicle_1 )
 	public:
+		SimpleNetworkVehicle();
+		virtual ~SimpleNetworkVehicle();
 
-		virtual ~AbstractNetworkVehicle() { /* Nothing to do. */ };
+		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
 
-		virtual void testFunction() = 0;
+		//---------------------------------------------------------------------------
+		// AbstractNetworkVehicle interface
+		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
+		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
+
+	private:
+
+
 	};
+
+
 } // namespace OpenSteer
 
-
-
-
-#endif // 
+#endif

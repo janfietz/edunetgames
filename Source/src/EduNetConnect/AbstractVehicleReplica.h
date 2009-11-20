@@ -43,8 +43,6 @@ public:
 	// replica interface
 	virtual RakNet::RakString GetName(void) const;
 
-	virtual void SetNetworkID( NetworkID id );
-
 	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
 
 	virtual RakNet::RM3SerializationResult Serialize( RakNet::SerializeParameters *serializeParameters );

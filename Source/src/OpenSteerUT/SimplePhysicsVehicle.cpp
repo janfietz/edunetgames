@@ -1,6 +1,3 @@
-#ifndef __NETWORKVEHICLE_H__
-#define __NETWORKVEHICLE_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,57 +26,26 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "AbstractNetworkVehicle.h"
+#include "SimplePhysicsVehicle.h"
 
-namespace OpenSteer {
+namespace OpenSteer
+{
+	//-------------------------------------------------------------------------
+#pragma warning(push)
+#pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
+	SimplePhysicsVehicle::SimplePhysicsVehicle():
+		m_kEulerUpdate(this),
+		m_kSteeringForceUpdate(this)
+		{ 
+		}
+#pragma warning(pop)
 
-
-	template <class Super>
-	class NetworkVehicleMixin : public Super
+	//-------------------------------------------------------------------------
+	SimplePhysicsVehicle::~SimplePhysicsVehicle()
 	{
-	public:
 
-		// constructor
-		NetworkVehicleMixin ();
-
-		// destructor
-		virtual ~NetworkVehicleMixin ();
-
-		// AbstractNetworkVehicle interface
-		virtual void testFunction();
-
-	private:
-
-
-	};
-
-
-
-	//----------------------------------------------------------------------------
-	// Constructor and destructor
-	template<class Super>
-	NetworkVehicleMixin<Super>::NetworkVehicleMixin(void)
-	{
 	}
 
+}
 
-	template<class Super>
-	NetworkVehicleMixin<Super>::~NetworkVehicleMixin(void)
-	{
-	}
 
-	//----------------------------------------------------------------------------
-	// interface
-	template<class Super>
-	void
-	NetworkVehicleMixin<Super>::testFunction(void)
-	{
-		bool btest = true;
-		btest = false;
-	}
-
-	// JF --
-
-} // namespace OpenSteer
-
-#endif

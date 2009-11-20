@@ -1,8 +1,9 @@
 #ifndef __NETBOID_H__
 #define __NETBOID_H__
 
-#include "OpenSteerUT/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
+#include "OpenSteerUT/VehicleClassIds.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
 
 namespace OpenSteer{
 

@@ -34,7 +34,6 @@
 
 using namespace OpenSteer;
 
-NetPedestrianFactory gNetPedestrianFactory;
 
 //-----------------------------------------------------------------------------
 NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
@@ -46,17 +45,10 @@ NetPedestrianReplica::NetPedestrianReplica():m_pkHostPlugin(NULL)
 NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-	this->m_pVehicle = gNetPedestrianFactory.createVehicle( ET_CID_NETPEDESTRIAN, this->m_pkHostPlugin->accessProximityDataBase() );
-	this->m_pVehicle->setIsRemoteObject( bIsRemoteObject );
+	static NetPedestrianFactory gNetPedestrianFactory;
+	this->setEntity( gNetPedestrianFactory.createVehicle( ET_CID_NETPEDESTRIAN, this->m_pkHostPlugin->accessProximityDataBase() ) );
+	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 };
-
-//-----------------------------------------------------------------------------
-void NetPedestrianReplica::SetNetworkID( NetworkID id )
-{
-	BaseClass::SetNetworkID( id );
-	OpenSteer::AbstractVehicle* pkVehicle = this->AccessVehicle();
-	pkVehicle->setNetworkId( id.guid.g );
-}
 
 //-----------------------------------------------------------------------------
 RakNet::RakString NetPedestrianReplica::GetName(void) const
@@ -69,38 +61,27 @@ RakNet::RakString NetPedestrianReplica::GetName(void) const
 void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
-	kVG.removeVehicle( this->m_pVehicle );
-	ET_SAFE_DELETE( this->m_pVehicle );
-	delete this;
+	kVG.removeVehicle( this->accessEntity() );
+	this->releaseEntity();
+	ET_DELETE this;
 }
 
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult NetPedestrianReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
-
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->position(),sizeof(OpenSteer::Vec3));
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->forward(),sizeof(OpenSteer::Vec3));
-	kStream.WriteAlignedBytes((const unsigned char*)&this->m_pVehicle->lastSteeringForce(),sizeof(OpenSteer::Vec3));
-
-	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	int nResult = kSerializer.serialize( serializeParameters );
+	if( nResult >= 0 )
+	{
+		return static_cast<RakNet::RM3SerializationResult>(nResult);
+	}
+	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
-
-	OpenSteer::Vec3 kVec;
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setPosition(kVec);
-
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setForward(kVec);	
-	this->m_pVehicle->regenerateOrthonormalBasisUF( kVec );			
-
-	kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
-	this->m_pVehicle->setLastSteeringForce(kVec);	
-
+	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	kSerializer.deserialize( deserializeParameters );
 }
 
