@@ -260,7 +260,8 @@ void PluginArray::initGui( void* pkUserdata )
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		GLUI_Panel* subPluginPanel = glui->add_panel_to_panel( pluginPanel, pkPlugin ? pkPlugin->name() : "Plugin" );
+		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->name() : "Plugin", false );	
+		GLUI_Panel* subPluginPanel = pluginRollout;
 		pkPlugin->initGui( subPluginPanel );
 		++kIter;
 	}

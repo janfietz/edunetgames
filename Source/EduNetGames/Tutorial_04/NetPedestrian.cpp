@@ -448,7 +448,7 @@ void NetPedestrian::annotateAvoidCloseNeighbor (const AbstractVehicle& other,
 	const char* string = headOn ? "OUCH!" : "pardon me";
 	const osVector3 location = position() + osVector3 (0, 0.5f, 0);
 	if (OpenSteer::annotationIsOn())
-		draw2dTextAt3dLocation (*string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
+		draw2dTextAt3dLocation (string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
 }
 
 //-----------------------------------------------------------------------------

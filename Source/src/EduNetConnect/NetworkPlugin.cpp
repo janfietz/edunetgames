@@ -1,6 +1,7 @@
 #include "NetworkPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
+#include "EduNetApplication/EduNetApplication.h"
 
 
 
@@ -61,11 +62,12 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
 
-	OpenSteer::AbstractPlugin* pkHostedPlugin = this->getHostedPlugin();
-	if( NULL != pkHostedPlugin )
+	OpenSteer::AbstractPlugin* pkPlugin = this->getHostedPlugin();
+	if( NULL != pkPlugin )
 	{
-		GLUI_Panel* subPluginPanel = glui->add_panel_to_panel( pluginPanel, pkHostedPlugin ? pkHostedPlugin->name() : "Plugin" );
-		pkHostedPlugin->initGui( subPluginPanel );
+		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->name() : "Plugin", false );	
+		GLUI_Panel* subPluginPanel = pluginRollout;
+		pkPlugin->initGui( subPluginPanel );
 	}
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
@@ -137,7 +139,7 @@ void NetworkPlugin::AddNetworkSimulator( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	GLUI_Panel* simulatorPanel = glui->add_panel_to_panel( pluginPanel, "Network Simulator" );
+	GLUI_Panel* simulatorPanel = glui->add_rollout_to_panel( pluginPanel, "Network Simulator", false );
 
 	GLUI_Checkbox* pkControl = 
 		glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", NULL, 1, changeNetworkSimulatorSettings );
@@ -252,8 +254,8 @@ void NetworkPlugin::addReplicaGuiWithManager( void* pkUserdata  )
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	GLUI_Panel* replicaPanel = glui->add_panel_to_panel( pluginPanel,
-		"Replication Settings" );
+	GLUI_Panel* replicaPanel = glui->add_rollout_to_panel( pluginPanel,
+		"Replication Settings", false );
 
 
 	GLUI_Spinner* repSpinner =
@@ -539,13 +541,9 @@ void NetworkPlugin::CloseOpenConnections( void )
 		}
 
 		while(IsConnected())
-	{
-	#ifdef WIN32
-		Sleep(1);
-	#else
-	  sleep(1);
-	#endif
-	}
+		{
+			EduNet::Application::sleep( 100 );
+		}
 	}
 }
 
