@@ -41,6 +41,38 @@ namespace OpenSteer {
 	typedef uint64_t NetworkId; 
 	typedef uint64_t EntityClassId; 
 
+	//-------------------------------------------------------------------------
+	// implement entity class id
+	static const EntityClassId g_clasId_Unknown(0);	
+
+	static const EntityClassId g_clasId_Entity(1);
+
+	static const EntityClassId g_clasId_LocalSpace(2);
+
+	// obstacle interface ids
+	static const EntityClassId g_clasId_Obstacle(3);
+	static const EntityClassId g_clasId_SphereObstacle(4);
+	static const EntityClassId g_clasId_BoxObstacle(5);
+	static const EntityClassId g_clasId_PlaneObstacle(6);
+	static const EntityClassId g_clasId_RectangleObstacle(7);
+	static const EntityClassId g_clasId_LastReserved(1000);
+}
+
+#define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
+#define OS_CID_ENTITY OpenSteer::g_clasId_Entity
+#define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
+
+#define OS_CID_OBSTACLE OpenSteer::g_clasId_Obstacle
+#define OS_CID_SPHEREOBSTACLE OpenSteer::g_clasId_SphereObstacle
+#define OS_CID_BOXOBSTACLE OpenSteer::g_clasId_BoxObstacle
+#define OS_CID_PLANEOBSTACLE OpenSteer::g_clasId_PlaneObstacle
+#define OS_CID_RECTANGLEOBSTACLE OpenSteer::g_clasId_RectangleObstacle
+
+#define OS_CID_LASTRESERVED OpenSteer::g_clasId_LastReserved
+
+
+//-----------------------------------------------------------------------------
+namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
 	class AbstractEntity
@@ -49,6 +81,8 @@ namespace OpenSteer {
 		virtual ~AbstractEntity() { /* Nothing to do. */ }
 
 		OS_DECLARE_CLASSNAME
+
+		virtual AbstractEntity* cloneEntity( void ) const = 0;
 
 		virtual EntityClassId getClassId( void ) const = 0;
 
@@ -126,6 +160,11 @@ namespace OpenSteer {
 		}
 
 		OS_IMPLEMENT_CLASSNAME( Super )
+
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return NULL;
+		}
 
 		virtual EntityClassId getClassId( void ) const
 		{

@@ -44,6 +44,3 @@ void ClientServerPlugin::initGui( void* pkUserdata )
 // 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
 // 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
 };
-
-
-ClientServerPlugin gClientServerPlugin;

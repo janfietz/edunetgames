@@ -393,6 +393,12 @@ namespace OpenSteer {
 
 		OS_IMPLEMENT_CLASSNAME( Super )
 
+		// AbstractEntity interface
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return NULL;
+		}
+
 		virtual EntityClassId getClassId( void ) const
 		{
 			return this->m_kEntity.getClassId( );

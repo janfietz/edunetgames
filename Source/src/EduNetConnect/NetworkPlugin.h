@@ -60,6 +60,7 @@ typedef struct TNetworkStats
 
 	size_t m_uiPacketsReceived;
 } NetworkStats;
+
 //-----------------------------------------------------------------------------
 typedef struct TNetworkAddress
 {
@@ -86,6 +87,7 @@ public:
 	int extraPingVariance;
 }NetworkSimulatorData;
 
+//-----------------------------------------------------------------------------
 typedef struct TReplicationParams
 {
 public:
@@ -116,7 +118,7 @@ class NetworkPlugin :
 {
 	ET_DECLARE_BASE( OpenSteer::Plugin );
 public:
-	NetworkPlugin(bool bAddToRegistry = true);
+	NetworkPlugin( bool bAddToRegistry = true );
 	virtual ~NetworkPlugin(void);
 
 	//----------------------------------------------------------------------------

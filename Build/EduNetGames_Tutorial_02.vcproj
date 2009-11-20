@@ -182,35 +182,7 @@
 				Name="net"
 				>
 				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\ClientPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\ClientPlugin.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_02\ClientServerPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\ClientServerPlugin.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\NetworkPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\NetworkPlugin.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\PeerPlugin.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\EduNetGames\Tutorial_02\PeerPlugin.h"
 					>
 				</File>
 			</Filter>

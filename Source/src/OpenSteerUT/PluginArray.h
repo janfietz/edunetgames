@@ -43,7 +43,7 @@ namespace OpenSteer
 
 
 	//-------------------------------------------------------------------------
-	class PluginArray : public AbstractPlugin, protected TPluginArray
+	class PluginArray : public EntityLocalSpace, public AbstractPlugin, protected TPluginArray
 	{
 	public:
 		PluginArray(bool bAddToRegistry = true);
@@ -86,6 +86,12 @@ namespace OpenSteer
 
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* pkUserdata );
+
+		// implement to create an entity of the specified class
+		virtual AbstractEntity* createEntity( EntityClassId classId ) const
+		{
+			return Plugin::createSystemEntity( classId );
+		}
 
 		// implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
