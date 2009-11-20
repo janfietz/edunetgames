@@ -16,7 +16,13 @@ typedef int64_t Prof_Int64;
 #endif
       void Prof_get_timestamp(Prof_Int64 *result)
       {
-         *result = 0;
+		  __asm {
+			  rdtsc;
+			  mov    ebx, result
+			  mov    [ebx], eax
+			  mov    [ebx+4], edx
+		  }
+//		  *result = 0;
       }
 
 #endif

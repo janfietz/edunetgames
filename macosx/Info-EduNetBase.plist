@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>EduNetDemo</string>
+	<string>EduNetBase</string>
 	<key>CFBundleIconFile</key>
 	<string>EduNet</string>
 	<key>CFBundleIdentifier</key>

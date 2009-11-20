@@ -958,7 +958,7 @@ namespace {
 	{
 		const float h = glutGet (GLUT_WINDOW_HEIGHT);
 		const OpenSteer::Vec3 screenLocation (10, h-20, 0);
-		draw2dTextAt2dLocation (*OpenSteer::OpenSteerDemo::nameOfSelectedPlugin (),
+		draw2dTextAt2dLocation (OpenSteer::OpenSteerDemo::nameOfSelectedPlugin (),
 			screenLocation,
 			OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
 	}

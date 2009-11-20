@@ -1535,10 +1535,13 @@ OpenSteer::drawAllDeferredCirclesOrDisks (void)
 bool _setTextColor = true;
 
 void 
-OpenSteer::draw2dTextAt3dLocation (const char& text,
+OpenSteer::draw2dTextAt3dLocation (const char* text,
                                    const Vec3& location,
                                    const Color& color, float w, float h)
 {
+	if( (NULL == text) || (0 == text[0]) ) {
+		return;
+	}
     // XXX NOTE: "it would be nice if" this had a 2d screenspace offset for
     // the origin of the text relative to the screen space projection of
     // the 3d point.
@@ -1561,7 +1564,7 @@ OpenSteer::draw2dTextAt3dLocation (const char& text,
 
     // loop over each character in string (until null terminator)
     int lines = 0;
-    for (const char* p = &text; *p; p++)
+    for (const char* p = text; *p; ++p)
     {
         if (*p == '\n')
         {
@@ -1593,12 +1596,12 @@ OpenSteer::draw2dTextAt3dLocation (const std::ostringstream& text,
                                    const Vec3& location,
                                    const Color& color, float w, float h)
 {
-    draw2dTextAt3dLocation (*text.str().c_str(), location, color, w, h);
+    draw2dTextAt3dLocation (text.str().c_str(), location, color, w, h);
 }
 
 
 void 
-OpenSteer::draw2dTextAt2dLocation (const char& text,
+OpenSteer::draw2dTextAt2dLocation (const char* text,
                                    const Vec3 location,
                                    const Color& color, float w, float h)
 {
@@ -1617,7 +1620,7 @@ OpenSteer::draw2dTextAt2dLocation (const std::ostringstream& text,
                                    const Vec3 location,
                                    const Color& color, float w, float h)
 {
-    draw2dTextAt2dLocation (*text.str().c_str(), location, color, w, h);
+    draw2dTextAt2dLocation (text.str().c_str(), location, color, w, h);
 }
 
 
@@ -1891,7 +1894,7 @@ namespace OpenSteer {
 		OpenSteer::Vec3 sp(x, y, 0);
 		sp.y += 2;
 		_setTextColor = false;
-		draw2dTextAt2dLocation (*str, sp, color, _gw, _gh);
+		draw2dTextAt2dLocation (str, sp, color, _gw, _gh);
 		_setTextColor = true;
 	}
 

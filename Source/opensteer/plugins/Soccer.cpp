@@ -344,7 +344,7 @@ namespace {
                 annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
                 annote << "      speed: " << TeamA[i]->speed() << "ID:" << i << std::ends;
                 draw2dTextAt3dLocation (annote, TeamA[i]->position(), gRed, drawGetWindowWidth(), drawGetWindowHeight());
-                draw2dTextAt3dLocation (*"start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
+				draw2dTextAt3dLocation ("start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
             }
             // update camera, tracking test vehicle
             OpenSteerDemo::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);

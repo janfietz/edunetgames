@@ -129,7 +129,7 @@ namespace {
             annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
             annote << "      speed: " << gOneTurning->speed() << std::ends;
             draw2dTextAt3dLocation (annote, gOneTurning->position(), gRed, drawGetWindowWidth(), drawGetWindowHeight());
-            draw2dTextAt3dLocation (*"start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
+            draw2dTextAt3dLocation ("start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
 
             // update camera, tracking test vehicle
             OpenSteerDemo::updateCamera (currentTime, elapsedTime, *gOneTurning);

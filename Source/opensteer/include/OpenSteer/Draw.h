@@ -270,7 +270,7 @@ namespace OpenSteer {
     //! 2d text drawing requires w, h since retrieving viewport w and h differs
     //! for every graphics API
 
-    void draw2dTextAt3dLocation (const char& text,
+    void draw2dTextAt3dLocation (const char* text,
                                  const Vec3& location,
                                  const Color& color, float w, float h);
 
@@ -278,7 +278,7 @@ namespace OpenSteer {
                                  const Vec3& location,
                                  const Color& color, float w, float h);
 
-    void draw2dTextAt2dLocation (const char& text,
+    void draw2dTextAt2dLocation (const char* text,
                                  const Vec3 location,
                                  const Color& color, float w, float h);
 
