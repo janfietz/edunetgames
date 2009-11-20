@@ -55,6 +55,12 @@ namespace OpenSteer
 		{
 		}
 
+		// AbstractEntity interface
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return NULL;
+		}
+
 		// important implement new clone functionality
 		//-------------------------------------------------------------------------
 		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const

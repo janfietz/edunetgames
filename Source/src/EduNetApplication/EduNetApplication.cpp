@@ -339,7 +339,7 @@ void Application::redrawSelectedPlugin (const float currentTime,
 void Application::sleep( size_t uiMilliseconds )
 {
 #ifdef WIN32
-	::Sleep(uiMilliseconds);
+	::Sleep( static_cast<DWORD>(uiMilliseconds) );
 #else
 	::sleep(uiMilliseconds);
 #endif

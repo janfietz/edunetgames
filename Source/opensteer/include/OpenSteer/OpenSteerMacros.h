@@ -41,6 +41,20 @@
 
 
 //-----------------------------------------------------------------------------
+// memory
+//-----------------------------------------------------------------------------
+
+#define OS_NEW new
+#define OS_DELETE delete
+
+#define OS_MALLOC malloc
+#define OS_FREE free
+
+#define OS_SAFE_DELETE( p ) { if( 0 != p ) { OS_DELETE p; p = 0; } }
+#define OS_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { OS_DELETE[] p; p = 0; } }
+#define OS_SAFE_FREE( p ) { if( 0 != p ) { OS_FREE( p ); p = 0; } }
+
+//-----------------------------------------------------------------------------
 
 #define OS_ABSTRACT = 0
 

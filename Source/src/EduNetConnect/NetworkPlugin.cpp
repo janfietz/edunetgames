@@ -553,7 +553,7 @@ void NetworkPlugin::ReceivePackets( void )
 	while(true)
 	{
 		Packet* pPacket = this->m_pNetInterface->Receive();
-		if(0 != pPacket)
+		if( 0 != pPacket )
 		{
 			++this->m_kStats.m_uiPacketsReceived;
 			this->OnReceivedPacket( pPacket );
@@ -569,7 +569,7 @@ void NetworkPlugin::ReceivePackets( void )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 {
-	switch (pPacket->data[0])
+	switch( pPacket->data[0] )
 	{
 	case ID_CONNECTION_ATTEMPT_FAILED:
 		printf("ID_CONNECTION_ATTEMPT_FAILED\n");		
@@ -646,6 +646,7 @@ bool NetworkPlugin::Connect()
 	return this->PingForOtherPeers( -1* this->m_iWaitForPongPort);	
 }
 
+//-----------------------------------------------------------------------------
 void NetworkPlugin::Disconnect()
 {
 	this->CloseOpenConnections();

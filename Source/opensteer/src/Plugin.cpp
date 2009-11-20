@@ -78,6 +78,47 @@ OpenSteer::Plugin::~Plugin()
 	}
 }
 
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* 
+OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
+{
+	OpenSteer::AbstractEntity* pkEntity = NULL;
+	OpenSteer::AbstractObstacle* pkObstacle = NULL;
+	switch( classId )
+	{
+	case( OS_CID_OBSTACLE ):
+		{
+// this is an abstract class no way to create it
+//			pkObstacle = OS_NEW OpenSteer::Obstacle();
+		}
+		break;
+	case( OS_CID_SPHEREOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::SphereObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_BOXOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::BoxObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_PLANEOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::PlaneObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_RECTANGLEOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::RectangleObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	}
+	return pkEntity;
+}
 
 //-----------------------------------------------------------------------------
 // returns pointer to the next Plugin in "selection order"

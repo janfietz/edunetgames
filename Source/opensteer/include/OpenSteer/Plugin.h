@@ -1,3 +1,6 @@
+#ifndef OPENSTEER_PLUGIN_H
+#define OPENSTEER_PLUGIN_H
+
 //-----------------------------------------------------------------------------
 //
 //
@@ -68,22 +71,17 @@ FooPlugin gFooPlugin;
 */
 //-----------------------------------------------------------------------------
 
-
-#ifndef OPENSTEER_PLUGIN_H
-#define OPENSTEER_PLUGIN_H
-
 #include <iostream>
+#include "OpenSteer/Entity.h"
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
 
-
 //-----------------------------------------------------------------------------
-
-
 namespace OpenSteer {
 
 	class AbstractVehicleFactory;
 
+	//-------------------------------------------------------------------------
     class AbstractPlugin
     {
     public:
@@ -139,6 +137,9 @@ namespace OpenSteer {
 		virtual AbstractVehicleFactory* getVehicleFactory( void ) const = 0;
 
 		//! implement to create a vehicle of the specified class
+		virtual AbstractEntity* createEntity( EntityClassId ) const = 0;
+
+		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const = 0;
 
 		//! format instance to characters for printing to stream
@@ -150,7 +151,8 @@ namespace OpenSteer {
 	
 	};
 
-	class Plugin : public AbstractPlugin
+	//-------------------------------------------------------------------------
+	class Plugin : public EntityLocalSpace, public AbstractPlugin
     {
     public:
 		// currently selected plug-in (user can choose or cycle through them)
@@ -204,6 +206,11 @@ namespace OpenSteer {
 
 		virtual AbstractVehicleFactory* getVehicleFactory( void ) const { return this->m_pkVehicleFactory; };
 
+		virtual AbstractEntity* createEntity( EntityClassId classId ) const
+		{
+			return Plugin::createSystemEntity( classId );
+		}
+
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
         
@@ -215,6 +222,9 @@ namespace OpenSteer {
         }
 
         //! CLASS FUNCTIONS
+
+		static AbstractEntity* createSystemEntity( EntityClassId );
+
 
         //! search the class registry for a Plugin with the given name
         static AbstractPlugin* findByName (const char* string);
