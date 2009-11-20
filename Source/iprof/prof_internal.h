@@ -1,6 +1,8 @@
 #ifndef Prof_INC_PROF_INTERNAL_H
 #define Prof_INC_PROF_INTERNAL_H
 
+#include "prof_time.h"
+
 /* report functions */
 
 #define NUM_VALUES 4
@@ -41,9 +43,8 @@ extern void Prof_graph(int num_frames,
 
 extern void Prof_init_highlevel();
 
-extern double Prof_get_time(void);
-
 extern int        Prof_num_zones;
+
 extern Prof_Zone *Prof_zones[];
 
 extern Prof_Declare(_global);

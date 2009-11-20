@@ -30,6 +30,7 @@
 
 // command line parsing
 #if __APPLE__ && __MACH__
+#include "../../../ThirdParty/argtable2-11/src/argtable2.h" 
 #else
 #include "../../../ThirdParty/argtable2-11/src/argtable2.h" 
 #endif //
@@ -74,8 +75,9 @@ int EduNetOptions::parseCommandLine(int argc, char **argv)
 {
 	int exitcode=0;
 #if __APPLE__ && __MACH__
-	exitcode = EXIT_SUCCESS;
+//	exitcode = EXIT_SUCCESS;
 #else	
+#endif
 	struct arg_str  *defines = arg_strn("pP","define","PLUGIN",0,argc+2,  "plugin selection");
 	struct arg_lit  *help    = arg_lit0(NULL,"help",                    "print this help and exit");
 	struct arg_lit  *version = arg_lit0(NULL,"version",                 "print version information and exit");
@@ -151,7 +153,6 @@ exit:
 	/* deallocate each non-null entry in argtable[] */
 	arg_freetable(argtable,sizeof(argtable)/sizeof(argtable[0]));
 
-#endif
 	return exitcode;
 }
 
