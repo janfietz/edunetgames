@@ -369,6 +369,13 @@ namespace OpenSteer {
 	};
 
 	//-------------------------------------------------------------------------
+// 	template <class Super>
+// 	class EntityLocalSpaceMixin : public EntityPossessionMixin<Super>
+// 	{
+// 
+// 	};
+
+	//-------------------------------------------------------------------------
 	template <class Super>
 	class EntityLocalSpaceMixin : public LocalSpaceMixin<Super>
 	{
@@ -378,24 +385,37 @@ namespace OpenSteer {
 	public:
 		//---------------------------------------------------------------------
 		//! constructors
-		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>()
+		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>(),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
 		EntityLocalSpaceMixin (const Vec3& Side,
 			const Vec3& Up,
 			const Vec3& Forward,
-			const Vec3& Position):LocalSpaceMixin<Super>( Side, Up, Forward, Position )
+			const Vec3& Position):LocalSpaceMixin<Super>( Side, Up, Forward, Position ),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
 		EntityLocalSpaceMixin (const Vec3& Up,
 			const Vec3& Forward,
-			const Vec3& Position):LocalSpaceMixin<Super>( Up, Forward, Position )
+			const Vec3& Position):LocalSpaceMixin<Super>( Up, Forward, Position ),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
-		virtual ~EntityLocalSpaceMixin() { /* Nothing to do. */ }
+		virtual ~EntityLocalSpaceMixin() 
+		{ 
+			if( NULL != this->m_pkPossessed )
+			{
+				this->m_pkPossessed->possessBy( NULL );
+			}
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+			}
+		}
 
 
 		OS_IMPLEMENT_CLASSNAME( Super )
@@ -440,6 +460,63 @@ namespace OpenSteer {
 		{
 			return this->m_kEntity.name();
 		}
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual void play( AbstractEntity* pkEntity )
+		{
+			AbstractEntity* pkThisEntity = reinterpret_cast<AbstractEntity*>( this );
+			//			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( this );
+			AbstractPlayer* pkThis = CastToAbstractPlayer( pkThisEntity );
+			if( NULL == pkThisEntity )
+			{
+				// not an entity
+				return;
+			}
+			if( NULL == pkThis )
+			{
+				// not a player
+				return;
+			}
+			if( NULL != pkEntity )
+			{
+				pkEntity->possessBy( pkThisEntity );
+				AbstractPlayer* pkPlayer = pkEntity->getPlayer();
+				if( pkPlayer == pkThis )
+				{
+					// play succeeded
+					this->m_pkPossessed = pkEntity;
+				}
+			}
+			else
+			{
+				this->m_pkPossessed = NULL;
+			}
+		};
+
+		virtual void possessBy( AbstractEntity* pkEntity )
+		{
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+			}
+			if( NULL == this->m_pkPossessor )
+			{
+				this->m_pkPossessor = pkEntity;
+			}
+		}
+
+		virtual AbstractPlayer* getPlayer( void ) const
+		{
+			return CastToAbstractPlayer( this->m_pkPossessor );
+		}
+
+		virtual AbstractEntity* getControlledEntity( void ) const
+		{
+			return this->m_pkPossessed;
+		}
+	private:
+		AbstractEntity* m_pkPossessor;
+		AbstractEntity* m_pkPossessed;
 	};
 
 	//-------------------------------------------------------------------------

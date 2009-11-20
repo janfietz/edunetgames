@@ -56,6 +56,7 @@ namespace OpenSteer
 		virtual void setController( AbstractController* ) OS_ABSTRACT;
 		virtual AbstractController const* const getController( AbstractController* ) const OS_ABSTRACT;
 
+		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
 
 
 	};

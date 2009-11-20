@@ -27,9 +27,17 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/Entity.h"
+#include "OpenSteer/AbstractPlayer.h"
 
 using namespace OpenSteer;
 
 
 InstanceTracker EntityInstance::ms_InstanceTracker;
+
+//-----------------------------------------------------------------------------
+AbstractPlayer* OpenSteer::CastToAbstractPlayer( AbstractEntity* pkEntity )
+{
+	return dynamic_cast<AbstractPlayer*>( pkEntity );
+}
+
 
