@@ -66,28 +66,16 @@ m_fLastRenderTime(0.0f)
 {
 	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
 
-	// entity player test
-
+	AbstractPlayer* pkLocalPlayer = SimplePlayer::accessLocalPlayer();
+	AbstractEntity* pkControlledEntity = NULL;
 	{
 		NetPedestrian kVehicle;
-		{
-			SimplePlayer kPlayer0;
-			SimplePlayer kPlayer1;
-			kPlayer0.play( &kVehicle );
-			AbstractPlayer* pkCP = kVehicle.getPlayer();
-			AbstractEntity* pkCE0 = kPlayer0.getControlledEntity();
-
-			kPlayer1.play( &kVehicle );
-			pkCP = kVehicle.getPlayer();
-			AbstractEntity* pkCE1 = kPlayer1.getControlledEntity();
-			pkCE0 = kPlayer0.getControlledEntity();
-		}
-		bool bTest0 = true;
-		bTest0 = false;
+		pkLocalPlayer->play( &kVehicle );
+		pkControlledEntity = pkLocalPlayer->getControlledEntity();
+		pkControlledEntity = NULL;
 	}
-	bool bTest1 = true;
-	bTest1 = false;
-
+	pkControlledEntity = pkLocalPlayer->getControlledEntity();
+	pkControlledEntity = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -289,14 +277,14 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 	std::ostringstream message;
 	message << "Function keys handled by ";
 	message << '"' << name() << '"' << ':' << std::ends;
-	OpenSteerDemo::printMessage (message);
-	OpenSteerDemo::printMessage (message);
-	OpenSteerDemo::printMessage ("  F1     add a pedestrian to the crowd.");
-	OpenSteerDemo::printMessage ("  F2     remove a pedestrian from crowd.");
-	OpenSteerDemo::printMessage ("  F3     use next proximity database.");
-	OpenSteerDemo::printMessage ("  F4     toggle directed path follow.");
-	OpenSteerDemo::printMessage ("  F5     toggle wander component on/off.");
-	OpenSteerDemo::printMessage ("");
+	EduNet::Log::printMessage (message);
+	EduNet::Log::printMessage (message);
+	EduNet::Log::printMessage ("  F1     add a pedestrian to the crowd.");
+	EduNet::Log::printMessage ("  F2     remove a pedestrian from crowd.");
+	EduNet::Log::printMessage ("  F3     use next proximity database.");
+	EduNet::Log::printMessage ("  F4     toggle directed path follow.");
+	EduNet::Log::printMessage ("  F5     toggle wander component on/off.");
+	EduNet::Log::printMessage ("");
 }
 
 //-----------------------------------------------------------------------------

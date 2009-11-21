@@ -1,6 +1,5 @@
-#ifndef __ABSTRACTPLAYER_H__
-#define __ABSTRACTPLAYER_H__
-
+#ifndef __EDUNETLOG_H__
+#define	__EDUNETLOG_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,42 +28,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer/AbstractUpdated.h"
-#include "OpenSteer/Entity.h"
+#include <sstream>
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+namespace EduNet
 {
-	class Vec3;
-
 	//-------------------------------------------------------------------------
-	class AbstractController : public AbstractEntity, public AbstractUpdated
+	class Log
 	{
 	public:
-		virtual ~AbstractController(){}
 
-		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
+		//! print a line on the console
+		static void printMessage (const char* message);
+		static void printMessage (const std::ostringstream& message);
 
+		//! like printMessage but prefix as warning
+		static void printWarning (const char* message);
+		static void printWarning (const std::ostringstream& message);
+
+		//! like printMessage but prefix as error
+		static void printError (const char* message);
+		static void printError (const std::ostringstream& message);
 	};
-
-	//-------------------------------------------------------------------------
-	class AbstractPlayer : public AbstractEntity, public AbstractUpdated 
-	{
-	public:
-		virtual ~AbstractPlayer(){}
-
-		virtual void setController( AbstractController* ) OS_ABSTRACT;
-		virtual AbstractController const* const getController( void ) const OS_ABSTRACT;
-
-		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
-
-		virtual bool isPlaying( void ) const OS_ABSTRACT; 
-
-		virtual bool isLocalPlayer( void ) const OS_ABSTRACT; 
-
-	};
-
 
 }
 
-#endif //  __ABSTRACTPLAYER_H__
+
+#endif // __EDUNETLOG_H__

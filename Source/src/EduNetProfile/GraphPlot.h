@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <string>
+
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {

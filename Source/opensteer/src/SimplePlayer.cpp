@@ -30,6 +30,29 @@
 
 using namespace OpenSteer;
 
+// entity player test
+#if 0
+{
+	NetPedestrian kVehicle;
+	{
+		SimplePlayer kPlayer0;
+		SimplePlayer kPlayer1;
+		kPlayer0.play( &kVehicle );
+		AbstractPlayer* pkCP0 = kVehicle.getPlayer();
+		AbstractEntity* pkCE0 = kPlayer0.getControlledEntity();
+
+		kPlayer1.play( &kVehicle );
+		AbstractPlayer* pkCP1 = kVehicle.getPlayer();
+		AbstractEntity* pkCE1 = kPlayer1.getControlledEntity();
+		pkCE0 = kPlayer0.getControlledEntity();
+	}
+	bool bTest0 = true;
+	bTest0 = false;
+}
+bool bTest1 = true;
+bTest1 = false;
+#endif
+
 //-----------------------------------------------------------------------------
 SimpleController::SimpleController()
 {
@@ -43,7 +66,8 @@ SimpleController::~SimpleController()
 }
 
 //-----------------------------------------------------------------------------
-SimplePlayer::SimplePlayer():m_pkController(NULL)
+SimplePlayer::SimplePlayer( bool bIsLocalPlayer ):
+	m_pkController(NULL),m_bIsLocalPlayer( bIsLocalPlayer )
 {
 
 }
@@ -54,4 +78,15 @@ SimplePlayer::~SimplePlayer()
 
 }
 
+//-----------------------------------------------------------------------------
+AbstractPlayer* SimplePlayer::accessLocalPlayer( void )
+{
+	static SimplePlayer kPlayer(true);
+	if( NULL == kPlayer.getController() )
+	{
+		static SimpleController kController;
+		kPlayer.setController( &kController );
+	}
+	return &kPlayer;
+}
 

@@ -38,14 +38,13 @@
 
 
 #include "OpenSteer/Plugin.h"
+#include "OpenSteer/SimplePlayer.h"
 
 
 //-----------------------------------------------------------------------------
 // Plugin registry
 //
 // XXX replace with STL utilities
-
-
 int OpenSteer::Plugin::itemsInRegistry = 0;
 const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
@@ -53,7 +52,6 @@ OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 //-----------------------------------------------------------------------------
 // currently selected plug-in (user can choose or cycle through them)
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::selectedPlugin = NULL;
-
 
 //-----------------------------------------------------------------------------
 // constructor
@@ -78,6 +76,59 @@ OpenSteer::Plugin::~Plugin()
 	}
 }
 
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* 
+OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
+{
+	OpenSteer::AbstractEntity* pkEntity = NULL;
+	OpenSteer::AbstractObstacle* pkObstacle = NULL;
+	switch( classId )
+	{
+	case( OS_CID_PLAYER ):
+		{
+			OpenSteer::SimplePlayer* pkPlayer = OS_NEW OpenSteer::SimplePlayer();
+			pkEntity = pkPlayer;
+		}
+		break;
+	case( OS_CID_PLAYERCONTROLLER ):
+		{
+			OpenSteer::SimpleController* pkController = OS_NEW OpenSteer::SimpleController();
+			pkEntity = pkController;
+		}
+		break;
+	case( OS_CID_OBSTACLE ):
+		{
+// this is an abstract class no way to create it
+//			pkObstacle = OS_NEW OpenSteer::Obstacle();
+		}
+		break;
+	case( OS_CID_SPHEREOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::SphereObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_BOXOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::BoxObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_PLANEOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::PlaneObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	case( OS_CID_RECTANGLEOBSTACLE ):
+		{
+			pkObstacle = OS_NEW OpenSteer::RectangleObstacle();
+			pkEntity = pkObstacle;
+		}
+		break;
+	}
+	return pkEntity;
+}
 
 //-----------------------------------------------------------------------------
 // returns pointer to the next Plugin in "selection order"
@@ -126,9 +177,13 @@ OpenSteer::Plugin::findByName (const char* string)
     {
         for (int i = 0; i < itemsInRegistry; i++)
         {
-            AbstractPlugin& pi = *registry[i];
-            const char* s = pi.name();
-            if (s && (strcmp (string, s) == 0)) return &pi;
+            AbstractPlugin* pi = registry[i];
+			AbstractEntity* pe = dynamic_cast<AbstractEntity*>(pi);
+			if( pe != NULL )
+			{
+				const char* s = pe->name();
+				if (s && (strcmp (string, s) == 0)) return pi;
+			}
         }
     }
     return NULL;
@@ -137,7 +192,7 @@ OpenSteer::Plugin::findByName (const char* string)
 //-----------------------------------------------------------------------------
 // apply a given function to all Plugins in the registry
 void 
-OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
+OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 {
     for (int i = 0; i < itemsInRegistry; i++)
     {
@@ -149,8 +204,6 @@ OpenSteer::Plugin::applyToAll (plugInCallBackFunction f)
 // sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
-
-
 void 
 OpenSteer::Plugin::sortBySelectionOrder (void)
 {
@@ -176,7 +229,6 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
     }
 }
 
-
 //-----------------------------------------------------------------------------
 // returns pointer to default Plugin (currently, first in registry)
 OpenSteer::AbstractPlugin* 
@@ -198,8 +250,6 @@ OpenSteer::Plugin::findDefault (void)
 //-----------------------------------------------------------------------------
 // save this instance in the class's registry of instances
 // (for use by contractors)
-
-
 void 
 OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {

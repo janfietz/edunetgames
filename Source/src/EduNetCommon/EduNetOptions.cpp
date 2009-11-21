@@ -32,9 +32,9 @@
 #if __APPLE__ && __MACH__
 #include "argtable2-11/src/argtable2.h" 
 #elseif WIN32
-#include "argtable2-11/src/argtable2.h"
+#include "argtable2-11/src/argtable2.h" 
 #else
-#include "argtable2.h"
+#include "argtable2.h" 
 #endif //
 // To include EXIT_SUCCESS
 #include <cstdlib>

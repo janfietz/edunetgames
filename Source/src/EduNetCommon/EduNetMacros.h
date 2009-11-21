@@ -43,11 +43,10 @@
 #define ET_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { ET_DELETE[] p; p = 0; } }
 #define ET_SAFE_FREE( p ) { if( 0 != p ) { ET_FREE( p ); p = 0; } }
 
-#ifdef WIN32
-  #define EF_FORCEINLINE __forceinline
+#ifndef linux
+#define EF_FORCEINLINE __forceinline
 #else
-  #pragma message( "Warning: no __forceinline!")
-  #define EF_FORCEINLINE
+#define EF_FORCEINLINE 
 #endif
 
 //-----------------------------------------------------------------------------

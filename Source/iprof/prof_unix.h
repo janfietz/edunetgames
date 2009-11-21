@@ -20,7 +20,7 @@ typedef int64_t Prof_Int64;
 #endif
       void Prof_get_timestamp(Prof_Int64 *result)
       {
-#ifdef __APPLE__
+#ifdef __APPLE__	
 		  __asm {
 			  rdtsc;
 			  mov    ebx, result
@@ -28,13 +28,13 @@ typedef int64_t Prof_Int64;
 			  mov    [ebx+4], edx
 		  }
 #else
-      struct timespec t; 
-      *result = 0;
-      if( clock_gettime( CLOCK_MONOTONIC, &t) == 0 ) {
-	  *result = (Prof_Int64)t.tv_sec * 1000000000 +  t.tv_nsec;
-      } 
-            
-#endif //__APPLE__
+	struct timespec t;
+	*result = 0;
+	if(0 == clock_gettime(CLOCK_MONOTONIC, &t))
+	{
+	  *result = t.tv_sec * 1000000000 + t.tv_nsec;
+	}
+#endif
       }
 
 #endif

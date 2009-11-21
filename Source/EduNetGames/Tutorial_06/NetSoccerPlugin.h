@@ -1,6 +1,5 @@
-#ifndef __ABSTRACTPLAYER_H__
-#define __ABSTRACTPLAYER_H__
-
+#ifndef __NETSOCCERPLUGIN_H__
+#define __NETSOCCERPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,42 +28,64 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer/AbstractUpdated.h"
-#include "OpenSteer/Entity.h"
+//-----------------------------------------------------------------------------
+#include "EduNetCommon/EduNetCommon.h"
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+class NetSoccerPlugin : public OpenSteer::Plugin
 {
-	class Vec3;
+	ET_DECLARE_BASE(OpenSteer::Plugin);
+public:
+	NetSoccerPlugin( bool bAddToRegistry = true );
+	virtual ~NetSoccerPlugin() {} // be more "nice" to avoid a compiler warning
+
+	OS_IMPLEMENT_CLASSNAME( NetSoccerPlugin )
+	//-------------------------------------------------------------------------
+	// OpenSteer::Plugin interface
+	virtual const char* name() const { return this->getClassName(); };
+
+	virtual float selectionOrderSortKey (void) const {return 0.01f;}
+
+	virtual void open (void);
+
+	virtual void update (const float currentTime, const float elapsedTime);
+
+	virtual void redraw (const float currentTime, const float elapsedTime);
+
+	virtual void close (void);
+
+	virtual void reset (void);
+
+	virtual void handleFunctionKeys (int keyNumber);
+
+	virtual void printMiniHelpForFunctionKeys (void) const;
+
+	virtual const osAVGroup& allVehicles (void) const {return (const osAVGroup&) all;}
+
+	// implement to create a vehicle of the specified class
+	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
+	virtual void addVehicle( osAbstractVehicle* pkVehicle );
 
 	//-------------------------------------------------------------------------
-	class AbstractController : public AbstractEntity, public AbstractUpdated
-	{
-	public:
-		virtual ~AbstractController(){}
+	void drawObstacles (void);
 
-		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
+	// a group (STL vector) of all vehicles in the Plugin
+	std::vector<osAbstractVehicle*> all;
+	int resetCount;
+	
+	 unsigned int	m_PlayerCountA;
+        unsigned int	m_PlayerCountB;
+        std::vector<Player*> TeamA;
+        std::vector<Player*> TeamB;
+        std::vector<Player*> m_AllPlayers;
 
-	};
+        Ball	*m_Ball;
+        AABBox	*m_bbox;
+        AABBox	*m_TeamAGoal;
+        AABBox	*m_TeamBGoal;
+        int junk;
+        int		m_redScore;
+        int		m_blueScore;
+};
 
-	//-------------------------------------------------------------------------
-	class AbstractPlayer : public AbstractEntity, public AbstractUpdated 
-	{
-	public:
-		virtual ~AbstractPlayer(){}
-
-		virtual void setController( AbstractController* ) OS_ABSTRACT;
-		virtual AbstractController const* const getController( void ) const OS_ABSTRACT;
-
-		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
-
-		virtual bool isPlaying( void ) const OS_ABSTRACT; 
-
-		virtual bool isLocalPlayer( void ) const OS_ABSTRACT; 
-
-	};
-
-
-}
-
-#endif //  __ABSTRACTPLAYER_H__
+#endif // __NETSOCCERPLUGIN_H__

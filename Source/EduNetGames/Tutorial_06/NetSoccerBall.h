@@ -1,6 +1,5 @@
-#ifndef __ABSTRACTPLAYER_H__
-#define __ABSTRACTPLAYER_H__
-
+#ifndef __NETSOCCERBALL_H__
+#define __NETSOCCERBALL_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,42 +28,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer/AbstractUpdated.h"
-#include "OpenSteer/Entity.h"
-
 //-----------------------------------------------------------------------------
-namespace OpenSteer
-{
-	class Vec3;
-
-	//-------------------------------------------------------------------------
-	class AbstractController : public AbstractEntity, public AbstractUpdated
-	{
-	public:
-		virtual ~AbstractController(){}
-
-		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
-
-	};
-
-	//-------------------------------------------------------------------------
-	class AbstractPlayer : public AbstractEntity, public AbstractUpdated 
-	{
-	public:
-		virtual ~AbstractPlayer(){}
-
-		virtual void setController( AbstractController* ) OS_ABSTRACT;
-		virtual AbstractController const* const getController( void ) const OS_ABSTRACT;
-
-		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
-
-		virtual bool isPlaying( void ) const OS_ABSTRACT; 
-
-		virtual bool isLocalPlayer( void ) const OS_ABSTRACT; 
-
-	};
+#include "EduNetCommon/EduNetCommon.h"
 
 
-}
 
-#endif //  __ABSTRACTPLAYER_H__
+#endif // __NETSOCCERBALL_H__

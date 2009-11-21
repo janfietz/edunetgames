@@ -5,16 +5,9 @@ ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
  ${RakNet_SOURCES}/DependentExtensions
 )
 
-SET(Tutorial04_Srcs
-main.cpp
-NetPedestrian.cpp
-NetPedestrianFactory.cpp
-NetPedestrianPlugin.cpp
-NetPedestrianPlugins.cpp
-NetPedestrianReplica.cpp
-NetPedestrianReplicaConnection.cpp
-)
+aux_source_directory(${Tutorial04_SOURCE_DIR} Tutorial_Src)
 
+MESSAGE(${Tutorial_Src})
 
 LINK_LIBRARIES(
  opensteer  
@@ -30,6 +23,6 @@ ${Argtable_LIBRARY}
 
 SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(${PROJECT_NAME} ${Tutorial04_Srcs})
+add_executable(${PROJECT_NAME} ${Tutorial_Src})
 
 

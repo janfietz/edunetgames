@@ -7,7 +7,6 @@
 #include "OpenSteerUT/CameraPlugin.h"
 
 #include "NetBoidConditionReplica.h"
-#include "BoidsPlugin.h"
 
 //-----------------------------------------------------------------------------
 NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):

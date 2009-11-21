@@ -1,4 +1,2 @@
 
-SUBDIRS( src opensteer EduNetGames iprof )
-
-
+SUBDIRS( src opensteer EduNetGames iprof)

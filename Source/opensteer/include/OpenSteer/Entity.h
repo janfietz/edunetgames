@@ -122,7 +122,9 @@ namespace OpenSteer {
 
 		virtual AbstractPlayer* getPlayer( void ) const OS_ABSTRACT;
 
-//		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
+		virtual bool isPossessed( void ) const OS_ABSTRACT;
+
+		virtual bool isPlayer( void ) const  OS_ABSTRACT;
 	};
 
 	AbstractPlayer* CastToAbstractPlayer( AbstractEntity* pkEntity );
@@ -154,19 +156,13 @@ namespace OpenSteer {
 		// AbstractEntity interface
 		virtual void play( AbstractEntity* pkEntity )
 		{
-			AbstractEntity* pkThisEntity = reinterpret_cast<AbstractEntity*>( this );
-//			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( this );
-			AbstractPlayer* pkThis = CastToAbstractPlayer( pkThisEntity );
-			if( NULL == pkThisEntity )
-			{
-				// not an entity
-				return;
-			}
-			if( NULL == pkThis )
+			if( false == this->isPlayer() )
 			{
 				// not a player
 				return;
 			}
+			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( this );
+			AbstractPlayer* pkThis = CastToAbstractPlayer( pkThisEntity );
 			if( NULL != pkEntity )
 			{
 				pkEntity->possessBy( pkThisEntity );
@@ -188,12 +184,8 @@ namespace OpenSteer {
 			if( NULL != this->m_pkPossessor )
 			{
 				this->m_pkPossessor->play( NULL );
-				this->m_pkPossessor = NULL;
 			}
-			if( NULL == this->m_pkPossessor )
-			{
-				this->m_pkPossessor = pkEntity;
-			}
+			this->m_pkPossessor = pkEntity;
 		}
 
 		virtual AbstractPlayer* getPlayer( void ) const
@@ -204,6 +196,19 @@ namespace OpenSteer {
 		virtual AbstractEntity* getControlledEntity( void ) const
 		{
 			return this->m_pkPossessed;
+		}
+
+		virtual bool isPossessed( void ) const 
+		{
+			return (NULL != this->getPlayer());
+		}
+
+		virtual bool isPlayer( void ) const
+		{
+			EntityPossessionMixin* pkThis = (EntityPossessionMixin*)this;
+			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( pkThis );
+			AbstractPlayer* pkThisPlayer = OpenSteer::CastToAbstractPlayer( pkThisEntity );
+			return ( NULL != pkThisPlayer );
 		}
 	private:
 		AbstractEntity* m_pkPossessor;
@@ -366,7 +371,7 @@ namespace OpenSteer {
 		// AbstractEntity interface
 		virtual AbstractEntity* cloneEntity( void ) const
 		{
-			return new VehicleClassIdMixin();
+			return new EntityClassIdMixin();
 		}
 
 		virtual EntityClassId getClassId( void ) const

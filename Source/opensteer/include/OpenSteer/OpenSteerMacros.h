@@ -35,7 +35,7 @@
 //! 
 #ifdef WIN32
 #define OS_HAVE_PROFILE 1
-#elseif __APPLE
+#elseif __APPLE__
 #define OS_HAVE_PROFILE 1
 #else
 #define OS_HAVE_PROFILE 0
