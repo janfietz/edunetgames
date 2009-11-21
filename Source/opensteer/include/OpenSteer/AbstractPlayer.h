@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
+#ifndef __ABSTRACTPLAYER_H__
+#define __ABSTRACTPLAYER_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,56 +29,39 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/AbstractUpdated.h"
+#include "OpenSteer/Entity.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-	using namespace OpenSteer;
+	class Vec3;
 
 	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
+	class AbstractController : public AbstractEntity, public AbstractUpdated
 	{
 	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
+		virtual ~AbstractController(){}
 
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
-		{
-
-		}
-
-		virtual ~VehicleClassIdMixin()
-		{
-		}
-
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
-
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
-		}
-
-	private:
+		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
 
 	};
 
+	//-------------------------------------------------------------------------
+	class AbstractPlayer : public AbstractEntity, public AbstractUpdated 
+	{
+	public:
+		virtual ~AbstractPlayer(){}
+
+		virtual void setController( AbstractController* ) OS_ABSTRACT;
+		virtual AbstractController const* const getController( AbstractController* ) const OS_ABSTRACT;
+
+		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
+
+
+	};
+
+
 }
 
-
-#endif // __ABSTRACTVEHICLEUTILITIES_H__
+#endif //  __ABSTRACTPLAYER_H__

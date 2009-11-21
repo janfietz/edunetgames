@@ -1,3 +1,6 @@
+#ifndef OPENSTEER_PLUGIN_H
+#define OPENSTEER_PLUGIN_H
+
 //-----------------------------------------------------------------------------
 //
 //
@@ -68,22 +71,17 @@ FooPlugin gFooPlugin;
 */
 //-----------------------------------------------------------------------------
 
-
-#ifndef OPENSTEER_PLUGIN_H
-#define OPENSTEER_PLUGIN_H
-
 #include <iostream>
+#include "OpenSteer/Entity.h"
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
 
-
 //-----------------------------------------------------------------------------
-
-
 namespace OpenSteer {
 
 	class AbstractVehicleFactory;
 
+	//-------------------------------------------------------------------------
     class AbstractPlugin
     {
     public:
@@ -98,7 +96,7 @@ namespace OpenSteer {
         virtual void reset (void) = 0;
 
         //! return a pointer to this instance's character string name
-        virtual const char* name (void) const = 0;
+        virtual const char* pluginName (void) const = 0;
 
         //! numeric sort key used to establish user-visible Plugin ordering
         //! ("built ins" have keys greater than 0 and less than 1)
@@ -139,18 +137,22 @@ namespace OpenSteer {
 		virtual AbstractVehicleFactory* getVehicleFactory( void ) const = 0;
 
 		//! implement to create a vehicle of the specified class
+		virtual AbstractEntity* createEntity( EntityClassId ) const = 0;
+
+		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const = 0;
 
 		//! format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
 		{
-			os << "<Plugin " << '"' << pi.name() << '"' << ">";
+			os << "<Plugin " << '"' << pi.pluginName() << '"' << ">";
 			return os;
 		}
 	
 	};
 
-	class Plugin : public AbstractPlugin
+	//-------------------------------------------------------------------------
+	class Plugin : public EntityLocalSpace, public AbstractPlugin
     {
     public:
 		// currently selected plug-in (user can choose or cycle through them)
@@ -168,7 +170,13 @@ namespace OpenSteer {
         //! destructor
         virtual ~Plugin();
 
-        //! default reset method is to do a close then an open
+		//! return a pointer to this instance's character string name
+		virtual const char* pluginName (void) const
+		{
+			return this->name();
+		}
+
+       //! default reset method is to do a close then an open
 		void reset (void) {close (); open ();}
 
         //! default sort key (after the "built ins")
@@ -204,17 +212,25 @@ namespace OpenSteer {
 
 		virtual AbstractVehicleFactory* getVehicleFactory( void ) const { return this->m_pkVehicleFactory; };
 
+		virtual AbstractEntity* createEntity( EntityClassId classId ) const
+		{
+			return Plugin::createSystemEntity( classId );
+		}
+
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
         
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {
-            os << "<Plugin " << '"' << pi.name() << '"' << ">";
+            os << "<Plugin " << '"' << pi.pluginName() << '"' << ">";
             return os;
         }
 
         //! CLASS FUNCTIONS
+
+		static AbstractEntity* createSystemEntity( EntityClassId );
+
 
         //! search the class registry for a Plugin with the given name
         static AbstractPlugin* findByName (const char* string);

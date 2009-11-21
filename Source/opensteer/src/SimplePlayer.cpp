@@ -1,6 +1,3 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,56 +26,32 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/SimplePlayer.h"
+
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+SimpleController::SimpleController()
 {
-	using namespace OpenSteer;
 
-	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
-	{
-	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
+}
 
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
-		{
+//-----------------------------------------------------------------------------
+SimpleController::~SimpleController()
+{
 
-		}
+}
 
-		virtual ~VehicleClassIdMixin()
-		{
-		}
+//-----------------------------------------------------------------------------
+SimplePlayer::SimplePlayer():m_pkController(NULL)
+{
 
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
+}
 
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
-		}
-
-	private:
-
-	};
+//-----------------------------------------------------------------------------
+SimplePlayer::~SimplePlayer()
+{
 
 }
 
 
-#endif // __ABSTRACTVEHICLEUTILITIES_H__

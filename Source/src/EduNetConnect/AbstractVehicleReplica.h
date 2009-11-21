@@ -30,6 +30,8 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetConnect/OSReplicaTypes.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
 class AbstractVehicleReplica : public OSReplica< OpenSteer::AbstractVehicle >

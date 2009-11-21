@@ -29,7 +29,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+//#include "EduNetCommon/EduNetCommon.h"
 
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/VehicleClassIds.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"

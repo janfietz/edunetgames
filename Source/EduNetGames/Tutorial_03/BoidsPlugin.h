@@ -2,6 +2,9 @@
 #define BOID_H
 
 #include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
+#include "OpenSteer/Plugin.h"
+
 #include "NetBoid.h"
 #include "NetBoidFactory.h"
 namespace OpenSteer{

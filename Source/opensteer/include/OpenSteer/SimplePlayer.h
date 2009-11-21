@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEUTILITIES_H__
-#define __ABSTRACTVEHICLEUTILITIES_H__
+#ifndef __SIMPLEPLAYER_H__
+#define __SIMPLEPLAYER_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,56 +29,60 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/AbstractPlayer.h"
+#include "OpenSteer/Vec3.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-	using namespace OpenSteer;
+
+	typedef EntityMixin<AbstractController> TAbstractController_0;
+	typedef EntityMixin<AbstractPlayer> TAbstractPlayer_0;
+
+	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
+	typedef AbstractUpdatedMixin<TAbstractPlayer_0> TAbstractPlayer;
 
 	//-------------------------------------------------------------------------
-	template <class Super, EntityClassId classId = 0>
-	class VehicleClassIdMixin : public Super
+	class SimpleController : public TAbstractController
 	{
+		OS_DECLARE_BASE( TAbstractController )
 	public:
-		
-		VehicleClassIdMixin()
-		{
-		}
+		SimpleController();
+		virtual ~SimpleController();
+		OS_IMPLEMENT_CLASSNAME( SimpleController )
 
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
+		virtual const Vec3& getOutputForce( void ) const
 		{
-
-		}
-
-		virtual ~VehicleClassIdMixin()
-		{
-		}
-
-		// AbstractEntity interface
-		virtual AbstractEntity* cloneEntity( void ) const
-		{
-			return new VehicleClassIdMixin();
-		}
-
-		// important implement new clone functionality
-		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
-		}
-
-		virtual EntityClassId getClassId( void ) const
-		{
-			static EntityClassId sClassId = classId;
-			return sClassId;
+			return this->m_kOutput;
 		}
 
 	private:
+		Vec3 m_kOutput;
+	};
 
+	//-------------------------------------------------------------------------
+	class SimplePlayer : public TAbstractPlayer
+	{
+		OS_DECLARE_BASE( TAbstractPlayer )
+	public:
+		SimplePlayer();
+		virtual ~SimplePlayer();
+		OS_IMPLEMENT_CLASSNAME( SimplePlayer )
+
+		virtual void setController( AbstractController* pkController)
+		{
+			this->m_pkController = pkController;
+		}
+
+		virtual AbstractController const* const getController( AbstractController* ) const
+		{
+			return this->m_pkController;
+		}
+
+	private:
+		AbstractController* m_pkController;
 	};
 
 }
 
-
-#endif // __ABSTRACTVEHICLEUTILITIES_H__
+#endif //  __ABSTRACTPLAYER_H__

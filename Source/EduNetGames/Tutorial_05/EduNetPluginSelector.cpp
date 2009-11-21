@@ -87,7 +87,7 @@ void PluginSelector::SelectServerPlugin( RakNet::RPC3 *rpcFromNetwork )
 		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectServerPlugin", GetNetworkID(), rpcFromNetwork);
 	} else
 	{
-		RakNet::RakString rs( this->m_pkPluginHost->GetCurrentPluginName() );
+		RakNet::RakString rs( this->m_pkPluginHost->getCurrentPluginName() );
 		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), rs,  rpcFromNetwork);
 	}
 }

@@ -74,22 +74,32 @@
 
 namespace OpenSteer {
 
+	typedef struct TLocalSpaceData
+	{
+		Vec3 _side;     //!    side-pointing unit basis vector
+		Vec3 _up;       //!  upward-pointing unit basis vector
+		Vec3 _forward;  //! forward-pointing unit basis vector
+		Vec3 _position; //! origin of local space
+	} LocalSpaceData;
 
 	class AbstractLocalSpace//! : public AbstractEntity
     {
     public:
         virtual ~AbstractLocalSpace() { /* Nothing to do. */ }
         
+		virtual const LocalSpaceData& getLocalSpaceData( void ) const = 0;
+		virtual LocalSpaceData& accessLocalSpaceData( void ) = 0;
+		virtual void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData ) = 0;
 
         //! accessors (get and set) for side, up, forward and position
         virtual const Vec3& side (void) const = 0;
-        virtual Vec3 setSide (const Vec3& s) = 0;
+        virtual const Vec3& setSide (const Vec3& s) = 0;
         virtual const Vec3& up (void) const = 0;
-        virtual Vec3 setUp (const Vec3& u) = 0;
+        virtual const Vec3& setUp (const Vec3& u) = 0;
         virtual const Vec3& forward (void) const = 0;
-        virtual Vec3 setForward (const Vec3& f) = 0;
+        virtual const Vec3& setForward (const Vec3& f) = 0;
         virtual const Vec3& position (void) const = 0;
-        virtual Vec3 setPosition (const Vec3& p) = 0;
+        virtual const Vec3& setPosition (const Vec3& p) = 0;
 
         //! use right-(or left-)handed coordinate space
         virtual bool rightHanded (void) const = 0;
@@ -131,43 +141,60 @@ namespace OpenSteer {
 	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {
     public:
         virtual ~AbstractUpdatedLocalSpace() { /* Nothing to do. */ }
+
+		virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+		{
+			// nothing to do here
+			return;
+		}
+
 	};
 	
 
     //-----------------------------------------------------------------------------
     //! LocalSpaceMixin is a mixin layer, a class template with a paramterized base
     //! class.  Allows "LocalSpace-ness" to be layered on any class.
-
-
     template <class Super>
-    class LocalSpaceMixin : public Super
+    class LocalSpaceMixin : protected LocalSpaceData, public Super
     {
         //! transformation as three orthonormal unit basis vectors and the
         //! origin of the local space.  These correspond to the "rows" of
         //! a 3x4 transformation matrix with [0 0 0 1] as the final column
 
     private:
-        Vec3 _side;     //!    side-pointing unit basis vector
-        Vec3 _up;       //!  upward-pointing unit basis vector
-        Vec3 _forward;  //! forward-pointing unit basis vector
-        Vec3 _position; //! origin of local space
 
     public:
 		OS_IMPLEMENT_CLASSNAME( Super )
+
+		const LocalSpaceData& getLocalSpaceData( void ) const
+		{
+			return *this;
+		}
+
+		LocalSpaceData& accessLocalSpaceData( void )
+		{
+			return *this;
+		}
+
+		void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData )
+		{
+			LocalSpaceData& _localSpaceData = *this;
+			_localSpaceData = kLocalSpaceData;
+		}
 
         //! accessors (get and set) for side, up, forward and position
         const Vec3& side     (void) const {return _side;};
         const Vec3& up       (void) const {return _up;};
         const Vec3& forward  (void) const {return _forward;};
         const Vec3& position (void) const {return _position;};
-        Vec3 setSide     (const Vec3& s) {return _side = s;};
-        Vec3 setUp       (const Vec3& u) {return _up = u;};
-        Vec3 setForward  (const Vec3& f) {return _forward = f;};
-        Vec3 setPosition (const Vec3& p) {return _position = p;};
-        Vec3 setSide     (float x, float y, float z){return _side.set    (x,y,z);};
-        Vec3 setUp       (float x, float y, float z){return _up.set      (x,y,z);};
-        Vec3 setForward  (float x, float y, float z){return _forward.set (x,y,z);};
-        Vec3 setPosition (float x, float y, float z){return _position.set(x,y,z);};
+        const Vec3& setSide     (const Vec3& s) {_side = s;return _side;};
+        const Vec3& setUp       (const Vec3& u) {_up = u;return _up;};
+        const Vec3& setForward  (const Vec3& f) {_forward = f;return _forward;};
+        const Vec3& setPosition (const Vec3& p) {_position = p;return _position;};
+        const Vec3& setSide     (float x, float y, float z){_side.set    (x,y,z);return _side;};
+        const Vec3& setUp       (float x, float y, float z){_up.set      (x,y,z);return _up;};
+        const Vec3& setForward  (float x, float y, float z){_forward.set (x,y,z);return _forward;};
+        const Vec3& setPosition (float x, float y, float z){_position.set(x,y,z);return _position;};
 
         //-------------------------------------------------------------------------
         //! Global compile-time switch to control handedness/chirality: should
@@ -186,22 +213,27 @@ namespace OpenSteer {
         LocalSpaceMixin (const Vec3& Side,
                          const Vec3& Up,
                          const Vec3& Forward,
-                         const Vec3& Position)
-            : _side( Side ), _up( Up ), _forward( Forward ), _position( Position ) {}
+                         const Vec3& Position) 
+		{
+			this->_side = Side;
+			this->_up = Up;
+			this->_forward = Forward;
+			this->_position = Position;
+		}
 
 
         LocalSpaceMixin (const Vec3& Up,
                          const Vec3& Forward,
                          const Vec3& Position)
-            : _side(), _up( Up ), _forward( Forward ), _position( Position )
         {
-            setUnitSideFromForwardAndUp ();
+			this->_up = Up;
+			this->_forward = Forward;
+			this->_position = Position;
+			setUnitSideFromForwardAndUp ();
         }
 
-        
         virtual ~LocalSpaceMixin() { /* Nothing to do. */ }
         
-
         //-------------------------------------------------------------------------
         //! reset transform: set local space to its identity state, equivalent to a
         //! 4x4 homogeneous transform like this:
@@ -212,7 +244,6 @@ namespace OpenSteer {
         //!     [ 0 0 0 1 ]
         //
         //! where X is 1 for a left-handed system and -1 for a right-handed system.
-
         void resetLocalSpace (void)
         {
             _forward.set (0, 0, 1);
@@ -221,11 +252,8 @@ namespace OpenSteer {
             _position.set (0, 0, 0);
         };
 
-
         //-------------------------------------------------------------------------
         //! transform a direction in global space to its equivalent in local space
-
-
         Vec3 localizeDirection (const Vec3& globalDirection) const
         {
             //! dot offset with local basis vectors to obtain local coordiantes
@@ -234,11 +262,8 @@ namespace OpenSteer {
                          globalDirection.dot (_forward));
         };
 
-
         //-------------------------------------------------------------------------
         //! transform a point in global space to its equivalent in local space
-
-
         Vec3 localizePosition (const Vec3& globalPosition) const
         {
             //! global offset from local origin
@@ -248,16 +273,12 @@ namespace OpenSteer {
             return localizeDirection (globalOffset);
         };
 
-
         //-------------------------------------------------------------------------
         //! transform a point in local space to its equivalent in global space
-
-
         Vec3 globalizePosition (const Vec3& localPosition) const
         {
             return _position + globalizeDirection (localPosition);
         };
-
 
         //-------------------------------------------------------------------------
         //! transform a direction in local space to its equivalent in global space
@@ -267,7 +288,6 @@ namespace OpenSteer {
                     (_up      * localDirection.y) +
                     (_forward * localDirection.z));
         };
-
 
         //-------------------------------------------------------------------------
         //! set "side" basis vector to normalized cross product of forward and up
@@ -281,12 +301,9 @@ namespace OpenSteer {
             _side = _side.normalized ();
         }
 
-
         //-------------------------------------------------------------------------
         //! regenerate the orthonormal basis vectors given a new forward
         //! (which is expected to have unit length)
-
-
         void regenerateOrthonormalBasisUF (const Vec3& newUnitForward)
         {
             _forward = newUnitForward;
@@ -303,17 +320,14 @@ namespace OpenSteer {
                 _up.cross (_forward, _side);
         }
 
-
         //! for when the new forward is NOT know to have unit length
-
         void regenerateOrthonormalBasis (const Vec3& newForward)
         {
-            regenerateOrthonormalBasisUF (newForward.normalized());
+            regenerateOrthonormalBasisUF( newForward.normalized() );
         }
 
 
         //! for supplying both a new forward and and new up
-
         void regenerateOrthonormalBasis (const Vec3& newForward,
                                          const Vec3& newUp)
         {
@@ -321,12 +335,9 @@ namespace OpenSteer {
             regenerateOrthonormalBasis (newForward.normalized());
         }
 
-
         //-------------------------------------------------------------------------
         //! rotate, in the canonical direction, a vector pointing in the
         //! "forward" (+Z) direction to the "side" (+/-X) direction
-
-
         Vec3 localRotateForwardToSide (const Vec3& v) const
         {
             return Vec3 (rightHanded () ? -v.z : +v.z,
@@ -335,7 +346,6 @@ namespace OpenSteer {
         }
 
         //! not currently used, just added for completeness
-
         Vec3 globalRotateForwardToSide (const Vec3& globalForward) const
         {
             const Vec3 localForward = localizeDirection (globalForward);
@@ -359,6 +369,13 @@ namespace OpenSteer {
 	};
 
 	//-------------------------------------------------------------------------
+// 	template <class Super>
+// 	class EntityLocalSpaceMixin : public EntityPossessionMixin<Super>
+// 	{
+// 
+// 	};
+
+	//-------------------------------------------------------------------------
 	template <class Super>
 	class EntityLocalSpaceMixin : public LocalSpaceMixin<Super>
 	{
@@ -368,27 +385,46 @@ namespace OpenSteer {
 	public:
 		//---------------------------------------------------------------------
 		//! constructors
-		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>()
+		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>(),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
 		EntityLocalSpaceMixin (const Vec3& Side,
 			const Vec3& Up,
 			const Vec3& Forward,
-			const Vec3& Position):LocalSpaceMixin<Super>( Side, Up, Forward, Position )
+			const Vec3& Position):LocalSpaceMixin<Super>( Side, Up, Forward, Position ),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
 		EntityLocalSpaceMixin (const Vec3& Up,
 			const Vec3& Forward,
-			const Vec3& Position):LocalSpaceMixin<Super>( Up, Forward, Position )
+			const Vec3& Position):LocalSpaceMixin<Super>( Up, Forward, Position ),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
 		{
 		};
 
-		virtual ~EntityLocalSpaceMixin() { /* Nothing to do. */ }
+		virtual ~EntityLocalSpaceMixin() 
+		{ 
+			if( NULL != this->m_pkPossessed )
+			{
+				this->m_pkPossessed->possessBy( NULL );
+			}
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+			}
+		}
 
 
 		OS_IMPLEMENT_CLASSNAME( Super )
+
+		// AbstractEntity interface
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return NULL;
+		}
 
 		virtual EntityClassId getClassId( void ) const
 		{
@@ -420,6 +456,68 @@ namespace OpenSteer {
 			return this->m_kEntity.isRemoteObject();
 		}
 
+		virtual const char* name (void) const
+		{
+			return this->m_kEntity.name();
+		}
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual void play( AbstractEntity* pkEntity )
+		{
+			AbstractEntity* pkThisEntity = reinterpret_cast<AbstractEntity*>( this );
+			//			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( this );
+			AbstractPlayer* pkThis = CastToAbstractPlayer( pkThisEntity );
+			if( NULL == pkThisEntity )
+			{
+				// not an entity
+				return;
+			}
+			if( NULL == pkThis )
+			{
+				// not a player
+				return;
+			}
+			if( NULL != pkEntity )
+			{
+				pkEntity->possessBy( pkThisEntity );
+				AbstractPlayer* pkPlayer = pkEntity->getPlayer();
+				if( pkPlayer == pkThis )
+				{
+					// play succeeded
+					this->m_pkPossessed = pkEntity;
+				}
+			}
+			else
+			{
+				this->m_pkPossessed = NULL;
+			}
+		};
+
+		virtual void possessBy( AbstractEntity* pkEntity )
+		{
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+				this->m_pkPossessor = NULL;
+			}
+			if( NULL == this->m_pkPossessor )
+			{
+				this->m_pkPossessor = pkEntity;
+			}
+		}
+
+		virtual AbstractPlayer* getPlayer( void ) const
+		{
+			return CastToAbstractPlayer( this->m_pkPossessor );
+		}
+
+		virtual AbstractEntity* getControlledEntity( void ) const
+		{
+			return this->m_pkPossessed;
+		}
+	private:
+		AbstractEntity* m_pkPossessor;
+		AbstractEntity* m_pkPossessed;
 	};
 
 	//-------------------------------------------------------------------------

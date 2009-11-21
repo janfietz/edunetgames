@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetConnect/EduNetConnect.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
@@ -43,6 +43,16 @@ namespace RakNet
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
+
+	enum ESerializeDataType
+	{
+		ESerializeDataType_Position,
+		ESerializeDataType_Forward,
+		ESerializeDataType_Side,
+		ESerializeDataType_Up,
+		ESerializeDataType_Force,
+		ESerializeDataType_Count,
+	};
 
 	class AbstractNetworkVehicle
 	{

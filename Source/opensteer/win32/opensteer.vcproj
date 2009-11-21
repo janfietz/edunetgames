@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\SimplePlayer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\SimpleVehicle.cpp"
 				>
 			</File>
@@ -244,6 +248,10 @@
 			Name="include"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath="..\include\OpenSteer\AbstractPlayer.h"
+				>
+			</File>
 			<File
 				RelativePath="..\include\OpenSteer\AbstractState.h"
 				>
@@ -366,6 +374,10 @@
 			</File>
 			<File
 				RelativePath="..\include\OpenSteer\SharedPointer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\include\OpenSteer\SimplePlayer.h"
 				>
 			</File>
 			<File

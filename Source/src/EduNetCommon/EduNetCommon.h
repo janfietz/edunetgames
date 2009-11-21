@@ -29,11 +29,28 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#ifndef EDUNET_NO_OPENSTEER_INCLUDES
+#define EDUNET_NO_OPENSTEER_INCLUDES 0
+#endif
+
+#if EDUNET_NO_OPENSTEER_INCLUDES
+#define EDUNET_INCLUDE_OPENSTEER 0
+#else
+#define EDUNET_INCLUDE_OPENSTEER 1
+#endif
+
 #include "EduNetConfig.h"
+#if EDUNET_INCLUDE_OPENSTEER
 #include "EduNetExternal.h"
+#endif
 #include "EduNetTypes.h"
 #include "EduNetGuiTypes.h"
 #include "EduNetMacros.h"
 
+
 #endif // __EDUNETCOMMON_H__
+
+// undef outside include guards
+#undef EDUNET_INCLUDE_OPENSTEER
+#undef EDUNET_NO_OPENSTEER_INCLUDES
 

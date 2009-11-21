@@ -39,8 +39,6 @@
 #define ET_MALLOC malloc
 #define ET_FREE free
 
-#define ET_ABSTRACT = 0
-
 #define ET_SAFE_DELETE( p ) { if( 0 != p ) { ET_DELETE p; p = 0; } }
 #define ET_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { ET_DELETE[] p; p = 0; } }
 #define ET_SAFE_FREE( p ) { if( 0 != p ) { ET_FREE( p ); p = 0; } }
@@ -55,6 +53,7 @@
 //-----------------------------------------------------------------------------
 // classes
 //-----------------------------------------------------------------------------
+#define ET_ABSTRACT = 0
 
 #define ET_DECLARE_BASE( classname ) typedef classname BaseClass;
 

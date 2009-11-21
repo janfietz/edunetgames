@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/Entity.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
@@ -38,17 +39,16 @@ namespace OpenSteer
 
 	//-------------------------------------------------------------------------
 	// implement entity class id
-	static const EntityClassId g_clasId_Unknown(0);	
-	static const EntityClassId g_clasId_NetPedestrian(1);	
-	static const EntityClassId g_clasId_CtfBaseVehicle(2);
-	static const EntityClassId g_clasId_CtfSeekerVehicle(3);
-	static const EntityClassId g_clasId_CtfEnemyVehicle(4);
-	static const EntityClassId g_clasId_NetBoid(5);
+	static const EntityClassId g_clasId_NetPedestrian( 1 + OS_CID_LASTRESERVED );	
+	static const EntityClassId g_clasId_CtfBaseVehicle( 2 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_CtfSeekerVehicle( 3 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_CtfEnemyVehicle( 4 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_NetBoid( 5 + OS_CID_LASTRESERVED );
 }
 
 //-----------------------------------------------------------------------------
 // define entity class id
-#define ET_CID_UNKNOWN OpenSteer::g_clasId_Unknown
+#define ET_CID_UNKNOWN OS_CID_UNKNOWN
 #define ET_CID_NETPEDESTRIAN OpenSteer::g_clasId_NetPedestrian
 #define ET_CID_CTF_BASE_VEHICLE OpenSteer::g_clasId_CtfBaseVehicle
 #define ET_CID_CTF_ENEMY_VEHICLE OpenSteer::g_clasId_CtfSeekerVehicle
