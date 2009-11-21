@@ -312,6 +312,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUtilities.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleUtilities.h"
 					>
 				</File>

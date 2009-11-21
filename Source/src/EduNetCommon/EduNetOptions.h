@@ -36,8 +36,6 @@
 class EduNetOptions
 {
 public:
-	EduNetOptions();
-	virtual ~EduNetOptions();
 
 	int parseCommandLine(int argc, char **argv);
 
@@ -56,7 +54,11 @@ public:
 	{
 		return this->m_kPluginName.c_str();
 	}
+
+	static EduNetOptions& accessOptions( void );
 private:
+	EduNetOptions();
+	virtual ~EduNetOptions();
 	bool m_bContinueProcess;
 	std::string m_kPluginName;
 };

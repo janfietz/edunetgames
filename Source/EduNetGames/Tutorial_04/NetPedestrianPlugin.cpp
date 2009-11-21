@@ -176,7 +176,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	if( ( NULL != nearMouse ) && ( NULL != selected ) )
 	{
 		// highlight Pedestrian nearest mouse
-		OpenSteerDemo::highlightVehicleUtility (*nearMouse);
+		VehicleUtilities::highlightVehicleUtility (*nearMouse);
 
 		// textual annotation (at the vehicle's screen position)
 		serialNumberAnnotationUtility(*selected, *nearMouse);

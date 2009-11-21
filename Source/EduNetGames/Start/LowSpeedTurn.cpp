@@ -46,6 +46,7 @@
 
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
@@ -193,7 +194,7 @@ namespace {
             CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
             // draw "ground plane"
-            OpenSteerDemo::gridUtility (selected.position());
+            GridPlugin::gridUtility( selected.position() );
           
             // update, draw and annotate each agent
             for (iterator i = all.begin(); i != all.end(); i++)
@@ -215,7 +216,7 @@ namespace {
             }
 
             // highlight vehicle nearest mouse
-            OpenSteerDemo::highlightVehicleUtility (nearMouse);
+            VehicleUtilities::highlightVehicleUtility (nearMouse);
         }
 
         void close (void)

@@ -173,7 +173,7 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	kVG.redraw( currentTime, elapsedTime );
 
 	// highlight vehicle nearest mouse
-	OpenSteerDemo::highlightVehicleUtility (nearMouse);
+	VehicleUtilities::highlightVehicleUtility (nearMouse);
 
 	// display status in the upper left corner of the window
 	std::ostringstream status;

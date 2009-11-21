@@ -252,6 +252,9 @@ namespace OpenSteer {
 		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
 		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
 		static int getPluginIdx( const AbstractPlugin* pkPlugin );
+
+		//! utility function
+		static const AVGroup& allVehiclesOfSelectedPlugin(void);
 	protected:
 		AbstractVehicleFactory* m_pkVehicleFactory;
 

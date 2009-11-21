@@ -9,7 +9,6 @@
 using namespace EduNet;
 using namespace OpenSteer;
 
-
 //-----------------------------------------------------------------------------
 namespace
 {
@@ -234,6 +233,17 @@ void Application::updateSelectedPlugin (const float currentTime,
 	{
 		return;
 	}
+
+	// if no vehicle is selected, and some exist, select the first one
+	if( SimpleVehicle::selectedVehicle == NULL )
+	{
+		const AVGroup& vehicles = OpenSteer::Plugin::selectedPlugin->allVehicles();
+		if( vehicles.size() > 0 )
+		{
+			SimpleVehicle::selectedVehicle = vehicles.front();
+		}
+	}
+
 
 	osScalar fSimulationFPS = this->m_fSimulationFPS;
 
