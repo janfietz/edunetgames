@@ -44,6 +44,7 @@
 
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 #include "OpenSteer/PolylineSegmentedPathwaySingleRadius.h"
 #include "OpenSteer/SimpleVehicle.h"
@@ -473,7 +474,7 @@ public:
         
         // draw "ground plane"
         if (SimpleVehicle::selectedVehicle) gridCenter = selected.position();
-        OpenSteerDemo::gridUtility (gridCenter);
+        GridPlugin::gridUtility( gridCenter );
         
         // draw and annotate each Pedestrian
         for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).draw (); 
@@ -482,7 +483,7 @@ public:
         drawPathAndObstacles ();
         
         // highlight Pedestrian nearest mouse
-        OpenSteerDemo::highlightVehicleUtility (nearMouse);
+        VehicleUtilities::highlightVehicleUtility (nearMouse);
         
         // textual annotation (at the vehicle's screen position)
         serialNumberAnnotationUtility (selected, nearMouse);

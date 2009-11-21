@@ -56,7 +56,7 @@ namespace OpenSteer
 		// optional methods (see comments in AbstractPlugin for explanation):
 		void reset (void) { } // default is to reset by doing close-then-open
 		float selectionOrderSortKey( void ) const {return 1000000;}
-		bool requestInitialSelection( void ) const {return true;}
+		bool requestInitialSelection( void ) const {return false;}
 		void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
 		void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
 
@@ -65,9 +65,9 @@ namespace OpenSteer
 			GridPlugin::ms_kGridCenter = kGridCenter;
 		}
 
+		static void gridUtility( const Vec3& gridTarget );
 		static int ms_iSolid;
 	private:
-		static void gridUtility( const Vec3& gridTarget );
 
 		AVGroup m_kVehicles;
 		static osVector3 ms_kGridCenter;

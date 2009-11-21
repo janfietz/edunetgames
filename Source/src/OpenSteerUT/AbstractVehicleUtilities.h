@@ -36,6 +36,42 @@ namespace OpenSteer
 {
 	using namespace OpenSteer;
 
+	class VehicleUtilities
+	{
+	public:
+		// draws a gray disk on the XZ plane under a given vehicle
+		static void highlightVehicleUtility (const AbstractVehicle& vehicle);
+
+		// draws a gray circle on the XZ plane under a given vehicle
+		static void circleHighlightVehicleUtility (const AbstractVehicle& vehicle);
+
+		// draw a box around a vehicle aligned with its local space
+		// xxx not used as of 11-20-02
+		static void drawBoxHighlightOnVehicle (const AbstractVehicle& v,
+			const Color& color);
+
+		// draws a colored circle (perpendicular to view axis) around the center
+		// of a given vehicle.  The circle's radius is the vehicle's radius times
+		// radiusMultiplier.
+		static void drawCircleHighlightOnVehicle (const AbstractVehicle& v,
+			const float radiusMultiplier,
+			const Color& color);
+
+		// select the "next" vehicle: cycle through the registry
+		static void selectNextVehicle (void);
+
+		// select vehicle nearest the given screen position (e.g.: of the mouse)
+		static void selectVehicleNearestScreenPosition (int x, int y);
+
+		// ---------------------------------------------------------- mouse support
+
+
+		// Find the AbstractVehicle whose screen position is nearest the
+		// given window coordinates, typically the mouse position.  Note
+		// this will return NULL if there are no AbstractVehicles.
+		static AbstractVehicle* findVehicleNearestScreenPosition (int x, int y);
+	};
+
 	//-------------------------------------------------------------------------
 	template <class Super, EntityClassId classId = 0>
 	class VehicleClassIdMixin : public Super

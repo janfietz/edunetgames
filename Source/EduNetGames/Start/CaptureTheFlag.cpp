@@ -58,6 +58,7 @@
 
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
@@ -889,7 +890,7 @@ namespace {
 				const Vec3 gridCenter = interpolate (blend,
 													 selected.position(),
 													 gHomeBaseCenter);
-				OpenSteerDemo::gridUtility (gridCenter);
+				GridPlugin::gridUtility( gridCenter );
 			}
 
             // draw the seeker, obstacles and home base
@@ -901,7 +902,7 @@ namespace {
             for (int i = 0; i < ctfEnemyCount; i++) ctfEnemies[i]->draw ();
 
             // highlight vehicle nearest mouse
-            OpenSteerDemo::highlightVehicleUtility (nearMouse);
+            VehicleUtilities::highlightVehicleUtility (nearMouse);
         }
 
         void close (void)
