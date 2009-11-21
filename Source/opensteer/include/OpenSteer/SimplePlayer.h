@@ -51,6 +51,11 @@ namespace OpenSteer
 		virtual ~SimpleController();
 		OS_IMPLEMENT_CLASSNAME( SimpleController )
 
+		virtual void setOutputForce( const Vec3& kOutput )
+		{
+			this->m_kOutput = kOutput;
+		}
+
 		virtual const Vec3& getOutputForce( void ) const
 		{
 			return this->m_kOutput;
@@ -69,9 +74,16 @@ namespace OpenSteer
 		virtual ~SimplePlayer();
 		OS_IMPLEMENT_CLASSNAME( SimplePlayer )
 
+		//---------------------------------------------------------------------
+		// AbstractPlayer interface
 		virtual void setController( AbstractController* pkController)
 		{
 			this->m_pkController = pkController;
+		}
+
+		virtual AbstractController* accessController( void ) const
+		{
+			return this->m_pkController;
 		}
 
 		virtual AbstractController const* const getController( void ) const
@@ -90,6 +102,11 @@ namespace OpenSteer
 		}
 
 		static AbstractPlayer* accessLocalPlayer( void );
+
+		//---------------------------------------------------------------------
+		// AbstractUpdated interface
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+
 
 
 	private:

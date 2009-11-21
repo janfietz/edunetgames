@@ -27,25 +27,107 @@
 //-----------------------------------------------------------------------------
 
 #include "SimplePhysicsVehicle.h"
+#include "AbstractVehicleMath.h"
+#include "OpenSteer/AbstractPlayer.h"
 
-namespace OpenSteer
-{
-	//-------------------------------------------------------------------------
+using namespace OpenSteer;
+
+//-----------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
-	SimplePhysicsVehicle::SimplePhysicsVehicle():
-		m_kEulerUpdate(this),
-		m_kSteeringForceUpdate(this)
-		{ 
-		}
+SimplePhysicsVehicle::SimplePhysicsVehicle():
+	m_kEulerUpdate(this),
+	m_kSteeringForceUpdate(this)
+{ 
+}
 #pragma warning(pop)
 
-	//-------------------------------------------------------------------------
-	SimplePhysicsVehicle::~SimplePhysicsVehicle()
-	{
+//-----------------------------------------------------------------------------
+SimplePhysicsVehicle::~SimplePhysicsVehicle()
+{
 
+}
+
+//-----------------------------------------------------------------------------
+// per frame simulation update
+void SimplePhysicsVehicle::update (const float currentTime, const float elapsedTime)
+{
+	if( this == SimpleVehicle::selectedVehicle )
+	{
+		if( false == this->isRemoteObject() )
+		{
+			this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
+		}
+		else
+		{
+			this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
+		}
+	}
+	else
+	{
+		this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
 	}
 
+	// craigs way ...
+	// apply steering force to our momentum
+	//	applySteeringForce (determineCombinedSteering (elapsedTime),
+	//		elapsedTime);
+
+	// alternative way
+	// now we can switch of steering force computation on the client
+	bool bComputeSteeringForce = true;
+	Vec3 kSteeringForce;
+	AbstractPlayer* pkPlayer = this->getPlayer();
+	if( NULL != pkPlayer )
+	{
+		const AbstractController* pkController = pkPlayer->getController();
+		if( NULL != pkController )
+		{
+			Vec3 kLocalSteeringForce = pkController->getOutputForce();
+			if( kLocalSteeringForce.length() > 0.1 )
+			{
+				localToWorldSpace( *this, kLocalSteeringForce, kSteeringForce );
+				kSteeringForce *= this->maxForce();
+				bComputeSteeringForce = false;
+			}
+		}
+	}
+	if( true == bComputeSteeringForce )
+	{
+		this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
+		kSteeringForce = this->m_kSteeringForceUpdate.getForce();
+	}
+	this->m_kEulerUpdate.setForce( kSteeringForce );
+	this->m_kEulerUpdate.update( currentTime, elapsedTime );
+
+#if 0
+	// reverse direction when we reach an endpoint
+	if (gUseDirectedPathFollowing)
+	{
+		const Color darkRed (0.7f, 0, 0);
+		float const pathRadius = path->radius();
+
+		if (osVector3::distance (position(), gEndpoint0) < pathRadius )
+		{
+			pathDirection = +1;
+			annotationXZCircle (pathRadius, gEndpoint0, darkRed, 20);
+		}
+		if (osVector3::distance (position(), gEndpoint1) < pathRadius )
+		{
+			pathDirection = -1;
+			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
+		}
+	}
+#endif
+
+	// annotation
+	annotationVelocityAcceleration (5, 0);
+	recordTrailVertex (currentTime, position());
+
+#if 0
+	// notify proximity database that our position has changed
+	proximityToken->updateForNewPosition (position());
+#endif
 }
 
 

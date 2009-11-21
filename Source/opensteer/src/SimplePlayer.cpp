@@ -90,3 +90,13 @@ AbstractPlayer* SimplePlayer::accessLocalPlayer( void )
 	return &kPlayer;
 }
 
+//-----------------------------------------------------------------------------
+void SimplePlayer::update( const osScalar currentTime, const osScalar elapsedTime )
+{
+	AbstractController* pkController = this->accessController();
+	if( NULL != pkController )
+	{
+		pkController->update( currentTime, elapsedTime );
+	}
+	BaseClass::update( currentTime, elapsedTime );
+}

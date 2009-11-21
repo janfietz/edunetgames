@@ -47,6 +47,9 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
 
+#include "OpenSteer/SimplePlayer.h"
+#include "OpenSteerUT/LocalPlayer.h"
+
 
 //-----------------------------------------------------------------------------
 namespace
@@ -211,6 +214,33 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	// service queued reset request, if any
 	doDelayedResetPluginXXX();
 
+	// update the local player object
+	AbstractPlayer* pkPlayer = SimplePlayer::accessLocalPlayer();
+	AbstractController* pkController = pkPlayer->accessController();
+	if( NULL != pkController )
+	{
+		pkController->setCustomUpdated( LocalPlayerController::accessLocalPlayerController() );
+	}
+	pkPlayer->update( currentTime, elapsedTime );
+	AbstractEntity* pkControlledEntity = pkPlayer->getControlledEntity();
+	AbstractEntity* pkNewControlledEntity = pkControlledEntity;  
+	if( SimpleVehicle::selectedVehicle != pkNewControlledEntity )
+	{
+		pkNewControlledEntity = SimpleVehicle::selectedVehicle;
+	}
+	if( pkNewControlledEntity != pkControlledEntity )
+	{
+		if( NULL != pkNewControlledEntity )
+		{
+			// right now only authorities
+			if( pkNewControlledEntity->isRemoteObject() )
+			{
+				pkNewControlledEntity = NULL;
+			}
+		}
+		pkPlayer->play( pkNewControlledEntity );
+	}
+
 	// invoke selected Plugin's Update method
 	EduNet::Application::AccessApplication().updateSelectedPlugin( currentTime, elapsedTime );
 
@@ -274,7 +304,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 	EduNet::Log::printMessage ("");
 	EduNet::Log::printMessage ("defined single key commands:");
 	EduNet::Log::printMessage ("  r      restart current Plugin.");
-	EduNet::Log::printMessage ("  s      select next vehicle.");
+	EduNet::Log::printMessage ("  n      select next vehicle.");
 	EduNet::Log::printMessage ("  c      select next camera mode.");
 	EduNet::Log::printMessage ("  f      select next preset frame rate");
 	EduNet::Log::printMessage ("  Tab    select next Plugin.");
@@ -772,9 +802,24 @@ namespace {
 
 	}
 
+
 	void 
-		keyboardFunc (unsigned char key, int /*x*/, int /*y*/) 
+		keyboardFuncUp( unsigned char key, int x, int y ) 
 	{
+		if( OpenSteer::LocalPlayerController::keyboardFuncUp( key, x, y ) )
+		{
+			return;
+		}
+	}
+
+	void 
+		keyboardFunc( unsigned char key, int x, int y ) 
+	{
+		if( OpenSteer::LocalPlayerController::keyboardFunc( key, x, y ) )
+		{
+			return;
+		}
+
 		std::ostringstream message;
 
 		// ascii codes
@@ -794,7 +839,7 @@ namespace {
 			break;
 
 			// cycle selection to next vehicle
-		case 's':
+		case 'n':
 			EduNet::Log::printMessage ("select next vehicle/agent");
 			OpenSteer::VehicleUtilities::selectNextVehicle ();
 			break;
@@ -817,10 +862,10 @@ namespace {
 			break;
 
 			// toggle annotation state
-		case 'a':
-			EduNet::Log::printMessage (OpenSteer::toggleAnnotationState () ?
-				"annotation ON" : "annotation OFF");
-			break;
+// 		case 'a':
+// 			EduNet::Log::printMessage (OpenSteer::toggleAnnotationState () ?
+// 				"annotation ON" : "annotation OFF");
+// 			break;
 
 			// toggle run/pause state
 		case space:
@@ -884,11 +929,11 @@ namespace {
 
 		default:
 			message << "unrecognized single key command: " << key;
-			message << " (" << (int)key << ")";//xxx perhaps only for debugging?
+			message << " (" << (int)key << ") x(" << x << ") y(" << y << ")";
 			message << std::ends;
 			EduNet::Log::printMessage ("");
 			EduNet::Log::printMessage (message);
-			OpenSteer::OpenSteerDemo::keyboardMiniHelp ();
+//			OpenSteer::OpenSteerDemo::keyboardMiniHelp ();
 		}
 	}
 
@@ -1100,7 +1145,9 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 	glutReshapeFunc (&reshapeFunc);
 
 	// register handler for keyboard events
-	glutKeyboardFunc (&keyboardFunc);
+	glutKeyboardFunc(&keyboardFunc);
+	glutKeyboardUpFunc(&keyboardFuncUp);
+
 	glutSpecialFunc (&keyboardSpecialFunc);
 
 	// register handler for mouse button events
