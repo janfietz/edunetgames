@@ -28,7 +28,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+#define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
+#include "EduNetConnect/EduNetConnect.h"
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 
@@ -60,6 +61,7 @@ typedef struct TNetworkStats
 
 	size_t m_uiPacketsReceived;
 } NetworkStats;
+
 //-----------------------------------------------------------------------------
 typedef struct TNetworkAddress
 {
@@ -86,6 +88,7 @@ public:
 	int extraPingVariance;
 }NetworkSimulatorData;
 
+//-----------------------------------------------------------------------------
 typedef struct TReplicationParams
 {
 public:
@@ -116,7 +119,7 @@ class NetworkPlugin :
 {
 	ET_DECLARE_BASE( OpenSteer::Plugin );
 public:
-	NetworkPlugin(bool bAddToRegistry = true);
+	NetworkPlugin( bool bAddToRegistry = true );
 	virtual ~NetworkPlugin(void);
 
 	//----------------------------------------------------------------------------

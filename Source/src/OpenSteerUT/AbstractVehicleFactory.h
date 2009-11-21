@@ -29,11 +29,12 @@
 //-----------------------------------------------------------------------------
 
 // TODO OpenSteerCollector include
-#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
+
 	//-------------------------------------------------------------------------
 	class AbstractVehicleFactory
 	{
@@ -82,32 +83,10 @@ namespace OpenSteer
 			  this->m_pkMasterVehicle = pkVehicle;
 		  }
 
-		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
-		  {
-			  OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
-			  if( NULL != pkMasterVehicle )
-			  {
-				  return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
-			  }
-			  return NULL;
-		  }
-
-		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
-		  {
-			  if( NULL != this->m_pkMasterVehicle )
-			  {
-				  // for debugging
-				  const OpenSteer::EntityClassId classId = this->m_pkMasterVehicle->getClassId();
-				  return this->m_pkMasterVehicle->cloneVehicle( pkProximityDatabase );
-			  }
-			  return NULL;
-		  };
-
-		  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
-		  {
-			  ET_SAFE_DELETE( pkVehicle );
-		  }
-			protected:
+		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
+		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
+		  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+	protected:
 
 
 		mutable OpenSteer::AbstractVehicle* m_pkMasterVehicle;
@@ -128,46 +107,9 @@ namespace OpenSteer
 
 		virtual ~VehicleFactoryArray() {}
 
-		void addVehicleFactory( AbstractVehicleFactory* pkFactory )
-		{
-			OpenSteer::EntityClassId classId(0);
-			// force initialize
-			OpenSteer::AbstractVehicle* pkMasterVehicle = NULL;
-			OpenSteer::AbstractVehicle* pkFactoryMasterVehicle = pkFactory->accessMasterVehicle( classId );
-			if( NULL == pkFactoryMasterVehicle )
-			{
-				pkMasterVehicle = pkFactory->getMasterVehicle( );
-			}
-			else
-			{
-				pkMasterVehicle = pkFactoryMasterVehicle;
-			}
-			if( NULL != pkMasterVehicle )
-			{
-				if( NULL == this->findVehicleFactory( pkMasterVehicle->getClassId() ) )
-				{
-					this->push_back( pkFactory );
-				}
-			}
-			return;
-		}
+		void addVehicleFactory( AbstractVehicleFactory* pkFactory );
 
-		AbstractVehicleFactory* findVehicleFactory( OpenSteer::EntityClassId classId ) const
-		{
-//			TVehicleFactoryArray::const_iterator kFound = std::find( this->begin(), this->end(), classId );
-			TVehicleFactoryArray::const_iterator kIter = this->begin();
-			TVehicleFactoryArray::const_iterator kEnd = this->end();
-			while( kIter != kEnd )
-			{
-				OpenSteer::AbstractVehicle* pkMasterVehicle = (*kIter)->accessMasterVehicle( classId );
-				if( NULL != pkMasterVehicle )
-				{
-					return (*kIter);
-				}
-				++kIter;
-			}
-			return NULL;
-		}
+		AbstractVehicleFactory* findVehicleFactory( OpenSteer::EntityClassId classId ) const;
 
 		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
 		{
@@ -185,34 +127,13 @@ namespace OpenSteer
 			return NULL;
 		}
 
-		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
-		{
-			AbstractVehicleFactory* pkFactory = this->findVehicleFactory( pkVehicle->getClassId() );
-			if( NULL != pkFactory )
-			{
-				return pkFactory->setMasterVehicle( pkVehicle );
-			}
-		}
+		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
-		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
-		{
-			OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
-			if( NULL != pkMasterVehicle )
-			{
-				return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
-			}
-			return NULL;
-		}
+		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
 
-		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
-		{
-			return NULL;
-		};
+		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
 
-		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
-		{
-			ET_SAFE_DELETE( pkVehicle );
-		}
+		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 	protected:
 	};
 

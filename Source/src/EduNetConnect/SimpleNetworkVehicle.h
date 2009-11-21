@@ -32,11 +32,6 @@
 #include "NetworkVehicle.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
 
-// #include "EduNetCommon/EduNetCommon.h"
-// #include "EduNetCommon/TUpdatePeriod.h"
-// #include "EduNetProfile/GraphPlot.h"
-
-
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 

@@ -27,7 +27,9 @@ namespace OpenSteer{
 		// type for a flock: an STL vector of Boid pointers
 		typedef std::vector<Boid*> groupType;
 
-		Boid (){};
+		Boid (){
+			_movesPlanar = false;
+		};
 		Boid (ProximityDatabase& pd);		 
 		~Boid ();
 
@@ -38,9 +40,9 @@ namespace OpenSteer{
 		void update (const float currentTime, const float elapsedTime);
 		Vec3 steerToFlock (void);
 		void sphericalWrapAround (void);
-		void regenerateLocalSpace (const Vec3& newVelocity,
-			const float elapsedTime);
-		void regenerateLocalSpaceForTerrainFollowing  (const Vec3& newVelocity,
+		void regenerateLocalSpace( const Vec3& newForward,
+			const float elapsedTime );
+		void regenerateLocalSpaceForTerrainFollowing (const Vec3& newForward,
 			const float /* elapsedTime */);
 		void newPD (ProximityDatabase& pd);
 		void annotateAvoidObstacle (const float minDistanceToCollision);

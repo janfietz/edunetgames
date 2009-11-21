@@ -88,6 +88,7 @@ namespace {
         // constructor
         Boid (ProximityDatabase& pd)
         {
+			_movesPlanar = false;
             // allocate a token for this boid in the proximity database
             proximityToken = NULL;
             newPD (pd);
@@ -109,25 +110,25 @@ namespace {
         void reset (void)
         {
             // reset the vehicle
-            SimpleVehicle::reset ();
+            SimpleVehicle::reset();
 
             // steering force is clipped to this magnitude
-            setMaxForce (27);
+            setMaxForce(27);
 
             // velocity is clipped to this magnitude
-            setMaxSpeed (9);
+            setMaxSpeed(9);
 
             // initial slow speed
-            setSpeed (maxSpeed() * 0.3f);
+            setSpeed(maxSpeed() * 0.3f);
 
             // randomize initial orientation
-            regenerateOrthonormalBasisUF (RandomUnitVector ());
+            regenerateOrthonormalBasisUF(RandomUnitVector ());
 
             // randomize initial position
-            setPosition (RandomVectorInUnitRadiusSphere () * 20);
+            setPosition(RandomVectorInUnitRadiusSphere () * 20);
 
             // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
+            proximityToken->updateForNewPosition(position());
         }
 
 
@@ -212,12 +213,12 @@ namespace {
             // annotationLine (position, position + (separationW * s), gRed);
             // annotationLine (position, position + (alignmentW  * s), gOrange);
             // annotationLine (position, position + (cohesionW   * s), gYellow);
-
-            return separationW + alignmentW + cohesionW;
+			this->setLastSteeringForce( separationW + alignmentW + cohesionW );
+            return this->lastSteeringForce();
         }
 
 
-        // constrain this boid to stay within sphereical boundary.
+        // constrain this boid to stay within spherical boundary.
         void sphericalWrapAround (void)
         {
             // when outside the sphere
@@ -238,21 +239,21 @@ namespace {
 
     // ---------------------------------------------- xxxcwr111704_terrain_following
         // control orientation for this boid
-        void regenerateLocalSpace (const Vec3& newVelocity,
+        void regenerateLocalSpace (const Vec3& newForward,
                                    const float elapsedTime)
         {
             // 3d flight with banking
-            regenerateLocalSpaceForBanking (newVelocity, elapsedTime);
+            regenerateLocalSpaceForBanking( newForward, elapsedTime );
 
             // // follow terrain surface
-            // regenerateLocalSpaceForTerrainFollowing (newVelocity, elapsedTime);
+            // regenerateLocalSpaceForTerrainFollowing( newForward, elapsedTime );
         }
 
 
         // XXX experiment:
         // XXX   herd with terrain following
         // XXX   special case terrain: a sphere at the origin, radius 40
-        void regenerateLocalSpaceForTerrainFollowing  (const Vec3& newVelocity,
+        void regenerateLocalSpaceForTerrainFollowing  (const Vec3& newForward,
                                                        const float /* elapsedTime */)
         {
 
@@ -263,11 +264,10 @@ namespace {
 
             const Vec3 newUp = surfaceNormal;
             const Vec3 newPos = surfacePoint;
-            const Vec3 newVel = newVelocity.perpendicularComponent(newUp);
-            const float newSpeed = newVel.length();
-            const Vec3 newFor = newVel / newSpeed;
+            const Vec3 newFor = newForward.perpendicularComponent(newUp);
 
-            setSpeed (newSpeed);
+// TODO: recompute speed ?
+//            setSpeed (newSpeed);
             setPosition (newPos);
             setUp (newUp);
             setForward (newFor);
@@ -315,6 +315,7 @@ namespace {
             annotationLine (BL, BR, white);
             annotationLine (BR, FR, white);
         }
+
 
     #ifndef NO_LQ_BIN_STATS
             static size_t minNeighbors, maxNeighbors, totalNeighbors;

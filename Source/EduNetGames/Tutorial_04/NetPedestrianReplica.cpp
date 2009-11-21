@@ -31,6 +31,7 @@
 #include "NetPedestrianFactory.h"
 
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteer/Plugin.h"
 
 using namespace OpenSteer;
 

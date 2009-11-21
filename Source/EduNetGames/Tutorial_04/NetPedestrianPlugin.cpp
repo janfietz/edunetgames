@@ -33,6 +33,7 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
+#include "OpenSteer/SimplePlayer.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/NetworkPlugin.h"
@@ -64,6 +65,28 @@ m_bCreatesVehicles(false),
 m_fLastRenderTime(0.0f)
 {
 	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
+
+	// entity player test
+
+	{
+		NetPedestrian kVehicle;
+		{
+			SimplePlayer kPlayer0;
+			SimplePlayer kPlayer1;
+			kPlayer0.play( &kVehicle );
+			AbstractPlayer* pkCP = kVehicle.getPlayer();
+			AbstractEntity* pkCE0 = kPlayer0.getControlledEntity();
+
+			kPlayer1.play( &kVehicle );
+			pkCP = kVehicle.getPlayer();
+			AbstractEntity* pkCE1 = kPlayer1.getControlledEntity();
+			pkCE0 = kPlayer0.getControlledEntity();
+		}
+		bool bTest0 = true;
+		bTest0 = false;
+	}
+	bool bTest1 = true;
+	bTest1 = false;
 
 }
 

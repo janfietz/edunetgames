@@ -65,7 +65,7 @@ void PluginClientPlugin::SelectPluginByName(
 //-----------------------------------------------------------------------------
 const char* PluginClientPlugin::name (void) const
 {
-	const char* pszCurrentPluginName = this->GetCurrentPluginName();
+	const char* pszCurrentPluginName = this->getCurrentPluginName();
 	if(NULL != pszCurrentPluginName )
 	{
 		return pszCurrentPluginName ;
@@ -73,12 +73,12 @@ const char* PluginClientPlugin::name (void) const
 	return "ClientRpcPlugin";
 }
 //-----------------------------------------------------------------------------
-const char* PluginClientPlugin::GetCurrentPluginName( void ) const
+const char* PluginClientPlugin::getCurrentPluginName( void ) const
 {
 	AbstractPlugin* pkCurrentPlugin = this->m_kGamePlugin.getPlugin( 0 );
 	if( NULL != pkCurrentPlugin)
 	{
-		return pkCurrentPlugin->name();
+		return pkCurrentPlugin->pluginName();
 	}
 	return NULL;
 	

@@ -44,6 +44,13 @@ public:
 
 	//-------------------------------------------------------------------------
 	// interface AbstractUpdated
+	//-------------------------------------------------------------------
+	// interface AbstractUpdated
+	virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+	{
+		// nothing to do here
+		return;
+	}
 	virtual void update (const float currentTime, const float elapsedTime);
 
 	//-------------------------------------------------------------------------

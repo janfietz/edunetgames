@@ -48,7 +48,7 @@ class GLUI_List;
 
 class Arcball;
 
-GLUI* getRootGLUI();
+extern GLUI* getRootGLUI();
 
 #endif //  EDUNET_HAVE_GLUI
 

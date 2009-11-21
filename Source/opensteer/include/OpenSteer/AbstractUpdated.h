@@ -20,10 +20,52 @@ namespace OpenSteer {
 	class AbstractUpdated {
     public:
         virtual ~AbstractUpdated( void ) { /* Nothing to do. */ }
+		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ ) OS_ABSTRACT;
 		virtual void update( const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ ) OS_ABSTRACT;
 		virtual void setCustomUpdated( AbstractUpdated* ) OS_ABSTRACT;
 		virtual AbstractUpdated* getCustomUpdated( void ) const OS_ABSTRACT; 
 	};
+
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class AbstractUpdatedMixin : public Super {
+	public:
+		AbstractUpdatedMixin(  ): m_pkCustomUpdated(0)
+		{
+		}
+		virtual ~AbstractUpdatedMixin(){}
+
+		//-------------------------------------------------------------------
+		// interface AbstractUpdated
+		//---------------------------------------------------------------------
+		virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+		{
+			// nothing to do here
+			return;
+		}
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime )
+		{
+			if( 0 != this->m_pkCustomUpdated )
+			{
+				this->m_pkCustomUpdated->updateCustom( this, currentTime, elapsedTime );
+			}
+		}
+
+		virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
+		{
+		  this->m_pkCustomUpdated = pkUpdated;
+		}
+
+		virtual AbstractUpdated* getCustomUpdated( void ) const
+		{
+		  return this->m_pkCustomUpdated;
+		}
+
+	protected:
+		AbstractUpdated* m_pkCustomUpdated;
+
+	};
+
 }
 
 #endif  //! __ABSTRACTUPDATED_H__

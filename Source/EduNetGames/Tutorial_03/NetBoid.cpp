@@ -19,6 +19,7 @@ size_t Boid::totalNeighbors = 0;
 //-----------------------------------------------------------------------------
 Boid::Boid (ProximityDatabase& pd)
 {
+	_movesPlanar = false;
 	// allocate a token for this boid in the proximity database
 	proximityToken = NULL;
 	newPD (pd);
@@ -151,11 +152,12 @@ Vec3 Boid::steerToFlock (void)
 	// annotationLine (position, position + (alignmentW  * s), gOrange);
 	// annotationLine (position, position + (cohesionW   * s), gYellow);
 
-	return separationW + alignmentW + cohesionW;
+	this->setLastSteeringForce( separationW + alignmentW + cohesionW );
+	return this->lastSteeringForce();
 }
 
 //-----------------------------------------------------------------------------
-// constrain this boid to stay within sphereical boundary.
+// constrain this boid to stay within spherical boundary.
 void Boid::sphericalWrapAround (void)
 {
 	// when outside the sphere
@@ -176,21 +178,21 @@ void Boid::sphericalWrapAround (void)
 
 // ---------------------------------------------- xxxcwr111704_terrain_following
 // control orientation for this boid
-void Boid::regenerateLocalSpace (const Vec3& newVelocity,
-								 const float elapsedTime)
+void Boid::regenerateLocalSpace( const Vec3& newForward,
+								 const float elapsedTime )
 {
 	// 3d flight with banking
-	regenerateLocalSpaceForBanking (newVelocity, elapsedTime);
+	regenerateLocalSpaceForBanking( newForward, elapsedTime );
 
 	// // follow terrain surface
-	// regenerateLocalSpaceForTerrainFollowing (newVelocity, elapsedTime);
+	// regenerateLocalSpaceForTerrainFollowing( newForward, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
 // XXX experiment:
 // XXX   herd with terrain following
 // XXX   special case terrain: a sphere at the origin, radius 40
-void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newVelocity,
+void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newForward,
 													 const float /* elapsedTime */)
 {
 
@@ -201,15 +203,15 @@ void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newVelocity,
 
 	const Vec3 newUp = surfaceNormal;
 	const Vec3 newPos = surfacePoint;
-	const Vec3 newVel = newVelocity.perpendicularComponent(newUp);
-	const float newSpeed = newVel.length();
-	const Vec3 newFor = newVel / newSpeed;
-
-	setSpeed (newSpeed);
-	setPosition (newPos);
-	setUp (newUp);
-	setForward (newFor);
-	setUnitSideFromForwardAndUp ();
+	const Vec3 newFor = newForward.perpendicularComponent(newUp);
+// 	const float newSpeed = newVel.length();
+// 	const Vec3 newFor = newVel / newSpeed;
+// 
+// 	setSpeed (newSpeed);
+	setPosition( newPos );
+	setUp( newUp );
+	setForward( newFor );
+	setUnitSideFromForwardAndUp();
 }
 // ---------------------------------------------- xxxcwr111704_terrain_following
 

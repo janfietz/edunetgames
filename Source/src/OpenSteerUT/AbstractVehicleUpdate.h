@@ -48,6 +48,12 @@ namespace OpenSteer
 
 		  //-------------------------------------------------------------------
 		  // interface AbstractUpdated
+		  virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
+		  {
+			  // nothing to do here
+			  return;
+		  }
+
 		  virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
 		  {
 			  this->m_pkCustomUpdated = pkUpdated;

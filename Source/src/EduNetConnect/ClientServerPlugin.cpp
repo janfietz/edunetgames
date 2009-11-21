@@ -6,7 +6,7 @@
 #include "ClientPlugin.h"
 #include "PeerPlugin.h"
 
-EduNet::EmptyPlugin gEmptyPlugin;
+EduNet::EmptyPlugin gEmptyPlugin(false);
 
 using namespace OpenSteer;
 
@@ -44,6 +44,3 @@ void ClientServerPlugin::initGui( void* pkUserdata )
 // 	glui->add_button_to_panel( pluginPanel, "Connect Client" );
 // 	glui->add_button_to_panel( pluginPanel, "Connect Server" );
 };
-
-
-ClientServerPlugin gClientServerPlugin;

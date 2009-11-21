@@ -41,6 +41,48 @@ namespace OpenSteer {
 	typedef uint64_t NetworkId; 
 	typedef uint64_t EntityClassId; 
 
+	//-------------------------------------------------------------------------
+	// implement entity class id
+	static const EntityClassId g_clasId_Unknown(0);	
+
+	static const EntityClassId g_clasId_Entity(1);
+
+	static const EntityClassId g_clasId_LocalSpace(2);
+
+	// player control interface ids
+	static const EntityClassId g_clasId_Player(3);
+	static const EntityClassId g_clasId_PlayerController(4);
+
+
+	// obstacle interface ids
+	static const EntityClassId g_clasId_Obstacle(5);
+	static const EntityClassId g_clasId_SphereObstacle(6);
+	static const EntityClassId g_clasId_BoxObstacle(7);
+	static const EntityClassId g_clasId_PlaneObstacle(8);
+	static const EntityClassId g_clasId_RectangleObstacle(9);
+	static const EntityClassId g_clasId_LastReserved(1000);
+}
+
+#define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
+#define OS_CID_ENTITY OpenSteer::g_clasId_Entity
+#define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
+
+#define OS_CID_PLAYER OpenSteer::g_clasId_Player
+#define OS_CID_PLAYERCONTROLLER OpenSteer::g_clasId_PlayerController
+
+#define OS_CID_OBSTACLE OpenSteer::g_clasId_Obstacle
+#define OS_CID_SPHEREOBSTACLE OpenSteer::g_clasId_SphereObstacle
+#define OS_CID_BOXOBSTACLE OpenSteer::g_clasId_BoxObstacle
+#define OS_CID_PLANEOBSTACLE OpenSteer::g_clasId_PlaneObstacle
+#define OS_CID_RECTANGLEOBSTACLE OpenSteer::g_clasId_RectangleObstacle
+
+#define OS_CID_LASTRESERVED OpenSteer::g_clasId_LastReserved
+
+
+//-----------------------------------------------------------------------------
+namespace OpenSteer {
+
+	class AbstractPlayer;
 
 	//-------------------------------------------------------------------------
 	class AbstractEntity
@@ -50,15 +92,123 @@ namespace OpenSteer {
 
 		OS_DECLARE_CLASSNAME
 
-		virtual EntityClassId getClassId( void ) const = 0;
+		//! return a pointer to a cloned instance of this entity
+		virtual AbstractEntity* cloneEntity( void ) const OS_ABSTRACT;
 
-		virtual InstanceTracker::Id getEntityId( void ) const = 0;
+		//! return the unique class id of this object
+		virtual EntityClassId getClassId( void ) const OS_ABSTRACT;
 
-		virtual NetworkId getNetworkId( void ) const = 0;
-		virtual void setNetworkId( NetworkId ) = 0;
+		//! return the unique instance id of this object
+		virtual InstanceTracker::Id getEntityId( void ) const OS_ABSTRACT;
 
-		virtual void setIsRemoteObject( bool bIsRemote ) = 0;
-		virtual bool isRemoteObject( void ) const = 0;
+		//! return the unique network id of this object
+		virtual NetworkId getNetworkId( void ) const OS_ABSTRACT;
+
+		//! set the unique network id of this object
+		virtual void setNetworkId( NetworkId ) OS_ABSTRACT;
+
+		//! set if this object is a remote object or not
+		virtual void setIsRemoteObject( bool bIsRemote ) OS_ABSTRACT;
+
+		//! return if this object is a remote object
+		virtual bool isRemoteObject( void ) const OS_ABSTRACT;
+
+		//! return a pointer to this instance's character string name
+		virtual const char* name (void) const OS_ABSTRACT;
+
+		virtual void play( AbstractEntity* ) OS_ABSTRACT;
+
+		virtual void possessBy( AbstractEntity* ) OS_ABSTRACT;
+
+		virtual AbstractPlayer* getPlayer( void ) const OS_ABSTRACT;
+
+//		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
+	};
+
+	AbstractPlayer* CastToAbstractPlayer( AbstractEntity* pkEntity );
+
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class EntityPossessionMixin : public Super
+	{
+	public:
+		EntityPossessionMixin():
+			m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
+		{
+		}
+
+		virtual ~EntityPossessionMixin()
+		{
+			if( NULL != this->m_pkPossessed )
+			{
+				this->m_pkPossessed->possessBy( NULL );
+			}
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+			}
+		}
+
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual void play( AbstractEntity* pkEntity )
+		{
+			AbstractEntity* pkThisEntity = reinterpret_cast<AbstractEntity*>( this );
+//			AbstractEntity* pkThisEntity = dynamic_cast<AbstractEntity*>( this );
+			AbstractPlayer* pkThis = CastToAbstractPlayer( pkThisEntity );
+			if( NULL == pkThisEntity )
+			{
+				// not an entity
+				return;
+			}
+			if( NULL == pkThis )
+			{
+				// not a player
+				return;
+			}
+			if( NULL != pkEntity )
+			{
+				pkEntity->possessBy( pkThisEntity );
+				AbstractPlayer* pkPlayer = pkEntity->getPlayer();
+				if( pkPlayer == pkThis )
+				{
+					// play succeeded
+					this->m_pkPossessed = pkEntity;
+				}
+			}
+			else
+			{
+				this->m_pkPossessed = NULL;
+			}
+		};
+
+		virtual void possessBy( AbstractEntity* pkEntity )
+		{
+			if( NULL != this->m_pkPossessor )
+			{
+				this->m_pkPossessor->play( NULL );
+				this->m_pkPossessor = NULL;
+			}
+			if( NULL == this->m_pkPossessor )
+			{
+				this->m_pkPossessor = pkEntity;
+			}
+		}
+
+		virtual AbstractPlayer* getPlayer( void ) const
+		{
+			return CastToAbstractPlayer( this->m_pkPossessor );
+		}
+
+		virtual AbstractEntity* getControlledEntity( void ) const
+		{
+			return this->m_pkPossessed;
+		}
+	private:
+		AbstractEntity* m_pkPossessor;
+		AbstractEntity* m_pkPossessed;
+
 	};
 
 	//-------------------------------------------------------------------------
@@ -80,7 +230,7 @@ namespace OpenSteer {
 
 		virtual EntityClassId getClassId( void ) const
 		{
-		  return EntityClassId( 0 );
+		  return OS_CID_UNKNOWN;
 		}
 
 		InstanceTracker::Id getEntityId( void ) const
@@ -108,6 +258,12 @@ namespace OpenSteer {
 			return m_bIsRemoteObject;
 		}
 
+		virtual const char* name (void) const
+		{
+			return "Unknown";
+		}
+
+
 	private:
 		InstanceTracker::Id m_uiId;
 		NetworkId m_netWorkId;
@@ -116,9 +272,11 @@ namespace OpenSteer {
 		static InstanceTracker ms_InstanceTracker;
 	};
 
+//	typedef EntityPossessionMixin<EntityInstance_0> EntityInstance;
+
 	//-------------------------------------------------------------------------
 	template <class Super>
-	class EntityMixin : public Super
+	class EntityMixin : public EntityPossessionMixin<Super>
 	{
 	public:
 		virtual ~EntityMixin()
@@ -126,6 +284,11 @@ namespace OpenSteer {
 		}
 
 		OS_IMPLEMENT_CLASSNAME( Super )
+
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return NULL;
+		}
 
 		virtual EntityClassId getClassId( void ) const
 		{
@@ -157,6 +320,31 @@ namespace OpenSteer {
 			return this->m_kInstance.isRemoteObject();
 		}
 
+		virtual const char* name (void) const
+		{
+			return this->m_kInstance.name();
+		}
+/*
+		virtual void play( AbstractEntity* pkEntity )
+		{
+			this->m_kInstance.play( pkEntity );
+		}
+
+		virtual void possessBy( AbstractEntity* pkEntity )
+		{
+			this->m_kInstance.possessBy( pkEntity );
+		}
+
+		virtual AbstractPlayer* getPlayer( void ) const
+		{
+			return this->m_kInstance.getPlayer( );
+		}
+
+		virtual AbstractEntity* getControlledEntity( void ) const
+		{
+			return this->m_kInstance.getControlledEntity( );
+		}
+*/
 	private:
 		EntityInstance m_kInstance;
 	};
@@ -172,6 +360,13 @@ namespace OpenSteer {
 
 		virtual ~EntityClassIdMixin()
 		{
+		}
+
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual AbstractEntity* cloneEntity( void ) const
+		{
+			return new VehicleClassIdMixin();
 		}
 
 		virtual EntityClassId getClassId( void ) const
