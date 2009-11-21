@@ -73,11 +73,11 @@ bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 	{
 		// reset selected Plugin
 	case 'w':
-		LocalPlayerController::ms_kOutput.x = 1.0f;
+		LocalPlayerController::ms_kOutput.z = 1.0f;
 		bHasAxis = true;
 		break;
 	case 'a':
-		LocalPlayerController::ms_kOutput.x = -1.0f;
+		LocalPlayerController::ms_kOutput.x = 1.0f;
 		bHasAxis = true;
 		break;
 	case 's':
@@ -85,7 +85,7 @@ bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 		bHasAxis = true;
 		break;
 	case 'd':
-		LocalPlayerController::ms_kOutput.z = 1.0f;
+		LocalPlayerController::ms_kOutput.x = -1.0f;
 		bHasAxis = true;
 		break;
 	}
@@ -100,7 +100,7 @@ bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 	{
 		// reset selected Plugin
 	case 'w':
-		LocalPlayerController::ms_kOutput.x = 0.0f;
+		LocalPlayerController::ms_kOutput.z = 0.0f;
 		bHasAxis = true;
 		break;
 	case 'a':
@@ -112,7 +112,7 @@ bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 		bHasAxis = true;
 		break;
 	case 'd':
-		LocalPlayerController::ms_kOutput.z = 0.0f;
+		LocalPlayerController::ms_kOutput.x = 0.0f;
 		bHasAxis = true;
 		break;
 	}
