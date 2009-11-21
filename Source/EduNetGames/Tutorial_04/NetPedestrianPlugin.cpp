@@ -66,28 +66,16 @@ m_fLastRenderTime(0.0f)
 {
 	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
 
-	// entity player test
-
+	AbstractPlayer* pkLocalPlayer = SimplePlayer::accessLocalPlayer();
+	AbstractEntity* pkControlledEntity = NULL;
 	{
 		NetPedestrian kVehicle;
-		{
-			SimplePlayer kPlayer0;
-			SimplePlayer kPlayer1;
-			kPlayer0.play( &kVehicle );
-			AbstractPlayer* pkCP = kVehicle.getPlayer();
-			AbstractEntity* pkCE0 = kPlayer0.getControlledEntity();
-
-			kPlayer1.play( &kVehicle );
-			pkCP = kVehicle.getPlayer();
-			AbstractEntity* pkCE1 = kPlayer1.getControlledEntity();
-			pkCE0 = kPlayer0.getControlledEntity();
-		}
-		bool bTest0 = true;
-		bTest0 = false;
+		pkLocalPlayer->play( &kVehicle );
+		pkControlledEntity = pkLocalPlayer->getControlledEntity();
+		pkControlledEntity = NULL;
 	}
-	bool bTest1 = true;
-	bTest1 = false;
-
+	pkControlledEntity = pkLocalPlayer->getControlledEntity();
+	pkControlledEntity = NULL;
 }
 
 //-----------------------------------------------------------------------------
