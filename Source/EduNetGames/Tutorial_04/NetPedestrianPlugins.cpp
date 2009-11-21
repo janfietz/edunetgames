@@ -197,7 +197,7 @@ OfflinePedestrianPlugin gPedestrianPlugin;
 //-----------------------------------------------------------------------------
 class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<PedestrianClientPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin> )
 public:
 	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
@@ -218,7 +218,7 @@ PedestrianRenderClientPlugin gPedestrianClientPlugin( true );
 //-----------------------------------------------------------------------------
 class PedestrianRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianPeerPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<PedestrianPeerPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<PedestrianPeerPlugin> )
 public:
 	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{

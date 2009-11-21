@@ -1,6 +1,5 @@
-#ifndef __EDUNETMACROS_H__
-#define __EDUNETMACROS_H__
-
+#ifndef __NETSOCCERPLUGIN_H__
+#define __NETSOCCERPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -30,54 +29,63 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-// memory
-//-----------------------------------------------------------------------------
-
-#define ET_NEW new
-#define ET_DELETE delete
-
-#define ET_MALLOC malloc
-#define ET_FREE free
-
-#define ET_SAFE_DELETE( p ) { if( 0 != p ) { ET_DELETE p; p = 0; } }
-#define ET_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { ET_DELETE[] p; p = 0; } }
-#define ET_SAFE_FREE( p ) { if( 0 != p ) { ET_FREE( p ); p = 0; } }
-
-#ifndef linux
-#define EF_FORCEINLINE __forceinline
-#else
-#define EF_FORCEINLINE 
-#endif
+#include "EduNetCommon/EduNetCommon.h"
 
 //-----------------------------------------------------------------------------
-// classes
-//-----------------------------------------------------------------------------
-#define ET_ABSTRACT = 0
+class NetSoccerPlugin : public OpenSteer::Plugin
+{
+	ET_DECLARE_BASE(OpenSteer::Plugin);
+public:
+	NetSoccerPlugin( bool bAddToRegistry = true );
+	virtual ~NetSoccerPlugin() {} // be more "nice" to avoid a compiler warning
 
-#define ET_DECLARE_BASE( classname ) typedef classname BaseClass;
+	OS_IMPLEMENT_CLASSNAME( NetSoccerPlugin )
+	//-------------------------------------------------------------------------
+	// OpenSteer::Plugin interface
+	virtual const char* name() const { return this->getClassName(); };
 
-//-----------------------------------------------------------------------------
-//! implement an empty private copy constructor and a private assignment
-#define ET_IMPLEMENT_CLASS_NO_COPY( classname ) private:\
-	classname( const classname& );\
-	classname& operator=( const classname& );
+	virtual float selectionOrderSortKey (void) const {return 0.01f;}
 
-//-----------------------------------------------------------------------------
-//  macros spit out 'clickable' file and line number
-//-----------------------------------------------------------------------------
-// with line number
-#ifndef ET_STRING
-# define ET_STRING2(x) #x
-# define ET_STRING(x) ET_STRING2(x)
-#endif //  KK_STRING
+	virtual void open (void);
 
-// sample 1
-//#pragma message (__FILE__ "(" ET_STRING(__LINE__) "): USE Macros ")
-#define ET_SOURCE_MESSAGE __FILE__ "(" ET_STRING(__LINE__) "):"
-// sample 2
-//#pragma message( ET_SOURCE_MESSAGE "Warning: Unicode disabled! Check your project settings!")
+	virtual void update (const float currentTime, const float elapsedTime);
 
-// Macro to supress warning that parameters aren't used.
-#define ET_UNUSED_PARAMETER(expr) (void)expr
+	virtual void redraw (const float currentTime, const float elapsedTime);
 
-#endif // __EDUNETMACROS_H__
+	virtual void close (void);
+
+	virtual void reset (void);
+
+	virtual void handleFunctionKeys (int keyNumber);
+
+	virtual void printMiniHelpForFunctionKeys (void) const;
+
+	virtual const osAVGroup& allVehicles (void) const {return (const osAVGroup&) all;}
+
+	// implement to create a vehicle of the specified class
+	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
+	virtual void addVehicle( osAbstractVehicle* pkVehicle );
+
+	//-------------------------------------------------------------------------
+	void drawObstacles (void);
+
+	// a group (STL vector) of all vehicles in the Plugin
+	std::vector<osAbstractVehicle*> all;
+	int resetCount;
+	
+	 unsigned int	m_PlayerCountA;
+        unsigned int	m_PlayerCountB;
+        std::vector<Player*> TeamA;
+        std::vector<Player*> TeamB;
+        std::vector<Player*> m_AllPlayers;
+
+        Ball	*m_Ball;
+        AABBox	*m_bbox;
+        AABBox	*m_TeamAGoal;
+        AABBox	*m_TeamBGoal;
+        int junk;
+        int		m_redScore;
+        int		m_blueScore;
+};
+
+#endif // __NETSOCCERPLUGIN_H__
