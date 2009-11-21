@@ -397,10 +397,10 @@ namespace {
             for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ();
 
             // highlight vehicle nearest mouse
-            OpenSteerDemo::drawCircleHighlightOnVehicle (nearMouse, 1, gGray70);
+            VehicleUtilities::drawCircleHighlightOnVehicle (nearMouse, 1, gGray70);
 
             // highlight selected vehicle
-            OpenSteerDemo::drawCircleHighlightOnVehicle (selected, 1, gGray50);
+            VehicleUtilities::drawCircleHighlightOnVehicle (selected, 1, gGray50);
 
             // display status in the upper left corner of the window
             std::ostringstream status;

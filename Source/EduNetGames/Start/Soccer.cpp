@@ -41,6 +41,7 @@
 
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 #include <iomanip>
 #include <sstream>
@@ -353,7 +354,7 @@ namespace {
             CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);
 
             // draw "ground plane"
-            OpenSteerDemo::gridUtility (Vec3(0,0,0));
+            GridPlugin::gridUtility( Vec3(0,0,0) );
         }
 
         void close (void)

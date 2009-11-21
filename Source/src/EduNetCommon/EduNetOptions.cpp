@@ -57,6 +57,14 @@ EduNetOptions::~EduNetOptions()
 }
 
 //-----------------------------------------------------------------------------
+EduNetOptions& EduNetOptions::accessOptions( void )
+{
+	static EduNetOptions kOptions;
+	return kOptions;
+}
+
+
+//-----------------------------------------------------------------------------
 int setOptions( EduNetOptions& kOptions, 
 		   const char **defines, int ndefines
 		   )

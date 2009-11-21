@@ -32,6 +32,7 @@
 #include "EduNetProfile/GraphPlot.h"
 #include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 #include <math.h>
 
@@ -75,7 +76,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 		// update camera, tracking test vehicle
 		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
 		// draw "ground plane"
-		OpenSteerDemo::gridUtility( SimpleVehicle::selectedVehicle->position() );
+		GridPlugin::gridUtility( SimpleVehicle::selectedVehicle->position() );
 	}
 
 	const float fGraphHeight = 175;

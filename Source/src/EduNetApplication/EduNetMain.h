@@ -27,6 +27,36 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#if 0 // not jet working
+// auto link libraries
+#ifdef _WIN32
+#  ifdef _DEBUG
+#    pragma comment(lib, "argtabled.lib")
+#    pragma comment(lib, "LibIProfd.lib")
+#    pragma comment(lib, "opensteerd.lib")
+#    pragma comment(lib, "LibGluid.lib")
+#    pragma comment(lib, "LibBulletLinearMathd.lib")
+#    pragma comment(lib, "LibEduNetCommond.lib")
+#    pragma comment(lib, "LibEduNetApplicationd.lib")
+#    if EDUNET_LINK_NET
+#        pragma comment(lib, "LibEduNetConnectd.lib")
+//#        pragma comment(lib, "RakNetLibStaticDebug.lib")
+#    endif
+#  else
+#    pragma comment(lib, "argtable.lib")
+#    pragma comment(lib, "LibIProf.lib")
+#    pragma comment(lib, "opensteer.lib")
+#    pragma comment(lib, "LibGlui.lib")
+#    pragma comment(lib, "LibBulletLinearMath.lib")
+#    pragma comment(lib, "LibEduNetCommon.lib")
+#    pragma comment(lib, "LibEduNetApplication.lib")
+#    if EDUNET_LINK_NET
+#        pragma comment(lib, "LibEduNetConnect.lib")
+//#        pragma comment(lib, "RakNetLibStatic.lib")
+#    endif
+#  endif
+#endif
+#endif
 
 int EduNetMain (int argc, char **argv);
 

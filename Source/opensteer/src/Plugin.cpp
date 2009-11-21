@@ -257,5 +257,17 @@ OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
     registry[itemsInRegistry++] = pkPlugin;
 }
 
+//-----------------------------------------------------------------------------
+// return a group (an STL vector of AbstractVehicle pointers) of all
+// vehicles(/agents/characters) defined by the currently selected Plugin
+const OpenSteer::AVGroup& 
+OpenSteer::Plugin::allVehiclesOfSelectedPlugin (void)
+{
+	static OpenSteer::AVGroup kTrash;
+	if(OpenSteer::Plugin::selectedPlugin )
+		return OpenSteer::Plugin::selectedPlugin->allVehicles ();
+	else
+		return kTrash;
+}
 
 //-----------------------------------------------------------------------------

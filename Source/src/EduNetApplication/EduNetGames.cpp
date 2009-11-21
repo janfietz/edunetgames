@@ -45,14 +45,8 @@
 #include "EduNetGames.h"
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
+#include "EduNetCommon/EduNetOptions.h"
 
-
-#include <algorithm>
-#include <sstream>
-#include <iomanip>
-
-
-EduNetOptions OpenSteer::OpenSteerDemo::options;
 
 //-----------------------------------------------------------------------------
 namespace
@@ -102,6 +96,16 @@ namespace {
 } // anonymous namespace
 
 //-----------------------------------------------------------------------------
+// Find the AbstractVehicle whose screen position is nearest the current the
+// mouse position.  Returns NULL if mouse is outside this window or if
+// there are no AbstractVehicle.
+OpenSteer::AbstractVehicle* 
+OpenSteer::OpenSteerDemo::vehicleNearestToMouse (void)
+{
+	return ( mouseInWindow ? VehicleUtilities::findVehicleNearestScreenPosition ( mouseX, mouseY ) : NULL);
+}
+
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::initialize (void)
 {
@@ -149,7 +153,6 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 		clock.getElapsedRealTime ());
 }
 
-
 //-----------------------------------------------------------------------------
 // exit OpenSteerDemo with a given text message or error code
 void 
@@ -161,7 +164,6 @@ OpenSteer::OpenSteerDemo::errorExit (const char* message)
 #endif
 	exit (-1);
 }
-
 
 //-----------------------------------------------------------------------------
 void 
@@ -180,9 +182,9 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 void 
 OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 {
-	const char* pszPluginName = OpenSteer::OpenSteerDemo::options.getSelectedPlugin();
-	OpenSteer::Plugin::selectedPlugin = Plugin::findByName (pszPluginName);
-	if (NULL == OpenSteer::Plugin::selectedPlugin)
+	const char* pszPluginName = EduNetOptions::accessOptions().getSelectedPlugin();
+	OpenSteer::Plugin::selectedPlugin = Plugin::findByName( pszPluginName );
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
 	{
 		Plugin::sortBySelectionOrder ();
 		OpenSteer::Plugin::selectedPlugin = Plugin::findDefault ();
@@ -230,7 +232,6 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugin (int keyNumber)
 	OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
 }
 
-
 //-----------------------------------------------------------------------------
 // return name of currently selected plug-in
 const char* 
@@ -239,48 +240,18 @@ OpenSteer::OpenSteerDemo::nameOfSelectedPlugin (void)
 	return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
 }
 
-
 //-----------------------------------------------------------------------------
 // open the currently selected plug-in
-
-//GLUI* glui = NULL;
-
 void 
 OpenSteer::OpenSteerDemo::openSelectedPlugin (void)
 {
 	OpenSteer::Camera::camera.reset ();
 	SimpleVehicle::selectedVehicle = NULL;
 	OpenSteer::Plugin::selectedPlugin->open ();
-/*
-	if( windowID )
-	{
-		GLUI_Node* firstChild = GLUI_Master.gluis.first_child();
-		if (firstChild != NULL )
-		{
-		}
-		if (glui != NULL )
-		{
-			glui->close();
-		}
-		else
-		{
-			// gui elements
-			glui = GLUI_Master.create_glui_subwindow( windowID, 
-				GLUI_SUBWINDOW_RIGHT );
-			glui->set_main_gfx_window( windowID );
-
-			EduNet::Application::AccessApplication().addGuiElements( glui );
-		}
-	}
-*/
-
 }
-
 
 //-----------------------------------------------------------------------------
 // do a simulation update for the currently selected plug-in
-
-
 void 
 OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 												const float elapsedTime)
@@ -291,26 +262,15 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	// service queued reset request, if any
 	doDelayedResetPluginXXX ();
 
-	// if no vehicle is selected, and some exist, select the first one
-	if (SimpleVehicle::selectedVehicle == NULL)
-	{
-		const AVGroup& vehicles = allVehiclesOfSelectedPlugin();
-		if (vehicles.size() > 0) SimpleVehicle::selectedVehicle = vehicles.front();
-	}
-
 	// invoke selected Plugin's Update method
-//	OpenSteer::Plugin::selectedPlugin->update (currentTime, elapsedTime);
 	EduNet::Application::AccessApplication().updateSelectedPlugin( currentTime, elapsedTime );
 
 	// return to previous phase
 	popPhase ();
 }
 
-
 //-----------------------------------------------------------------------------
 // redraw graphics for the currently selected plug-in
-
-
 void 
 OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 												const float elapsedTime)
@@ -319,7 +279,6 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 	pushPhase (drawPhase);
 
 	// invoke selected Plugin's Draw method
-//	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
 	EduNet::Application::AccessApplication().redrawSelectedPlugin( currentTime, elapsedTime );
 
 	// draw any annotation queued up during selected Plugin's Update method
@@ -330,22 +289,16 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 	popPhase ();
 }
 
-
 //-----------------------------------------------------------------------------
 // close the currently selected plug-in
-
-
 void 
 OpenSteer::OpenSteerDemo::closeSelectedPlugin (void)
 {
 	OpenSteer::Plugin::selectedPlugin->close ();
 }
 
-
 //-----------------------------------------------------------------------------
 // reset the currently selected plug-in
-
-
 void 
 OpenSteer::OpenSteerDemo::resetSelectedPlugin (void)
 {
@@ -373,7 +326,6 @@ OpenSteer::OpenSteerDemo::queueDelayedResetPluginXXX (void)
 	gDelayedResetPluginXXX = true;
 }
 
-
 void 
 OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 {
@@ -386,232 +338,16 @@ OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 
 
 //-----------------------------------------------------------------------------
-// return a group (an STL vector of AbstractVehicle pointers) of all
-// vehicles(/agents/characters) defined by the currently selected Plugin
-
-
-const OpenSteer::AVGroup& 
-OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugin (void)
-{
-	static OpenSteer::AVGroup kTrash;
-	if(OpenSteer::Plugin::selectedPlugin )
-		return OpenSteer::Plugin::selectedPlugin->allVehicles ();
-	else
-		return kTrash;
-}
-
-
-//-----------------------------------------------------------------------------
-// select the "next" vehicle: the one listed after the currently selected one
-// in allVehiclesOfSelectedPlugin
-void 
-OpenSteer::OpenSteerDemo::selectNextVehicle (void)
-{
-	if (SimpleVehicle::selectedVehicle != NULL)
-	{
-		// get a container of all vehicles
-		const AVGroup& all = allVehiclesOfSelectedPlugin ();
-		const AVIterator first = all.begin();
-		const AVIterator last = all.end();
-
-		// find selected vehicle in container
-		AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
-		if( s == last )
-		{
-			// if the search failed, use NULL
-			SimpleVehicle::selectedVehicle = NULL;
-			if( all.size() > 0 )
-			{
-				SimpleVehicle::selectedVehicle = all[0];
-			}
-		}
-		else
-		{
-			// normally select the next vehicle in container
-			++s;
-			if( s == last )
-			{
-				// if we are at the end of the container, select the first vehicle
-				s = first;
-			}
-			SimpleVehicle::selectedVehicle = (*s);
-		}
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-// select vehicle nearest the given screen position (e.g.: of the mouse)
-
-
-void 
-OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (int x, int y)
-{
-	SimpleVehicle::selectedVehicle = findVehicleNearestScreenPosition (x, y);
-}
-
-
-//-----------------------------------------------------------------------------
-// Find the AbstractVehicle whose screen position is nearest the current the
-// mouse position.  Returns NULL if mouse is outside this window or if
-// there are no AbstractVehicle.
-
-
-OpenSteer::AbstractVehicle* 
-OpenSteer::OpenSteerDemo::vehicleNearestToMouse (void)
-{
-	return (mouseInWindow ? 
-		findVehicleNearestScreenPosition (mouseX, mouseY) :
-	NULL);
-}
-
-
-//-----------------------------------------------------------------------------
-// Find the AbstractVehicle whose screen position is nearest the given window
-// coordinates, typically the mouse position.  Returns NULL if there are no
-// AbstractVehicles.
-//
-// This works by constructing a line in 3d space between the camera location
-// and the "mouse point".  Then it measures the distance from that line to the
-// centers of each AbstractVehicle.  It returns the AbstractVehicle whose
-// distance is smallest.
-//
-// xxx Issues: Should the distanceFromLine test happen in "perspective space"
-// xxx or in "screen space"?  Also: I think this would be happy to select a
-// xxx vehicle BEHIND the camera location.
-
-
-OpenSteer::AbstractVehicle* 
-OpenSteer::OpenSteerDemo::findVehicleNearestScreenPosition (int x, int y)
-{
-	// find the direction from the camera position to the given pixel
-	const Vec3 direction = directionFromCameraToScreenPosition (x, y, glutGet (GLUT_WINDOW_HEIGHT));
-
-	// iterate over all vehicles to find the one whose center is nearest the
-	// "eye-mouse" selection line
-	float minDistance = FLT_MAX;       // smallest distance found so far
-	AbstractVehicle* nearest = NULL;   // vehicle whose distance is smallest
-	const AVGroup& vehicles = allVehiclesOfSelectedPlugin();
-	for (AVIterator i = vehicles.begin(); i != vehicles.end(); i++)
-	{
-		// distance from this vehicle's center to the selection line:
-		const float d = distanceFromLine ((**i).position(),
-			OpenSteer::Camera::camera.position(),
-			direction);
-
-		// if this vehicle-to-line distance is the smallest so far,
-		// store it and this vehicle in the selection registers.
-		if (d < minDistance)
-		{
-			minDistance = d;
-			nearest = *i;
-		}
-	}
-
-	return nearest;
-}
-
-
-//-----------------------------------------------------------------------------
 // for storing most recent mouse state
-
-
 int OpenSteer::OpenSteerDemo::mouseX = 0;
 int OpenSteer::OpenSteerDemo::mouseY = 0;
 bool OpenSteer::OpenSteerDemo::mouseInWindow = false;
-
-//-----------------------------------------------------------------------------
-// ground plane grid-drawing utility used by several plug-ins
-void 
-OpenSteer::OpenSteerDemo::gridUtility (const Vec3& gridTarget)
-{
-	// round off target to the nearest multiple of 2 (because the
-	// checkboard grid with a pitch of 1 tiles with a period of 2)
-	// then lower the grid a bit to put it under 2d annotation lines
-	const Vec3 gridCenter ((round (gridTarget.x * 0.5f) * 2),
-		(round (gridTarget.y * 0.5f) * 2) - .05f,
-		(round (gridTarget.z * 0.5f) * 2));
-
-	// colors for checkboard
-	const Color gray1(0.27f);
-	const Color gray2(0.30f);
-
-	// draw 50x50 checkerboard grid with 50 squares along each side
-	drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
-
-	// alternate style
-	// drawXZLineGrid (50, 50, gridCenter, gBlack);
-}
-
-
-//-----------------------------------------------------------------------------
-// draws a gray disk on the XZ plane under a given vehicle
-void 
-OpenSteer::OpenSteerDemo::highlightVehicleUtility (const AbstractVehicle& vehicle)
-{
-	if (&vehicle != NULL)
-		drawXZDisk (vehicle.radius(), vehicle.position(), gGray60, 20);
-}
-
-
-//-----------------------------------------------------------------------------
-// draws a gray circle on the XZ plane under a given vehicle
-void 
-OpenSteer::OpenSteerDemo::circleHighlightVehicleUtility (const AbstractVehicle& vehicle)
-{
-	if (&vehicle != NULL) drawXZCircle (vehicle.radius () * 1.1f,
-		vehicle.position(),
-		gGray60,
-		20);
-}
-
-
-//-----------------------------------------------------------------------------
-// draw a box around a vehicle aligned with its local space
-// xxx not used as of 11-20-02
-void 
-OpenSteer::OpenSteerDemo::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
-													 const Color& color)
-{
-	if (&v)
-	{
-		const float diameter = v.radius() * 2;
-		const Vec3 size (diameter, diameter, diameter);
-		drawBoxOutline (v, size, color);
-	}
-}
-
-
-//-----------------------------------------------------------------------------
-// draws a colored circle (perpendicular to view axis) around the center
-// of a given vehicle.  The circle's radius is the vehicle's radius times
-// radiusMultiplier.
-void 
-OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
-														const float radiusMultiplier,
-														const Color& color)
-{
-	if (&v)
-	{
-		const Vec3& cPosition = OpenSteer::Camera::camera.position();
-		draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
-			v.position(),                   // center
-			v.position() - cPosition,       // view axis
-			color,                          // drawing color
-			20);                            // circle segments
-	}
-}
-
-
-
 
 // ------------------------------------------------------------------------
 // print list of known commands
 //
 // XXX this list should be assembled automatically,
 // XXX perhaps from a list of "command" objects created at initialization
-
-
 void 
 OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
@@ -678,8 +414,6 @@ OpenSteer::OpenSteerDemo::popPhase (void)
 
 
 //-----------------------------------------------------------------------------
-
-
 float OpenSteer::OpenSteerDemo::phaseTimerBase = 0;
 float OpenSteer::OpenSteerDemo::phaseTimers [drawPhase+1];
 
@@ -707,9 +441,6 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 
 
 namespace {
-
-
-
 
 
 	//-------------------------------------------------------------------------
@@ -748,9 +479,6 @@ namespace {
 	}
 
 
-
-
-
 	//-------------------------------------------------------------------------
 	// handler for window resizing
 
@@ -775,7 +503,7 @@ namespace {
 		const GLfloat fieldOfViewY = 45;
 		const GLfloat hither = 1;  // put this on Camera so Plugins can frob it
 		const GLfloat yon = 400;   // put this on Camera so Plugins can frob it
-		gluPerspective (fieldOfViewY, aspectRatio, hither, yon);
+		gluPerspective( fieldOfViewY, aspectRatio, hither, yon );
 
 		// leave in modelview mode
 		glMatrixMode(GL_MODELVIEW);
@@ -784,8 +512,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// This is called (by GLUT) each time a mouse button pressed or released.
-
-
 	void 
 		mouseButtonFunc (int button, int state, int x, int y)
 	{
@@ -819,7 +545,7 @@ namespace {
 			// mouse-left (with no modifiers): select vehicle
 			if (modNone && mouseL)
 			{
-				OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (x, y);
+				OpenSteer::VehicleUtilities::selectVehicleNearestScreenPosition (x, y);
 			}
 
 			// control-mouse-left: begin adjusting camera angle (on Mac OS X
@@ -852,8 +578,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// called when mouse moves and any buttons are down
-
-
 	void 
 		mouseMotionFunc (int x, int y)
 	{
@@ -893,8 +617,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// called when mouse moves and no buttons are down
-
-
 	void 
 		mousePassiveMotionFunc (int x, int y)
 	{
@@ -924,8 +646,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// draw PlugI name in upper lefthand corner of screen
-
-
 	void 
 		drawDisplayPluginName (void)
 	{
@@ -939,8 +659,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// draw camera mode name in lower lefthand corner of screen
-
-
 	void 
 		drawDisplayCameraModeName (void)
 	{
@@ -953,9 +671,6 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// helper for drawDisplayFPS
-
-
-
 	void 
 		writePhaseTimerReportToStream (float phaseTimer,
 		std::ostringstream& stream)
@@ -1098,8 +813,6 @@ namespace {
 
 	// ------------------------------------------------------------------------
 	// cycle through frame rate presets  (XXX move this to OpenSteerDemo)
-
-
 	void 
 		selectNextPresetFrameRate (void)
 	{
@@ -1144,7 +857,6 @@ namespace {
 	// XXX the bulk of this should be moved to OpenSteerDemo
 	//
 	// parameter names commented out to prevent compiler warning from "-W"
-
 	void keyboardSpecialUpFunc(int key, int x, int y)
 	{
 		// 		if (demo)
@@ -1178,7 +890,7 @@ namespace {
 			// cycle selection to next vehicle
 		case 's':
 			EduNet::Log::printMessage ("select next vehicle/agent");
-			OpenSteer::OpenSteerDemo::selectNextVehicle ();
+			OpenSteer::VehicleUtilities::selectNextVehicle ();
 			break;
 
 			// camera mode cycle
@@ -1284,7 +996,6 @@ namespace {
 	// function keys are handled by the Plugin
 	//
 	// parameter names commented out to prevent compiler warning from "-W"
-
 	void 
 		keyboardSpecialFunc (int key, int /*x*/, int /*y*/)
 	{
@@ -1532,27 +1243,21 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 //-----------------------------------------------------------------------------
 // run graphics event loop
-
-
 void 
 OpenSteer::runGraphics (void)
 {
 	glutMainLoop ();  
 }
 
-
-
 //-----------------------------------------------------------------------------
 // accessors for GLUT's window dimensions
-
-
 float 
 OpenSteer::drawGetWindowHeight (void) 
 {
 	return glutGet( GLUT_WINDOW_HEIGHT );
 }
 
-
+//-----------------------------------------------------------------------------
 float 
 OpenSteer::drawGetWindowWidth  (void) 
 {

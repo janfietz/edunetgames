@@ -26,6 +26,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#define EDUNET_LINK_NET 1
 #include "EduNetApplication/EduNetMain.h"
 
 //-----------------------------------------------------------------------------

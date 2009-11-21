@@ -1,5 +1,3 @@
-
-
 //-----------------------------------------------------------------------------
 //
 //
@@ -47,8 +45,8 @@
 #define OPENSTEER_OPENSTEERDEMO_H
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/EduNetOptions.h"
 #include "EduNetCommon/EduNetLog.h"
+#include "OpenSteerUT/AbstractVehicleUtilities.h"
 
 #include "OpenSteer/Clock.h"
 #include "OpenSteer/Plugin.h"
@@ -65,17 +63,12 @@ namespace OpenSteer {
     class OpenSteerDemo
     {
     public:
-		// options
-		static EduNetOptions options;
-
         // ------------------------------------------------------ component objects
 
         // clock keeps track of both "real time" and "simulation time"
         static Clock& clock;
 
         // ------------------------------------------ addresses of selected objects
-
-
 
         // -------------------------------------------- initialize, update and exit
 
@@ -127,7 +120,6 @@ namespace OpenSteer {
         // reset the currently selected plug-in
         static void resetSelectedPlugin (void);
 
-        static const AVGroup& allVehiclesOfSelectedPlugin(void);
 
         // ---------------------------------------------------- OpenSteerDemo phase
 
@@ -154,23 +146,10 @@ namespace OpenSteer {
 
         // ------------------------------------------------------ vehicle selection
 
-        // select the "next" vehicle: cycle through the registry
-        static void selectNextVehicle (void);
-
-        // select vehicle nearest the given screen position (e.g.: of the mouse)
-        static void selectVehicleNearestScreenPosition (int x, int y);
-
-        // ---------------------------------------------------------- mouse support
-
-        // Find the AbstractVehicle whose screen position is nearest the
-        // current the mouse position.  Returns NULL if mouse is outside
-        // this window or if there are no AbstractVehicles.
-        static AbstractVehicle* vehicleNearestToMouse (void);
-
-        // Find the AbstractVehicle whose screen position is nearest the
-        // given window coordinates, typically the mouse position.  Note
-        // this will return NULL if there are no AbstractVehicles.
-        static AbstractVehicle* findVehicleNearestScreenPosition (int x, int y);
+		// Find the AbstractVehicle whose screen position is nearest the
+		// current the mouse position.  Returns NULL if mouse is outside
+		// this window or if there are no AbstractVehicles.
+		static AbstractVehicle* vehicleNearestToMouse (void);
 
         // for storing most recent mouse state
         static int mouseX;
@@ -182,35 +161,12 @@ namespace OpenSteer {
         // do all initialization related to graphics
         static void initializeGraphics (void);
 
-        // ground plane grid-drawing utility used by several plug-ins
-        static void gridUtility (const Vec3& gridTarget);
-
-        // draws a gray disk on the XZ plane under a given vehicle
-        static void highlightVehicleUtility (const AbstractVehicle& vehicle);
-
-        // draws a gray circle on the XZ plane under a given vehicle
-        static void circleHighlightVehicleUtility (const AbstractVehicle& vehicle);
-
-        // draw a box around a vehicle aligned with its local space
-        // xxx not used as of 11-20-02
-        static void drawBoxHighlightOnVehicle (const AbstractVehicle& v,
-                                               const Color& color);
-
-        // draws a colored circle (perpendicular to view axis) around the center
-        // of a given vehicle.  The circle's radius is the vehicle's radius times
-        // radiusMultiplier.
-        static void drawCircleHighlightOnVehicle (const AbstractVehicle& v,
-                                                  const float radiusMultiplier,
-                                                  const Color& color);
 
         // ----------------------------------------------------------- console text
-
-
         // print list of known commands
         static void keyboardMiniHelp (void);
 
         // ---------------------------------------------------------------- private
-
 		static void initPhaseTimers (void);
     private:
         static int phase;
@@ -251,8 +207,6 @@ namespace OpenSteer {
 
     //-----------------------------------------------------------------------------
     // accessors for GLUT's window dimensions
-
-
     float drawGetWindowHeight (void);
     float drawGetWindowWidth (void);
 
@@ -262,7 +216,6 @@ namespace OpenSteer {
 //-----------------------------------------------------------------------------
 
 
-#include "OpenSteer/Draw.h"
 
 
 //-----------------------------------------------------------------------------
