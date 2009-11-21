@@ -31,9 +31,9 @@
 
 #include "EduNetCommon/EduNetCommon.h"
 
-#include "Bullet/src/LinearMath/btVector3.h"
-#include "Bullet/src/LinearMath/btTransform.h"
-#include "Bullet/src/LinearMath/btTransformUtil.h"
+#include "bullet/src/LinearMath/btVector3.h"
+#include "bullet/src/LinearMath/btTransform.h"
+#include "bullet/src/LinearMath/btTransformUtil.h"
 
 namespace OpenSteer
 {

@@ -51,7 +51,7 @@
 #include "EduNetCommon/EduNetLog.h"
 
 #include "OpenSteer/Clock.h"
-#include "OpenSteer/PlugIn.h"
+#include "OpenSteer/Plugin.h"
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Utilities.h"
 

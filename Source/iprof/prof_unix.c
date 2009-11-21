@@ -7,7 +7,11 @@ static int baseRealTimeUsec = 0;
 
 double Prof_get_time(void)
 {
+#ifdef __APPLE__
 	_STRUCT_TIMEVAL t;
+#else
+	struct timeval t;
+#endif
     if (gettimeofday (&t, 0) != 0) return 0.0;
 	
     // ensure the base time is recorded once after launch

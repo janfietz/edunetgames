@@ -22,6 +22,7 @@ SET(OPENTSTEER_LIB_SRC
  Camera.cpp
  Pathway.cpp
  Entity.cpp
+SimplePlayer.cpp
 )
 
 SET(OPENTSTEER_LIB_HDRS
@@ -57,6 +58,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Utilities.h
  ../include/OpenSteer/Vec3.h
  ../include/OpenSteer/Vec3Utilities.h
+../include/OpenSteer/SimplePlayer.h
 )
 
 #SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
