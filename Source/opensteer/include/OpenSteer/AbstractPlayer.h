@@ -54,10 +54,13 @@ namespace OpenSteer
 		virtual ~AbstractPlayer(){}
 
 		virtual void setController( AbstractController* ) OS_ABSTRACT;
-		virtual AbstractController const* const getController( AbstractController* ) const OS_ABSTRACT;
+		virtual AbstractController const* const getController( void ) const OS_ABSTRACT;
 
 		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;
 
+		virtual bool isPlaying( void ) const OS_ABSTRACT; 
+
+		virtual bool isLocalPlayer( void ) const OS_ABSTRACT; 
 
 	};
 

@@ -65,7 +65,7 @@ namespace OpenSteer
 	{
 		OS_DECLARE_BASE( TAbstractPlayer )
 	public:
-		SimplePlayer();
+		SimplePlayer( bool bIsLocalPlayer = false );
 		virtual ~SimplePlayer();
 		OS_IMPLEMENT_CLASSNAME( SimplePlayer )
 
@@ -74,13 +74,27 @@ namespace OpenSteer
 			this->m_pkController = pkController;
 		}
 
-		virtual AbstractController const* const getController( AbstractController* ) const
+		virtual AbstractController const* const getController( void ) const
 		{
 			return this->m_pkController;
 		}
 
+		virtual bool isPlaying( void ) const
+		{
+			return (NULL != this->getControlledEntity());
+		}
+
+		virtual bool isLocalPlayer( void ) const
+		{
+			return this->m_bIsLocalPlayer;
+		}
+
+		static AbstractPlayer* accessLocalPlayer( void );
+
+
 	private:
 		AbstractController* m_pkController;
+		bool m_bIsLocalPlayer;
 	};
 
 }
