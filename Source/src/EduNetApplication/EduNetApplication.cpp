@@ -45,7 +45,7 @@ void	setDefaultSettingsAndSync()
 //-----------------------------------------------------------------------------
 void gluiNextPlugin()
 {
-	OpenSteer::OpenSteerDemo::selectNextPlugin();
+	OpenSteer::Plugin::selectNextPlugin();
 }
 
 //-----------------------------------------------------------------------------
@@ -54,11 +54,16 @@ void gluiSelectPlugin()
 	AbstractPlugin* currentPlugin = OpenSteer::Plugin::selectedPlugin;
 	if( pluginSelection != pluginIndex )
 	{
-		OpenSteerDemo::selectPluginByIndex( pluginSelection );	
+		Plugin::selectPluginByIndex( pluginSelection );	
 		pluginIndex = pluginSelection;
 	}
 }
 
+//-----------------------------------------------------------------------------
+void OnPluginSelected( void )
+{
+	EduNet::Application::AccessApplication().onPluginSelected( OpenSteer::Plugin::selectedPlugin );
+}
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -68,6 +73,7 @@ void gluiSelectPlugin()
 Application& Application::AccessApplication( void )
 {
 	static Application kApplication;
+	Plugin::ms_on_plugin_selected_func = OnPluginSelected;
 	return kApplication;
 }
 
@@ -117,8 +123,7 @@ void Application::_SDMCleanup( void )
 	bCleanedup = true;
 	if( NULL != OpenSteer::Plugin::selectedPlugin )
 	{
-		OpenSteer::Plugin::selectedPlugin->close();
-		OpenSteer::Plugin::selectedPlugin = NULL;
+		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 }
 
@@ -151,6 +156,7 @@ void Application::addGuiElements( GLUI* glui )
 		const char* s = pi->pluginName();
 		pluginList->add_item(i, s);
 	}
+
 	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteer::Plugin::selectedPlugin );
 	pluginList->do_selection( pluginSelection );
 
@@ -211,12 +217,14 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 			delete pluginPanel;
 			pluginPanel = NULL;
 		}
-		if( pluginPanel == NULL )
+		if( NULL != pkPlugin )
 		{
-			GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
-			pluginPanel = pluginRollout;
-			//pluginPanel = appGlui->add_panel( pkPlugin ? pkPlugin->name() : "Plugin" );
-			pkPlugin->initGui( pluginPanel );
+			if( pluginPanel == NULL )
+			{
+				GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
+				pluginPanel = pluginRollout;
+				pkPlugin->initGui( pluginPanel );
+			}
 		}
 	}
 }
@@ -243,7 +251,6 @@ void Application::updateSelectedPlugin (const float currentTime,
 			SimpleVehicle::selectedVehicle = vehicles.front();
 		}
 	}
-
 
 	osScalar fSimulationFPS = this->m_fSimulationFPS;
 
