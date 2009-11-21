@@ -165,6 +165,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\EduNetCommon\EduNetLog.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Source\src\EduNetCommon\EduNetLog.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\EduNetApplication\EduNetMain.cpp"
 				>
 			</File>

@@ -1039,7 +1039,7 @@ namespace {
             {
                 std::ostringstream message;
                 message << "collision after "<<timeSinceLastCollision<<" seconds";
-                OpenSteerDemo::printMessage (message);
+                EduNet::Log::printMessage (message);
                 sumOfCollisionFreeTimes += timeSinceLastCollision;
                 countOfCollisionFreeTimes++;
                 timeOfLastCollision = currentTime;
@@ -2811,13 +2811,13 @@ namespace {
             std::ostringstream message;
             message << "Function keys handled by ";
             message << '"' << name() << '"' << ':' << std::ends;
-            OpenSteerDemo::printMessage (message);
-            OpenSteerDemo::printMessage ("  F1     select next driving demo.");
-            OpenSteerDemo::printMessage ("  F2     reverse path following direction.");
-            OpenSteerDemo::printMessage ("  F3     toggle path fences.");
-            OpenSteerDemo::printMessage ("  F4     toggle random rock clumps.");
-            OpenSteerDemo::printMessage ("  F5     toggle curved prediction.");
-            OpenSteerDemo::printMessage ("");
+            EduNet::Log::printMessage (message);
+            EduNet::Log::printMessage ("  F1     select next driving demo.");
+            EduNet::Log::printMessage ("  F2     reverse path following direction.");
+            EduNet::Log::printMessage ("  F3     toggle path fences.");
+            EduNet::Log::printMessage ("  F4     toggle random rock clumps.");
+            EduNet::Log::printMessage ("  F5     toggle curved prediction.");
+            EduNet::Log::printMessage ("");
         }
 
         void reversePathFollowDirection (void)
@@ -2867,7 +2867,7 @@ namespace {
                 break;
             }
             message << std::ends;
-            OpenSteerDemo::printMessage (message);
+            EduNet::Log::printMessage (message);
         }
 
         // random utility, worth moving to Utilities.h?

@@ -951,10 +951,10 @@ namespace {
             std::ostringstream message;
             message << "Function keys handled by ";
             message << '"' << name() << '"' << ':' << std::ends;
-            OpenSteerDemo::printMessage (message);
-            OpenSteerDemo::printMessage ("  F1     add one obstacle.");
-            OpenSteerDemo::printMessage ("  F2     remove one obstacle.");
-            OpenSteerDemo::printMessage ("");
+            EduNet::Log::printMessage (message);
+            EduNet::Log::printMessage ("  F1     add one obstacle.");
+            EduNet::Log::printMessage ("  F2     remove one obstacle.");
+            EduNet::Log::printMessage ("");
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}

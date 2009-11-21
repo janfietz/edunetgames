@@ -155,7 +155,7 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 void 
 OpenSteer::OpenSteerDemo::errorExit (const char* message)
 {
-	printMessage (message);
+	EduNet::Log::printMessage (message);
 #ifdef _MSC_VER
 	MessageBox(0, message, "OpenSteerDemo Unfortunate Event", MB_ICONERROR);
 #endif
@@ -603,33 +603,6 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
 }
 
 
-//-----------------------------------------------------------------------------
-void 
-OpenSteer::OpenSteerDemo::printMessage (const char* message)
-{
-	std::cout << "OpenSteerDemo: " <<  message << std::endl << std::flush;
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::printMessage (const std::ostringstream& message)
-{
-	printMessage (message.str().c_str());
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::printWarning (const char* message)
-{
-	std::cout << "OpenSteerDemo: Warning: " <<  message << std::endl << std::flush;
-}
-
-
-void 
-OpenSteer::OpenSteerDemo::printWarning (const std::ostringstream& message)
-{
-	printWarning (message.str().c_str());
-}
 
 
 // ------------------------------------------------------------------------
@@ -642,18 +615,18 @@ OpenSteer::OpenSteerDemo::printWarning (const std::ostringstream& message)
 void 
 OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
-	printMessage ("");
-	printMessage ("defined single key commands:");
-	printMessage ("  r      restart current Plugin.");
-	printMessage ("  s      select next vehicle.");
-	printMessage ("  c      select next camera mode.");
-	printMessage ("  f      select next preset frame rate");
-	printMessage ("  Tab    select next Plugin.");
-	printMessage ("  a      toggle annotation on/off.");
-	printMessage ("  Space  toggle between Run and Pause.");
-	printMessage ("  ->     step forward one frame.");
-	printMessage ("  Esc    exit.");
-	printMessage ("");
+	EduNet::Log::printMessage ("");
+	EduNet::Log::printMessage ("defined single key commands:");
+	EduNet::Log::printMessage ("  r      restart current Plugin.");
+	EduNet::Log::printMessage ("  s      select next vehicle.");
+	EduNet::Log::printMessage ("  c      select next camera mode.");
+	EduNet::Log::printMessage ("  f      select next preset frame rate");
+	EduNet::Log::printMessage ("  Tab    select next Plugin.");
+	EduNet::Log::printMessage ("  a      toggle annotation on/off.");
+	EduNet::Log::printMessage ("  Space  toggle between Run and Pause.");
+	EduNet::Log::printMessage ("  ->     step forward one frame.");
+	EduNet::Log::printMessage ("  Esc    exit.");
+	EduNet::Log::printMessage ("");
 
 	// allow Plugin to print mini help for the function keys it handles
 	OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
@@ -1199,12 +1172,12 @@ namespace {
 			message << "reset Plugin "
 				<< '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugin () << '"'
 				<< std::ends;
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage (message);
 			break;
 
 			// cycle selection to next vehicle
 		case 's':
-			OpenSteer::OpenSteerDemo::printMessage ("select next vehicle/agent");
+			EduNet::Log::printMessage ("select next vehicle/agent");
 			OpenSteer::OpenSteerDemo::selectNextVehicle ();
 			break;
 
@@ -1213,7 +1186,7 @@ namespace {
 			OpenSteer::Camera::camera.selectNextMode ();
 			message << "select camera mode "
 				<< '"' << OpenSteer::Camera::camera.modeName () << '"' << std::ends;
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage (message);
 			break;
 
 			// select next Plugin
@@ -1222,18 +1195,18 @@ namespace {
 			message << "select next Plugin: "
 				<< '"' << OpenSteer::OpenSteerDemo::nameOfSelectedPlugin () << '"'
 				<< std::ends;
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage (message);
 			break;
 
 			// toggle annotation state
 		case 'a':
-			OpenSteer::OpenSteerDemo::printMessage (OpenSteer::toggleAnnotationState () ?
+			EduNet::Log::printMessage (OpenSteer::toggleAnnotationState () ?
 				"annotation ON" : "annotation OFF");
 			break;
 
 			// toggle run/pause state
 		case space:
-			OpenSteer::OpenSteerDemo::printMessage (OpenSteer::OpenSteerDemo::clock.togglePausedState () ?
+			EduNet::Log::printMessage (OpenSteer::OpenSteerDemo::clock.togglePausedState () ?
 				"pause" : "run");
 			break;
 
@@ -1254,7 +1227,7 @@ namespace {
 					<< OpenSteer::OpenSteerDemo::clock.getFixedFrameRate () << " fps)";
 			}
 			message << std::ends;
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage (message);
 			break;
 
 			// print minimal help for single key commands
@@ -1267,7 +1240,7 @@ namespace {
 			{
 #if 0
 // to be investigated
-				OpenSteer::OpenSteerDemo::printMessage ("exit.");
+				EduNet::Log::printMessage ("exit.");
 				GLUI* glui = ::getRootGLUI();
 				if( NULL != glui )
 				{
@@ -1292,15 +1265,15 @@ namespace {
 			}
 			break;
 // 			glutDestroyWindow (windowID);
-// 			OpenSteer::OpenSteerDemo::printMessage ("exit.");
+// 			EduNet::Log::printMessage ("exit.");
 // 			OpenSteer::OpenSteerDemo::exit (0);
 
 		default:
 			message << "unrecognized single key command: " << key;
 			message << " (" << (int)key << ")";//xxx perhaps only for debugging?
 			message << std::ends;
-			OpenSteer::OpenSteerDemo::printMessage ("");
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage ("");
+			EduNet::Log::printMessage (message);
 			OpenSteer::OpenSteerDemo::keyboardMiniHelp ();
 		}
 	}
@@ -1342,7 +1315,7 @@ namespace {
 				<< OpenSteer::OpenSteerDemo::clock.advanceSimulationTimeOneFrame ()
 				<< ")"
 				<< std::endl;
-			OpenSteer::OpenSteerDemo::printMessage (message);
+			EduNet::Log::printMessage (message);
 			break;
 		/*case GLUT_KEY_UP: OpenSteer::OpenSteerDemo::functionKeyForPlugin (GLUT_KEY_UP); break;
 		case GLUT_KEY_DOWN: OpenSteer::OpenSteerDemo::functionKeyForPlugin (GLUT_KEY_DOWN); break;

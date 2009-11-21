@@ -48,6 +48,7 @@
 
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "EduNetCommon/EduNetLog.h"
 
 #include "OpenSteer/Clock.h"
 #include "OpenSteer/PlugIn.h"
@@ -204,13 +205,6 @@ namespace OpenSteer {
 
         // ----------------------------------------------------------- console text
 
-        // print a line on the console with "OpenSteerDemo: " then the given ending
-        static void printMessage (const char* message);
-        static void printMessage (const std::ostringstream& message);
-
-        // like printMessage but prefix is "OpenSteerDemo: Warning: "
-        static void printWarning (const char* message);
-        static void printWarning (const std::ostringstream& message);
 
         // print list of known commands
         static void keyboardMiniHelp (void);
