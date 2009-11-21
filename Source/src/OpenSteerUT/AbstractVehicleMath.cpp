@@ -27,7 +27,6 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleMath.h"
-//#include "EmptyPlugin.h"
 
 
 namespace OpenSteer
@@ -225,6 +224,15 @@ namespace OpenSteer
 		getVector3( _AngularVelocity, kAngularVelocity );
 	}
 
+	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget )
+	{
+		btTransform kWorldTransform;
+		writeToMatrix( kVehicle, kWorldTransform );
+		btVector3 _kSource, _kWorld;
+		getVector3( kSource, _kSource );
+		_kWorld = kWorldTransform.getBasis() * _kSource;
+		getVector3( _kWorld, kTarget );
+	}
 
 
 

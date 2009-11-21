@@ -52,6 +52,9 @@ namespace OpenSteer
 		{
 			return this->m_kEulerUpdate;
 		}
+
+		virtual void update (const float currentTime, const float elapsedTime);
+
 	protected:
 		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
 		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
