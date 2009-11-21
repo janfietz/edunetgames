@@ -88,23 +88,7 @@ namespace OpenSteer {
 
         // select the default Plugin
         static void selectDefaultPlugin (void);
-        
-        // select the "next" plug-in, cycling through "plug-in selection order"
-        static void selectNextPlugin (void);
-
-		// select the plug-in by index
-		static void selectPluginByIndex (size_t idx);
-
-		static void selectPlugin( AbstractPlugin* pkPlugin );
-
-        // handle function keys an a per-plug-in basis
-        static void functionKeyForPlugin (int keyNumber);
-
-        // return name of currently selected plug-in
-        static const char* nameOfSelectedPlugin (void);
-
-        // open the currently selected plug-in
-        static void openSelectedPlugin (void);
+      
 
         // do a simulation update for the currently selected plug-in
         static void updateSelectedPlugin (const float currentTime,
@@ -114,11 +98,6 @@ namespace OpenSteer {
         static void redrawSelectedPlugin (const float currentTime,
                                           const float elapsedTime);
 
-        // close the currently selected plug-in
-        static void closeSelectedPlugin (void);
-
-        // reset the currently selected plug-in
-        static void resetSelectedPlugin (void);
 
 
         // ---------------------------------------------------- OpenSteerDemo phase
