@@ -1,9 +1,8 @@
 project(Tutorial03)
 INCLUDE_DIRECTORIES( 
-${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
-
- ${RakNet_SOURCES}/DependentExtensions
-)
+ ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
+ ${RakNet_SOURCES}/DependentExtensions
+)
 
 aux_source_directory(${Tutorial03_SOURCE_DIR} Tutorial_Src)
 
