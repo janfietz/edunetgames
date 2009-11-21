@@ -53,12 +53,12 @@ namespace OpenSteer {
 
 		virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
 		{
-		  this->m_pkCustomUpdated = pkUpdated;
+			this->m_pkCustomUpdated = pkUpdated;
 		}
 
 		virtual AbstractUpdated* getCustomUpdated( void ) const
 		{
-		  return this->m_pkCustomUpdated;
+			return this->m_pkCustomUpdated;
 		}
 
 	protected:

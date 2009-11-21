@@ -607,14 +607,14 @@ public:
         std::ostringstream message;
         message << "Function keys handled by ";
         message << '"' << name() << '"' << ':' << std::ends;
-        OpenSteerDemo::printMessage (message);
-        OpenSteerDemo::printMessage (message);
-        OpenSteerDemo::printMessage ("  F1     add a pedestrian to the crowd.");
-        OpenSteerDemo::printMessage ("  F2     remove a pedestrian from crowd.");
-        OpenSteerDemo::printMessage ("  F3     use next proximity database.");
-        OpenSteerDemo::printMessage ("  F4     toggle directed path follow.");
-        OpenSteerDemo::printMessage ("  F5     toggle wander component on/off.");
-        OpenSteerDemo::printMessage ("");
+        EduNet::Log::printMessage (message);
+        EduNet::Log::printMessage (message);
+        EduNet::Log::printMessage ("  F1     add a pedestrian to the crowd.");
+        EduNet::Log::printMessage ("  F2     remove a pedestrian from crowd.");
+        EduNet::Log::printMessage ("  F3     use next proximity database.");
+        EduNet::Log::printMessage ("  F4     toggle directed path follow.");
+        EduNet::Log::printMessage ("  F5     toggle wander component on/off.");
+        EduNet::Log::printMessage ("");
     }
     
     

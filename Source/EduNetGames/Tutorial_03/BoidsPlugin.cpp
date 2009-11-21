@@ -304,12 +304,12 @@ void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
     std::ostringstream message;
     message << "Function keys handled by ";
     message << '"' << name() << '"' << ':' << std::ends;
-    OpenSteerDemo::printMessage (message);
-    OpenSteerDemo::printMessage ("  F1     add a boid to the flock.");
-    OpenSteerDemo::printMessage ("  F2     remove a boid from the flock.");
-    OpenSteerDemo::printMessage ("  F3     use next proximity database.");
-    OpenSteerDemo::printMessage ("  F4     next flock boundary condition.");
-    OpenSteerDemo::printMessage ("");
+    EduNet::Log::printMessage (message);
+    EduNet::Log::printMessage ("  F1     add a boid to the flock.");
+    EduNet::Log::printMessage ("  F2     remove a boid from the flock.");
+    EduNet::Log::printMessage ("  F3     use next proximity database.");
+    EduNet::Log::printMessage ("  F4     next flock boundary condition.");
+    EduNet::Log::printMessage ("");
 }
 
 //-----------------------------------------------------------------------------
