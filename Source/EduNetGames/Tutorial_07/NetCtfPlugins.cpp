@@ -205,7 +205,7 @@ OfflineCtfPlugin gCtfPlugin;
 //-----------------------------------------------------------------------------
 class CtfRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<CtfClientPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<CtfClientPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<CtfClientPlugin> )
 public:
 	CtfRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
@@ -226,7 +226,7 @@ CtfRenderClientPlugin gCtfClientPlugin( true );
 //-----------------------------------------------------------------------------
 class CtfRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<CtfPeerPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<CtfPeerPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<CtfPeerPlugin> )
 public:
 	CtfRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{

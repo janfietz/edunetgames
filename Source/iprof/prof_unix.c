@@ -7,12 +7,17 @@ static int baseRealTimeUsec = 0;
 
 double Prof_get_time(void)
 {
-	_STRUCT_TIMEVAL t;
+#ifndef  __APPLE__
+    struct timeval t;
+#else
+    _STRUCT_TIMEVAL t;
+#endif
+	
     if (gettimeofday (&t, 0) != 0) return 0.0;
 	
     // ensure the base time is recorded once after launch
     if (baseRealTimeSec == 0)
-    {
+    { 
         baseRealTimeSec = t.tv_sec;
         baseRealTimeUsec = t.tv_usec;
     }
@@ -20,4 +25,5 @@ double Prof_get_time(void)
     // real "wall clock" time since launch
     return (( t.tv_sec  - baseRealTimeSec) +
             ((t.tv_usec - baseRealTimeUsec) / 1000000.0f));
+
 }

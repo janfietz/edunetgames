@@ -5,6 +5,10 @@
 #include <stdint.h>
 #endif
 
+#ifndef __APPLE__
+#include <time.h>
+#endif
+
 typedef int64_t Prof_Int64;
 
 #ifdef __cplusplus
@@ -16,13 +20,21 @@ typedef int64_t Prof_Int64;
 #endif
       void Prof_get_timestamp(Prof_Int64 *result)
       {
+#ifdef __APPLE__
 		  __asm {
 			  rdtsc;
 			  mov    ebx, result
 			  mov    [ebx], eax
 			  mov    [ebx+4], edx
 		  }
-//		  *result = 0;
+#else
+      struct timespec t; 
+      *result = 0;
+      if( clock_gettime( CLOCK_MONOTONIC, &t) == 0 ) {
+	  *result = (Prof_Int64)t.tv_sec * 1000000000 +  t.tv_nsec;
+      } 
+            
+#endif //__APPLE__
       }
 
 #endif

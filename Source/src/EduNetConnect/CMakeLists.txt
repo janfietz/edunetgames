@@ -2,13 +2,20 @@ project(EduNetConnect)
 
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
- ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet-3.705/DependentExtensions
+ ${RakNet_SOURCES}/DependentExtensions
  )
 SET(EduNetConnect_LIB_SRC
 NetworkPlugin.cpp
 PeerPlugin.cpp
 ClientPlugin.cpp
-OSReplicaConnection.cpp
+AbstractNetworkVehicle.cpp
+AbstractReplica.cpp
+AbstractVehicleReplica.cpp
+AbstractVehicleReplicaConnection.cpp
+ClientServerPlugin.cpp
+NetworkPlot.cpp
+NetworkVehicle.cpp
+SimpleNetworkVehicle.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${EduNetConnect_LIB_SRC})

@@ -1,5 +1,5 @@
 
-SUBDIRS( EduNetConnect EduNetCommon EduNetApplication )
+SUBDIRS( EduNetConnect EduNetCommon EduNetApplication EduNetProfile )
 
 
 #INSTALL of other files requires CMake 2.6

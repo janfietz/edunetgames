@@ -7,6 +7,7 @@
 #include "OpenSteerUT/CameraPlugin.h"
 
 #include "NetBoidConditionReplica.h"
+#include "BoidsPlugin.h"
 
 //-----------------------------------------------------------------------------
 NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
@@ -119,7 +120,7 @@ void NetClientBoidPlugin::DeleteContent( void )
 class NetBoidRenderOfflinePlugin : 
 	public OpenSteer::PluginArrayPluginMixin<OpenSteer::BoidsPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<OpenSteer::BoidsPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<OpenSteer::BoidsPlugin> )
 public:
 	NetBoidRenderOfflinePlugin( bool bAddToRegistry = true ):
 		BaseClass( bAddToRegistry ) 
@@ -142,7 +143,7 @@ NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( );
 class NetBoidRenderClientPlugin : 
 	public OpenSteer::PluginArrayPluginMixin<NetClientBoidPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<NetClientBoidPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<NetClientBoidPlugin> )
 public:
 	NetBoidRenderClientPlugin( bool bAddToRegistry = true ):
 		BaseClass( bAddToRegistry ) 
@@ -164,7 +165,7 @@ NetBoidRenderClientPlugin gNetBoidRenderClientPlugin( true );
 class NetBoidRenderPeerPlugin : 
 	public OpenSteer::PluginArrayPluginMixin<NetPeerBoidPlugin>
 {
-	ET_DECLARE_BASE( PluginArrayPluginMixin<NetPeerBoidPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<NetPeerBoidPlugin> )
 public:
 	NetBoidRenderPeerPlugin( bool bAddToRegistry = true ):
 		BaseClass( bAddToRegistry ) 
