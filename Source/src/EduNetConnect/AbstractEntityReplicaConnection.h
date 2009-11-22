@@ -76,7 +76,9 @@ public:
 	AbstractEntityReplicaFactory(AbstractEntityReplicaManager* pkManager):
 	  m_pkReplicaManager( pkManager ) {}
 	  
+	  virtual OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId ) const;
 	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId ) const;
+	  virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
 	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 private:

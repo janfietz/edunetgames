@@ -62,9 +62,8 @@ public:
 
 		this->setLocalReplicaParamsFromManager( &this->m_kReplicaManager);
 
-		// remap the vehicle factory
+		// remap the entity factory
 		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
-		AbstractEntityReplica::setAbstractEntityFactory( &gOnlineNetCtfEntityFactory );
 		this->m_kGamePlugin.setEntityFactory( this->m_pkNetCtfFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( CtfPeerPlugin )
@@ -146,7 +145,6 @@ public:
 	{
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
-		AbstractEntityReplica::setAbstractEntityFactory( &gOnlineNetCtfEntityFactory );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( CtfClientPlugin )

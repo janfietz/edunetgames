@@ -68,8 +68,12 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 		else
 		{
 			AbstractEntityReplica* pkNewReplica = new AbstractEntityReplica( pkPlugin, classId, true  );
-			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-			kVG.addVehicle( pkNewReplica->accessEntity() );
+			OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( pkNewReplica->accessEntity() );
+			if( NULL != pkVehicle )
+			{
+				OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
+				kVG.addVehicle( pkVehicle );
+			}
 			return pkNewReplica; 
 		}
 	}
@@ -81,35 +85,47 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* AbstractEntityReplicaFactory::createVehicle( OpenSteer::EntityClassId classId ) const
+OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer::EntityClassId classId ) const
 {
 	AbstractEntityReplica* pkNewReplica = new AbstractEntityReplica( this->m_pkReplicaManager->getPlugin(), classId, false );	
 	if( NULL != pkNewReplica )
 	{
 		this->m_pkReplicaManager->Reference( pkNewReplica );
-		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
-		if( NULL != pkVehicle )
+		OpenSteer::AbstractEntity* pkEntity = pkNewReplica->accessEntity();
+		if( NULL != pkEntity )
 		{
-			this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
+			this->m_uidMap.Set( pkEntity->getEntityId(), pkNewReplica );
 		}
-		return pkVehicle;
+		return pkEntity;
 	}
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-void AbstractEntityReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+OpenSteer::AbstractVehicle* AbstractEntityReplicaFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
-	const OpenSteer::InstanceTracker::Id uiEntityId = pkVehicle->getEntityId();	
+	return dynamic_cast<OpenSteer::AbstractVehicle*>( this->createEntity( classId ) );
+}
+
+//-----------------------------------------------------------------------------
+void AbstractEntityReplicaFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+{
+	const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();	
 	if(true == this->m_uidMap.Has( uiEntityId ))
 	{
-		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
+		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId );		
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
 		this->m_uidMap.Set( uiEntityId, NULL );
 		delete pReplicaObject;
 	}
-// do not call the base class in this case !!!
-//	BaseClass::destroyVehicle( pkVehicle );
+	// do not call the base class in this case !!!
+	//	BaseClass::destroyEntity( pkVehicle );
+}
+
+//-----------------------------------------------------------------------------
+void AbstractEntityReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+{
+	this->destroyEntity( pkVehicle );
 }
 
 
