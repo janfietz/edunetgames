@@ -26,77 +26,109 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer/SimplePlayer.h"
+#include "LocalPlayer.h"
 
 using namespace OpenSteer;
 
-// entity player test
 #if 0
+AbstractPlayer* pkLocalPlayer = SimplePlayer::accessLocalPlayer();
+AbstractEntity* pkControlledEntity = NULL;
 {
 	NetPedestrian kVehicle;
-	{
-		SimplePlayer kPlayer0;
-		SimplePlayer kPlayer1;
-		kPlayer0.play( &kVehicle );
-		AbstractPlayer* pkCP0 = kVehicle.getPlayer();
-		AbstractEntity* pkCE0 = kPlayer0.getControlledEntity();
-
-		kPlayer1.play( &kVehicle );
-		AbstractPlayer* pkCP1 = kVehicle.getPlayer();
-		AbstractEntity* pkCE1 = kPlayer1.getControlledEntity();
-		pkCE0 = kPlayer0.getControlledEntity();
-	}
-	bool bTest0 = true;
-	bTest0 = false;
+	pkLocalPlayer->play( &kVehicle );
+	pkControlledEntity = pkLocalPlayer->getControlledEntity();
+	pkControlledEntity = NULL;
 }
-bool bTest1 = true;
-bTest1 = false;
+pkControlledEntity = pkLocalPlayer->getControlledEntity();
+pkControlledEntity = NULL;
+
 #endif
 
+Vec3 LocalPlayerController::ms_kOutput(Vec3::zero);
+
 //-----------------------------------------------------------------------------
-SimpleController::SimpleController()
+LocalPlayerController::LocalPlayerController()
 {
 
 }
 
 //-----------------------------------------------------------------------------
-SimpleController::~SimpleController()
+LocalPlayerController::~LocalPlayerController()
 {
 
 }
 
 //-----------------------------------------------------------------------------
-SimplePlayer::SimplePlayer( bool bIsLocalPlayer ):
-	m_pkController(NULL),m_bIsLocalPlayer( bIsLocalPlayer )
+AbstractController* LocalPlayerController::accessLocalPlayerController( void )
 {
-
+	static LocalPlayerController kLocalPlayerController;
+	return &kLocalPlayerController;
 }
 
 //-----------------------------------------------------------------------------
-SimplePlayer::~SimplePlayer()
+bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 {
-
-}
-
-//-----------------------------------------------------------------------------
-AbstractPlayer* SimplePlayer::accessLocalPlayer( void )
-{
-	static SimplePlayer kPlayer(true);
-	if( NULL == kPlayer.getController() )
+	bool bHasAxis = false;
+	switch (key)
 	{
-		static SimpleController kController;
-		kPlayer.setController( &kController );
+		// reset selected Plugin
+	case 'w':
+		LocalPlayerController::ms_kOutput.z = 1.0f;
+		bHasAxis = true;
+		break;
+	case 'a':
+		LocalPlayerController::ms_kOutput.x = 1.0f;
+		bHasAxis = true;
+		break;
+	case 's':
+		LocalPlayerController::ms_kOutput.z = -1.0f;
+		bHasAxis = true;
+		break;
+	case 'd':
+		LocalPlayerController::ms_kOutput.x = -1.0f;
+		bHasAxis = true;
+		break;
 	}
-	return &kPlayer;
+	return bHasAxis;
 }
 
 //-----------------------------------------------------------------------------
-void SimplePlayer::update( const osScalar currentTime, const osScalar elapsedTime )
+bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 {
-	AbstractController* pkController = this->accessController();
-	if( NULL != pkController )
+	bool bHasAxis = false;
+	switch (key)
 	{
-		pkController->update( currentTime, elapsedTime );
+		// reset selected Plugin
+	case 'w':
+		LocalPlayerController::ms_kOutput.z = 0.0f;
+		bHasAxis = true;
+		break;
+	case 'a':
+		LocalPlayerController::ms_kOutput.x = 0.0f;
+		bHasAxis = true;
+		break;
+	case 's':
+		LocalPlayerController::ms_kOutput.z = 0.0f;
+		bHasAxis = true;
+		break;
+	case 'd':
+		LocalPlayerController::ms_kOutput.x = 0.0f;
+		bHasAxis = true;
+		break;
 	}
-	BaseClass::update( currentTime, elapsedTime );
+	return bHasAxis;
+}
+
+//-----------------------------------------------------------------------------
+void LocalPlayerController::updateCustom( 
+	AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
+{
+	AbstractController* pkTargetController = dynamic_cast<AbstractController*>(pkParent);
+	if( NULL != pkTargetController )
+	{
+		// pass the control force from here to the actual 'in game' controller
+		pkTargetController->setOutputForce( this->getOutputForce() );
+		bool bTest = true;
+		bTest = false;
+	}
 }

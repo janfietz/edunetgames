@@ -65,17 +65,6 @@ m_bCreatesVehicles(false),
 m_fLastRenderTime(0.0f)
 {
 	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
-
-	AbstractPlayer* pkLocalPlayer = SimplePlayer::accessLocalPlayer();
-	AbstractEntity* pkControlledEntity = NULL;
-	{
-		NetPedestrian kVehicle;
-		pkLocalPlayer->play( &kVehicle );
-		pkControlledEntity = pkLocalPlayer->getControlledEntity();
-		pkControlledEntity = NULL;
-	}
-	pkControlledEntity = pkLocalPlayer->getControlledEntity();
-	pkControlledEntity = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -87,7 +76,6 @@ NetPedestrianPlugin::~NetPedestrianPlugin()
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::open (void)
 {
-
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
 	this->nextPD ();

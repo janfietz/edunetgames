@@ -76,6 +76,9 @@ FooPlugin gFooPlugin;
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
 
+
+typedef void (*on_plugin_selected_func)( void );
+
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
@@ -155,14 +158,16 @@ namespace OpenSteer {
 	class Plugin : public EntityLocalSpace, public AbstractPlugin
     {
     public:
-		// currently selected plug-in (user can choose or cycle through them)
-		static AbstractPlugin* selectedPlugin;
-
         //! prototypes for function pointers used with Plugins
-        typedef void (* plugInCallBackFunction) (AbstractPlugin& clientObject);
+        typedef void (* plugInCallBackFunction) ( AbstractPlugin& clientObject );
         typedef void (* voidCallBackFunction) (void);
         typedef void (* timestepCallBackFunction) (const float currentTime,
                                                    const float elapsedTime);
+
+		// TODO: make this one private		
+		//! currently selected plug-in (user can choose or cycle through them)
+		static AbstractPlugin* selectedPlugin;
+
 
         //! constructor
         Plugin( bool bAddToRegistry = true );
@@ -255,10 +260,37 @@ namespace OpenSteer {
 
 		//! utility function
 		static const AVGroup& allVehiclesOfSelectedPlugin(void);
+
+		// not public right now ... needs to forward gui update
+		// select the "next" plug-in, cycling through "plug-in selection order"
+		static void selectNextPlugin (void);
+
+		static void selectPlugin( AbstractPlugin* pkPlugin );
+
+		// select the plug-in by index
+		static void selectPluginByIndex( size_t idx );
+
+		// handle function keys an a per-plug-in basis
+		static void functionKeyForPlugin( int keyNumber );
+
+		// return name of currently selected plug-in
+		static const char* nameOfSelectedPlugin( void );
+
+		// open the currently selected plug-in
+		static void openSelectedPlugin( void );
+
+		// close the currently selected plug-in
+		static void closeSelectedPlugin( void );
+
+		// reset the currently selected plug-in
+		static void resetSelectedPlugin( void );
+
+		static on_plugin_selected_func ms_on_plugin_selected_func;
 	protected:
 		AbstractVehicleFactory* m_pkVehicleFactory;
 
     private:
+
 		AbstractPlugin* m_pkParentPlugin;
 
         //! This array stores a list of all Plugins.  It is manipulated by the

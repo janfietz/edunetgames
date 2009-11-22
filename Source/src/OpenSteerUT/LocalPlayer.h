@@ -1,5 +1,5 @@
-#ifndef __SIMPLEPLAYER_H__
-#define __SIMPLEPLAYER_H__
+#ifndef __LOCALPLAYER_H__
+#define __LOCALPLAYER_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,91 +29,37 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer/AbstractPlayer.h"
-#include "OpenSteer/Vec3.h"
+#include "OpenSteer/SimplePlayer.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-
-	typedef EntityMixin<AbstractController> TAbstractController_0;
-	typedef EntityMixin<AbstractPlayer> TAbstractPlayer_0;
-
-	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
-	typedef AbstractUpdatedMixin<TAbstractPlayer_0> TAbstractPlayer;
-
 	//-------------------------------------------------------------------------
-	class SimpleController : public TAbstractController
+	class LocalPlayerController : public SimpleController
 	{
-		OS_DECLARE_BASE( TAbstractController )
 	public:
-		SimpleController();
-		virtual ~SimpleController();
-		OS_IMPLEMENT_CLASSNAME( SimpleController )
+		LocalPlayerController();
+		virtual ~LocalPlayerController();
+
+		static AbstractController* accessLocalPlayerController( void );
 
 		virtual void setOutputForce( const Vec3& kOutput )
 		{
-			this->m_kOutput = kOutput;
+			LocalPlayerController::ms_kOutput = kOutput;
 		}
 
 		virtual const Vec3& getOutputForce( void ) const
 		{
-			return this->m_kOutput;
+			return LocalPlayerController::ms_kOutput;
 		}
 
+		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
+
+		static bool keyboardFunc( unsigned char key, int x, int y );
+		static bool keyboardFuncUp( unsigned char key, int x, int y );
 	private:
-		Vec3 m_kOutput;
+		static Vec3 ms_kOutput;
 	};
-
-	//-------------------------------------------------------------------------
-	class SimplePlayer : public TAbstractPlayer
-	{
-		OS_DECLARE_BASE( TAbstractPlayer )
-	public:
-		SimplePlayer( bool bIsLocalPlayer = false );
-		virtual ~SimplePlayer();
-		OS_IMPLEMENT_CLASSNAME( SimplePlayer )
-
-		//---------------------------------------------------------------------
-		// AbstractPlayer interface
-		virtual void setController( AbstractController* pkController)
-		{
-			this->m_pkController = pkController;
-		}
-
-		virtual AbstractController* accessController( void ) const
-		{
-			return this->m_pkController;
-		}
-
-		virtual AbstractController const* const getController( void ) const
-		{
-			return this->m_pkController;
-		}
-
-		virtual bool isPlaying( void ) const
-		{
-			return (NULL != this->getControlledEntity());
-		}
-
-		virtual bool isLocalPlayer( void ) const
-		{
-			return this->m_bIsLocalPlayer;
-		}
-
-		static AbstractPlayer* accessLocalPlayer( void );
-
-		//---------------------------------------------------------------------
-		// AbstractUpdated interface
-		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
-
-
-
-	private:
-		AbstractController* m_pkController;
-		bool m_bIsLocalPlayer;
-	};
-
 }
 
-#endif //  __ABSTRACTPLAYER_H__
+#endif //  __LOCALPLAYER_H__

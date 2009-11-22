@@ -332,6 +332,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="player"
+				>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\LocalPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\LocalPlayer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="EduNetProfile"

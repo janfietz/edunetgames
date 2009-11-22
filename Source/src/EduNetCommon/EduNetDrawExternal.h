@@ -30,6 +30,16 @@
 	#endif
 #endif
 
+
+//-----------------------------------------------------------------------------
+// undocumented windows hacks
+#ifdef WIN32
+extern "C" {
+	int APIENTRY __glutCreateWindowWithExit(const char *title, void (__cdecl *exitfunc)(int));
+	void APIENTRY __glutInitWithExit(int *argcp, char **argv, void (__cdecl *exitfunc)(int));
+}
+#endif //WIN32
+
 //-----------------------------------------------------------------------------
 // GLUI
 #if EDUNET_HAVE_GLUI
