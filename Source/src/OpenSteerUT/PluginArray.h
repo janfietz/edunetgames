@@ -108,7 +108,10 @@ namespace OpenSteer
 
 		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
 		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
+		virtual PlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
+		virtual const PlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
 	private:
+		PlayerGroup m_kAllPlayers;
 		ObstacleGroup m_kAllObstacles;
 		AVGroup m_kVehicles;
 		AbstractPlugin* m_pkParentPlugin;

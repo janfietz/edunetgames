@@ -67,7 +67,7 @@ void NetBoidReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 RakNet::RM3SerializationResult NetBoidReplica::Serialize(
 	RakNet::SerializeParameters *serializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	int nResult = kSerializer.serialize( serializeParameters );
 	if( nResult >= 0 )
 	{
@@ -80,6 +80,6 @@ RakNet::RM3SerializationResult NetBoidReplica::Serialize(
 void NetBoidReplica::Deserialize(
 	RakNet::DeserializeParameters *deserializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }

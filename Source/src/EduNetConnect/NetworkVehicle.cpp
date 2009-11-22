@@ -30,33 +30,3 @@
 
 using namespace OpenSteer;
 
-//-----------------------------------------------------------------------------
-void NetworkVehicleSerializer::querySendParameters( OpenSteer::AbstractNetworkVehicle* pkVehicle, RakNet::PRO& kPro ) const
-{
-	// TODO: query the send parameters from the vehicle itself
-	kPro.priority = LOW_PRIORITY;
-	kPro.reliability = UNRELIABLE;
-	kPro.orderingChannel = 1;
-}
-
-//-----------------------------------------------------------------------------
-int NetworkVehicleSerializer::serialize( RakNet::SerializeParameters *serializeParameters ) const
-{
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkVehicle);
-	if( NULL != pkNetworkVehicle )
-	{
-		this->querySendParameters( pkNetworkVehicle, serializeParameters->pro );
-		return pkNetworkVehicle->serialize( serializeParameters );
-	}
-	return -1;
-}
-
-//-----------------------------------------------------------------------------
-void NetworkVehicleSerializer::deserialize( RakNet::DeserializeParameters *deserializeParameters )
-{
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkVehicle);
-	if( NULL != pkNetworkVehicle )
-	{
-		pkNetworkVehicle->deserialize( deserializeParameters );
-	}
-}

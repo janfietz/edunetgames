@@ -74,6 +74,7 @@ FooPlugin gFooPlugin;
 #include <iostream>
 #include "OpenSteer/Entity.h"
 #include "OpenSteer/AbstractVehicle.h"
+#include "OpenSteer/AbstractPlayer.h"
 #include "OpenSteer/Obstacle.h"
 
 
@@ -125,6 +126,10 @@ namespace OpenSteer {
 
 		virtual ObstacleGroup& allObstacles( void ) OS_ABSTRACT;
 		virtual const ObstacleGroup& allObstacles( void ) const OS_ABSTRACT;
+
+		virtual PlayerGroup& allPlayers( void ) OS_ABSTRACT;
+		virtual const PlayerGroup& allPlayers( void ) const OS_ABSTRACT;
+		
  
 		//! returns pointer to the next Plugin in "selection order"
 		virtual AbstractPlugin* next(void) const OS_ABSTRACT;
@@ -229,6 +234,8 @@ namespace OpenSteer {
 		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
 		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
 
+		virtual PlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
+		virtual const PlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
         
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
@@ -294,6 +301,7 @@ namespace OpenSteer {
 	protected:
 		AbstractEntityFactory* m_pkEntityFactory;
 		ObstacleGroup m_kAllObstacles;
+		PlayerGroup m_kAllPlayers;
 
     private:
 
