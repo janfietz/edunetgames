@@ -15,4 +15,4 @@ FindRaknet.cmake~
 # switch to regexp syntax.
 syntax: regexp
 ^Temp/.*
-
+^buildlinux/.*
