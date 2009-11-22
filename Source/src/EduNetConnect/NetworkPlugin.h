@@ -291,6 +291,25 @@ public:
 		return m_kGamePlugin.allVehicles();
 	}
 
+	virtual OpenSteer::PlayerGroup& allPlayers( void ) 
+	{ 
+		return m_kGamePlugin.allPlayers();
+	}
+	virtual const OpenSteer::PlayerGroup& allPlayers( void ) const 
+	{ 
+		return m_kGamePlugin.allPlayers();
+	}
+
+	virtual const OpenSteer::ObstacleGroup& allObstacles( void ) const 
+	{
+		return m_kGamePlugin.allObstacles();
+	}
+
+	virtual OpenSteer::ObstacleGroup& allObstacles( void ) 
+	{
+		return m_kGamePlugin.allObstacles();
+	}
+
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const
 	{
 		return ((OpenSteer::AbstractPlugin*)&this->m_kGamePlugin);

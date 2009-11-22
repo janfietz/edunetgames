@@ -70,6 +70,11 @@ m_pkHostPlugin(pkHostPlugin)
 		{
 			pkHostPlugin->allObstacles().push_back( pkObstacle );
 		}
+		OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
+		if( NULL != pkPlayer )
+		{
+			pkHostPlugin->allPlayers().push_back( pkPlayer );
+		}
 	}
 };
 
@@ -92,6 +97,7 @@ void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnect
 	{
 		kVG.removeVehicle( pkVehicle );
 	}
+
 	OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
 	if( NULL != pkObstacle )
 	{
@@ -101,6 +107,17 @@ void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnect
 			m_pkHostPlugin->allObstacles().erase( kIter );
 		}
 	}
+
+	OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
+	if( NULL != pkPlayer )
+	{
+		PlayerGroup::iterator kIter = std::find( m_pkHostPlugin->allPlayers().begin(), m_pkHostPlugin->allPlayers().end(), pkPlayer );
+		if( kIter != m_pkHostPlugin->allPlayers().end() )
+		{
+			m_pkHostPlugin->allPlayers().erase( kIter );
+		}
+	}
+
 	this->releaseEntity();
 	ET_DELETE this;
 }
@@ -108,15 +125,11 @@ void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnect
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
-	if( NULL != pkVehicle )
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
+	int nResult = kSerializer.serialize( serializeParameters );
+	if( nResult >= 0 )
 	{
-		OpenSteer::NetworkVehicleSerializer kSerializer( pkVehicle );
-		int nResult = kSerializer.serialize( serializeParameters );
-		if( nResult >= 0 )
-		{
-			return static_cast<RakNet::RM3SerializationResult>(nResult);
-		}
+		return static_cast<RakNet::RM3SerializationResult>(nResult);
 	}
 	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
@@ -124,11 +137,7 @@ RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::Serializ
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
-	if( NULL != pkVehicle )
-	{
-		OpenSteer::NetworkVehicleSerializer kSerializer( pkVehicle );
-		kSerializer.deserialize( deserializeParameters );
-	}
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
+	kSerializer.deserialize( deserializeParameters );
 }
 

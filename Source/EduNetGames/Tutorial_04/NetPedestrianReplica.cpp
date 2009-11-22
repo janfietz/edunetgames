@@ -70,7 +70,7 @@ void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnecti
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult NetPedestrianReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	int nResult = kSerializer.serialize( serializeParameters );
 	if( nResult >= 0 )
 	{
@@ -82,7 +82,7 @@ RakNet::RM3SerializationResult NetPedestrianReplica::Serialize(RakNet::Serialize
 //-----------------------------------------------------------------------------
 void NetPedestrianReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }
 

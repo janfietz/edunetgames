@@ -213,7 +213,14 @@ namespace OpenSteer {
             resetLocalSpace ();
         };
 
-        LocalSpaceMixin (const Vec3& Side,
+		LocalSpaceMixin (
+			const Vec3& Position) 
+		{
+			resetLocalSpace ();
+			this->_position = Position;
+		}
+
+		LocalSpaceMixin (const Vec3& Side,
                          const Vec3& Up,
                          const Vec3& Forward,
                          const Vec3& Position) 
@@ -399,6 +406,12 @@ namespace OpenSteer {
 		//---------------------------------------------------------------------
 		//! constructors
 		EntityLocalSpaceMixin (void):LocalSpaceMixin<Super>(),m_pkPossessor(NULL),
+			m_pkPossessed(NULL)
+		{
+		};
+
+		EntityLocalSpaceMixin (
+			const Vec3& Position):LocalSpaceMixin<Super>( Position ),m_pkPossessor(NULL),
 			m_pkPossessed(NULL)
 		{
 		};

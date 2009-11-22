@@ -32,6 +32,7 @@
 #include "OpenSteer/AbstractUpdated.h"
 #include "OpenSteer/Entity.h"
 
+#include <vector>
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
@@ -65,6 +66,8 @@ namespace OpenSteer
 		virtual bool isLocalPlayer( void ) const OS_ABSTRACT; 
 
 	};
+
+	typedef std::vector<AbstractPlayer*> PlayerGroup;
 
 
 }

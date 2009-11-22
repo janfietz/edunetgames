@@ -249,7 +249,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="vehicles"
+				Name="entities"
 				>
 				<File
 					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.cpp"
@@ -257,6 +257,14 @@
 				</File>
 				<File
 					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\NetworkEntity.h"
 					>
 				</File>
 				<File

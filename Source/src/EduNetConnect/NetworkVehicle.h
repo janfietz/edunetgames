@@ -30,22 +30,10 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractNetworkVehicle.h"
+#include "NetworkEntity.h"
 
 namespace OpenSteer {
 
-	//-------------------------------------------------------------------------
-	class NetworkVehicleSerializer
-	{
-	public:
-		NetworkVehicleSerializer( OpenSteer::AbstractVehicle* pkVehicle ):m_pkVehicle(pkVehicle){};
-		virtual ~NetworkVehicleSerializer(){};
-		void querySendParameters( OpenSteer::AbstractNetworkVehicle* pkVehicle, RakNet::PRO& kPro ) const;
-		int serialize( RakNet::SerializeParameters *serializeParameters ) const;
-		void deserialize( RakNet::DeserializeParameters *deserializeParameters );
-	private:
-		OpenSteer::AbstractVehicle* m_pkVehicle;
-
-	};
 
 	//-------------------------------------------------------------------------
 	template <class Super>

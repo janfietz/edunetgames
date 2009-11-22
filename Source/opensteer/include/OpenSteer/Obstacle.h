@@ -167,11 +167,11 @@ namespace OpenSteer {
     {
     public:
         float radius;
-        Vec3 center;
+        Vec3& center;
 
         //! constructors
-        SphereObstacle (float r, Vec3 c) : radius(r), center (c) {}
-        SphereObstacle (void) : radius(1), center (Vec3::zero) {}
+		SphereObstacle (float r, const Vec3& c) : LocalSpaceObstacle(c), radius(r), center (LocalSpaceObstacle::_position) {}
+        SphereObstacle (void) : radius(1), center (LocalSpaceObstacle::_position) {}
 
         virtual ~SphereObstacle() { /* Nothing to do. */ }
         
