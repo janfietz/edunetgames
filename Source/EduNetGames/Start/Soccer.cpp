@@ -100,13 +100,13 @@ namespace {
         // reset state
         void reset (void)
         {
-            SimpleVehicle::reset (); // reset the vehicle 
+            SimpleVehicle::reset (); // reset the vehicle
             setSpeed (0.0f);         // speed along Forward direction.
             setMaxForce (9.0f);      // steering force is clipped to this magnitude
             setMaxSpeed (9.0f);         // velocity is clipped to this magnitude
 
             setPosition(0,0,0);
-            clearTrailHistory ();    // prevent long streaks due to teleportation 
+            clearTrailHistory ();    // prevent long streaks due to teleportation
             setTrailParameters (100, 6000);
         }
 
@@ -133,7 +133,7 @@ namespace {
 
         void kick(Vec3 dir, const float elapsedTime){
             OPENSTEER_UNUSED_PARAMETER(elapsedTime);
-            
+
             setSpeed(dir.length());
             regenerateOrthonormalBasis(dir);
         }
@@ -158,7 +158,7 @@ namespace {
         // reset state
         void reset (void)
         {
-            SimpleVehicle::reset (); // reset the vehicle 
+            SimpleVehicle::reset (); // reset the vehicle
             setSpeed (0.0f);         // speed along Forward direction.
             setMaxForce (3000.7f);      // steering force is clipped to this magnitude
             setMaxSpeed (10);         // velocity is clipped to this magnitude
@@ -173,7 +173,7 @@ namespace {
                     setPosition(Vec3(-playerPosition[m_MyID].x, playerPosition[m_MyID].y, playerPosition[m_MyID].z));
                 }
             m_home = position();
-            clearTrailHistory ();    // prevent long streaks due to teleportation 
+            clearTrailHistory ();    // prevent long streaks due to teleportation
             setTrailParameters (10, 60);
         }
 
@@ -249,7 +249,7 @@ namespace {
     class MicTestPlugin : public Plugin
     {
     public:
-        
+
         const char* name (void) const {return "Michael's Simple Soccer";}
 
         // float selectionOrderSortKey (void) const {return 0.06f;}
@@ -288,10 +288,10 @@ namespace {
                 m_AllPlayers.push_back(pMicTest);
             }
             // initialize camera
-            CameraPlugin::init2dCamera (*m_Ball);
-            Camera::camera.setPosition (10, CameraPlugin::camera2dElevation, 10);
-            Camera::camera.fixedPosition.set (40, 40, 40);
-            Camera::camera.mode = Camera::cmFixed;
+                   CameraPlugin::init2dCamera ( *m_Ball );
+        Camera::camera.setPosition ( 10, CameraPlugin::camera2dElevation, 10 );
+        Camera::camera.fixedPosition.set ( 40, 40, 40 );
+        Camera::camera.mode = Camera::cmFixed;
             m_redScore = 0;
             m_blueScore = 0;
         }

@@ -1,11 +1,11 @@
-project(Tutorial06)
+project(Start)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 
  ${RakNet_SOURCES}/DependentExtensions
 )
 
-aux_source_directory(${Tutorial06_SOURCE_DIR} Tutorial_Src)
+aux_source_directory(${Start_SOURCE_DIR} Tutorial_Src)
 
 MESSAGE(${Tutorial_Src})
 
