@@ -26,48 +26,48 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetCtfVehicleFactory.h"
+#include "NetCtfEntityFactory.h"
 #include "NetCtfVehicles.h"
 
 //-----------------------------------------------------------------------------
-class NetCtfBaseVehicleFactory : public OpenSteer::TVehicleFactory<TNetCtfBaseVehicle>
+class NetCtfBaseEntityFactory : public OpenSteer::TEntityFactory<TNetCtfBaseVehicle>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<TNetCtfBaseVehicle> );
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetCtfBaseVehicle> );
 public:
-	NetCtfBaseVehicleFactory(){};
-	virtual ~NetCtfBaseVehicleFactory(){};
+	NetCtfBaseEntityFactory(){};
+	virtual ~NetCtfBaseEntityFactory(){};
 };
 
 //-----------------------------------------------------------------------------
-class NetCtfSeekerVehicleFactory : public OpenSteer::TVehicleFactory<TNetCtfSeekerVehicle>
+class NetCtfSeekerEntityFactory : public OpenSteer::TEntityFactory<TNetCtfSeekerVehicle>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<TNetCtfSeekerVehicle> );
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetCtfSeekerVehicle> );
 public:
-	NetCtfSeekerVehicleFactory(){};
-	virtual ~NetCtfSeekerVehicleFactory(){};
+	NetCtfSeekerEntityFactory(){};
+	virtual ~NetCtfSeekerEntityFactory(){};
 };
 
 //-----------------------------------------------------------------------------
-class NetCtfEnemyVehicleFactory : public OpenSteer::TVehicleFactory<TNetCtfEnemyVehicle>
+class NetCtfEnemyEntityFactory : public OpenSteer::TEntityFactory<TNetCtfEnemyVehicle>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<TNetCtfSeekerVehicle> );
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetCtfSeekerVehicle> );
 public:
-	NetCtfEnemyVehicleFactory(){};
-	virtual ~NetCtfEnemyVehicleFactory(){};
+	NetCtfEnemyEntityFactory(){};
+	virtual ~NetCtfEnemyEntityFactory(){};
 };
 
 
 //-----------------------------------------------------------------------------
-NetCtfVehicleFactory::NetCtfVehicleFactory()
+NetCtfEntityFactory::NetCtfEntityFactory()
 {
 	//-----------------------------------------------------------------------------
 	// now 3 global vehicle factories
-	static NetCtfBaseVehicleFactory gNetCtfBaseVehicleFactory;
-	static NetCtfSeekerVehicleFactory gNetCtfSeekerVehicleFactory;
-	static NetCtfEnemyVehicleFactory gNetCtfEnemyVehicleFactory;
-	this->addVehicleFactory( &gNetCtfBaseVehicleFactory );
-	this->addVehicleFactory( &gNetCtfSeekerVehicleFactory );
-	this->addVehicleFactory( &gNetCtfEnemyVehicleFactory );
+	static NetCtfBaseEntityFactory gNetCtfBaseEntityFactory;
+	static NetCtfSeekerEntityFactory gNetCtfSeekerEntityFactory;
+	static NetCtfEnemyEntityFactory gNetCtfEnemyEntityFactory;
+	this->addEntityFactory( &gNetCtfBaseEntityFactory );
+	this->addEntityFactory( &gNetCtfSeekerEntityFactory );
+	this->addEntityFactory( &gNetCtfEnemyEntityFactory );
 #ifdef _DEBUG
 	// test the 3 vehicle classes
 	OpenSteer::AbstractVehicle* pkVehicle = NULL;
@@ -81,7 +81,7 @@ NetCtfVehicleFactory::NetCtfVehicleFactory()
 }
 
 //-----------------------------------------------------------------------------
-NetCtfVehicleFactory::~NetCtfVehicleFactory()
+NetCtfEntityFactory::~NetCtfEntityFactory()
 {
 
 }

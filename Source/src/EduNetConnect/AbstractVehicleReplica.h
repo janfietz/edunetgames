@@ -34,12 +34,12 @@
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
-class AbstractVehicleReplica : public OSReplica< OpenSteer::AbstractVehicle >
+class AbstractEntityReplica : public OSReplica< OpenSteer::AbstractVehicle >
 {
 	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
 public:
-	AbstractVehicleReplica();
-	AbstractVehicleReplica( OpenSteer::AbstractPlugin* pPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject );
+	AbstractEntityReplica();
+	AbstractEntityReplica( OpenSteer::AbstractPlugin* pPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject );
 
 	//-------------------------------------------------------------------------
 	// replica interface
@@ -51,14 +51,14 @@ public:
 
 	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
 
-	static void setAbstractVehicleFactory( OpenSteer::AbstractVehicleFactory* pkFactory );
+	static void setAbstractEntityFactory( OpenSteer::AbstractEntityFactory* pkFactory );
 
 private:
 	OpenSteer::AbstractPlugin* m_pkHostPlugin;
-	static OpenSteer::AbstractVehicleFactory* ms_pkFactory;
+	static OpenSteer::AbstractEntityFactory* ms_pkFactory;
 	RakNet::RakString m_kClassName;
 
-	ET_IMPLEMENT_CLASS_NO_COPY( AbstractVehicleReplica );
+	ET_IMPLEMENT_CLASS_NO_COPY( AbstractEntityReplica );
 };
 
 

@@ -19,7 +19,7 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
 	pkBoid->setParentPlugin( &this->m_kGamePlugin );
 	this->m_pkBoidFactory->setMasterVehicle( pkBoid );
-	this->m_kGamePlugin.setVehicleFactory( this->m_pkBoidFactory );
+	this->m_kGamePlugin.setEntityFactory( this->m_pkBoidFactory );
 }
 
 //-----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ NetClientBoidPlugin::NetClientBoidPlugin(bool bAddToRegistry):
 	BaseClass(bAddToRegistry)
 {
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
-	this->m_kGamePlugin.setVehicleFactory( NULL  );
+	this->m_kGamePlugin.setEntityFactory( NULL  );
 }
 
 //-----------------------------------------------------------------------------

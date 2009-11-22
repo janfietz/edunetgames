@@ -63,7 +63,7 @@ BaseClass( bAddToRegistry ),
 pd(NULL),
 m_fLastRenderTime(0.0f)
 {
-	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
+	this->setEntityFactory( &this->m_kOfflinePedestrianFactory );
 }
 
 //-----------------------------------------------------------------------------
@@ -278,7 +278,7 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId ) const
 {
 	AbstractVehicle* pkVehicle = NULL;
-	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 	if( NULL != pkFactory )
 	{
 		pkVehicle = pkFactory->createVehicle( classId );
@@ -309,7 +309,7 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 			SimpleVehicle::selectedVehicle = NULL;
 
 		// delete the Pedestrian
-		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 		if( NULL != pkFactory )
 		{
 			pkFactory->destroyVehicle( pedestrian );

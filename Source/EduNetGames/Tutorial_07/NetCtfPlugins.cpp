@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetCtfPlugin.h"
-#include "NetCtfVehicleFactory.h"
+#include "NetCtfEntityFactory.h"
 
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
@@ -35,8 +35,8 @@
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
-#include "EduNetConnect/AbstractVehicleReplica.h"
-#include "EduNetConnect/AbstractVehicleReplicaConnection.h"
+#include "EduNetConnect/AbstractEntityReplica.h"
+#include "EduNetConnect/AbstractEntityReplicaConnection.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 
@@ -44,7 +44,7 @@
 // now the basic network plugins
 //-----------------------------------------------------------------------------
 // now 1 global vehicle factory
-NetCtfVehicleFactory gOnlineNetCtfVehicleFactory;
+NetCtfEntityFactory gOnlineNetCtfEntityFactory;
 
 typedef PeerPlugin<NetCtfPlugin> TCtfPeerPlugin;
 typedef ClientPlugin<NetCtfPlugin> TCtfClientPlugin;
@@ -62,10 +62,10 @@ public:
 
 		this->setLocalReplicaParamsFromManager( &this->m_kReplicaManager);
 
-		// attach vehicle factory
-		this->m_pkNetCtfFactory = new AbstractVehicleReplicaFactory( &this->m_kReplicaManager );
-		AbstractVehicleReplica::setAbstractVehicleFactory( &gOnlineNetCtfVehicleFactory );
-		this->m_kGamePlugin.setVehicleFactory( this->m_pkNetCtfFactory );
+		// remap the vehicle factory
+		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+		AbstractEntityReplica::setAbstractEntityFactory( &gOnlineNetCtfEntityFactory );
+		this->m_kGamePlugin.setEntityFactory( this->m_pkNetCtfFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( CtfPeerPlugin )
 		virtual const char* name() const { return this->getClassName(); };
@@ -129,8 +129,8 @@ private:
 	interval(30){}		
 	RakNetTime interval;
 	};
-	AbstractVehicleReplicaFactory* m_pkNetCtfFactory;
-	AbstractVehicleReplicaManager m_kReplicaManager;
+	AbstractEntityReplicaFactory* m_pkNetCtfFactory;
+	AbstractEntityReplicaManager m_kReplicaManager;
 
 	ReplicationParams m_kReplicationSettings;
 };
@@ -145,8 +145,8 @@ public:
 	BaseClass( bAddToRegistry )
 	{
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-		this->m_kGamePlugin.setVehicleFactory( NULL );
-		AbstractVehicleReplica::setAbstractVehicleFactory( &gOnlineNetCtfVehicleFactory );
+		this->m_kGamePlugin.setEntityFactory( NULL );
+		AbstractEntityReplica::setAbstractEntityFactory( &gOnlineNetCtfEntityFactory );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( CtfClientPlugin )
@@ -172,8 +172,8 @@ public:
 	}
 private:
 
-	AbstractVehicleReplicaFactory* m_pkBoidFactory;
-	AbstractVehicleReplicaManager m_kReplicaManager;
+	AbstractEntityReplicaFactory* m_pkBoidFactory;
+	AbstractEntityReplicaManager m_kReplicaManager;
 };
 
 //-----------------------------------------------------------------------------

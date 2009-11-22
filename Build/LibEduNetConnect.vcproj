@@ -220,27 +220,27 @@
 				Name="replication"
 				>
 				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractEntityReplica.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractEntityReplica.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractEntityReplicaConnection.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\AbstractEntityReplicaConnection.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\EduNetConnect\AbstractReplica.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Source\src\EduNetConnect\AbstractReplica.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplica.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplica.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplicaConnection.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractVehicleReplicaConnection.h"
 					>
 				</File>
 				<File

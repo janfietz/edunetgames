@@ -59,7 +59,7 @@ public:
 
 		// attach vehicle factory
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
-		this->m_kGamePlugin.setVehicleFactory( this->m_pkNetPedestrianFactory );
+		this->m_kGamePlugin.setEntityFactory( this->m_pkNetPedestrianFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
 		virtual const char* name() const { return this->getClassName(); };
@@ -138,7 +138,7 @@ public:
 	BaseClass( bAddToRegistry )
 	{
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-		this->m_kGamePlugin.setVehicleFactory( NULL );
+		this->m_kGamePlugin.setEntityFactory( NULL );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianClientPlugin )

@@ -1,5 +1,5 @@
-#ifndef __NETCTFVEHICLEFACTORY_H__
-#define __NETCTFVEHICLEFACTORY_H__
+#ifndef __NETCTFENTITYFACTORY_H__
+#define __NETCTFENTITYFACTORY_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,15 +29,15 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteerUT/AbstractVehicleFactory.h"
+#include "OpenSteerUT/AbstractEntityFactory.h"
 
 //-----------------------------------------------------------------------------
-class NetCtfVehicleFactory : public OpenSteer::VehicleFactoryArray
+class NetCtfEntityFactory : public OpenSteer::EntityFactoryArray
 {
-	ET_DECLARE_BASE( OpenSteer::VehicleFactoryArray );
+	ET_DECLARE_BASE( OpenSteer::EntityFactoryArray );
 public:
-	NetCtfVehicleFactory();
-	virtual ~NetCtfVehicleFactory();
+	NetCtfEntityFactory();
+	virtual ~NetCtfEntityFactory();
 };
 
-#endif // __NETCTFVEHICLEFACTORY_H__
+#endif // __NETCTFENTITYFACTORY_H__

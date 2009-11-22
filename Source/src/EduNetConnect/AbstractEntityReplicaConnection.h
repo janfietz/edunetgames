@@ -1,5 +1,5 @@
-#ifndef __ABSTRACTVEHICLEREPLICACONNECTION_H__
-#define __ABSTRACTVEHICLEREPLICACONNECTION_H__
+#ifndef __ABSTRACTENTITYREPLICACONNECTION_H__
+#define __ABSTRACTENTITYREPLICACONNECTION_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -86,4 +86,4 @@ private:
 };
 
 
-#endif // __ABSTRACTVEHICLEREPLICACONNECTION_H__
+#endif // __ABSTRACTENTITYREPLICACONNECTION_H__

@@ -28,7 +28,7 @@
 
 #include "NetCtfPlugin.h"
 #include "NetCtfVehicles.h"
-#include "NetCtfVehicleFactory.h"
+#include "NetCtfEntityFactory.h"
 #include "NetCtfGameLogic.h"
 
 #include "EduNetCommon/EduNetDraw.h"
@@ -54,19 +54,19 @@ namespace	{
 
 //-----------------------------------------------------------------------------
 // now 1 global vehicle factory
-NetCtfVehicleFactory gOfflineNetCtfVehicleFactory;
+NetCtfEntityFactory gOfflineNetCtfEntityFactory;
 
 //-----------------------------------------------------------------------------
 NetCtfPlugin::NetCtfPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry ),resetCount(0),m_pkSeeker(NULL)
 {
-	this->setVehicleFactory( &gOfflineNetCtfVehicleFactory );
+	this->setEntityFactory( &gOfflineNetCtfEntityFactory );
 }
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId) const
 {
 	AbstractVehicle* pkVehicle = NULL;
-	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 	if( NULL != pkFactory )
 	{
 		pkVehicle = pkFactory->createVehicle( classId );
@@ -219,7 +219,7 @@ void NetCtfPlugin::close (void)
 		}
 
 		// delete the Pedestrian
-		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 		if( NULL != pkFactory )
 		{
 			pkFactory->destroyVehicle( pkVehicle );
