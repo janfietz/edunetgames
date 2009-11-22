@@ -76,7 +76,7 @@ public:
 	NetPedestrianReplicaFactory(NetPedestrianReplicaManager* pkManager):
 	  m_pkReplicaManager(pkManager){}
 	  
-	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const;
+	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId ) const;
 	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 private:

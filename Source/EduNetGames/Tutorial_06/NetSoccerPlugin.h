@@ -73,8 +73,7 @@ public:
     }
 
     // implement to create a vehicle of the specified class
-    virtual osAbstractVehicle* createVehicle ( osEntityClassId,
-                                               osProximityDatabase* ) const;
+    virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;
     virtual void addVehicle ( osAbstractVehicle* pkVehicle ){};
 
     //-------------------------------------------------------------------------

@@ -63,7 +63,7 @@ public:
 	virtual void reset( void );
 	virtual void allocateProximityToken( ProximityDatabase* pd );
 
-	virtual void addVehicle( AbstractVehicle* pkVehicle );
+	virtual void addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase = NULL );
  	virtual void removeVehicle( const AbstractVehicle* pkVehicle );
  	virtual AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
 

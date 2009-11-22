@@ -99,10 +99,9 @@ namespace OpenSteer
 
 		// important implement new clone functionality
 		//-------------------------------------------------------------------------
-		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+		virtual OpenSteer::AbstractVehicle* cloneVehicle( void ) const
 		{
 			OpenSteer::AbstractVehicle* pkVehicle = ET_NEW VehicleClassIdMixin();
-			pkVehicle->allocateProximityToken( pkProximityDatabase );
 			return pkVehicle;
 		}
 

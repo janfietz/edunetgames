@@ -81,7 +81,7 @@ RakNet::Replica3* AbstractVehicleReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* AbstractVehicleReplicaFactory::createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* AbstractVehicleReplicaFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
 	AbstractVehicleReplica* pkNewReplica = new AbstractVehicleReplica( this->m_pkReplicaManager->getPlugin(), classId, false );	
 	if( NULL != pkNewReplica )

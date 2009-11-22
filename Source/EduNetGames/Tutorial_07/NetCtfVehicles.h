@@ -57,7 +57,7 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetCtfBaseVehicle )
 
 	// create a clone
-	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+	virtual AbstractVehicle* cloneVehicle( void ) const;
 
 	// reset state
 	virtual void reset( void );
@@ -106,7 +106,7 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetCtfSeekerVehicle )
 
 	// create a clone
-	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+	virtual AbstractVehicle* cloneVehicle( void ) const;
 
 	// reset state
 	virtual void reset( void );
@@ -159,7 +159,7 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetCtfEnemyVehicle )
 
 	// create a clone
-	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+	virtual AbstractVehicle* cloneVehicle( void ) const;
 	
 	// reset state
 	virtual void reset( void );

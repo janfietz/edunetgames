@@ -94,8 +94,7 @@ void NetSoccerBall::draw ( const float currentTime,
     drawTrail ();
 }
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetSoccerBall::cloneVehicle (
-    OpenSteer::ProximityDatabase* ) const
+AbstractVehicle* NetSoccerBall::cloneVehicle ( void ) const
 {
     return ET_NEW NetSoccerBall();
 }

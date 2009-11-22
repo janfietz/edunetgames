@@ -194,8 +194,7 @@ void NetSoccerPlugin::reset ( void )
 }
 
 //-----------------------------------------------------------------------------
-osAbstractVehicle* NetSoccerPlugin::createVehicle ( osEntityClassId,
-        osProximityDatabase* ) const
+osAbstractVehicle* NetSoccerPlugin::createVehicle ( osEntityClassId ) const
 {
     return NULL;
 }

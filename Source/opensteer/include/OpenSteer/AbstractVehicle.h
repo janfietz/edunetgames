@@ -117,7 +117,7 @@ namespace OpenSteer {
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
                                              const float deltaTime) = 0;
 
-		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const = 0;
+		virtual AbstractVehicle* cloneVehicle( void ) const = 0;
 
 		virtual const Vec3& lastSteeringForce( void ) const = 0;
 		virtual void setLastSteeringForce( const Vec3& ) = 0;

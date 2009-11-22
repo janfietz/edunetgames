@@ -143,7 +143,7 @@ namespace OpenSteer {
 		virtual AbstractEntity* createEntity( EntityClassId ) const = 0;
 
 		//! implement to create a vehicle of the specified class
-		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const = 0;
+		virtual AbstractVehicle* createVehicle( EntityClassId ) const = 0;
 
 		//! format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
@@ -220,7 +220,7 @@ namespace OpenSteer {
 		virtual AbstractEntity* createEntity( EntityClassId classId ) const;
 
 		//! implement to create a vehicle of the specified class
-		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
+		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
         
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)

@@ -64,6 +64,15 @@
 // namespaces to search to find names.
 using namespace OpenSteer;
 
+namespace
+{
+#ifdef _DEBUG
+	size_t uiInitialFlockSize = 10;
+#else
+	size_t uiInitialFlockSize = 50;
+#endif
+}
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void BoidsPlugin::open (void)
@@ -73,8 +82,12 @@ void BoidsPlugin::open (void)
 	this->pd = NULL;
     nextPD ();
 
-    // make default-sized flock
-    for (int i = 0; i < 100; i++) addBoidToFlock ();
+	if( false == this->isRemoteObject() )
+	{
+		// make default-sized flock
+		for (size_t i = 0; i < uiInitialFlockSize; i++) 
+			addBoidToFlock ();
+	}
 
     // initialize camera
     CameraPlugin::init3dCamera( *SimpleVehicle::selectedVehicle );
@@ -316,9 +329,9 @@ void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
 //-----------------------------------------------------------------------------
 void BoidsPlugin::addBoidToFlock (void)
 {    
-	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETBOID, pd );
+	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETBOID );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle );
+	kVG.addVehicle( pkVehicle, pd );
 }
 
 
@@ -348,13 +361,13 @@ void BoidsPlugin::removeBoidFromFlock (void)
 
 //-----------------------------------------------------------------------------
 AbstractVehicle* BoidsPlugin::createVehicle( 
-	EntityClassId classId, ProximityDatabase* pd ) const
+	EntityClassId classId ) const
 {
 	AbstractVehicle* pkVehicle = NULL;
 	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
 	if( NULL != pkFactory )
 	{
-		pkVehicle = pkFactory->createVehicle( classId, pd );
+		pkVehicle = pkFactory->createVehicle( classId );
 	}	
 	return pkVehicle;
 }

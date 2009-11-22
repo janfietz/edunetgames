@@ -535,7 +535,7 @@ namespace {
         {
             population++;
             Boid* boid = new Boid();
-			boid->allocateProximityToken(pd);
+			boid->allocateProximityToken( pd );
             flock.push_back (boid);
             if (population == 1) SimpleVehicle::selectedVehicle = boid;
         }

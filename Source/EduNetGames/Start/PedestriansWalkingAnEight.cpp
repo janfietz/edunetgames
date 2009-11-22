@@ -611,7 +611,7 @@ public:
     {
         population++;
         Pedestrian* pedestrian = new Pedestrian();
-		pedestrian->allocateProximityToken(pd);
+		pedestrian->allocateProximityToken( pd );
         crowd.push_back (pedestrian);
         if (population == 1) SimpleVehicle::selectedVehicle = pedestrian;
     }

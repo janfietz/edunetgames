@@ -43,8 +43,7 @@ namespace OpenSteer{
 			const float /* elapsedTime */);
 		void annotateAvoidObstacle (const float minDistanceToCollision);
 
-		virtual AbstractVehicle* cloneVehicle( 
-			ProximityDatabase* ) const;
+		virtual AbstractVehicle* cloneVehicle( void ) const;
 
 	
 

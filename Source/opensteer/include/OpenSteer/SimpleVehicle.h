@@ -229,7 +229,7 @@ namespace OpenSteer {
 		//! CP ++
 		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
 		virtual void allocateProximityToken( ProximityDatabase* pkProximityDatabase );
-		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const { return NULL; };
+		virtual AbstractVehicle* cloneVehicle( void ) const { return NULL; };
 
 		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
 		virtual void setLastSteeringForce( const Vec3& force ) { _lastSteeringForce = force; };

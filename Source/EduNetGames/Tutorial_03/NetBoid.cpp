@@ -240,12 +240,9 @@ const ObstacleGroup& Boid::obstacles(void) const { return m_pkParentPlugin->obst
 ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* Boid::cloneVehicle(
-	ProximityDatabase* pkProximityDatabase ) const
+AbstractVehicle* Boid::cloneVehicle( void ) const
 {
 	Boid* pkVehicle = ET_NEW Boid();
-	pkVehicle->allocateProximityToken( pkProximityDatabase );
 	pkVehicle->setParentPlugin( this->m_pkParentPlugin );
-
-	 return pkVehicle;
+	return pkVehicle;
 }

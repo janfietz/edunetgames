@@ -61,7 +61,6 @@ float NetPedestrianPlugin::selectionOrderSortKey (void) const
 NetPedestrianPlugin::NetPedestrianPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry ),
 pd(NULL),
-m_bCreatesVehicles(false),
 m_fLastRenderTime(0.0f)
 {
 	this->setVehicleFactory( &this->m_kOfflinePedestrianFactory );
@@ -175,7 +174,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	const float h = drawGetWindowHeight ();
 	osVector3 screenLocation (10, h - 50, 0);
 	Color kColor = gGray80;
-	if( this->m_bCreatesVehicles )
+	if( false == this->isRemoteObject() )
 	{
 		status << "[F1/F2] Crowd size: " << kVG.population();
 		status << "\n[F3] PD type: ";
@@ -276,13 +275,13 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, ProximityDatabase* pd ) const
+AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId ) const
 {
 	AbstractVehicle* pkVehicle = NULL;
 	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
 	if( NULL != pkFactory )
 	{
-		pkVehicle = pkFactory->createVehicle( classId, pd );
+		pkVehicle = pkFactory->createVehicle( classId );
 	}
 	return pkVehicle;
 }
@@ -290,9 +289,9 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId, Prox
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
-	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, pd );
+	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle );
+	kVG.addVehicle( pkVehicle, pd );
 }
 
 //-----------------------------------------------------------------------------
@@ -382,13 +381,8 @@ void removePedestrian(GLUI_Control* pkControl )
 // implement to initialize additional gui functionality
 void NetPedestrianPlugin::initGui( void* pkUserdata ) 
 {
-	// test if a vehicle can be created
-	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN, NULL );
-	if( NULL != pkVehicle )
-	{
-		ET_SAFE_DELETE( pkVehicle );
-		
-		this->m_bCreatesVehicles = true;
+	if( false == this->isRemoteObject() )
+	{		
 
 		GLUI* glui = ::getRootGLUI();
 		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

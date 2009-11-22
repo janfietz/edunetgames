@@ -85,7 +85,7 @@ OpenSteer::Plugin::createEntity( EntityClassId classId ) const
 	OpenSteer::AbstractEntity* pkEntity = Plugin::createSystemEntity( classId );
 	if( NULL == pkEntity )
 	{
-		pkEntity = this->createVehicle( classId, NULL );
+		pkEntity = this->createVehicle( classId );
 	}
 	return pkEntity;
 }

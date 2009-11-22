@@ -98,7 +98,7 @@ namespace OpenSteer
 		}
 
 		// implement to create a vehicle of the specified class
-		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };
+		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
 
 		// set an external vehicle factory
 		virtual void setVehicleFactory( AbstractVehicleFactory* ){};

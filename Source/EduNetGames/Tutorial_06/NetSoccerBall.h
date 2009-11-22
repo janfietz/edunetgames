@@ -83,8 +83,7 @@ public:
     virtual ~NetSoccerBall();
 
     // create a clone
-    virtual AbstractVehicle* cloneVehicle (
-        OpenSteer::ProximityDatabase* ) const;
+    virtual AbstractVehicle* cloneVehicle ( void ) const;
     // reset state
     virtual void reset ( void );
 
