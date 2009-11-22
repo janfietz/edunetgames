@@ -82,7 +82,7 @@ typedef void (*on_plugin_selected_func)( void );
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	class AbstractVehicleFactory;
+	class AbstractEntityFactory;
 
 	//-------------------------------------------------------------------------
     class AbstractPlugin
@@ -135,9 +135,9 @@ namespace OpenSteer {
 		virtual void initGui( void* /*pkUserdata*/ ) = 0;
 
 		//! set an external vehicle factory
-		virtual void setVehicleFactory( AbstractVehicleFactory* ) = 0;
+		virtual void setEntityFactory( AbstractEntityFactory* ) = 0;
 
-		virtual AbstractVehicleFactory* getVehicleFactory( void ) const = 0;
+		virtual AbstractEntityFactory* getEntityFactory( void ) const = 0;
 
 		//! implement to create a vehicle of the specified class
 		virtual AbstractEntity* createEntity( EntityClassId ) const = 0;
@@ -213,9 +213,9 @@ namespace OpenSteer {
 		virtual void initGui( void* /*pkUserdata*/ ) {};
 
 		//! set an external vehicle factory
-		virtual void setVehicleFactory( AbstractVehicleFactory* pkVehicleFactory ) { this->m_pkVehicleFactory = pkVehicleFactory; }
+		virtual void setEntityFactory( AbstractEntityFactory* pkEntityFactory ) { this->m_pkEntityFactory = pkEntityFactory; }
 
-		virtual AbstractVehicleFactory* getVehicleFactory( void ) const { return this->m_pkVehicleFactory; };
+		virtual AbstractEntityFactory* getEntityFactory( void ) const { return this->m_pkEntityFactory; };
 
 		virtual AbstractEntity* createEntity( EntityClassId classId ) const;
 
@@ -284,7 +284,7 @@ namespace OpenSteer {
 
 		static on_plugin_selected_func ms_on_plugin_selected_func;
 	protected:
-		AbstractVehicleFactory* m_pkVehicleFactory;
+		AbstractEntityFactory* m_pkEntityFactory;
 
     private:
 

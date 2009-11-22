@@ -272,14 +272,6 @@
 				Name="vehicles"
 				>
 				<File
-					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleFactory.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractVehicleGroup.cpp"
 					>
 				</File>
@@ -341,6 +333,18 @@
 				</File>
 				<File
 					RelativePath="..\Source\src\OpenSteerUT\LocalPlayer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="entities"
+				>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractEntityFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractEntityFactory.h"
 					>
 				</File>
 			</Filter>

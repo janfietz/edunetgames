@@ -1,5 +1,5 @@
-#ifndef __OPENSTEERUTTYPES_H__
-#define __OPENSTEERUTTYPES_H__
+#ifndef __ABSTRACTENTITYREPLICA_H__
+#define __ABSTRACTENTITYREPLICA_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -28,56 +28,38 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetMacros.h"
 
-#include "OpenSteer/OpenSteerTypes.h"
-#include "OpenSteer/Proximity.h"
-#include "OpenSteer/AbstractVehicle.h"
+#include "EduNetConnect/OSReplicaTypes.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer{
-
-	// Include names declared in the OpenSteer namespace into the
-	// namespace to search to find names.
-	using namespace OpenSteer;
-
-	//-------------------------------------------------------------------------
-//	class AbstractVehicle;
-	class AbstractPlugin;
-	class AbstractPlayer;
-	class AbstractController;
-
-	class Color;
-
-	typedef uint64_t NetworkId; 
-	typedef uint64_t EntityClassId;
+class AbstractEntityReplica : public OSReplica< OpenSteer::AbstractVehicle >
+{
+	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractVehicle > )
+public:
+	AbstractEntityReplica();
+	AbstractEntityReplica( OpenSteer::AbstractPlugin* pPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject );
 
 	//-------------------------------------------------------------------------
-	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
-	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
+	// replica interface
+	virtual RakNet::RakString GetName(void) const;
+
+	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
+
+	virtual RakNet::RM3SerializationResult Serialize( RakNet::SerializeParameters *serializeParameters );
+
+	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
+
+	static void setAbstractEntityFactory( OpenSteer::AbstractEntityFactory* pkFactory );
+
+private:
+	OpenSteer::AbstractPlugin* m_pkHostPlugin;
+	static OpenSteer::AbstractEntityFactory* ms_pkFactory;
+	RakNet::RakString m_kClassName;
+
+	ET_IMPLEMENT_CLASS_NO_COPY( AbstractEntityReplica );
+};
 
 
-	class PolylineSegmentedPathwaySingleRadius;
-
-	float drawGetWindowHeight(void);
-	float drawGetWindowWidth(void);
-
-	//-------------------------------------------------------------------------
-	// OpenSteerUT types
-	class AbstractEntityFactory;
-
-
-}
-
-typedef OpenSteer::Vec3 osVector3;
-typedef OpenSteer::AbstractVehicle osAbstractVehicle;
-typedef OpenSteer::AVGroup osAVGroup;
-typedef OpenSteer::AVGroup::iterator osAVIterator;
-typedef OpenSteer::AVGroup::const_iterator osAVCIterator;
-typedef OpenSteer::ProximityDatabase osProximityDatabase;
-typedef OpenSteer::ProximityToken osProximityToken;
-typedef OpenSteer::Color osColor;
-
-typedef OpenSteer::EntityClassId osEntityClassId;
-
-#endif //  __OPENSTEERUTTYPES_H__
+#endif //  __ABSTRACTENTITYREPLICA_H__

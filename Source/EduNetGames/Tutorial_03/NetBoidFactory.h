@@ -30,13 +30,13 @@
 //-----------------------------------------------------------------------------
 
 #include "NetBoid.h"
-#include "OpenSteerUT/AbstractVehicleFactory.h"
+#include "OpenSteerUT/AbstractEntityFactory.h"
 
 
 //-----------------------------------------------------------------------------
-class NetBoidFactory : public OpenSteer::TVehicleFactory<OpenSteer::TNetBoid>
+class NetBoidFactory : public OpenSteer::TEntityFactory<OpenSteer::TNetBoid>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<OpenSteer::TNetBoid> );
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<OpenSteer::TNetBoid> );
 public:
 	NetBoidFactory();
 	virtual ~NetBoidFactory();

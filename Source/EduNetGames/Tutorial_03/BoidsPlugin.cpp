@@ -142,7 +142,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 	Vec3 screenLocation (10, h-50, 0);
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	Color kColor = gGray80;
-	if (NULL != this->getVehicleFactory())
+	if (NULL != this->getEntityFactory())
 	{
 		// display status in the upper left corner of the window		
 		status << "[F1/F2] " << kVG.population() << " boids";
@@ -350,7 +350,7 @@ void BoidsPlugin::removeBoidFromFlock (void)
 			SimpleVehicle::selectedVehicle = NULL;
 
 		// delete the Pedestrian
-		const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 		if( NULL != pkFactory )
 		{
 			pkFactory->destroyVehicle( boid );
@@ -364,7 +364,7 @@ AbstractVehicle* BoidsPlugin::createVehicle(
 	EntityClassId classId ) const
 {
 	AbstractVehicle* pkVehicle = NULL;
-	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
+	const AbstractEntityFactory* pkFactory = this->getEntityFactory();
 	if( NULL != pkFactory )
 	{
 		pkVehicle = pkFactory->createVehicle( classId );

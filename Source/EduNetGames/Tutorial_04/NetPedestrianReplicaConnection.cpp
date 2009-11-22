@@ -45,7 +45,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 	OpenSteer::AbstractPlugin* pkPlugin = this->getPlugin();
 	if( NULL != pkPlugin )
 	{
-// 		OpenSteer::AbstractVehicle* pkMaster = pkPlugin->getVehicleFactory()->accessMasterVehicle(0);
+// 		OpenSteer::AbstractVehicle* pkMaster = pkPlugin->getEntityFactory()->accessMasterVehicle(0);
 // 		RakNet::RakString kMasterName = pkMaster->getClassName();
 //		if ( typeName == kMasterName )
 		static NetPedestrianReplica kReplica;

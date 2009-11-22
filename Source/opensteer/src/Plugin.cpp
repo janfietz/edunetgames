@@ -59,7 +59,7 @@ on_plugin_selected_func OpenSteer::Plugin::ms_on_plugin_selected_func = NULL;
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 	m_pkParentPlugin( NULL ),
-	m_pkVehicleFactory( NULL )
+	m_pkEntityFactory( NULL )
 {
     // save this new instance in the registry
 	if( true == bAddToRegistry )

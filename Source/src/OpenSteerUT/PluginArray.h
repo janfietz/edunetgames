@@ -101,9 +101,9 @@ namespace OpenSteer
 		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
 
 		// set an external vehicle factory
-		virtual void setVehicleFactory( AbstractVehicleFactory* ){};
+		virtual void setEntityFactory( AbstractEntityFactory* ){};
 
-		virtual AbstractVehicleFactory* getVehicleFactory( void ) const {return NULL;};
+		virtual AbstractEntityFactory* getEntityFactory( void ) const {return NULL;};
 
 	private:
 		AVGroup m_kVehicles;

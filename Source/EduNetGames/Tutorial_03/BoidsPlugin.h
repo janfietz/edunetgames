@@ -37,7 +37,7 @@ namespace OpenSteer{
 		BaseClass(bAddToRegistry)
 		{
 			pd = NULL;
-			this->setVehicleFactory( &this->m_kOfflineBoidFactory );
+			this->setEntityFactory( &this->m_kOfflineBoidFactory );
 		};
 		virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
 		

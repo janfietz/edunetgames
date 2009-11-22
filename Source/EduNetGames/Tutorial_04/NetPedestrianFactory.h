@@ -31,14 +31,14 @@
 
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteerUT/AbstractVehicleFactory.h"
+#include "OpenSteerUT/AbstractEntityFactory.h"
 #include "NetPedestrian.h"
 
 
 //-----------------------------------------------------------------------------
-class NetPedestrianFactory : public OpenSteer::TVehicleFactory<TNetPedestrian>
+class NetPedestrianFactory : public OpenSteer::TEntityFactory<TNetPedestrian>
 {
-	ET_DECLARE_BASE( OpenSteer::TVehicleFactory<TNetPedestrian> );
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetPedestrian> );
 public:
 	NetPedestrianFactory();
 	virtual ~NetPedestrianFactory();
