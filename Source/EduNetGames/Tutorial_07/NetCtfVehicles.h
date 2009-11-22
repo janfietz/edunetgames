@@ -71,7 +71,6 @@ public:
 
 	void drawHomeBase( void );
 
-	void randomizeStartingPositionAndHeading ( void );
 	enum seekerState {running, tagged, atGoal};
 
 	// for draw method
@@ -80,14 +79,8 @@ public:
 	// xxx store steer sub-state for anotation
 	bool avoiding;
 
-	// dynamic obstacle registry
-	static void initializeObstacles( void );
-	static void addOneObstacle( void );
-	static void removeOneObstacle( void );
-	float minDistanceToObstacle( const osVector3& point );
-	static int obstacleCount;
-	static const int maxObstacleCount;
-	static OpenSteer::SOG allObstacles;
+	const OpenSteer::ObstacleGroup* m_pkObstacles;
+
 private:
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfBaseVehicle )
 

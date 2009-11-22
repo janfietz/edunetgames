@@ -79,6 +79,7 @@ namespace OpenSteer
 		virtual void printMiniHelpForFunctionKeys(void) const; 
 		virtual ProximityDatabase* accessProximityDataBase( void ) const {return NULL;};
 		virtual const AVGroup& allVehicles(void) const;
+		virtual AVGroup& allVehicles(void);
 
 		virtual AbstractPlugin* next(void) const;
 
@@ -105,7 +106,10 @@ namespace OpenSteer
 
 		virtual AbstractEntityFactory* getEntityFactory( void ) const {return NULL;};
 
+		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
+		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
 	private:
+		ObstacleGroup m_kAllObstacles;
 		AVGroup m_kVehicles;
 		AbstractPlugin* m_pkParentPlugin;
 

@@ -71,6 +71,10 @@ public:
     {
         return ( const osAVGroup& ) all;
     }
+	virtual osAVGroup& allVehicles ( void )
+	{
+		return ( osAVGroup& ) all;
+	}
 
     // implement to create a vehicle of the specified class
     virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;

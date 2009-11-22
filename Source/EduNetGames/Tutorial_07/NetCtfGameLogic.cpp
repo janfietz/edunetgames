@@ -46,6 +46,17 @@ NetCtfGameLogic::~NetCtfGameLogic()
 
 }
 
+
+#if ET_ACTIVE_CTF_HACK
+const float resetDelay = 4;
+const float resetTime = lastRunningTime + resetDelay;
+if( currentTime > resetTime ) 
+{
+	// xxx a royal hack(should do this internal to CTF):
+	OpenSteerDemo::queueDelayedResetPluginXXX();
+}
+#endif
+
 //-----------------------------------------------------------------------------
 void NetCtfGameLogic::update( const float currentTime, const float elapsedTime )
 {

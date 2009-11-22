@@ -135,7 +135,8 @@ namespace EduNet{
 			kVehicles.reset( );
 		}
 
-		const AVGroup& allVehicles (void) const {return (const AVGroup&) m_kVehicles;}
+		const AVGroup& allVehicles (void) const {return m_kVehicles;}
+		AVGroup& allVehicles (void) {return m_kVehicles;}
 
 		void initGui( void* pkUserdata );
 

@@ -42,6 +42,12 @@ public:
 		return "BoidCondition";
 	};
 
+	virtual OpenSteer::EntityClassId getClassId( void ) const
+	{
+		return OS_CID_UNKNOWN;
+	}
+
+
 	NetBoidConditionReplica(OpenSteer::BoidsPlugin* pBoidPlugin = NULL):
 		m_pBoidPlugin(pBoidPlugin){}
 

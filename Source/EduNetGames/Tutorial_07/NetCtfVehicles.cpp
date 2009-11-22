@@ -41,9 +41,6 @@ namespace	{
 	// globals
 	//(perhaps these should be member variables of a Vehicle or Plugin class)
 
-	const float gMinStartRadius = 30;
-	const float gMaxStartRadius = 40;
-
 	const float gBrakingRate = 0.75;
 
 	const Color evadeColor    (0.6f, 0.6f, 0.3f); // annotation
@@ -55,13 +52,12 @@ namespace	{
 	float gAvoidancePredictTime = gAvoidancePredictTimeMin;
 }
 
-const int NetCtfBaseVehicle::maxObstacleCount = 100;
 
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle()
+NetCtfBaseVehicle::NetCtfBaseVehicle():m_pkObstacles(NULL)
 {
 	reset();
 }
@@ -97,8 +93,6 @@ void NetCtfBaseVehicle::reset( void )
 	setMaxSpeed(3.0);        // velocity is clipped to this magnitude
 
 	avoiding = false;         // not actively avoiding
-
-	randomizeStartingPositionAndHeading();  // new starting position
 }
 
 //-----------------------------------------------------------------------------
@@ -115,117 +109,6 @@ void NetCtfBaseVehicle::draw( const float currentTime, const float elapsedTime )
 void  NetCtfBaseVehicle::update( const float currentTime, const float elapsedTime )
 {
 	BaseClass::update( currentTime,  elapsedTime );
-}
-
-//-----------------------------------------------------------------------------
-void NetCtfBaseVehicle::randomizeStartingPositionAndHeading( void )
-{
-	// randomize position on a ring between inner and outer radii
-	// centered around the home base
-	const float rRadius = frandom2(gMinStartRadius, gMaxStartRadius);
-	const Vec3 randomOnRing = RandomUnitVectorOnXZPlane() * rRadius;
-	setPosition(NetCtfGameLogic::ms_kHomeBaseCenter + randomOnRing);
-
-	// are we are too close to an obstacle?
-	if(minDistanceToObstacle(position()) < radius()*5)
-	{
-		// if so, retry the randomization(this recursive call may not return
-		// if there is too little free space)
-		randomizeStartingPositionAndHeading();
-	}
-	else
-	{
-		// otherwise, if the position is OK, randomize 2D heading
-		randomizeHeadingOnXZPlane();
-	}
-}
-
-//-----------------------------------------------------------------------------
-// dynamic obstacle registry
-//
-// xxx need to combine guts of addOneObstacle and minDistanceToObstacle,
-// xxx perhaps by having the former call the latter, or change the latter to
-// xxx be "nearestObstacle": give it a position, it finds the nearest obstacle
-// xxx(but remember: obstacles a not necessarilty spheres!)
-
-
-int NetCtfBaseVehicle::obstacleCount = -1; // this value means "uninitialized"
-SOG NetCtfBaseVehicle::allObstacles;
-
-
-#define testOneObstacleOverlap(radius, center)               \
-{                                                            \
-	float d = Vec3::distance(c, center);                    \
-	float clearance = d -(r +(radius));                    \
-	if(minClearance > clearance) minClearance = clearance;  \
-}
-
-
-//-----------------------------------------------------------------------------
-void NetCtfBaseVehicle::initializeObstacles( void )
-{
-	// start with 40% of possible obstacles
-	if(obstacleCount == -1)
-	{
-		obstacleCount = 0;
-		for(int i = 0; i <(maxObstacleCount * 0.4); i++) addOneObstacle();
-	}
-}
-
-//-----------------------------------------------------------------------------
-void NetCtfBaseVehicle::addOneObstacle( void )
-{
-	if(obstacleCount < maxObstacleCount)
-	{
-		// pick a random center and radius,
-		// loop until no overlap with other obstacles and the home base
-		float r;
-		Vec3 c;
-		float minClearance;
-		const float requiredClearance = gNetCtfSeekerVehicle.radius() * 4; // 2 x diameter
-		do
-		{
-			r = frandom2(1.5, 4);
-			c = randomVectorOnUnitRadiusXZDisk() * gMaxStartRadius * 1.1f;
-			minClearance = FLT_MAX;
-
-			for(SOI so = allObstacles.begin(); so != allObstacles.end(); so++)
-			{
-				testOneObstacleOverlap((**so).radius,(**so).center);
-			}
-
-			testOneObstacleOverlap(NetCtfGameLogic::ms_fHomeBaseRadius - requiredClearance,
-				NetCtfGameLogic::ms_kHomeBaseCenter);
-		}
-		while(minClearance < requiredClearance);
-
-		// add new non-overlapping obstacle to registry
-		allObstacles.push_back(new SphereObstacle(r, c));
-		obstacleCount++;
-	}
-}
-
-//-----------------------------------------------------------------------------
-float NetCtfBaseVehicle::minDistanceToObstacle(const Vec3& point)
-{
-	float r = 0;
-	Vec3 c = point;
-	float minClearance = FLT_MAX;
-	for(SOI so = allObstacles.begin(); so != allObstacles.end(); so++)
-	{
-		testOneObstacleOverlap((**so).radius,(**so).center);
-	}
-	return minClearance;
-}
-
-//-----------------------------------------------------------------------------
-void NetCtfBaseVehicle::removeOneObstacle( void )
-{
-	if(obstacleCount > 0)
-	{
-		obstacleCount--;
-		allObstacles.pop_back();
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -445,7 +328,7 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 	adjustObstacleAvoidanceLookAhead(clearPath);
 	const Vec3 obstacleAvoidance =
 		steerToAvoidObstacles(gAvoidancePredictTime,
-		(ObstacleGroup&) allObstacles);
+		*this->m_pkObstacles);
 
 	// saved for annotation
 	avoiding =(obstacleAvoidance != Vec3::zero);
@@ -539,15 +422,6 @@ void NetCtfSeekerVehicle::updateState(const float currentTime)
 	}
 	else
 	{
-#if ET_ACTIVE_CTF_HACK
-		const float resetDelay = 4;
-		const float resetTime = lastRunningTime + resetDelay;
-		if( currentTime > resetTime ) 
-		{
-			// xxx a royal hack(should do this internal to CTF):
-			OpenSteerDemo::queueDelayedResetPluginXXX();
-		}
-#endif
 	}
 }
 
@@ -688,7 +562,7 @@ osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime
 		{
 			const Vec3 avoidance =
 				steerToAvoidObstacles(gAvoidancePredictTimeMin,
-				(ObstacleGroup&) allObstacles);
+				*this->m_pkObstacles);
 
 			// saved for annotation
 			avoiding =(avoidance == Vec3::zero);

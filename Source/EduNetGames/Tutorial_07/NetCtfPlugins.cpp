@@ -41,13 +41,15 @@
 #include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
-// now the basic network plugins
+// network plugins
 //-----------------------------------------------------------------------------
-// now 1 global vehicle factory
-NetCtfEntityFactory gOnlineNetCtfEntityFactory;
 
 typedef PeerPlugin<NetCtfPlugin> TCtfPeerPlugin;
 typedef ClientPlugin<NetCtfPlugin> TCtfClientPlugin;
+
+//-----------------------------------------------------------------------------
+// peer plugin
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 class CtfPeerPlugin : public TCtfPeerPlugin
@@ -134,6 +136,9 @@ private:
 	ReplicationParams m_kReplicationSettings;
 };
 
+//-----------------------------------------------------------------------------
+// client plugin
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 class CtfClientPlugin : public TCtfClientPlugin

@@ -60,14 +60,22 @@ public:
 
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
-	virtual const osAVGroup& allVehicles (void) const {return (const osAVGroup&) all;}
+	virtual const osAVGroup& allVehicles (void) const {return all;}
+	virtual osAVGroup& allVehicles (void) {return all;}
+
+	void NetCtfPlugin::initGui( void* pkUserdata );
 
 	// implement to create a vehicle of the specified class
 	virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
 	virtual void addVehicle( osAbstractVehicle* pkVehicle );
 
 	//-------------------------------------------------------------------------
-	void drawObstacles (void);
+	void drawObstacles( void );
+	void addOneObstacle( void );
+	void removeOneObstacle( void );
+	void randomizeStartingPositionAndHeading( osAbstractVehicle* pkVehicle );
+
+	float minDistanceToObstacle( const osVector3& point ) const;
 
 	// a group (STL vector) of all vehicles in the Plugin
 	std::vector<osAbstractVehicle*> all;

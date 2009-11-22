@@ -44,6 +44,11 @@ public:
 		return "PluginSelector";
 	};
 
+	virtual OpenSteer::EntityClassId getClassId( void ) const
+	{
+		return OS_CID_UNKNOWN;
+	}
+
 	PluginSelector(){};
 
 	virtual RakNet::RM3ConstructionState QueryConstruction(

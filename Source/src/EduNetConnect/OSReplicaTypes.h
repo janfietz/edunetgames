@@ -37,12 +37,17 @@ class OSReplica : public EduNet::AbstractReplica
 {
 	ET_DECLARE_BASE( EduNet::AbstractReplica )
 public:
-	OSReplica():m_pkEntity( NULL ){};
+	OSReplica():m_pkEntity( NULL ),m_classId(OS_CID_UNKNOWN){};
 	virtual ~OSReplica()
 	{
 		this->releaseEntity();
 	};
 	
+	virtual OpenSteer::EntityClassId getClassId( void ) const
+	{
+		return m_classId;
+	}
+
 	//-----------------------------------------------------------------------------
 	// RakNet::Replica3 interface
 	virtual RakNet::RM3ConstructionState QueryConstruction(
@@ -100,6 +105,9 @@ public:
 		// release the reference here
 		ET_SAFE_DELETE( this->m_pkEntity );
 	}
+
+protected:
+	OpenSteer::EntityClassId m_classId;
 
 private:
 	OSType* m_pkEntity;

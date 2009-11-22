@@ -58,6 +58,22 @@ typedef signed long long   	int64_t;
 
 
 
+//-----------------------------------------------------------------------------
+namespace OpenSteer {
+
+	using namespace OpenSteer;
+
+	typedef uint64_t NetworkId; 
+	typedef uint64_t EntityClassId; 
+
+	static const EntityClassId g_clasId_Unknown(0);	
+
+}
+
+
+#define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
+
+
 typedef float osScalar;
 
 #endif //!  __OPENSTEERTYPES_H__

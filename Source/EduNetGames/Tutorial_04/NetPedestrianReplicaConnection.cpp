@@ -42,6 +42,8 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 {
 	RakNet::RakString typeName;
 	allocationId->Read( typeName );
+	OpenSteer::EntityClassId kId;
+	allocationId->Read( kId );
 	OpenSteer::AbstractPlugin* pkPlugin = this->getPlugin();
 	if( NULL != pkPlugin )
 	{
