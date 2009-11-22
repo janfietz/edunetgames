@@ -102,9 +102,10 @@ NetPedestrian::NetPedestrian()
 
 	// for debugging
 	const char* pszClassName = this->getClassName();
-
-	TNetPedestrian kTestPedestrian;
+#ifdef _DEBUG
+	static TNetPedestrian kTestPedestrian;
 	OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
+#endif
 }
 
 #pragma warning(pop)
@@ -115,10 +116,9 @@ NetPedestrian::~NetPedestrian()
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+AbstractVehicle* NetPedestrian::cloneVehicle( void ) const
 {
 	AbstractVehicle* pkVehicle = ET_NEW NetPedestrian();
-	pkVehicle->allocateProximityToken( pkProximityDatabase );
 	return pkVehicle;
 }
 

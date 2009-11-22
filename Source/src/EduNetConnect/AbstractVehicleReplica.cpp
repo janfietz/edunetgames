@@ -49,7 +49,7 @@ AbstractVehicleReplica::AbstractVehicleReplica( OpenSteer::AbstractPlugin* pkHos
 m_pkHostPlugin(pkHostPlugin)
 {
 	assert( NULL != AbstractVehicleReplica::ms_pkFactory );
-	this->setEntity( AbstractVehicleReplica::ms_pkFactory->createVehicle( classId, this->m_pkHostPlugin->accessProximityDataBase() ) );
+	this->setEntity( AbstractVehicleReplica::ms_pkFactory->createVehicle( classId ) );
 	assert( NULL != this->getEntity() );
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 	this->m_kClassName = this->accessEntity()->getClassName();

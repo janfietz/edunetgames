@@ -71,11 +71,11 @@ NetCtfVehicleFactory::NetCtfVehicleFactory()
 #ifdef _DEBUG
 	// test the 3 vehicle classes
 	OpenSteer::AbstractVehicle* pkVehicle = NULL;
-	pkVehicle = this->createVehicle( ET_CID_CTF_BASE_VEHICLE, NULL );
+	pkVehicle = this->createVehicle( ET_CID_CTF_BASE_VEHICLE );
 	this->destroyVehicle( pkVehicle );
-	pkVehicle = this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL );
+	pkVehicle = this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE );
 	this->destroyVehicle( pkVehicle );
-	pkVehicle = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL );
+	pkVehicle = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE );
 	this->destroyVehicle( pkVehicle );
 #endif
 }

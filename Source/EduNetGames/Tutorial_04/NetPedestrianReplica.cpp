@@ -47,7 +47,7 @@ NetPedestrianReplica::NetPedestrianReplica( OpenSteer::AbstractPlugin* pkHostPlu
 m_pkHostPlugin(pkHostPlugin)
 {
 	static NetPedestrianFactory gNetPedestrianFactory;
-	this->setEntity( gNetPedestrianFactory.createVehicle( ET_CID_NETPEDESTRIAN, this->m_pkHostPlugin->accessProximityDataBase() ) );
+	this->setEntity( gNetPedestrianFactory.createVehicle( ET_CID_NETPEDESTRIAN ) );
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 };
 

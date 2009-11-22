@@ -85,8 +85,7 @@ namespace OpenSteer{
 		void addBoidToFlock (void);
 		void removeBoidFromFlock (void);
 
-		virtual osAbstractVehicle* createVehicle( osEntityClassId,
-			osProximityDatabase* ) const;
+		virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
 		// JF --
 
 	private:

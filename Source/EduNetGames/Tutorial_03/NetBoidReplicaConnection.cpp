@@ -65,24 +65,15 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* NetBoidReplicaFactory::createVehicle( 
-	OpenSteer::EntityClassId classId,
-	OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+	OpenSteer::EntityClassId classId ) const
 {
-	if( NULL == pkProximityDatabase )
-	{
-		// can not be a replicated object in this case
-		return BaseClass::createVehicle( classId, pkProximityDatabase );
-	}
-	else
-	{
-		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( 
-			this->m_pkReplicaManager->accessPlugin(), false );		
-		this->m_pkReplicaManager->Reference( pkNewReplica );
+	NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( 
+		this->m_pkReplicaManager->accessPlugin(), false );		
+	this->m_pkReplicaManager->Reference( pkNewReplica );
 
-		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
-		this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
-		return pkNewReplica->accessEntity();
-	}
+	OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
+	this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
+	return pkNewReplica->accessEntity();
 }
 
 //-----------------------------------------------------------------------------

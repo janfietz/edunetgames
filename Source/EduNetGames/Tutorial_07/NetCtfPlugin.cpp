@@ -63,13 +63,13 @@ BaseClass( bAddToRegistry ),resetCount(0),m_pkSeeker(NULL)
 	this->setVehicleFactory( &gOfflineNetCtfVehicleFactory );
 }
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId, ProximityDatabase* pd ) const
+AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId) const
 {
 	AbstractVehicle* pkVehicle = NULL;
 	const AbstractVehicleFactory* pkFactory = this->getVehicleFactory();
 	if( NULL != pkFactory )
 	{
-		pkVehicle = pkFactory->createVehicle( classId, pd );
+		pkVehicle = pkFactory->createVehicle( classId );
 	}
 	return pkVehicle;
 }
@@ -106,12 +106,12 @@ void NetCtfPlugin::open (void)
 	else
 	{
 		// create the seeker ("hero"/"attacker")
-		this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL ) );
+		this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE ) );
 		// create the specified number of enemies, 
 		// storing pointers to them in an array.
 		for (int i = 0; i < ctfEnemyCount; ++i)
 		{
-			this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL ) );
+			this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE ) );
 		}
 
 		NetCtfBaseVehicle::initializeObstacles();

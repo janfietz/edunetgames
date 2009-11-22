@@ -66,7 +66,7 @@ public:
 		const osVector3& threatFuture );
 
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
-	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
+	virtual AbstractVehicle* cloneVehicle( void ) const;
 
 
 	void annotationUtility( void ) const;

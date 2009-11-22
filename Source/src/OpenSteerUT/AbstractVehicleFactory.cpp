@@ -32,24 +32,24 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* VehicleFactory::createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* VehicleFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
 	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
 	if( NULL != pkMasterVehicle )
 	{
-		return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+		return pkMasterVehicle->cloneVehicle(  );
 	}
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* VehicleFactory::createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* VehicleFactory::createVehicle(  ) const
 {
 	if( NULL != this->m_pkMasterVehicle )
 	{
 		// for debugging
 		const OpenSteer::EntityClassId classId = this->m_pkMasterVehicle->getClassId();
-		return this->m_pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+		return this->m_pkMasterVehicle->cloneVehicle( );
 	}
 	return NULL;
 };
@@ -117,18 +117,18 @@ void VehicleFactoryArray::setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicl
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* VehicleFactoryArray::createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* VehicleFactoryArray::createVehicle( OpenSteer::EntityClassId classId ) const
 {
 	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
 	if( NULL != pkMasterVehicle )
 	{
-		return pkMasterVehicle->cloneVehicle( pkProximityDatabase );
+		return pkMasterVehicle->cloneVehicle(  );
 	}
 	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* VehicleFactoryArray::createVehicle( OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* VehicleFactoryArray::createVehicle(  ) const
 {
 	return NULL;
 };

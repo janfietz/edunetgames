@@ -81,10 +81,9 @@ NetCtfBaseVehicle::~NetCtfBaseVehicle()
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetCtfBaseVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+AbstractVehicle* NetCtfBaseVehicle::cloneVehicle( void ) const
 {
 	AbstractVehicle* pkVehicle = ET_NEW NetCtfBaseVehicle();
-	pkVehicle->allocateProximityToken( pkProximityDatabase );
 	return pkVehicle;
 }
 
@@ -249,10 +248,9 @@ void NetCtfBaseVehicle::annotateAvoidObstacle(const float minDistanceToCollision
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetCtfSeekerVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+AbstractVehicle* NetCtfSeekerVehicle::cloneVehicle( void ) const
 {
 	AbstractVehicle* pkVehicle = ET_NEW NetCtfSeekerVehicle();
-	pkVehicle->allocateProximityToken( pkProximityDatabase );
 	return pkVehicle;
 }
 
@@ -645,10 +643,9 @@ void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTim
 }
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* NetCtfEnemyVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
+AbstractVehicle* NetCtfEnemyVehicle::cloneVehicle( void ) const
 {
 	AbstractVehicle* pkVehicle = ET_NEW NetCtfEnemyVehicle();
-	pkVehicle->allocateProximityToken( pkProximityDatabase );
 	return pkVehicle;
 }
 

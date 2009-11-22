@@ -65,24 +65,16 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenSteer::EntityClassId classId, OpenSteer::ProximityDatabase* pkProximityDatabase ) const
+OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
-	if( NULL == pkProximityDatabase )
+	if( classId == ET_CID_NETPEDESTRIAN )
 	{
-		// can not be a replicated object in this case
-		return BaseClass::createVehicle( classId, pkProximityDatabase );
-	}
-	else
-	{
-		if( classId == ET_CID_NETPEDESTRIAN )
-		{
-			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
-			this->m_pkReplicaManager->Reference( pkNewReplica );
+		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
+		this->m_pkReplicaManager->Reference( pkNewReplica );
 
-			OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
-			this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
-			return pkNewReplica->accessEntity();
-		}
+		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
+		this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
+		return pkNewReplica->accessEntity();
 	}
 	return NULL;
 }

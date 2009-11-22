@@ -42,8 +42,8 @@ NetBoidReplica::NetBoidReplica():
 NetBoidReplica::NetBoidReplica( OpenSteer::BoidsPlugin* pkHostPlugin, bool bIsRemoteObject  ):
 	m_pBoidPlugin(pkHostPlugin)
 {
-	this->setEntity( gNetBoidFactory.createVehicle( ET_CID_NETBOID,
-	this->m_pBoidPlugin->accessProximityDataBase() ) );
+	OpenSteer::AbstractVehicle* pkVehicle = gNetBoidFactory.createVehicle( ET_CID_NETBOID );
+	this->setEntity( pkVehicle );
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );	
 }
 

@@ -86,7 +86,7 @@ public:
 	void nextPD (void);
 
 	// implement to create a vehicle of the specified class
-	virtual osAbstractVehicle* createVehicle( osEntityClassId, osProximityDatabase* ) const;
+	virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
 
 private:
 	NetPedestrianFactory m_kOfflinePedestrianFactory;
@@ -103,7 +103,6 @@ private:
 	// which of the various proximity databases is currently in use
 	int cyclePD;
 
-	bool m_bCreatesVehicles;
 	float m_fLastRenderTime;
 };
 
