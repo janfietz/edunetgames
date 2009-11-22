@@ -7,6 +7,8 @@ RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(
 {
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
+	OpenSteer::EntityClassId kId;
+	allocationId->Read( kId );
 	if (typeName=="PluginSelector"){
 		printf("Create PluginSelector instance.");
 		PluginSelector* pkNewInstance = new PluginSelector();

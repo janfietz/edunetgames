@@ -227,6 +227,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) all;}
 
         std::vector<LowSpeedTurn*> all; // for allVehicles
         typedef std::vector<LowSpeedTurn*>::const_iterator iterator;

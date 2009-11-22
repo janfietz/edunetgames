@@ -49,6 +49,8 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 	static NetBoidConditionReplica kReplicaCondition;
 	RakNet::RakString typeName;
 	allocationId->Read(typeName);
+	OpenSteer::EntityClassId kId;
+	allocationId->Read( kId );
 	if (typeName==kReplica.GetName()){
 		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( this->m_pBoidPlugin, true  );
 		OpenSteer::AbstractVehicleGroup kVG( this->m_pBoidPlugin->allVehicles() );

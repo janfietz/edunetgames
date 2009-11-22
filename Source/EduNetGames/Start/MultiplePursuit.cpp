@@ -248,6 +248,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) allMP;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) allMP;}
 
         // a group (STL vector) of all vehicles
         std::vector<MpBase*> allMP;

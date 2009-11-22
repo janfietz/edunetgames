@@ -34,6 +34,7 @@ using namespace EduNet;
 void AbstractReplica::WriteAllocationID( RakNet::BitStream *allocationIdBitstream ) const 
 {
 	allocationIdBitstream->Write( GetName() );
+	allocationIdBitstream->Write( this->getClassId() );
 }
 
 //-----------------------------------------------------------------------------
@@ -43,6 +44,8 @@ void AbstractReplica::PrintOutput( RakNet::BitStream *bs )
 		return;
 	RakNet::RakString rakString;
 	bs->Read( rakString );
+	OpenSteer::EntityClassId kId;
+	bs->Read( kId );
 	printf("Receive: %s\n", rakString.C_String());
 }
 

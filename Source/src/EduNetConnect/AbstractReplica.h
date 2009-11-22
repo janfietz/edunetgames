@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetConnect/EduNetConnect.h"
+#include "OpenSteer/OpenSteerTypes.h"
 
 namespace EduNet
 {
@@ -38,7 +39,8 @@ namespace EduNet
 	{
 	public:
 		// AbstractReplica interface
-		virtual RakNet::RakString GetName( void ) const = 0;
+		virtual RakNet::RakString GetName( void ) const ET_ABSTRACT;
+		virtual OpenSteer::EntityClassId getClassId( void ) const ET_ABSTRACT;
 
 		// RakNet::Replica3 interface
 		virtual void WriteAllocationID( RakNet::BitStream *allocationIdBitstream ) const;

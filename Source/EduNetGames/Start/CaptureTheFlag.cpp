@@ -957,6 +957,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) all;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) all;}
 
         void drawHomeBase (void)
         {

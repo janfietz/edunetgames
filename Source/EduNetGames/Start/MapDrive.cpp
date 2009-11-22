@@ -3007,6 +3007,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) vehicles;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) vehicles;}
 
         MapDriver* vehicle;
         std::vector<MapDriver*> vehicles; // for allVehicles

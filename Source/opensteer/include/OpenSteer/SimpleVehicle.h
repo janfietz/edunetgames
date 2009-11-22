@@ -217,14 +217,6 @@ namespace OpenSteer {
         void annotationVelocityAcceleration (void)
             {annotationVelocityAcceleration (3, 3);}
 
-        //! set a random "2D" heading: set local Up to global Y, then effectively
-        //! rotate about it by a random angle (pick random forward, derive side).
-        void randomizeHeadingOnXZPlane (void)
-        {
-            setUp (Vec3::up);
-            setForward (RandomUnitVectorOnXZPlane ());
-            setSide (localRotateForwardToSide (forward()));
-        }
 
 		//! CP ++
 		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};

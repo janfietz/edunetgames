@@ -58,6 +58,7 @@ namespace OpenSteer{
 
 		 // return an AVGroup containing each boid of the flock
         const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
+		AVGroup& allVehicles (void) {return ( AVGroup&)flock;}
 
 		const ObstacleGroup& obstacles(void) const { return m_kObstacles; }
 		ObstacleGroup& obstacles(void){ return m_kObstacles; }

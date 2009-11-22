@@ -49,7 +49,11 @@ namespace	{
 	//(perhaps these should be member variables of a Vehicle or Plugin class)
 
 	//-------------------------------------------------------------------------
-	const int ctfEnemyCount = 4;
+	const size_t ctfEnemyCount = 4;
+	const size_t initialObstacleCount = 10;
+
+	const float gMinStartRadius = 30;
+	const float gMaxStartRadius = 40;
 }
 
 //-----------------------------------------------------------------------------
@@ -81,6 +85,12 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	{
 		return;
 	}
+	NetCtfBaseVehicle* pkBaseVehicle = dynamic_cast<NetCtfBaseVehicle*>( pkVehicle );
+	if( NULL != pkBaseVehicle )
+	{
+		pkBaseVehicle->m_pkObstacles = &this->allObstacles();
+	}
+
 	NetCtfSeekerVehicle* pkSeeker = dynamic_cast<NetCtfSeekerVehicle*>( pkVehicle );
 	if( NULL != pkSeeker )
 	{
@@ -95,6 +105,78 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	kVG.addVehicle( pkVehicle );
 }
 
+
+//-----------------------------------------------------------------------------
+#define testOneObstacleOverlap(radius, center)               \
+{                                                            \
+	float d = Vec3::distance(c, center);                    \
+	float clearance = d -(r +(radius));                    \
+	if(minClearance > clearance) minClearance = clearance;  \
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfPlugin::addOneObstacle( void )
+{
+	static NetCtfSeekerVehicle kPrototype;
+//	if(obstacleCount < maxObstacleCount)
+	{
+		// pick a random center and radius,
+		// loop until no overlap with other obstacles and the home base
+		float r;
+		Vec3 c;
+		float minClearance;
+		const float requiredClearance = kPrototype.radius() * 4; // 2 x diameter
+		ObstacleGroup::const_iterator kIter = this->allObstacles().begin();
+		ObstacleGroup::const_iterator kEnd = this->allObstacles().end();
+		do
+		{
+			r = frandom2(1.5, 4);
+			c = randomVectorOnUnitRadiusXZDisk() * gMaxStartRadius * 1.1f;
+			minClearance = FLT_MAX;
+
+			for( ObstacleGroup::const_iterator so = kIter; so != kEnd; ++so )
+			{
+				SphereObstacle* pkSphere = dynamic_cast<SphereObstacle*>(*so);
+				testOneObstacleOverlap( pkSphere->radius,pkSphere->center );
+			}
+
+			testOneObstacleOverlap(NetCtfGameLogic::ms_fHomeBaseRadius - requiredClearance,
+				NetCtfGameLogic::ms_kHomeBaseCenter);
+		}
+		while(minClearance < requiredClearance);
+
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
+		if( NULL != pkFactory )
+		{
+			AbstractEntity* pkEntity = pkFactory->createEntity( OS_CID_SPHEREOBSTACLE );
+			SphereObstacle* pkSphereObstacle = dynamic_cast<SphereObstacle*>(pkEntity);
+			pkSphereObstacle->radius = r;
+			pkSphereObstacle->center = c;
+			// add new non-overlapping obstacle to registry
+			this->allObstacles().push_back( pkSphereObstacle );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfPlugin::removeOneObstacle( void )
+{
+	if( this->allObstacles().size() > 0 )
+	{
+		AbstractObstacle* pkObstacle = this->allObstacles()[this->allObstacles().size() - 1];
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
+		if( NULL != pkFactory )
+		{
+			pkFactory->destroyEntity( pkObstacle );
+		}
+		else
+		{
+			ET_SAFE_DELETE( pkObstacle );
+		}
+		this->allObstacles().pop_back();
+	}
+}
+
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::open (void)
 {
@@ -105,16 +187,24 @@ void NetCtfPlugin::open (void)
 	}
 	else
 	{
-		// create the seeker ("hero"/"attacker")
-		this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE ) );
-		// create the specified number of enemies, 
-		// storing pointers to them in an array.
-		for (int i = 0; i < ctfEnemyCount; ++i)
+		for( size_t i = 0; i < initialObstacleCount; ++i )
 		{
-			this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE ) );
+			this->addOneObstacle();
 		}
 
-		NetCtfBaseVehicle::initializeObstacles();
+		// create the seeker ("hero"/"attacker")
+		AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE );
+		this->addVehicle( pkVehicle );
+		this->randomizeStartingPositionAndHeading( pkVehicle );  // new starting position
+
+		// create the specified number of enemies, 
+		// storing pointers to them in an array.
+		for (size_t i = 0; i < ctfEnemyCount; ++i)
+		{
+			pkVehicle = this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE );
+			this->addVehicle( pkVehicle );
+			this->randomizeStartingPositionAndHeading( pkVehicle );  // new starting position
+		}
 	}
 
 	// initialize camera
@@ -127,7 +217,6 @@ void NetCtfPlugin::open (void)
 		Camera::camera.fixedTarget.set(15, 0, 0);
 		Camera::camera.fixedPosition.set(80, 60, 0);
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -156,10 +245,6 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	// vehicle nearest mouse (to be highlighted)
 	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
-#if 0
-	// update camera
-	CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
-#endif
 
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
@@ -189,7 +274,7 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		status << this->m_pkSeeker->getSeekerStateString() << std::endl;
 	}
-	status << NetCtfBaseVehicle::allObstacles.size() << " obstacles [F1/F2]" << std::endl;
+	status << this->allObstacles().size() << " obstacles [F1/F2]" << std::endl;
 	status << this->resetCount << " restarts" << std::ends;
 	const float h = drawGetWindowHeight();
 	const Vec3 screenLocation(10, h-50, 0);
@@ -230,6 +315,25 @@ void NetCtfPlugin::close (void)
 		}
 		pkVehicle = NULL;
 	}
+
+	ObstacleGroup::const_iterator kIter = this->allObstacles().begin();
+	ObstacleGroup::const_iterator kEnd = this->allObstacles().end();
+	while( kIter != kEnd )
+	{
+		AbstractObstacle* pkObstacle = *kIter;
+		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
+		if( NULL != pkFactory )
+		{
+			pkFactory->destroyEntity( pkObstacle );
+		}
+		else
+		{
+			ET_SAFE_DELETE( pkObstacle );
+		}
+		++kIter;
+	}
+	this->allObstacles().clear();
+
 }
 
 //-----------------------------------------------------------------------------
@@ -241,6 +345,13 @@ void NetCtfPlugin::reset (void)
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.reset( );
+	AVIterator iter = allVehicles().begin();
+	AVIterator last = allVehicles().end();
+	while( iter != last )
+	{
+		this->randomizeStartingPositionAndHeading( *iter );  // new starting position
+		++iter;
+	}
 
 	// reset camera position
 	CameraPlugin::position2dCamera( *SimpleVehicle::selectedVehicle );
@@ -252,34 +363,116 @@ void NetCtfPlugin::reset (void)
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::handleFunctionKeys (int keyNumber)
 {
-	switch (keyNumber)
-	{
-	case 1: NetCtfBaseVehicle::addOneObstacle ();    break;
-	case 2: NetCtfBaseVehicle::removeOneObstacle (); break;
+	if( false == this->isRemoteObject() )
+	{		
+		switch (keyNumber)
+		{
+		case 1: this->addOneObstacle ();    break;
+		case 2: this->removeOneObstacle (); break;
+		}
 	}
 }
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::printMiniHelpForFunctionKeys (void) const
 {
-	std::ostringstream message;
-	message << "Function keys handled by ";
-	message << '"' << name() << '"' << ':' << std::ends;
-	EduNet::Log::printMessage (message);
-	EduNet::Log::printMessage ("  F1     add one obstacle.");
-	EduNet::Log::printMessage ("  F2     remove one obstacle.");
-	EduNet::Log::printMessage ("");
+	if( false == this->isRemoteObject() )
+	{		
+		std::ostringstream message;
+		message << "Function keys handled by ";
+		message << '"' << name() << '"' << ':' << std::ends;
+		EduNet::Log::printMessage (message);
+		EduNet::Log::printMessage ("  F1     add one obstacle.");
+		EduNet::Log::printMessage ("  F2     remove one obstacle.");
+		EduNet::Log::printMessage ("");
+
+	}
 }
 
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::drawObstacles (void)
 {
 	const Color color (0.8f, 0.6f, 0.4f);
-	const SOG& allSO = NetCtfBaseVehicle::allObstacles;
-	for (SOI so = allSO.begin(); so != allSO.end(); so++)
+	ObstacleGroup::const_iterator kIter = this->allObstacles().begin();
+	ObstacleGroup::const_iterator kEnd = this->allObstacles().end();
+	while( kIter != kEnd )
 	{
-		drawXZCircle ((**so).radius, (**so).center, color, 40);
+		SphereObstacle* pkSphere = dynamic_cast<SphereObstacle*>(*kIter);
+		drawXZCircle( pkSphere->radius, pkSphere->center, color, 40 );
+		++kIter;
 	}
 }
 
+void NetCtfPlugin::randomizeStartingPositionAndHeading( osAbstractVehicle* pkVehicle )
+{
+	// randomize position on a ring between inner and outer radii
+	// centered around the home base
+	const float rRadius = frandom2(gMinStartRadius, gMaxStartRadius);
+	const Vec3 randomOnRing = RandomUnitVectorOnXZPlane() * rRadius;
+	pkVehicle->setPosition(NetCtfGameLogic::ms_kHomeBaseCenter + randomOnRing);
 
+	// are we are too close to an obstacle?
+	if( this->minDistanceToObstacle( pkVehicle->position()) < pkVehicle->radius()*5 )
+	{
+		// if so, retry the randomization(this recursive call may not return
+		// if there is too little free space)
+		randomizeStartingPositionAndHeading( pkVehicle );
+	}
+	else
+	{
+		// otherwise, if the position is OK, randomize 2D heading
+		pkVehicle->randomizeHeadingOnXZPlane();
+	}
+
+}
+
+//-----------------------------------------------------------------------------
+float NetCtfPlugin::minDistanceToObstacle( const Vec3& point ) const
+{
+	float r = 0;
+	Vec3 c = point;
+	float minClearance = FLT_MAX;
+
+	ObstacleGroup::const_iterator kIter = this->allObstacles().begin();
+	ObstacleGroup::const_iterator kEnd = this->allObstacles().end();
+	while( kIter != kEnd )
+	{
+		SphereObstacle* pkSphere = dynamic_cast<SphereObstacle*>(*kIter);
+		testOneObstacleOverlap(pkSphere->radius,pkSphere->center);
+		++kIter;
+	}
+	return minClearance;
+}
+
+
+//-----------------------------------------------------------------------------
+void addObstacle(GLUI_Control* pkControl )
+{
+	NetCtfPlugin* pkPlugin = (NetCtfPlugin*)pkControl->ptr_val;
+	pkPlugin->addOneObstacle();
+}
+
+//-----------------------------------------------------------------------------
+void removeObstacle(GLUI_Control* pkControl )
+{
+	NetCtfPlugin* pkPlugin = (NetCtfPlugin*)pkControl->ptr_val;
+	pkPlugin->removeOneObstacle();
+}
+
+//-----------------------------------------------------------------------------
+// implement to initialize additional gui functionality
+void NetCtfPlugin::initGui( void* pkUserdata ) 
+{
+	if( false == this->isRemoteObject() )
+	{		
+
+		GLUI* glui = ::getRootGLUI();
+		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+		GLUI_Control* pkControl;
+		pkControl = glui->add_button_to_panel( pluginPanel, "Add Obstacle", -1, addObstacle );
+		pkControl->set_ptr_val( this );
+		pkControl = glui->add_button_to_panel( pluginPanel, "Remove Obstacle", -1, removeObstacle  );
+		pkControl->set_ptr_val( this );
+	}
+};

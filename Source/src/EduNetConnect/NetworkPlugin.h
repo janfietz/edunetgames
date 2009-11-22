@@ -281,11 +281,16 @@ public:
 	virtual void handleFunctionKeys (int keyNumber);
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
-	virtual const OpenSteer::AVGroup& allVehicles (void) const 
+	virtual const OpenSteer::AVGroup& allVehicles( void ) const 
 	{
 		return m_kGamePlugin.allVehicles();
 	}
 	
+	virtual OpenSteer::AVGroup& allVehicles( void ) 
+	{
+		return m_kGamePlugin.allVehicles();
+	}
+
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const
 	{
 		return ((OpenSteer::AbstractPlugin*)&this->m_kGamePlugin);

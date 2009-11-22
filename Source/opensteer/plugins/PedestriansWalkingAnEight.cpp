@@ -667,7 +667,8 @@ public:
     
     
     const AVGroup& allVehicles (void) const {return (const AVGroup&) crowd;}
-    
+	AVGroup& allVehicles (void) {return ( AVGroup&) crowd;}
+   
     // crowd: a group (STL vector) of all Pedestrians
     Pedestrian::groupType crowd;
     typedef Pedestrian::groupType::const_iterator iterator;

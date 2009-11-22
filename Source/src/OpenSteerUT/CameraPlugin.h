@@ -50,6 +50,7 @@ namespace OpenSteer
 		void redraw (const float currentTime, const float elapsedTime);
 		void close (void) { }
 		const AVGroup& allVehicles (void) const { return m_kVehicles; }
+		AVGroup& allVehicles (void) { return m_kVehicles; }
 
 		// optional methods (see comments in AbstractPlugin for explanation):
 		void reset (void) { } // default is to reset by doing close-then-open

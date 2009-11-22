@@ -43,7 +43,6 @@ namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
 	// implement entity class id
-	static const EntityClassId g_clasId_Unknown(0);	
 
 	static const EntityClassId g_clasId_Entity(1);
 
@@ -63,7 +62,6 @@ namespace OpenSteer {
 	static const EntityClassId g_clasId_LastReserved(1000);
 }
 
-#define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
 #define OS_CID_ENTITY OpenSteer::g_clasId_Entity
 #define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
 

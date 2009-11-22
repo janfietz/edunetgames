@@ -157,6 +157,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) theVehicle;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) theVehicle;}
 
         OneTurning* gOneTurning;
         std::vector<OneTurning*> theVehicle; // for allVehicles

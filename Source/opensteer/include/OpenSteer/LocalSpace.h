@@ -136,6 +136,9 @@ namespace OpenSteer {
         //! rotate 90 degrees in the direction implied by rightHanded()
         virtual Vec3 localRotateForwardToSide (const Vec3& v) const = 0;
         virtual Vec3 globalRotateForwardToSide (const Vec3& globalForward) const=0;
+
+		virtual void randomizeHeadingOnXZPlane (void) = 0;
+
     };
     //-----------------------------------------------------------------------------
 	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {
@@ -352,6 +355,16 @@ namespace OpenSteer {
             const Vec3 localSide = localRotateForwardToSide (localForward);
             return globalizeDirection (localSide);
         }
+
+		//! set a random "2D" heading: set local Up to global Y, then effectively
+		//! rotate about it by a random angle (pick random forward, derive side).
+		virtual void randomizeHeadingOnXZPlane (void)
+		{
+			setUp (Vec3::up);
+			setForward (RandomUnitVectorOnXZPlane ());
+			setSide (localRotateForwardToSide (forward()));
+		}
+
     };
 
 	//-------------------------------------------------------------------------

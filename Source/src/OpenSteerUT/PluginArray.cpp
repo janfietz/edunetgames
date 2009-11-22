@@ -250,6 +250,30 @@ const AVGroup& PluginArray::allVehicles(void) const
 }
 
 //-----------------------------------------------------------------------------
+AVGroup& PluginArray::allVehicles(void)
+{
+	{
+		AVGroup& kVehicles = this->m_kVehicles;
+		if( kVehicles.size() > 0 )
+		{
+			return kVehicles;
+		}
+	}
+	TPluginArray::const_iterator kIter = this->begin();
+	TPluginArray::const_iterator kEnd = this->end();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		AVGroup& kVehicles = pkPlugin->allVehicles();
+		if( kVehicles.size() > 0 )
+		{
+			return kVehicles;
+		}
+		++kIter;
+	}
+	return this->m_kVehicles;
+}
+//-----------------------------------------------------------------------------
 AbstractPlugin* PluginArray::next(void) const 
 { 
 	return OpenSteer::Plugin::findNextPlugin( this );

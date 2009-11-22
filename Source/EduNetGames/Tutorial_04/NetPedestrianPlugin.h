@@ -68,6 +68,7 @@ public:
 	}
 
 	virtual const osAVGroup& allVehicles (void) const;
+	virtual osAVGroup& allVehicles (void);
 
 	// implement to initialize additional gui functionality
 	virtual void initGui( void* pkUserdata );

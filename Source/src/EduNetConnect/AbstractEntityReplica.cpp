@@ -45,6 +45,7 @@ AbstractEntityReplica::AbstractEntityReplica():m_pkHostPlugin(NULL)
 AbstractEntityReplica::AbstractEntityReplica( OpenSteer::AbstractPlugin* pkHostPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject  ):
 m_pkHostPlugin(pkHostPlugin)
 {
+	this->m_classId = classId;
 	// now retrieve the original game entity factory
 	OpenSteer::AbstractPlugin* pkParentPlugin = pkHostPlugin->getParentPlugin();
 	AbstractNetworkPlugin* pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pkParentPlugin );
@@ -55,6 +56,21 @@ m_pkHostPlugin(pkHostPlugin)
 	assert( NULL != this->getEntity() );
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 	this->m_kClassName = this->accessEntity()->getClassName();
+
+	if( true == bIsRemoteObject )
+	{
+		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+		if( NULL != pkVehicle )
+		{
+			OpenSteer::AbstractVehicleGroup kVG( pkHostPlugin->allVehicles() );
+			kVG.addVehicle( pkVehicle );
+		}
+		OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
+		if( NULL != pkObstacle )
+		{
+			pkHostPlugin->allObstacles().push_back( pkObstacle );
+		}
+	}
 };
 
 //-----------------------------------------------------------------------------
@@ -75,6 +91,15 @@ void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnect
 	if( NULL != pkVehicle )
 	{
 		kVG.removeVehicle( pkVehicle );
+	}
+	OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
+	if( NULL != pkObstacle )
+	{
+		ObstacleGroup::iterator kIter = std::find( m_pkHostPlugin->allObstacles().begin(), m_pkHostPlugin->allObstacles().end(), pkObstacle );
+		if( kIter != m_pkHostPlugin->allObstacles().end() )
+		{
+			m_pkHostPlugin->allObstacles().erase( kIter );
+		}
 	}
 	this->releaseEntity();
 	ET_DELETE this;

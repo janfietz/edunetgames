@@ -38,26 +38,35 @@
 
 //-----------------------------------------------------------------------------
 RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
-	RakNet::BitStream *allocationId,
-	RakNet::ReplicaManager3 *replicaManager3)
+	RakNet::BitStream *allocationId, RakNet::ReplicaManager3 *replicaManager3)
 {
 	RakNet::RakString typeName;
 	allocationId->Read( typeName );
+	OpenSteer::EntityClassId classId = ET_CID_UNKNOWN;
+	allocationId->Read( classId );
 	OpenSteer::AbstractPlugin* pkPlugin = this->getPlugin();
 	if( NULL != pkPlugin )
 	{
-		OpenSteer::EntityClassId classId = ET_CID_UNKNOWN;
-		if( typeName == "NetCtfBaseVehicle" )
+		if( classId == ET_CID_UNKNOWN )
 		{
-			classId = ET_CID_CTF_BASE_VEHICLE;
+			if( typeName == "NetCtfBaseVehicle" )
+			{
+				classId = ET_CID_CTF_BASE_VEHICLE;
+			}
+			else if( typeName == "NetCtfEnemyVehicle" )
+			{
+				classId = ET_CID_CTF_ENEMY_VEHICLE;
+			}
+			else if( typeName == "NetCtfSeekerVehicle" )
+			{
+				classId = ET_CID_CTF_SEEKER_VEHICLE;
+			}
 		}
-		else if( typeName == "NetCtfEnemyVehicle" )
+		if( classId == OS_CID_SPHEREOBSTACLE )
 		{
-			classId = ET_CID_CTF_ENEMY_VEHICLE;
-		}
-		else if( typeName == "NetCtfSeekerVehicle" )
-		{
-			classId = ET_CID_CTF_SEEKER_VEHICLE;
+			bool bTest = true;
+			bTest = false;
+			assert( classId != ET_CID_UNKNOWN );
 		}
 		if( classId == ET_CID_UNKNOWN )
 		{
@@ -68,12 +77,6 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 		else
 		{
 			AbstractEntityReplica* pkNewReplica = new AbstractEntityReplica( pkPlugin, classId, true  );
-			OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( pkNewReplica->accessEntity() );
-			if( NULL != pkVehicle )
-			{
-				OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-				kVG.addVehicle( pkVehicle );
-			}
 			return pkNewReplica; 
 		}
 	}

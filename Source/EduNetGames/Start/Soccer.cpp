@@ -377,6 +377,7 @@ namespace {
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) TeamA;}
+		AVGroup& allVehicles (void) {return ( AVGroup&) TeamA;}
 
         unsigned int	m_PlayerCountA;
         unsigned int	m_PlayerCountB;

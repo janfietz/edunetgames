@@ -362,6 +362,11 @@ const AVGroup& NetPedestrianPlugin::allVehicles (void) const
 {
 	return crowd;
 }
+//-----------------------------------------------------------------------------
+AVGroup& NetPedestrianPlugin::allVehicles (void) 
+{
+	return crowd;
+}
 
 //-----------------------------------------------------------------------------
 void addPedestrian(GLUI_Control* pkControl )

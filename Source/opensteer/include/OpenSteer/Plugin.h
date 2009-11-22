@@ -92,58 +92,62 @@ namespace OpenSteer {
         virtual ~AbstractPlugin() { /* Nothing to do. */ }
         
         //! generic Plugin actions: open, update, redraw, close and reset
-        virtual void open (void) = 0;
-        virtual void update (const float currentTime, const float elapsedTime) = 0;
-        virtual void redraw (const float currentTime, const float elapsedTime) = 0;
-        virtual void close (void) = 0;
-        virtual void reset (void) = 0;
+        virtual void open (void) OS_ABSTRACT;
+        virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
+        virtual void redraw (const float currentTime, const float elapsedTime) OS_ABSTRACT;
+        virtual void close (void) OS_ABSTRACT;
+        virtual void reset (void) OS_ABSTRACT;
 
         //! return a pointer to this instance's character string name
-        virtual const char* pluginName (void) const = 0;
+        virtual const char* pluginName (void) const OS_ABSTRACT;
 
         //! numeric sort key used to establish user-visible Plugin ordering
         //! ("built ins" have keys greater than 0 and less than 1)
-        virtual float selectionOrderSortKey (void) const = 0;
+        virtual float selectionOrderSortKey (void) const OS_ABSTRACT;
 
         //! allows a Plugin to nominate itself as OpenSteerDemo's initially selected
         //! (default) Plugin, which is otherwise the first in "selection order"
-        virtual bool requestInitialSelection (void) const = 0;
+        virtual bool requestInitialSelection (void) const OS_ABSTRACT;
 
         //! handle function keys (which are reserved by SterTest for Plugins)
-        virtual void handleFunctionKeys (int keyNumber) = 0;
+        virtual void handleFunctionKeys (int keyNumber) OS_ABSTRACT;
 
         //! print "mini help" documenting function keys handled by this Plugin
-        virtual void printMiniHelpForFunctionKeys (void) const = 0;
+        virtual void printMiniHelpForFunctionKeys (void) const OS_ABSTRACT;
 
 		//! return the current vehicle proximity database for this plugin
-		virtual ProximityDatabase* accessProximityDataBase( void ) const = 0;
+		virtual ProximityDatabase* accessProximityDataBase( void ) const OS_ABSTRACT;
 
        //! return an AVGroup (an STL vector of AbstractVehicle pointers) of
         //! all vehicles(/agents/characters) defined by the Plugin
-        virtual const AVGroup& allVehicles (void) const = 0;
-  
+        virtual const AVGroup& allVehicles (void) const OS_ABSTRACT;
+		virtual AVGroup& allVehicles (void) OS_ABSTRACT;
+
+		virtual ObstacleGroup& allObstacles( void ) OS_ABSTRACT;
+		virtual const ObstacleGroup& allObstacles( void ) const OS_ABSTRACT;
+ 
 		//! returns pointer to the next Plugin in "selection order"
-		virtual AbstractPlugin* next(void) const = 0;
+		virtual AbstractPlugin* next(void) const OS_ABSTRACT;
 
 		//! returns pointer to the parent Plugin
-		virtual AbstractPlugin* getParentPlugin(void) const = 0;
+		virtual AbstractPlugin* getParentPlugin(void) const OS_ABSTRACT;
 
 		//! set a parent Plugin
-		virtual void setParentPlugin( AbstractPlugin* ) = 0;
+		virtual void setParentPlugin( AbstractPlugin* ) OS_ABSTRACT;
 
 		//! implement to initialize additional gui functionality
-		virtual void initGui( void* /*pkUserdata*/ ) = 0;
+		virtual void initGui( void* /*pkUserdata*/ ) OS_ABSTRACT;
 
 		//! set an external vehicle factory
-		virtual void setEntityFactory( AbstractEntityFactory* ) = 0;
+		virtual void setEntityFactory( AbstractEntityFactory* ) OS_ABSTRACT;
 
-		virtual AbstractEntityFactory* getEntityFactory( void ) const = 0;
-
-		//! implement to create a vehicle of the specified class
-		virtual AbstractEntity* createEntity( EntityClassId ) const = 0;
+		virtual AbstractEntityFactory* getEntityFactory( void ) const OS_ABSTRACT;
 
 		//! implement to create a vehicle of the specified class
-		virtual AbstractVehicle* createVehicle( EntityClassId ) const = 0;
+		virtual AbstractEntity* createEntity( EntityClassId ) const OS_ABSTRACT;
+
+		//! implement to create a vehicle of the specified class
+		virtual AbstractVehicle* createVehicle( EntityClassId ) const OS_ABSTRACT;
 
 		//! format instance to characters for printing to stream
 		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
@@ -221,6 +225,10 @@ namespace OpenSteer {
 
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
+
+		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
+		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
+
         
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
@@ -285,6 +293,7 @@ namespace OpenSteer {
 		static on_plugin_selected_func ms_on_plugin_selected_func;
 	protected:
 		AbstractEntityFactory* m_pkEntityFactory;
+		ObstacleGroup m_kAllObstacles;
 
     private:
 
