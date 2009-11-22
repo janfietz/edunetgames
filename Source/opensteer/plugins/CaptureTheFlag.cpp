@@ -220,8 +220,6 @@ namespace {
         avoiding = false;         // not actively avoiding
 
         randomizeStartingPositionAndHeading ();  // new starting position
-
-        clearTrailHistory ();     // prevent long streaks due to teleportation
     }
 
 

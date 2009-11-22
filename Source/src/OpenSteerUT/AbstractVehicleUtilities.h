@@ -82,7 +82,7 @@ namespace OpenSteer
 		{
 		}
 
-		VehicleClassIdMixin( OpenSteer::ProximityDatabase& pd ):Super( pd )
+		VehicleClassIdMixin( OpenSteer::ProximityDatabase* pd ):Super( pd )
 		{
 
 		}
@@ -94,14 +94,16 @@ namespace OpenSteer
 		// AbstractEntity interface
 		virtual AbstractEntity* cloneEntity( void ) const
 		{
-			return new VehicleClassIdMixin();
+			return ET_NEW VehicleClassIdMixin();
 		}
 
 		// important implement new clone functionality
 		//-------------------------------------------------------------------------
 		virtual OpenSteer::AbstractVehicle* cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 		{
-			return NULL == pkProximityDatabase ? new VehicleClassIdMixin() : new VehicleClassIdMixin( *pkProximityDatabase );
+			OpenSteer::AbstractVehicle* pkVehicle = ET_NEW VehicleClassIdMixin();
+			pkVehicle->allocateProximityToken( pkProximityDatabase );
+			return pkVehicle;
 		}
 
 		virtual EntityClassId getClassId( void ) const

@@ -80,7 +80,7 @@ OpenSteer::AbstractVehicle* NetBoidReplicaFactory::createVehicle(
 		this->m_pkReplicaManager->Reference( pkNewReplica );
 
 		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
-		this->m_uidMap.Set(pkVehicle->getEntityId(), pkNewReplica);
+		this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
 		return pkNewReplica->accessEntity();
 	}
 }

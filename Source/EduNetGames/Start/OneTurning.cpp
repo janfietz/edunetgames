@@ -70,7 +70,6 @@ namespace {
             setSpeed (1.5f);         // speed along Forward direction.
             setMaxForce (0.3f);      // steering force is clipped to this magnitude
             setMaxSpeed (5);         // velocity is clipped to this magnitude
-            clearTrailHistory ();    // prevent long streaks due to teleportation 
         }
 
         // per frame simulation update

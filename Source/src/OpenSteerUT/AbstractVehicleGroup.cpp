@@ -54,13 +54,13 @@ m_pkCustomUpdated( NULL )
 }
 
 //-----------------------------------------------------------------------------
-void AbstractVehicleGroup::newPD( ProximityDatabase& pd )
+void AbstractVehicleGroup::allocateProximityToken( ProximityDatabase* pd )
 {
 	AVIterator iter = m_kVehicles.begin();
 	AVIterator last = m_kVehicles.end();
 	while( iter != last )
 	{
-		(*iter)->newPD( pd );
+		(*iter)->allocateProximityToken( pd );
 		++iter;
 	}
 }

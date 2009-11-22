@@ -98,14 +98,23 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::open (void)
 {
-	// a client does not do anything here
-	// create the seeker ("hero"/"attacker")
-	this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL ) );
-	// create the specified number of enemies, 
-	// storing pointers to them in an array.
-	for (int i = 0; i < ctfEnemyCount; ++i)
+	if( this->isRemoteObject() )
 	{
-		this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL ) );
+		// client side initialize
+		// a client does not do anything here
+	}
+	else
+	{
+		// create the seeker ("hero"/"attacker")
+		this->addVehicle( this->createVehicle( ET_CID_CTF_SEEKER_VEHICLE, NULL ) );
+		// create the specified number of enemies, 
+		// storing pointers to them in an array.
+		for (int i = 0; i < ctfEnemyCount; ++i)
+		{
+			this->addVehicle( this->createVehicle( ET_CID_CTF_ENEMY_VEHICLE, NULL ) );
+		}
+
+		NetCtfBaseVehicle::initializeObstacles();
 	}
 
 	// initialize camera
@@ -119,7 +128,6 @@ void NetCtfPlugin::open (void)
 		Camera::camera.fixedPosition.set(80, 60, 0);
 	}
 
-	NetCtfBaseVehicle::initializeObstacles();
 }
 
 //-----------------------------------------------------------------------------

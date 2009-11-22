@@ -64,7 +64,6 @@ namespace {
             setSpeed (0);            // speed along Forward direction.
             setMaxForce (5.0);       // steering force is clipped to this magnitude
             setMaxSpeed (3.0);       // velocity is clipped to this magnitude
-            clearTrailHistory ();    // prevent long streaks due to teleportation 
             gaudyPursuitAnnotation = true; // select use of 9-color annotation
         }
 

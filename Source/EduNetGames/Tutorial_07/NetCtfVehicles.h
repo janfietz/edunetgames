@@ -51,7 +51,7 @@ class NetCtfBaseVehicle : public OpenSteer::SimpleNetworkVehicle
 public:
 
 	NetCtfBaseVehicle();
-	NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd );
+	NetCtfBaseVehicle( OpenSteer::ProximityDatabase* pd );
 	virtual ~NetCtfBaseVehicle();
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfBaseVehicle )
@@ -101,7 +101,7 @@ public:
 
 	// constructor
 	NetCtfSeekerVehicle () {reset();}
-	NetCtfSeekerVehicle( OpenSteer::ProximityDatabase& pd ):BaseClass( pd ){reset();};
+	NetCtfSeekerVehicle( OpenSteer::ProximityDatabase* pd ):BaseClass( pd ){reset();};
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfSeekerVehicle )
 
@@ -154,7 +154,7 @@ public:
 
 	// constructor
 	NetCtfEnemyVehicle ():m_pkSeeker( NULL ) {reset ();}
-	NetCtfEnemyVehicle( OpenSteer::ProximityDatabase& pd ):BaseClass( pd ){reset();};
+	NetCtfEnemyVehicle( OpenSteer::ProximityDatabase* pd ):BaseClass( pd ){reset();};
 
 	OS_IMPLEMENT_CLASSNAME( NetCtfEnemyVehicle )
 

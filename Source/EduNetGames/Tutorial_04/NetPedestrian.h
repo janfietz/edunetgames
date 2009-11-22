@@ -43,7 +43,6 @@ class NetPedestrian : public OpenSteer::SimpleNetworkVehicle
 public:
 
 	NetPedestrian();
-	NetPedestrian( OpenSteer::ProximityDatabase& pd );
 	virtual ~NetPedestrian();
 
 	OS_IMPLEMENT_CLASSNAME( NetPedestrian )
@@ -67,7 +66,6 @@ public:
 		const osVector3& threatFuture );
 
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
-	virtual void newPD( OpenSteer::ProximityDatabase& pd );
 	virtual AbstractVehicle* cloneVehicle( OpenSteer::ProximityDatabase* ) const;
 
 
@@ -78,9 +76,6 @@ public:
 
 private:
 
-
-	// a pointer to this boid's interface object for the proximity database
-	OpenSteer::ProximityToken* proximityToken;
 
 	OpenSteer::AVGroup m_kNeighbors;
 

@@ -80,6 +80,18 @@ OpenSteer::Plugin::~Plugin()
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractEntity* 
+OpenSteer::Plugin::createEntity( EntityClassId classId ) const
+{
+	OpenSteer::AbstractEntity* pkEntity = Plugin::createSystemEntity( classId );
+	if( NULL == pkEntity )
+	{
+		pkEntity = this->createVehicle( classId, NULL );
+	}
+	return pkEntity;
+}
+
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* 
 OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
 {
 	OpenSteer::AbstractEntity* pkEntity = NULL;

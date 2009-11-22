@@ -826,9 +826,6 @@ namespace {
             // not previously avoiding
             annotateAvoid = Vec3::zero;
 
-            // prevent long streaks due to teleportation 
-            clearTrailHistory ();
-
             // first pass at detecting "stuck" state
             stuck = false;
 
@@ -2182,9 +2179,6 @@ namespace {
 
                     // make camera jump immediately to new position
                     Camera::camera.doNotSmoothNextMove ();
-
-                    // prevent long streaks due to teleportation 
-                    clearTrailHistory ();
 
                     return true; 
                 }

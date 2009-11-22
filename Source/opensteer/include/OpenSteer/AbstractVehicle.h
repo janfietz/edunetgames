@@ -101,7 +101,7 @@ namespace OpenSteer {
 		//! CP ++
 		virtual void draw( const float currentTime, const float elapsedTime ) = 0;
 		virtual void reset( void ) = 0;
-		virtual void newPD( ProximityDatabase& pd ) = 0;
+		virtual void allocateProximityToken( ProximityDatabase* pd ) = 0;
 
 		virtual void regenerateLocalSpace( const Vec3& newForward,
                                            const float elapsedTime) = 0;

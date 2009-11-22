@@ -124,10 +124,11 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 	annotationVelocityAcceleration (5, 0);
 	recordTrailVertex (currentTime, position());
 
-#if 0
-	// notify proximity database that our position has changed
-	proximityToken->updateForNewPosition (position());
-#endif
+	if( NULL != this->m_pkProximityToken )
+	{
+		// notify proximity database that our position has changed
+		m_pkProximityToken->updateForNewPosition (position());
+	}
 }
 
 

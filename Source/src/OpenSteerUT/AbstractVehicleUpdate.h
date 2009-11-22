@@ -48,6 +48,20 @@ namespace OpenSteer
 
 		  //-------------------------------------------------------------------
 		  // interface AbstractUpdated
+		  virtual void update( const osScalar currentTime, const osScalar elapsedTime )
+		  {
+			  if( 0 != this->m_pkCustomUpdated )
+			  {
+				  // in case the custom updater decides to call the base class
+				  // prevent infinite recursion, store the custom updater locally
+				  // and restore it once done with the update
+				  AbstractUpdated* pkCustomUpdated = this->m_pkCustomUpdated;
+				  this->m_pkCustomUpdated = 0;
+				  pkCustomUpdated->updateCustom( this, currentTime, elapsedTime );
+				  this->m_pkCustomUpdated = pkCustomUpdated;
+			  }
+		  }
+
 		  virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
 		  {
 			  // nothing to do here

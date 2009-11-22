@@ -17,12 +17,9 @@ size_t Boid::maxNeighbors = 0;
 size_t Boid::totalNeighbors = 0;
 
 //-----------------------------------------------------------------------------
-Boid::Boid (ProximityDatabase& pd)
+Boid::Boid()
 {
 	_movesPlanar = false;
-	// allocate a token for this boid in the proximity database
-	proximityToken = NULL;
-	newPD (pd);
 
 	// reset all boid state
 	reset ();	
@@ -30,8 +27,6 @@ Boid::Boid (ProximityDatabase& pd)
 //-----------------------------------------------------------------------------
 Boid::~Boid ()
 {
-	// delete this boid's token in the proximity database
-	delete proximityToken;
 }
 
 void Boid::setParentPlugin( BoidsPlugin* pPlugin)
@@ -62,7 +57,10 @@ void Boid::reset (void)
 	setPosition (RandomVectorInUnitRadiusSphere () * 20);
 
 	// notify proximity database that our position has changed
-	proximityToken->updateForNewPosition (position());
+	if( NULL != this->m_pkProximityToken )
+	{
+		m_pkProximityToken->updateForNewPosition(position());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -90,7 +88,10 @@ void Boid::update (const float currentTime, const float elapsedTime)
 	}
 
 	// notify proximity database that our position has changed
-	proximityToken->updateForNewPosition (position());
+	if( NULL != this->m_pkProximityToken )
+	{
+		m_pkProximityToken->updateForNewPosition(position());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -120,7 +121,7 @@ Vec3 Boid::steerToFlock (void)
 
 	// find all flockmates within maxRadius using proximity database
 	neighbors.clear();
-	proximityToken->findNeighbors (position(), maxRadius, neighbors);
+	m_pkProximityToken->findNeighbors (position(), maxRadius, neighbors);
 
 #ifndef NO_LQ_BIN_STATS
 	// maintain stats on max/min/ave neighbors per boids
@@ -215,16 +216,6 @@ void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newForward,
 }
 // ---------------------------------------------- xxxcwr111704_terrain_following
 
-// switch to new proximity database -- just for demo purposes
-void Boid::newPD (ProximityDatabase& pd)
-{
-	// delete this boid's token in the old proximity database
-	delete proximityToken;
-
-	// allocate a token for this boid in the proximity database
-	proximityToken = pd.allocateToken (this);
-}       
-
 //-----------------------------------------------------------------------------
 // xxx perhaps this should be a call to a general purpose annotation for
 // xxx "local xxx axis aligned box in XZ plane" -- same code in in
@@ -252,8 +243,9 @@ ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
 AbstractVehicle* Boid::cloneVehicle(
 	ProximityDatabase* pkProximityDatabase ) const
 {
-	Boid* pkNewBoid = (NULL == pkProximityDatabase) ? new Boid() : new Boid( *pkProximityDatabase );
-	pkNewBoid->setParentPlugin( this->m_pkParentPlugin );
+	Boid* pkVehicle = ET_NEW Boid();
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	pkVehicle->setParentPlugin( this->m_pkParentPlugin );
 
-	 return pkNewBoid;
+	 return pkVehicle;
 }

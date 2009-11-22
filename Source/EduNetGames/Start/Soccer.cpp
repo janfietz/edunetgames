@@ -106,7 +106,6 @@ namespace {
             setMaxSpeed (9.0f);         // velocity is clipped to this magnitude
 
             setPosition(0,0,0);
-            clearTrailHistory ();    // prevent long streaks due to teleportation
             setTrailParameters (100, 6000);
         }
 
@@ -173,7 +172,6 @@ namespace {
                     setPosition(Vec3(-playerPosition[m_MyID].x, playerPosition[m_MyID].y, playerPosition[m_MyID].z));
                 }
             m_home = position();
-            clearTrailHistory ();    // prevent long streaks due to teleportation
             setTrailParameters (10, 60);
         }
 

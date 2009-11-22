@@ -55,7 +55,6 @@ void NetSoccerBall::reset ( void )
     setMaxSpeed ( 9.0f );       // velocity is clipped to this magnitude
 
     setPosition ( 0,0,0 );
-    clearTrailHistory ();    // prevent long streaks due to teleportation
     setTrailParameters ( 100, 6000 );
 }
 //-----------------------------------------------------------------------------

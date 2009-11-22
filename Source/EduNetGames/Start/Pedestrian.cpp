@@ -96,12 +96,8 @@ namespace {
         typedef std::vector<Pedestrian*> groupType;
 
         // constructor
-        Pedestrian (ProximityDatabase& pd)
+        Pedestrian()
         {
-            // allocate a token for this boid in the proximity database
-            proximityToken = NULL;
-            newPD (pd);
-
             // reset Pedestrian state
             reset ();
         }
@@ -109,8 +105,6 @@ namespace {
         // destructor
         virtual ~Pedestrian ()
         {
-            // delete this boid's token in the proximity database
-            delete proximityToken;
         }
 
         // reset all instance state
@@ -149,8 +143,11 @@ namespace {
             setTrailParameters (3, 60);
 
             // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
-        }
+			if( NULL != this->m_pkProximityToken )
+			{
+				m_pkProximityToken->updateForNewPosition(position());
+			}
+		}
 
         // per frame simulation update
         void update (const float currentTime, const float elapsedTime)
@@ -182,8 +179,11 @@ namespace {
             recordTrailVertex (currentTime, position());
 
             // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
-        }
+			if( NULL != this->m_pkProximityToken )
+			{
+				m_pkProximityToken->updateForNewPosition(position());
+			}
+		}
 
         // compute combined steering force: move forward, avoid obstacles
         // or neighbors if needed, otherwise follow the path and wander
@@ -227,7 +227,7 @@ namespace {
                 // where a collision is possible within caLeadTime seconds.)
                 const float maxRadius = caLeadTime * maxSpeed() * 2;
                 neighbors.clear();
-                proximityToken->findNeighbors (position(), maxRadius, neighbors);
+                m_pkProximityToken->findNeighbors (position(), maxRadius, neighbors);
 
                 if (leakThrough < frandom01())
                     collisionAvoidance =
@@ -345,18 +345,6 @@ namespace {
             annotationLine (BR, FR, white);
         }
 
-        // switch to new proximity database -- just for demo purposes
-        void newPD (ProximityDatabase& pd)
-        {
-            // delete this boid's token in the old proximity database
-            delete proximityToken;
-
-            // allocate a token for this boid in the proximity database
-            proximityToken = pd.allocateToken (this);
-        }
-
-        // a pointer to this boid's interface object for the proximity database
-        ProximityToken* proximityToken;
 
         // allocate one and share amoung instances just to save memory usage
         // (change to per-instance allocation to be more MP-safe)
@@ -693,7 +681,8 @@ namespace {
         void addPedestrianToCrowd (void)
         {
             population++;
-            Pedestrian* pedestrian = new Pedestrian (*pd);
+            Pedestrian* pedestrian = new Pedestrian();
+			pedestrian->allocateProximityToken(pd);
             crowd.push_back (pedestrian);
             if (population == 1) SimpleVehicle::selectedVehicle = pedestrian;
         }
@@ -749,7 +738,8 @@ namespace {
             }
 
             // switch each boid to new PD
-            for (iterator i=crowd.begin(); i!=crowd.end(); i++) (**i).newPD(*pd);
+            for (iterator i=crowd.begin(); i!=crowd.end(); i++) 
+				(**i).allocateProximityToken(pd);
 
             // delete old PD (if any)
             delete oldPD;
