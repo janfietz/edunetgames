@@ -27,10 +27,7 @@ namespace OpenSteer{
 		// type for a flock: an STL vector of Boid pointers
 		typedef std::vector<Boid*> groupType;
 
-		Boid (){
-			_movesPlanar = false;
-		};
-		Boid (ProximityDatabase& pd);		 
+		Boid ();
 		~Boid ();
 
 		OS_IMPLEMENT_CLASSNAME( Boid )
@@ -44,7 +41,6 @@ namespace OpenSteer{
 			const float elapsedTime );
 		void regenerateLocalSpaceForTerrainFollowing (const Vec3& newForward,
 			const float /* elapsedTime */);
-		void newPD (ProximityDatabase& pd);
 		void annotateAvoidObstacle (const float minDistanceToCollision);
 
 		virtual AbstractVehicle* cloneVehicle( 
@@ -56,8 +52,6 @@ namespace OpenSteer{
 		static size_t minNeighbors, maxNeighbors, totalNeighbors;
 	#endif // NO_LQ_BIN_STATS
 
-		// a pointer to this boid's interface object for the proximity database
-		ProximityToken* proximityToken;
 
 		static float worldRadius;
 		void setParentPlugin( class BoidsPlugin* pPlugin);		

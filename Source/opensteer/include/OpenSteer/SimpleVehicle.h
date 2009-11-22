@@ -110,18 +110,20 @@ namespace OpenSteer {
             //! (XXX this seems really fragile, needs to be redesigned XXX)
             SimpleVehicle_3::reset ();
 
-            setMass (1);          //! mass (defaults to 1 so acceleration=force)
-            setSpeed (0);         //! speed along Forward direction.
+            setMass( 1 );          //! mass (defaults to 1 so acceleration=force)
+            setSpeed( 0 );         //! speed along Forward direction.
 
-            setRadius (0.5f);     //! size of bounding sphere
+            setRadius( 0.5f );     //! size of bounding sphere
 
-            setMaxForce (0.1f);   //! steering force is clipped to this magnitude
-            setMaxSpeed (1.0f);   //! velocity is clipped to this magnitude
+            setMaxForce( 0.1f );   //! steering force is clipped to this magnitude
+            setMaxSpeed( 1.0f );   //! velocity is clipped to this magnitude
 
-            //! reset bookkeeping to do running averages of these quanities
-            resetSmoothedPosition ();
-            resetSmoothedCurvature ();
-            resetSmoothedAcceleration ();
+            //! reset bookkeeping to do running averages of these quantities
+            resetSmoothedPosition();
+            resetSmoothedCurvature();
+            resetSmoothedAcceleration();
+
+			clearTrailHistory(); // prevent long streaks due to teleportation
 
 			setLastSteeringForce( Vec3::zero );
         }
@@ -226,7 +228,7 @@ namespace OpenSteer {
 
 		//! CP ++
 		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
-		virtual void newPD( ProximityDatabase& /*pd*/ ) {};
+		virtual void allocateProximityToken( ProximityDatabase* pkProximityDatabase );
 		virtual AbstractVehicle* cloneVehicle( ProximityDatabase* ) const { return NULL; };
 
 		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
@@ -255,6 +257,11 @@ namespace OpenSteer {
 		//! for which additional information may be displayed.  Clicking the mouse
 		//! near a vehicle causes it to become the Selected Vehicle.
 		static AbstractVehicle* selectedVehicle;
+
+		// TODO: make private !
+		//! a pointer to this vehicles's interface object for the proximity database
+		ProximityToken* m_pkProximityToken;
+
 	protected:
 		Vec3 _lastSteeringForce;
 		bool _movesPlanar;
@@ -282,6 +289,7 @@ namespace OpenSteer {
 		float _curvature;
         float _smoothedCurvature;
 		AbstractUpdated* m_pkCustomUpdated;
+
 
 
         //! measure path curvature (1/turning-radius), maintain smoothed version

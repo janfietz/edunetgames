@@ -312,7 +312,7 @@ void
 OpenSteer::AnnotationMixin<Super>::clearTrailHistory (void)
 {
     //! brute force implementation, reset everything
-    setTrailParameters (trailDuration, trailVertexCount);
+    setTrailParameters( trailDuration, trailVertexCount );
 }
 
 //-----------------------------------------------------------------------------

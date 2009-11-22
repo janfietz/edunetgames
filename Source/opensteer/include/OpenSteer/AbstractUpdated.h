@@ -47,7 +47,13 @@ namespace OpenSteer {
 		{
 			if( 0 != this->m_pkCustomUpdated )
 			{
-				this->m_pkCustomUpdated->updateCustom( this, currentTime, elapsedTime );
+				// in case the custom updater decides to call the base class
+				// prevent infinite recursion, store the custom updater locally
+				// and restore it once done with the update
+				AbstractUpdated* pkCustomUpdated = this->m_pkCustomUpdated;
+				this->m_pkCustomUpdated = 0;
+				pkCustomUpdated->updateCustom( this, currentTime, elapsedTime );
+				this->m_pkCustomUpdated = pkCustomUpdated;
 			}
 		}
 

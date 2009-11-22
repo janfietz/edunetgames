@@ -45,6 +45,8 @@ void EulerVehicleUpdate::setVehicle( AbstractVehicle* pkVehicle )
 //-----------------------------------------------------------------------------
 void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
+	// only in case a custom has been set ?
+	BaseClass::update( currentTime, elapsedTime );
 	// store current world transform
 //	writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
 
@@ -127,8 +129,10 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 }
 
 //-------------------------------------------------------------------------
-void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const osScalar elapsedTime )
+void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
+	// only in case a custom has been set ?
+	BaseClass::update( currentTime, elapsedTime );
 	const Vec3 force = this->vehicle().determineCombinedSteering( elapsedTime );
 	Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
 
@@ -157,166 +161,3 @@ void SteeringForceVehicleUpdate::update( const osScalar /*currentTime*/, const o
 	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 
-//-------------------------------------------------------------------------
-// state machine test
-#if 0
-#include "OpenSteer/AbstractState.h"
-#include <string>
-
-std::string	kTest;
-
-
-void testStateMachine( void );
-
-using namespace OpenSteer;
-typedef TState<OpenSteer::LocalSpace> AbstractLocalSpaceState;
-typedef TStateMachine<OpenSteer::LocalSpace> LocalSpaceStateMachine;
-
-class LocalSpaceState : public AbstractLocalSpaceState
-{
-public:	
-/*	LocalSpaceState( )
-	{
-	}
-	LocalSpaceState( const LocalSpaceState& kSource )
-	{
-	}
-*/	virtual void enter( OpenSteer::LocalSpace* ){};
-	virtual void exit( OpenSteer::LocalSpace* ){};
-	
-	virtual void execute( OpenSteer::LocalSpace* pkEntity, osScalar fAccumTime, osScalar fDeltaTime )
-	{
-		bool bTest = true;
-		bTest = false;
-	}
-	
-};
-
-
-typedef TStateVector<OpenSteer::LocalSpace> LocalSpaceStateVector;
-
-
-void testStateMachine( void )
-{
-	
-	LocalSpace kLocalSpace;
-	LocalSpaceStateMachine kStateMachine;
-	LocalSpaceState kState;
-	kStateMachine.pushState( kState );
-	kStateMachine.execute( &kLocalSpace, 1.0f, 2.0f );
-	
-}
-#endif
-//-------------------------------------------------------------------------
-	
-#if 0	
-    //-----------------------------------------------------------------------------
-    class Pedestrian : public SimpleVehicle
-    {
-		public:
-        
-        // type for a group of Pedestrians
-        typedef std::vector<Pedestrian*> groupType;
-		
-		SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-		EulerVehicleUpdate m_kEulerUpdate;
-        
-        // constructor
-        Pedestrian (ProximityDatabase& pd):
-		m_kSteeringForceUpdate(*this),
-		m_kEulerUpdate(*this)
-        {
-            // allocate a token for this boid in the proximity database
-            proximityToken = NULL;
-            newPD (pd);
-            
-            // reset Pedestrian state
-            reset ();
-        }
-        
-        // destructor
-        virtual ~Pedestrian ()
-        {
-            // delete this boid's token in the proximity database
-            delete proximityToken;
-        }
-        
-        // reset all instance state
-        void reset (void)
-        {
-            // reset the vehicle 
-            SimpleVehicle::reset ();
-            
-            // max speed and max steering force (maneuverability)
-			float fAgility = 1.0 + frandom01();
-            setMaxSpeed ( 2.0 * fAgility );
-            setMaxForce ( 8.0 * fAgility );
-            
-            // initially stopped
-            setSpeed (0);
-            
-            // size of bounding sphere, for obstacle avoidance, etc.
-            setRadius (0.5); // width = 0.7, add 0.3 margin, take half
-            
-            // set the path for this Pedestrian to follow
-            path = getTestPath ();
-            
-            // set initial position
-            // (random point on path + random horizontal offset)
-            const float d = path->length() * frandom01();
-            const float r = path->radius();
-            const Vec3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
-            setPosition (path->mapPathDistanceToPoint (d) + randomOffset);
-            
-            // randomize 2D heading
-            randomizeHeadingOnXZPlane ();
-            
-            // pick a random direction for path following (upstream or downstream)
-            pathDirection = (frandom01() > 0.5) ? -1 : +1;
-            
-            // trail parameters: 3 seconds with 60 points along the trail
-            setTrailParameters (3, 60);
-            
-            // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
-        }
-		
-        // per frame simulation update
-        void update (const float currentTime, const float elapsedTime)
-        {
-            // apply steering force to our momentum
-//            applySteeringForce (determineCombinedSteering (elapsedTime),
-//                                elapsedTime);
-			// alternative way
-			this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
-			const Vec3& kSteeringForce = this->m_kSteeringForceUpdate.getForce();
-			this->m_kEulerUpdate.setForce( kSteeringForce );
-			this->m_kEulerUpdate.update( currentTime, elapsedTime );
-			
-            
-            // reverse direction when we reach an endpoint
-            if (gUseDirectedPathFollowing)
-            {
-                const Color darkRed (0.7f, 0, 0);
-                float const pathRadius = path->radius();
-                
-                if (Vec3::distance (position(), gEndpoint0) < pathRadius )
-                {
-                    pathDirection = +1;
-                    annotationXZCircle (pathRadius, gEndpoint0, darkRed, 20);
-                }
-                if (Vec3::distance (position(), gEndpoint1) < pathRadius )
-                {
-                    pathDirection = -1;
-                    annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
-                }
-            }
-            
-            // annotation
-            annotationVelocityAcceleration (5, 0);
-            recordTrailVertex (currentTime, position());
-            
-            // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
-        }
-#endif

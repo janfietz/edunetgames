@@ -93,20 +93,10 @@ bool NetPedestrian::gUseDirectedPathFollowing = true;
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 //-----------------------------------------------------------------------------
-NetPedestrian::NetPedestrian():
-proximityToken( NULL )
-{
-
-}
-
 //-----------------------------------------------------------------------------
 // constructor
-NetPedestrian::NetPedestrian( ProximityDatabase& pd ):
-proximityToken( NULL )
+NetPedestrian::NetPedestrian()
 {
-	// allocate a token for this boid in the proximity database
-	newPD (pd);
-
 	// reset Pedestrian state
 	reset ();
 
@@ -116,19 +106,20 @@ proximityToken( NULL )
 	TNetPedestrian kTestPedestrian;
 	OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
 }
+
 #pragma warning(pop)
 
 //-----------------------------------------------------------------------------
 NetPedestrian::~NetPedestrian()
 {
-	// delete this boid's token in the proximity database
-	ET_SAFE_DELETE( proximityToken );
 }
 
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetPedestrian::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
-	return NULL == pkProximityDatabase ? ET_NEW NetPedestrian() : ET_NEW NetPedestrian( *pkProximityDatabase );
+	AbstractVehicle* pkVehicle = ET_NEW NetPedestrian();
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	return pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
@@ -168,7 +159,10 @@ void NetPedestrian::reset (void)
 	setTrailParameters (3, 60);
 
 	// notify proximity database that our position has changed
-	proximityToken->updateForNewPosition (position());
+	if( NULL != this->m_pkProximityToken )
+	{
+		m_pkProximityToken->updateForNewPosition(position());
+	}
 
 	// notify the update states
 	this->m_kSteeringForceUpdate.setVehicle( this );
@@ -200,7 +194,10 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 	}
 
 	// notify proximity database that our position has changed
-	proximityToken->updateForNewPosition (position());
+	if( NULL != this->m_pkProximityToken )
+	{
+		m_pkProximityToken->updateForNewPosition(position());
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -250,7 +247,7 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 		// where a collision is possible within caLeadTime seconds.)
 		const float maxRadius = caLeadTime * maxSpeed() * 2;
 		m_kNeighbors.clear();
-		proximityToken->findNeighbors (position(), maxRadius, m_kNeighbors);
+		m_pkProximityToken->findNeighbors (position(), maxRadius, m_kNeighbors);
 
 		if (leakThrough < frandom01())
 			collisionAvoidance =
@@ -458,15 +455,3 @@ void NetPedestrian::annotateAvoidObstacle (const float minDistanceToCollision)
 	annotationLine (BL, BR, white);
 	annotationLine (BR, FR, white);
 }
-
-//-----------------------------------------------------------------------------
-// switch to new proximity database -- just for demo purposes
-void NetPedestrian::newPD( ProximityDatabase& pd )
-{
-	// delete this boid's token in the old proximity database
-	delete proximityToken;
-
-	// allocate a token for this boid in the proximity database
-	proximityToken = pd.allocateToken (this);
-}
-

@@ -67,7 +67,7 @@ NetCtfBaseVehicle::NetCtfBaseVehicle()
 }
 
 //-----------------------------------------------------------------------------
-NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase& pd )
+NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase* pd )
 {
 
 }
@@ -83,7 +83,9 @@ NetCtfBaseVehicle::~NetCtfBaseVehicle()
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetCtfBaseVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
-	return NULL == pkProximityDatabase ? ET_NEW NetCtfBaseVehicle() : ET_NEW NetCtfBaseVehicle( *pkProximityDatabase );
+	AbstractVehicle* pkVehicle = ET_NEW NetCtfBaseVehicle();
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	return pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
@@ -98,8 +100,6 @@ void NetCtfBaseVehicle::reset( void )
 	avoiding = false;         // not actively avoiding
 
 	randomizeStartingPositionAndHeading();  // new starting position
-
-	clearTrailHistory();     // prevent long streaks due to teleportation
 }
 
 //-----------------------------------------------------------------------------
@@ -251,7 +251,9 @@ void NetCtfBaseVehicle::annotateAvoidObstacle(const float minDistanceToCollision
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetCtfSeekerVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
-	return NULL == pkProximityDatabase ? ET_NEW NetCtfSeekerVehicle() : ET_NEW NetCtfSeekerVehicle( *pkProximityDatabase );
+	AbstractVehicle* pkVehicle = ET_NEW NetCtfSeekerVehicle();
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	return pkVehicle;
 }
 
 //-----------------------------------------------------------------------------
@@ -645,7 +647,9 @@ void NetCtfSeekerVehicle::update(const float currentTime, const float elapsedTim
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetCtfEnemyVehicle::cloneVehicle( ProximityDatabase* pkProximityDatabase ) const
 {
-	return NULL == pkProximityDatabase ? ET_NEW NetCtfEnemyVehicle() : ET_NEW NetCtfEnemyVehicle( *pkProximityDatabase );
+	AbstractVehicle* pkVehicle = ET_NEW NetCtfEnemyVehicle();
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	return pkVehicle;
 }
 
 //-----------------------------------------------------------------------------

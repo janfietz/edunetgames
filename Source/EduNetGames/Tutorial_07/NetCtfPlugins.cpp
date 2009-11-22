@@ -156,7 +156,7 @@ public:
 	void StartNetworkSession( void )
 	{
 		BaseClass::StartNetworkSession();
-		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
+		this->m_pNetInterface->AttachPlugin( &this->m_kReplicaManager );
 	}
 
 	//-------------------------------------------------------------------------

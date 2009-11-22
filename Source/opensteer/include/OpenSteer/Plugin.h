@@ -217,10 +217,7 @@ namespace OpenSteer {
 
 		virtual AbstractVehicleFactory* getVehicleFactory( void ) const { return this->m_pkVehicleFactory; };
 
-		virtual AbstractEntity* createEntity( EntityClassId classId ) const
-		{
-			return Plugin::createSystemEntity( classId );
-		}
+		virtual AbstractEntity* createEntity( EntityClassId classId ) const;
 
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId, ProximityDatabase* ) const { return NULL; };

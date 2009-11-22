@@ -68,24 +68,27 @@ AbstractController* LocalPlayerController::accessLocalPlayerController( void )
 //-----------------------------------------------------------------------------
 bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 {
+	// references
+	float& forwardComponent = LocalPlayerController::ms_kOutput.z;
+	float& sideComponent = LocalPlayerController::ms_kOutput.x;
 	bool bHasAxis = false;
 	switch (key)
 	{
 		// reset selected Plugin
 	case 'w':
-		LocalPlayerController::ms_kOutput.z = 1.0f;
+		forwardComponent = 1.0f;
 		bHasAxis = true;
 		break;
 	case 'a':
-		LocalPlayerController::ms_kOutput.x = 1.0f;
+		sideComponent = 1.0f;
 		bHasAxis = true;
 		break;
 	case 's':
-		LocalPlayerController::ms_kOutput.z = -1.0f;
+		forwardComponent = -1.0f;
 		bHasAxis = true;
 		break;
 	case 'd':
-		LocalPlayerController::ms_kOutput.x = -1.0f;
+		sideComponent = -1.0f;
 		bHasAxis = true;
 		break;
 	}
@@ -95,24 +98,21 @@ bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 //-----------------------------------------------------------------------------
 bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 {
+	// references
+	float& forwardComponent = LocalPlayerController::ms_kOutput.z;
+	float& sideComponent = LocalPlayerController::ms_kOutput.x;
+
 	bool bHasAxis = false;
 	switch (key)
 	{
-		// reset selected Plugin
 	case 'w':
-		LocalPlayerController::ms_kOutput.z = 0.0f;
-		bHasAxis = true;
-		break;
-	case 'a':
-		LocalPlayerController::ms_kOutput.x = 0.0f;
-		bHasAxis = true;
-		break;
 	case 's':
-		LocalPlayerController::ms_kOutput.z = 0.0f;
+		forwardComponent = 0.0f;
 		bHasAxis = true;
 		break;
 	case 'd':
-		LocalPlayerController::ms_kOutput.x = 0.0f;
+	case 'a':
+		sideComponent = 0.0f;
 		bHasAxis = true;
 		break;
 	}
@@ -128,7 +128,5 @@ void LocalPlayerController::updateCustom(
 	{
 		// pass the control force from here to the actual 'in game' controller
 		pkTargetController->setOutputForce( this->getOutputForce() );
-		bool bTest = true;
-		bTest = false;
 	}
 }

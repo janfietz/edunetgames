@@ -9,7 +9,10 @@ class ClientPlugin :
 	ET_DECLARE_BASE(TNetworkPlugin<PluginClass>);
 public:
 	ClientPlugin(bool bAddToRegistry = true):
-	  BaseClass( bAddToRegistry ){};
+	  BaseClass( bAddToRegistry )
+	  {
+		  this->m_kGamePlugin.setIsRemoteObject( true );
+	  };
 	virtual ~ClientPlugin(void){};
 
 	virtual const char* name (void) const {return "ClientPlugin";};
@@ -41,6 +44,8 @@ void ClientPlugin<PluginClass>::redraw (const float currentTime,
 template < class PluginClass >
 void ClientPlugin<PluginClass>::CreateContent( void )
 {
+	// note: in most cases a client plugin will not do anything in the open call
+	//       but ! the remote status of the plugin has to be checked by the coder himself
 	this->m_kGamePlugin.open();
 }
 //-----------------------------------------------------------------------------

@@ -231,7 +231,8 @@ void BoidsPlugin::nextPD (void)
     }
 
     // switch each boid to new PD
-    for (iterator i=flock.begin(); i!=flock.end(); i++) (**i).newPD(*pd);
+    for (iterator i=flock.begin(); i!=flock.end(); i++) 
+		(**i).allocateProximityToken(pd);
 
     // delete old PD (if any)
     delete oldPD;
@@ -284,7 +285,7 @@ void BoidsPlugin::printLQbinStats (void)
 	AbstractVehicleGroup kVG( this->allVehicles() );
     int min, max; float average;
     Boid& aBoid = **(flock.begin());
-    aBoid.proximityToken->getBinPopulationStats (min, max, average);
+    aBoid.m_pkProximityToken->getBinPopulationStats (min, max, average);
     std::cout << std::setprecision (2)
               << std::setiosflags (std::ios::fixed);
     std::cout << "Bin populations: min, max, average: "

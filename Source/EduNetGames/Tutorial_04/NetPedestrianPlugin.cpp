@@ -352,7 +352,7 @@ void NetPedestrianPlugin::nextPD (void)
 
 	// switch each vehicle to new PD
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.newPD(*pd);
+	kVG.allocateProximityToken(pd);
 
 	// delete old PD (if any)
 	ET_SAFE_DELETE( oldPD );

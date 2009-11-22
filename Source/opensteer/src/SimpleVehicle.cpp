@@ -73,7 +73,8 @@ OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 // constructor
 OpenSteer::SimpleVehicle::SimpleVehicle (void):
 _movesPlanar(true),
-m_pkCustomUpdated( NULL )
+m_pkCustomUpdated( NULL ),
+m_pkProximityToken( NULL )
 {
     // set inital state
     reset ();
@@ -91,9 +92,29 @@ m_pkCustomUpdated( NULL )
 // destructor
 OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 {
+	// cleanup the proximity token in case there is one
+	this->allocateProximityToken( NULL );
 	if( this == SimpleVehicle::selectedVehicle )
 	{
 		SimpleVehicle::selectedVehicle = NULL;
+	}
+}
+
+//-----------------------------------------------------------------------------
+// switch to new proximity database
+void OpenSteer::SimpleVehicle::allocateProximityToken( ProximityDatabase* pkProximityDatabase ) 
+{
+	// delete this vehicle's token in the old proximity database
+	OS_SAFE_DELETE( this->m_pkProximityToken );
+	if( NULL != pkProximityDatabase )
+	{
+		// allocate a token for this vehicle in the proximity database
+		this->m_pkProximityToken = pkProximityDatabase->allocateToken( this );
+		if( NULL != this->m_pkProximityToken )
+		{
+			// notify proximity database that our position has initially changed
+			this->m_pkProximityToken->updateForNewPosition( this->position() );
+		}
 	}
 }
 

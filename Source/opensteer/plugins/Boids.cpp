@@ -81,12 +81,9 @@ namespace {
 
 
         // constructor
-        Boid (ProximityDatabase& pd)
+        Boid()
         {
 			_movesPlanar = false;
-            // allocate a token for this boid in the proximity database
-            proximityToken = NULL;
-            newPD( pd );
 
             // reset all boid state
             reset();
@@ -94,10 +91,8 @@ namespace {
 
 
         // destructor
-        ~Boid ()
+        virtual ~Boid ()
         {
-            // delete this boid's token in the proximity database
-            delete proximityToken;
         }
 
 
@@ -123,8 +118,11 @@ namespace {
             setPosition( RandomVectorInUnitRadiusSphere () * 20 );
 
             // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition( position() );
-        }
+			if( NULL != this->m_pkProximityToken )
+			{
+				m_pkProximityToken->updateForNewPosition(position());
+			}
+		}
 
 
         // draw this boid into the scene
@@ -147,8 +145,11 @@ namespace {
             sphericalWrapAround ();
 
             // notify proximity database that our position has changed
-            proximityToken->updateForNewPosition (position());
-        }
+			if( NULL != this->m_pkProximityToken )
+			{
+				m_pkProximityToken->updateForNewPosition(position());
+			}
+		}
 
 
         // basic flocking
@@ -177,7 +178,7 @@ namespace {
 
             // find all flockmates within maxRadius using proximity database
             neighbors.clear();
-            proximityToken->findNeighbors (position(), maxRadius, neighbors);
+            m_pkProximityToken->findNeighbors (position(), maxRadius, neighbors);
 
     #ifndef NO_LQ_BIN_STATS
             // maintain stats on max/min/ave neighbors per boids
@@ -272,22 +273,10 @@ namespace {
         }
     //----------------------------------------------- xxxcwr111704_terrain_following
 
-        // switch to new proximity database -- just for demo purposes
-        void newPD (ProximityDatabase& pd)
-        {
-            // delete this boid's token in the old proximity database
-            delete proximityToken;
-
-            // allocate a token for this boid in the proximity database
-            proximityToken = pd.allocateToken (this);
-        }
-
 
         // group of all obstacles to be avoided by each Boid
         static ObstacleGroup obstacles;
 
-        // a pointer to this boid's interface object for the proximity database
-        ProximityToken* proximityToken;
 
         // allocate one and share amoung instances just to save memory usage
         // (change to per-instance allocation to be more MP-safe)
@@ -490,7 +479,8 @@ namespace {
             }
 
             // switch each boid to new PD
-            for (iterator i=flock.begin(); i!=flock.end(); i++) (**i).newPD(*pd);
+            for (iterator i=flock.begin(); i!=flock.end(); i++) 
+				(**i).allocateProximityToken(pd);
 
             // delete old PD (if any)
             delete oldPD;
@@ -513,7 +503,7 @@ namespace {
     #ifndef NO_LQ_BIN_STATS
             int min, max; float average;
             Boid& aBoid = **(flock.begin());
-            aBoid.proximityToken->getBinPopulationStats (min, max, average);
+            aBoid.m_pkProximityToken->getBinPopulationStats (min, max, average);
             std::cout << std::setprecision (2)
                       << std::setiosflags (std::ios::fixed);
             std::cout << "Bin populations: min, max, average: "
@@ -543,7 +533,8 @@ namespace {
         void addBoidToFlock (void)
         {
             population++;
-            Boid* boid = new Boid (*pd);
+            Boid* boid = new Boid();
+			boid->allocateProximityToken( pd );
             flock.push_back (boid);
             if (population == 1) SimpleVehicle::selectedVehicle = boid;
         }
