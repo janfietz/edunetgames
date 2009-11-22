@@ -38,6 +38,9 @@
 namespace OpenSteer
 {
 
+	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget );
+
+
 	osVector3& getVector3( const btVector3& kSource, osVector3& kTarget );
 	btVector3& getVector3( const osVector3& kSource, btVector3& kTarget );
 

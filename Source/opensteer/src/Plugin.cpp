@@ -39,6 +39,8 @@
 
 #include "OpenSteer/Plugin.h"
 #include "OpenSteer/SimplePlayer.h"
+#include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteer/Camera.h"
 
 
 //-----------------------------------------------------------------------------
@@ -52,7 +54,7 @@ OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
 //-----------------------------------------------------------------------------
 // currently selected plug-in (user can choose or cycle through them)
 OpenSteer::AbstractPlugin* OpenSteer::Plugin::selectedPlugin = NULL;
-
+on_plugin_selected_func OpenSteer::Plugin::ms_on_plugin_selected_func = NULL;
 //-----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
@@ -72,7 +74,7 @@ OpenSteer::Plugin::~Plugin()
 {
 	if( this == OpenSteer::Plugin::selectedPlugin )
 	{
-		OpenSteer::Plugin::selectedPlugin = NULL;
+		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 }
 
@@ -196,7 +198,7 @@ OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 {
     for (int i = 0; i < itemsInRegistry; i++)
     {
-        f (*registry[i]);
+        f(*registry[i]);
     }
 }
 
@@ -271,3 +273,99 @@ OpenSteer::Plugin::allVehiclesOfSelectedPlugin (void)
 }
 
 //-----------------------------------------------------------------------------
+void 
+OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
+{
+	if( pkPlugin == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	OpenSteer::Plugin::closeSelectedPlugin();
+	OpenSteer::Plugin::selectedPlugin = pkPlugin;
+	if( NULL != Plugin::ms_on_plugin_selected_func )
+	{
+		Plugin::ms_on_plugin_selected_func();
+	}
+	OpenSteer::Plugin::openSelectedPlugin();
+}
+
+//-----------------------------------------------------------------------------
+// select the "next" plug-in, cycling through "plug-in selection order"
+void 
+OpenSteer::Plugin::selectNextPlugin (void)
+{
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	Plugin::selectPlugin( OpenSteer::Plugin::selectedPlugin->next () );
+}
+
+//-----------------------------------------------------------------------------
+// select the plug-in by index
+void OpenSteer::Plugin::selectPluginByIndex (size_t idx)
+{
+	AbstractPlugin* p = Plugin::getPluginAt( idx );
+	if( ( NULL != p ) && (p != OpenSteer::Plugin::selectedPlugin) )
+	{
+		Plugin::selectPlugin( p );
+	}
+}
+
+//-----------------------------------------------------------------------------
+// handle function keys an a per-plug-in basis
+void 
+OpenSteer::Plugin::functionKeyForPlugin (int keyNumber)
+{
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
+}
+
+//-----------------------------------------------------------------------------
+// return name of currently selected plug-in
+const char* 
+OpenSteer::Plugin::nameOfSelectedPlugin (void)
+{
+	return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
+}
+
+//-----------------------------------------------------------------------------
+// open the currently selected plug-in
+void 
+OpenSteer::Plugin::openSelectedPlugin (void)
+{
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	OpenSteer::Camera::camera.reset ();
+	SimpleVehicle::selectedVehicle = NULL;
+	OpenSteer::Plugin::selectedPlugin->open ();
+}
+
+//-----------------------------------------------------------------------------
+// close the currently selected plug-in
+void 
+OpenSteer::Plugin::closeSelectedPlugin (void)
+{
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	OpenSteer::Plugin::selectedPlugin->close ();
+}
+
+//-----------------------------------------------------------------------------
+// reset the currently selected plug-in
+void 
+OpenSteer::Plugin::resetSelectedPlugin (void)
+{
+	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	{
+		return;
+	}
+	OpenSteer::Plugin::selectedPlugin->reset ();
+}

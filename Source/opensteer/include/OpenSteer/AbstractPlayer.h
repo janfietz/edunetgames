@@ -43,6 +43,7 @@ namespace OpenSteer
 	public:
 		virtual ~AbstractController(){}
 
+		virtual void setOutputForce( const Vec3& ) OS_ABSTRACT;
 		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
 
 	};
@@ -54,6 +55,7 @@ namespace OpenSteer
 		virtual ~AbstractPlayer(){}
 
 		virtual void setController( AbstractController* ) OS_ABSTRACT;
+		virtual AbstractController* accessController( void ) const OS_ABSTRACT;
 		virtual AbstractController const* const getController( void ) const OS_ABSTRACT;
 
 		virtual AbstractEntity* getControlledEntity( void ) const OS_ABSTRACT;

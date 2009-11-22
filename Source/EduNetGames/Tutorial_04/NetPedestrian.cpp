@@ -179,30 +179,7 @@ void NetPedestrian::reset (void)
 // per frame simulation update
 void NetPedestrian::update (const float currentTime, const float elapsedTime)
 {
-	if( this == SimpleVehicle::selectedVehicle )
-	{
-		if( false == this->isRemoteObject() )
-		{
-			this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
-		}
-		else
-		{
-			this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
-		}
-	}
-	else
-	{
-		this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
-	}
-	// apply steering force to our momentum
-//	applySteeringForce (determineCombinedSteering (elapsedTime),
-//		elapsedTime);
-	// alternative way
-	// now we can switch of steering force computation on the client
-	this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
-	const Vec3& kSteeringForce = this->m_kSteeringForceUpdate.getForce();
-	this->m_kEulerUpdate.setForce( kSteeringForce );
-	this->m_kEulerUpdate.update( currentTime, elapsedTime );
+	BaseClass::update( currentTime, elapsedTime );
 
 	// reverse direction when we reach an endpoint
 	if (gUseDirectedPathFollowing)
@@ -221,10 +198,6 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
 		}
 	}
-
-	// annotation
-	annotationVelocityAcceleration (5, 0);
-	recordTrailVertex (currentTime, position());
 
 	// notify proximity database that our position has changed
 	proximityToken->updateForNewPosition (position());

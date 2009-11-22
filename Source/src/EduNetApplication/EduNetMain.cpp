@@ -15,11 +15,11 @@ int EduNetMain (int argc, char **argv)
 	{
 		if( true ==  EduNetOptions::accessOptions().continueProcess() )
 		{
-			// initialize OpenSteerDemo application
-			OpenSteer::OpenSteerDemo::initialize ();
-
 			// initialize graphics
 			OpenSteer::initializeGraphics (argc, argv);
+
+			// initialize OpenSteerDemo application
+			OpenSteer::OpenSteerDemo::initialize ();
 
 			// run the main event processing loop
 			OpenSteer::runGraphics ();  
