@@ -33,6 +33,8 @@
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 
+#include "OpenSteer/Plugin.h"
+
 #define CLIENT_PORT  23456
 #define SERVER_PORT  12345
 
@@ -104,12 +106,15 @@ class AbstractNetworkPlugin
 public:
 	virtual ~AbstractNetworkPlugin(void){};
 
-	virtual void CreateContent( void ) = 0;
-	virtual void DeleteContent( void ) = 0;
-	virtual bool IsConnected() const = 0;
-	virtual bool DoAutoConnect( void ) const = 0;
-	virtual bool Connect() = 0;
-	virtual void Disconnect() = 0;
+	virtual void CreateContent( void ) ET_ABSTRACT;
+	virtual void DeleteContent( void ) ET_ABSTRACT;
+	virtual bool IsConnected() const ET_ABSTRACT;
+	virtual bool DoAutoConnect( void ) const ET_ABSTRACT;
+	virtual bool Connect() ET_ABSTRACT;
+	virtual void Disconnect() ET_ABSTRACT;
+
+	virtual OpenSteer::AbstractEntityFactory* getGamePluginEntityFactory( void ) const ET_ABSTRACT;
+	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const ET_ABSTRACT;
 
 };
 
@@ -132,6 +137,9 @@ public:
 	void redraw (const float currentTime, const float elapsedTime);
 	virtual void handleFunctionKeys (int keyNumber);
 	virtual void printMiniHelpForFunctionKeys (void) const;
+
+
+
 
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
@@ -260,9 +268,13 @@ public:
 	  BaseClass( bAddToRegistry ),
 		m_kGamePlugin( false )
 	{
+		this->m_pkGamePluginEntityFactory = this->m_kGamePlugin.getEntityFactory();
 		this->m_kGamePlugin.setParentPlugin( this );
 	};
-	virtual ~TNetworkPlugin(void) {};
+	virtual ~TNetworkPlugin(void) 
+	{
+
+	};
 
 	virtual void reset (void);
 	virtual void update (const float currentTime, const float elapsedTime);
@@ -279,7 +291,15 @@ public:
 		return ((OpenSteer::AbstractPlugin*)&this->m_kGamePlugin);
 	}
 
+	//----------------------------------------------------------------------------
+	// NetworkPlugin interface
+	virtual OpenSteer::AbstractEntityFactory* getGamePluginEntityFactory( void ) const
+	{
+		return this->m_pkGamePluginEntityFactory;
+	}
+protected:
 	PluginClass m_kGamePlugin;
+	OpenSteer::AbstractEntityFactory* m_pkGamePluginEntityFactory;
 };
 
 

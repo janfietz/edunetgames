@@ -32,6 +32,17 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* EntityFactory::createEntity( OpenSteer::EntityClassId classId ) const
+{
+	OpenSteer::AbstractEntity* pkEntity = OpenSteer::Plugin::createSystemEntity( classId );
+	if( NULL == pkEntity )
+	{
+		pkEntity = this->createVehicle( classId );
+	}
+	return pkEntity;
+}
+
+//-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
 	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
@@ -53,6 +64,12 @@ OpenSteer::AbstractVehicle* EntityFactory::createVehicle(  ) const
 	}
 	return NULL;
 };
+
+//-----------------------------------------------------------------------------
+void EntityFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+{
+	ET_SAFE_DELETE( pkEntity );
+}
 
 //-----------------------------------------------------------------------------
 void EntityFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
@@ -117,6 +134,17 @@ void EntityFactoryArray::setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle
 }
 
 //-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* EntityFactoryArray::createEntity( OpenSteer::EntityClassId classId ) const
+{
+	OpenSteer::AbstractEntity* pkEntity = OpenSteer::Plugin::createSystemEntity( classId );
+	if( NULL == pkEntity )
+	{
+		pkEntity = this->createVehicle( classId );
+	}
+	return pkEntity;
+}
+
+//-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactoryArray::createVehicle( OpenSteer::EntityClassId classId ) const
 {
 	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
@@ -132,6 +160,12 @@ OpenSteer::AbstractVehicle* EntityFactoryArray::createVehicle(  ) const
 {
 	return NULL;
 };
+
+//-----------------------------------------------------------------------------
+void EntityFactoryArray::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+{
+	ET_SAFE_DELETE( pkEntity );
+}
 
 //-----------------------------------------------------------------------------
 void EntityFactoryArray::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const

@@ -28,14 +28,12 @@
 
 #include "AbstractEntityReplica.h"
 #include "NetworkVehicle.h"
+#include "NetworkPlugin.h"
 
 #include "OpenSteerUT/AbstractEntityFactory.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
-#include "OpenSteer/Plugin.h"
 
 using namespace OpenSteer;
-
-OpenSteer::AbstractEntityFactory* AbstractEntityReplica::ms_pkFactory = NULL;
 
 //-----------------------------------------------------------------------------
 AbstractEntityReplica::AbstractEntityReplica():m_pkHostPlugin(NULL)
@@ -47,18 +45,17 @@ AbstractEntityReplica::AbstractEntityReplica():m_pkHostPlugin(NULL)
 AbstractEntityReplica::AbstractEntityReplica( OpenSteer::AbstractPlugin* pkHostPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject  ):
 m_pkHostPlugin(pkHostPlugin)
 {
-	assert( NULL != AbstractEntityReplica::ms_pkFactory );
-	this->setEntity( AbstractEntityReplica::ms_pkFactory->createVehicle( classId ) );
+	// now retrieve the original game entity factory
+	OpenSteer::AbstractPlugin* pkParentPlugin = pkHostPlugin->getParentPlugin();
+	AbstractNetworkPlugin* pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pkParentPlugin );
+	OpenSteer::AbstractEntityFactory* pkEntityFactory = pkNetworkPlugin->getGamePluginEntityFactory();
+	assert( NULL != pkEntityFactory );
+	this->setEntity( pkEntityFactory->createEntity( classId ) );
+
 	assert( NULL != this->getEntity() );
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 	this->m_kClassName = this->accessEntity()->getClassName();
 };
-
-//-----------------------------------------------------------------------------
-void AbstractEntityReplica::setAbstractEntityFactory( OpenSteer::AbstractEntityFactory* pkFactory )
-{
-	AbstractEntityReplica::ms_pkFactory = pkFactory;
-}
 
 //-----------------------------------------------------------------------------
 RakNet::RakString AbstractEntityReplica::GetName(void) const
@@ -74,7 +71,11 @@ RakNet::RakString AbstractEntityReplica::GetName(void) const
 void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
-	kVG.removeVehicle( this->accessEntity() );
+	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+	if( NULL != pkVehicle )
+	{
+		kVG.removeVehicle( pkVehicle );
+	}
 	this->releaseEntity();
 	ET_DELETE this;
 }
@@ -82,11 +83,15 @@ void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnect
 //-----------------------------------------------------------------------------
 RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
-	int nResult = kSerializer.serialize( serializeParameters );
-	if( nResult >= 0 )
+	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+	if( NULL != pkVehicle )
 	{
-		return static_cast<RakNet::RM3SerializationResult>(nResult);
+		OpenSteer::NetworkVehicleSerializer kSerializer( pkVehicle );
+		int nResult = kSerializer.serialize( serializeParameters );
+		if( nResult >= 0 )
+		{
+			return static_cast<RakNet::RM3SerializationResult>(nResult);
+		}
 	}
 	return RakNet::RM3SR_DO_NOT_SERIALIZE;
 }
@@ -94,7 +99,11 @@ RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::Serializ
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	OpenSteer::NetworkVehicleSerializer kSerializer( this->accessEntity() );
-	kSerializer.deserialize( deserializeParameters );
+	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+	if( NULL != pkVehicle )
+	{
+		OpenSteer::NetworkVehicleSerializer kSerializer( pkVehicle );
+		kSerializer.deserialize( deserializeParameters );
+	}
 }
 
