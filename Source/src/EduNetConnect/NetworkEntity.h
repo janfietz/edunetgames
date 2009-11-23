@@ -43,6 +43,8 @@ namespace OpenSteer {
 		void querySendParameters( OpenSteer::AbstractNetworkVehicle* pkVehicle, RakNet::PRO& kPro ) const;
 		int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 		void deserialize( RakNet::DeserializeParameters *deserializeParameters );
+		void serializeConstruction(RakNet::BitStream *constructionBitstream);
+		bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
 
 		static bool setLocalSpaceVariable( ESerializeDataType eVariable, AbstractLocalSpace* pkLocalSpace, const osVector3& kValue );
 		static bool setLocalSpaceDataVariable( ESerializeDataType eVariable, LocalSpaceData& pkLocalSpace, const osVector3& kValue );

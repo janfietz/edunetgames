@@ -79,6 +79,7 @@ public:
     // implement to create a vehicle of the specified class
     virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;
     virtual void addVehicle ( osAbstractVehicle* pkVehicle );
+	virtual void removeVehicle ( osAbstractVehicle* pkVehicle);
 
     //-------------------------------------------------------------------------
     void drawObstacles ( void );

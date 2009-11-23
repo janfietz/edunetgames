@@ -48,8 +48,12 @@ public:
 	virtual void DeallocReplica( RakNet::Connection_RM3 *sourceConnection );
 
 	virtual RakNet::RM3SerializationResult Serialize( RakNet::SerializeParameters *serializeParameters );
+	virtual void SerializeConstruction(RakNet::BitStream *constructionBitstream,
+		RakNet::Connection_RM3 *destinationConnection);
 
 	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
+	virtual bool DeserializeConstruction(RakNet::BitStream *constructionBitstream,
+		RakNet::Connection_RM3 *sourceConnection);
 
 private:
 	OpenSteer::AbstractPlugin* m_pkHostPlugin;

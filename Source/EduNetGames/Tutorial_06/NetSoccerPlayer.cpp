@@ -125,14 +125,31 @@ void NetSoccerPlayer::setHomeAndPosition(  const OpenSteer::Vec3& kPos )
 //-----------------------------------------------------------------------------
 int NetSoccerPlayer::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
-	int iResult = BaseClass::serialize( serializeParameters );
-	serializeParameters->outputBitstream[0].Write( this->b_ImTeamA );
-	return iResult;
+	return BaseClass::serialize( serializeParameters );	
 }
 
 //-----------------------------------------------------------------------------
 void NetSoccerPlayer::deserialize( RakNet::DeserializeParameters *deserializeParameters )
 {
-	BaseClass::deserialize( deserializeParameters );
-	deserializeParameters->serializationBitstream[0].Read( this->b_ImTeamA );
+	BaseClass::deserialize( deserializeParameters );	
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerPlayer::serializeConstruction(
+	RakNet::BitStream *constructionBitstream)
+{
+	constructionBitstream->Write( this->b_ImTeamA );
+	constructionBitstream->Write( this->m_MyID );
+}
+//-----------------------------------------------------------------------------
+bool NetSoccerPlayer::deserializeConstruction(
+	RakNet::BitStream *constructionBitstream )
+{
+	bool bResult = BaseClass::deserializeConstruction( constructionBitstream );
+	if (true == bResult)
+	{
+		constructionBitstream->Read( this->b_ImTeamA );
+		constructionBitstream->Read( this->m_MyID );
+	}
+	return bResult;
 }

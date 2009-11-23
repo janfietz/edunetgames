@@ -211,3 +211,24 @@ bool NetworkEntitySerializer::setLocalSpaceDataVariable(
 	}
 	return false;
 }
+//-----------------------------------------------------------------------------
+void NetworkEntitySerializer::serializeConstruction(
+	RakNet::BitStream *constructionBitstream)
+{
+	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkVehicle);
+	if( NULL != pkNetworkVehicle )
+	{
+		pkNetworkVehicle->serializeConstruction( constructionBitstream );
+	}
+}
+//-----------------------------------------------------------------------------
+bool NetworkEntitySerializer::deserializeConstruction(
+	RakNet::BitStream *constructionBitstream )
+{
+	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkVehicle);
+	if( NULL != pkNetworkVehicle )
+	{
+		return pkNetworkVehicle->deserializeConstruction( constructionBitstream );
+	}
+	return true;
+}

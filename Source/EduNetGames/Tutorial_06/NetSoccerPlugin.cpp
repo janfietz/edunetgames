@@ -211,14 +211,26 @@ void NetSoccerPlugin::close ( void )
 {
 	unsigned int uiPlayerCount = m_kTeamA.size();
     for ( unsigned int i=0; i < uiPlayerCount ; i++ )
-        delete m_kTeamA[i];
+	{
+		osAbstractVehicle* pkVehicle = m_kTeamA[i];
+		this->removeVehicle( pkVehicle );
+        delete pkVehicle;
+	}
     m_kTeamA.clear ();
 
 	uiPlayerCount = m_kTeamB.size();
     for ( unsigned int i=0; i < uiPlayerCount ; i++ )
-        delete m_kTeamB[i];
+	{
+		osAbstractVehicle* pkVehicle = m_kTeamB[i];
+		this->removeVehicle( pkVehicle );
+        delete pkVehicle;
+	}
     m_kTeamB.clear ();
     m_AllPlayers.clear();
+
+	osAbstractVehicle* pkVehicle = this->m_Ball;
+	this->removeVehicle(pkVehicle);
+	ET_DELETE pkVehicle;
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::reset ( void )
@@ -303,8 +315,39 @@ void NetSoccerPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicle( pkVehicle );
 }
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
+{
+	NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
+	if( NULL != pkPlayerVehicle )
+	{
 
+		NetSoccerPlayer::Group::iterator kIter = this->m_AllPlayers.begin();
+		NetSoccerPlayer::Group::iterator kIterEnd = this->m_AllPlayers.end();
+		while (kIterEnd != kIter)
+		{
+			NetSoccerPlayer* pkTmpVehicle = (*kIter);
+			if (pkPlayerVehicle == pkTmpVehicle)
+			{
+				kIter = this->m_AllPlayers.erase( kIter );
+				kIterEnd = this->m_AllPlayers.end();
+			}else
+			{
+				++kIter;
+			}
+		}
+			
+	}
 
+	NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
+	if( NULL != pkBall )
+	{		
+		this->m_Ball = NULL;		
+	}
+
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.removeVehicle( pkVehicle );
+}
 
 //-----------------------------------------------------------------------------
 

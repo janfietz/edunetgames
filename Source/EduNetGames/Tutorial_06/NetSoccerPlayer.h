@@ -57,6 +57,8 @@ public:
 
 	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
+	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
+	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
 
 	void setTeamIdAndPlayerNumber( bool isTeamA,  unsigned int id);
 	void setPlayerGroupsAndBall(Group& kOpponentGroup, Group& kAllGroup, NetSoccerBall* pkBall)

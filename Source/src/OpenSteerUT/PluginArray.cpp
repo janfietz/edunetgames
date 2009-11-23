@@ -29,6 +29,7 @@
 #include "PluginArray.h"
 
 #include "EduNetCommon/EduNetDraw.h"
+#include "AbstractVehicleGroup.h"
 
 
 using namespace OpenSteer;
@@ -272,6 +273,45 @@ AVGroup& PluginArray::allVehicles(void)
 		++kIter;
 	}
 	return this->m_kVehicles;
+}
+
+//-----------------------------------------------------------------------------
+void PluginArray::addVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
+{
+	
+}
+//-----------------------------------------------------------------------------
+void PluginArray::removeVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
+{
+	
+}
+//-----------------------------------------------------------------------------
+void PluginArray::addObstacle ( OpenSteer::AbstractObstacle* pkObstacle)
+{
+	this->allObstacles().push_back( pkObstacle );
+}
+//-----------------------------------------------------------------------------
+void PluginArray::removeObstacle ( OpenSteer::AbstractObstacle* pkObstacle)
+{
+	ObstacleGroup::iterator kIter = std::find( this->m_kAllObstacles.begin(), this->m_kAllObstacles.end(), pkObstacle );
+	if( kIter != this->m_kAllObstacles.end() )
+	{
+		this->m_kAllObstacles.erase( kIter );
+	}
+}
+//-----------------------------------------------------------------------------
+void PluginArray::addPlayer ( OpenSteer::AbstractPlayer* pkPlayer)
+{
+	this->allPlayers().push_back( pkPlayer );
+}
+//-----------------------------------------------------------------------------
+void PluginArray::removePlayer ( OpenSteer::AbstractPlayer* pkPlayer)
+{
+	PlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
+	if( kIter != this->m_kAllPlayers.end() )
+	{
+		this->m_kAllPlayers.erase( kIter );
+	}
 }
 //-----------------------------------------------------------------------------
 AbstractPlugin* PluginArray::next(void) const 

@@ -126,4 +126,17 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		}
 	}
 }
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::serializeConstruction(
+	RakNet::BitStream *constructionBitstream)
+{
+
+}
+//-----------------------------------------------------------------------------
+bool SimpleNetworkVehicle::deserializeConstruction(
+	RakNet::BitStream *constructionBitstream )
+{
+	return true;
+}
+
 

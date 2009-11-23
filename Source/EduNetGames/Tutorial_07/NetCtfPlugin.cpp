@@ -104,7 +104,12 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicle( pkVehicle );
 }
-
+//-----------------------------------------------------------------------------
+void NetCtfPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
+{
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.removeVehicle( pkVehicle );
+}
 
 //-----------------------------------------------------------------------------
 #define testOneObstacleOverlap(radius, center)               \
@@ -446,14 +451,14 @@ float NetCtfPlugin::minDistanceToObstacle( const Vec3& point ) const
 
 
 //-----------------------------------------------------------------------------
-void addObstacle(GLUI_Control* pkControl )
+void addAnObstacle(GLUI_Control* pkControl )
 {
 	NetCtfPlugin* pkPlugin = (NetCtfPlugin*)pkControl->ptr_val;
 	pkPlugin->addOneObstacle();
 }
 
 //-----------------------------------------------------------------------------
-void removeObstacle(GLUI_Control* pkControl )
+void removeAnObstacle(GLUI_Control* pkControl )
 {
 	NetCtfPlugin* pkPlugin = (NetCtfPlugin*)pkControl->ptr_val;
 	pkPlugin->removeOneObstacle();
@@ -470,9 +475,9 @@ void NetCtfPlugin::initGui( void* pkUserdata )
 		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
 		GLUI_Control* pkControl;
-		pkControl = glui->add_button_to_panel( pluginPanel, "Add Obstacle", -1, addObstacle );
+		pkControl = glui->add_button_to_panel( pluginPanel, "Add Obstacle", -1, addAnObstacle );
 		pkControl->set_ptr_val( this );
-		pkControl = glui->add_button_to_panel( pluginPanel, "Remove Obstacle", -1, removeObstacle  );
+		pkControl = glui->add_button_to_panel( pluginPanel, "Remove Obstacle", -1, removeAnObstacle  );
 		pkControl->set_ptr_val( this );
 	}
 };
