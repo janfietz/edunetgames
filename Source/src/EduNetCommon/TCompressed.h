@@ -1,6 +1,5 @@
-
-#ifndef __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
-#define __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
+#ifndef __TCOMPRESSED_H__
+#define __TCOMPRESSED_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -30,31 +29,51 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetProfile/GraphPlot.h"
+// compressing a value with a certain range into a data type with less bytes
+// costs - accuracy !
+//
+// Example:
+//		char bOut = TCompressedFixpoint<float,char,8>::writeCompress( 0.9f , -1.0f, 1.0f );
+//
+// Writes the float value 0.0f which is always between -1.0f and 1.0f into a byte. 
+// The transmission needs now 24 bits less the sending the whole float.
+//
+//     float fOut = TCompressedFixpoint<float,char,8>::readInflate( bOut , -1.0f, 1.0f );
+//
+// Converts the received char back to the origin float.
 
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer {
-
-	class AbstractVehicle;
-
-	//-------------------------------------------------------------------------
-	class AbstractVehicleMotionStatePlot
+template<typename InType, typename OutType, int iBitSize>
+class TCompressedFixpoint
+{
+private:
+	enum
 	{
-	public:
-		AbstractVehicleMotionStatePlot();
-		virtual ~AbstractVehicleMotionStatePlot();
-
-		void recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
-		void draw( void ) const;
-
-		mutable Profile::GraphValuesArray m_kLinearVelocity;
-		mutable Profile::GraphValuesArray m_kAngularVelocity;
-		mutable Profile::GraphValuesArray m_kSteeringForce;
-	private:
-		AbstractVehicle* m_pkVehicle;
+		MaxAccessValue = 1 << iBitSize,		
+		BitMask   = MaxAccessValue - 1,
+		Converter  = BitMask - 1,
 	};
-}
+
+public:
+
+	static OutType writeCompress( InType kValue, const InType kLowBound, const InType kHighBound )
+	{
+		assert( (kValue >= kLowBound && kValue <= kHighBound) );
+		kValue -= kLowBound;
+		kValue *= 1 / (kHighBound - kLowBound);
+		return static_cast<OutType>( kValue * Converter ) & BitMask;
+	}
+
+	static InType readInflate( OutType kValue, const InType kLowBound, const InType kHighBound )
+	{
+		assert( (kValue < MaxAccessValue) );	
+		InType kOutValue = static_cast<InType>(kValue & BitMask);
+		kOutValue /= static_cast<InType>( Converter );
+		kOutValue *= ( kHighBound - kLowBound );
+		return (kLowBound + kOutValue);
+	}
+};
 
 
-#endif // __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
+#endif // __TCOMPRESSED_H__

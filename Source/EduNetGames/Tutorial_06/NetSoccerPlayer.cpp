@@ -49,8 +49,12 @@ void NetSoccerPlayer::reset (void)
 //-----------------------------------------------------------------------------
 // per frame simulation update
 // (parameter names commented out to prevent compiler warning from "-W")
-void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTime)
+osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 {
+	if( this->isRemoteObject() )
+	{
+		return this->lastSteeringForce();
+	}
     // if I hit the ball, kick it.
 
     const float distToBall = OpenSteer::Vec3::distance (position(), m_Ball->position());
@@ -62,7 +66,7 @@ void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTi
     // otherwise consider avoiding collisions with others
     OpenSteer::Vec3 collisionAvoidance = steerToAvoidNeighbors(1, (OpenSteer::AVGroup&)*m_AllPlayers);
     if(collisionAvoidance != OpenSteer::Vec3::zero)
-	applySteeringForce (collisionAvoidance, elapsedTime);
+	this->setLastSteeringForce( collisionAvoidance );
     else
 	{
 	float distHomeToBall = OpenSteer::Vec3::distance (m_home, m_Ball->position());
@@ -72,7 +76,7 @@ void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTi
 		if( b_ImTeamA ? position().x > m_Ball->position().x : position().x < m_Ball->position().x)
 		{
 		OpenSteer::Vec3 seekTarget = xxxsteerForSeek(m_Ball->position());
-		applySteeringForce (seekTarget, elapsedTime);
+		this->setLastSteeringForce(seekTarget);
 		}
 	    else
 		{
@@ -83,7 +87,7 @@ void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTi
 		    OpenSteer::Vec3 behindBallForce = xxxsteerForSeek(behindBall);
 		    annotationLine (position(), behindBall ,OpenSteer::Color(0.0f,1.0f,0.0f));
 		    OpenSteer::Vec3 evadeTarget = xxxsteerForFlee(m_Ball->position());
-		    applySteeringForce (behindBallForce*10.0f + evadeTarget, elapsedTime);
+		    this->setLastSteeringForce(behindBallForce*10.0f + evadeTarget);
 		    }
 		}
 	    }
@@ -91,10 +95,12 @@ void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTi
 	    {
 	    OpenSteer::Vec3 seekTarget = xxxsteerForSeek(m_home);
 	    OpenSteer::Vec3 seekHome = xxxsteerForSeek(m_home);
-	    applySteeringForce (seekTarget+seekHome, elapsedTime);
+	    this->setLastSteeringForce(seekTarget+seekHome);
 	    }
 
 	}
+	// return steering constrained to global XZ "ground" plane
+	return this->lastSteeringForce();
 }
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene

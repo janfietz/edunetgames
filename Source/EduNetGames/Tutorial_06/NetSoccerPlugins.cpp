@@ -246,7 +246,7 @@ public:
     NetSoccerRenderOfflinePlugin ( bool bAddToRegistry = true ) :
             BaseClass ( bAddToRegistry )
     {
-        this->addPlugin ( ET_NEW NetSoccerPlugin ( true ) );
+        this->addPlugin ( ET_NEW NetSoccerPlugin ( false ) );
         this->addPlugin ( new OpenSteer::CameraPlugin() );
     };
 

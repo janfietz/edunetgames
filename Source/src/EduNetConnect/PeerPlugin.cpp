@@ -2,4 +2,3 @@
 
 
 
-//PeerPlugin<> gPeerPlugin;

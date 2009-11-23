@@ -51,7 +51,7 @@ void PeerPlugin<PluginClass>::CreateContent( void )
 template < class PluginClass >
 void PeerPlugin<PluginClass>::DeleteContent( void )
 {
-		this->m_kGamePlugin.close();
+	this->m_kGamePlugin.close();
 }
 
 //-----------------------------------------------------------------------------
@@ -67,17 +67,6 @@ void PeerPlugin<PluginClass>::StartNetworkSession( void )
 	{
 		this->m_eNetworkSessionType = ENetworkSessionType_Peer;
 	}
-// 	bool bStarted(false);
-// 	while( false == bStarted )
-// 	{
-// 		while (SocketLayer::IsPortInUse(sd.port)==true)
-// 			sd.port++;
-// 		if( true == this->m_pNetInterface->Startup(32,100,&sd,1) )
-// 		{
-// 			this->m_pNetInterface->SetMaximumIncomingConnections(32);
-// 			bStarted = true;
-// 		}
-// 	}
 	printf("Starting peer at port: %d.\n", sd.port);	
 }
 

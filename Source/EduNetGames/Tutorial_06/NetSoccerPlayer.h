@@ -50,7 +50,7 @@ public:
 
     // per frame simulation update
     // (parameter names commented out to prevent compiler warning from "-W")
-	virtual void update ( const float currentTime, const float elapsedTime );
+	virtual osVector3 determineCombinedSteering( const float elapsedTime );
 
     // draw this character/vehicle into the scene
     virtual void draw ( const float currentTime, const float elapsedTime );

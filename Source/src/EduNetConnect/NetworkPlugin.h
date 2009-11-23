@@ -338,8 +338,21 @@ void TNetworkPlugin< PluginClass >::reset()
 template < class PluginClass >
 void TNetworkPlugin< PluginClass >::update (const float currentTime, const float elapsedTime)
 {
-	BaseClass::update( currentTime, elapsedTime );
-	m_kGamePlugin.update(currentTime, elapsedTime);
+	const bool bIsRemoteObject = m_kGamePlugin.isRemoteObject();
+	if( true == bIsRemoteObject )
+	{
+		// client side
+		// read net first
+		BaseClass::update( currentTime, elapsedTime );
+		m_kGamePlugin.update(currentTime, elapsedTime);
+	}
+	else
+	{
+		// peer side
+		// update first and write updated net data
+		m_kGamePlugin.update(currentTime, elapsedTime);
+		BaseClass::update( currentTime, elapsedTime );
+	}
 
 	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
 	{

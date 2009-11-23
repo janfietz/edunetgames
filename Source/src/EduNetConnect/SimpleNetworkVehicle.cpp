@@ -3,17 +3,62 @@
 
 using namespace OpenSteer;
 
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
+{
+	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);
+	SimpleProxyVehicle& kProxy = pkNetworkVehicle->accessProxyVehicle();
+	if( true == kProxy.m_bHasNewData )
+	{
+		// now read the proxy and apply the data to the scene vehicle
+		// position interpolation
+		float fFactor = 0.5;
+		osVector3 kNewPosition = interpolate( fFactor, pkNetworkVehicle->position(), kProxy.getLocalSpaceData()._position);
+
+		osVector3 kNewForward = interpolate( fFactor, pkNetworkVehicle->forward(), kProxy.getLocalSpaceData()._forward);
+		kNewForward.normalize();
+		kProxy.accessLocalSpaceData()._forward = kNewForward;
+		kProxy.accessLocalSpaceData()._position = kNewPosition;
+
+		pkNetworkVehicle->setLocalSpaceData( kProxy.getLocalSpaceData() );
+
+		pkNetworkVehicle->setLastSteeringForce( kProxy.lastSteeringForce() );
+		kProxy.m_bHasNewData = false;
+	}
+//	pkNetworkVehicle->update( currentTime, elapsedTime ); 
+}
+
+//-------------------------------------------------------------------------
+void SimpleNetworkVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
+{
+
+}
+
 //-------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
-SimpleNetworkVehicle::SimpleNetworkVehicle()
+SimpleNetworkVehicle::SimpleNetworkVehicle():m_kNetworkVehicleUpdate(this)
 { 
+//	this->setCustomUpdated( &this->m_kNetworkVehicleUpdate );
 }
 #pragma warning(pop)
 
 //-----------------------------------------------------------------------------
 SimpleNetworkVehicle::~SimpleNetworkVehicle() 
 { 
+}
+
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
+{
+	// in case the custom updater decides to call the base class
+	// prevent infinite recursion, store the custom updater locally
+	// and restore it once done with the update
+	AbstractUpdated* pkCustomUpdated = this->getCustomUpdated();
+	this->setCustomUpdated( NULL );
+	this->m_kNetworkVehicleUpdate.updateCustom( this, currentTime, elapsedTime );
+	BaseClass::update( currentTime, elapsedTime );
+	this->setCustomUpdated( pkCustomUpdated );
 }
 
 //-----------------------------------------------------------------------------
@@ -45,7 +90,8 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deserializeParameters )
 {
 	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
-
+	AbstractVehicle* pkSerializeTarget = &this->m_kProxyVehicle;
+	this->m_kProxyVehicle.m_bHasNewData = true;
 	OpenSteer::Vec3 kVec;
 	unsigned char dataTypes;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
@@ -53,7 +99,8 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	{
 		unsigned char dataType;
 		kStream.ReadAlignedBytes(&dataType,sizeof(unsigned char));
-		switch( dataType )
+		ESerializeDataType eDataType = static_cast<ESerializeDataType>(dataType);
+		switch( eDataType )
 		{
 		case(ESerializeDataType_Position):
 		case(ESerializeDataType_Forward):
@@ -66,36 +113,16 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 			break;
 		}
 
-		switch( dataType )
+		if( false == NetworkEntitySerializer::setLocalSpaceVariable( eDataType, pkSerializeTarget, kVec ) )
 		{
-		case(ESerializeDataType_Position):
+			switch( eDataType )
 			{
-				this->setPosition(kVec);
+			case(ESerializeDataType_Force):
+				{
+					pkSerializeTarget->setLastSteeringForce( kVec );	
+				}
+				break;
 			}
-			break;
-		case(ESerializeDataType_Forward):
-			{
-				this->setForward(kVec);	
-				this->regenerateLocalSpace( this->forward(), 0 );
-			}
-			break;
-		case(ESerializeDataType_Side):
-			{
-				this->setSide(kVec);	
-				this->regenerateLocalSpace( this->forward(), 0 );
-			}
-			break;
-		case(ESerializeDataType_Up):
-			{
-				this->setUp(kVec);	
-				this->regenerateLocalSpace( this->forward(), 0 );
-			}
-			break;
-		case(ESerializeDataType_Force):
-			{
-				this->setLastSteeringForce( kVec );	
-			}
-			break;
 		}
 	}
 }

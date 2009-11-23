@@ -32,7 +32,8 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot()
+	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot():
+		m_pkVehicle(NULL)
 	{
 		this->m_kLinearVelocity.accessValues(0).setName( "LinearVel" );
 		this->m_kAngularVelocity.accessValues(0).setName( "AngularVel" );
@@ -45,6 +46,14 @@ namespace OpenSteer {
 
 	void AbstractVehicleMotionStatePlot::recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
 	{
+		if( this->m_pkVehicle != pkVehicle )
+		{
+			this->m_kLinearVelocity.accessValues(0).clear();
+			this->m_kAngularVelocity.accessValues(0).clear();
+			this->m_kSteeringForce.accessValues(0).clear();
+		}
+		this->m_pkVehicle = pkVehicle;
+
 		if( NULL == pkVehicle )
 		{
 			return;
@@ -95,8 +104,8 @@ namespace OpenSteer {
 	void AbstractVehicleMotionStatePlot::draw( void ) const
 	{
 		// draw motion state plot
-		const float fGraphStart = 220;
-		const float fGraphHeight = 175;
+		const float fGraphStart = 100;
+		const float fGraphHeight = 150;
 		const float fGraphWidth = 400;
 		Profile::GraphPlot kPlot;
 		Profile::TGraphPointerArray kGraphArray;
