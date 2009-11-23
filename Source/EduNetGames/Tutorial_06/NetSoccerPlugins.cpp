@@ -142,6 +142,8 @@ public:
 	};
 	virtual ~RenderSoccerPeerPlugin() {};
 
+	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
+
 	OS_IMPLEMENT_CLASSNAME( RenderSoccerPeerPlugin )
 };
 
@@ -205,6 +207,8 @@ public:
 	};
 	virtual ~RenderSoccerClientPlugin() {};
 
+	virtual float selectionOrderSortKey (void) const { return 2.0f ;}
+
 	OS_IMPLEMENT_CLASSNAME( RenderSoccerClientPlugin )
 };
 
@@ -222,6 +226,8 @@ public:
 
 	SoccerClientServerPlugin(bool bAddToRegistry = true);
 	virtual ~SoccerClientServerPlugin(){};
+
+	virtual float selectionOrderSortKey (void) const { return 4.0f ;}
 
 	OS_IMPLEMENT_CLASSNAME( SoccerClientServerPlugin );
 };
@@ -252,7 +258,9 @@ public:
 
     virtual ~NetSoccerRenderOfflinePlugin() {};
 
-    OS_IMPLEMENT_CLASSNAME ( NetSoccerRenderOfflinePlugin )
+	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+
+    OS_IMPLEMENT_CLASSNAME ( SoccerOfflinePlugin )
 };
 
 NetSoccerRenderOfflinePlugin gNetNetSoccerRenderOfflinePlugin ( true );

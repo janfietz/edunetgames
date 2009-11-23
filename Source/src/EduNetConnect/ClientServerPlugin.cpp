@@ -1,25 +1,21 @@
 #include "ClientServerPlugin.h"
 
 
-#include "OpenSteerUT/EmptyPlugin.h"
 
-#include "ClientPlugin.h"
-#include "PeerPlugin.h"
+
+
 
 EduNet::EmptyPlugin gEmptyPlugin(false);
 
 using namespace OpenSteer;
-
-typedef PeerPlugin<EduNet::EmptyPlugin> EmtyServerPlugin;
-typedef ClientPlugin<EduNet::EmptyPlugin> EmtyClientPlugin;
 
 //-----------------------------------------------------------------------------
 ClientServerPlugin::ClientServerPlugin()
 {
 	Plugin::addToRegistry(this);
 
-	this->addPlugin( new EmtyServerPlugin( false ) );
-	this->addPlugin( new EmtyClientPlugin( false ) );
+	this->addPlugin( new EmptyServerPlugin( false ) );
+	this->addPlugin( new EmptyClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------
