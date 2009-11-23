@@ -50,10 +50,13 @@ public:
 
     // per frame simulation update
     // (parameter names commented out to prevent compiler warning from "-W")
-    void update ( const float /*currentTime*/, const float elapsedTime );
+	virtual void update ( const float currentTime, const float elapsedTime );
 
     // draw this character/vehicle into the scene
-    void draw ( void );
+    virtual void draw ( const float currentTime, const float elapsedTime );
+
+	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
+	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
 
 	void setTeamIdAndPlayerNumber( bool isTeamA,  unsigned int id);
 	void setPlayerGroupsAndBall(Group& kOpponentGroup, Group& kAllGroup, NetSoccerBall* pkBall)

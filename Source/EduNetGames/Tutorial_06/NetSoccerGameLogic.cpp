@@ -44,32 +44,68 @@ NetSoccerGameLogic::~NetSoccerGameLogic()
 //-----------------------------------------------------------------------------
 void NetSoccerGameLogic::update( const float currentTime, const float elapsedTime )
 {	
-	NetSoccerPlayer::Group& teamA = this->m_pkPlugin->m_kTeamA;
-	NetSoccerPlayer::Group& teamB = this->m_pkPlugin->m_kTeamB;
-	this->updateTeam(teamA, teamB, currentTime, elapsedTime);	
-	this->updateTeam(teamB, teamA, currentTime, elapsedTime);
+	if( this->isVehicleUpdate() )
+	{
+		osAbstractVehicle& kVehicle = this->vehicle();
+		kVehicle.update( currentTime, elapsedTime );		
+	}else
+	{
+		NetSoccerPlayer::Group teamA;
+		NetSoccerPlayer::Group teamB;
+		NetSoccerBall* pkBall(NULL);
 
+		const osAVGroup& kVehicles = this->m_pkPlugin->allVehicles();
+		{
+			osAVCIterator kIter = kVehicles.begin();
+			osAVCIterator kEnd = kVehicles.end();
+			while( kIter != kEnd )
+			{
+				osAbstractVehicle* pkVehicle = (*kIter);
+				// right now only one seeker
+				NetSoccerPlayer* pkPlayer = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
+				if( NULL != pkPlayer )
+				{
+					if (pkPlayer->b_ImTeamA)
+					{
+						teamA.push_back( pkPlayer );
+					} else
+					{
+						teamB.push_back( pkPlayer );
+					}
+				}else
+				if( NULL == pkBall )
+				{
+					pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
+				}				
+				++kIter;
+			}
+		}		
 
-	NetSoccerBall* pkBall = this->m_pkPlugin->m_Ball;
-	pkBall->setBox(this->m_pkPlugin->m_bbox);
-	pkBall->update ( currentTime, elapsedTime );
+		if (NULL != pkBall)
+		{
+			pkBall->setBox(this->m_pkPlugin->m_bbox);
+		}
+
+		this->updateTeam(teamA, teamB, pkBall, currentTime, elapsedTime);	
+		this->updateTeam(teamB, teamA, pkBall, currentTime, elapsedTime);
+	}
+
+		
 }
 
 //-----------------------------------------------------------------------------
 void NetSoccerGameLogic::updateTeam( NetSoccerPlayer::Group& kPlayerGroup,
-	NetSoccerPlayer::Group& kOpponentGroup,
+	NetSoccerPlayer::Group& kOpponentGroup, NetSoccerBall* pkBall,
 	const float currentTime, const float elapsedTime)
 {
-	NetSoccerPlayer::Group& kAllGroup = this->m_pkPlugin->m_AllPlayers;
-	NetSoccerBall* pkBall = this->m_pkPlugin->m_Ball;
+	NetSoccerPlayer::Group& kAllGroup = this->m_pkPlugin->m_AllPlayers;	
 
 	NetSoccerPlayer::Group::iterator kIter = kPlayerGroup.begin();
 	const NetSoccerPlayer::Group::const_iterator kIterEnd = kPlayerGroup.end();
 	while(kIterEnd != kIter)
 	{
 		NetSoccerPlayer* pkPlayer = (*kIter);
-		pkPlayer->setPlayerGroupsAndBall( kOpponentGroup, kAllGroup, pkBall );
-		pkPlayer->update( currentTime, elapsedTime);
+		pkPlayer->setPlayerGroupsAndBall( kOpponentGroup, kAllGroup, pkBall );		
 		++kIter;
 	}	
 }

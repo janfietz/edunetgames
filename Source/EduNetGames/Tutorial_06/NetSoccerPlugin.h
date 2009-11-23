@@ -103,7 +103,9 @@ public:
 private:
 
 	void createTeam(unsigned int uiTeamMemberCount,
-		NetSoccerPlayer::Group& kPlayerGroup, bool bTeamId);	
+		NetSoccerPlayer::Group& kPlayerGroup, bool bTeamId);
+
+	bool checkForGoal( void );
 };
 
 #endif // __NETSOCCERPLUGIN_H__
