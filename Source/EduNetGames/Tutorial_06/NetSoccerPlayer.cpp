@@ -98,7 +98,7 @@ void NetSoccerPlayer::update (const float /*currentTime*/, const float elapsedTi
 }
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene
-void NetSoccerPlayer::draw (void)
+void NetSoccerPlayer::draw (const float currentTime, const float elapsedTime)
 {
     drawBasic2dCircularVehicle (*this, b_ImTeamA ? OpenSteer::Color(1.0f,0.0f,0.0f):OpenSteer::Color(0.0f,0.0f,1.0f));
     drawTrail ();
@@ -115,4 +115,18 @@ void NetSoccerPlayer::setHomeAndPosition(  const OpenSteer::Vec3& kPos )
 {
 	this->m_home = kPos;
 	this->setPosition( this->m_home );
+}
+//-----------------------------------------------------------------------------
+int NetSoccerPlayer::serialize( RakNet::SerializeParameters *serializeParameters ) const
+{
+	int iResult = BaseClass::serialize( serializeParameters );
+	serializeParameters->outputBitstream[0].Write( this->b_ImTeamA );
+	return iResult;
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerPlayer::deserialize( RakNet::DeserializeParameters *deserializeParameters )
+{
+	BaseClass::deserialize( deserializeParameters );
+	deserializeParameters->serializationBitstream[0].Read( this->b_ImTeamA );
 }

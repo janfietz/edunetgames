@@ -32,6 +32,210 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
+#include "EduNetConnect/ClientPlugin.h"
+#include "EduNetConnect/PeerPlugin.h"
+
+#include "EduNetConnect/AbstractEntityReplica.h"
+#include "EduNetConnect/AbstractEntityReplicaConnection.h"
+
+//-----------------------------------------------------------------------------
+// network plugins
+//-----------------------------------------------------------------------------
+typedef PeerPlugin<NetSoccerPlugin> TSoccerPeerPlugin;
+typedef ClientPlugin<NetSoccerPlugin> TSoccerClientPlugin;
+
+
+//-----------------------------------------------------------------------------
+// soccer peer plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class SoccerPeerPlugin : public TSoccerPeerPlugin
+{
+	ET_DECLARE_BASE(TSoccerPeerPlugin)
+public:
+	SoccerPeerPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry )
+	{	
+
+		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
+
+		this->setLocalReplicaParamsFromManager( &this->m_kReplicaManager);
+
+		// remap the entity factory
+		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+		this->m_kGamePlugin.setEntityFactory( this->m_pkNetCtfFactory );
+	}
+	OS_IMPLEMENT_CLASSNAME( SoccerPeerPlugin )
+	virtual const char* name() const { return this->getClassName(); };
+
+	//-------------------------------------------------------------------------
+	void StartNetworkSession( void )
+	{
+		BaseClass::StartNetworkSession();
+		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
+	}
+
+	//-------------------------------------------------------------------------
+	void CreateContent( void )
+	{
+		BaseClass::CreateContent();
+
+	}
+
+	//-------------------------------------------------------------------------
+	void handleFunctionKeys (int keyNumber)
+	{
+		switch (keyNumber)
+		{
+		case 101:  setReplicationInterval(5);         break; //GLUT_KEY_UP
+		case 103:  setReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
+		default: BaseClass::handleFunctionKeys(keyNumber);
+		}	
+	}	
+
+	//-------------------------------------------------------------------------
+	virtual void initGui( void* pkUserdata ) 
+	{
+		BaseClass::initGui( pkUserdata );
+		GLUI* glui = ::getRootGLUI();
+		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+
+		this->addReplicaGuiWithManager( pkUserdata );
+	};
+
+	//-------------------------------------------------------------------------
+	void DeleteContent( void )
+	{	
+		BaseClass::DeleteContent();
+	}
+
+	virtual void onChangedReplicationParams(
+		const ReplicationParams& kParams )
+	{
+		this->m_kReplicaManager.SetAutoSerializeInterval(
+			kParams.interval);
+		this->m_kReplicaManager.SetDefaultPacketReliability(
+			kParams.sendParameter.reliability);
+		this->m_kReplicaManager.SetDefaultPacketPriority(
+			kParams.sendParameter.priority);
+	};
+
+private:
+
+	AbstractEntityReplicaFactory* m_pkNetCtfFactory;
+	AbstractEntityReplicaManager m_kReplicaManager;	
+};
+
+//-----------------------------------------------------------------------------
+// render server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class RenderSoccerPeerPlugin : public OpenSteer::PluginArrayPluginMixin<SoccerPeerPlugin>
+{
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<SoccerPeerPlugin> )
+public:
+	RenderSoccerPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+	};
+	virtual ~RenderSoccerPeerPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( RenderSoccerPeerPlugin )
+};
+
+RenderSoccerPeerPlugin gSoccerPeerPlugin( true );
+
+//-----------------------------------------------------------------------------
+// client plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class SoccerClientPlugin : public TSoccerClientPlugin
+{
+	ET_DECLARE_BASE(TSoccerClientPlugin)
+public:
+	SoccerClientPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry )
+	{
+		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
+		this->m_kGamePlugin.setEntityFactory( NULL );
+	}
+
+	OS_IMPLEMENT_CLASSNAME( SoccerClientPlugin )
+		virtual const char* name() const { return this->getClassName(); };
+
+	//-------------------------------------------------------------------------
+	void StartNetworkSession( void )
+	{
+		BaseClass::StartNetworkSession();
+		this->m_pNetInterface->AttachPlugin( &this->m_kReplicaManager );
+	}
+
+	//-------------------------------------------------------------------------
+	void CreateContent( void )
+	{
+		BaseClass::CreateContent();
+	}
+
+	//-------------------------------------------------------------------------
+	void DeleteContent( void )
+	{	
+		BaseClass::DeleteContent();
+	}
+private:
+
+	AbstractEntityReplicaFactory* m_pkBoidFactory;
+	AbstractEntityReplicaManager m_kReplicaManager;
+};
+
+//-----------------------------------------------------------------------------
+// render server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class RenderSoccerClientPlugin : public OpenSteer::PluginArrayPluginMixin<SoccerClientPlugin>
+{
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<SoccerClientPlugin> )
+public:
+	RenderSoccerClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+	};
+	virtual ~RenderSoccerClientPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( RenderSoccerClientPlugin )
+};
+
+RenderSoccerClientPlugin gSoccerClientPlugin( true );
+
+//-----------------------------------------------------------------------------
+// client server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class SoccerClientServerPlugin : public OpenSteer::PluginArray
+{
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
+public:
+
+	SoccerClientServerPlugin(bool bAddToRegistry = true);
+	virtual ~SoccerClientServerPlugin(){};
+
+	OS_IMPLEMENT_CLASSNAME( SoccerClientServerPlugin );
+};
+
+//-----------------------------------------------------------------------------
+SoccerClientServerPlugin::SoccerClientServerPlugin( bool bAddToRegistry ):
+BaseClass( bAddToRegistry )
+{
+	this->addPlugin( new SoccerPeerPlugin( false ) );
+	this->addPlugin( new SoccerClientPlugin( false ) );
+	this->addPlugin( new OpenSteer::CameraPlugin() );
+}
+
+SoccerClientServerPlugin gSoccerClientServerPlugin( true );
 
 //-----------------------------------------------------------------------------
 class NetSoccerRenderOfflinePlugin :

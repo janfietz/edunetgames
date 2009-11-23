@@ -65,6 +65,7 @@ protected:
 private:
 	void updateTeam( NetSoccerPlayer::Group& kPlayerGroup,
 		NetSoccerPlayer::Group& kOpponentGroup,
+		class NetSoccerBall* pkBall,
 		const float currentTime, const float elapsedTime);
 };
 
