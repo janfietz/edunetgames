@@ -116,13 +116,19 @@ namespace OpenSteer {
 
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
+		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
 
 		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
 		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
+		virtual void addObstacle (OpenSteer::AbstractObstacle* pkObstacle);
+		virtual void removeObstacle (OpenSteer::AbstractObstacle* pkObstacle);
 
 		virtual PlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
 		virtual const PlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
-        
+		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
+		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
+
 		//! format instance to characters for printing to stream
         friend std::ostream& operator<< (std::ostream& os, Plugin& pi)
         {

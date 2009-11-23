@@ -381,3 +381,48 @@ OpenSteer::Plugin::resetSelectedPlugin (void)
 	}
 	OpenSteer::Plugin::selectedPlugin->reset ();
 }
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::addVehicle ( 
+	OpenSteer::AbstractVehicle* pkVehicle)
+{
+	
+}
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::removeVehicle (
+	OpenSteer::AbstractVehicle* pkVehicle)
+{
+	
+}
+
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::addObstacle (
+	OpenSteer::AbstractObstacle* pkObstacle)
+{
+	this->allObstacles().push_back( pkObstacle );
+}
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::removeObstacle (
+	OpenSteer::AbstractObstacle* pkObstacle)
+{
+	ObstacleGroup::iterator kIter = std::find( this->m_kAllObstacles.begin(), this->m_kAllObstacles.end(), pkObstacle );
+	if( kIter != this->m_kAllObstacles.end() )
+	{
+		this->m_kAllObstacles.erase( kIter );
+	}
+}
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::addPlayer (
+	OpenSteer::AbstractPlayer* pkPlayer)
+{
+	this->allPlayers().push_back( pkPlayer );
+}
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::removePlayer (
+	OpenSteer::AbstractPlayer* pkPlayer)
+{
+	PlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
+	if( kIter != this->m_kAllPlayers.end() )
+	{
+		this->m_kAllPlayers.erase( kIter );
+	}
+}

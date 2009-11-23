@@ -63,18 +63,17 @@ m_pkHostPlugin(pkHostPlugin)
 		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
 		if( NULL != pkVehicle )
 		{
-			OpenSteer::AbstractVehicleGroup kVG( pkHostPlugin->allVehicles() );
-			kVG.addVehicle( pkVehicle );
+			pkHostPlugin->addVehicle( pkVehicle );
 		}
 		OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
 		if( NULL != pkObstacle )
 		{
-			pkHostPlugin->allObstacles().push_back( pkObstacle );
+			pkHostPlugin->addObstacle( pkObstacle );
 		}
 		OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
 		if( NULL != pkPlayer )
 		{
-			pkHostPlugin->allPlayers().push_back( pkPlayer );
+			pkHostPlugin->addPlayer( pkPlayer );
 		}
 	}
 };
@@ -92,31 +91,22 @@ RakNet::RakString AbstractEntityReplica::GetName(void) const
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
-	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
 	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
 	if( NULL != pkVehicle )
 	{
-		kVG.removeVehicle( pkVehicle );
+		m_pkHostPlugin->removeVehicle( pkVehicle );	
 	}
 
 	OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
 	if( NULL != pkObstacle )
 	{
-		ObstacleGroup::iterator kIter = std::find( m_pkHostPlugin->allObstacles().begin(), m_pkHostPlugin->allObstacles().end(), pkObstacle );
-		if( kIter != m_pkHostPlugin->allObstacles().end() )
-		{
-			m_pkHostPlugin->allObstacles().erase( kIter );
-		}
+		m_pkHostPlugin->removeObstacle( pkObstacle );		
 	}
 
 	OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
 	if( NULL != pkPlayer )
-	{
-		PlayerGroup::iterator kIter = std::find( m_pkHostPlugin->allPlayers().begin(), m_pkHostPlugin->allPlayers().end(), pkPlayer );
-		if( kIter != m_pkHostPlugin->allPlayers().end() )
-		{
-			m_pkHostPlugin->allPlayers().erase( kIter );
-		}
+	{		
+		m_pkHostPlugin->removePlayer( pkPlayer );		
 	}
 
 	this->releaseEntity();
@@ -141,4 +131,17 @@ void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deseriali
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }
-
+//-----------------------------------------------------------------------------
+void AbstractEntityReplica::SerializeConstruction(RakNet::BitStream *constructionBitstream,
+	RakNet::Connection_RM3 *destinationConnection)
+{
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
+	kSerializer.serializeConstruction( constructionBitstream );
+}
+//-----------------------------------------------------------------------------
+bool AbstractEntityReplica::DeserializeConstruction(RakNet::BitStream *constructionBitstream,
+	RakNet::Connection_RM3 *sourceConnection)
+{
+	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
+	return kSerializer.deserializeConstruction( constructionBitstream );
+}

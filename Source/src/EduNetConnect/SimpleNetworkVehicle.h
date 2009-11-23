@@ -88,7 +88,9 @@ namespace OpenSteer {
 		// AbstractNetworkVehicle interface
 		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
-
+		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
+		virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
+		
 		SimpleProxyVehicle& accessProxyVehicle( void )
 		{
 			return this->m_kProxyVehicle;

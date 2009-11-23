@@ -63,8 +63,10 @@ namespace OpenSteer {
 
 		virtual void testFunction() = 0;
 
-		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const = 0;
-		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) = 0;
+		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const ET_ABSTRACT;
+		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) ET_ABSTRACT;
+		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream) ET_ABSTRACT;
+		virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream ) ET_ABSTRACT;
 	};
 
 

@@ -78,8 +78,7 @@ namespace OpenSteer
 		virtual void handleFunctionKeys(int keyNumber); 
 		virtual void printMiniHelpForFunctionKeys(void) const; 
 		virtual ProximityDatabase* accessProximityDataBase( void ) const {return NULL;};
-		virtual const AVGroup& allVehicles(void) const;
-		virtual AVGroup& allVehicles(void);
+		
 
 		virtual AbstractPlugin* next(void) const;
 
@@ -106,10 +105,20 @@ namespace OpenSteer
 
 		virtual AbstractEntityFactory* getEntityFactory( void ) const {return NULL;};
 
+		virtual const AVGroup& allVehicles(void) const;
+		virtual AVGroup& allVehicles(void);
+		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+
 		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
 		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };
+		virtual void addObstacle (OpenSteer::AbstractObstacle* pkObstacle);
+		virtual void removeObstacle (OpenSteer::AbstractObstacle* pkObstacle);
+
 		virtual PlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
 		virtual const PlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
+		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
+		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
 	private:
 		PlayerGroup m_kAllPlayers;
 		ObstacleGroup m_kAllObstacles;

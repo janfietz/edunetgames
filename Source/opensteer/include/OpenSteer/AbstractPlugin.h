@@ -123,17 +123,22 @@ namespace OpenSteer {
         //! all vehicles(/agents/characters) defined by the Plugin
         virtual const AVGroup& allVehicles (void) const OS_ABSTRACT;
 		virtual AVGroup& allVehicles (void) OS_ABSTRACT;
+		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle) OS_ABSTRACT;
+		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle) OS_ABSTRACT;
 
 		//! return an STL vector of AbstractObstacle pointers of
 		//! all obstacles defined by the Plugin
 		virtual ObstacleGroup& allObstacles( void ) OS_ABSTRACT;
 		virtual const ObstacleGroup& allObstacles( void ) const OS_ABSTRACT;
+		virtual void addObstacle (OpenSteer::AbstractObstacle* pkObstacle) OS_ABSTRACT;
+		virtual void removeObstacle (OpenSteer::AbstractObstacle* pkObstacle) OS_ABSTRACT;
 
 		//! return  an STL vector of AbstractPlayer pointers of
 		//! all players defined by the Plugin
 		virtual PlayerGroup& allPlayers( void ) OS_ABSTRACT;
 		virtual const PlayerGroup& allPlayers( void ) const OS_ABSTRACT;
-		
+		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer) OS_ABSTRACT;
+		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer) OS_ABSTRACT;
  
 		//! returns pointer to the next Plugin in "selection order"
 		virtual AbstractPlugin* next(void) const OS_ABSTRACT;
