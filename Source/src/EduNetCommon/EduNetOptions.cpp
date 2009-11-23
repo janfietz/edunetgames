@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetOptions.h"
+#include "EduNetLog.h"
 
 // command line parsing
 #if __APPLE__ && __MACH__
@@ -73,7 +74,8 @@ int setOptions( EduNetOptions& kOptions,
 
 	for (i=0; i<ndefines; i++)
 	{
-		printf("selected plugin \"%s\"\n",defines[i]);
+//		EduNet::Log::printLine( "selected plugin \"%s\"",defines[i] );
+		printf( "selected plugin \"%s\"\n",defines[i] );
 		kOptions.setSelectedPlugin( defines[i] );
 	}
 
@@ -175,7 +177,7 @@ void EduNetOptions::setup( void )
 //-----------------------------------------------------------------------------
 const char* EduNetOptions::getAppName( void )
 {
- #ifdef win32
+#ifdef _WIN32
 	static char pszFile[MAX_PATH + 1];
 	static bool bDone = false;
 	if( false == bDone )
@@ -205,5 +207,5 @@ const char* EduNetOptions::getAppName( void )
 	return pszFile;
 #else
 	return "EduNetGamesApp";
-#endif //win32
+#endif // _WIN32
 }

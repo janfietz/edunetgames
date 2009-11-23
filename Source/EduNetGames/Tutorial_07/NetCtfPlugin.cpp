@@ -74,6 +74,11 @@ AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId) const
 	if( NULL != pkFactory )
 	{
 		pkVehicle = pkFactory->createVehicle( classId );
+		NetCtfBaseVehicle* pkBaseVehicle = dynamic_cast<NetCtfBaseVehicle*>( pkVehicle );
+		if( NULL != pkBaseVehicle )
+		{
+			pkBaseVehicle->m_pkObstacles = &this->allObstacles();
+		}
 	}
 	return pkVehicle;
 }
@@ -84,11 +89,6 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	if( NULL == pkVehicle )
 	{
 		return;
-	}
-	NetCtfBaseVehicle* pkBaseVehicle = dynamic_cast<NetCtfBaseVehicle*>( pkVehicle );
-	if( NULL != pkBaseVehicle )
-	{
-		pkBaseVehicle->m_pkObstacles = &this->allObstacles();
 	}
 
 	NetCtfSeekerVehicle* pkSeeker = dynamic_cast<NetCtfSeekerVehicle*>( pkVehicle );

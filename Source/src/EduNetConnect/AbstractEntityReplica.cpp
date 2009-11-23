@@ -57,6 +57,7 @@ m_pkHostPlugin(pkHostPlugin)
 	this->accessEntity()->setIsRemoteObject( bIsRemoteObject );
 	this->m_kClassName = this->accessEntity()->getClassName();
 
+	// remote objects have to be added to the client game plugin
 	if( true == bIsRemoteObject )
 	{
 		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );

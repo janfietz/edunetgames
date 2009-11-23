@@ -37,8 +37,9 @@ class btTransform;
 namespace OpenSteer
 {
 
+	typedef OpenSteer::AnnotationMixin<AbstractUpdated> TAbstractAnnotatedUpdated;
 	//-------------------------------------------------------------------------
-	class AbstractVehicleUpdate : public AbstractUpdated {
+	class AbstractVehicleUpdate : public TAbstractAnnotatedUpdated {
 	public:
 		AbstractVehicleUpdate( AbstractVehicle* pkVehicle ):
 		  m_pkVehicle( pkVehicle ), m_pkCustomUpdated(NULL)

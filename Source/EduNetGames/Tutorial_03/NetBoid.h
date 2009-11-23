@@ -57,8 +57,8 @@ namespace OpenSteer{
 	private:
 		// group of all obstacles to be avoided by each Boid
 		//        static ObstacleGroup obstacles;
-		const ObstacleGroup& obstacles(void) const;
-		ObstacleGroup& obstacles(void);
+		const ObstacleGroup& allObstacles(void) const;
+		ObstacleGroup& allObstacles(void);
 		// allocate one and share amoung instances just to save memory usage
 		// (change to per-instance allocation to be more MP-safe)
 		//static AVGroup neighbors;

@@ -28,6 +28,7 @@
 
 
 #include "EduNetApplication.h"
+#include "EduNetCommon/EduNetLog.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
@@ -142,6 +143,7 @@ void Application::_SDMInit( void )
 //-----------------------------------------------------------------------------
 void Application::_SDMCleanup( void )
 {
+//	EduNet::Log::printMessage( "Application cleanup ..." );
 	static bool bCleanedup = false;
 	if( true == bCleanedup )
 	{
@@ -152,19 +154,21 @@ void Application::_SDMCleanup( void )
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
+//	EduNet::Log::printMessage( "Application cleanup - done." );
 }
 
 
 //-----------------------------------------------------------------------------
 void Application::_SDMShutdown( void )
 {
-	printf( "shutdown ...\n");
+	EduNet::Log::printMessage( "Application shutdown ..." );
 	static bool bShutdown = false;
 	if( true == bShutdown )
 	{
 		return;
 	}
 	bShutdown = true;
+	EduNet::Log::printMessage( "Application shutdown - done." );
 }
 
 

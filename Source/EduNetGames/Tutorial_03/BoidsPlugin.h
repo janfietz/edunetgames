@@ -60,9 +60,6 @@ namespace OpenSteer{
         const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
 		AVGroup& allVehicles (void) {return ( AVGroup&)flock;}
 
-		const ObstacleGroup& obstacles(void) const { return m_kObstacles; }
-		ObstacleGroup& obstacles(void){ return m_kObstacles; }
-
 		// JF ++ 
 		virtual ProximityDatabase* accessProximityDataBase( void ) const
 		{
@@ -144,7 +141,6 @@ namespace OpenSteer{
            outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
 		NetBoidFactory m_kOfflineBoidFactory;
-		ObstacleGroup m_kObstacles;
 	
 	};
 }
