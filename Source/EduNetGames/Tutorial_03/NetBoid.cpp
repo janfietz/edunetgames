@@ -100,7 +100,7 @@ Vec3 Boid::steerToFlock (void)
 {
 	// avoid obstacles if needed
 	// XXX this should probably be moved elsewhere
-	const Vec3 avoidance = steerToAvoidObstacles (1.0f, obstacles());
+	const Vec3 avoidance = steerToAvoidObstacles (1.0f, allObstacles());
 	if (avoidance != Vec3::zero) return avoidance;
 
 	const float separationRadius =  5.0f;
@@ -236,8 +236,8 @@ void Boid::annotateAvoidObstacle (const float minDistanceToCollision)
 }
 
 
-const ObstacleGroup& Boid::obstacles(void) const { return m_pkParentPlugin->obstacles(); }
-ObstacleGroup& Boid::obstacles(void) { return m_pkParentPlugin->obstacles(); }
+const ObstacleGroup& Boid::allObstacles(void) const { return m_pkParentPlugin->allObstacles(); }
+ObstacleGroup& Boid::allObstacles(void) { return m_pkParentPlugin->allObstacles(); }
 
 //-----------------------------------------------------------------------------
 AbstractVehicle* Boid::cloneVehicle( void ) const

@@ -87,7 +87,15 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 		if( this->vehicle().speed() > 0 )
 		{
 			newForward += newVelocity.normalized();
-			newForward = newForward.normalized();
+			float fLength = newForward.length();
+			if( fLength > 0 )
+			{
+				newForward /= fLength;
+			}
+			else
+			{
+				newForward = -this->vehicle().forward();
+			}
 		}
 		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
 	}
@@ -159,5 +167,10 @@ void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osSca
 		}
 	}
 	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
+
+	const Vec3 c1 = this->vehicle().position();
+	const Vec3 c2 = this->vehicle().position() + this->m_kForce;
+	const Color color = gBlue;
+	this->annotationLine (c1, c2, color);
 }
 

@@ -37,17 +37,7 @@
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
-
-
-
-// ???
-// class AbstractGamePlugin : public AbstractPlugin
-// {
-// public:
-// }
-
-
-// typedef GamePluginMixin<Plugin> SimpleGamePlugin;
+#include "OpenSteerUT/SimplePhysicsVehicle.h"
 
 
 // anonymous namespace
@@ -55,8 +45,9 @@ namespace EduNet{
 
 	using namespace OpenSteer;
 
-	class EmptyVehicle : public SimpleVehicle
+	class EmptyVehicle : public SimplePhysicsVehicle
 	{
+		ET_DECLARE_BASE( SimplePhysicsVehicle )
 	public:
 
 		EmptyVehicle():m_uiId( EmptyVehicle::ms_kInstanceCount.Constructor() )
@@ -72,14 +63,18 @@ namespace EduNet{
 		// reset vehicle state
 		virtual void reset (void)
 		{
-			SimpleVehicle::reset();
+			BaseClass::reset();
+			this->setMaxForce( 9 );
+			// velocity is clipped to this magnitude
+			this->setMaxSpeed( 9 );
+
 			m_kUpdatePeriod.SetPeriodTime( 0.5f );
 		}
 
 		// per frame simulation update
 		virtual void update (const float currentTime, const float elapsedTime)
 		{
-			// do nothing
+			BaseClass::update( currentTime, elapsedTime );
 
 			// test the UpdatePeriod
 			size_t uiTicks = m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
