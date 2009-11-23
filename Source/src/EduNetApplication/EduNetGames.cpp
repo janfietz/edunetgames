@@ -76,7 +76,12 @@ namespace
 
 	bool gDelayedResetPluginXXX = false;
 
-	void printPlugin (OpenSteer::AbstractPlugin& pi) {std::cout << " " << pi << std::endl;} // XXX
+	void printPlugin (OpenSteer::AbstractPlugin& pi) 
+	{
+		std::ostringstream message;
+		message << " " << pi;
+		EduNet::Log::printLine( message );
+	}
 } // anonymous namespace
 
 namespace OpenSteer {
@@ -132,16 +137,22 @@ OpenSteer::OpenSteerDemo::initialize (void)
 	{
 		// XXX this block is for debugging purposes,
 		// XXX should it be replaced with something permanent?
+		std::ostringstream message0;
+		message0 << "Known plugins:" << std::ends;  
+		EduNet::Log::printLine( message0 );
 
-		std::cout << std::endl << "Known plugins:" << std::endl;   // xxx?
-		Plugin::applyToAll( printPlugin );                         // xxx?
-		std::cout << std::endl;                                    // xxx?
+ 		Plugin::applyToAll( printPlugin );                         
 
 		// identify default Plugin
-		if (!OpenSteer::Plugin::selectedPlugin) errorExit ("no default Plugin");
-		std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
-		std::cout << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;          // xxx?
-		std::cout << std::endl;                                    // xxx?
+		if (!OpenSteer::Plugin::selectedPlugin) 
+			errorExit ("no default Plugin");
+
+		std::ostringstream message;
+		message << std::endl << "Default plugin:" << std::endl;
+		message << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;
+		message << std::endl;
+		EduNet::Log::printLine( message );
+
 	}
 
 }
@@ -592,7 +603,6 @@ namespace {
 			OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
 	}
 
-
 	//-------------------------------------------------------------------------
 	// draw camera mode name in lower lefthand corner of screen
 	void 
@@ -603,7 +613,6 @@ namespace {
 		const OpenSteer::Vec3 screenLocation (10, 10, 0);
 		OpenSteer::draw2dTextAt2dLocation (message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
 	}
-
 
 	//-------------------------------------------------------------------------
 	// helper for drawDisplayFPS
@@ -1087,6 +1096,7 @@ namespace {
 	//-----------------------------------------------------------------------------
 	void consoleExit( int i )
 	{
+		EduNet::Log::printMessage( "console exit ..." );
 		EduNet::Application::_SDMCleanup();
 	}
 
@@ -1095,6 +1105,7 @@ namespace {
 	//-----------------------------------------------------------------------------
 	void windowExit( int i )
 	{
+		EduNet::Log::printMessage( "window exit ..." );
 		EduNet::Application::_SDMCleanup();
 	}
 

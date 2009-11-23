@@ -34,9 +34,23 @@
 namespace EduNet
 {
 	//-------------------------------------------------------------------------
+	enum ELogType
+	{
+		ELogType_Status,
+		ELogType_Message,
+		ELogType_Warning,
+		ELogType_Error,
+	};
+
+	//-------------------------------------------------------------------------
 	class Log
 	{
 	public:
+		static void setLogColor( ELogType eType );
+
+		//! print a line on the console
+		static void printLine (const char* message);
+		static void printLine (const std::ostringstream& message);
 
 		//! print a line on the console
 		static void printMessage (const char* message);

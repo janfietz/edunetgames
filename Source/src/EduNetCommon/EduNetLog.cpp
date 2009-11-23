@@ -28,12 +28,70 @@
 
 #include "EduNetLog.h"
 #include <iostream>
+
+#ifdef _WIN32
+#include "EduNetCommon/EduNetCommon.h"
+#include <windows.h>
+#endif
+
 using namespace EduNet;
+
+
+//-----------------------------------------------------------------------------
+void Log::setLogColor( ELogType eType )
+{
+#ifdef _WIN32
+	HANDLE hOutput = ::GetStdHandle(STD_OUTPUT_HANDLE);
+	if( NULL == hOutput )
+	{
+		return;
+	}
+	switch( eType )
+	{
+	case( ELogType_Status ):
+		{
+			::SetConsoleTextAttribute( hOutput, FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_GREEN );
+		}
+		break;
+	case( ELogType_Message ):
+		{
+			::SetConsoleTextAttribute( hOutput, FOREGROUND_GREEN|FOREGROUND_INTENSITY );
+		}
+		break;
+	case( ELogType_Warning ):
+		{
+			::SetConsoleTextAttribute( hOutput, FOREGROUND_BLUE|FOREGROUND_INTENSITY );
+		}
+		break;
+	case( ELogType_Error ):
+		{
+			::SetConsoleTextAttribute( hOutput, FOREGROUND_RED|FOREGROUND_INTENSITY );
+		}
+		break;
+	}
+#endif
+}
+
+//-----------------------------------------------------------------------------
+void 
+Log::printLine (const char* message)
+{
+	Log::setLogColor( ELogType_Message );
+	std::cout << message << std::endl << std::flush;
+}
+
+//-----------------------------------------------------------------------------
+void 
+Log::printLine (const std::ostringstream& message)
+{
+	Log::printLine( message.str().c_str() );
+}
 
 //-----------------------------------------------------------------------------
 void 
 Log::printMessage (const char* message)
 {
+	Log::setLogColor( ELogType_Message );
 	std::cout << "msg  : " <<  message << std::endl << std::flush;
 }
 
@@ -48,6 +106,7 @@ Log::printMessage (const std::ostringstream& message)
 void 
 Log::printWarning (const char* message)
 {
+	Log::setLogColor( ELogType_Warning );
 	std::cout << "warn : " <<  message << std::endl << std::flush;
 }
 
@@ -62,6 +121,7 @@ Log::printWarning (const std::ostringstream& message)
 void 
 Log::printError (const char* message)
 {
+	Log::setLogColor( ELogType_Error );
 	std::cout << "error: " <<  message << std::endl << std::flush;
 }
 

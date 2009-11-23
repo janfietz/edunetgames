@@ -73,30 +73,42 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 	//	applySteeringForce (determineCombinedSteering (elapsedTime),
 	//		elapsedTime);
 
-	// alternative way
-	// now we can switch of steering force computation on the client
-	bool bComputeSteeringForce = true;
-	Vec3 kSteeringForce;
+	// read client side controller data
+	bool bHasController = false;
+	osVector3 kSteeringForce, kControllerForce(osVector3::zero);
 	AbstractPlayer* pkPlayer = this->getPlayer();
 	if( NULL != pkPlayer )
 	{
 		const AbstractController* pkController = pkPlayer->getController();
 		if( NULL != pkController )
 		{
+			bHasController = true;
 			Vec3 kLocalSteeringForce = pkController->getOutputForce();
 			if( kLocalSteeringForce.length() > 0.1 )
 			{
-				localToWorldSpace( *this, kLocalSteeringForce, kSteeringForce );
-				kSteeringForce *= this->maxForce();
-				bComputeSteeringForce = false;
+				localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
+				kControllerForce *= this->maxForce();
+
+				const Vec3 c1 = this->position();
+				const Vec3 c2 = this->position() + kControllerForce;
+				const Color color = gCyan;
+				annotationLine (c1, c2, color);
 			}
 		}
 	}
-	if( true == bComputeSteeringForce )
+
+	// compute steering forces
+	this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
+	kSteeringForce = this->m_kSteeringForceUpdate.getForce();
+
+	// override steering force computation with controller values
+	if( true == bHasController )
 	{
-		this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
-		kSteeringForce = this->m_kSteeringForceUpdate.getForce();
+		kSteeringForce.x = kControllerForce.x;
+		kSteeringForce.z = kControllerForce.z;
 	}
+
+	// integrate results
 	this->m_kEulerUpdate.setForce( kSteeringForce );
 	this->m_kEulerUpdate.update( currentTime, elapsedTime );
 

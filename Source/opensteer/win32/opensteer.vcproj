@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\AbstractPlugin.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\AbstractState.h"
 				>
 			</File>
