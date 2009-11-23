@@ -32,14 +32,11 @@ using namespace OpenSteer;
 
 
 //-----------------------------------------------------------------------------
-NetSoccerBall::NetSoccerBall()
+NetSoccerBall::NetSoccerBall(): m_bbox ( NULL )
 {
+	reset();
 }
-//-----------------------------------------------------------------------------
-NetSoccerBall::NetSoccerBall ( NetSoccerGame::AABBox *bbox ) : m_bbox ( bbox )
-{
-    reset();
-}
+
 //-----------------------------------------------------------------------------
 NetSoccerBall::~NetSoccerBall()
 {

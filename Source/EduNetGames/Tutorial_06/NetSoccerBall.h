@@ -78,8 +78,7 @@ class NetSoccerBall : public OpenSteer::SimpleNetworkVehicle
     ET_DECLARE_BASE ( OpenSteer::SimpleNetworkVehicle )
 public:
 
-    NetSoccerBall();
-    NetSoccerBall ( NetSoccerGame::AABBox *bbox );
+    NetSoccerBall();    
     virtual ~NetSoccerBall();
 
     // create a clone
@@ -93,9 +92,13 @@ public:
 
     void kick ( OpenSteer::Vec3 dir, const float elapsedTime );
 
-    NetSoccerGame::AABBox *m_bbox;
+	void setBox( NetSoccerGame::AABBox *bbox ){ this->m_bbox = bbox;}
 private:
     ET_IMPLEMENT_CLASS_NO_COPY( NetSoccerBall )
+
+	NetSoccerGame::AABBox *m_bbox;
 };
+
+typedef OpenSteer::VehicleClassIdMixin<NetSoccerBall, ET_CID_NETSOCCER_BALL> TNetSoccerBall;
 
 #endif // __NETSOCCERBALL_H__

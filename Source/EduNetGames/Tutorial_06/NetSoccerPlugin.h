@@ -78,7 +78,7 @@ public:
 
     // implement to create a vehicle of the specified class
     virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;
-    virtual void addVehicle ( osAbstractVehicle* pkVehicle ){};
+    virtual void addVehicle ( osAbstractVehicle* pkVehicle );
 
     //-------------------------------------------------------------------------
     void drawObstacles ( void );
@@ -89,8 +89,8 @@ public:
 
     unsigned int        m_PlayerCountA;
     unsigned int        m_PlayerCountB;
-    NetSoccerPlayer::Group TeamA;
-    NetSoccerPlayer::Group TeamB;
+    NetSoccerPlayer::Group m_kTeamA;
+    NetSoccerPlayer::Group m_kTeamB;
     NetSoccerPlayer::Group m_AllPlayers;
 
     NetSoccerBall       *m_Ball;
@@ -100,6 +100,10 @@ public:
     int junk;
     int         m_redScore;
     int         m_blueScore;
+private:
+
+	void createTeam(unsigned int uiTeamMemberCount,
+		NetSoccerPlayer::Group& kPlayerGroup, bool bTeamId);	
 };
 
 #endif // __NETSOCCERPLUGIN_H__

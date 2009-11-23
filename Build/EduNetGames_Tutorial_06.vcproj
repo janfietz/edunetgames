@@ -196,6 +196,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerEntityFactory.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerEntityFactory.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerGameLogic.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerGameLogic.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPlayer.cpp"
 			>
 		</File>
@@ -209,6 +225,10 @@
 		</File>
 		<File
 			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPlugin.h"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPlugins.cpp"
 			>
 		</File>
 	</Files>

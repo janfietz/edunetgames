@@ -1,5 +1,3 @@
-#ifndef __NETSOCCERPLAYER_H__
-#define __NETSOCCERPLAYER_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,49 +25,52 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "NetSoccerGameLogic.h"
+#include "NetSoccerPlugin.h"
 
 //-----------------------------------------------------------------------------
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "OpenSteerUT/AbstractVehicleUtilities.h"
-#include "OpenSteerUT/VehicleClassIds.h"
-#include "EduNetConnect/SimpleNetworkVehicle.h"
-#include "NetSoccerBall.h"
-
-//-----------------------------------------------------------------------------
-class NetSoccerPlayer : public OpenSteer::SimpleNetworkVehicle
+NetSoccerGameLogic::NetSoccerGameLogic( osAbstractVehicle* pkVehicle):
+	BaseClass(pkVehicle), m_pkPlugin(NULL)
 {
-    ET_DECLARE_BASE ( OpenSteer::SimpleNetworkVehicle )
-public:
-    typedef  std::vector<NetSoccerPlayer*> Group;
-    // constructor
-    NetSoccerPlayer();   
 
-    OS_IMPLEMENT_CLASSNAME ( NetSoccerPlayer )
-    // reset state
-    void reset ( void );
+}
 
-    // per frame simulation update
-    // (parameter names commented out to prevent compiler warning from "-W")
-    void update ( const float /*currentTime*/, const float elapsedTime );
+//-----------------------------------------------------------------------------
+NetSoccerGameLogic::~NetSoccerGameLogic()
+{
 
-    // draw this character/vehicle into the scene
-    void draw ( void );
+}
 
-	void setTeamIdAndPlayerNumber( bool isTeamA,  unsigned int id);
-	void setPlayerGroupsAndBall(Group& kOpponentGroup, Group& kAllGroup, NetSoccerBall* pkBall)
+//-----------------------------------------------------------------------------
+void NetSoccerGameLogic::update( const float currentTime, const float elapsedTime )
+{	
+	NetSoccerPlayer::Group& teamA = this->m_pkPlugin->m_kTeamA;
+	NetSoccerPlayer::Group& teamB = this->m_pkPlugin->m_kTeamB;
+	this->updateTeam(teamA, teamB, currentTime, elapsedTime);	
+	this->updateTeam(teamB, teamA, currentTime, elapsedTime);
+
+
+	NetSoccerBall* pkBall = this->m_pkPlugin->m_Ball;
+	pkBall->setBox(this->m_pkPlugin->m_bbox);
+	pkBall->update ( currentTime, elapsedTime );
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerGameLogic::updateTeam( NetSoccerPlayer::Group& kPlayerGroup,
+	NetSoccerPlayer::Group& kOpponentGroup,
+	const float currentTime, const float elapsedTime)
+{
+	NetSoccerPlayer::Group& kAllGroup = this->m_pkPlugin->m_AllPlayers;
+	NetSoccerBall* pkBall = this->m_pkPlugin->m_Ball;
+
+	NetSoccerPlayer::Group::iterator kIter = kPlayerGroup.begin();
+	const NetSoccerPlayer::Group::const_iterator kIterEnd = kPlayerGroup.end();
+	while(kIterEnd != kIter)
 	{
-		this->m_others = &kOpponentGroup;
-		this->m_AllPlayers = &kAllGroup;
-		this->m_Ball = pkBall;
+		NetSoccerPlayer* pkPlayer = (*kIter);
+		pkPlayer->setPlayerGroupsAndBall( kOpponentGroup, kAllGroup, pkBall );
+		pkPlayer->update( currentTime, elapsedTime);
+		++kIter;
 	}	
-	void setHomeAndPosition(  const OpenSteer::Vec3& kPos );
-    // per-instance reference to its group
-    Group*  m_others;
-    Group*  m_AllPlayers;
-    NetSoccerBall*       m_Ball;
-    bool b_ImTeamA;
-    unsigned int m_MyID;
-    OpenSteer::Vec3 m_home;
-};
-typedef OpenSteer::VehicleClassIdMixin<NetSoccerPlayer, ET_CID_NETSOCCER_PLAYER> TNetSoccerPlayer;
-#endif // __NETSOCCERPLAYER_H__
+}
+

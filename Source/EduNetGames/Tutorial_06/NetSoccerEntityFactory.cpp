@@ -1,6 +1,3 @@
-#ifndef __VEHICLECLASSIDS_H__
-#define __VEHICLECLASSIDS_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,35 +26,41 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteer/Entity.h"
+#include "NetSoccerEntityFactory.h"
+#include "NetSoccerBall.h"
+#include "NetSoccerPlayer.h"
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+class NetNetSoccerPlayerEntityFactory : public OpenSteer::TEntityFactory<TNetSoccerPlayer>
 {
-	using namespace OpenSteer;
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetSoccerPlayer> );
+public:
+	NetNetSoccerPlayerEntityFactory(){};
+	virtual ~NetNetSoccerPlayerEntityFactory(){};
+};
 
-	//-------------------------------------------------------------------------
-	// implement entity class id
-	static const EntityClassId g_clasId_NetPedestrian( 1 + OS_CID_LASTRESERVED );	
-	static const EntityClassId g_clasId_CtfBaseVehicle( 2 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_CtfSeekerVehicle( 3 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_CtfEnemyVehicle( 4 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_NetBoid( 5 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_NetSoccerPlayer( 6 + OS_CID_LASTRESERVED );
-	static const EntityClassId g_clasId_NetSoccerBall( 7 + OS_CID_LASTRESERVED );
+//-----------------------------------------------------------------------------
+class NetNetSoccerBallEntityFactory : public OpenSteer::TEntityFactory<TNetSoccerBall>
+{
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<TNetSoccerBall> );
+public:
+	NetNetSoccerBallEntityFactory(){};
+	virtual ~NetNetSoccerBallEntityFactory(){};
+};
+
+
+//-----------------------------------------------------------------------------
+NetSoccerEntityFactory::NetSoccerEntityFactory()
+{
+	static NetNetSoccerPlayerEntityFactory gNetNetSoccerPlayerEntityFactory;
+	static NetNetSoccerBallEntityFactory gNetNetSoccerBallEntityFactory;
+	this->addEntityFactory( &gNetNetSoccerPlayerEntityFactory );
+	this->addEntityFactory( &gNetNetSoccerBallEntityFactory );
+}
+//-----------------------------------------------------------------------------
+NetSoccerEntityFactory::~NetSoccerEntityFactory()
+{
+
 }
 
-//-----------------------------------------------------------------------------
-// define entity class id
-#define ET_CID_UNKNOWN OS_CID_UNKNOWN
-#define ET_CID_NETPEDESTRIAN OpenSteer::g_clasId_NetPedestrian
-#define ET_CID_CTF_BASE_VEHICLE OpenSteer::g_clasId_CtfBaseVehicle
-#define ET_CID_CTF_ENEMY_VEHICLE OpenSteer::g_clasId_CtfSeekerVehicle
-#define ET_CID_CTF_SEEKER_VEHICLE OpenSteer::g_clasId_CtfEnemyVehicle
-#define ET_CID_NETBOID OpenSteer::g_clasId_NetBoid
-#define ET_CID_NETSOCCER_PLAYER OpenSteer::g_clasId_NetSoccerPlayer
-#define ET_CID_NETSOCCER_BALL OpenSteer::g_clasId_NetSoccerBall
 
-
-#endif // __VEHICLECLASSIDS_H__

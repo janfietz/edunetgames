@@ -49,11 +49,21 @@
 #include "OpenSteer/Draw.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
+
+#include "NetSoccerEntityFactory.h"
+#include "NetSoccerGameLogic.h"
 
 using namespace OpenSteer;
 //-----------------------------------------------------------------------------
-NetSoccerPlugin::NetSoccerPlugin ( bool bAddToRegistry ) : BaseClass ( bAddToRegistry )
+// now 1 global vehicle factory
+NetSoccerEntityFactory gOfflineNetSoccerEntityFactory;
+
+//-----------------------------------------------------------------------------
+NetSoccerPlugin::NetSoccerPlugin ( bool bAddToRegistry ) :
+	BaseClass ( bAddToRegistry )
 {
+	this->setEntityFactory( &gOfflineNetSoccerEntityFactory );
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::open ( void )
@@ -67,25 +77,23 @@ void NetSoccerPlugin::open ( void )
     // Blue Goal
     m_TeamBGoal = new NetSoccerGame::AABBox ( Vec3 ( 19,0,-7 ),  Vec3 ( 21,0,7 ) );
     // Make a ball
-    m_Ball = new NetSoccerBall ( m_bbox );
-    // Build team A
+
+	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETSOCCER_BALL );
+	if (NULL != pkVehicle)
+	{
+		this->m_Ball= dynamic_cast<NetSoccerBall*>( pkVehicle );
+		this->m_Ball->setBox(m_bbox);
+		this->addVehicle( pkVehicle );
+	}
+
+	// Build team A
     m_PlayerCountA = 8;
-    for ( unsigned int i=0; i < m_PlayerCountA ; i++ )
-    {
-        NetSoccerPlayer *pMicTest = new NetSoccerPlayer ( TeamA, m_AllPlayers, m_Ball, true, i );
-        TeamA.push_back ( pMicTest );
-        SimpleVehicle::selectedVehicle = pMicTest;
-        m_AllPlayers.push_back ( pMicTest );
-    }
-    // Build Team B
+	this->createTeam(this->m_PlayerCountA, m_kTeamA, true);
+   
+	// Build Team B
     m_PlayerCountB = 8;
-    for ( unsigned int i=0; i < m_PlayerCountB ; i++ )
-    {
-        NetSoccerPlayer *pMicTest = new NetSoccerPlayer ( TeamB, m_AllPlayers, m_Ball, false, i );
-        TeamB.push_back ( pMicTest );
-        SimpleVehicle::selectedVehicle = pMicTest;
-        m_AllPlayers.push_back ( pMicTest );
-    }
+	this->createTeam(this->m_PlayerCountB, m_kTeamB, false);
+   
     // initialize camera
     CameraPlugin::position2dCamera ( *m_Ball );
     Camera::camera.mode =  Camera::cmFixed;
@@ -93,16 +101,45 @@ void NetSoccerPlugin::open ( void )
     Camera::camera.fixedPosition.set ( 40, 40, 40 );
     m_redScore = 0;
     m_blueScore = 0;
+
+	this->reset();
+}
+//-----------------------------------------------------------------------------
+// createTeam
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::createTeam(unsigned int uiTeamMemberCount,
+				NetSoccerPlayer::Group& kPlayerGroup, bool bTeamId)
+{
+	for ( unsigned int i=0; i < uiTeamMemberCount ; ++i)
+	{
+		AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETSOCCER_PLAYER );
+		if (NULL != pkVehicle)
+		{
+			NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
+			pkPlayerVehicle->setTeamIdAndPlayerNumber(bTeamId, i);
+			kPlayerGroup.push_back ( pkPlayerVehicle );
+			m_AllPlayers.push_back ( pkPlayerVehicle );
+		}	
+	}
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime )
 {
-    // update simulation of test vehicle
-    for ( unsigned int i=0; i < m_PlayerCountA ; i++ )
-        TeamA[i]->update ( currentTime, elapsedTime );
-    for ( unsigned int i=0; i < m_PlayerCountB ; i++ )
-        TeamB[i]->update ( currentTime, elapsedTime );
-    m_Ball->update ( currentTime, elapsedTime );
+
+	NetSoccerGameLogic kGameLogic;
+	kGameLogic.setPlugin( this );
+	kGameLogic.update( currentTime, elapsedTime );
+
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.setCustomUpdated( &kGameLogic );
+	kVG.update( currentTime, elapsedTime );
+
+
+ //   // update simulation of test vehicle
+	//this->updateTeam(m_kTeamA, currentTime, elapsedTime);
+	//this->updateTeam(m_kTeamB, currentTime, elapsedTime);
+ //   
+ //   m_Ball->update ( currentTime, elapsedTime );
 
     if ( m_TeamAGoal->InsideX ( m_Ball->position() ) && m_TeamAGoal->InsideZ ( m_Ball->position() ) )
     {
@@ -115,14 +152,15 @@ void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime 
         m_blueScore++;
     }
 }
+
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::redraw ( const float currentTime, const float elapsedTime )
 {
     // draw test vehicle
     for ( unsigned int i=0; i < m_PlayerCountA ; i++ )
-        TeamA[i]->draw ();
+        m_kTeamA[i]->draw ();
     for ( unsigned int i=0; i < m_PlayerCountB ; i++ )
-        TeamB[i]->draw ();
+        m_kTeamB[i]->draw ();
     m_Ball->draw ( currentTime, elapsedTime );
     m_bbox->draw();
     m_TeamAGoal->draw();
@@ -151,12 +189,15 @@ void NetSoccerPlugin::redraw ( const float currentTime, const float elapsedTime 
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::close ( void )
 {
-    for ( unsigned int i=0; i < m_PlayerCountA ; i++ )
-        delete TeamA[i];
-    TeamA.clear ();
-    for ( unsigned int i=0; i < m_PlayerCountB ; i++ )
-        delete TeamB[i];
-    TeamB.clear ();
+	unsigned int uiPlayerCount = m_kTeamA.size();
+    for ( unsigned int i=0; i < uiPlayerCount ; i++ )
+        delete m_kTeamA[i];
+    m_kTeamA.clear ();
+
+	uiPlayerCount = m_kTeamB.size();
+    for ( unsigned int i=0; i < uiPlayerCount ; i++ )
+        delete m_kTeamB[i];
+    m_kTeamB.clear ();
     m_AllPlayers.clear();
 }
 //-----------------------------------------------------------------------------
@@ -175,28 +216,58 @@ void NetSoccerPlugin::reset ( void )
     // reset vehicle
     for ( unsigned int i=0; i < m_PlayerCountA ; i++ )
     {
-        NetSoccerPlayer* pkPlayer = TeamA[i];
-        pkPlayer->setPosition ( playerPosition[i] );
+        NetSoccerPlayer* pkPlayer = m_kTeamA[i];       
         pkPlayer->reset ();
+		pkPlayer->setHomeAndPosition ( playerPosition[i] );
     }
 
     for ( unsigned int i=0; i < m_PlayerCountB ; i++ )
     {
-        NetSoccerPlayer* pkPlayer = TeamB[i];
-
+        NetSoccerPlayer* pkPlayer = m_kTeamB[i];
+		pkPlayer->reset ();
         Vec3 kPos ( playerPosition[i] );
-        kPos.x *= -1;
-        pkPlayer->setPosition ( kPos );
-        pkPlayer->reset ();
+        kPos.x *= -1;		
+        pkPlayer->setHomeAndPosition ( kPos );
+        
     }
 
     m_Ball->reset();
 }
 
 //-----------------------------------------------------------------------------
-osAbstractVehicle* NetSoccerPlugin::createVehicle ( osEntityClassId ) const
+osAbstractVehicle* NetSoccerPlugin::createVehicle ( osEntityClassId  classId) const
 {
-    return NULL;
+	AbstractVehicle* pkVehicle = NULL;
+	const AbstractEntityFactory* pkFactory = this->getEntityFactory();
+	if( NULL != pkFactory )
+	{
+		pkVehicle = pkFactory->createVehicle( classId );
+	}
+	return pkVehicle;
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::addVehicle( AbstractVehicle* pkVehicle )
+{
+	if( NULL == pkVehicle )
+	{
+		return;
+	}
+
+	NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
+	if( NULL != pkPlayerVehicle )
+	{
+		//pkBaseVehicle->m_pkObstacles = &this->allObstacles();
+	}
+
+	NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
+	if( NULL != pkBall )
+	{
+		
+	}
+
+	/*AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.addVehicle( pkVehicle );*/
 }
 
 
