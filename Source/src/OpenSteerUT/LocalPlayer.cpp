@@ -92,6 +92,10 @@ bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 		bHasAxis = true;
 		break;
 	}
+	if( true == bHasAxis )
+	{
+		LocalPlayerController::ms_kOutput.normalize();
+	}
 	return bHasAxis;
 }
 
@@ -115,6 +119,10 @@ bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 		sideComponent = 0.0f;
 		bHasAxis = true;
 		break;
+	}
+	if( true == bHasAxis )
+	{
+		LocalPlayerController::ms_kOutput.normalize();
 	}
 	return bHasAxis;
 }

@@ -3,8 +3,6 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetApplication/EduNetApplication.h"
 
-
-
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 

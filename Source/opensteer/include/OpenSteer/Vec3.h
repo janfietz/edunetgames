@@ -104,7 +104,19 @@ namespace OpenSteer {
             return (len>0) ? (*this)/len : (*this);
         }
 
-        //! cross product (modify "*this" to be A x B)
+		//! normalize: returns normalized version (parallel to this, length = 1)
+		const Vec3& normalize (void)
+		{
+			//! skip divide if length is zero
+			const float len = length ();
+			if( len > 0 )
+			{
+				(*this) = (*this)/len;
+			}
+			return (*this);
+		}
+
+       //! cross product (modify "*this" to be A x B)
         //! [XXX  side effecting -- deprecate this function?  XXX]
         void cross(const Vec3& a, const Vec3& b)
         {

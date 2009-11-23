@@ -463,7 +463,7 @@ void BoidsPlugin::initObstacles (void)
 void BoidsPlugin::updateObstacles (void)
 {
     // first clear out obstacle list
-    this->obstacles().clear ();
+    this->allObstacles().clear ();
 
     // add back obstacles based on mode
     switch (constraint)
@@ -474,34 +474,34 @@ void BoidsPlugin::updateObstacles (void)
     case EBoidConstraintType_none:
         break;
     case EBoidConstraintType_insideSphere:
-        this->obstacles().push_back (&insideBigSphere);
+        this->allObstacles().push_back (&insideBigSphere);
         break;
     case EBoidConstraintType_outsideSphere:
-        this->obstacles().push_back (&insideBigSphere);
-        this->obstacles().push_back (&outsideSphere0);
+        this->allObstacles().push_back (&insideBigSphere);
+        this->allObstacles().push_back (&outsideSphere0);
         break;
     case EBoidConstraintType_outsideSpheres:
-        this->obstacles().push_back (&insideBigSphere);
+        this->allObstacles().push_back (&insideBigSphere);
     case EBoidConstraintType_outsideSpheresNoBig:
-        this->obstacles().push_back (&outsideSphere1);
-        this->obstacles().push_back (&outsideSphere2);
-        this->obstacles().push_back (&outsideSphere3);
-        this->obstacles().push_back (&outsideSphere4);
-        this->obstacles().push_back (&outsideSphere5);
-        this->obstacles().push_back (&outsideSphere6);
+        this->allObstacles().push_back (&outsideSphere1);
+        this->allObstacles().push_back (&outsideSphere2);
+        this->allObstacles().push_back (&outsideSphere3);
+        this->allObstacles().push_back (&outsideSphere4);
+        this->allObstacles().push_back (&outsideSphere5);
+        this->allObstacles().push_back (&outsideSphere6);
         break;
     case EBoidConstraintType_rectangle:
-        this->obstacles().push_back (&insideBigSphere);
-        this->obstacles().push_back (&bigRectangle);
+        this->allObstacles().push_back (&insideBigSphere);
+        this->allObstacles().push_back (&bigRectangle);
     case EBoidConstraintType_rectangleNoBig:
-        this->obstacles().push_back (&bigRectangle);
+        this->allObstacles().push_back (&bigRectangle);
         break;
     case EBoidConstraintType_outsideBox:
-        this->obstacles().push_back (&insideBigSphere);
-        this->obstacles().push_back (&outsideBigBox);
+        this->allObstacles().push_back (&insideBigSphere);
+        this->allObstacles().push_back (&outsideBigBox);
         break;
     case EBoidConstraintType_insideBox:
-        this->obstacles().push_back (&insideBigBox);
+        this->allObstacles().push_back (&insideBigBox);
         break;
     }
 }
@@ -509,8 +509,8 @@ void BoidsPlugin::updateObstacles (void)
 //-----------------------------------------------------------------------------
 void BoidsPlugin::drawObstacles (void)
 {
-    for (ObstacleIterator o = this->obstacles().begin();
-         o != this->obstacles().end();
+    for (ObstacleIterator o = this->allObstacles().begin();
+         o != this->allObstacles().end();
          o++)
     {
         (**o).draw (false, // draw in wireframe
