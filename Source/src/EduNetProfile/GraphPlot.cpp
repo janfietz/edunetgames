@@ -139,8 +139,8 @@ void GraphPlot::draw( const GraphValues& kValues, float sx, float sy, float widt
 
 	if( kInterval.x > 0 )
 	{
-		float sw( OpenSteer::drawGetWindowHeight() ), 
-			sh( OpenSteer::drawGetWindowWidth() );
+		const float sw( OpenSteer::drawGetWindowWidth() ), 
+			sh( OpenSteer::drawGetWindowHeight() );
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
 		this->drawGraphFrame( kGraphLocation );
 		OpenSteer::end2dDrawing (originalMatrixMode);
@@ -184,8 +184,8 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 
 //	if( kInterval.x > 0 )
 	{
-		float sw( OpenSteer::drawGetWindowHeight() ), 
-			sh( OpenSteer::drawGetWindowWidth() );
+		const float sw( OpenSteer::drawGetWindowWidth() ), 
+			sh( OpenSteer::drawGetWindowHeight() );
 
 		kIter = kValues.begin();
 		while( kIter != kEnd )
@@ -247,8 +247,8 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 //-----------------------------------------------------------------------------
 void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height ) const
 {
-	const float sw( OpenSteer::drawGetWindowHeight() ), 
-		sh( OpenSteer::drawGetWindowWidth() );
+	const float sw( OpenSteer::drawGetWindowWidth() ), 
+		sh( OpenSteer::drawGetWindowHeight() );
 	const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
 	GraphLocation kGraphLocation;
 	kGraphLocation.sx = sx;
@@ -317,8 +317,8 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 		GraphPlot::setGraphColor( kValues.getId(), &kColor );
 	}
 
-	const float sw( OpenSteer::drawGetWindowHeight() ), 
-		sh( OpenSteer::drawGetWindowWidth() );
+	const float sw( OpenSteer::drawGetWindowWidth() ), 
+		sh( OpenSteer::drawGetWindowHeight() );
 	const char* pszName = kValues.getName();
 	if( NULL != pszName )
 	{

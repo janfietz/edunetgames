@@ -191,9 +191,9 @@ public:
 	OfflineCtfPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetCtfPlugin( false ) );
-		this->addPlugin( new OpenSteer::CameraPlugin() );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflineCtfPlugin )
@@ -212,8 +212,8 @@ class CtfRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<CtfClient
 public:
 	CtfRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~CtfRenderClientPlugin() {};
 
@@ -233,8 +233,8 @@ class CtfRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<CtfPeerPlug
 public:
 	CtfRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~CtfRenderPeerPlugin() {};
 
@@ -267,10 +267,10 @@ public:
 CtfClientServerPlugin::CtfClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
+	this->addPlugin( new OpenSteer::CameraPlugin() );
 	this->addPlugin( new OpenSteer::GridPlugin() );
 	this->addPlugin( new CtfPeerPlugin( false ) );
 	this->addPlugin( new CtfClientPlugin( false ) );
-	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
 //-----------------------------------------------------------------------------

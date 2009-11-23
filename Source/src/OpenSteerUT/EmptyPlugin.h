@@ -103,7 +103,10 @@ namespace EduNet{
 	public:
 
 		// construction / destruction
-		EmptyPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry){};
+		EmptyPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry),
+			m_bShowMotionStatePlot(0),
+			m_bShowSamplePlot(1)
+		{};
 		virtual ~EmptyPlugin() {}
 
 		virtual const char* name (void) const {return "EmptyPlugin";}
@@ -112,11 +115,7 @@ namespace EduNet{
 
 		virtual void open (void);
 
-		virtual void update (const float currentTime, const float elapsedTime)
-		{
-			AbstractVehicleGroup kVehicles( m_kVehicles );
-			kVehicles.update( currentTime, elapsedTime );
-		}
+		virtual void update (const float currentTime, const float elapsedTime);
 
 		virtual void redraw (const float currentTime, const float elapsedTime);
 
@@ -135,6 +134,9 @@ namespace EduNet{
 
 		void initGui( void* pkUserdata );
 
+		OpenSteer::AbstractVehicleMotionStatePlot m_kMotionStateProfile;
+		int m_bShowMotionStatePlot;
+		int m_bShowSamplePlot;
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;

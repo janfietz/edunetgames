@@ -50,14 +50,18 @@
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteerUT/LocalPlayer.h"
 
+typedef struct TViewPort
+{
+	int tx, ty, tw, th;
+} ViewPort;
 
 //-----------------------------------------------------------------------------
 namespace
 {
-	int tx, ty, tw, th;
+	ViewPort viewPort = { 0, 0, 0, 0 };
 	int framePeriod = 100;//todo: test if this value should be 0
 
-	const char* appVersionName = EDUNET_APPNAME;//"OpenSteerDemo 0.8.2";
+	const char* appVersionName = EDUNET_APPNAME;
 
 	// The number of our GLUT window
 	int windowID = 0;
@@ -152,9 +156,7 @@ OpenSteer::OpenSteerDemo::initialize (void)
 		message << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;
 		message << std::endl;
 		EduNet::Log::printLine( message );
-
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -297,7 +299,6 @@ OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // for storing most recent mouse state
 int OpenSteer::OpenSteerDemo::mouseX = 0;
@@ -319,7 +320,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 	EduNet::Log::printMessage ("  c      select next camera mode.");
 	EduNet::Log::printMessage ("  f      select next preset frame rate");
 	EduNet::Log::printMessage ("  Tab    select next Plugin.");
-	EduNet::Log::printMessage ("  a      toggle annotation on/off.");
+	EduNet::Log::printMessage ("  o      toggle annotation on/off.");
 	EduNet::Log::printMessage ("  Space  toggle between Run and Pause.");
 	EduNet::Log::printMessage ("  ->     step forward one frame.");
 	EduNet::Log::printMessage ("  Esc    exit.");
@@ -348,7 +349,7 @@ OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 	if (phaseStackIndex >= phaseStackSize) errorExit ("phaseStack overflow");
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::popPhase (void)
 {
@@ -361,12 +362,11 @@ OpenSteer::OpenSteerDemo::popPhase (void)
 	drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
 }
 
-
 //-----------------------------------------------------------------------------
 float OpenSteer::OpenSteerDemo::phaseTimerBase = 0;
 float OpenSteer::OpenSteerDemo::phaseTimers [drawPhase+1];
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::initPhaseTimers (void)
 {
@@ -376,7 +376,7 @@ OpenSteer::OpenSteerDemo::initPhaseTimers (void)
 	phaseTimerBase = clock.getTotalRealTime ();
 }
 
-
+//-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 {
@@ -387,8 +387,6 @@ OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 
 
 //-----------------------------------------------------------------------------
-
-
 namespace {
 
 
@@ -430,24 +428,17 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// handler for window resizing
-
-
 	void 
 		reshapeFunc (int width, int height)
 	{
-		GLUI_Master.get_viewport_area( &tx, &ty, &tw, &th );
-		glViewport( tx, ty, tw, th );
-
-// 		// set viewport to full window
-// 		glViewport(0, 0, width, height);
+		GLUI_Master.get_viewport_area( &viewPort.tx, &viewPort.ty, &viewPort.tw, &viewPort.th );
+		glViewport( viewPort.tx, viewPort.ty, viewPort.tw, viewPort.th );
 
 		// set perspective transformation
-		glMatrixMode (GL_PROJECTION);
+		glMatrixMode( GL_PROJECTION );
 		glLoadIdentity ();
-		const GLfloat w = tw;
-		const GLfloat h = th;
-// 		const GLfloat w = width;
-// 		const GLfloat h = height;
+		const GLfloat w = viewPort.tw;
+		const GLfloat h = viewPort.th;
 		const GLfloat aspectRatio = (height == 0) ? 1 : w/h;
 		const GLfloat fieldOfViewY = 45;
 		const GLfloat hither = 1;  // put this on Camera so Plugins can frob it
@@ -457,7 +448,6 @@ namespace {
 		// leave in modelview mode
 		glMatrixMode(GL_MODELVIEW);
 	}
-
 
 	//-------------------------------------------------------------------------
 	// This is called (by GLUT) each time a mouse button pressed or released.
@@ -524,7 +514,6 @@ namespace {
 		}
 	}
 
-
 	//-------------------------------------------------------------------------
 	// called when mouse moves and any buttons are down
 	void 
@@ -563,7 +552,6 @@ namespace {
 		}
 	}
 
-
 	//-------------------------------------------------------------------------
 	// called when mouse moves and no buttons are down
 	void 
@@ -572,7 +560,6 @@ namespace {
 		OpenSteer::OpenSteerDemo::mouseX = x;
 		OpenSteer::OpenSteerDemo::mouseY = y;
 	}
-
 
 	//-------------------------------------------------------------------------
 	// called when mouse enters or exits the window
@@ -645,7 +632,6 @@ namespace {
 			stream << "sec)\n";
 		}
 	}
-
 
 	//-------------------------------------------------------------------------
 	// draw text showing (smoothed, rounded) "frames per second" rate
@@ -755,7 +741,6 @@ namespace {
 		}
 	}
 
-
 	// ------------------------------------------------------------------------
 	// cycle through frame rate presets  (XXX move this to OpenSteerDemo)
 	void 
@@ -795,7 +780,6 @@ namespace {
 		}
 	}
 
-
 	// ------------------------------------------------------------------------
 	// This function is called (by GLUT) each time a key is pressed.
 	//
@@ -804,13 +788,7 @@ namespace {
 	// parameter names commented out to prevent compiler warning from "-W"
 	void keyboardSpecialUpFunc(int key, int x, int y)
 	{
-		// 		if (demo)
-		// 		{
-		// 			demo->specialKeyboardUp(key,x,y);
-		// 		}
-
 	}
-
 
 	void 
 		keyboardFuncUp( unsigned char key, int x, int y ) 
@@ -871,10 +849,10 @@ namespace {
 			break;
 
 			// toggle annotation state
-// 		case 'a':
-// 			EduNet::Log::printMessage (OpenSteer::toggleAnnotationState () ?
-// 				"annotation ON" : "annotation OFF");
-// 			break;
+		case 'o':
+			EduNet::Log::printMessage (OpenSteer::toggleAnnotationState () ?
+				"annotation ON" : "annotation OFF");
+			break;
 
 			// toggle run/pause state
 		case space:
@@ -1082,9 +1060,18 @@ namespace {
 	void idleFunc( void )
 	{
 #ifdef _DEBUG
-		EduNet::Application::sleep( 10 );
+		EduNet::Application::sleep( 5 );
 #else
 		EduNet::Application::sleep( 1 );
+#endif
+#if 0
+		/* According to the GLUT specification, the current window is
+		undefined during an idle callback.  So we need to explicitly change
+		it if necessary */
+		if ( glutGetWindow() != windowID )
+			glutSetWindow(windowID);
+
+		glutPostRedisplay();
 #endif
 		displayFunc();
 //		glutSetWindow(windowID);
@@ -1173,6 +1160,10 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 	// register handler for when mouse enters or exists the window
 	glutEntryFunc (mouseEnterExitWindowFunc);
 
+	// gui elements
+	GLUI* glui = GLUI_Master.create_glui_subwindow( windowID, 
+		GLUI_SUBWINDOW_RIGHT );
+
 	// GLUI setup
 	GLUI_Master.set_glutReshapeFunc(reshapeFunc);  
 	GLUI_Master.set_glutKeyboardFunc(keyboardFunc);
@@ -1182,11 +1173,8 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 	GLUI_Master.set_glutSpecialUpFunc(keyboardSpecialUpFunc);
 	GLUI_Master.set_glutMouseFunc(mouseButtonFunc);
 
-
-	// gui elements
-	GLUI* glui = GLUI_Master.create_glui_subwindow( windowID, 
-		GLUI_SUBWINDOW_RIGHT );
 	glui->set_main_gfx_window( windowID );
+
 
 	// sort plugins before adding them to the gui
 	Plugin::sortBySelectionOrder();
@@ -1209,6 +1197,10 @@ OpenSteer::runGraphics (void)
 float 
 OpenSteer::drawGetWindowHeight (void) 
 {
+	if( viewPort.th > 0 )
+	{
+		return viewPort.th;
+	}
 	return glutGet( GLUT_WINDOW_HEIGHT );
 }
 
@@ -1216,6 +1208,10 @@ OpenSteer::drawGetWindowHeight (void)
 float 
 OpenSteer::drawGetWindowWidth  (void) 
 {
+	if( viewPort.tw > 0 )
+	{
+		return viewPort.tw;
+	}
 	return glutGet( GLUT_WINDOW_WIDTH );
 }
 

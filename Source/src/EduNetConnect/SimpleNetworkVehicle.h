@@ -35,6 +35,38 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
+	//-------------------------------------------------------------------------
+	class SimpleNetworkVehicleUpdate : public AbstractVehicleUpdate {
+		OS_DECLARE_BASE(AbstractVehicleUpdate)
+	public:
+		SimpleNetworkVehicleUpdate( AbstractVehicle* pkVehicle ):
+		BaseClass( pkVehicle )
+		{
+		}
+		virtual ~SimpleNetworkVehicleUpdate(){}
+
+		//-------------------------------------------------------------------
+		// interface AbstractUpdated
+		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+	private:
+	};
+
+	//-------------------------------------------------------------------------
+	class SimpleProxyVehicle : public SimplePhysicsVehicle
+	{
+	public:
+		SimpleProxyVehicle():m_bHasNewData(false)
+		{
+
+		}
+		virtual ~SimpleProxyVehicle()
+		{
+
+		}
+		bool m_bHasNewData;
+	private:
+	};
 
 	// SimpleNetworkVehicle_1 adds concrete NetworkVehicle methods to SimpleVehicle
 	typedef NetworkVehicleMixin<SimplePhysicsVehicle> SimpleNetworkVehicle_1;
@@ -49,13 +81,21 @@ namespace OpenSteer {
 
 		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
 
+
+		virtual void update (const float currentTime, const float elapsedTime);
+
 		//---------------------------------------------------------------------------
 		// AbstractNetworkVehicle interface
 		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
 
+		SimpleProxyVehicle& accessProxyVehicle( void )
+		{
+			return this->m_kProxyVehicle;
+		}
 	private:
-
+		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
+		SimpleProxyVehicle m_kProxyVehicle;
 
 	};
 

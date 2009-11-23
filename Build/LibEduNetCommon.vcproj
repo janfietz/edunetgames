@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Source\src\EduNetCommon\TCompressed.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Source\src\EduNetCommon\TUpdatePeriod.h"
 				>
 			</File>

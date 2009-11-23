@@ -4,6 +4,7 @@
 	Version="8,00"
 	Name="EduNetGames_Tutorial_06"
 	ProjectGUID="{6F84345E-A8E8-45D7-A50E-D363EFED3919}"
+	RootNamespace="EduNetGames_Tutorial_06"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

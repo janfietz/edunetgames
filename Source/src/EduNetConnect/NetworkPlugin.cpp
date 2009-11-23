@@ -307,12 +307,16 @@ void NetworkPlugin::reset (void)
 //-----------------------------------------------------------------------------
 void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( NULL == this->m_pNetInterface )
+	{
+		return;
+	}
 	if( !IsConnected()&& DoAutoConnect() )
 	{
 		this->Connect();
 	}
 
-	if(true == this->WaitForPong() )
+	if( true == this->WaitForPong() )
 	{
 		this->CheckPongTimeout();
 	}
@@ -512,6 +516,11 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::StopNetworkSession( void )
 {	
+	if( NULL != this->m_pNetInterface )
+	{
+		// do not allow any further connections
+		this->m_pNetInterface->SetMaximumIncomingConnections( 0 );
+	}
 	this->CloseOpenConnections();	
 
 	if( NULL != this->m_pNetInterface )
@@ -656,7 +665,7 @@ bool NetworkPlugin::PingForOtherPeers( const int iPort )
 	if( false == this->WaitForPong() )
 	{	
 		unsigned short usMyPort = 
-			this->m_pNetInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS,0).port;
+			this->m_pNetInterface->GetInternalID( UNASSIGNED_SYSTEM_ADDRESS,0 ).port;
 		if (usMyPort != iPort)
 		{		
 			if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )

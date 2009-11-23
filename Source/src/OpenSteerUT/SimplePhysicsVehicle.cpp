@@ -52,6 +52,18 @@ SimplePhysicsVehicle::~SimplePhysicsVehicle()
 // per frame simulation update
 void SimplePhysicsVehicle::update (const float currentTime, const float elapsedTime)
 {
+	if( NULL != this->getCustomUpdated() )
+	{
+		// in case the custom updater decides to call the base class
+		// prevent infinite recursion, store the custom updater locally
+		// and restore it once done with the update
+		AbstractUpdated* pkCustomUpdated = this->getCustomUpdated();
+		this->setCustomUpdated( NULL );
+		pkCustomUpdated->updateCustom( this, currentTime, elapsedTime );
+		this->setCustomUpdated( pkCustomUpdated );
+		return;
+	}
+
 	if( this == SimpleVehicle::selectedVehicle )
 	{
 		if( false == this->isRemoteObject() )
@@ -74,7 +86,7 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 	//		elapsedTime);
 
 	// read client side controller data
-	bool bHasController = false;
+	bool bHasControllerValues = false;
 	osVector3 kSteeringForce, kControllerForce(osVector3::zero);
 	AbstractPlayer* pkPlayer = this->getPlayer();
 	if( NULL != pkPlayer )
@@ -82,10 +94,10 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 		const AbstractController* pkController = pkPlayer->getController();
 		if( NULL != pkController )
 		{
-			bHasController = true;
 			Vec3 kLocalSteeringForce = pkController->getOutputForce();
 			if( kLocalSteeringForce.length() > 0.1 )
 			{
+				bHasControllerValues = true;
 				localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
 				kControllerForce *= this->maxForce();
 
@@ -102,7 +114,7 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 	kSteeringForce = this->m_kSteeringForceUpdate.getForce();
 
 	// override steering force computation with controller values
-	if( true == bHasController )
+	if( true == bHasControllerValues )
 	{
 		kSteeringForce.x = kControllerForce.x;
 		kSteeringForce.z = kControllerForce.z;
