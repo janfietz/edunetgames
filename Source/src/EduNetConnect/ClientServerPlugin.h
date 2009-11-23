@@ -2,6 +2,13 @@
 #define __CLIENTSERVERPLUGIN_H__
 
 #include "OpenSteerUT/PluginArray.h"
+#include "OpenSteerUT/EmptyPlugin.h"
+
+#include "ClientPlugin.h"
+#include "PeerPlugin.h"
+
+typedef PeerPlugin<EduNet::EmptyPlugin> EmptyServerPlugin;
+typedef ClientPlugin<EduNet::EmptyPlugin> EmptyClientPlugin;
 
 //-----------------------------------------------------------------------------
 class ClientServerPlugin : public OpenSteer::PluginArray
