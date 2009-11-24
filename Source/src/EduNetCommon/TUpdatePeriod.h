@@ -90,9 +90,13 @@ TFLOAT GetAccumTime( void ) const
 	return this->m_fAccumTime;
 }
 
-void SetPeriodFrequency( TFLOAT fFrequency );
+void SetPeriodFrequency( TFLOAT fFrequency, 
+						bool bRandomizeStart = false,
+						TFLOAT fRandomFactor = TFLOAT( 0.75 ) );
 
-void SetPeriodTime( TFLOAT fPeriodTime );
+void SetPeriodTime( TFLOAT fPeriodTime, 
+				   bool bRandomizeStart = false,
+				   TFLOAT fRandomFactor = TFLOAT( 0.75 ) );
 
 void SetAccumPeriodTime( TFLOAT fAccumTime )
 {
@@ -177,7 +181,7 @@ bool PeriodElapsed( void ) const
 
 private:
 	// Returns a btScalar randomly distributed between 0 and 1
-	TFLOAT Rrandom01(void)
+	TFLOAT Random01(void)
 	{
 		return (((TFLOAT) rand ()) / ((TFLOAT) RAND_MAX));
 	}
@@ -193,7 +197,10 @@ private:
 
 //-----------------------------------------------------------------------------
 template <class TFLOAT, class TMathLimits>
-void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( TFLOAT fFrequency )
+void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( 
+	TFLOAT fFrequency, 
+	bool bRandomizeStart,
+	TFLOAT fRandomFactor )
 {
 	if( fFrequency == this->m_fPeriodFrequency )
 	{
@@ -203,6 +210,10 @@ void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( TFLOAT fFrequency )
 	{
 		this->m_fPeriodTime = TFLOAT( 1.0 ) / fFrequency;
 		this->m_fPeriodFrequency = fFrequency;
+		if( true == bRandomizeStart )
+		{
+			this->RandomizeStart( fRandomFactor );
+		}
 	}
 	else
 	{
@@ -213,7 +224,9 @@ void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodFrequency( TFLOAT fFrequency )
 
 //-----------------------------------------------------------------------------
 template <class TFLOAT, class TMathLimits>
-void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodTime( TFLOAT fPeriodTime )
+void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodTime( TFLOAT fPeriodTime, 
+													   bool bRandomizeStart,
+													   TFLOAT fRandomFactor )
 {
 	if( fPeriodTime == this->m_fPeriodTime )
 	{
@@ -223,6 +236,10 @@ void TUpdatePeriod<TFLOAT, TMathLimits>::SetPeriodTime( TFLOAT fPeriodTime )
 	if( this->m_fPeriodTime > TFLOAT( 0.0 ) )
 	{
 		this->m_fPeriodFrequency = TFLOAT( 1.0 ) / this->m_fPeriodTime;;
+		if( true == bRandomizeStart )
+		{
+			this->RandomizeStart( fRandomFactor );
+		}
 	}
 	else
 	{
