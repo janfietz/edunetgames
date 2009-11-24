@@ -2,11 +2,16 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetApplication/EduNetApplication.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
 
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
 
 using namespace OpenSteer;
+
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractVehicleMotionStatePlot NetworkPlugin::ms_kMotionStateProfile;
 
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
@@ -61,6 +66,8 @@ void NetworkPlugin::initGui( void* pkUserdata )
 
 
 	OpenSteer::AbstractPlugin* pkPlugin = this->getHostedPlugin();
+	AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
+	assert( NULL != pkPluginEntity );
 	if( NULL != pkPlugin )
 	{
 		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
@@ -68,11 +75,32 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		pkPlugin->initGui( subPluginPanel );
 	}
 
-	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
-	glui->add_checkbox_to_panel( pluginPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
-	glui->add_checkbox_to_panel( pluginPanel, "Plot Network", &this->m_bDrawNetworkPlot);
+	// general network plugin gui
+	{
+		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );	
+		GLUI_Panel* subPanel = profileRollout;
+		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
+		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
+		if( false == pkPluginEntity->isRemoteObject() )
+		{
+			GLUI_Rollout* replicationRollout = glui->add_rollout_to_panel( profileRollout, "Entity Replication", false );	
+			GLUI_Panel* replicationPanel = replicationRollout;
+			glui->add_checkbox_to_panel( replicationPanel, "Position", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Position]);
+			glui->add_checkbox_to_panel( replicationPanel, "Forward", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Forward]);
+			glui->add_checkbox_to_panel( replicationPanel, "Side", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Side]);
+			glui->add_checkbox_to_panel( replicationPanel, "Up", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Up]);
+			glui->add_checkbox_to_panel( replicationPanel, "Force", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Force]);
+			glui->add_checkbox_to_panel( replicationPanel, "Radius", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Radius]);
+			glui->add_checkbox_to_panel( replicationPanel, "Speed", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Speed]);
+			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation]);
+			glui->add_checkbox_to_panel( replicationPanel, "CompressedForce", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedForce]);
 
-	if(true == this->AddConnectBox())
+		}
+	}
+
+	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
+
+	if( true == this->AddConnectBox() )
 	{
 		const NetworkAddress& kAddress = this->getCurrentAddress();
 		
@@ -330,6 +358,41 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
+void NetworkPlugin::updateMotionStateProfile( const float currentTime, const float elapsedTime )
+{
+	if( 0 == m_bShowMotionStatePlot )
+	{
+		return;
+	}
+	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
+	{
+		// find the selected vehicle by id
+		AbstractPlugin* pkHostedPlugin = this->getHostedPlugin();
+		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkHostedPlugin );
+		assert( NULL != pkPluginEntity );
+		if( true == pkPluginEntity->isRemoteObject() )
+		{
+			bool bTest = true;
+			bTest = false;
+		}
+		else
+		{
+			bool bTest = true;
+			bTest = false;
+		}
+		AbstractVehicleGroup kAV( pkHostedPlugin->allVehicles() );
+		NetworkId networkId = OpenSteer::SimpleVehicle::selectedVehicle->getNetworkId();
+		AVGroup::iterator kFound = kAV.findNetworkVehicle( networkId );
+		if( kFound != kAV.end() )
+		{
+			// update motion state plot
+			NetworkPlugin::ms_kMotionStateProfile.recordUpdate( *kFound, currentTime, elapsedTime );
+		}
+	}
+
+}
+
+//-----------------------------------------------------------------------------
 void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 {
 
@@ -379,7 +442,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw motion state plot
 		if( NULL != SimpleVehicle::selectedVehicle )
 		{
-			this->m_kMotionStateProfile.draw();
+			NetworkPlugin::ms_kMotionStateProfile.draw( currentTime );
 		}
 	}
 

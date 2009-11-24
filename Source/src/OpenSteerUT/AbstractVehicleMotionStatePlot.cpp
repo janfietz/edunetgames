@@ -32,12 +32,29 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot():
-		m_pkVehicle(NULL)
+	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot()
 	{
-		this->m_kLinearVelocity.accessValues(0).setName( "LinearVel" );
-		this->m_kAngularVelocity.accessValues(0).setName( "AngularVel" );
-		this->m_kSteeringForce.accessValues(0).setName( "SteeringForce" );
+		Color kColor0(0.0f, 1.0f, 0.0f);
+		Color kColor1(1.0f, 0.0f, 0.0f);
+		Profile::GraphValues& kValues0 = this->m_kLinearVelocity.accessValues(0).
+			setName( "LinearVel" ).
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+//		kValues0.setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+		this->m_kAngularVelocity.accessValues(0).
+			setName( "AngularVel" ).
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+		this->m_kSteeringForce.accessValues(0).
+			setName( "SteeringForce" ).
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+		this->m_kLinearVelocity.accessValues(1).
+			setName( "LinearVel" ).
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
+		this->m_kAngularVelocity.accessValues(1).
+			setName( "AngularVel" ).
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
+		this->m_kSteeringForce.accessValues(1).
+			setName( "SteeringForce" ).
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
 	}
 
 	AbstractVehicleMotionStatePlot::~AbstractVehicleMotionStatePlot()
@@ -46,18 +63,11 @@ namespace OpenSteer {
 
 	void AbstractVehicleMotionStatePlot::recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
 	{
-		if( this->m_pkVehicle != pkVehicle )
-		{
-			this->m_kLinearVelocity.accessValues(0).clear();
-			this->m_kAngularVelocity.accessValues(0).clear();
-			this->m_kSteeringForce.accessValues(0).clear();
-		}
-		this->m_pkVehicle = pkVehicle;
-
 		if( NULL == pkVehicle )
 		{
 			return;
 		}
+		size_t uiRecordIndex = pkVehicle->isRemoteObject() ? 1 : 0;
 		// update motion state plot
 		SimplePhysicsVehicle* pkPhysicsVehicle = dynamic_cast<SimplePhysicsVehicle*>(pkVehicle);
 		if( pkPhysicsVehicle != NULL )
@@ -68,41 +78,32 @@ namespace OpenSteer {
 				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkPhysicsVehicle->accessEulerUpdate();
 				PhysicsMotionState& kUpdateState = kEulerUpdateAccess.accessMotionState();
 				kUpdateState.updateMotionState( pkPhysicsVehicle, currentTime, elapsedTime );
-
 			}
 
 			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
 			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
 
 			Profile::GraphValues& kLinearVelocityValues = 
-				this->m_kLinearVelocity.accessValues(0);
+				this->m_kLinearVelocity.accessValues(uiRecordIndex);
 			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
 
 			Profile::GraphValues& kAngularVelocityValues = 
-				this->m_kAngularVelocity.accessValues(0);
+				this->m_kAngularVelocity.accessValues(uiRecordIndex);
 			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
 			Profile::GraphValues& kSteeringForceValues = 
-				this->m_kSteeringForce.accessValues(0);
+				this->m_kSteeringForce.accessValues(uiRecordIndex);
 			kSteeringForceValues.addValue( currentTime, kState.m_kForce.length() );
-
-			Color kColor;
-			if( true == pkPhysicsVehicle->isRemoteObject() )
-			{
-				kColor = gGreen;
-			}
-			else
-			{
-				kColor = gRed;
-			}
-			this->m_kLinearVelocity.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
-			this->m_kAngularVelocity.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
-			this->m_kSteeringForce.setColor( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
-
 		}
 	}
 
-	void AbstractVehicleMotionStatePlot::draw( void ) const
+	void AbstractVehicleMotionStatePlot::draw( float currentTime ) const
 	{
+		// draw only once
+		if( currentTime == this->m_currentTime )
+		{
+			return;
+		}
+		this->m_currentTime = currentTime;
 		// draw motion state plot
 		const float fGraphStart = 100;
 		const float fGraphHeight = 150;

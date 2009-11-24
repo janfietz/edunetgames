@@ -1,7 +1,3 @@
-
-#ifndef __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
-#define __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -30,31 +26,4 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetProfile/GraphPlot.h"
-
-
-//-----------------------------------------------------------------------------
-namespace OpenSteer {
-
-	class AbstractVehicle;
-
-	//-------------------------------------------------------------------------
-	class AbstractVehicleMotionStatePlot
-	{
-	public:
-		AbstractVehicleMotionStatePlot();
-		virtual ~AbstractVehicleMotionStatePlot();
-
-		void recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
-		void draw( float currentTime ) const;
-
-		mutable Profile::GraphValuesArray m_kLinearVelocity;
-		mutable Profile::GraphValuesArray m_kAngularVelocity;
-		mutable Profile::GraphValuesArray m_kSteeringForce;
-	private:
-		mutable float m_currentTime;
-	};
-}
-
-
-#endif // __ABSTRACTVEHICLEMOTIONSTATEPLOT_H__
+#include "OpenSteerUT/AbstractEntityQuery.h"

@@ -30,13 +30,14 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/AbstractUpdated.h"
-#include "OpenSteer/Entity.h"
+#include "OpenSteer/AbstractEntity.h"
 
 #include <vector>
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
 	class Vec3;
+	class AbstractEntity;
 
 	//-------------------------------------------------------------------------
 	class AbstractController : public AbstractEntity, public AbstractUpdated
@@ -67,7 +68,7 @@ namespace OpenSteer
 
 	};
 
-	typedef std::vector<AbstractPlayer*> PlayerGroup;
+	typedef std::vector<AbstractPlayer*> AbstractPlayerGroup;
 
 
 }

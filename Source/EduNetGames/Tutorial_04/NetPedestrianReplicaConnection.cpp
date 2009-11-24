@@ -73,9 +73,11 @@ OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenStee
 	{
 		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
 		this->m_pkReplicaManager->Reference( pkNewReplica );
-
 		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
 		this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );
+		NetworkID kNetWorkId = pkNewReplica->GetNetworkID();
+		OpenSteer::NetworkId networkId = kNetWorkId.guid.g;
+		pkVehicle->setNetworkId( networkId );
 		return pkNewReplica->accessEntity();
 	}
 	return NULL;

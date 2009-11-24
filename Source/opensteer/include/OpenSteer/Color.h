@@ -95,7 +95,38 @@ namespace OpenSteer {
         float r_;
         float g_;
         float b_;
-		 float a_;	//! provided for API's which require four components        
+		 float a_;	//! provided for API's which require four components       
+
+	public:
+		 static const Color _gBlack;
+		 static const Color _gWhite;
+
+		 static const Color _gRed; 
+		 static const Color _gGreen;
+		 static const Color _gBlue;
+		 static const Color _gYellow;
+		 static const Color _gCyan;
+		 static const Color _gMagenta;
+		 static const Color _gOrange;
+
+		 static const Color _gDarkRed;
+		 static const Color _gDarkGreen;
+		 static const Color _gDarkBlue;
+		 static const Color _gDarkYellow;
+		 static const Color _gDarkCyan;
+		 static const Color _gDarkMagenta;
+		 static const Color _gDarkOrange;
+
+		 static const Color _gGray10;
+		 static const Color _gGray20;
+		 static const Color _gGray30;
+		 static const Color _gGray40;
+		 static const Color _gGray50;
+		 static const Color _gGray60;
+		 static const Color _gGray70;
+		 static const Color _gGray80;
+
+
     }; //! class Color
     
     
@@ -124,32 +155,32 @@ namespace OpenSteer {
     
     Color grayColor( float value );
     
-    extern Color const gBlack;
-    extern Color const gWhite; 
-    extern Color const gRed; 
-    extern Color const gGreen;
-    extern Color const gBlue;
-    extern Color const gYellow;
-    extern Color const gCyan;
-    extern Color const gMagenta;
-    extern Color const gOrange;
-    extern Color const gDarkRed;
-    extern Color const gDarkGreen;
-    extern Color const gDarkBlue;
-    extern Color const gDarkYellow;
-    extern Color const gDarkCyan;
-    extern Color const gDarkMagenta;
-    extern Color const gDarkOrange;
+    #define gBlack Color::_gBlack
+    #define gWhite Color::_gWhite
+    #define gRed Color::_gRed
+    #define gGreen Color::_gGreen
+    #define gBlue Color::_gBlue
+    #define gYellow Color::_gYellow
+    #define gCyan Color::_gCyan
+    #define gMagenta Color::_gMagenta
+    #define gOrange Color::_gOrange
+    #define gDarkRed Color::_gDarkRed
+    #define gDarkGreen Color::_gDarkGreen
+    #define gDarkBlue Color::_gDarkBlue
+    #define gDarkYellow Color::_gDarkYellow
+    #define gDarkCyan Color::_gDarkCyan
+    #define gDarkMagenta Color::_gDarkMagenta
+    #define gDarkOrange Color::_gDarkOrange
     
-    extern Color const gGray10;
-    extern Color const gGray20;
-    extern Color const gGray30;
-    extern Color const gGray40;
-    extern Color const gGray50;
-    extern Color const gGray60;
-    extern Color const gGray70;
-    extern Color const gGray80;
-    extern Color const gGray90;
+    #define gGray10 Color::_gGray10
+    #define gGray20 Color::_gGray20
+    #define gGray30 Color::_gGray30
+    #define gGray40 Color::_gGray40
+    #define gGray50 Color::_gGray50
+    #define gGray60 Color::_gGray60
+    #define gGray70 Color::_gGray70
+    #define gGray80 Color::_gGray80
+    #define gGray90 Color::_gGray90
     
 } //! namespace OpenSteer
 

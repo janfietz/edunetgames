@@ -31,99 +31,14 @@
 
 #include "OpenSteer/OpenSteerTypes.h"
 #include "OpenSteer/OpenSteerMacros.h"
-#include "OpenSteer/InstanceTracker.h"
+#include "OpenSteer/AbstractEntity.h"
+#include "OpenSteer/AbstractPlayer.h"
 
-//-----------------------------------------------------------------------------
-namespace OpenSteer {
-
-	using namespace OpenSteer;
-
-	typedef uint64_t NetworkId; 
-	typedef uint64_t EntityClassId; 
-
-	//-------------------------------------------------------------------------
-	// implement entity class id
-
-	static const EntityClassId g_clasId_Entity(1);
-
-	static const EntityClassId g_clasId_LocalSpace(2);
-
-	// player control interface ids
-	static const EntityClassId g_clasId_Player(3);
-	static const EntityClassId g_clasId_PlayerController(4);
-
-
-	// obstacle interface ids
-	static const EntityClassId g_clasId_Obstacle(5);
-	static const EntityClassId g_clasId_SphereObstacle(6);
-	static const EntityClassId g_clasId_BoxObstacle(7);
-	static const EntityClassId g_clasId_PlaneObstacle(8);
-	static const EntityClassId g_clasId_RectangleObstacle(9);
-	static const EntityClassId g_clasId_LastReserved(1000);
-}
-
-#define OS_CID_ENTITY OpenSteer::g_clasId_Entity
-#define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
-
-#define OS_CID_PLAYER OpenSteer::g_clasId_Player
-#define OS_CID_PLAYERCONTROLLER OpenSteer::g_clasId_PlayerController
-
-#define OS_CID_OBSTACLE OpenSteer::g_clasId_Obstacle
-#define OS_CID_SPHEREOBSTACLE OpenSteer::g_clasId_SphereObstacle
-#define OS_CID_BOXOBSTACLE OpenSteer::g_clasId_BoxObstacle
-#define OS_CID_PLANEOBSTACLE OpenSteer::g_clasId_PlaneObstacle
-#define OS_CID_RECTANGLEOBSTACLE OpenSteer::g_clasId_RectangleObstacle
-
-#define OS_CID_LASTRESERVED OpenSteer::g_clasId_LastReserved
 
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	class AbstractPlayer;
-
-	//-------------------------------------------------------------------------
-	class AbstractEntity
-	{
-	public:
-		virtual ~AbstractEntity() { /* Nothing to do. */ }
-
-		OS_DECLARE_CLASSNAME
-
-		//! return a pointer to a cloned instance of this entity
-		virtual AbstractEntity* cloneEntity( void ) const OS_ABSTRACT;
-
-		//! return the unique class id of this object
-		virtual EntityClassId getClassId( void ) const OS_ABSTRACT;
-
-		//! return the unique instance id of this object
-		virtual InstanceTracker::Id getEntityId( void ) const OS_ABSTRACT;
-
-		//! return the unique network id of this object
-		virtual NetworkId getNetworkId( void ) const OS_ABSTRACT;
-
-		//! set the unique network id of this object
-		virtual void setNetworkId( NetworkId ) OS_ABSTRACT;
-
-		//! set if this object is a remote object or not
-		virtual void setIsRemoteObject( bool bIsRemote ) OS_ABSTRACT;
-
-		//! return if this object is a remote object
-		virtual bool isRemoteObject( void ) const OS_ABSTRACT;
-
-		//! return a pointer to this instance's character string name
-		virtual const char* name (void) const OS_ABSTRACT;
-
-		virtual void play( AbstractEntity* ) OS_ABSTRACT;
-
-		virtual void possessBy( AbstractEntity* ) OS_ABSTRACT;
-
-		virtual AbstractPlayer* getPlayer( void ) const OS_ABSTRACT;
-
-		virtual bool isPossessed( void ) const OS_ABSTRACT;
-
-		virtual bool isPlayer( void ) const  OS_ABSTRACT;
-	};
 
 	AbstractPlayer* CastToAbstractPlayer( AbstractEntity* pkEntity );
 
@@ -140,13 +55,14 @@ namespace OpenSteer {
 
 		virtual ~EntityPossessionMixin()
 		{
-			if( NULL != this->m_pkPossessed )
+			if( NULL != this->getControlledEntity() )
 			{
-				this->m_pkPossessed->possessBy( NULL );
+				this->play( NULL );
 			}
-			if( NULL != this->m_pkPossessor )
+			AbstractPlayer* pkPlayer = this->getPlayer();
+			if( NULL != pkPlayer )
 			{
-				this->m_pkPossessor->play( NULL );
+				pkPlayer->play( NULL );
 			}
 		}
 

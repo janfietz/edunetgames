@@ -433,13 +433,14 @@ namespace OpenSteer {
 
 		virtual ~EntityLocalSpaceMixin() 
 		{ 
-			if( NULL != this->m_pkPossessed )
+			if( NULL != this->getControlledEntity() )
 			{
-				this->m_pkPossessed->possessBy( NULL );
+				this->play( NULL );
 			}
-			if( NULL != this->m_pkPossessor )
+			AbstractPlayer* pkPlayer = this->getPlayer();
+			if( NULL != pkPlayer )
 			{
-				this->m_pkPossessor->play( NULL );
+				pkPlayer->play( NULL );
 			}
 		}
 

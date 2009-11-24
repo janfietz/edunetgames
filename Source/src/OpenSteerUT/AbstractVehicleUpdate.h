@@ -141,12 +141,14 @@ namespace OpenSteer
 		}
 		virtual ~SteeringForceVehicleUpdate(){}
 
-		const Vec3& getForce( void ){ return m_kForce; }
+		const Vec3& getForce( void ) const { return m_kForce; }
+		const char* getCompressedForce( void ) const { return m_cForce; }
 
 		//---------------------------------------------------------------------
 		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
 	private:
 		Vec3 m_kForce;
+		char m_cForce[4];
 	};
 
 }

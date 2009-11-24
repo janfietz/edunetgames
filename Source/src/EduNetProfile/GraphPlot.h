@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <string>
+#include "EduNetCommon/EduNetMath.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer
@@ -44,13 +45,14 @@ namespace Profile
 	//-------------------------------------------------------------------------
 	typedef struct TGraphValue
 	{
-		TGraphValue(){}
-		TGraphValue( float _x, float _y, float _z ):x(_x), y(_y), z(_z){}
+		TGraphValue():scale_y(1){}
+		TGraphValue( float _x, float _y, float _z ):x(_x), y(_y), z(_z), scale_y(1){}
 		union {
-			float m_fValues[3];
+			float m_fValues[4];
 			struct  
 			{
 				float x,y,z;
+				float scale_y;
 			};
 		};
 
@@ -73,12 +75,11 @@ namespace Profile
 				this->m_fColor[3] = 
 				0;
 			this->reserve( uiMaxRecords + 1 );
+			this->reset();
 		}
 
 		virtual ~GraphValues()
 		{
-			bool bTest = true;
-			bTest = false;
 		}
 
 		GraphValues& addValue( float x, float y )
@@ -94,6 +95,16 @@ namespace Profile
 				}
 			}
 			GraphValue v( x, y, 0 );
+			GraphValue& kMin = this->m_kMin;
+			GraphValue& kMax = this->m_kMax;
+			kMin.x = ::etMin( kMin.x, v.x );
+			kMin.y = ::etMin( kMin.y, v.y );
+			kMin.z = ::etMin( kMin.z, v.z );
+			kMax.x = ::etMax( kMax.x, v.x );
+			kMax.y = ::etMax( kMax.y, v.y );
+			kMax.z = ::etMax( kMax.z, v.z );
+
+
 			this->push_back( v );
 			if( this->size() > this->m_uiMaxRecords )
 			{
@@ -113,12 +124,23 @@ namespace Profile
 
 		GraphValues& setName( const char* pszName )
 		{
-			this->m_kName.assign( pszName );
+			if( ( NULL == pszName ) || ( 0 == pszName[0] ) )
+			{
+				this->m_kName.clear();
+			}
+			else
+			{
+				this->m_kName.assign( pszName );
+			}
 			return (*this);
 		}
 
 		const char* getName( void ) const
 		{
+			if( this->m_kName.empty() )
+			{
+				return NULL;
+			}
 			return this->m_kName.c_str();
 		}
 
@@ -147,6 +169,16 @@ namespace Profile
 			this->m_fColor[3] = a;
 			return (*this);
 		}
+
+		void reset()
+		{
+			this->m_kMin = GraphValue::ms_Max;
+			this->m_kMax = GraphValue::ms_Min;
+		}
+
+		GraphValue m_kMin;
+		GraphValue m_kMax;
+
 	private:
 		float m_fColor[4];
 		size_t m_uiMaxRecords;
@@ -162,6 +194,7 @@ namespace Profile
 		GraphValuesArray()
 		{
 //			this->reserve( 10 );
+			this->reset();
 		}
 		GraphValues& accessValues( size_t uiIdx )
 		{
@@ -190,6 +223,16 @@ namespace Profile
 			}
 		}
 
+		void reset()
+		{
+			this->m_kMin = GraphValue::ms_Max;
+			this->m_kMax = GraphValue::ms_Min;
+		}
+
+		GraphValue m_kMin;
+		GraphValue m_kMax;
+
+
 	};
 
 	typedef std::vector<GraphValuesArray*> TGraphPointerArray;
@@ -202,9 +245,12 @@ namespace Profile
 		GraphPlot( void );
 		virtual ~GraphPlot();
 
-		void draw( const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const;
-		void draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const;
-		void draw( const GraphValues& kValues, float sx, float sy, float width, float height ) const;
+		void draw( const TGraphPointerArray& kValues, 
+			float sx, float sy, float width, float height ) const;
+		void draw( const GraphValuesArray& kValues, 
+			float sx, float sy, float width, float height ) const;
+		void draw( const GraphValues& kValues, 
+			float sx, float sy, float width, float height ) const;
 		void drawGraphFrame( float sx, float sy, float width, float height ) const;
 	private:
 		typedef struct TGraphLocation
@@ -225,6 +271,8 @@ namespace Profile
 
 		} GraphLocation;
 		void computeGraphLocation( const GraphValues& kValues, GraphLocation& kGraphLocation ) const;
+		void draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
+			float sx, float sy, float width, float height ) const;
 		void drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
 		void drawGraphFrame( const GraphLocation& kGraphLocation ) const;
 
