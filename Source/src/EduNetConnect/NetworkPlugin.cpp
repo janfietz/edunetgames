@@ -93,7 +93,8 @@ void NetworkPlugin::initGui( void* pkUserdata )
 			glui->add_checkbox_to_panel( replicationPanel, "Radius", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Radius]);
 			glui->add_checkbox_to_panel( replicationPanel, "Speed", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Speed]);
 			glui->add_checkbox_to_panel( replicationPanel, "Orientation", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Orientation]);
-			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation]);
+			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation1", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1]);
+			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation2", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2]);
 			glui->add_checkbox_to_panel( replicationPanel, "CompressedForce", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedForce]);
 
 		}

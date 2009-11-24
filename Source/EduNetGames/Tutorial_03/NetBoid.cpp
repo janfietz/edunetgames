@@ -76,22 +76,30 @@ void Boid::draw (void)
 // per frame simulation update
 void Boid::update (const float currentTime, const float elapsedTime)
 {
-	OPENSTEER_UNUSED_PARAMETER(currentTime);
-
 	if( false == this->isRemoteObject() )
 	{
-		// steer to flock and avoid obstacles if any
-		applySteeringForce (steerToFlock (), elapsedTime);
-
 		// wrap around to contrain boid within the spherical boundary
 		sphericalWrapAround ();
 	}
+	BaseClass::update( currentTime, elapsedTime );
 
 	// notify proximity database that our position has changed
 	if( NULL != this->m_pkProximityToken )
 	{
 		m_pkProximityToken->updateForNewPosition(position());
 	}
+}
+
+//-----------------------------------------------------------------------------
+osVector3 Boid::determineCombinedSteering (const float elapsedTime)
+{
+	if( this->isRemoteObject() )
+	{
+		return this->lastSteeringForce();
+	}
+	// steer to flock and avoid obstacles if any
+	this->setLastSteeringForce( steerToFlock () );
+	return this->lastSteeringForce();
 }
 
 //-----------------------------------------------------------------------------

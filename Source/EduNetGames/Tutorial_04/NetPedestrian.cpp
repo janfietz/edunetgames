@@ -176,7 +176,7 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 	BaseClass::update( currentTime, elapsedTime );
 
 	// reverse direction when we reach an endpoint
-	if (gUseDirectedPathFollowing)
+	if( gUseDirectedPathFollowing )
 	{
 		const Color darkRed (0.7f, 0, 0);
 		float const pathRadius = path->radius();

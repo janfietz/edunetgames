@@ -27,12 +27,14 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleMath.h"
+#include "EduNetCommon/EduNetMath.h"
+#include "EduNetCommon/TCompressed.h"
 
 
 namespace OpenSteer
 {
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	using namespace OpenSteer;
 
 	//-------------------------------------------------------------------------
@@ -46,8 +48,10 @@ namespace OpenSteer
 		}
 		// store new world transform
 		btTransform kWorldTransform1;
-		writeToMatrix( *pkVehicle, kWorldTransform1 );
-		this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+		if( writeToMatrix( *pkVehicle, kWorldTransform1 ) )
+		{
+			this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+		}
 	}
 
 
@@ -105,6 +109,7 @@ namespace OpenSteer
 		kState.m_kWorldTransform = kWorldTransform1;
 	}
 
+
 	//-----------------------------------------------------------------------------
 	osVector3& getVector3( const btVector3& kSource, osVector3& kTarget )
 	{
@@ -114,7 +119,7 @@ namespace OpenSteer
 		return kTarget;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	btVector3& getVector3( const osVector3& kSource, btVector3& kTarget )
 	{
 		kTarget.setX( kSource.x );
@@ -130,6 +135,7 @@ namespace OpenSteer
 	// 	kWorldTransform.setIdentity();
 	// 	readFromMatrix( v2, kWorldTransform );
 	// 	writeToMatrix( v2, kTargetWorldTransform );
+	//-------------------------------------------------------------------------
 	void readFromRotationMatrix( osLocalSpaceData& kLocalSpace, const btMatrix3x3& kWorldRotation )
 	{
 		// calculate local coordinate system
@@ -214,8 +220,25 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform )
+	bool writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform )
 	{
+		if( false == OpenSteer::isValidVector( kLocalSpace._forward ) )
+		{
+			return false;
+		}
+		if( false == OpenSteer::isValidVector( kLocalSpace._side ) )
+		{
+			return false;
+		}
+		if( false == OpenSteer::isValidVector( kLocalSpace._up ) )
+		{
+			return false;
+		}
+		if( false == OpenSteer::isValidVector( kLocalSpace._position ) )
+		{
+			return false;
+		}
+
 #if OS_HAS_BULLET
 		kWorldTransform.setOrigin( kLocalSpace._position );
 #else
@@ -224,21 +247,22 @@ namespace OpenSteer
 #endif
 		btMatrix3x3& kWorldRotation = kWorldTransform.getBasis();
 		OpenSteer::writeToRotationMatrix( kLocalSpace, kWorldRotation );
+		return true;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void readFromMatrix( AbstractVehicle& kVehicle, const btTransform& kWorldTransform )
 	{
 		OpenSteer::readFromMatrix( kVehicle.accessLocalSpaceData(), kWorldTransform );
 	}
 
-	//-----------------------------------------------------------------------------
-	void writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform )
+	//-------------------------------------------------------------------------
+	bool writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform )
 	{
-		OpenSteer::writeToMatrix( kVehicle.getLocalSpaceData(), kWorldTransform );
+		return OpenSteer::writeToMatrix( kVehicle.getLocalSpaceData(), kWorldTransform );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void calculateVelocity( const btTransform& kWorldTransform0, const btTransform& kWorldTransform1,
 		osScalar fDeltaTime,
 		osVector3& kLinearVelocity, osVector3& kAngularVelocity )
@@ -251,7 +275,7 @@ namespace OpenSteer
 		getVector3( _AngularVelocity, kAngularVelocity );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget )
 	{
 		btTransform kWorldTransform;
@@ -262,24 +286,78 @@ namespace OpenSteer
 		getVector3( _kWorld, kTarget );
 	}
 
-
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	btQuaternion AbstractVehicleMath::readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData )
 	{
 		btMatrix3x3 kWorldRotation;
 		OpenSteer::writeToRotationMatrix( kLocalSpaceData, kWorldRotation );
 		btQuaternion kRotation;
 		kWorldRotation.getRotation( kRotation );
+		kRotation.normalize();
 		return kRotation;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void AbstractVehicleMath::writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData )
 	{
+		if( false == OpenSteer::isValidQuaterion( kRotation ) )
+		{
+			return;
+		}
 		btMatrix3x3 kWorldRotation;
 		kWorldRotation.setRotation( kRotation );
 		OpenSteer::readFromRotationMatrix( kLocalSpaceData, kWorldRotation );
 	}
+
+	//-------------------------------------------------------------------------
+	osVector3 AbstractVehicleMath::compressQuaternion( const btQuaternion& kRotation, char& wSign )
+	{
+		btQuaternion kUnitRotation = kRotation.normalized();
+		osVector3 kCompressed( kUnitRotation.getX(), kUnitRotation.getY(), kUnitRotation.getZ() );
+		wSign = ( kUnitRotation.getW() < 0 ) ? -1 : 1;
+		return kCompressed;
+	}
+
+	//-------------------------------------------------------------------------
+	btQuaternion AbstractVehicleMath::expandQuaternion( const osVector3& kCompressed, float wSign )
+	{
+		// A unit quaternion has the following property
+		// w2 + x2 + y2 + z2=1
+		// ->
+		//	w2 = 1 - (x2 + y2 + z2)
+		// w = sqrt( 1 - (x2 + y2 + z2) )
+		btQuaternion kUnitRotation( kCompressed.x, kCompressed.y, kCompressed.z, 0 );
+		kUnitRotation.setW( 
+			wSign * btSqrt( btScalar(1) - 
+			( kUnitRotation.getX() * kUnitRotation.getX() +
+			kUnitRotation.getY() * kUnitRotation.getY() +
+			kUnitRotation.getZ() * kUnitRotation.getZ()
+			) ) );
+		return kUnitRotation;
+	}
+
+	//-------------------------------------------------------------------------
+	void AbstractVehicleMath::compressUnitVector( const osVector3& kSource, char* kTarget )
+	{
+		const osScalar x = ::etClamp( kSource.x, -1.0f, 1.0f );
+		const osScalar y = ::etClamp( kSource.y, -1.0f, 1.0f );
+		const osScalar z = ::etClamp( kSource.z, -1.0f, 1.0f );
+
+		kTarget[0] = TCompressedFixpoint<float,char,8>::writeCompress( x , -1.0f, 1.0f );
+		kTarget[1] = TCompressedFixpoint<float,char,8>::writeCompress( y , -1.0f, 1.0f );
+		kTarget[2] = TCompressedFixpoint<float,char,8>::writeCompress( z , -1.0f, 1.0f );
+	}
+
+	//-------------------------------------------------------------------------
+	void AbstractVehicleMath::expandUnitVector( const char* kSource, osVector3& kTarget  )
+	{
+		kTarget.x = TCompressedFixpoint<float,char,8>::readInflate( kSource[0] , -1.0f, 1.0f );
+		kTarget.y = TCompressedFixpoint<float,char,8>::readInflate( kSource[1] , -1.0f, 1.0f );
+		kTarget.z = TCompressedFixpoint<float,char,8>::readInflate( kSource[2] , -1.0f, 1.0f );
+	}
+
+
+
 
 } // end namespace OpenSteer
 

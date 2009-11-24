@@ -49,8 +49,6 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 {
 	// only in case a custom has been set ?
 	BaseClass::update( currentTime, elapsedTime );
-	// store current world transform
-//	writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
 
 	// compute acceleration and velocity
 	Vec3 newAcceleration = ( this->getForce() / this->vehicle().mass() );
@@ -81,24 +79,9 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 
 	// regenerate local space (by default: align vehicle's forward axis with
 	// new velocity, but this behavior may be overridden by derived classes.)
-	float newSpeed = newVelocity.length();
-	if( newSpeed > 0 )
+	if( this->vehicle().speed() > 0 )
 	{
-		//Vec3 newForward = newVelocity / newSpeed;
-		Vec3 newForward = this->vehicle().forward();
-		if( this->vehicle().speed() > 0 )
-		{
-			newForward += newVelocity.normalized();
-			float fLength = newForward.length();
-			if( fLength > 0 )
-			{
-				newForward /= fLength;
-			}
-			else
-			{
-				newForward = -this->vehicle().forward();
-			}
-		}
+		Vec3 newForward = newVelocity.normalized();
 		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
 	}
 	else
@@ -106,24 +89,6 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 		// maybe smth to turn at zero speed ?
 	}
 
-// 	bool bInfiniteRotationSpeed = false;
-// 	if( true == bInfiniteRotationSpeed )
-// 	{
-// 		// regenerate local space (by default: align vehicle's forward axis with
-// 		// new velocity, but this behavior may be overridden by derived classes.)
-// 		this->vehicle().regenerateLocalSpace( newVelocity, elapsedTime );			
-// 	}
-// 	else 
-// 	{
-// 		Vec3 newForward = this->vehicle().forward();
-// 		if( this->vehicle().speed() > 0 )
-// 		{
-// 			newForward += newVelocity.normalized();
-// 			newForward = newForward.normalized();
-// 		}
-// 		this->vehicle().regenerateOrthonormalBasisUF( newForward );			
-// 	}
-// 
 	this->updateMotionState( currentTime, elapsedTime );
 }
 
@@ -134,8 +99,10 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 {
 	// store new world transform
 	btTransform kWorldTransform1;
-	writeToMatrix( this->vehicle(), kWorldTransform1 );
-	this->m_kMotionState.updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+	if( true == writeToMatrix( this->vehicle(), kWorldTransform1 ) )
+	{
+		this->m_kMotionState.updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+	}
 }
 
 //-------------------------------------------------------------------------
