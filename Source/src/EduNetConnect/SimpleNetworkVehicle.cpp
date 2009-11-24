@@ -75,7 +75,10 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	// set this frequency each update cycle as it might get changed by the gui
 	this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimpleNetworkVehicle::ms_NetWriteFPS );
 	size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
-	this->m_bWantsToSendData = ( uiTicks > 0 );
+	if( false == this->m_bWantsToSendData )
+	{
+		this->m_bWantsToSendData = ( uiTicks > 0 );
+	}
 	// in case the custom updater decides to call the base class
 	// prevent infinite recursion, store the custom updater locally
 	// and restore it once done with the update
@@ -89,10 +92,10 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 //-----------------------------------------------------------------------------
 int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
-// 	if( false == this->m_bWantsToSendData )
-// 	{
-// 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
-// 	}
+	if( false == this->m_bWantsToSendData )
+	{
+		return RakNet::RM3SR_DO_NOT_SERIALIZE;
+	}
 	this->m_bWantsToSendData = false;
 
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
