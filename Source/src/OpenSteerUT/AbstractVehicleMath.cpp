@@ -130,13 +130,8 @@ namespace OpenSteer
 	// 	kWorldTransform.setIdentity();
 	// 	readFromMatrix( v2, kWorldTransform );
 	// 	writeToMatrix( v2, kTargetWorldTransform );
-
-	//-----------------------------------------------------------------------------
-	void readFromMatrix( AbstractVehicle& kVehicle, const btTransform& kWorldTransform )
+	void readFromRotationMatrix( osLocalSpaceData& kLocalSpace, const btMatrix3x3& kWorldRotation )
 	{
-		//	const btTransform& kWorldTransform = pkRigidBody->getWorldTransform();
-		const btMatrix3x3& kWorldRotation = kWorldTransform.getBasis();
-
 		// calculate local coordinate system
 		const btVector3& kRow0 = kWorldRotation.getRow(0);
 		const btVector3& kRow1 = kWorldRotation.getRow(1);
@@ -156,31 +151,41 @@ namespace OpenSteer
 
 
 #if OS_HAS_BULLET
-		kVehicle.setSide( kAxis[0] );
-		kVehicle.setForward( kAxis[1] );
-		kVehicle.setUp( kAxis[2] );
-
-		kVehicle.setPosition( kWorldTransform.getOrigin() );
+		kLocalSpace._side = kAxis[0];
+		kLocalSpace._forward = kAxis[1];
+		kLocalSpace._up = kAxis[2];
 #else
 		osVector3 kTemp;
 #if OPENSTEER_Z_ISUP
-		kVehicle.setSide( getVector3( kAxis[0], kTemp ) );
-		kVehicle.setForward( getVector3( kAxis[1], kTemp ) );
-		kVehicle.setUp( getVector3( kAxis[2], kTemp ) );
+		kLocalSpace._side = getVector3( kAxis[0], kTemp );
+		kLocalSpace._forward = getVector3( kAxis[1], kTemp );
+		kLocalSpace._up = getVector3( kAxis[2], kTemp );
 #else
-		kVehicle.setSide( -getVector3( kAxis[0], kTemp ) );
-		kVehicle.setForward( getVector3( kAxis[2], kTemp ) );
-		kVehicle.setUp( getVector3( kAxis[1], kTemp ) );
+		kLocalSpace._side = -getVector3( kAxis[0], kTemp );
+		kLocalSpace._forward = getVector3( kAxis[2], kTemp );
+		kLocalSpace._up = getVector3( kAxis[1], kTemp );
 #endif
-		kVehicle.setPosition( getVector3( kWorldTransform.getOrigin(), kTemp ) );
 #endif
 	}
 
-	//-----------------------------------------------------------------------------
-	void writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform )
+	//-------------------------------------------------------------------------
+	void readFromMatrix( osLocalSpaceData& kLocalSpace, const btTransform& kWorldTransform )
+	{
+		//	const btTransform& kWorldTransform = pkRigidBody->getWorldTransform();
+		const btMatrix3x3& kWorldRotation = kWorldTransform.getBasis();
+		OpenSteer::readFromRotationMatrix( kLocalSpace, kWorldRotation );
+#if OS_HAS_BULLET
+		kLocalSpace._position = kWorldTransform.getOrigin();
+#else
+		osVector3 kTemp;
+		kLocalSpace._position = getVector3( kWorldTransform.getOrigin(), kTemp );
+#endif
+	}
+
+	//-------------------------------------------------------------------------
+	void writeToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation )
 	{
 #if OS_HAS_BULLET
-		kWorldTransform.setOrigin( kVehicle.position() );
 		const btVector3 kTargetRow[3] =
 		{
 			kVehicle.side(),
@@ -189,26 +194,48 @@ namespace OpenSteer
 		};
 #else
 		btVector3 kTemp;
-		kWorldTransform.setOrigin( getVector3( kVehicle.position(), kTemp ) );
 		const btVector3 kTargetRow[3] =
 		{
 #if OPENSTEER_Z_ISUP
-			getVector3( kVehicle.side(), kTemp ),
-			getVector3( kVehicle.forward(), kTemp ),
-			getVector3( kVehicle.up(), kTemp ),
+			getVector3( kLocalSpace._side, kTemp ),
+			getVector3( kLocalSpace._forward, kTemp ),
+			getVector3( kLocalSpace._up, kTemp ),
 #else
-			getVector3( -kVehicle.side(), kTemp ),
-			getVector3( kVehicle.up(), kTemp ),
-			getVector3( kVehicle.forward(), kTemp ),
+			getVector3( -kLocalSpace._side, kTemp ),
+			getVector3( kLocalSpace._up, kTemp ),
+			getVector3( kLocalSpace._forward, kTemp ),
 #endif
 		};
 #endif
-		btMatrix3x3& kWorldRotation = kWorldTransform.getBasis();
-
 		kWorldRotation.setValue( 
 			kTargetRow[0].x(), kTargetRow[1].x(), kTargetRow[2].x(),
 			kTargetRow[0].y(), kTargetRow[1].y(), kTargetRow[2].y(),
 			kTargetRow[0].z(), kTargetRow[1].z(), kTargetRow[2].z());
+	}
+
+	//-------------------------------------------------------------------------
+	void writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform )
+	{
+#if OS_HAS_BULLET
+		kWorldTransform.setOrigin( kLocalSpace._position );
+#else
+		btVector3 kTemp;
+		kWorldTransform.setOrigin( getVector3( kLocalSpace._position, kTemp ) );
+#endif
+		btMatrix3x3& kWorldRotation = kWorldTransform.getBasis();
+		OpenSteer::writeToRotationMatrix( kLocalSpace, kWorldRotation );
+	}
+
+	//-----------------------------------------------------------------------------
+	void readFromMatrix( AbstractVehicle& kVehicle, const btTransform& kWorldTransform )
+	{
+		OpenSteer::readFromMatrix( kVehicle.accessLocalSpaceData(), kWorldTransform );
+	}
+
+	//-----------------------------------------------------------------------------
+	void writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform )
+	{
+		OpenSteer::writeToMatrix( kVehicle.getLocalSpaceData(), kWorldTransform );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -224,6 +251,7 @@ namespace OpenSteer
 		getVector3( _AngularVelocity, kAngularVelocity );
 	}
 
+	//-----------------------------------------------------------------------------
 	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget )
 	{
 		btTransform kWorldTransform;
@@ -235,6 +263,23 @@ namespace OpenSteer
 	}
 
 
+	//-----------------------------------------------------------------------------
+	btQuaternion AbstractVehicleMath::readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData )
+	{
+		btMatrix3x3 kWorldRotation;
+		OpenSteer::writeToRotationMatrix( kLocalSpaceData, kWorldRotation );
+		btQuaternion kRotation;
+		kWorldRotation.getRotation( kRotation );
+		return kRotation;
+	}
+
+	//-----------------------------------------------------------------------------
+	void AbstractVehicleMath::writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData )
+	{
+		btMatrix3x3 kWorldRotation;
+		kWorldRotation.setRotation( kRotation );
+		OpenSteer::readFromRotationMatrix( kLocalSpaceData, kWorldRotation );
+	}
 
 } // end namespace OpenSteer
 
