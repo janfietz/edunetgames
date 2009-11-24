@@ -14,7 +14,8 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_Radius,
 	1, // 	ESerializeDataType_Speed,
 	0, //   ESerializeDataType_Orientation
-	0, // 	ESerializeDataType_CompressedOrientation,
+	0, // 	ESerializeDataType_CompressedOrientation1,
+	0, // 	ESerializeDataType_CompressedOrientation2,
 	0, // 	ESerializeDataType_CompressedForce,
 
 };
@@ -176,11 +177,27 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation] != 0 )
+	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
 	{
-		dataType = ESerializeDataType_CompressedOrientation;
+		dataType = ESerializeDataType_CompressedOrientation1;
+		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		char wSign = 0;
+		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		kStream.WriteAlignedBytes((const unsigned char*)&this->forward(),sizeof(OpenSteer::Vec3));
+		kStream.WriteAlignedBytes((const unsigned char*)&kCompressedRotation,sizeof(osVector3));
+		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
+	}
+	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
+	{
+		dataType = ESerializeDataType_CompressedOrientation2;
+		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		char wSign = 0;
+		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
+		char cVector[3];
+		AbstractVehicleMath::compressUnitVector( kCompressedRotation, cVector );
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		kStream.WriteAlignedBytes((const unsigned char*)&cVector,sizeof(cVector));
+		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
 	{
@@ -208,9 +225,11 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	AbstractVehicle* pkSerializeTarget = &this->m_kProxyVehicle;
 	this->m_kProxyVehicle.m_bHasNewData = true;
 	float fValue;
-	OpenSteer::Vec3 kVec;
+	osVector3 kVec;
+	char wSign;
 	btQuaternion kRotation;
 	unsigned char dataTypes;
+	char cVector[3];
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
 	{
@@ -225,10 +244,21 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		case(ESerializeDataType_Side):
 		case(ESerializeDataType_Up):
 		case(ESerializeDataType_Force):
-		case(ESerializeDataType_CompressedOrientation):
 		case(ESerializeDataType_CompressedForce):
 			{
-				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
+				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(osVector3));
+			}
+			break;
+		case(ESerializeDataType_CompressedOrientation1):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(osVector3));
+				kStream.ReadAlignedBytes((unsigned char*)&wSign,sizeof(char));
+			}
+			break;
+		case(ESerializeDataType_CompressedOrientation2):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&cVector,sizeof(cVector));
+				kStream.ReadAlignedBytes((unsigned char*)&wSign,sizeof(char));
 			}
 			break;
 		case(ESerializeDataType_Orientation):
@@ -253,9 +283,17 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
 				}
 				break;
-			case(ESerializeDataType_CompressedOrientation):
+			case(ESerializeDataType_CompressedOrientation1):
 				{
-					// TODO
+					kRotation = AbstractVehicleMath::expandQuaternion( kVec, wSign == 1 ? 1.0f : -1.0f );
+					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
+				}
+				break;
+			case(ESerializeDataType_CompressedOrientation2):
+				{
+					AbstractVehicleMath::expandUnitVector( cVector, kVec );
+					kRotation = AbstractVehicleMath::expandQuaternion( kVec, wSign == 1 ? 1.0f : -1.0f );
+					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
 				}
 				break;
 			case(ESerializeDataType_CompressedForce):

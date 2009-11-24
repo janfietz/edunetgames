@@ -34,6 +34,7 @@ namespace OpenSteer{
 
 		void reset (void);
 		void draw (void);
+		virtual osVector3 determineCombinedSteering( const float elapsedTime );
 		void update (const float currentTime, const float elapsedTime);
 		Vec3 steerToFlock (void);
 		void sphericalWrapAround (void);

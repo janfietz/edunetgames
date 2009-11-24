@@ -37,7 +37,45 @@
 
 namespace OpenSteer
 {
+	//-----------------------------------------------------------------------------
+	EF_FORCEINLINE 
+	bool isValidFloat( float fValue )
+	{
+		unsigned long ulValue = *((unsigned long*)&fValue);
+		return !(ulValue == 0xffc00000);
+	}
 
+	//-----------------------------------------------------------------------------
+	EF_FORCEINLINE 
+	bool isValidDouble( double dValue )
+	{
+		unsigned long ulLower = *((unsigned long*)&dValue);
+		unsigned long ulUpper = *(((unsigned long*)&dValue) + 1);
+		return !((ulLower == 0x0) && (ulUpper == 0xfff80000));
+	}
+
+	//-------------------------------------------------------------------------
+	EF_FORCEINLINE 
+	bool isValidQuaterion( const btQuaternion& kRotation )
+	{
+		return ( isValidFloat( kRotation.getX() ) &&
+			isValidFloat( kRotation.getY() ) &&
+			isValidFloat( kRotation.getZ() ) &&
+			isValidFloat( kRotation.getZ() )
+			);
+	}
+
+	//-------------------------------------------------------------------------
+	EF_FORCEINLINE 
+	bool isValidVector( const osVector3& kVector )
+	{
+		return ( isValidFloat( kVector.x ) &&
+			isValidFloat( kVector.y ) &&
+			isValidFloat( kVector.z )
+			);
+	}
+
+	//-------------------------------------------------------------------------
 	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget );
 
 
@@ -47,10 +85,10 @@ namespace OpenSteer
 	void readFromRotationMatrix( osLocalSpaceData& kLocalSpace, const btMatrix3x3& kWorldRotation );
 	void readFromMatrix( osLocalSpaceData& kLocalSpace, const btTransform& kWorldTransform );
 	void writeToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation );
-	void writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
+	bool writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
 
 	void readFromMatrix( osAbstractVehicle& kVehicle, const btTransform& kWorldTransform );
-	void writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
+	bool writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
 
 	void calculateVelocity( const btTransform& kWorldTransform0, const btTransform& kWorldTransform1,
 		osScalar fDeltaTime,
@@ -96,7 +134,12 @@ namespace OpenSteer
 	public:
 		static btQuaternion readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData );
 		static void writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData );
-		
+	
+		static osVector3 compressQuaternion( const btQuaternion& kRotation, char& wSign );
+		static btQuaternion expandQuaternion( const osVector3& kCompressed, float wSign );
+
+		static void compressUnitVector( const osVector3& kSource, char* kTarget );
+		static void expandUnitVector( const char* kSource, osVector3& kTarget  );
 	};
 
 
