@@ -46,6 +46,10 @@ namespace OpenSteer{
 	class AbstractPlugin;
 	class AbstractPlayer;
 	class AbstractController;
+	class AbstractLocalSpace;
+
+	typedef struct TLocalSpaceData LocalSpaceData;
+
 
 	class Color;
 
@@ -70,6 +74,7 @@ namespace OpenSteer{
 }
 
 typedef OpenSteer::Vec3 osVector3;
+typedef OpenSteer::LocalSpaceData osLocalSpaceData;
 typedef OpenSteer::AbstractVehicle osAbstractVehicle;
 typedef OpenSteer::AVGroup osAVGroup;
 typedef OpenSteer::AVGroup::iterator osAVIterator;

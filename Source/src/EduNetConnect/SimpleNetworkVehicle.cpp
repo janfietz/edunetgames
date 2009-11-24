@@ -1,4 +1,5 @@
 #include "SimpleNetworkVehicle.h"
+#include "OpenSteerUT/AbstractVehicleMath.h"
 
 
 using namespace OpenSteer;
@@ -12,10 +13,13 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_Force,
 	0, // 	ESerializeDataType_Radius,
 	1, // 	ESerializeDataType_Speed,
+	0, //   ESerializeDataType_Orientation
 	0, // 	ESerializeDataType_CompressedOrientation,
 	0, // 	ESerializeDataType_CompressedForce,
 
 };
+
+osScalar SimpleNetworkVehicle::ms_NetWriteFPS = 20.0f;
 
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
@@ -52,7 +56,9 @@ void SimpleNetworkVehicleUpdate::update( const osScalar currentTime, const osSca
 //-------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
-SimpleNetworkVehicle::SimpleNetworkVehicle():m_kNetworkVehicleUpdate(this)
+SimpleNetworkVehicle::SimpleNetworkVehicle():
+	m_kNetworkVehicleUpdate(this),
+	m_bWantsToSendData( false )
 { 
 //	this->setCustomUpdated( &this->m_kNetworkVehicleUpdate );
 }
@@ -66,6 +72,10 @@ SimpleNetworkVehicle::~SimpleNetworkVehicle()
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
+	// set this frequency each update cycle as it might get changed by the gui
+	this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimpleNetworkVehicle::ms_NetWriteFPS );
+	size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
+	this->m_bWantsToSendData = ( uiTicks > 0 );
 	// in case the custom updater decides to call the base class
 	// prevent infinite recursion, store the custom updater locally
 	// and restore it once done with the update
@@ -79,6 +89,12 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 //-----------------------------------------------------------------------------
 int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
+// 	if( false == this->m_bWantsToSendData )
+// 	{
+// 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
+// 	}
+	this->m_bWantsToSendData = false;
+
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 
 	unsigned char dataTypes = 0; // how many variables will be send
@@ -137,6 +153,13 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		float fValue = this->speed();
 		kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
 	}
+	if( ms_bReplicationDataConfig[ESerializeDataType_Orientation] != 0 )
+	{
+		dataType = ESerializeDataType_Orientation;
+		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
+	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation;
@@ -170,6 +193,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	this->m_kProxyVehicle.m_bHasNewData = true;
 	float fValue;
 	OpenSteer::Vec3 kVec;
+	btQuaternion kRotation;
 	unsigned char dataTypes;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
@@ -191,6 +215,11 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
 			}
 			break;
+		case(ESerializeDataType_Orientation):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&kRotation,sizeof(btQuaternion));
+			}
+			break;
 		case(ESerializeDataType_Radius):
 		case(ESerializeDataType_Speed):
 			{
@@ -203,6 +232,11 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		{
 			switch( eDataType )
 			{
+			case(ESerializeDataType_Orientation):
+				{
+					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
+				}
+				break;
 			case(ESerializeDataType_CompressedOrientation):
 				{
 					// TODO

@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetworkVehicle.h"
+#include "EduNetCommon/TUpdatePeriod.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
 
 //-----------------------------------------------------------------------------
@@ -99,9 +100,12 @@ namespace OpenSteer {
 
 		// int to enable gui customization
 		static int ms_bReplicationDataConfig[ESerializeDataType_Count];
+		static osScalar ms_NetWriteFPS;
 	private:
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
 		SimpleProxyVehicle m_kProxyVehicle;
+		TUpdatePeriod<osScalar, FloatMathLimits> m_kNetWriteUpdatePeriod;
+		mutable bool m_bWantsToSendData;
 
 
 	};

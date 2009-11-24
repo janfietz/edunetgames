@@ -44,6 +44,11 @@ namespace OpenSteer
 	osVector3& getVector3( const btVector3& kSource, osVector3& kTarget );
 	btVector3& getVector3( const osVector3& kSource, btVector3& kTarget );
 
+	void readFromRotationMatrix( osLocalSpaceData& kLocalSpace, const btMatrix3x3& kWorldRotation );
+	void readFromMatrix( osLocalSpaceData& kLocalSpace, const btTransform& kWorldTransform );
+	void writeToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation );
+	void writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
+
 	void readFromMatrix( osAbstractVehicle& kVehicle, const btTransform& kWorldTransform );
 	void writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
 
@@ -89,6 +94,8 @@ namespace OpenSteer
 	class AbstractVehicleMath
 	{
 	public:
+		static btQuaternion readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData );
+		static void writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData );
 		
 	};
 
