@@ -58,7 +58,8 @@ void SimpleNetworkVehicleUpdate::update( const osScalar currentTime, const osSca
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_kNetworkVehicleUpdate(this),
-	m_bWantsToSendData( false )
+	m_bWantsToSendData( false ),
+	m_bHasBeenSerialized( false )
 { 
 //	this->setCustomUpdated( &this->m_kNetworkVehicleUpdate );
 }
@@ -72,13 +73,21 @@ SimpleNetworkVehicle::~SimpleNetworkVehicle()
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
+	// simple send data control
+	// note: not connection specific
+	if( this->m_bHasBeenSerialized )
+	{
+		this->m_bWantsToSendData = false;
+		this->m_bHasBeenSerialized = false;
+	}
 	// set this frequency each update cycle as it might get changed by the gui
-	this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimpleNetworkVehicle::ms_NetWriteFPS );
+	this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimpleNetworkVehicle::ms_NetWriteFPS, true );
 	size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
 	if( false == this->m_bWantsToSendData )
 	{
 		this->m_bWantsToSendData = ( uiTicks > 0 );
 	}
+
 	// in case the custom updater decides to call the base class
 	// prevent infinite recursion, store the custom updater locally
 	// and restore it once done with the update
@@ -89,14 +98,18 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	this->setCustomUpdated( pkCustomUpdated );
 }
 
+// TODO: implement specialized connection specific QuerySerialization implementations 
+// 
 //-----------------------------------------------------------------------------
 int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
+	// note: serialize is called for each connection
+	//       so here we have loads of optimization possibilities
 	if( false == this->m_bWantsToSendData )
 	{
 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
 	}
-	this->m_bWantsToSendData = false;
+	this->m_bHasBeenSerialized = true;
 
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 

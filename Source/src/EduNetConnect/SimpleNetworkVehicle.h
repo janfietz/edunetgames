@@ -106,6 +106,7 @@ namespace OpenSteer {
 		SimpleProxyVehicle m_kProxyVehicle;
 		TUpdatePeriod<osScalar, FloatMathLimits> m_kNetWriteUpdatePeriod;
 		mutable bool m_bWantsToSendData;
+		mutable bool m_bHasBeenSerialized;
 
 
 	};
