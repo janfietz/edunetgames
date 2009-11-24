@@ -34,6 +34,7 @@
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 
 #include "OpenSteer/Plugin.h"
+#include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
 #define CLIENT_PORT  23456
 #define SERVER_PORT  12345
@@ -194,6 +195,9 @@ public:
 	void getNetworkStatistics(RakNetStatistics& kStats);
 
 
+	void updateMotionStateProfile( const float currentTime, const float elapsedTime );
+
+
 protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
@@ -206,7 +210,7 @@ protected:
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
 
-	OpenSteer::AbstractVehicleMotionStatePlot m_kMotionStateProfile;
+	static OpenSteer::AbstractVehicleMotionStatePlot ms_kMotionStateProfile;
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager* m_pkNetworkIdManager;
@@ -291,11 +295,11 @@ public:
 		return m_kGamePlugin.allVehicles();
 	}
 
-	virtual OpenSteer::PlayerGroup& allPlayers( void ) 
+	virtual OpenSteer::AbstractPlayerGroup& allPlayers( void ) 
 	{ 
 		return m_kGamePlugin.allPlayers();
 	}
-	virtual const OpenSteer::PlayerGroup& allPlayers( void ) const 
+	virtual const OpenSteer::AbstractPlayerGroup& allPlayers( void ) const 
 	{ 
 		return m_kGamePlugin.allPlayers();
 	}
@@ -354,11 +358,7 @@ void TNetworkPlugin< PluginClass >::update (const float currentTime, const float
 		BaseClass::update( currentTime, elapsedTime );
 	}
 
-	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
-	{
-		// update motion state plot
-		this->m_kMotionStateProfile.recordUpdate( OpenSteer::SimpleVehicle::selectedVehicle, currentTime, elapsedTime );
-	}
+	this->updateMotionStateProfile( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------

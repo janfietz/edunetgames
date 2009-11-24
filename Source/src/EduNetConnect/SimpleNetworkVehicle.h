@@ -65,6 +65,7 @@ namespace OpenSteer {
 
 		}
 		bool m_bHasNewData;
+		int m_bReveivedDataConfig[ESerializeDataType_Count];
 	private:
 	};
 
@@ -95,9 +96,13 @@ namespace OpenSteer {
 		{
 			return this->m_kProxyVehicle;
 		}
+
+		// int to enable gui customization
+		static int ms_bReplicationDataConfig[ESerializeDataType_Count];
 	private:
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
 		SimpleProxyVehicle m_kProxyVehicle;
+
 
 	};
 

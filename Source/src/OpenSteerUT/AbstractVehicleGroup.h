@@ -30,8 +30,10 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/AbstractEntityQuery.h"
 
 namespace OpenSteer {
+
 
 //-----------------------------------------------------------------------------
 // a utility class to handle common vehicle related topics
@@ -42,8 +44,6 @@ public:
 	AbstractVehicleGroup( const AVGroup& kAVGroup );
 	virtual ~AbstractVehicleGroup( void ){};
 
-	//-------------------------------------------------------------------
-	// interface AbstractUpdated
 	//-------------------------------------------------------------------
 	// interface AbstractUpdated
 	virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
@@ -59,14 +59,17 @@ public:
 	}
 
 
-	virtual void redraw (const float currentTime, const float elapsedTime);
-	virtual void reset( void );
-	virtual void allocateProximityToken( ProximityDatabase* pd );
+	void redraw (const float currentTime, const float elapsedTime);
+	void reset( void );
+	void allocateProximityToken( ProximityDatabase* pd );
 
-	virtual void addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase = NULL );
- 	virtual void removeVehicle( const AbstractVehicle* pkVehicle );
- 	virtual AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
+	void addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase = NULL );
+ 	void removeVehicle( const AbstractVehicle* pkVehicle );
+ 	AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
+	AVGroup::iterator findNetworkVehicle( NetworkId networkId ) const;
 
+	AVGroup::iterator begin() { return m_kVehicles.begin(); }
+	AVGroup::iterator end() { return m_kVehicles.end(); }
 	size_t population() const { return m_kVehicles.size(); }
 private:
 	AbstractVehicleGroup( void );

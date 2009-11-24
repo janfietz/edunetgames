@@ -27,6 +27,8 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleUpdate.h"
+#include "EduNetCommon/TCompressed.h"
+#include "EduNetCommon/EduNetMath.h"
 
 //-----------------------------------------------------------------------------
 using namespace OpenSteer;
@@ -172,5 +174,43 @@ void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osSca
 	const Vec3 c2 = this->vehicle().position() + this->m_kForce;
 	const Color color = gBlue;
 	this->annotationLine (c1, c2, color);
+
+	float fForce = this->m_kForce.length();
+	if( fForce > 0 )
+	{
+		// compression prototype code
+		osVector3 kUnitForce = this->m_kForce / fForce;
+		kUnitForce.x = etClamp( kUnitForce.x, -1.0f, 1.0f );
+		kUnitForce.y = etClamp( kUnitForce.y, -1.0f, 1.0f );
+		kUnitForce.z = etClamp( kUnitForce.z, -1.0f, 1.0f );
+		float fForceFactor = fForce / this->vehicle().maxForce ();
+		fForceFactor = etClamp( fForceFactor, -1.0f, 1.0f );
+
+		this->m_cForce[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.x , -1.0f, 1.0f );
+		this->m_cForce[1] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.y , -1.0f, 1.0f );
+		this->m_cForce[2] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.z , -1.0f, 1.0f );
+		this->m_cForce[3] = TCompressedFixpoint<float,char,8>::writeCompress( fForceFactor, -1.0f, 1.0f );
+
+		// inflate and apply to avoid inconsistencies
+		osVector3 kInflatedForce;
+		kInflatedForce.x = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[0] , -1.0f, 1.0f );
+		kInflatedForce.y = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[1] , -1.0f, 1.0f );
+		kInflatedForce.z = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[2] , -1.0f, 1.0f );
+		kInflatedForce *= TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[3] , -1.0f, 1.0f );
+		kInflatedForce *= this->vehicle().maxForce();
+
+		osVector3 kCompressionError = kInflatedForce - this->m_kForce;
+		float fCompressionError = kCompressionError.length();
+		const size_t uiVe3Size = sizeof(osVector3);
+		const size_t uiCompressedSize = sizeof(this->m_cForce);
+
+		this->m_kForce = kInflatedForce;
+	}
+	else
+	{
+		this->m_cForce[0] = this->m_cForce[1] = this->m_cForce[2] = this->m_cForce[3];
+
+	}
+
 }
 

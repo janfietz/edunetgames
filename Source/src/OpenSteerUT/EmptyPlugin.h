@@ -38,6 +38,7 @@
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
+#include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
 
 // anonymous namespace

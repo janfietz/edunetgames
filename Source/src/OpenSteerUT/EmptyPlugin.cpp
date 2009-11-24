@@ -73,6 +73,10 @@ void EmptyPlugin::update (const float currentTime, const float elapsedTime)
 {
 	AbstractVehicleGroup kVehicles( m_kVehicles );
 	kVehicles.update( currentTime, elapsedTime );
+	if( 0 == m_bShowMotionStatePlot )
+	{
+		return;
+	}
 	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
 	{
 		// update motion state plot
@@ -151,7 +155,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw motion state plot
 		if( NULL != SimpleVehicle::selectedVehicle )
 		{
-			this->m_kMotionStateProfile.draw();
+			this->m_kMotionStateProfile.draw( currentTime );
 		}
 	}
 

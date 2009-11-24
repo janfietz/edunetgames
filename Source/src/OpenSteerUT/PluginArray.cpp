@@ -307,7 +307,7 @@ void PluginArray::addPlayer ( OpenSteer::AbstractPlayer* pkPlayer)
 //-----------------------------------------------------------------------------
 void PluginArray::removePlayer ( OpenSteer::AbstractPlayer* pkPlayer)
 {
-	PlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
+	AbstractPlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
 	if( kIter != this->m_kAllPlayers.end() )
 	{
 		this->m_kAllPlayers.erase( kIter );

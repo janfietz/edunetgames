@@ -28,7 +28,6 @@
 
 #include "GraphPlot.h"
 #include "EduNetCommon/EduNetDraw.h"
-#include "EduNetCommon/EduNetMath.h"
 #include "OpenSteer/Draw.h"
 
 using namespace Profile;
@@ -111,6 +110,44 @@ void GraphPlot::drawQuad(float x0, float y0, float x1, float y1)
 	glVertex2f(x1, y1);
 	glVertex2f(x0, y1);
 	glEnd();
+}
+
+//-----------------------------------------------------------------------------
+void GraphPlot::draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
+		  float sx, float sy, float width, float height ) const
+{
+	if( kValues.size() < 2 )
+	{
+		return;
+	}
+
+	GraphLocation kGraphLocation = kMasterGraphLocation;
+	kGraphLocation.sx = sx;
+	kGraphLocation.sy = sy;
+	kGraphLocation.width = width;
+	kGraphLocation.height = height;
+	GraphValue& kMin = kGraphLocation.kMin;
+	GraphValue& kMax = kGraphLocation.kMax;
+	GraphValue& kInterval = kGraphLocation.kInterval;
+	GraphValue& kScale = kGraphLocation.kScale;
+/*
+	kMin = GraphValue::ms_Max;
+	kMax = GraphValue::ms_Min;
+	kInterval = GraphValue::ms_Min;
+	kScale = GraphValue::ms_Min;
+
+	this->computeGraphLocation( kValues, kGraphLocation );
+*/
+	if( kInterval.x > 0 )
+	{
+		const float sw( OpenSteer::drawGetWindowWidth() ), 
+			sh( OpenSteer::drawGetWindowHeight() );
+		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
+		this->drawGraphFrame( kGraphLocation );
+		OpenSteer::end2dDrawing (originalMatrixMode);
+
+		this->drawSingleGraph( kValues, kGraphLocation );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -302,7 +339,6 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 
 	const GraphValue& kEndValue = kValues[kValues.size() - 1];
 
-
 	OpenSteer::Color kColor = OpenSteer::gGray80;
 	if( kValues.hasColor() )
 	{
@@ -356,6 +392,7 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			sn	<< " Max: " << kMax.y;
 			sn	<< " Avg: " << fAvg;
 			sn	<< " Cur: " << kEndValue.y;
+			sn	<< " Scale: " << kScale.y;
 		}
 		sn	<< std::ends;
 
@@ -387,6 +424,7 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			// offset the graph to begin at sy
 			kRenderValue.y -= kMinDraw.y;
 			kRenderValue.y *= kScale.y;
+			kRenderValue.y *= kRenderValue.scale_y;
 			kRenderValue.y += kGraphLocation.sy;
 
 			glVertex2f(kRenderValue.x,kRenderValue.y);
@@ -397,7 +435,6 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	}
 
 }
-
 
 //-----------------------------------------------------------------------------
 void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation& kGraphLocation ) const
@@ -417,16 +454,28 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 	GraphValue& kIntervalDraw = kGraphLocation.kIntervalDraw;
 	GraphValue& kScale = kGraphLocation.kScale;
 
+	const bool bGlobalStats = false;
+	if( true == bGlobalStats )
+	{
+		kMin.y = ::etMin( kMin.y, kValues.m_kMin.y );
+		kMin.z = ::etMin( kMin.z, kValues.m_kMin.z );
+		kMax.y = ::etMax( kMax.y, kValues.m_kMax.y );
+		kMax.z = ::etMax( kMax.z, kValues.m_kMax.z );
+	}
+
 	// iterate once to determine min max values
 	while( kIter != kEnd )
 	{
 		const GraphValue& kRenderValue = (*kIter);
 		kMin.x = ::etMin( kMin.x, kRenderValue.x );
-		kMin.y = ::etMin( kMin.y, kRenderValue.y );
-		kMin.z = ::etMin( kMin.z, kRenderValue.z );
 		kMax.x = ::etMax( kMax.x, kRenderValue.x );
-		kMax.y = ::etMax( kMax.y, kRenderValue.y );
-		kMax.z = ::etMax( kMax.z, kRenderValue.z );
+		if( false == bGlobalStats )
+		{
+			kMin.y = ::etMin( kMin.y, kRenderValue.y );
+			kMin.z = ::etMin( kMin.z, kRenderValue.z );
+			kMax.y = ::etMax( kMax.y, kRenderValue.y );
+			kMax.z = ::etMax( kMax.z, kRenderValue.z );
+		}
 		++kIter;
 	}
 
@@ -477,5 +526,4 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 	{
 		kScale.y = kGraphLocation.height / kIntervalDraw.y;
 	}
-
 }

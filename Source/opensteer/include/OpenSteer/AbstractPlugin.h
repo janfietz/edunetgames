@@ -135,8 +135,8 @@ namespace OpenSteer {
 
 		//! return  an STL vector of AbstractPlayer pointers of
 		//! all players defined by the Plugin
-		virtual PlayerGroup& allPlayers( void ) OS_ABSTRACT;
-		virtual const PlayerGroup& allPlayers( void ) const OS_ABSTRACT;
+		virtual AbstractPlayerGroup& allPlayers( void ) OS_ABSTRACT;
+		virtual const AbstractPlayerGroup& allPlayers( void ) const OS_ABSTRACT;
 		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer) OS_ABSTRACT;
 		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer) OS_ABSTRACT;
  

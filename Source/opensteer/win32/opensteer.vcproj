@@ -249,6 +249,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
+				RelativePath="..\include\OpenSteer\AbstractEntity.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\AbstractPlayer.h"
 				>
 			</File>

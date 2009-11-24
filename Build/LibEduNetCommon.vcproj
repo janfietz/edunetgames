@@ -359,6 +359,14 @@
 					RelativePath="..\Source\src\OpenSteerUT\AbstractEntityFactory.h"
 					>
 				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractEntityQuery.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractEntityQuery.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

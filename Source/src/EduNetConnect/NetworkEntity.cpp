@@ -127,6 +127,11 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 					kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
 				}
 				break;
+			case(ESerializeDataType_Speed):
+				{
+					kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+				}
+				break;
 			}
 
 			if( false == NetworkEntitySerializer::setLocalSpaceVariable( eDataType, pkLocalSpace, kVec ) )

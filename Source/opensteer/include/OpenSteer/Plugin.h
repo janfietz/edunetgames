@@ -124,8 +124,8 @@ namespace OpenSteer {
 		virtual void addObstacle (OpenSteer::AbstractObstacle* pkObstacle);
 		virtual void removeObstacle (OpenSteer::AbstractObstacle* pkObstacle);
 
-		virtual PlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
-		virtual const PlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
+		virtual AbstractPlayerGroup& allPlayers( void ) { return m_kAllPlayers; };
+		virtual const AbstractPlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
 		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
 		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
 
@@ -193,7 +193,7 @@ namespace OpenSteer {
 	protected:
 		AbstractEntityFactory* m_pkEntityFactory;
 		ObstacleGroup m_kAllObstacles;
-		PlayerGroup m_kAllPlayers;
+		AbstractPlayerGroup m_kAllPlayers;
 
     private:
 

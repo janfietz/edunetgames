@@ -35,6 +35,34 @@
 // Include assert
 #include <cassert>
 
+const OpenSteer::Color OpenSteer::Color::_gBlack(0.0f, 0.0f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gWhite(1.0f, 1.0f, 1.0f);
+
+const OpenSteer::Color OpenSteer::Color::_gRed(1.0f, 0.0f, 0.0f); 
+const OpenSteer::Color OpenSteer::Color::_gGreen(0.0f, 1.0f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gBlue(0.0f, 0.0f, 1.0f);
+const OpenSteer::Color OpenSteer::Color::_gYellow(1.0f, 1.0f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gCyan(0.0f, 1.0f, 1.0f);
+const OpenSteer::Color OpenSteer::Color::_gMagenta(1.0f, 0.0f, 1.0f);
+const OpenSteer::Color OpenSteer::Color::_gOrange(1.0f, 0.5f, 0.0f);
+
+const OpenSteer::Color OpenSteer::Color::_gDarkRed(0.5f, 0.0f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gDarkGreen(0.0f, 0.5f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gDarkBlue(0.0f, 0.0f, 0.5f);
+const OpenSteer::Color OpenSteer::Color::_gDarkYellow(0.5f, 0.5f, 0.0f);
+const OpenSteer::Color OpenSteer::Color::_gDarkCyan(0.0f, 0.5f, 0.5f);
+const OpenSteer::Color OpenSteer::Color::_gDarkMagenta(0.5f, 0.0f, 0.5f);
+const OpenSteer::Color OpenSteer::Color::_gDarkOrange(0.5f, 0.25f, 0.0f);
+
+const OpenSteer::Color OpenSteer::Color::_gGray10(0.1f);
+const OpenSteer::Color OpenSteer::Color::_gGray20(0.2f);
+const OpenSteer::Color OpenSteer::Color::_gGray30(0.3f);
+const OpenSteer::Color OpenSteer::Color::_gGray40(0.4f);
+const OpenSteer::Color OpenSteer::Color::_gGray50(0.5f);
+const OpenSteer::Color OpenSteer::Color::_gGray60(0.6f);
+const OpenSteer::Color OpenSteer::Color::_gGray70(0.7f);
+const OpenSteer::Color OpenSteer::Color::_gGray80(0.8f);
+
 
 OpenSteer::Color::Color()
     : r_(1.0f), g_(1.0f), b_(1.0f), a_ (1.0f)
@@ -229,34 +257,4 @@ OpenSteer::operator/( Color const& lhs, float rhs )
 
 
 
-
-
-OpenSteer::Color const OpenSteer::gBlack(0.0f, 0.0f, 0.0f);
-OpenSteer::Color const OpenSteer::gWhite(1.0f, 1.0f, 1.0f);
-
-OpenSteer::Color const OpenSteer::gRed(1.0f, 0.0f, 0.0f); 
-OpenSteer::Color const OpenSteer::gGreen(0.0f, 1.0f, 0.0f);
-OpenSteer::Color const OpenSteer::gBlue(0.0f, 0.0f, 1.0f);
-OpenSteer::Color const OpenSteer::gYellow(1.0f, 1.0f, 0.0f);
-OpenSteer::Color const OpenSteer::gCyan(0.0f, 1.0f, 1.0f);
-OpenSteer::Color const OpenSteer::gMagenta(1.0f, 0.0f, 1.0f);
-OpenSteer::Color const OpenSteer::gOrange(1.0f, 0.5f, 0.0f);
-
-OpenSteer::Color const OpenSteer::gDarkRed(0.5f, 0.0f, 0.0f);
-OpenSteer::Color const OpenSteer::gDarkGreen(0.0f, 0.5f, 0.0f);
-OpenSteer::Color const OpenSteer::gDarkBlue(0.0f, 0.0f, 0.5f);
-OpenSteer::Color const OpenSteer::gDarkYellow(0.5f, 0.5f, 0.0f);
-OpenSteer::Color const OpenSteer::gDarkCyan(0.0f, 0.5f, 0.5f);
-OpenSteer::Color const OpenSteer::gDarkMagenta(0.5f, 0.0f, 0.5f);
-OpenSteer::Color const OpenSteer::gDarkOrange(0.5f, 0.25f, 0.0f);
-
-OpenSteer::Color const OpenSteer::gGray10(0.1f);
-OpenSteer::Color const OpenSteer::gGray20(0.2f);
-OpenSteer::Color const OpenSteer::gGray30(0.3f);
-OpenSteer::Color const OpenSteer::gGray40(0.4f);
-OpenSteer::Color const OpenSteer::gGray50(0.5f);
-OpenSteer::Color const OpenSteer::gGray60(0.6f);
-OpenSteer::Color const OpenSteer::gGray70(0.7f);
-OpenSteer::Color const OpenSteer::gGray80(0.8f);
-OpenSteer::Color const OpenSteer::gGray90(0.9f);
 

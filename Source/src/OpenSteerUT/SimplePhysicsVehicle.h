@@ -31,7 +31,6 @@
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer

@@ -98,6 +98,10 @@ OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer
 		if( NULL != pkEntity )
 		{
 			this->m_uidMap.Set( pkEntity->getEntityId(), pkNewReplica );
+
+			NetworkID kNetWorkId = pkNewReplica->GetNetworkID();
+			OpenSteer::NetworkId networkId = kNetWorkId.guid.g;
+			pkEntity->setNetworkId( networkId );
 		}
 		return pkEntity;
 	}

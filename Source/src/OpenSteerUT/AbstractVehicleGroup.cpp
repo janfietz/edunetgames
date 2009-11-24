@@ -80,6 +80,7 @@ void AbstractVehicleGroup::update( const float currentTime, const float elapsedT
 	while( iter != last )
 	{
 		AbstractVehicle* pkVehicle = (*iter);
+		AbstractUpdated* pkVehicleCustomUpdate = pkVehicle->getCustomUpdated();
 		pkVehicle->setCustomUpdated( this->getCustomUpdated() );
 		AbstractUpdated* pkCustomUpdate = pkVehicle->getCustomUpdated();
 		if( NULL != pkCustomUpdate )
@@ -98,9 +99,10 @@ void AbstractVehicleGroup::update( const float currentTime, const float elapsedT
 		}
 		else
 		{
+			pkVehicle->setCustomUpdated( pkVehicleCustomUpdate );
 			pkVehicle->update( currentTime, elapsedTime );
 		}
-		pkVehicle->setCustomUpdated( NULL );
+		pkVehicle->setCustomUpdated( pkVehicleCustomUpdate );
 		++iter;
 	}
 }
@@ -173,8 +175,18 @@ void AbstractVehicleGroup::removeVehicle( const AbstractVehicle* pkVehicle )
 //-----------------------------------------------------------------------------
 AVGroup::iterator AbstractVehicleGroup::findVehicle( const AbstractVehicle* pkVehicle ) const
 {
-	return std::find( m_kVehicles.begin(), m_kVehicles.end(), pkVehicle );
+	EntityPointerQuery kEntityPointerQuery(pkVehicle);
+	AVQuery kQuery( this->m_kVehicles, &kEntityPointerQuery );
+	return kQuery.find( );
+//	return std::find( m_kVehicles.begin(), m_kVehicles.end(), pkVehicle );
 }
 
+//-----------------------------------------------------------------------------
+AVGroup::iterator AbstractVehicleGroup::findNetworkVehicle( NetworkId networkId ) const
+{
+	NetworkEntityQuery kNetworkEntityQuery(networkId);
+	AVQuery kQuery( this->m_kVehicles, &kNetworkEntityQuery );
+	return kQuery.find( );
+}
 
 } // namespace OpenSteer
