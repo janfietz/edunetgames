@@ -52,6 +52,9 @@ namespace OpenSteer {
 		// interface AbstractUpdated
 		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+
+		void collect3DTextAnnotation( std::ostringstream& kStream );
+	
 	private:
 		ServerVehicleUpdate m_kServerVehicleUpdate;
 		ClientVehicleUpdate m_kClientVehicleUpdate;

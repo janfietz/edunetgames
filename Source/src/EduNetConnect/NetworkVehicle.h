@@ -39,6 +39,7 @@ namespace OpenSteer {
 	template <class Super>
 	class NetworkVehicleMixin : public Super, public AbstractNetworkVehicle
 	{
+		ET_DECLARE_BASE( Super )
 	public:
 
 		// constructor

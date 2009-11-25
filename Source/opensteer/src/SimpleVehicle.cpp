@@ -62,6 +62,9 @@
 
 #include "OpenSteer/SimpleVehicle.h"
 #include <algorithm>
+#ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
+#include "OpenSteer/Draw.h"
+#endif //! NOT_OPENSTEERDEMO
 
 //-----------------------------------------------------------------------------
 // currently selected vehicle.  Generally the one the camera follows and
@@ -100,6 +103,49 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 		SimpleVehicle::selectedVehicle = NULL;
 	}
 }
+
+//-----------------------------------------------------------------------------
+void OpenSteer::SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
+{
+	kStream << "#"
+		<< this->name()
+		<< "-"
+		<< this->getEntityId()
+		<< std::endl;
+}
+
+//-----------------------------------------------------------------------------
+void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime*/ ) 
+{
+//	if( OpenSteer::SimpleVehicle::selectedVehicle == this )
+	{
+		std::ostringstream kStream;
+		this->collect3DTextAnnotation( kStream );
+
+		Color textColor (0.8f, 1, 0.8f);
+		Vec3 textOffset (0, 0.25f, 0);
+		if( this->isRemoteObject() )
+		{
+			textColor.setR( 1.0f );
+			textColor.setG( 0.70f );
+			textColor.setB( 0.70f );
+			textColor.setA( 0.95f );
+		}
+		else
+		{
+			textColor.setR( 0.20f );
+			textColor.setG( 1.00f );
+			textColor.setB( 0.20f );
+			textColor.setA( 0.95f );
+			textOffset.y += 1.0f;
+		}
+		const Vec3 textPos = this->position() + textOffset;
+		OpenSteer::draw2dTextAt3dLocation( 
+			kStream, textPos, textColor, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight() );
+
+		kStream.flush();
+	}
+};
 
 //-----------------------------------------------------------------------------
 // switch to new proximity database

@@ -37,6 +37,7 @@ namespace OpenSteer {
 		m_pkClientVehicle( NULL ),
 		m_pkServerVehicle( NULL )
 	{
+		const size_t uiNumRecords = 50;
 		Color kColor0(0.0f, 1.0f, 0.0f);
 		Color kColor1(1.0f, 0.0f, 0.0f);
 
@@ -46,54 +47,54 @@ namespace OpenSteer {
 		this->m_kLinearVelocity.accessValues(0).
 			setName( "LinearVel" ).
 			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 		this->m_kAngularVelocity.accessValues(0).
 			setName( "AngularVel" ).
 			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 		this->m_kSteeringForce.accessValues(0).
 			setName( "SteeringForce" ).
 			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 
 		this->m_kLinearVelocity.accessValues(1).
 			setName( "LinearVel" ).
 			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 		this->m_kAngularVelocity.accessValues(1).
 			setName( "AngularVel" ).
 			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 		this->m_kSteeringForce.accessValues(1).
 			setName( "SteeringForce" ).
 			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
-			setMaxRecords( 100 );
+			setMaxRecords( uiNumRecords );
 
 		this->m_kLinearVelocity.accessValues(2).
 			setName( NULL ).
 			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 		this->m_kAngularVelocity.accessValues(2).
 			setName( NULL ).
 			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 		this->m_kSteeringForce.accessValues(2).
 			setName( NULL ).
 			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 
 		this->m_kLinearVelocity.accessValues(3).
 			setName( NULL ).
 			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 		this->m_kAngularVelocity.accessValues(3).
 			setName( NULL ).
 			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 		this->m_kSteeringForce.accessValues(3).
 			setName( NULL ).
 			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
-			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+			setMaxRecords( uiNumRecords ).setGraphType( Profile::EGraphType_Dots );
 
 	}
 

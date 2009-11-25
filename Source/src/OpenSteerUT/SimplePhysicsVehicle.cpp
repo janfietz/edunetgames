@@ -54,6 +54,7 @@ SimplePhysicsVehicle::~SimplePhysicsVehicle()
 //-----------------------------------------------------------------------------
 void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTime )
 {
+	BaseClass::draw( currentTime, elapsedTime );
 #if 0
 // extrapolation example
 	PhysicsMotionState kMotionState;
@@ -139,15 +140,34 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 		}
 	}
 
-	// compute steering forces
-	this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
-	kSteeringForce = this->m_kSteeringForceUpdate.getForce();
-
-	// override steering force computation with controller values
-	if( true == bHasControllerValues )
+	switch( this->m_kEulerUpdate.getUpdateMode() )
 	{
-		kSteeringForce.x = kControllerForce.x;
-		kSteeringForce.z = kControllerForce.z;
+	case( EEulerUpdateMode_Accelerate ):
+		{
+			if( true == this->m_kSteeringForceUpdate.isEnabled() )
+			{
+				// compute steering forces
+				this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
+				kSteeringForce = this->m_kSteeringForceUpdate.getForce();
+			}
+			else
+			{
+				kSteeringForce = this->lastSteeringForce();
+			}
+
+			// override steering force computation with controller values
+			if( true == bHasControllerValues )
+			{
+				kSteeringForce.x = kControllerForce.x;
+				kSteeringForce.z = kControllerForce.z;
+			}
+		}
+		break;
+	case( EEulerUpdateMode_IntegrateMotionState ):
+		{
+			kSteeringForce = Vec3::zero;
+		}
+		break;
 	}
 
 	// integrate results

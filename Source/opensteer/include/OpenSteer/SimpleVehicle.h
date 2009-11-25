@@ -100,6 +100,13 @@ namespace OpenSteer {
 
 		OS_IMPLEMENT_CLASSNAME( SimpleVehicle )
 
+		virtual const char* name (void) const
+		{
+			//			return this->m_kInstance.name();
+			return this->getClassName();
+		}
+
+
        //! reset vehicle state
         virtual void reset (void)
         {
@@ -247,7 +254,10 @@ namespace OpenSteer {
 
 
 		//! CP ++
-		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ ) {};
+		virtual void collect3DTextAnnotation( std::ostringstream& kStream );
+
+		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ );
+
 		virtual void allocateProximityToken( ProximityDatabase* pkProximityDatabase );
 		virtual AbstractVehicle* cloneVehicle( void ) const { return NULL; };
 

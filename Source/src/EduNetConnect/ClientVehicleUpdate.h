@@ -34,12 +34,22 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
+	enum EVehicleUpdateMode
+	{
+		EVehicleUpdateMode_Unknown,
+		EVehicleUpdateMode_BruteForce,
+		EVehicleUpdateMode_PhysicsMotion,
+		EVehicleUpdateMode_ForwardSpeed,
+		EVehicleUpdateMode_Steer,
+		EVehicleUpdateMode_Count,
+	};
+
 	//-------------------------------------------------------------------------
 	class ClientVehicleUpdate : public AbstractVehicleUpdate {
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
 		ClientVehicleUpdate( AbstractVehicle* pkVehicle ):
-		BaseClass( pkVehicle )
+		BaseClass( pkVehicle ),m_eLastUpdateMode( EVehicleUpdateMode_Unknown )
 		{
 		}
 		virtual ~ClientVehicleUpdate(){}
@@ -48,7 +58,33 @@ namespace OpenSteer {
 		// interface AbstractUpdated
 		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+
+		
+		EVehicleUpdateMode getVehicleUpdateMode( void ) const { return m_eLastUpdateMode; }
+		static const char* getVehicleUpdateModeString( EVehicleUpdateMode eMode )
+		{
+			static const char* pszModes[EVehicleUpdateMode_Count] =
+			{
+				"Unknown",
+				"BruteForce",
+				"PhysicsMotion",
+				"ForwardSpeed",
+				"Steer"
+			};
+			return pszModes[eMode];
+		}
 	private:
+		
+		EVehicleUpdateMode determineUpdateMode( const class SimpleNetworkVehicle& kVehicle ) const;
+
+		void updateBruteForce( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		void updatePhysicsMotion( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		void updateForwardSpeed( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		void updateSteer( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		void updateUnknown( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+
+		EVehicleUpdateMode m_eLastUpdateMode;
+
 	};
 
 

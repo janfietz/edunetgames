@@ -87,7 +87,7 @@ namespace OpenSteer {
         
 		virtual const LocalSpaceData& getLocalSpaceData( void ) const OS_ABSTRACT;
 		virtual LocalSpaceData& accessLocalSpaceData( void ) OS_ABSTRACT;
-		virtual void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData ) OS_ABSTRACT;
+		virtual void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData, bool bPreserveUpdateTicks ) OS_ABSTRACT;
 
         //! accessors (get and set) for side, up, forward and position
         virtual const Vec3& side (void) const OS_ABSTRACT;

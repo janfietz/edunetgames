@@ -61,6 +61,10 @@ typedef int GLint;
 
 namespace OpenSteer {
 
+	extern float drawGetWindowHeight(void);
+	extern float drawGetWindowWidth(void);
+
+
 	GLint begin2dDrawing (float w, float h);
 	void end2dDrawing (GLint originalMatrixMode);
 

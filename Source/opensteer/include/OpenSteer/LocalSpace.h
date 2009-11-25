@@ -82,22 +82,29 @@ namespace OpenSteer {
     private:
 
     public:
-		OS_IMPLEMENT_CLASSNAME( Super )
+// does not work
+//		OS_IMPLEMENT_CLASSNAME( Super )
+		OS_IMPLEMENT_CLASSNAME( LocalSpaceMixin )
 
 		const LocalSpaceData& getLocalSpaceData( void ) const
 		{
 			return *this;
 		}
 
-		LocalSpaceData& accessLocalSpaceData( void )
+		virtual LocalSpaceData& accessLocalSpaceData( void )
 		{
 			return *this;
 		}
 
-		void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData )
+		virtual void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData, bool bPreserveUpdateTicks )
 		{
+			const size_t currentUpdateTicks = this->_updateTicks;
 			LocalSpaceData& _localSpaceData = *this;
 			_localSpaceData = kLocalSpaceData;
+			if( true == bPreserveUpdateTicks )
+			{
+				this->_updateTicks = currentUpdateTicks;
+			}
 		}
 
         //! accessors (get and set) for side, up, forward and position
@@ -350,8 +357,9 @@ namespace OpenSteer {
 			}
 		}
 
-
-		OS_IMPLEMENT_CLASSNAME( Super )
+// does not work
+//		OS_IMPLEMENT_CLASSNAME( Super )
+		OS_IMPLEMENT_CLASSNAME( EntityLocalSpaceMixin )
 
 		// AbstractEntity interface
 		virtual AbstractEntity* cloneEntity( void ) const

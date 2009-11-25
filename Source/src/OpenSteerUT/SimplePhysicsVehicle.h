@@ -39,9 +39,12 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	class SimplePhysicsVehicle : public SimpleVehicle
 	{
+		ET_DECLARE_BASE( SimpleVehicle )
 	public:
 		SimplePhysicsVehicle();
 		virtual ~SimplePhysicsVehicle();
+
+		OS_IMPLEMENT_CLASSNAME( SimplePhysicsVehicle )
 
 		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
 		{
@@ -51,6 +54,16 @@ namespace OpenSteer
 		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
 		{
 			return this->m_kEulerUpdate;
+		}
+
+		const OpenSteer::SteeringForceVehicleUpdate& getSteeringForceUpdate( void ) const
+		{
+			return this->m_kSteeringForceUpdate;
+		}
+
+		OpenSteer::SteeringForceVehicleUpdate& accessSteeringForceUpdate( void )
+		{
+			return this->m_kSteeringForceUpdate;
 		}
 
 		virtual void draw( const float currentTime, const float elapsedTime );
