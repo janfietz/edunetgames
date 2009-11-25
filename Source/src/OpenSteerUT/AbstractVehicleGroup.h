@@ -58,6 +58,8 @@ public:
 		return this->m_pkCustomUpdated;
 	}
 
+	virtual bool isEnabled( void ) const { return this->m_bEnabled; }; 
+	virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; }; 
 
 	void redraw (const float currentTime, const float elapsedTime);
 	void reset( void );
@@ -75,6 +77,7 @@ private:
 	AbstractVehicleGroup( void );
 	AVGroup& m_kVehicles;
 	AbstractUpdated* m_pkCustomUpdated;
+	bool m_bEnabled;
 
 };
 

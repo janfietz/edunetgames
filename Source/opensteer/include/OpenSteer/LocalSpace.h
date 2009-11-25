@@ -1,3 +1,6 @@
+#ifndef OPENSTEER_LOCALSPACE_H
+#define OPENSTEER_LOCALSPACE_H
+
 //-----------------------------------------------------------------------------
 //
 //
@@ -59,101 +62,13 @@
 //
 //-----------------------------------------------------------------------------
 
-
-#ifndef OPENSTEER_LOCALSPACE_H
-#define OPENSTEER_LOCALSPACE_H
-
-
-#include "OpenSteer/Vec3.h"
-#include "OpenSteer/AbstractUpdated.h"
+#include "OpenSteer/AbstractLocalSpace.h"
 #include "OpenSteer/Entity.h"
 
-
 //-----------------------------------------------------------------------------
-
-
 namespace OpenSteer {
 
-	typedef struct TLocalSpaceData
-	{
-		Vec3 _side;     //!    side-pointing unit basis vector
-		Vec3 _up;       //!  upward-pointing unit basis vector
-		Vec3 _forward;  //! forward-pointing unit basis vector
-		Vec3 _position; //! origin of local space
-	} LocalSpaceData;
-
-	class AbstractLocalSpace//! : public AbstractEntity
-    {
-    public:
-        virtual ~AbstractLocalSpace() { /* Nothing to do. */ }
-        
-		virtual const LocalSpaceData& getLocalSpaceData( void ) const = 0;
-		virtual LocalSpaceData& accessLocalSpaceData( void ) = 0;
-		virtual void setLocalSpaceData( const LocalSpaceData& kLocalSpaceData ) = 0;
-
-        //! accessors (get and set) for side, up, forward and position
-        virtual const Vec3& side (void) const = 0;
-        virtual const Vec3& setSide (const Vec3& s) = 0;
-        virtual const Vec3& up (void) const = 0;
-        virtual const Vec3& setUp (const Vec3& u) = 0;
-        virtual const Vec3& forward (void) const = 0;
-        virtual const Vec3& setForward (const Vec3& f) = 0;
-        virtual const Vec3& position (void) const = 0;
-        virtual const Vec3& setPosition (const Vec3& p) = 0;
-
-        //! use right-(or left-)handed coordinate space
-        virtual bool rightHanded (void) const = 0;
-
-        //! reset transform to identity
-        virtual void resetLocalSpace (void) = 0;
-
-        //! transform a direction in global space to its equivalent in local space
-        virtual Vec3 localizeDirection (const Vec3& globalDirection) const = 0;
-
-        //! transform a point in global space to its equivalent in local space
-        virtual Vec3 localizePosition (const Vec3& globalPosition) const = 0;
-
-        //! transform a point in local space to its equivalent in global space
-        virtual Vec3 globalizePosition (const Vec3& localPosition) const = 0;
-
-        //! transform a direction in local space to its equivalent in global space
-        virtual Vec3 globalizeDirection (const Vec3& localDirection) const = 0;
-
-        //! set "side" basis vector to normalized cross product of forward and up
-        virtual void setUnitSideFromForwardAndUp (void) = 0;
-
-        //! regenerate the orthonormal basis vectors given a new forward
-        //! (which is expected to have unit length)
-        virtual void regenerateOrthonormalBasisUF (const Vec3& newUnitForward) = 0;
-
-        //! for when the new forward is NOT of unit length
-        virtual void regenerateOrthonormalBasis (const Vec3& newForward) = 0;
-
-        //! for supplying both a new forward and and new up
-        virtual void regenerateOrthonormalBasis (const Vec3& newForward,
-                                                 const Vec3& newUp) = 0;
-
-        //! rotate 90 degrees in the direction implied by rightHanded()
-        virtual Vec3 localRotateForwardToSide (const Vec3& v) const = 0;
-        virtual Vec3 globalRotateForwardToSide (const Vec3& globalForward) const=0;
-
-		virtual void randomizeHeadingOnXZPlane (void) = 0;
-
-    };
-    //-----------------------------------------------------------------------------
-	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {
-    public:
-        virtual ~AbstractUpdatedLocalSpace() { /* Nothing to do. */ }
-
-		virtual void updateCustom( AbstractUpdated* /*pkParent*/, const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ )
-		{
-			// nothing to do here
-			return;
-		}
-
-	};
 	
-
     //-----------------------------------------------------------------------------
     //! LocalSpaceMixin is a mixin layer, a class template with a paramterized base
     //! class.  Allows "LocalSpace-ness" to be layered on any class.
@@ -186,18 +101,22 @@ namespace OpenSteer {
 		}
 
         //! accessors (get and set) for side, up, forward and position
-        const Vec3& side     (void) const {return _side;};
-        const Vec3& up       (void) const {return _up;};
-        const Vec3& forward  (void) const {return _forward;};
-        const Vec3& position (void) const {return _position;};
-        const Vec3& setSide     (const Vec3& s) {_side = s;return _side;};
-        const Vec3& setUp       (const Vec3& u) {_up = u;return _up;};
-        const Vec3& setForward  (const Vec3& f) {_forward = f;return _forward;};
-        const Vec3& setPosition (const Vec3& p) {_position = p;return _position;};
-        const Vec3& setSide     (float x, float y, float z){_side.set    (x,y,z);return _side;};
-        const Vec3& setUp       (float x, float y, float z){_up.set      (x,y,z);return _up;};
-        const Vec3& setForward  (float x, float y, float z){_forward.set (x,y,z);return _forward;};
-        const Vec3& setPosition (float x, float y, float z){_position.set(x,y,z);return _position;};
+        virtual const Vec3& side     (void) const {return _side;};
+        virtual const Vec3& up       (void) const {return _up;};
+        virtual const Vec3& forward  (void) const {return _forward;};
+        virtual const Vec3& position (void) const {return _position;};
+        virtual const Vec3& setSide     (const Vec3& s) {_side = s;return _side;};
+        virtual const Vec3& setUp       (const Vec3& u) {_up = u;return _up;};
+        virtual const Vec3& setForward  (const Vec3& f) {_forward = f;return _forward;};
+        virtual const Vec3& setPosition (const Vec3& p) {_position = p;return _position;};
+        virtual const Vec3& setSide     (float x, float y, float z){_side.set    (x,y,z);return _side;};
+        virtual const Vec3& setUp       (float x, float y, float z){_up.set      (x,y,z);return _up;};
+        virtual const Vec3& setForward  (float x, float y, float z){_forward.set (x,y,z);return _forward;};
+        virtual const Vec3& setPosition (float x, float y, float z){_position.set(x,y,z);return _position;};
+		virtual const Vec3& angularVelocity (void) const {return _angularVelocity;};
+		virtual const Vec3& setAngularVelocity (const Vec3& p) {_angularVelocity = p;return _angularVelocity;};
+		virtual const Vec3& linearVelocity (void) const {return _linearVelocity;};
+		virtual const Vec3& setLinearVelocity (const Vec3& p) {_linearVelocity = p;return _linearVelocity;};
 
         //-------------------------------------------------------------------------
         //! Global compile-time switch to control handedness/chirality: should
@@ -229,8 +148,10 @@ namespace OpenSteer {
 			this->_up = Up;
 			this->_forward = Forward;
 			this->_position = Position;
+			this->_angularVelocity =
+			this->_linearVelocity = Vec3::zero;
+			this->_updateTicks = 0;
 		}
-
 
         LocalSpaceMixin (const Vec3& Up,
                          const Vec3& Forward,
@@ -239,6 +160,9 @@ namespace OpenSteer {
 			this->_up = Up;
 			this->_forward = Forward;
 			this->_position = Position;
+			this->_angularVelocity =
+			this->_linearVelocity = Vec3::zero;
+			this->_updateTicks = 0;
 			setUnitSideFromForwardAndUp ();
         }
 
@@ -260,6 +184,9 @@ namespace OpenSteer {
             _side = localRotateForwardToSide (_forward);
             _up.set (0, 1, 0);
             _position.set (0, 0, 0);
+			this->_angularVelocity =
+			this->_linearVelocity = Vec3::zero;
+			this->_updateTicks = 0;
         };
 
         //-------------------------------------------------------------------------
@@ -375,27 +302,6 @@ namespace OpenSteer {
     };
 
 	//-------------------------------------------------------------------------
-	class AbstractEntityLocalSpace : public AbstractEntity, public AbstractLocalSpace
-	{
-	public:
-		virtual ~AbstractEntityLocalSpace() { /* Nothing to do. */ }
-	};
-
-	//-------------------------------------------------------------------------
-	class AbstractEntityUpdatedLocalSpace : public AbstractEntity, public AbstractUpdatedLocalSpace
-	{
-	public:
-		virtual ~AbstractEntityUpdatedLocalSpace() { /* Nothing to do. */ }
-	};
-
-	//-------------------------------------------------------------------------
-// 	template <class Super>
-// 	class EntityLocalSpaceMixin : public EntityPossessionMixin<Super>
-// 	{
-// 
-// 	};
-
-	//-------------------------------------------------------------------------
 	template <class Super>
 	class EntityLocalSpaceMixin : public LocalSpaceMixin<Super>
 	{
@@ -487,6 +393,7 @@ namespace OpenSteer {
 		{
 			return this->m_kEntity.name();
 		}
+
 		//---------------------------------------------------------------------
 		// AbstractEntity interface
 		virtual void play( AbstractEntity* pkEntity )

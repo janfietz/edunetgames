@@ -58,10 +58,10 @@ void NetSoccerBall::reset ( void )
 // per frame simulation update
 osVector3 NetSoccerBall::determineCombinedSteering (const float elapsedTime)
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
+// 	if( this->isRemoteObject() )
+// 	{
+// 		return this->lastSteeringForce();
+// 	}
     applyBrakingForce ( 1.5f, elapsedTime );
     this->setLastSteeringForce( velocity() );
     // are we now outside the field?

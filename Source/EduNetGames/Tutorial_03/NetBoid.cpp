@@ -65,7 +65,7 @@ void Boid::reset (void)
 
 //-----------------------------------------------------------------------------
 // draw this boid into the scene
-void Boid::draw (void)
+void Boid::draw( const float currentTime, const float elapsedTime )
 {
 	drawBasic3dSphericalVehicle (*this,
 		(this->isRemoteObject()) ? gOrange : gGray70);
@@ -93,10 +93,6 @@ void Boid::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 osVector3 Boid::determineCombinedSteering (const float elapsedTime)
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
 	// steer to flock and avoid obstacles if any
 	this->setLastSteeringForce( steerToFlock () );
 	return this->lastSteeringForce();

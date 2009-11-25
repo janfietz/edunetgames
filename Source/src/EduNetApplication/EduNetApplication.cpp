@@ -34,21 +34,31 @@
 #include "EduNetCommon/EduNetOptions.h"
 #include "EduNetProfile/GraphPlot.h"
 
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "OpenSteerUT/SimplePhysicsVehicle.h"
+
+
 using namespace EduNet;
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 namespace
 {
+	int profReportMode = 0;
+
+
 	int pluginSelection = 0;
 	int pluginIndex = 0;
 
 	GLUI* appGlui = NULL;
 	GLUI_Listbox* pluginList = NULL;
+	GLUI_Listbox* profileModesList = NULL;
 
 	GLUI_Panel* pluginPanel = NULL;
 	GLUI_StaticText* simulationFPS = NULL;
 	GLUI_StaticText* cpuFPS = NULL;
+
+	float fSimulationFPS = 50.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -64,7 +74,7 @@ void setDefaultSettings()
 }
 
 //-----------------------------------------------------------------------------
-void	setDefaultSettingsAndSync()
+void setDefaultSettingsAndSync()
 {
 	setDefaultSettings();
 //	glui->sync_live();
@@ -93,6 +103,31 @@ void OnPluginSelected( void )
 	EduNet::Application::AccessApplication().onPluginSelected( OpenSteer::Plugin::selectedPlugin );
 }
 
+
+//-----------------------------------------------------------------------------
+void gluiProfMoveCursorNext()
+{
+	Prof_move_cursor(1);
+}
+
+//-----------------------------------------------------------------------------
+void gluiProfMoveCursorPrevious()
+{
+	Prof_move_cursor(-1);
+}
+
+//-----------------------------------------------------------------------------
+void gluiProfSelect()
+{
+	Prof_select();
+}
+
+//-----------------------------------------------------------------------------
+void gluiProfSelectParent()
+{
+	Prof_select_parent();
+}
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -107,7 +142,7 @@ Application& Application::AccessApplication( void )
 
 //-----------------------------------------------------------------------------
 Application::Application( void ):
-m_fSimulationFPS(60.0f),
+m_fSimulationFPS( fSimulationFPS ),
 m_fTimeFactor(1.0f),
 m_bFixedSimulationFPS(1),
 m_bEnableAnnotation(0),
@@ -194,24 +229,66 @@ void Application::addGuiElements( GLUI* glui )
 	glui->add_button("Next Plugin", 0,(GLUI_Update_CB)gluiNextPlugin);
 
 #if EDUNET_HAVE_PROFILE
+	// profiler gui
 	glui->add_separator();
 
-	glui->add_checkbox("Update CPU Profile", &this->m_bUpdateCPUProfile);
-	glui->add_checkbox("Show CPU Profile", &this->m_bShowCPUProfile);
-	glui->add_checkbox("Show CPU Profile Graph", &this->m_bShowCPUProfileGraph);
+	{
+		GLUI_Rollout* rollout = glui->add_rollout( "Profile", false );	
+		GLUI_Panel* subPanel = rollout;
+
+		profileModesList = glui->add_listbox_to_panel( subPanel, "Modes", &profReportMode );
+		profileModesList->add_item(0, "Self Time");
+		profileModesList->add_item(1, "Hierarchical Time");
+		profileModesList->add_item(2, "Call Graph");
+		profileModesList->do_selection( profReportMode );
+
+		glui->add_checkbox_to_panel( subPanel, "Update CPU Profile", &this->m_bUpdateCPUProfile);
+		glui->add_checkbox_to_panel( subPanel, "Show CPU Profile", &this->m_bShowCPUProfile);
+		glui->add_checkbox_to_panel( subPanel, "Show CPU Profile Graph", &this->m_bShowCPUProfileGraph);
+
+		glui->add_separator_to_panel( subPanel );
+		glui->add_button_to_panel( subPanel, "Next", 0,(GLUI_Update_CB)gluiProfMoveCursorNext );
+		glui->add_button_to_panel( subPanel, "Previous", 0,(GLUI_Update_CB)gluiProfMoveCursorPrevious );
+
+		glui->add_separator_to_panel( subPanel );
+		glui->add_button_to_panel( subPanel, "Select", 0,(GLUI_Update_CB)gluiProfSelect );
+		glui->add_button_to_panel( subPanel, "Select parent", 0,(GLUI_Update_CB)gluiProfSelectParent );
+	}
+
 #endif
 	glui->add_separator();
 
-	GLUI_Spinner* timefactorSpinner =
-		glui->add_spinner("Timefactor", GLUI_SPINNER_FLOAT, &this->m_fTimeFactor);
-	timefactorSpinner->set_float_limits(0.01f, 10.0f);
+	// simulation gui
+	{
+		// general
+		GLUI_Rollout* rollout = glui->add_rollout( "Simulation", false );	
+		GLUI_Panel* subPanel = rollout;
+		GLUI_Spinner* timefactorSpinner =
+			glui->add_spinner_to_panel( subPanel, "Timefactor", GLUI_SPINNER_FLOAT, &this->m_fTimeFactor);
+		timefactorSpinner->set_float_limits(0.01f, 10.0f);
 
-	GLUI_Spinner* simulationFPSSpinner =
-		glui->add_spinner("Simulation FPS", GLUI_SPINNER_FLOAT, &this->m_fSimulationFPS);
-	simulationFPSSpinner->set_float_limits(5.0f, 200.0f);
-	glui->add_checkbox("Fixed Timestep", &this->m_bFixedSimulationFPS);
-	simulationFPS = glui->add_statictext( "FPS" );
-	cpuFPS = glui->add_statictext( "CPU" );
+		GLUI_Spinner* simulationFPSSpinner =
+			glui->add_spinner_to_panel( subPanel, "Simulation FPS", GLUI_SPINNER_FLOAT, &this->m_fSimulationFPS);
+		simulationFPSSpinner->set_float_limits(10.0f, 100.0f);
+
+		glui->add_checkbox_to_panel( subPanel, "Fixed Timestep", &this->m_bFixedSimulationFPS);
+		simulationFPS = glui->add_statictext_to_panel( subPanel, "FPS" );
+
+		cpuFPS = glui->add_statictext_to_panel( subPanel, "CPU" );
+
+		glui->add_separator_to_panel( subPanel );
+		// steering force update
+
+		GLUI_Spinner* steeringForceFPSSpinner =
+			glui->add_spinner_to_panel( subPanel, "Steering FPS", GLUI_SPINNER_FLOAT, &SteeringForceVehicleUpdate::ms_SteeringForceFPS);
+		steeringForceFPSSpinner->set_float_limits(5.0f, 60.0f);
+
+		GLUI_Spinner* vehicleReplicationFPSSpinner =
+			glui->add_spinner_to_panel( subPanel, "Vehicle Replication FPS", GLUI_SPINNER_FLOAT, &SimplePhysicsVehicle::ms_NetWriteFPS);
+		vehicleReplicationFPSSpinner->set_float_limits(0.1f, 30.0f);
+
+	}
+
 	glui->add_separator();
 	glui->add_checkbox("Enable Annotation", &this->m_bEnableAnnotation);
 
@@ -398,9 +475,8 @@ void Application::drawProfile (const float currentTime,
 				  const float elapsedTime)
 {
 #if EDUNET_HAVE_PROFILE
+	Prof_set_report_mode( static_cast<Prof_Report_Mode>(profReportMode) );
 	Prof_update( this->m_bUpdateCPUProfile );
-//	Prof_set_report_mode(Prof_CALL_GRAPH);
-	Prof_set_report_mode(Prof_HIERARCHICAL_TIME);
 	const float tw = OpenSteer::drawGetWindowWidth();
 	const float th = OpenSteer::drawGetWindowHeight();
 	if( ( 0 != this->m_bShowCPUProfile ) )

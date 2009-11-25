@@ -37,79 +37,6 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	using namespace OpenSteer;
 
-	//-------------------------------------------------------------------------
-	void TPhysicsMotionState::updateMotionState( AbstractVehicle* pkVehicle, const osScalar currentTime, 
-		const osScalar elapsedTime
-		)
-	{
-		if( NULL == pkVehicle )
-		{
-			return;
-		}
-		// store new world transform
-		btTransform kWorldTransform1;
-		if( writeToMatrix( *pkVehicle, kWorldTransform1 ) )
-		{
-			this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
-		}
-	}
-
-
-	//-----------------------------------------------------------------------------
-	void TPhysicsMotionState::updateMotionState( 
-		const class btTransform& kWorldTransform1,
-		const osScalar currentTime,
-		const osScalar elapsedTime
-		)
-	{
-		// do not do this twice
-		if( this->m_fLastUpdateTime == currentTime )
-		{
-			return;
-		}
-		this->m_fLastUpdateTime = currentTime;
-
-		const class btTransform& kWorldTransform0 = this->m_kWorldTransform;
-		// compute motion state data
-		// in world space
-		PhysicsMotionState& kState = *this;
-		bool bDoCalculation = true;
-		if( elapsedTime == 0.0f )
-		{
-			// do nothing in this case
-			bDoCalculation = false;
-		}
-		else if( elapsedTime < 0.001f )
-		{
-			// clamp very very small timeframes ?
-			// elapsedTime = 0.001f;
-			bDoCalculation = false;
-		}
-		if( true == bDoCalculation )
-		{
-			calculateVelocity( kWorldTransform0, kWorldTransform1, elapsedTime,
-				kState.m_kLinearVelocity, kState.m_kAngularVelocity );
-
-			// in local space
-			btMatrix3x3 kLocalBasis = kWorldTransform1.getBasis().inverse();
-			btVector3 kLocalLinearVelocity;
-			getVector3( kState.m_kLinearVelocity, kLocalLinearVelocity );
-			kLocalLinearVelocity = kLocalBasis * kLocalLinearVelocity;
-			btVector3 kLocalAngularVelocity;
-			getVector3( kState.m_kAngularVelocity, kLocalAngularVelocity );
-			kLocalAngularVelocity = kLocalBasis * kLocalAngularVelocity;
-
-			getVector3( kLocalLinearVelocity, kState.m_kLocalLinearVelocity );
-			getVector3( kLocalAngularVelocity, kState.m_kLocalAngularVelocity );
-			kState.m_fLinearVelocity = kState.m_kLinearVelocity.length();
-			kState.m_fAngularVelocity = kState.m_kAngularVelocity.length();
-
-		}
-
-		kState.m_kWorldTransform = kWorldTransform1;
-	}
-
-
 	//-----------------------------------------------------------------------------
 	osVector3& getVector3( const btVector3& kSource, osVector3& kTarget )
 	{
@@ -251,13 +178,19 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void readFromMatrix( AbstractVehicle& kVehicle, const btTransform& kWorldTransform )
+	void readFromMatrix( osAbstractLocalSpace& kLocalSpace, const btTransform& kWorldTransform )
+	{
+		OpenSteer::readFromMatrix( kLocalSpace.accessLocalSpaceData(), kWorldTransform );
+	}
+
+	//-------------------------------------------------------------------------
+	void readFromMatrix( osAbstractVehicle& kVehicle, const btTransform& kWorldTransform )
 	{
 		OpenSteer::readFromMatrix( kVehicle.accessLocalSpaceData(), kWorldTransform );
 	}
 
 	//-------------------------------------------------------------------------
-	bool writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform )
+	bool writeToMatrix( const osAbstractVehicle& kVehicle, btTransform& kWorldTransform )
 	{
 		return OpenSteer::writeToMatrix( kVehicle.getLocalSpaceData(), kWorldTransform );
 	}

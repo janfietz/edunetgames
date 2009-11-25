@@ -64,10 +64,20 @@ namespace Profile
 	typedef std::vector<GraphValue> TGraphValues;
 
 	//-------------------------------------------------------------------------
+	enum EGraphType
+	{
+		EGraphType_Lines,
+		EGraphType_Dots,
+		EGraphType_Count,
+	};
+
+	//-------------------------------------------------------------------------
 	class GraphValues : public TGraphValues
 	{
 	public:
-		GraphValues( size_t uiMaxRecords = 128 ):m_uiMaxRecords( uiMaxRecords )
+		GraphValues( size_t uiMaxRecords = 128 ):
+		  m_uiMaxRecords( uiMaxRecords ),
+		  m_eGrapType( EGraphType_Lines )
 		{
 			this->m_fColor[0] = 
 				this->m_fColor[1] = 
@@ -114,6 +124,16 @@ namespace Profile
 		}
 
 		size_t getMaxRecords( void ) const { return m_uiMaxRecords; }
+
+		GraphValues& setMaxRecords( size_t uiValue ) 
+		{ 
+			m_uiMaxRecords = uiValue; 
+			if( this->capacity() < m_uiMaxRecords )
+			{
+				this->reserve( m_uiMaxRecords );
+			}
+			return (*this);
+		}
 
 		GraphValues& setId( size_t id ) 
 		{ 
@@ -170,6 +190,16 @@ namespace Profile
 			return (*this);
 		}
 
+		void setGraphType( EGraphType eType )
+		{
+			this->m_eGrapType = eType;
+		}
+
+		EGraphType getGraphType( void ) const
+		{
+			return this->m_eGrapType;
+		}
+
 		void reset()
 		{
 			this->m_kMin = GraphValue::ms_Max;
@@ -178,11 +208,13 @@ namespace Profile
 
 		GraphValue m_kMin;
 		GraphValue m_kMax;
+		mutable GraphValue m_kScale;
 
 	private:
 		float m_fColor[4];
 		size_t m_uiMaxRecords;
 		size_t m_uiId;
+		EGraphType m_eGrapType;
 		std::string m_kName;
 	};
 	

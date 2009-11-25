@@ -1,6 +1,6 @@
 #include "SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
-
+#include "EduNetConnect/NetworkPlugin.h"
 
 using namespace OpenSteer;
 
@@ -17,42 +17,11 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_CompressedOrientation1,
 	0, // 	ESerializeDataType_CompressedOrientation2,
 	0, // 	ESerializeDataType_CompressedForce,
-
+	0, // 	ESerializeDataType_AngularVelocity,
+	0, // 	ESerializeDataType_LinearVelocity,
+	0, // 	ESerializeDataType_UpdateTicks,
 };
 
-osScalar SimpleNetworkVehicle::ms_NetWriteFPS = 20.0f;
-
-//-----------------------------------------------------------------------------
-void SimpleNetworkVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
-{
-	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);
-	SimpleProxyVehicle& kProxy = pkNetworkVehicle->accessProxyVehicle();
-	if( true == kProxy.m_bHasNewData )
-	{
-		// now read the proxy and apply the data to the scene vehicle
-		// position interpolation
-		float fFactor = 0.5;
-		osVector3 kNewPosition = interpolate( fFactor, pkNetworkVehicle->position(), kProxy.getLocalSpaceData()._position);
-
-		osVector3 kNewForward = interpolate( fFactor, pkNetworkVehicle->forward(), kProxy.getLocalSpaceData()._forward);
-		kNewForward.normalize();
-		kProxy.accessLocalSpaceData()._forward = kNewForward;
-		kProxy.accessLocalSpaceData()._position = kNewPosition;
-
-		pkNetworkVehicle->setLocalSpaceData( kProxy.getLocalSpaceData() );
-		pkNetworkVehicle->setSpeed( kProxy.speed() );
-
-		pkNetworkVehicle->setLastSteeringForce( kProxy.lastSteeringForce() );
-		kProxy.m_bHasNewData = false;
-	}
-//	pkNetworkVehicle->update( currentTime, elapsedTime ); 
-}
-
-//-------------------------------------------------------------------------
-void SimpleNetworkVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
-{
-
-}
 
 //-------------------------------------------------------------------------
 #pragma warning(push)
@@ -62,7 +31,6 @@ SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_bWantsToSendData( false ),
 	m_bHasBeenSerialized( false )
 { 
-//	this->setCustomUpdated( &this->m_kNetworkVehicleUpdate );
 }
 #pragma warning(pop)
 
@@ -76,17 +44,27 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 {
 	// simple send data control
 	// note: not connection specific
-	if( this->m_bHasBeenSerialized )
+	bool bRecordNetGraph = false;
+	if( false == this->isRemoteObject() )
 	{
-		this->m_bWantsToSendData = false;
-		this->m_bHasBeenSerialized = false;
+		if( this->m_bHasBeenSerialized )
+		{
+			this->m_bWantsToSendData = false;
+			this->m_bHasBeenSerialized = false;
+		}
+		// set this frequency each update cycle as it might get changed by the gui
+		this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
+		size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
+		if( false == this->m_bWantsToSendData )
+		{
+			this->m_bWantsToSendData = ( uiTicks > 0 );
+			bRecordNetGraph = this->m_bWantsToSendData;
+		}
 	}
-	// set this frequency each update cycle as it might get changed by the gui
-	this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimpleNetworkVehicle::ms_NetWriteFPS, true );
-	size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
-	if( false == this->m_bWantsToSendData )
+	else
 	{
-		this->m_bWantsToSendData = ( uiTicks > 0 );
+		SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+		bRecordNetGraph = kProxy.m_bHasNewData;
 	}
 
 	// in case the custom updater decides to call the base class
@@ -95,8 +73,27 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	AbstractUpdated* pkCustomUpdated = this->getCustomUpdated();
 	this->setCustomUpdated( NULL );
 	this->m_kNetworkVehicleUpdate.updateCustom( this, currentTime, elapsedTime );
-	BaseClass::update( currentTime, elapsedTime );
 	this->setCustomUpdated( pkCustomUpdated );
+
+	if( true == this->isRemoteObject() )
+	{
+		// once the real vehicle update function has been called
+		// one has to assume the new data have made their way into the simulation
+		SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+		kProxy.m_bHasNewData = false;
+	}
+
+	// server or client side send dots
+	if( true == bRecordNetGraph )
+	{
+		NetworkPlugin::recordNetUpdate( this, currentTime, elapsedTime );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::updateBase(const float currentTime, const float elapsedTime)
+{
+	BaseClass::update( currentTime, elapsedTime );
 }
 
 // TODO: implement specialized connection specific QuerySerialization implementations 
@@ -205,6 +202,25 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->lastSteeringForce(),sizeof(OpenSteer::Vec3));
 	}
+	if( ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
+	{
+		dataType = ESerializeDataType_AngularVelocity;
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		kStream.WriteAlignedBytes((const unsigned char*)&this->angularVelocity(),sizeof(OpenSteer::Vec3));
+	}
+	if( ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity] != 0 )
+	{
+		dataType = ESerializeDataType_LinearVelocity;
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		kStream.WriteAlignedBytes((const unsigned char*)&this->linearVelocity(),sizeof(OpenSteer::Vec3));
+	}
+	if( ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks] != 0 )
+	{
+		dataType = ESerializeDataType_UpdateTicks;
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		size_t updateTicks = this->getLocalSpaceData()._updateTicks;
+		kStream.WriteAlignedBytes((const unsigned char*)&updateTicks,sizeof(size_t));
+	}
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 }
@@ -223,13 +239,18 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	// do not directly write into the scene vehicle
 	// otherwise there will be no chance to customize the network behaviour
 	AbstractVehicle* pkSerializeTarget = &this->m_kProxyVehicle;
-	this->m_kProxyVehicle.m_bHasNewData = true;
+
+	// store last update tick to check if new data has arrived
+	const size_t lastServerUpdateTicks = pkSerializeTarget->accessLocalSpaceData()._updateTicks;
+	pkSerializeTarget->accessLocalSpaceData()._updateTicks = 0;
+
 	float fValue;
 	osVector3 kVec;
 	char wSign;
 	btQuaternion kRotation;
 	unsigned char dataTypes;
 	char cVector[3];
+	size_t uiValue;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
 	{
@@ -245,6 +266,8 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		case(ESerializeDataType_Up):
 		case(ESerializeDataType_Force):
 		case(ESerializeDataType_CompressedForce):
+		case(ESerializeDataType_AngularVelocity):
+		case(ESerializeDataType_LinearVelocity):
 			{
 				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(osVector3));
 			}
@@ -270,6 +293,11 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		case(ESerializeDataType_Speed):
 			{
 				kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+			}
+			break;
+		case(ESerializeDataType_UpdateTicks):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&uiValue,sizeof(size_t));
 			}
 			break;
 		}
@@ -311,8 +339,26 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 					pkSerializeTarget->setSpeed( fValue );
 				}
 				break;
+			case(ESerializeDataType_UpdateTicks):
+				{
+					pkSerializeTarget->accessLocalSpaceData()._updateTicks = uiValue;
+				}
+				break;
 			}
 		}
+	}
+
+	const size_t newServerUpdateTicks = pkSerializeTarget->getLocalSpaceData()._updateTicks;
+	if( newServerUpdateTicks != 0 )
+	{
+		if( lastServerUpdateTicks < newServerUpdateTicks )
+		{
+			this->m_kProxyVehicle.m_bHasNewData = true;
+		}
+	}
+	else
+	{
+		this->m_kProxyVehicle.m_bHasNewData = true;
 	}
 }
 //-----------------------------------------------------------------------------

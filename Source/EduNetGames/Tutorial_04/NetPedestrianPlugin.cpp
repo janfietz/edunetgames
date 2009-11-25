@@ -77,7 +77,7 @@ void NetPedestrianPlugin::open (void)
 {
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
-	this->nextPD ();
+	this->nextPD();
 
 	// create the specified number of Pedestrians
 	for( int i = 0; i < gPedestrianStartCount; i++ )

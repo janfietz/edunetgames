@@ -324,6 +324,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\PhysicsMotionState.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\OpenSteerUT\PhysicsMotionState.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\SimplePhysicsVehicle.cpp"
 					>
 				</File>

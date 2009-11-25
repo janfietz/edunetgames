@@ -176,7 +176,7 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 	BaseClass::update( currentTime, elapsedTime );
 
 	// reverse direction when we reach an endpoint
-	if( gUseDirectedPathFollowing )
+	if( NetPedestrian::gUseDirectedPathFollowing )
 	{
 		const Color darkRed (0.7f, 0, 0);
 		float const pathRadius = path->radius();
@@ -192,12 +192,6 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
 		}
 	}
-
-	// notify proximity database that our position has changed
-	if( NULL != this->m_pkProximityToken )
-	{
-		m_pkProximityToken->updateForNewPosition(position());
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -205,17 +199,16 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 // or neighbors if needed, otherwise follow the path and wander
 osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
 	// move forward
 	osVector3 steeringForce = forward();
 
 	// probability that a lower priority behavior will be given a
 	// chance to "drive" even if a higher priority behavior might
 	// otherwise be triggered.
-	const float leakThrough = 0.1f;
+//	const float leakThrough = 0.1f;
+
+	// no random behaviour for network samples
+	const float leakThrough = -1.0f;
 
 	// determine if obstacle avoidance is required
 	osVector3 obstacleAvoidance;
@@ -285,6 +278,7 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 // draw this pedestrian into scene
 void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 {
+	BaseClass::draw( currentTime, elapsedTime );
 	Color kColor;
 	Vec3 kPosition = this->position();
 	Vec3 kTempPosition = kPosition;
@@ -430,18 +424,18 @@ void NetPedestrian::annotateAvoidNeighbor (const AbstractVehicle& threat,
 {
 	const Color green (0.15f, 0.6f, 0.0f);
 
-	annotationLine (position(), ourFuture, green);
-	annotationLine (threat.position(), threatFuture, green);
-	annotationLine (ourFuture, threatFuture, gRed);
-	annotationXZCircle (radius(), ourFuture,    green, 12);
-	annotationXZCircle (radius(), threatFuture, green, 12);
+	annotationLine( position(), ourFuture, green );
+	annotationLine( threat.position(), threatFuture, green );
+	annotationLine( ourFuture, threatFuture, gRed );
+	annotationXZCircle( radius(), ourFuture,    green, 12 );
+	annotationXZCircle( radius(), threatFuture, green, 12 );
 }
 
 //-----------------------------------------------------------------------------
 // xxx perhaps this should be a call to a general purpose annotation for
 // xxx "local xxx axis aligned box in XZ plane" -- same code in in
 // xxx CaptureTheFlag.cpp
-void NetPedestrian::annotateAvoidObstacle (const float minDistanceToCollision)
+void NetPedestrian::annotateAvoidObstacle( const float minDistanceToCollision )
 {
 	const osVector3 boxSide = side() * radius();
 	const osVector3 boxFront = forward() * minDistanceToCollision;
@@ -449,9 +443,9 @@ void NetPedestrian::annotateAvoidObstacle (const float minDistanceToCollision)
 	const osVector3 FL = position() + boxFront + boxSide;
 	const osVector3 BR = position()            - boxSide;
 	const osVector3 BL = position()            + boxSide;
-	const Color white (1,1,1);
-	annotationLine (FR, FL, white);
-	annotationLine (FL, BL, white);
-	annotationLine (BL, BR, white);
-	annotationLine (BR, FR, white);
+	const Color white( 1,1,1 );
+	annotationLine( FR, FL, white );
+	annotationLine( FL, BL, white );
+	annotationLine( BL, BR, white );
+	annotationLine( BR, FR, white );
 }

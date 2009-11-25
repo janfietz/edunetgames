@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\include\OpenSteer\AbstractLocalSpace.h"
+				>
+			</File>
+			<File
 				RelativePath="..\include\OpenSteer\AbstractPlayer.h"
 				>
 			</File>

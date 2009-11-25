@@ -12,6 +12,7 @@ using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicleMotionStatePlot NetworkPlugin::ms_kMotionStateProfile;
+int NetworkPlugin::ms_bShowMotionStatePlot = 0;
 
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
@@ -21,7 +22,6 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1),
-		m_bShowMotionStatePlot(0),
 		m_bDrawNetworkPlot(0)
 {
 
@@ -79,7 +79,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	{
 		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );	
 		GLUI_Panel* subPanel = profileRollout;
-		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
+		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &NetworkPlugin::ms_bShowMotionStatePlot);
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
 		if( false == pkPluginEntity->isRemoteObject() )
 		{
@@ -96,7 +96,9 @@ void NetworkPlugin::initGui( void* pkUserdata )
 			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation1", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1]);
 			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation2", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2]);
 			glui->add_checkbox_to_panel( replicationPanel, "CompressedForce", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedForce]);
-
+			glui->add_checkbox_to_panel( replicationPanel, "AngularVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity]);
+			glui->add_checkbox_to_panel( replicationPanel, "LinearVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity]);
+			glui->add_checkbox_to_panel( replicationPanel, "UpdateTicks", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks]);
 		}
 	}
 
@@ -341,6 +343,9 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
+
+	ET_PROFILE(updateNetworkPlugin);
+
 	if( !IsConnected()&& DoAutoConnect() )
 	{
 		this->Connect();
@@ -360,9 +365,20 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
+void NetworkPlugin::recordNetUpdate( 
+	osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
+{
+	if( 0 == NetworkPlugin::ms_bShowMotionStatePlot )
+	{
+		return;
+	}
+	NetworkPlugin::ms_kMotionStateProfile.recordNetUpdate( pkVehicle, currentTime, elapsedTime );
+}
+
+//-----------------------------------------------------------------------------
 void NetworkPlugin::updateMotionStateProfile( const float currentTime, const float elapsedTime )
 {
-	if( 0 == m_bShowMotionStatePlot )
+	if( 0 == NetworkPlugin::ms_bShowMotionStatePlot )
 	{
 		return;
 	}
@@ -439,7 +455,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	draw2dTextAt2dLocation(
 		status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
 
-	if( 0 != this->m_bShowMotionStatePlot )
+	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
 	{
 		// draw motion state plot
 		if( NULL != SimpleVehicle::selectedVehicle )
@@ -622,6 +638,7 @@ void NetworkPlugin::CloseOpenConnections( void )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::ReceivePackets( void )
 {
+	ET_PROFILE(ReceivePackets);
 	while(true)
 	{
 		Packet* pPacket = this->m_pNetInterface->Receive();

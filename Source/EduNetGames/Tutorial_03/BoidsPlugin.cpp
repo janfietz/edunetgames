@@ -129,7 +129,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
     AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();	
 
     // draw each boid in flock
-    for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw ();
+    for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw (currentTime, elapsedTime);
 
     // highlight vehicle nearest mouse
     VehicleUtilities::drawCircleHighlightOnVehicle (nearMouse, 1, gGray70);

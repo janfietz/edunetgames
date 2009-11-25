@@ -196,6 +196,8 @@ public:
 
 
 	void updateMotionStateProfile( const float currentTime, const float elapsedTime );
+	static void recordNetUpdate( 
+		osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 
 
 protected:
@@ -219,7 +221,7 @@ protected:
 	unsigned int m_uiPortPongCount;
 
 	int m_iWaitForPongPort;
-	int m_bShowMotionStatePlot;
+	static int ms_bShowMotionStatePlot;
 	SocketDescriptor m_kSocketDescriptor;
 
 	RakNetTime m_kPongEndTime;

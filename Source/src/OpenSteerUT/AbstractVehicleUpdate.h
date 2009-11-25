@@ -30,7 +30,8 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "AbstractVehicleMath.h"
+#include "EduNetCommon/TUpdatePeriod.h"
+#include "OpenSteerUT/PhysicsMotionState.h"
 
 class btTransform;
 
@@ -42,7 +43,7 @@ namespace OpenSteer
 	class AbstractVehicleUpdate : public TAbstractAnnotatedUpdated {
 	public:
 		AbstractVehicleUpdate( AbstractVehicle* pkVehicle ):
-		  m_pkVehicle( pkVehicle ), m_pkCustomUpdated(NULL)
+		  m_pkVehicle( pkVehicle ), m_pkCustomUpdated(NULL), m_bEnabled( true )
 		  {
 		  }
 		  virtual ~AbstractVehicleUpdate(){}
@@ -96,9 +97,12 @@ namespace OpenSteer
 			  return *this->m_pkVehicle;
 		  }
 
+		  virtual bool isEnabled( void ) const { return this->m_bEnabled; }; 
+		  virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; }; 
 	protected:
 		AbstractVehicle* m_pkVehicle;
 		AbstractUpdated* m_pkCustomUpdated;
+		bool m_bEnabled;
 
 	};
 
@@ -124,8 +128,9 @@ namespace OpenSteer
 
 		virtual void setVehicle( AbstractVehicle* pkVehicle );
 
-	private:
 		void updateMotionState( const osScalar currentTime, const osScalar elapsedTime );
+	private:
+		Vec3 updateLinearVelocity( const osScalar currentTime, const osScalar elapsedTime );
 		PhysicsMotionState m_kMotionState;
 		Vec3 _smoothedAcceleration;
 	};
@@ -146,9 +151,12 @@ namespace OpenSteer
 
 		//---------------------------------------------------------------------
 		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
+
+		static osScalar ms_SteeringForceFPS;
 	private:
 		Vec3 m_kForce;
 		char m_cForce[4];
+		TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
 	};
 
 }

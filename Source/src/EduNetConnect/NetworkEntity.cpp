@@ -118,6 +118,8 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 			case(ESerializeDataType_Side):
 			case(ESerializeDataType_Up):
 			case(ESerializeDataType_Force):
+			case(ESerializeDataType_AngularVelocity):
+			case(ESerializeDataType_LinearVelocity):
 				{
 					kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(kVec));
 				}
@@ -130,6 +132,11 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 			case(ESerializeDataType_Speed):
 				{
 					kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+				}
+				break;
+			default:
+				{
+					assert( true == false );
 				}
 				break;
 			}
@@ -210,6 +217,18 @@ bool NetworkEntitySerializer::setLocalSpaceDataVariable(
 	case(ESerializeDataType_Up):
 		{
 			kLocalSpace._up = kValue;	
+			return true;
+		}
+		break;
+	case(ESerializeDataType_AngularVelocity):
+		{
+			kLocalSpace._angularVelocity = kValue;	
+			return true;
+		}
+		break;
+	case(ESerializeDataType_LinearVelocity):
+		{
+			kLocalSpace._linearVelocity = kValue;	
 			return true;
 		}
 		break;

@@ -47,15 +47,12 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 	OpenSteer::AbstractPlugin* pkPlugin = this->getPlugin();
 	if( NULL != pkPlugin )
 	{
-// 		OpenSteer::AbstractVehicle* pkMaster = pkPlugin->getEntityFactory()->accessMasterVehicle(0);
-// 		RakNet::RakString kMasterName = pkMaster->getClassName();
-//		if ( typeName == kMasterName )
 		static NetPedestrianReplica kReplica;
 		if ( typeName == kReplica.GetName() )
 		{
 			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pkPlugin, true  );
 			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-			kVG.addVehicle( pkNewReplica->accessEntity() );
+			kVG.addVehicle( pkNewReplica->accessEntity(), pkPlugin->accessProximityDataBase() );
 			return pkNewReplica; 
 		}
 	}

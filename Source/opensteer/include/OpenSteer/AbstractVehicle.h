@@ -62,19 +62,19 @@ namespace OpenSteer {
         virtual ~AbstractVehicle() { /* Nothing to do. */ }
         
         //! mass (defaults to unity so acceleration=force)
-        virtual float mass (void) const = 0;
-        virtual float setMass (float) = 0;
+        virtual float mass (void) const OS_ABSTRACT;
+        virtual float setMass (float) OS_ABSTRACT;
 
         //! size of bounding sphere, for obstacle avoidance, etc.
-        virtual float radius (void) const = 0;
-        virtual float setRadius (float) = 0;
+        virtual float radius (void) const OS_ABSTRACT;
+        virtual float setRadius (float) OS_ABSTRACT;
 
         //! velocity of vehicle
-        virtual Vec3 velocity (void) const = 0;
+        virtual const Vec3& velocity (void) const OS_ABSTRACT;
 
         //! speed of vehicle  (may be faster than taking magnitude of velocity)
-        virtual float speed (void) const = 0;
-        virtual float setSpeed (float) = 0;
+        virtual float speed (void) const OS_ABSTRACT;
+        virtual float setSpeed (float) OS_ABSTRACT;
 
         //! groups of (pointers to) abstract vehicles, and iterators over them
         typedef std::vector<AbstractVehicle*> group;
@@ -82,46 +82,48 @@ namespace OpenSteer {
 
         //! predict position of this vehicle at some time in the future
         //! (assumes velocity remains constant)
-        virtual Vec3 predictFuturePosition (const float predictionTime) const = 0;
+        virtual Vec3 predictFuturePosition (const float predictionTime) const OS_ABSTRACT;
 
         //-----------------------------------------------------------------------
         //! XXX this vehicle-model-specific functionality functionality seems out
         //! XXX of place on the abstract base class, but for now it is expedient
 
         //! the maximum steering force this vehicle can apply
-        virtual float maxForce (void) const = 0;
-        virtual float setMaxForce (float) = 0;
+        virtual float maxForce (void) const OS_ABSTRACT;
+        virtual float setMaxForce (float) OS_ABSTRACT;
 
         //! the maximum speed this vehicle is allowed to move
-        virtual float maxSpeed (void) const = 0;
-        virtual float setMaxSpeed (float) = 0;
+        virtual float maxSpeed (void) const OS_ABSTRACT;
+        virtual float setMaxSpeed (float) OS_ABSTRACT;
+
+		virtual float relativeSpeed (void) const OS_ABSTRACT;
 
 		//! dp - added to support heterogeneous flocks
-//		virtual void update(const float currentTime, const float elapsedTime) = 0;
+//		virtual void update(const float currentTime, const float elapsedTime) OS_ABSTRACT;
 		//! CP ++
-		virtual void draw( const float currentTime, const float elapsedTime ) = 0;
-		virtual void reset( void ) = 0;
-		virtual void allocateProximityToken( ProximityDatabase* pd ) = 0;
+		virtual void draw( const float currentTime, const float elapsedTime ) OS_ABSTRACT;
+		virtual void reset( void ) OS_ABSTRACT;
+		virtual void allocateProximityToken( ProximityDatabase* pd ) OS_ABSTRACT;
 
 		virtual void regenerateLocalSpace( const Vec3& newForward,
-                                           const float elapsedTime) = 0;
+                                           const float elapsedTime) OS_ABSTRACT;
 		
 		virtual void applySteeringForce (const Vec3& force,
-										 const float elapsedTime) = 0;
+										 const float elapsedTime) OS_ABSTRACT;
 		
-        virtual Vec3 determineCombinedSteering (const float elapsedTime) = 0;
+        virtual Vec3 determineCombinedSteering (const float elapsedTime) OS_ABSTRACT;
 
         //! adjust the steering force passed to applySteeringForce.
         //! allows a specific vehicle class to redefine this adjustment.
         //! default is to disallow backward-facing steering at low speed.
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
-                                             const float deltaTime) = 0;
+                                             const float deltaTime) OS_ABSTRACT;
 
-		virtual AbstractVehicle* cloneVehicle( void ) const = 0;
+		virtual AbstractVehicle* cloneVehicle( void ) const OS_ABSTRACT;
 
-		virtual const Vec3& lastSteeringForce( void ) const = 0;
-		virtual void setLastSteeringForce( const Vec3& ) = 0;
-		virtual bool movesPlanar( void ) const = 0;
+		virtual const Vec3& lastSteeringForce( void ) const OS_ABSTRACT;
+		virtual void setLastSteeringForce( const Vec3& ) OS_ABSTRACT;
+		virtual bool movesPlanar( void ) const OS_ABSTRACT;
 		//! CP --
    };
 

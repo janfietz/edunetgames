@@ -129,30 +129,50 @@ namespace OpenSteer {
         }
 
         //! get/set mass
-        float mass (void) const {return _mass;}
-        float setMass (float m) {return _mass = m;}
+        virtual float mass (void) const {return _mass;}
+        virtual float setMass (float m) {return _mass = m;}
 
         //! get velocity of vehicle
-        Vec3 velocity (void) const {return forward() * _speed;}
+        virtual const Vec3& velocity (void) const { return this->linearVelocity();/*forward() * _speed;*/ }
 
         //! get/set speed of vehicle  (may be faster than taking mag of velocity)
-        float speed (void) const {return _speed;}
-        float setSpeed (float s) {return _speed = s;}
+        virtual float speed (void) const {return _speed;}
+        virtual float setSpeed (float s) 
+		{
+			if( s == 0 )
+			{
+				this->setLinearVelocity( Vec3::zero );
+			}
+			else
+			{
+				// get current velocity
+				if( this->_linearVelocity.length() == 0 )
+				{
+					this->_linearVelocity = this->_forward;
+				}
+				else
+				{
+					this->_linearVelocity.normalize();
+				}
+				this->_linearVelocity *= s;
+			}
+			return _speed = s;
+		}
 
         //! size of bounding sphere, for obstacle avoidance, etc.
-        float radius (void) const {return _radius;}
-        float setRadius (float m) {return _radius = m;}
+        virtual float radius (void) const {return _radius;}
+        virtual float setRadius (float m) {return _radius = m;}
 
         //! get/set maxForce
-        float maxForce (void) const {return _maxForce;}
-        float setMaxForce (float mf) {return _maxForce = mf;}
+        virtual float maxForce (void) const {return _maxForce;}
+        virtual float setMaxForce (float mf) {return _maxForce = mf;}
 
         //! get/set maxSpeed
-        float maxSpeed (void) const {return _maxSpeed;}
-        float setMaxSpeed (float ms) {return _maxSpeed = ms;}
+        virtual float maxSpeed (void) const {return _maxSpeed;}
+        virtual float setMaxSpeed (float ms) {return _maxSpeed = ms;}
 
         //! ratio of speed to max possible speed (0 slowest, 1 fastest)
-        float relativeSpeed (void) const {return speed () / maxSpeed ();}
+        virtual float relativeSpeed (void) const {return speed () / maxSpeed ();}
 
 
         //! apply a given steering force to our momentum,
@@ -165,6 +185,14 @@ namespace OpenSteer {
         //! UP as little as possible.
         virtual void regenerateLocalSpace( const Vec3& newForward,
                                            const float elapsedTime);
+
+		// local space override
+		virtual const Vec3& setLinearVelocity( const Vec3& newVelocity )
+		{
+			this->_linearVelocity = newVelocity;
+			this->_speed = this->_linearVelocity.length();
+			return _linearVelocity;
+		}
 
         //! alternate version: keep FORWARD parallel to velocity, adjust UP
         //! according to a no-basis-in-reality "banking" behavior, something
@@ -245,6 +273,10 @@ namespace OpenSteer {
 			// nothing to do here
 			return;
 		}
+
+		virtual bool isEnabled( void ) const { return this->m_bEnabled; }; 
+		virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; }; 
+
 		//! currently selected vehicle.  Generally the one the camera follows and
 		//! for which additional information may be displayed.  Clicking the mouse
 		//! near a vehicle causes it to become the Selected Vehicle.
@@ -257,6 +289,7 @@ namespace OpenSteer {
 	protected:
 		Vec3 _lastSteeringForce;
 		bool _movesPlanar;
+		bool m_bEnabled;
 
 		//! CP --
     private:

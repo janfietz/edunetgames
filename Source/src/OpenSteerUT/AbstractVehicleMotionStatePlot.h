@@ -46,13 +46,17 @@ namespace OpenSteer {
 		virtual ~AbstractVehicleMotionStatePlot();
 
 		void recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
+		void recordNetUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 		void draw( float currentTime ) const;
 
 		mutable Profile::GraphValuesArray m_kLinearVelocity;
 		mutable Profile::GraphValuesArray m_kAngularVelocity;
 		mutable Profile::GraphValuesArray m_kSteeringForce;
+
 	private:
 		mutable float m_currentTime;
+		AbstractVehicle* m_pkServerVehicle;
+		AbstractVehicle* m_pkClientVehicle;
 	};
 }
 
