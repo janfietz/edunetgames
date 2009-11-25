@@ -50,6 +50,7 @@
 #endif //! NOT_OPENSTEERDEMO
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/Color.h"
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 
@@ -221,6 +222,11 @@ namespace OpenSteer {
 		bool isAnnotated( void ) const
 		{
 			return ( ( this->m_eAnnotationMode == OpenSteer::EAnnotationMode_local ) || OpenSteer::enableAnnotation );
+		}
+
+		virtual void collect3DTextAnnotation( std::ostringstream& kStream )
+		{
+
 		}
 
         //-------------------------------------------------------------------------

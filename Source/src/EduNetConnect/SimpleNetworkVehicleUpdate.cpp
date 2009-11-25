@@ -33,6 +33,21 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
+void SimpleNetworkVehicleUpdate::collect3DTextAnnotation( std::ostringstream& kStream )
+{
+	if( this->vehicle().isRemoteObject() )
+	{
+		kStream << "UpdateMode:"
+			<< ClientVehicleUpdate::getVehicleUpdateModeString( 
+			this->m_kClientVehicleUpdate.getVehicleUpdateMode() )
+			<< std::endl;
+	}
+	else
+	{
+	}
+}
+
+//-----------------------------------------------------------------------------
 void SimpleNetworkVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
 {
 	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);

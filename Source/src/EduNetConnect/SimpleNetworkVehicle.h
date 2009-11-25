@@ -51,7 +51,7 @@ namespace OpenSteer {
 
 		}
 		bool m_bHasNewData;
-		int m_bReveivedDataConfig[ESerializeDataType_Count];
+		bool m_bReveivedDataConfig[ESerializeDataType_Count];
 		PhysicsMotionState m_kProxyMotionState;
 	private:
 	};
@@ -70,6 +70,8 @@ namespace OpenSteer {
 		OS_IMPLEMENT_CLASSNAME( SimpleNetworkVehicle )
 
 
+		virtual void collect3DTextAnnotation( std::ostringstream& kStream );
+		virtual void draw( const float currentTime, const float elapsedTime );
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		//---------------------------------------------------------------------------
@@ -82,6 +84,10 @@ namespace OpenSteer {
 		//---------------------------------------------------------------------------
 		// extension
 		SimpleProxyVehicle& accessProxyVehicle( void )
+		{
+			return this->m_kProxyVehicle;
+		}
+		const SimpleProxyVehicle& getProxyVehicle( void ) const
 		{
 			return this->m_kProxyVehicle;
 		}

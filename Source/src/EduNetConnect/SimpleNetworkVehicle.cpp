@@ -12,7 +12,7 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_Up,
 	0, // 	ESerializeDataType_Force,
 	0, // 	ESerializeDataType_Radius,
-	1, // 	ESerializeDataType_Speed,
+	0, // 	ESerializeDataType_Speed,
 	0, //   ESerializeDataType_Orientation
 	0, // 	ESerializeDataType_CompressedOrientation1,
 	0, // 	ESerializeDataType_CompressedOrientation2,
@@ -40,6 +40,19 @@ SimpleNetworkVehicle::~SimpleNetworkVehicle()
 }
 
 //-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
+{
+	BaseClass::collect3DTextAnnotation( kStream );
+	this->m_kNetworkVehicleUpdate.collect3DTextAnnotation( kStream );
+}
+
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::draw( const float currentTime, const float elapsedTime )
+{
+	BaseClass::draw( currentTime, elapsedTime );
+}
+
+//-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
 	// simple send data control
@@ -63,7 +76,7 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	}
 	else
 	{
-		SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+		const SimpleProxyVehicle& kProxy = this->getProxyVehicle();
 		bRecordNetGraph = kProxy.m_bHasNewData;
 	}
 
@@ -233,7 +246,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	// reset the received data configuration
 	for( size_t i = 0; i < ESerializeDataType_Count; ++i )
 	{
-		this->m_kProxyVehicle.m_bReveivedDataConfig[i] = 0;
+		this->m_kProxyVehicle.m_bReveivedDataConfig[i] = false;
 	}
 
 	// do not directly write into the scene vehicle
@@ -257,7 +270,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		unsigned char dataType;
 		kStream.ReadAlignedBytes(&dataType,sizeof(unsigned char));
 		ESerializeDataType eDataType = static_cast<ESerializeDataType>(dataType);
-		this->m_kProxyVehicle.m_bReveivedDataConfig[eDataType] = 1;
+		this->m_kProxyVehicle.m_bReveivedDataConfig[eDataType] = true;
 		switch( eDataType )
 		{
 		case(ESerializeDataType_Position):

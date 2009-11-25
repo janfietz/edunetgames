@@ -107,13 +107,22 @@ namespace OpenSteer
 	};
 
 
+	enum EEulerUpdateMode
+	{
+		EEulerUpdateMode_Accelerate,
+		EEulerUpdateMode_IntegrateMotionState,
+		EEulerUpdateMode_Count,
+	};
+
 	//-------------------------------------------------------------------------
-	class EulerVehicleUpdate : public AbstractVehicleUpdate {
+	class EulerVehicleUpdate : public AbstractVehicleUpdate 
+	{
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
 		EulerVehicleUpdate( AbstractVehicle* pkVehicle ):
 		BaseClass( pkVehicle ),
-			_smoothedAcceleration(Vec3::zero)
+			m_kSmoothedAcceleration(Vec3::zero),
+			m_eUpdateMode( EEulerUpdateMode_Accelerate )
 		{
 		}
 		virtual ~EulerVehicleUpdate(){}
@@ -128,11 +137,18 @@ namespace OpenSteer
 
 		virtual void setVehicle( AbstractVehicle* pkVehicle );
 
+		//---------------------------------------------------------------------
+		EEulerUpdateMode getUpdateMode( void ) const { return this->m_eUpdateMode; }
+		void setUpdateMode( EEulerUpdateMode eMode ){ this->m_eUpdateMode = eMode; }
 		void updateMotionState( const osScalar currentTime, const osScalar elapsedTime );
 	private:
+
+		void integrateMotionState( const osScalar currentTime, const osScalar elapsedTime );
 		Vec3 updateLinearVelocity( const osScalar currentTime, const osScalar elapsedTime );
+
 		PhysicsMotionState m_kMotionState;
-		Vec3 _smoothedAcceleration;
+		Vec3 m_kSmoothedAcceleration;
+		EEulerUpdateMode m_eUpdateMode;
 	};
 
 	//-------------------------------------------------------------------------

@@ -46,6 +46,7 @@ namespace OpenSteer {
 	template <class Super>
 	class EntityPossessionMixin : public Super
 	{
+		OS_DECLARE_BASE( Super )
 	public:
 		EntityPossessionMixin():
 			m_pkPossessor(NULL),
@@ -202,7 +203,9 @@ namespace OpenSteer {
 		{
 		}
 
-		OS_IMPLEMENT_CLASSNAME( Super )
+// does not work
+//		OS_IMPLEMENT_CLASSNAME( Super )
+		OS_IMPLEMENT_CLASSNAME( EntityPossessionMixin )
 
 		virtual AbstractEntity* cloneEntity( void ) const
 		{
@@ -241,29 +244,10 @@ namespace OpenSteer {
 
 		virtual const char* name (void) const
 		{
-			return this->m_kInstance.name();
-		}
-/*
-		virtual void play( AbstractEntity* pkEntity )
-		{
-			this->m_kInstance.play( pkEntity );
+//			return this->m_kInstance.name();
+			return this->getClassName();
 		}
 
-		virtual void possessBy( AbstractEntity* pkEntity )
-		{
-			this->m_kInstance.possessBy( pkEntity );
-		}
-
-		virtual AbstractPlayer* getPlayer( void ) const
-		{
-			return this->m_kInstance.getPlayer( );
-		}
-
-		virtual AbstractEntity* getControlledEntity( void ) const
-		{
-			return this->m_kInstance.getControlledEntity( );
-		}
-*/
 	private:
 		EntityInstance m_kInstance;
 	};

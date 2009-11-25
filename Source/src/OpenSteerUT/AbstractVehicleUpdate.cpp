@@ -45,49 +45,56 @@ void EulerVehicleUpdate::setVehicle( AbstractVehicle* pkVehicle )
 }
 
 //-----------------------------------------------------------------------------
+void EulerVehicleUpdate::integrateMotionState( 
+	const osScalar currentTime, const osScalar elapsedTime )
+{
+	m_kSmoothedAcceleration = Vec3::zero;
+	PhysicsMotionState kMotionState;
+	PhysicsMotionState kExtrapolatedMotionState;
+	kMotionState.readLocalSpaceData( this->vehicle().getLocalSpaceData() );
+	kMotionState.integrateMotionState( 
+		kExtrapolatedMotionState, elapsedTime );
+	kExtrapolatedMotionState.writeLocalSpaceData( this->vehicle() );
+}
+
+//-----------------------------------------------------------------------------
 void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
 	// only in case a custom has been set ?
 	BaseClass::update( currentTime, elapsedTime );
 
-	// compute acceleration and velocity
-	const Vec3 newVelocity = this->updateLinearVelocity( currentTime, elapsedTime );
-
-	// update Speed
-	this->vehicle().setSpeed( newVelocity.length() );
-
-	if( this->vehicle().speed() > 0 )
+	switch( this->getUpdateMode() )
 	{
-		// Euler integrate (per frame) velocity into position
-		const osVector3 kNewPosition = this->vehicle().position() + ( newVelocity * elapsedTime );
-		this->vehicle().setPosition( kNewPosition );
+	case( EEulerUpdateMode_Accelerate ):
+		{
+			// compute acceleration and velocity
+			const Vec3 newVelocity = this->updateLinearVelocity( currentTime, elapsedTime );
 
-		// regenerate local space (by default: align vehicle's forward axis with
-		// new velocity, but this behavior may be overridden by derived classes.)
-		Vec3 newForward = newVelocity.normalized();
-		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
-	}
-	else
-	{
-		// maybe smth to turn at zero speed ?
-	}
-}
+			// update Speed
+			this->vehicle().setSpeed( newVelocity.length() );
 
-//-------------------------------------------------------------------------
-void EulerVehicleUpdate::updateMotionState( const osScalar currentTime, 
-					   const osScalar elapsedTime
-					   )
-{
-	bool bSuccess = 
-		this->m_kMotionState.updateMotionState( &this->vehicle(), currentTime, elapsedTime );
-	if( false == bSuccess )
-	{
-		// this is a serious error what to do ?
-	}
-	else
-	{
-		this->vehicle().setAngularVelocity( this->m_kMotionState.m_kAngularVelocity );
-		this->vehicle().setLinearVelocity( this->m_kMotionState.m_kLinearVelocity );
+			if( this->vehicle().speed() > 0 )
+			{
+				// Euler integrate (per frame) velocity into position
+				const osVector3 kNewPosition = this->vehicle().position() + ( newVelocity * elapsedTime );
+				this->vehicle().setPosition( kNewPosition );
+
+				// regenerate local space (by default: align vehicle's forward axis with
+				// new velocity, but this behavior may be overridden by derived classes.)
+				Vec3 newForward = newVelocity.normalized();
+				this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
+			}
+			else
+			{
+				// maybe smth to turn at zero speed ?
+			}
+		}
+		break;
+	case( EEulerUpdateMode_IntegrateMotionState ):
+		{
+			this->integrateMotionState( currentTime, elapsedTime );
+		}
+		break;
 	}
 }
 
@@ -106,9 +113,9 @@ Vec3 EulerVehicleUpdate::updateLinearVelocity( const osScalar currentTime, const
 		const float smoothRate = clip (9 * elapsedTime, 0.15f, 0.4f);
 		blendIntoAccumulator( smoothRate,
 			newAcceleration,
-			_smoothedAcceleration );
+			m_kSmoothedAcceleration );
 		// Euler integrate (per frame) acceleration into velocity
-		newVelocity += _smoothedAcceleration * elapsedTime;
+		newVelocity += m_kSmoothedAcceleration * elapsedTime;
 
 	}
 	// enforce speed limit anyways
@@ -116,6 +123,29 @@ Vec3 EulerVehicleUpdate::updateLinearVelocity( const osScalar currentTime, const
 	newVelocity = newVelocity.truncateLength( this->vehicle().maxSpeed () );
 
 	return newVelocity;
+}
+
+//-------------------------------------------------------------------------
+void EulerVehicleUpdate::updateMotionState( const osScalar currentTime, 
+					   const osScalar elapsedTime
+					   )
+{
+	if( this->getUpdateMode() == EEulerUpdateMode_IntegrateMotionState )
+	{
+		// do not do anything in this case;
+		return;
+	}
+	bool bSuccess = 
+		this->m_kMotionState.updateMotionState( &this->vehicle(), currentTime, elapsedTime );
+	if( false == bSuccess )
+	{
+		// this is a serious error what to do ?
+	}
+	else
+	{
+		this->vehicle().setAngularVelocity( this->m_kMotionState.m_kAngularVelocity );
+		this->vehicle().setLinearVelocity( this->m_kMotionState.m_kLinearVelocity );
+	}
 }
 
 //-------------------------------------------------------------------------
