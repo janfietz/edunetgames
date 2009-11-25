@@ -40,7 +40,8 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 AbstractVehicleGroup::AbstractVehicleGroup( AVGroup& kAVGroup ):
 m_kVehicles(kAVGroup),
-m_pkCustomUpdated( NULL )
+m_pkCustomUpdated( NULL ),
+m_bEnabled(true)
 {
 	
 }
@@ -48,7 +49,8 @@ m_pkCustomUpdated( NULL )
 //-----------------------------------------------------------------------------
 AbstractVehicleGroup::AbstractVehicleGroup( const AVGroup& kAVGroup ):
 m_kVehicles((AVGroup&)kAVGroup),
-m_pkCustomUpdated( NULL )
+m_pkCustomUpdated( NULL ),
+m_bEnabled(true)
 {
 
 }

@@ -87,6 +87,7 @@ namespace OpenSteer
 	void writeToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation );
 	bool writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
 
+	void readFromMatrix( osAbstractLocalSpace& kVehicle, const btTransform& kWorldTransform );
 	void readFromMatrix( osAbstractVehicle& kVehicle, const btTransform& kWorldTransform );
 	bool writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
 
@@ -94,39 +95,6 @@ namespace OpenSteer
 		osScalar fDeltaTime,
 		osVector3& kLinearVelocity, osVector3& kAngularVelocity );
 
-	typedef struct TPhysicsMotionState
-	{
-		TPhysicsMotionState():m_kForce(Vec3::zero),
-			m_kLinearVelocity(Vec3::zero),
-			m_kLocalLinearVelocity(Vec3::zero),
-			m_kAngularVelocity(Vec3::zero),
-			m_kLocalAngularVelocity(Vec3::zero),
-			m_fLinearVelocity(0),
-			m_fAngularVelocity(0),
-			m_fLastUpdateTime(0)
-		{
-			m_kWorldTransform.setIdentity();
-		}
-		btTransform m_kWorldTransform;
-		Vec3 m_kForce;
-		Vec3 m_kLinearVelocity;
-		Vec3 m_kLocalLinearVelocity;
-		Vec3 m_kAngularVelocity;
-		Vec3 m_kLocalAngularVelocity;
-		float m_fLinearVelocity;
-		float m_fAngularVelocity;
-		osScalar m_fLastUpdateTime;
-
-		void updateMotionState( AbstractVehicle* pkVehicle, const osScalar currentTime, 
-			const osScalar elapsedTime
-			);
-
-		void updateMotionState( 
-			const btTransform& kWorldTransform1,
-			const osScalar currentTime,
-			const osScalar elapsedTime
-			);
-	} PhysicsMotionState;
 
 	//-------------------------------------------------------------------------
 	class AbstractVehicleMath

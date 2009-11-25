@@ -252,14 +252,6 @@
 				Name="entities"
 				>
 				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Source\src\EduNetConnect\NetworkEntity.cpp"
 					>
 				</File>
@@ -267,22 +259,58 @@
 					RelativePath="..\Source\src\EduNetConnect\NetworkEntity.h"
 					>
 				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.cpp"
+				<Filter
+					Name="networkvehicle"
 					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.h"
-					>
-				</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\AbstractNetworkVehicle.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\ClientVehicleUpdate.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\ClientVehicleUpdate.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\NetworkVehicle.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\ServerVehicleUpdate.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\ServerVehicleUpdate.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicle.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicleUpdate.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Source\src\EduNetConnect\SimpleNetworkVehicleUpdate.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="config"

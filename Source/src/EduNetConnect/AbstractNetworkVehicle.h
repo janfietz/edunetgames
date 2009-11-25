@@ -57,6 +57,9 @@ namespace OpenSteer {
 		ESerializeDataType_CompressedOrientation1,
 		ESerializeDataType_CompressedOrientation2,
 		ESerializeDataType_CompressedForce,
+		ESerializeDataType_AngularVelocity,
+		ESerializeDataType_LinearVelocity,
+		ESerializeDataType_UpdateTicks,
 		ESerializeDataType_Count,
 	};
 

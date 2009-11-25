@@ -1,5 +1,5 @@
-#ifndef __SIMPLEPHYSICSVEHICLE_H__
-#define __SIMPLEPHYSICSVEHICLE_H__
+#ifndef __SIMPLENETWORKVEHICLEUPDATE_H__
+#define __SIMPLENETWORKVEHICLEUPDATE_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,51 +29,36 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetMacros.h"
-#include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "EduNetConnect/ServerVehicleUpdate.h"
+#include "EduNetConnect/ClientVehicleUpdate.h"
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
-{
+namespace OpenSteer {
+
 	//-------------------------------------------------------------------------
-	class SimplePhysicsVehicle : public SimpleVehicle
-	{
+	class SimpleNetworkVehicleUpdate : public AbstractVehicleUpdate {
+		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
-		SimplePhysicsVehicle();
-		virtual ~SimplePhysicsVehicle();
-
-		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
+		SimpleNetworkVehicleUpdate( AbstractVehicle* pkVehicle ):
+			BaseClass( pkVehicle ),
+			m_kServerVehicleUpdate( pkVehicle ),
+			m_kClientVehicleUpdate( pkVehicle )
 		{
-			return this->m_kEulerUpdate;
 		}
+		virtual ~SimpleNetworkVehicleUpdate(){}
 
-		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
-		{
-			return this->m_kEulerUpdate;
-		}
-
-		virtual void draw( const float currentTime, const float elapsedTime );
-		virtual void update (const float currentTime, const float elapsedTime);
-
-		float getUpdateTickTime( void ) const;
-		static osScalar ms_NetWriteFPS;
-	protected:
-		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
-		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-		float m_fAccumulatedElapsedTime;
-
+		//-------------------------------------------------------------------
+		// interface AbstractUpdated
+		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+	private:
+		ServerVehicleUpdate m_kServerVehicleUpdate;
+		ClientVehicleUpdate m_kClientVehicleUpdate;
 	};
 
-	EF_FORCEINLINE
-	float SimplePhysicsVehicle::getUpdateTickTime( void ) const
-	{
-		// count the updateTicks a 50 hz
-		const float fTickTime = 1.0f / 50.0f;
-		return fTickTime;
-	}
-
-}
 
 
-#endif // __SIMPLEPHYSICSVEHICLE_H__
+} // namespace OpenSteer
+
+#endif // __SIMPLENETWORKVEHICLEUPDATE_H__

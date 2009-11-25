@@ -46,15 +46,16 @@ void NetSoccerPlayer::reset (void)
 
   setTrailParameters (10, 60);
 }
+
 //-----------------------------------------------------------------------------
 // per frame simulation update
 // (parameter names commented out to prevent compiler warning from "-W")
 osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
+// 	if( this->isRemoteObject() )
+// 	{
+// 		return this->lastSteeringForce();
+// 	}
     // if I hit the ball, kick it.
 
     const float distToBall = OpenSteer::Vec3::distance (position(), m_Ball->position());
@@ -102,6 +103,7 @@ osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 	// return steering constrained to global XZ "ground" plane
 	return this->lastSteeringForce();
 }
+
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene
 void NetSoccerPlayer::draw (const float currentTime, const float elapsedTime)
@@ -116,12 +118,14 @@ void NetSoccerPlayer::setTeamIdAndPlayerNumber( bool isTeamA, unsigned int id)
 	this->b_ImTeamA = isTeamA;
 	this->m_MyID = id;
 }
+
 //-----------------------------------------------------------------------------
 void NetSoccerPlayer::setHomeAndPosition(  const OpenSteer::Vec3& kPos )
 {
 	this->m_home = kPos;
 	this->setPosition( this->m_home );
 }
+
 //-----------------------------------------------------------------------------
 int NetSoccerPlayer::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
@@ -141,6 +145,7 @@ void NetSoccerPlayer::serializeConstruction(
 	constructionBitstream->Write( this->b_ImTeamA );
 	constructionBitstream->Write( this->m_MyID );
 }
+
 //-----------------------------------------------------------------------------
 bool NetSoccerPlayer::deserializeConstruction(
 	RakNet::BitStream *constructionBitstream )

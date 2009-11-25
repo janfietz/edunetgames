@@ -32,35 +32,77 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot()
+	//-------------------------------------------------------------------------
+	AbstractVehicleMotionStatePlot::AbstractVehicleMotionStatePlot():
+		m_pkClientVehicle( NULL ),
+		m_pkServerVehicle( NULL )
 	{
 		Color kColor0(0.0f, 1.0f, 0.0f);
 		Color kColor1(1.0f, 0.0f, 0.0f);
-		Profile::GraphValues& kValues0 = this->m_kLinearVelocity.accessValues(0).
+
+		Color kColor00(0.25f, 1.0f, 0.0f);
+		Color kColor10(1.0f, 0.25f, 0.0f);
+
+		this->m_kLinearVelocity.accessValues(0).
 			setName( "LinearVel" ).
-			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
-//		kValues0.setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
+			setMaxRecords( 100 );
 		this->m_kAngularVelocity.accessValues(0).
 			setName( "AngularVel" ).
-			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
+			setMaxRecords( 100 );
 		this->m_kSteeringForce.accessValues(0).
 			setName( "SteeringForce" ).
-			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() );
+			setColor( kColor0.r(), kColor0.g(), kColor0.b(), kColor0.a() ).
+			setMaxRecords( 100 );
+
 		this->m_kLinearVelocity.accessValues(1).
 			setName( "LinearVel" ).
-			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
+			setMaxRecords( 100 );
 		this->m_kAngularVelocity.accessValues(1).
 			setName( "AngularVel" ).
-			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
+			setMaxRecords( 100 );
 		this->m_kSteeringForce.accessValues(1).
 			setName( "SteeringForce" ).
-			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() );
+			setColor( kColor1.r(), kColor1.g(), kColor1.b(), kColor1.a() ).
+			setMaxRecords( 100 );
+
+		this->m_kLinearVelocity.accessValues(2).
+			setName( NULL ).
+			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+		this->m_kAngularVelocity.accessValues(2).
+			setName( NULL ).
+			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+		this->m_kSteeringForce.accessValues(2).
+			setName( NULL ).
+			setColor( kColor00.r(), kColor00.g(), kColor00.b(), kColor00.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+
+		this->m_kLinearVelocity.accessValues(3).
+			setName( NULL ).
+			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+		this->m_kAngularVelocity.accessValues(3).
+			setName( NULL ).
+			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+		this->m_kSteeringForce.accessValues(3).
+			setName( NULL ).
+			setColor( kColor10.r(), kColor10.g(), kColor10.b(), kColor10.a() ).
+			setMaxRecords( 100 ).setGraphType( Profile::EGraphType_Dots );
+
 	}
 
+	//-------------------------------------------------------------------------
 	AbstractVehicleMotionStatePlot::~AbstractVehicleMotionStatePlot()
 	{
 	}
 
+	//-------------------------------------------------------------------------
 	void AbstractVehicleMotionStatePlot::recordUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
 	{
 		if( NULL == pkVehicle )
@@ -68,34 +110,93 @@ namespace OpenSteer {
 			return;
 		}
 		size_t uiRecordIndex = pkVehicle->isRemoteObject() ? 1 : 0;
+		if( pkVehicle->isRemoteObject() )
+		{
+			this->m_pkClientVehicle = pkVehicle;
+		}
+		else
+		{
+			this->m_pkServerVehicle = pkVehicle;
+		}
 		// update motion state plot
 		SimplePhysicsVehicle* pkPhysicsVehicle = dynamic_cast<SimplePhysicsVehicle*>(pkVehicle);
 		if( pkPhysicsVehicle != NULL )
 		{
-			// a hack ...
-			if( false )
 			{
-				OpenSteer::EulerVehicleUpdate& kEulerUpdateAccess = pkPhysicsVehicle->accessEulerUpdate();
-				PhysicsMotionState& kUpdateState = kEulerUpdateAccess.accessMotionState();
-				kUpdateState.updateMotionState( pkPhysicsVehicle, currentTime, elapsedTime );
+				const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
+				//			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
+
+				Profile::GraphValues& kLinearVelocityValues = 
+					this->m_kLinearVelocity.accessValues(uiRecordIndex);
+				//			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
+				kLinearVelocityValues.addValue( currentTime, pkVehicle->linearVelocity().length() );
+
+				Profile::GraphValues& kAngularVelocityValues = 
+					this->m_kAngularVelocity.accessValues(uiRecordIndex);
+				//			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
+				kAngularVelocityValues.addValue( currentTime, pkVehicle->angularVelocity().length() );
+
+				Profile::GraphValues& kSteeringForceValues = 
+					this->m_kSteeringForce.accessValues(uiRecordIndex);
+				kSteeringForceValues.addValue( currentTime, kEulerUpdate.getForce().length() );
 			}
 
-			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
-			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
+			// now add some fake values to the net send/receive graph
+			uiRecordIndex = pkVehicle->isRemoteObject() ? 3 : 2;
+			{
+				Profile::GraphValues& kLinearVelocityValues = 
+					this->m_kLinearVelocity.accessValues(uiRecordIndex);
+				kLinearVelocityValues.addValue( currentTime, 0.0f );
 
-			Profile::GraphValues& kLinearVelocityValues = 
-				this->m_kLinearVelocity.accessValues(uiRecordIndex);
-			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
+				Profile::GraphValues& kAngularVelocityValues = 
+					this->m_kAngularVelocity.accessValues(uiRecordIndex);
+				kAngularVelocityValues.addValue( currentTime, 0.0f );
 
-			Profile::GraphValues& kAngularVelocityValues = 
-				this->m_kAngularVelocity.accessValues(uiRecordIndex);
-			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
-			Profile::GraphValues& kSteeringForceValues = 
-				this->m_kSteeringForce.accessValues(uiRecordIndex);
-			kSteeringForceValues.addValue( currentTime, kState.m_kForce.length() );
+				Profile::GraphValues& kSteeringForceValues = 
+					this->m_kSteeringForce.accessValues(uiRecordIndex);
+				kSteeringForceValues.addValue( currentTime, 0.0f );
+			}
 		}
 	}
 
+	//-------------------------------------------------------------------------
+	void AbstractVehicleMotionStatePlot::recordNetUpdate( AbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
+	{
+		if( NULL == pkVehicle )
+		{
+			return;
+		}
+
+		if( ( this->m_pkClientVehicle != pkVehicle ) &&
+			( this->m_pkServerVehicle != pkVehicle ) )
+		{
+			return;
+		}
+
+		size_t uiRecordIndex = pkVehicle->isRemoteObject() ? 3 : 2;
+		// update motion state plot
+		SimplePhysicsVehicle* pkPhysicsVehicle = dynamic_cast<SimplePhysicsVehicle*>(pkVehicle);
+		if( pkPhysicsVehicle != NULL )
+		{
+			const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
+			//			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
+
+			Profile::GraphValues& kLinearVelocityValues = 
+				this->m_kLinearVelocity.accessValues(uiRecordIndex);
+			//			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
+			kLinearVelocityValues.addValue( currentTime, pkVehicle->linearVelocity().length() );
+
+			Profile::GraphValues& kAngularVelocityValues = 
+				this->m_kAngularVelocity.accessValues(uiRecordIndex);
+			//			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
+			kAngularVelocityValues.addValue( currentTime, pkVehicle->angularVelocity().length() );
+			Profile::GraphValues& kSteeringForceValues = 
+				this->m_kSteeringForce.accessValues(uiRecordIndex);
+			kSteeringForceValues.addValue( currentTime, kEulerUpdate.getForce().length() );
+		}
+	}
+
+	//-------------------------------------------------------------------------
 	void AbstractVehicleMotionStatePlot::draw( float currentTime ) const
 	{
 		// draw only once
@@ -107,7 +208,7 @@ namespace OpenSteer {
 		// draw motion state plot
 		const float fGraphStart = 100;
 		const float fGraphHeight = 150;
-		const float fGraphWidth = 400;
+		const float fGraphWidth = 600;
 		Profile::GraphPlot kPlot;
 		Profile::TGraphPointerArray kGraphArray;
 		kGraphArray.push_back( &this->m_kLinearVelocity );

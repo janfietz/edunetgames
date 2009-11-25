@@ -255,6 +255,8 @@ namespace OpenSteer {
 
 
     //-------------------------------------------------------------------------
+	void drawBasic2dCircularLocalSpace (const LocalSpaceData& vehicle,
+		const Color& color, float fRadius, bool bDrawCircle = true );
 
 
     void drawBasic2dCircularVehicle (const AbstractVehicle& bv,

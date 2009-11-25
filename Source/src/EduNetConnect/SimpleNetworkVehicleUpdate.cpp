@@ -1,6 +1,3 @@
-#ifndef __SIMPLEPHYSICSVEHICLE_H__
-#define __SIMPLEPHYSICSVEHICLE_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,51 +26,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetMacros.h"
-#include "OpenSteer/SimpleVehicle.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "EduNetConnect/SimpleNetworkVehicleUpdate.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "OpenSteerUT/AbstractVehicleMath.h"
+
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer
+void SimpleNetworkVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
 {
-	//-------------------------------------------------------------------------
-	class SimplePhysicsVehicle : public SimpleVehicle
+	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);
+	if( pkNetworkVehicle->isRemoteObject() )
 	{
-	public:
-		SimplePhysicsVehicle();
-		virtual ~SimplePhysicsVehicle();
-
-		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
-		{
-			return this->m_kEulerUpdate;
-		}
-
-		OpenSteer::EulerVehicleUpdate& accessEulerUpdate( void )
-		{
-			return this->m_kEulerUpdate;
-		}
-
-		virtual void draw( const float currentTime, const float elapsedTime );
-		virtual void update (const float currentTime, const float elapsedTime);
-
-		float getUpdateTickTime( void ) const;
-		static osScalar ms_NetWriteFPS;
-	protected:
-		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
-		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
-		float m_fAccumulatedElapsedTime;
-
-	};
-
-	EF_FORCEINLINE
-	float SimplePhysicsVehicle::getUpdateTickTime( void ) const
-	{
-		// count the updateTicks a 50 hz
-		const float fTickTime = 1.0f / 50.0f;
-		return fTickTime;
+		this->m_kClientVehicleUpdate.updateCustom( pkParent, currentTime, elapsedTime );
 	}
+	else
+	{
+		this->m_kServerVehicleUpdate.updateCustom( pkParent, currentTime, elapsedTime );
+	}
+}
+
+//-------------------------------------------------------------------------
+void SimpleNetworkVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
+{
 
 }
 
 
-#endif // __SIMPLEPHYSICSVEHICLE_H__

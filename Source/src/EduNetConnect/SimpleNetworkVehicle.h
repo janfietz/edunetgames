@@ -32,26 +32,11 @@
 #include "NetworkVehicle.h"
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
+#include "EduNetConnect/SimpleNetworkVehicleUpdate.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	//-------------------------------------------------------------------------
-	class SimpleNetworkVehicleUpdate : public AbstractVehicleUpdate {
-		OS_DECLARE_BASE(AbstractVehicleUpdate)
-	public:
-		SimpleNetworkVehicleUpdate( AbstractVehicle* pkVehicle ):
-		BaseClass( pkVehicle )
-		{
-		}
-		virtual ~SimpleNetworkVehicleUpdate(){}
-
-		//-------------------------------------------------------------------
-		// interface AbstractUpdated
-		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
-		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
-	private:
-	};
 
 	//-------------------------------------------------------------------------
 	class SimpleProxyVehicle : public SimplePhysicsVehicle
@@ -67,6 +52,7 @@ namespace OpenSteer {
 		}
 		bool m_bHasNewData;
 		int m_bReveivedDataConfig[ESerializeDataType_Count];
+		PhysicsMotionState m_kProxyMotionState;
 	private:
 	};
 
@@ -93,16 +79,22 @@ namespace OpenSteer {
 		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
 		virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
 		
+		//---------------------------------------------------------------------------
+		// extension
 		SimpleProxyVehicle& accessProxyVehicle( void )
 		{
 			return this->m_kProxyVehicle;
 		}
 
+		void updateBase(const float currentTime, const float elapsedTime);
+
 		// int to enable gui customization
 		static int ms_bReplicationDataConfig[ESerializeDataType_Count];
-		static osScalar ms_NetWriteFPS;
 	private:
+		// the core object responsible to create smoth moves
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
+		// in case of a client the data receiver
+		// in case of a server the extrapolator
 		SimpleProxyVehicle m_kProxyVehicle;
 		TUpdatePeriod<osScalar, FloatMathLimits> m_kNetWriteUpdatePeriod;
 		mutable bool m_bWantsToSendData;

@@ -51,36 +51,19 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	BaseClass::update( currentTime, elapsedTime );
 
 	// compute acceleration and velocity
-	Vec3 newAcceleration = ( this->getForce() / this->vehicle().mass() );
-	Vec3 newVelocity = this->vehicle().velocity();
-
-	// damp out abrupt changes and oscillations in steering acceleration
-	// (rate is proportional to time step, then clipped into useful range)
-	if (elapsedTime > 0)
-	{
-		const float smoothRate = clip (9 * elapsedTime, 0.15f, 0.4f);
-		blendIntoAccumulator (smoothRate,
-			newAcceleration,
-			_smoothedAcceleration);
-	}
-
-	// Euler integrate (per frame) acceleration into velocity
-	newVelocity += _smoothedAcceleration * elapsedTime;
-
-	// enforce speed limit
-	newVelocity = newVelocity.truncateLength( this->vehicle().maxSpeed () );
+	const Vec3 newVelocity = this->updateLinearVelocity( currentTime, elapsedTime );
 
 	// update Speed
 	this->vehicle().setSpeed( newVelocity.length() );
 
-	// Euler integrate (per frame) velocity into position
-	osVector3 kNewPosition = vehicle().position() + (newVelocity * elapsedTime);
-	this->vehicle().setPosition( kNewPosition );
-
-	// regenerate local space (by default: align vehicle's forward axis with
-	// new velocity, but this behavior may be overridden by derived classes.)
 	if( this->vehicle().speed() > 0 )
 	{
+		// Euler integrate (per frame) velocity into position
+		const osVector3 kNewPosition = this->vehicle().position() + ( newVelocity * elapsedTime );
+		this->vehicle().setPosition( kNewPosition );
+
+		// regenerate local space (by default: align vehicle's forward axis with
+		// new velocity, but this behavior may be overridden by derived classes.)
 		Vec3 newForward = newVelocity.normalized();
 		this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
 	}
@@ -88,8 +71,6 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	{
 		// maybe smth to turn at zero speed ?
 	}
-
-	this->updateMotionState( currentTime, elapsedTime );
 }
 
 //-------------------------------------------------------------------------
@@ -97,19 +78,72 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 					   const osScalar elapsedTime
 					   )
 {
-	// store new world transform
-	btTransform kWorldTransform1;
-	if( true == writeToMatrix( this->vehicle(), kWorldTransform1 ) )
+	bool bSuccess = 
+		this->m_kMotionState.updateMotionState( &this->vehicle(), currentTime, elapsedTime );
+	if( false == bSuccess )
 	{
-		this->m_kMotionState.updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+		// this is a serious error what to do ?
+	}
+	else
+	{
+		this->vehicle().setAngularVelocity( this->m_kMotionState.m_kAngularVelocity );
+		this->vehicle().setLinearVelocity( this->m_kMotionState.m_kLinearVelocity );
 	}
 }
+
+//-------------------------------------------------------------------------
+Vec3 EulerVehicleUpdate::updateLinearVelocity( const osScalar currentTime, const osScalar elapsedTime )
+{
+	Vec3 newVelocity = this->vehicle().velocity();
+
+	// damp out abrupt changes and oscillations in steering acceleration
+	// (rate is proportional to time step, then clipped into useful range)
+	if( elapsedTime > 0 )
+	{
+		// compute acceleration and velocity
+		Vec3 newAcceleration = ( this->getForce() / this->vehicle().mass() );
+
+		const float smoothRate = clip (9 * elapsedTime, 0.15f, 0.4f);
+		blendIntoAccumulator( smoothRate,
+			newAcceleration,
+			_smoothedAcceleration );
+		// Euler integrate (per frame) acceleration into velocity
+		newVelocity += _smoothedAcceleration * elapsedTime;
+
+	}
+	// enforce speed limit anyways
+	// as the velocity might have been set from an external call
+	newVelocity = newVelocity.truncateLength( this->vehicle().maxSpeed () );
+
+	return newVelocity;
+}
+
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+
+osScalar SteeringForceVehicleUpdate::ms_SteeringForceFPS = 30.0f;
 
 //-------------------------------------------------------------------------
 void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
 	// only in case a custom has been set ?
 	BaseClass::update( currentTime, elapsedTime );
+	this->m_kUpdatePeriod.SetPeriodFrequency( SteeringForceVehicleUpdate::ms_SteeringForceFPS, true );
+	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
+	if( uiTicks == 0 )
+	{
+		// just do nothing
+		return;
+	}
+
+// this is not right as this is part of the physics engine
+// ...
+// 	if( this->vehicle().isRemoteObject() )
+// 	{
+// 		return;
+// 	}
+
 	const Vec3 force = this->vehicle().determineCombinedSteering( elapsedTime );
 	Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
 
@@ -176,8 +210,6 @@ void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osSca
 	else
 	{
 		this->m_cForce[0] = this->m_cForce[1] = this->m_cForce[2] = this->m_cForce[3];
-
 	}
-
 }
 

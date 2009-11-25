@@ -33,7 +33,7 @@ namespace OpenSteer{
 		OS_IMPLEMENT_CLASSNAME( Boid )
 
 		void reset (void);
-		void draw (void);
+		virtual void draw( const float currentTime, const float elapsedTime );
 		virtual osVector3 determineCombinedSteering( const float elapsedTime );
 		void update (const float currentTime, const float elapsedTime);
 		Vec3 steerToFlock (void);

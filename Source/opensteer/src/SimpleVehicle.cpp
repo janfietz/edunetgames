@@ -73,6 +73,7 @@ OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 // constructor
 OpenSteer::SimpleVehicle::SimpleVehicle (void):
 _movesPlanar(true),
+m_bEnabled(true),
 m_pkCustomUpdated( NULL ),
 m_pkProximityToken( NULL )
 {

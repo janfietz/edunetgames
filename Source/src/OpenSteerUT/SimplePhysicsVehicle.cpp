@@ -32,12 +32,15 @@
 
 using namespace OpenSteer;
 
+osScalar SimplePhysicsVehicle::ms_NetWriteFPS = 20.0f;
+
 //-----------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 SimplePhysicsVehicle::SimplePhysicsVehicle():
 	m_kEulerUpdate(this),
-	m_kSteeringForceUpdate(this)
+	m_kSteeringForceUpdate(this),
+	m_fAccumulatedElapsedTime(0.0f)
 { 
 }
 #pragma warning(pop)
@@ -49,9 +52,41 @@ SimplePhysicsVehicle::~SimplePhysicsVehicle()
 }
 
 //-----------------------------------------------------------------------------
+void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTime )
+{
+#if 0
+// extrapolation example
+	PhysicsMotionState kMotionState;
+	PhysicsMotionState kExtrapolatedMotionState;
+	kMotionState.readLocalSpaceData( this->getLocalSpaceData() );
+
+	kExtrapolatedMotionState = kMotionState;
+	LocalSpace kLocalSpace;
+	for( size_t i = 0; i < 51; ++i )
+	{
+		kMotionState.integrateMotionState( 
+			kExtrapolatedMotionState, this->getUpdateTickTime() );
+
+		if( i % 10 == 0 )
+		{
+			kExtrapolatedMotionState.writeLocalSpaceData( kLocalSpace );
+			drawBasic2dCircularLocalSpace( kLocalSpace.getLocalSpaceData(), gBlue, this->radius() );
+		}
+		kMotionState = kExtrapolatedMotionState;
+	}
+#endif
+}
+
+//-----------------------------------------------------------------------------
 // per frame simulation update
 void SimplePhysicsVehicle::update (const float currentTime, const float elapsedTime)
 {
+	// prevent any updates with zero or negative delta time
+	if( elapsedTime <= 0 )
+	{
+		return;
+	}
+
 	if( NULL != this->getCustomUpdated() )
 	{
 		// in case the custom updater decides to call the base class
@@ -80,11 +115,6 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 		this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
 	}
 
-	// craigs way ...
-	// apply steering force to our momentum
-	//	applySteeringForce (determineCombinedSteering (elapsedTime),
-	//		elapsedTime);
-
 	// read client side controller data
 	bool bHasControllerValues = false;
 	osVector3 kSteeringForce, kControllerForce(osVector3::zero);
@@ -98,13 +128,13 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 			if( kLocalSteeringForce.length() > 0.1 )
 			{
 				bHasControllerValues = true;
-				localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
+				OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
 				kControllerForce *= this->maxForce();
 
 				const Vec3 c1 = this->position();
 				const Vec3 c2 = this->position() + kControllerForce;
 				const Color color = gCyan;
-				annotationLine (c1, c2, color);
+				this->annotationLine( c1, c2, color );
 			}
 		}
 	}
@@ -124,34 +154,27 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 	this->m_kEulerUpdate.setForce( kSteeringForce );
 	this->m_kEulerUpdate.update( currentTime, elapsedTime );
 
-#if 0
-	// reverse direction when we reach an endpoint
-	if (gUseDirectedPathFollowing)
-	{
-		const Color darkRed (0.7f, 0, 0);
-		float const pathRadius = path->radius();
+	// finally update the current motion state
+	this->m_kEulerUpdate.updateMotionState( currentTime, elapsedTime );
 
-		if (osVector3::distance (position(), gEndpoint0) < pathRadius )
-		{
-			pathDirection = +1;
-			annotationXZCircle (pathRadius, gEndpoint0, darkRed, 20);
-		}
-		if (osVector3::distance (position(), gEndpoint1) < pathRadius )
-		{
-			pathDirection = -1;
-			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
-		}
+	// increment the updateTicks counter
+	this->m_fAccumulatedElapsedTime += elapsedTime;
+
+	const float fTickTime = this->getUpdateTickTime();
+	while( this->m_fAccumulatedElapsedTime >= fTickTime )
+	{
+		++this->_updateTicks;
+		this->m_fAccumulatedElapsedTime -= fTickTime;
 	}
-#endif
 
 	// annotation
-	annotationVelocityAcceleration (5, 0);
-	recordTrailVertex (currentTime, position());
+	this->annotationVelocityAcceleration (5, 0);
+	this->recordTrailVertex (currentTime, position());
 
 	if( NULL != this->m_pkProximityToken )
 	{
 		// notify proximity database that our position has changed
-		m_pkProximityToken->updateForNewPosition (position());
+		this->m_pkProximityToken->updateForNewPosition( position() );
 	}
 }
 

@@ -24,13 +24,15 @@ namespace OpenSteer {
 		virtual void update( const osScalar /*currentTime*/, const osScalar /*elapsedTime*/ ) OS_ABSTRACT;
 		virtual void setCustomUpdated( AbstractUpdated* ) OS_ABSTRACT;
 		virtual AbstractUpdated* getCustomUpdated( void ) const OS_ABSTRACT; 
+		virtual bool isEnabled( void ) const OS_ABSTRACT; 
+		virtual void setEnabled( bool bEnabled ) OS_ABSTRACT; 
 	};
 
 	//-------------------------------------------------------------------------
 	template <class Super>
 	class AbstractUpdatedMixin : public Super {
 	public:
-		AbstractUpdatedMixin(  ): m_pkCustomUpdated(0)
+		AbstractUpdatedMixin(  ): m_pkCustomUpdated(0),m_bEnabled(true)
 		{
 		}
 		virtual ~AbstractUpdatedMixin(){}
@@ -67,8 +69,12 @@ namespace OpenSteer {
 			return this->m_pkCustomUpdated;
 		}
 
+		virtual bool isEnabled( void ) const { return this->m_bEnabled; }; 
+		virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; }; 
+
 	protected:
 		AbstractUpdated* m_pkCustomUpdated;
+		bool m_bEnabled;
 
 	};
 

@@ -387,6 +387,7 @@ void OpenSteer::Plugin::addVehicle (
 {
 	
 }
+
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::removeVehicle (
 	OpenSteer::AbstractVehicle* pkVehicle)

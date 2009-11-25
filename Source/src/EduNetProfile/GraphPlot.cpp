@@ -104,11 +104,11 @@ void GraphPlot::drawRectangle(float x0, float y0, float x1, float y1)
 //-----------------------------------------------------------------------------
 void GraphPlot::drawQuad(float x0, float y0, float x1, float y1)
 {
-	glBegin(GL_QUADS);
-	glVertex2f(x0, y0);
-	glVertex2f(x1, y0);
-	glVertex2f(x1, y1);
-	glVertex2f(x0, y1);
+	glBegin( GL_QUADS );
+	glVertex2f( x0, y0 );
+	glVertex2f( x1, y0 );
+	glVertex2f( x1, y1 );
+	glVertex2f( x0, y1 );
 	glEnd();
 }
 
@@ -170,7 +170,7 @@ void GraphPlot::draw( const GraphValues& kValues, float sx, float sy, float widt
 	kMin = GraphValue::ms_Max;
 	kMax = GraphValue::ms_Min;
 	kInterval = GraphValue::ms_Min;
-	kScale = GraphValue::ms_Min;
+	kScale = GraphValue::ms_Max;
 
 	this->computeGraphLocation( kValues, kGraphLocation );
 
@@ -206,7 +206,8 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 	kMin = GraphValue::ms_Max;
 	kMax = GraphValue::ms_Min;
 	kInterval = GraphValue::ms_Min;
-	kScale = GraphValue::ms_Min;
+//	kScale = GraphValue::ms_Min;
+	kScale = GraphValue::ms_Max;
 
 	TGraphValuesArray::const_iterator kIter = kValues.begin();
 	TGraphValuesArray::const_iterator kEnd = kValues.end();
@@ -335,7 +336,9 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	const GraphValue& kMin = kGraphLocation.kMin;
 	const GraphValue& kMax = kGraphLocation.kMax;
 	const GraphValue& kInterval = kGraphLocation.kInterval;
-	const GraphValue& kScale = kGraphLocation.kScale;
+	//const 
+	GraphValue& kScale = kValues.m_kScale;//kGraphLocation.kScale;
+ 	kScale.y = kGraphLocation.kScale.y;
 
 	const GraphValue& kEndValue = kValues[kValues.size() - 1];
 
@@ -392,7 +395,7 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			sn	<< " Max: " << kMax.y;
 			sn	<< " Avg: " << fAvg;
 			sn	<< " Cur: " << kEndValue.y;
-			sn	<< " Scale: " << kScale.y;
+//			sn	<< " Scale: " << kScale.y;
 		}
 		sn	<< std::ends;
 
@@ -407,30 +410,74 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	{
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
 		GraphPlot::setGraphColor( kValues );
-		glBegin(GL_LINE_STRIP);
 
-		GraphValue kRenderValue;
-		TGraphValues::const_iterator kIter = kValues.begin();
-		TGraphValues::const_iterator kEnd = kValues.end();
-		const GraphValue& kStartValue = (*kIter);
-		while( kIter != kEnd )
+		switch( kValues.getGraphType() )
 		{
-			kRenderValue = (*kIter);
-			// force the graph to begin at sx
-			kRenderValue.x -= kStartValue.x;
-			kRenderValue.x *= kScale.x;
-			kRenderValue.x += kGraphLocation.sx;
+		case(EGraphType_Lines):
+			{
+				glBegin(GL_LINE_STRIP);
+				GraphValue kRenderValue;
+				TGraphValues::const_iterator kIter = kValues.begin();
+				TGraphValues::const_iterator kEnd = kValues.end();
+				const GraphValue& kStartValue = (*kIter);
+				while( kIter != kEnd )
+				{
+					kRenderValue = (*kIter);
+					// force the graph to begin at sx
+					kRenderValue.x -= kStartValue.x;
+					kRenderValue.x *= kScale.x;
+					kRenderValue.x += kGraphLocation.sx;
 
-			// offset the graph to begin at sy
-			kRenderValue.y -= kMinDraw.y;
-			kRenderValue.y *= kScale.y;
-			kRenderValue.y *= kRenderValue.scale_y;
-			kRenderValue.y += kGraphLocation.sy;
+					// offset the graph to begin at sy
+					kRenderValue.y -= kMinDraw.y;
+					kRenderValue.y *= kScale.y;
+					kRenderValue.y *= kRenderValue.scale_y;
+					kRenderValue.y += kGraphLocation.sy;
 
-			glVertex2f(kRenderValue.x,kRenderValue.y);
-			++kIter;
+					glVertex2f(kRenderValue.x,kRenderValue.y);
+					++kIter;
+				}
+				glEnd();
+			}
+			break;
+		case(EGraphType_Dots):
+			{
+				GraphValue kRenderValue;
+				TGraphValues::const_iterator kIter = kValues.begin();
+				TGraphValues::const_iterator kEnd = kValues.end();
+				const GraphValue& kStartValue = (*kIter);
+				while( kIter != kEnd )
+				{
+					kRenderValue = (*kIter);
+					// force the graph to begin at sx
+					kRenderValue.x -= kStartValue.x;
+					kRenderValue.x *= kScale.x;
+					kRenderValue.x += kGraphLocation.sx;
+
+					if( kRenderValue.y == 0.0f )
+					{
+
+					}
+					else
+					{
+						// offset the graph to begin at sy
+						kRenderValue.y -= kMinDraw.y;
+						kRenderValue.y *= kScale.y;
+						kRenderValue.y *= kRenderValue.scale_y;
+						kRenderValue.y += kGraphLocation.sy;
+
+						const float fDotSize = 2.0f;
+						GraphPlot::drawQuad(
+							kRenderValue.x - fDotSize, kRenderValue.y - fDotSize, 
+							kRenderValue.x + fDotSize, kRenderValue.y + fDotSize 
+							);
+					}
+
+					++kIter;
+				}
+			}
+			break;
 		}
-		glEnd();
 		OpenSteer::end2dDrawing (originalMatrixMode);
 	}
 
@@ -452,7 +499,8 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 	GraphValue& kMaxDraw = kGraphLocation.kMaxDraw;
 	GraphValue& kInterval = kGraphLocation.kInterval;
 	GraphValue& kIntervalDraw = kGraphLocation.kIntervalDraw;
-	GraphValue& kScale = kGraphLocation.kScale;
+	GraphValue& kScale = kValues.m_kScale; //kGraphLocation.kScale;
+	GraphValue& kGraphLocationScale = kGraphLocation.kScale;
 
 	const bool bGlobalStats = false;
 	if( true == bGlobalStats )
@@ -471,9 +519,21 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 		kMax.x = ::etMax( kMax.x, kRenderValue.x );
 		if( false == bGlobalStats )
 		{
-			kMin.y = ::etMin( kMin.y, kRenderValue.y );
+			if( kValues.getGraphType() == EGraphType_Dots )
+			{
+				if( kRenderValue.y != 0.0 )
+				{
+					kMin.y = ::etMin( kMin.y, kRenderValue.y );
+					kMax.y = ::etMax( kMax.y, kRenderValue.y );
+				}
+			}
+			else
+			{
+				kMin.y = ::etMin( kMin.y, kRenderValue.y );
+				kMax.y = ::etMax( kMax.y, kRenderValue.y );
+			}
+
 			kMin.z = ::etMin( kMin.z, kRenderValue.z );
-			kMax.y = ::etMax( kMax.y, kRenderValue.y );
 			kMax.z = ::etMax( kMax.z, kRenderValue.z );
 		}
 		++kIter;
@@ -520,10 +580,12 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 
 	if( kIntervalDraw.x > 0 )
 	{
+		kGraphLocationScale.x = ::etMin( kGraphLocationScale.x, kGraphLocation.width / kIntervalDraw.x );
 		kScale.x = kGraphLocation.width / kIntervalDraw.x;
 	}
 	if( kIntervalDraw.y > 0 )
 	{
+		kGraphLocationScale.y = ::etMin( kGraphLocationScale.y, kGraphLocation.height / kIntervalDraw.y );
 		kScale.y = kGraphLocation.height / kIntervalDraw.y;
 	}
 }
