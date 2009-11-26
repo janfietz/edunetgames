@@ -46,6 +46,13 @@ namespace OpenSteer
 
 		OS_IMPLEMENT_CLASSNAME( SimplePhysicsVehicle )
 
+		//---------------------------------------------------------------------------
+		// extension
+		void setMovesPlanar( bool bMovesPlanar )
+		{
+			this->_movesPlanar = bMovesPlanar;
+		}
+
 		const OpenSteer::EulerVehicleUpdate& getEulerUpdate( void ) const
 		{
 			return this->m_kEulerUpdate;
@@ -70,12 +77,16 @@ namespace OpenSteer
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		float getUpdateTickTime( void ) const;
+		float getUpdateCurrentTime( void ) const { return this->m_fUpdateCurrentTime; };
+		float getUpdateElapsedTime( void ) const { return this->m_fUpdateElapsedTime; };
 		static osScalar ms_NetWriteFPS;
 	protected:
 		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
 		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;
 		float m_fAccumulatedElapsedTime;
-
+	private:
+		float m_fUpdateCurrentTime;
+		float m_fUpdateElapsedTime;
 	};
 
 	EF_FORCEINLINE

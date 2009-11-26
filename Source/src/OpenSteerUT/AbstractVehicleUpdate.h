@@ -91,7 +91,7 @@ namespace OpenSteer
 			  return (NULL != this->m_pkVehicle);
 		  }
 
-		  AbstractVehicle& vehicle( void ) 
+		  AbstractVehicle& vehicle( void ) const 
 		  {
 			  assert( NULL != this->m_pkVehicle );
 			  return *this->m_pkVehicle;
@@ -159,10 +159,14 @@ namespace OpenSteer
 		BaseClass( pkVehicle ),
 			m_kForce(Vec3::zero)
 		{
+			m_cForce[0] = m_cForce[1] = m_cForce[2] = m_cForce[3] = 0;
 		}
 		virtual ~SteeringForceVehicleUpdate(){}
 
-		const Vec3& getForce( void ) const { return m_kForce; }
+		Vec3 determineCombinedSteering( const osScalar elapsedTime ) const;
+		
+		void setForce( const Vec3& kForce, bool bCompress = true );
+		const Vec3& getForce( void ) const { return this->m_kForce; }
 		const char* getCompressedForce( void ) const { return m_cForce; }
 
 		//---------------------------------------------------------------------

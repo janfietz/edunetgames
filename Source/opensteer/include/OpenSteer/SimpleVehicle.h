@@ -132,7 +132,6 @@ namespace OpenSteer {
 
 			clearTrailHistory(); // prevent long streaks due to teleportation
 
-			setLastSteeringForce( Vec3::zero );
         }
 
         //! get/set mass
@@ -212,7 +211,7 @@ namespace OpenSteer {
         //! default is to disallow backward-facing steering at low speed.
         //! xxx experimental 8-20-02
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
-                                             const float deltaTime);
+                                             const float deltaTime) const;
 
         //! apply a given braking force (for a given dt) to our momentum.
         //! xxx experimental 9-6-02
@@ -261,9 +260,6 @@ namespace OpenSteer {
 		virtual void allocateProximityToken( ProximityDatabase* pkProximityDatabase );
 		virtual AbstractVehicle* cloneVehicle( void ) const { return NULL; };
 
-		virtual const Vec3& lastSteeringForce( void ) const { return _lastSteeringForce; };
-		virtual void setLastSteeringForce( const Vec3& force ) { _lastSteeringForce = force; };
-
 		virtual bool movesPlanar( void ) const { return _movesPlanar; };
 
 		virtual void setCustomUpdated( AbstractUpdated* pkUpdated )
@@ -297,7 +293,6 @@ namespace OpenSteer {
 		ProximityToken* m_pkProximityToken;
 
 	protected:
-		Vec3 _lastSteeringForce;
 		bool _movesPlanar;
 		bool m_bEnabled;
 

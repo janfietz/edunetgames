@@ -177,7 +177,7 @@ void OpenSteer::SimpleVehicle::allocateProximityToken( ProximityDatabase* pkProx
 // parameter names commented out to prevent compiler warning from "-W"
 OpenSteer::Vec3 
 OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
-                                                  const float /* deltaTime */)
+                                                  const float /* deltaTime */) const
 {
     const float maxAdjustedSpeed = 0.2f * maxSpeed ();
 

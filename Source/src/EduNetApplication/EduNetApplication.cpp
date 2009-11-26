@@ -119,6 +119,8 @@ void gluiProfMoveCursorPrevious()
 //-----------------------------------------------------------------------------
 void gluiProfSelect()
 {
+	profReportMode = Prof_CALL_GRAPH;
+	profileModesList->do_selection( profReportMode );
 	Prof_select();
 }
 

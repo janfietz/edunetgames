@@ -213,8 +213,8 @@ namespace {
             // annotationLine (position, position + (separationW * s), gRed);
             // annotationLine (position, position + (alignmentW  * s), gOrange);
             // annotationLine (position, position + (cohesionW   * s), gYellow);
-			this->setLastSteeringForce( separationW + alignmentW + cohesionW );
-            return this->lastSteeringForce();
+			const Vec3 kSummedForce = separationW + alignmentW + cohesionW;
+            return kSummedForce;
         }
 
 
