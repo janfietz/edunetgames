@@ -80,13 +80,15 @@ void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTim
 
 //-----------------------------------------------------------------------------
 // per frame simulation update
-void SimplePhysicsVehicle::update (const float currentTime, const float elapsedTime)
+void SimplePhysicsVehicle::update( const float currentTime, const float elapsedTime )
 {
 	// prevent any updates with zero or negative delta time
 	if( elapsedTime <= 0 )
 	{
 		return;
 	}
+	this->m_fUpdateCurrentTime = currentTime;
+	this->m_fUpdateElapsedTime = elapsedTime;
 
 	if( NULL != this->getCustomUpdated() )
 	{
@@ -100,101 +102,96 @@ void SimplePhysicsVehicle::update (const float currentTime, const float elapsedT
 		return;
 	}
 
-	if( this == SimpleVehicle::selectedVehicle )
 	{
-		if( false == this->isRemoteObject() )
+		ET_PROFILE( updatePhysicsVehicle );
+		if( this == SimpleVehicle::selectedVehicle )
 		{
-			this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
+			if( false == this->isRemoteObject() )
+			{
+				this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
+			}
+			else
+			{
+				this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
+			}
 		}
 		else
 		{
 			this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
 		}
-	}
-	else
-	{
-		this->setAnnotationMode( OpenSteer::EAnnotationMode_global );
-	}
 
-	// read client side controller data
-	bool bHasControllerValues = false;
-	osVector3 kSteeringForce, kControllerForce(osVector3::zero);
-	AbstractPlayer* pkPlayer = this->getPlayer();
-	if( NULL != pkPlayer )
-	{
-		const AbstractController* pkController = pkPlayer->getController();
-		if( NULL != pkController )
+		// read client side controller data
+		bool bHasControllerValues = false;
+		osVector3 kControllerForce(osVector3::zero);
+		AbstractPlayer* pkPlayer = this->getPlayer();
+		if( NULL != pkPlayer )
 		{
-			Vec3 kLocalSteeringForce = pkController->getOutputForce();
-			if( kLocalSteeringForce.length() > 0.1 )
+			const AbstractController* pkController = pkPlayer->getController();
+			if( NULL != pkController )
 			{
-				bHasControllerValues = true;
-				OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
-				kControllerForce *= this->maxForce();
+				Vec3 kLocalSteeringForce = pkController->getOutputForce();
+				if( kLocalSteeringForce.length() > 0.1 )
+				{
+					bHasControllerValues = true;
+					OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
+					kControllerForce *= this->maxForce();
 
-				const Vec3 c1 = this->position();
-				const Vec3 c2 = this->position() + kControllerForce;
-				const Color color = gCyan;
-				this->annotationLine( c1, c2, color );
+					const Vec3 c1 = this->position();
+					const Vec3 c2 = this->position() + kControllerForce;
+					const Color color = gCyan;
+					this->annotationLine( c1, c2, color );
+				}
 			}
 		}
-	}
 
-	switch( this->m_kEulerUpdate.getUpdateMode() )
-	{
-	case( EEulerUpdateMode_Accelerate ):
+		switch( this->m_kEulerUpdate.getUpdateMode() )
 		{
-			if( true == this->m_kSteeringForceUpdate.isEnabled() )
+		case( EEulerUpdateMode_Accelerate ):
 			{
 				// compute steering forces
 				this->m_kSteeringForceUpdate.update( currentTime, elapsedTime );
-				kSteeringForce = this->m_kSteeringForceUpdate.getForce();
-			}
-			else
-			{
-				kSteeringForce = this->lastSteeringForce();
-			}
+				osVector3 kSteeringForce = this->m_kSteeringForceUpdate.getForce();
 
-			// override steering force computation with controller values
-			if( true == bHasControllerValues )
-			{
-				kSteeringForce.x = kControllerForce.x;
-				kSteeringForce.z = kControllerForce.z;
+				// override steering force computation with controller values
+				if( true == bHasControllerValues )
+				{
+					kSteeringForce.x = kControllerForce.x;
+					kSteeringForce.z = kControllerForce.z;
+				}
+				this->m_kEulerUpdate.setForce( kSteeringForce );
 			}
+			break;
+		case( EEulerUpdateMode_IntegrateMotionState ):
+			{
+			}
+			break;
 		}
-		break;
-	case( EEulerUpdateMode_IntegrateMotionState ):
+
+		// integrate results
+		this->m_kEulerUpdate.update( currentTime, elapsedTime );
+
+		// finally update the current motion state
+		this->m_kEulerUpdate.updateMotionState( currentTime, elapsedTime );
+
+		// increment the updateTicks counter
+		this->m_fAccumulatedElapsedTime += elapsedTime;
+
+		const float fTickTime = this->getUpdateTickTime();
+		while( this->m_fAccumulatedElapsedTime >= fTickTime )
 		{
-			kSteeringForce = Vec3::zero;
+			++this->_updateTicks;
+			this->m_fAccumulatedElapsedTime -= fTickTime;
 		}
-		break;
-	}
 
-	// integrate results
-	this->m_kEulerUpdate.setForce( kSteeringForce );
-	this->m_kEulerUpdate.update( currentTime, elapsedTime );
+		// annotation
+		this->annotationVelocityAcceleration (5, 0);
+		this->recordTrailVertex (currentTime, position());
 
-	// finally update the current motion state
-	this->m_kEulerUpdate.updateMotionState( currentTime, elapsedTime );
-
-	// increment the updateTicks counter
-	this->m_fAccumulatedElapsedTime += elapsedTime;
-
-	const float fTickTime = this->getUpdateTickTime();
-	while( this->m_fAccumulatedElapsedTime >= fTickTime )
-	{
-		++this->_updateTicks;
-		this->m_fAccumulatedElapsedTime -= fTickTime;
-	}
-
-	// annotation
-	this->annotationVelocityAcceleration (5, 0);
-	this->recordTrailVertex (currentTime, position());
-
-	if( NULL != this->m_pkProximityToken )
-	{
-		// notify proximity database that our position has changed
-		this->m_pkProximityToken->updateForNewPosition( position() );
+		if( NULL != this->m_pkProximityToken )
+		{
+			// notify proximity database that our position has changed
+			this->m_pkProximityToken->updateForNewPosition( position() );
+		}
 	}
 }
 

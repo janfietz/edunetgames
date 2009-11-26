@@ -485,11 +485,6 @@ void NetCtfSeekerVehicle::drawHomeBase( void ) const
 // or neighbors if needed, otherwise follow the path and wander
 osVector3 NetCtfSeekerVehicle::determineCombinedSteering (const float elapsedTime)
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
-
 	// determine and apply steering/braking forces
 	osVector3 steeringForce(0, 0, 0);;
 	if(state == running)
@@ -501,10 +496,8 @@ osVector3 NetCtfSeekerVehicle::determineCombinedSteering (const float elapsedTim
 		applyBrakingForce( gBrakingRate, elapsedTime );
 	}
 
-	this->setLastSteeringForce( steeringForce.setYtoZero () );
-
 	// return steering constrained to global XZ "ground" plane
-	return this->lastSteeringForce();
+	return steeringForce.setYtoZero ();
 }
 
 //-----------------------------------------------------------------------------
@@ -536,10 +529,6 @@ void NetCtfEnemyVehicle::reset( void )
 // or neighbors if needed, otherwise follow the path and wander
 osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime)
 {
-	if( this->isRemoteObject() )
-	{
-		return this->lastSteeringForce();
-	}
 	osVector3 steeringForce(0, 0, 0);
 
 	if( NULL == this->m_pkSeeker )
@@ -578,10 +567,8 @@ osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime
 		}
 	}
 
-	this->setLastSteeringForce( steeringForce.setYtoZero () );
-
 	// return steering constrained to global XZ "ground" plane
-	return this->lastSteeringForce();
+	return steeringForce.setYtoZero ();
 }
 
 //-----------------------------------------------------------------------------

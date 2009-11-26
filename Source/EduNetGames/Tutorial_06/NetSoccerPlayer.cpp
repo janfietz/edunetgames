@@ -52,56 +52,53 @@ void NetSoccerPlayer::reset (void)
 // (parameter names commented out to prevent compiler warning from "-W")
 osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 {
-// 	if( this->isRemoteObject() )
-// 	{
-// 		return this->lastSteeringForce();
-// 	}
     // if I hit the ball, kick it.
 
-    const float distToBall = OpenSteer::Vec3::distance (position(), m_Ball->position());
+    const float distToBall = osVector3::distance (position(), m_Ball->position());
     const float sumOfRadii = radius() + m_Ball->radius();
     if (distToBall < sumOfRadii)
 	m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
 
-
+	osVector3 kSteeringForce( osVector3::zero );
     // otherwise consider avoiding collisions with others
-    OpenSteer::Vec3 collisionAvoidance = steerToAvoidNeighbors(1, (OpenSteer::AVGroup&)*m_AllPlayers);
-    if(collisionAvoidance != OpenSteer::Vec3::zero)
-	this->setLastSteeringForce( collisionAvoidance );
-    else
+    osVector3 collisionAvoidance = steerToAvoidNeighbors(1, (OpenSteer::AVGroup&)*m_AllPlayers);
+    if(collisionAvoidance != osVector3::zero)
 	{
-	float distHomeToBall = OpenSteer::Vec3::distance (m_home, m_Ball->position());
-	if( distHomeToBall < 12.0f)
-	    {
-	    // go for ball if I'm on the 'right' side of the ball
-		if( b_ImTeamA ? position().x > m_Ball->position().x : position().x < m_Ball->position().x)
-		{
-		OpenSteer::Vec3 seekTarget = xxxsteerForSeek(m_Ball->position());
-		this->setLastSteeringForce(seekTarget);
-		}
-	    else
-		{
+		kSteeringForce = collisionAvoidance;
+	}
+	else
+	{
+		float distHomeToBall = osVector3::distance (m_home, m_Ball->position());
 		if( distHomeToBall < 12.0f)
-		    {
-		    float Z = m_Ball->position().z - position().z > 0 ? -1.0f : 1.0f;
-		    OpenSteer::Vec3 behindBall = m_Ball->position() + (b_ImTeamA ? OpenSteer::Vec3(2.0f,0.0f,Z) : OpenSteer::Vec3(-2.0f,0.0f,Z));
-		    OpenSteer::Vec3 behindBallForce = xxxsteerForSeek(behindBall);
-		    annotationLine (position(), behindBall ,OpenSteer::Color(0.0f,1.0f,0.0f));
-		    OpenSteer::Vec3 evadeTarget = xxxsteerForFlee(m_Ball->position());
-		    this->setLastSteeringForce(behindBallForce*10.0f + evadeTarget);
-		    }
+		{
+			// go for ball if I'm on the 'right' side of the ball
+			if( b_ImTeamA ? position().x > m_Ball->position().x : position().x < m_Ball->position().x)
+			{
+				osVector3 seekTarget = xxxsteerForSeek(m_Ball->position());
+				kSteeringForce = seekTarget;
+			}
+			else
+			{
+				if( distHomeToBall < 12.0f)
+				{
+					float Z = m_Ball->position().z - position().z > 0 ? -1.0f : 1.0f;
+					osVector3 behindBall = m_Ball->position() + (b_ImTeamA ? osVector3(2.0f,0.0f,Z) : osVector3(-2.0f,0.0f,Z));
+					osVector3 behindBallForce = xxxsteerForSeek(behindBall);
+					annotationLine (position(), behindBall ,OpenSteer::Color(0.0f,1.0f,0.0f));
+					osVector3 evadeTarget = xxxsteerForFlee(m_Ball->position());
+					kSteeringForce = behindBallForce*10.0f + evadeTarget;
+				}
+			}
 		}
-	    }
-	else	// Go home
-	    {
-	    OpenSteer::Vec3 seekTarget = xxxsteerForSeek(m_home);
-	    OpenSteer::Vec3 seekHome = xxxsteerForSeek(m_home);
-	    this->setLastSteeringForce(seekTarget+seekHome);
-	    }
-
+		else	// Go home
+		{
+			osVector3 seekTarget = xxxsteerForSeek(m_home);
+			osVector3 seekHome = xxxsteerForSeek(m_home);
+			kSteeringForce = seekTarget + seekHome;
+		}
 	}
 	// return steering constrained to global XZ "ground" plane
-	return this->lastSteeringForce();
+	return kSteeringForce.setYtoZero();
 }
 
 //-----------------------------------------------------------------------------
@@ -120,7 +117,7 @@ void NetSoccerPlayer::setTeamIdAndPlayerNumber( bool isTeamA, unsigned int id)
 }
 
 //-----------------------------------------------------------------------------
-void NetSoccerPlayer::setHomeAndPosition(  const OpenSteer::Vec3& kPos )
+void NetSoccerPlayer::setHomeAndPosition(  const osVector3& kPos )
 {
 	this->m_home = kPos;
 	this->setPosition( this->m_home );

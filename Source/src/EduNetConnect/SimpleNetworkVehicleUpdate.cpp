@@ -37,13 +37,25 @@ void SimpleNetworkVehicleUpdate::collect3DTextAnnotation( std::ostringstream& kS
 {
 	if( this->vehicle().isRemoteObject() )
 	{
-		kStream << "UpdateMode:"
+		kStream << "UpdateMode: "
 			<< ClientVehicleUpdate::getVehicleUpdateModeString( 
 			this->m_kClientVehicleUpdate.getVehicleUpdateMode() )
 			<< std::endl;
 	}
 	else
 	{
+		size_t uiPackageSize = 0;
+		for( size_t i = 0; i < ESerializeDataType_Count; ++i)
+		{
+			if( SimpleNetworkVehicle::ms_bReplicationDataConfig[i] != 0 )
+			{
+				uiPackageSize += SimpleNetworkVehicle::ms_uiReplicationDataBytes[i];
+			}
+		}
+		kStream << "Packagesize: "
+			<< uiPackageSize
+			<< " Bytes"
+			<< std::endl;
 	}
 }
 

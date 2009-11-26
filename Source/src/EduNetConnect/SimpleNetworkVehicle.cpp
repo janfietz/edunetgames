@@ -1,4 +1,6 @@
 #include "SimpleNetworkVehicle.h"
+#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/EduNetExternal.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
 #include "EduNetConnect/NetworkPlugin.h"
 
@@ -22,6 +24,23 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_UpdateTicks,
 };
 
+size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count] =
+{
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Position,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Forward,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Side,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Up,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Force,
+	sizeof(osScalar) + 1, // 	ESerializeDataType_Radius,
+	sizeof(osScalar) + 1, // 	ESerializeDataType_Speed,
+	sizeof(btQuaternion) + 1, //   ESerializeDataType_Orientation
+	sizeof(OpenSteer::Vec3) + 2, // 	ESerializeDataType_CompressedOrientation1,
+	sizeof(char) * 3 + 2, // 	ESerializeDataType_CompressedOrientation2,
+	sizeof(char) * 4 + 1, // 	ESerializeDataType_CompressedForce,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_AngularVelocity,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_LinearVelocity,
+	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_UpdateTicks,
+};
 
 //-------------------------------------------------------------------------
 #pragma warning(push)
@@ -55,6 +74,16 @@ void SimpleNetworkVehicle::draw( const float currentTime, const float elapsedTim
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
+	// pass over important values to the proxy
+	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+	kProxy.setIsRemoteObject( this->isRemoteObject() );
+	kProxy.setMaxForce( this->maxForce() );
+	kProxy.setMaxSpeed( this->maxSpeed() );
+	kProxy.setMass( this->mass() );
+	kProxy.setRadius( this->radius() );
+	kProxy.setMovesPlanar( this->movesPlanar() );
+
+
 	// simple send data control
 	// note: not connection specific
 	bool bRecordNetGraph = false;
@@ -120,6 +149,27 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	{
 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
 	}
+
+	ET_PROFILE( serializeNetworkVehicle );
+
+	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+	if( false == this->m_bHasBeenSerialized )
+	{
+		// serialize is called the first time now
+
+		// now a special case arises
+		// in case the steering force is replicated
+		// to create a consistent data set the steering force for the next update
+		// has to be computed
+		if( ( ms_bReplicationDataConfig[ESerializeDataType_Force] != 0 ) ||
+			( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
+			)
+		{
+			Vec3 kNextSteeringForce = this->getSteeringForceUpdate().determineCombinedSteering( this->getUpdateElapsedTime() );
+			kProxy.accessSteeringForceUpdate().setForce( kNextSteeringForce );
+		}
+	}
+
 	this->m_bHasBeenSerialized = true;
 
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
@@ -164,7 +214,9 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	{
 		dataType = ESerializeDataType_Force;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		kStream.WriteAlignedBytes((const unsigned char*)&this->lastSteeringForce(),sizeof(OpenSteer::Vec3));
+
+		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
+		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getForce(),sizeof(OpenSteer::Vec3));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Radius] != 0 )
 	{
@@ -183,29 +235,29 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	if( ms_bReplicationDataConfig[ESerializeDataType_Orientation] != 0 )
 	{
 		dataType = ESerializeDataType_Orientation;
-		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation1;
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		char wSign = 0;
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
-		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&kCompressedRotation,sizeof(osVector3));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation2;
+		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		char wSign = 0;
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		char cVector[3];
 		AbstractVehicleMath::compressUnitVector( kCompressedRotation, cVector );
-		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&cVector,sizeof(cVector));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
 	}
@@ -213,7 +265,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	{
 		dataType = ESerializeDataType_CompressedForce;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		kStream.WriteAlignedBytes((const unsigned char*)&this->lastSteeringForce(),sizeof(OpenSteer::Vec3));
+		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
+		const char* pcForce = kSteeringForceUpdate.getCompressedForce();
+		char cForce[4] = { pcForce[0], pcForce[1], pcForce[2], pcForce[3] };
+		kStream.WriteAlignedBytes((const unsigned char*)&cForce,sizeof(cForce));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
 	{
@@ -241,17 +296,20 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deserializeParameters )
 {
+	ET_PROFILE( deserializeNetworkVehicle );
+
 	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
 
 	// reset the received data configuration
+	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
 	for( size_t i = 0; i < ESerializeDataType_Count; ++i )
 	{
-		this->m_kProxyVehicle.m_bReveivedDataConfig[i] = false;
+		kProxy.m_bReveivedDataConfig[i] = false;
 	}
 
 	// do not directly write into the scene vehicle
 	// otherwise there will be no chance to customize the network behaviour
-	AbstractVehicle* pkSerializeTarget = &this->m_kProxyVehicle;
+	AbstractVehicle* pkSerializeTarget = &kProxy;
 
 	// store last update tick to check if new data has arrived
 	const size_t lastServerUpdateTicks = pkSerializeTarget->accessLocalSpaceData()._updateTicks;
@@ -263,6 +321,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	btQuaternion kRotation;
 	unsigned char dataTypes;
 	char cVector[3];
+	char cFixedSizeVector[4];
 	size_t uiValue;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
@@ -278,11 +337,18 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		case(ESerializeDataType_Side):
 		case(ESerializeDataType_Up):
 		case(ESerializeDataType_Force):
-		case(ESerializeDataType_CompressedForce):
 		case(ESerializeDataType_AngularVelocity):
 		case(ESerializeDataType_LinearVelocity):
 			{
 				kStream.ReadAlignedBytes((unsigned char*)&kVec,sizeof(osVector3));
+			}
+			break;
+		case(ESerializeDataType_CompressedForce):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&cFixedSizeVector,sizeof(cFixedSizeVector));
+				// expand
+				AbstractVehicleMath::expandFixedLengthVector( 
+					cFixedSizeVector, this->maxForce(), kVec );
 			}
 			break;
 		case(ESerializeDataType_CompressedOrientation1):
@@ -338,13 +404,10 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 				}
 				break;
 			case(ESerializeDataType_CompressedForce):
-				{
-					// TODO
-				}
-				break;
 			case(ESerializeDataType_Force):
 				{
-					pkSerializeTarget->setLastSteeringForce( kVec );	
+					SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.accessSteeringForceUpdate();
+					kSteeringForceUpdate.setForce( kVec );	
 				}
 				break;
 			case(ESerializeDataType_Speed):

@@ -117,12 +117,10 @@ namespace OpenSteer {
         //! allows a specific vehicle class to redefine this adjustment.
         //! default is to disallow backward-facing steering at low speed.
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
-                                             const float deltaTime) OS_ABSTRACT;
+                                             const float deltaTime) const OS_ABSTRACT;
 
 		virtual AbstractVehicle* cloneVehicle( void ) const OS_ABSTRACT;
 
-		virtual const Vec3& lastSteeringForce( void ) const OS_ABSTRACT;
-		virtual void setLastSteeringForce( const Vec3& ) OS_ABSTRACT;
 		virtual bool movesPlanar( void ) const OS_ABSTRACT;
 		//! CP --
    };

@@ -58,28 +58,24 @@ void NetSoccerBall::reset ( void )
 // per frame simulation update
 osVector3 NetSoccerBall::determineCombinedSteering (const float elapsedTime)
 {
-// 	if( this->isRemoteObject() )
-// 	{
-// 		return this->lastSteeringForce();
-// 	}
     applyBrakingForce ( 1.5f, elapsedTime );
-    this->setLastSteeringForce( velocity() );
     // are we now outside the field?
     if ( !m_bbox->InsideX ( position() ) )
     {
         Vec3 d = velocity();
         regenerateOrthonormalBasis ( Vec3 ( -d.x, d.y, d.z ) );
-        this->setLastSteeringForce( velocity() );
+		this->setLinearVelocity( this->forward() * d.length() );
     }
     if ( !m_bbox->InsideZ ( position() ) )
     {
         Vec3 d = velocity();
         regenerateOrthonormalBasis ( Vec3 ( d.x, d.y, -d.z ) );
-        this->setLastSteeringForce( velocity() );
-    }
+		this->setLinearVelocity( this->forward() * d.length() );
+   }
 //    recordTrailVertex ( currentTime, position() );
 	// return steering constrained to global XZ "ground" plane
-	return this->lastSteeringForce();
+	Vec3 kSteeringForce = velocity();
+	return kSteeringForce.setYtoZero();
 }
 //-----------------------------------------------------------------------------
 void NetSoccerBall::kick ( Vec3 dir, const float elapsedTime )

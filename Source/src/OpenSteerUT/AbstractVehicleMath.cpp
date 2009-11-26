@@ -220,6 +220,32 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
+	osVector3 AbstractVehicleMath::worldDirectionToLocal( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kWorld )
+	{
+		osVector3 kTarget;
+		btTransform kWorldTransform;
+		writeToMatrix( kLocalSpaceData, kWorldTransform );
+		btVector3 _kSource, _kLocal;
+		getVector3( kWorld, _kSource );
+		_kLocal = kWorldTransform.getBasis().inverse() * _kSource;
+		getVector3( _kLocal, kTarget );
+		return kTarget;
+	}
+
+	//-------------------------------------------------------------------------
+	osVector3 AbstractVehicleMath::localDirectionToWorld( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kLocal )
+	{
+		osVector3 kTarget;
+		btTransform kWorldTransform;
+		writeToMatrix( kLocalSpaceData, kWorldTransform );
+		btVector3 _kSource, _kWorld;
+		getVector3( kLocal, _kSource );
+		_kWorld = kWorldTransform.getBasis() * _kSource;
+		getVector3( _kWorld, kTarget );
+		return kTarget;
+	}
+
+	//-------------------------------------------------------------------------
 	btQuaternion AbstractVehicleMath::readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData )
 	{
 		btMatrix3x3 kWorldRotation;
@@ -289,6 +315,42 @@ namespace OpenSteer
 		kTarget.z = TCompressedFixpoint<float,char,8>::readInflate( kSource[2] , -1.0f, 1.0f );
 	}
 
+	//-------------------------------------------------------------------------
+	void AbstractVehicleMath::compressFixedLengthVector( const osVector3& kSource, float fMaxLength, char* psTarget )
+	{
+		osVector3 kFixedSource = kSource;
+		kFixedSource.truncateLength( fMaxLength );
+		const float fLength = kFixedSource.length();
+		if( fLength > 0 )
+		{
+			osVector3 kUnitSource = kFixedSource / fLength;
+			kUnitSource.x = etClamp( kUnitSource.x, -1.0f, 1.0f );
+			kUnitSource.y = etClamp( kUnitSource.y, -1.0f, 1.0f );
+			kUnitSource.z = etClamp( kUnitSource.z, -1.0f, 1.0f );
+			float fUnitFactor = fLength / fMaxLength;
+			fUnitFactor = etClamp( fUnitFactor, -1.0f, 1.0f );
+
+			psTarget[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.x , -1.0f, 1.0f );
+			psTarget[1] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.y , -1.0f, 1.0f );
+			psTarget[2] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.z , -1.0f, 1.0f );
+			psTarget[3] = TCompressedFixpoint<float,char,8>::writeCompress( fUnitFactor, -1.0f, 1.0f );
+		}
+		else
+		{
+			psTarget[0] = psTarget[1] = psTarget[2] = psTarget[3] = 0;
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	void AbstractVehicleMath::expandFixedLengthVector( const char* psSource, float fMaxLength, osVector3& kTarget  )
+	{
+		// expand
+		kTarget.x = TCompressedFixpoint<float,char,8>::readInflate( psSource[0] , -1.0f, 1.0f );
+		kTarget.y = TCompressedFixpoint<float,char,8>::readInflate( psSource[1] , -1.0f, 1.0f );
+		kTarget.z = TCompressedFixpoint<float,char,8>::readInflate( psSource[2] , -1.0f, 1.0f );
+		kTarget *= TCompressedFixpoint<float,char,8>::readInflate( psSource[3] , -1.0f, 1.0f );
+		kTarget *= fMaxLength;
+	}
 
 
 

@@ -31,115 +31,6 @@
 #include "OpenSteerUT/AbstractVehicleMath.h"
 
 using namespace OpenSteer;
-#if 0
-//-----------------------------------------------------------------------------
-void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
-{
-	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);
-	SimpleProxyVehicle& kProxy = pkNetworkVehicle->accessProxyVehicle();
-	if( true == kProxy.m_bHasNewData )
-	{
-		kProxy.m_kProxyMotionState.readLocalSpaceData( kProxy.getLocalSpaceData() );
-		if( ( kProxy.m_bReveivedDataConfig[ ESerializeDataType_UpdateTicks ] ) &&
-			( kProxy.getLocalSpaceData()._updateTicks > 0 ) )
-		{
-			// compute the time difference
-			// local update ticks / against server update ticks
-			// usually one would expect one of both sides being late
-			// if this it not the case the server is running in the future
-			const size_t uiClientTicks = pkNetworkVehicle->getLocalSpaceData()._updateTicks;
-			const size_t uiServerTicks = kProxy.getLocalSpaceData()._updateTicks;
-			if( uiClientTicks < uiServerTicks )
-			{
-				kProxy.m_kProxyMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				pkNetworkVehicle->accessLocalSpaceData()._updateTicks = uiServerTicks;
-				pkNetworkVehicle->updateBase( currentTime, elapsedTime );
-				/*
-				const size_t uiTickDifference = uiServerTicks - uiClientTicks;
-				float fTickDifferenceTime = pkNetworkVehicle->getUpdateTickTime() * uiTickDifference;
-				if( ( fTickDifferenceTime > 0 ) && ( fTickDifferenceTime < 5.0f ) )
-				{
-					PhysicsMotionState kExtrapolatedMotionState;
-					kProxy.m_kProxyMotionState.integrateMotionState( 
-						kExtrapolatedMotionState, pkNetworkVehicle->getUpdateTickTime(), uiTickDifference );
-					kExtrapolatedMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				}
-				else
-				{
-					kProxy.m_kProxyMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				}
-				*/
-			}
-			else if( uiClientTicks > uiServerTicks )
-			{
-				const size_t uiTickDifference = uiClientTicks - uiServerTicks;
-				float fTickDifferenceTime = pkNetworkVehicle->getUpdateTickTime() * uiTickDifference;
-				if( ( fTickDifferenceTime > 0 ) && ( fTickDifferenceTime < 5.0f ) )
-				{
-					PhysicsMotionState kExtrapolatedMotionState;
-					kProxy.m_kProxyMotionState.integrateMotionState( 
-						kExtrapolatedMotionState, pkNetworkVehicle->getUpdateTickTime(), uiTickDifference );
-					kExtrapolatedMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				}
-				else
-				{
-					kProxy.m_kProxyMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				}
-				pkNetworkVehicle->accessLocalSpaceData()._updateTicks = uiServerTicks;
-			}
-			else
-			{
-				kProxy.m_kProxyMotionState.writeLocalSpaceData( *pkNetworkVehicle );
-				pkNetworkVehicle->accessLocalSpaceData()._updateTicks = uiServerTicks;
-			}
-
-			// update the motion state manually now
-			PhysicsMotionState kNetworkVehicleMotionState = pkNetworkVehicle->accessEulerUpdate().accessMotionState();
-			kNetworkVehicleMotionState.readLocalSpaceData( pkNetworkVehicle->getLocalSpaceData() );
-			kNetworkVehicleMotionState.m_fLastUpdateTime = currentTime;
-			pkNetworkVehicle->setLastSteeringForce( kProxy.lastSteeringForce() );
-
-		}
-		else
-		{
-			// now read the proxy and apply the data to the scene vehicle
-			// position interpolation
-			float fFactor = 0.5;
-			osVector3 kNewPosition = interpolate( fFactor, pkNetworkVehicle->position(), kProxy.getLocalSpaceData()._position);
-
-			osVector3 kNewForward = interpolate( fFactor, pkNetworkVehicle->forward(), kProxy.getLocalSpaceData()._forward);
-			kNewForward.normalize();
-			kProxy.accessLocalSpaceData()._forward = kNewForward;
-			kProxy.accessLocalSpaceData()._position = kNewPosition;
-
-			pkNetworkVehicle->setLocalSpaceData( kProxy.getLocalSpaceData() );
-			pkNetworkVehicle->setSpeed( kProxy.speed() );
-
-
-			// update the motion state manually now
-			pkNetworkVehicle->accessEulerUpdate().updateMotionState( currentTime, elapsedTime );
-		}
-
-
-		if( ( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Force ] ) )
-		{
-			pkNetworkVehicle->setLastSteeringForce( kProxy.lastSteeringForce() );
-		}
-		if( ( kProxy.m_bReveivedDataConfig[ ESerializeDataType_AngularVelocity ] ) )
-		{
-			pkNetworkVehicle->setAngularVelocity( kProxy.angularVelocity() );
-		}
-		if( ( kProxy.m_bReveivedDataConfig[ ESerializeDataType_LinearVelocity ] ) )
-		{
-			pkNetworkVehicle->setLinearVelocity( kProxy.linearVelocity() );
-		}
-	}
-	else
-	{
-		pkNetworkVehicle->updateBase( currentTime, elapsedTime );
-	}
-}
-#endif
 
 //-----------------------------------------------------------------------------
 void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime )
@@ -208,7 +99,7 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 	{
 		eType = EVehicleUpdateMode_PhysicsMotion;
 	}
-	else if( bHasPositionUpdate /*&& bHasOrientationUpdate*/ && bHasForceUpdate )
+	else if( bHasPositionUpdate && bHasOrientationUpdate && bHasForceUpdate )
 	{
 		eType = EVehicleUpdateMode_Steer;
 	}
@@ -242,7 +133,7 @@ void ClientVehicleUpdate::updateBruteForce(
 		kVehicle.setAngularVelocity( Vec3::zero );
 		kVehicle.setLinearVelocity( Vec3::zero );
 	}
-	EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
@@ -265,7 +156,7 @@ void ClientVehicleUpdate::updatePhysicsMotion(
 	{
 
 	}
-	EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
@@ -290,11 +181,16 @@ void ClientVehicleUpdate::updateForwardSpeed(
 		kVehicle.setAngularVelocity( Vec3::zero );
 		kVehicle.setSpeed( kProxy.speed() );
 	}
-	EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
 }
+
+#define ET_STEERUPDATE_ACCELERATE 1
+#define ET_STEERUPDATE_NO_NEWDATA_INTEGRATE 0
+#define ET_STEERUPDATE_ADJUST_FORCE_00 0
+#define ET_STEERUPDATE_ADJUST_FORCE_01 0
 
 //-------------------------------------------------------------------------
 void ClientVehicleUpdate::updateSteer( 
@@ -308,29 +204,48 @@ void ClientVehicleUpdate::updateSteer(
 		// preserve client updateTicks ?
 		const bool bPreserveUpdateTicks = true;
 
-//		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
-		kVehicle.setPosition( kProxy.position() );
-		kVehicle.setAngularVelocity( Vec3::zero );
-		kVehicle.setLastSteeringForce( kProxy.lastSteeringForce() );
+		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+		SteeringForceVehicleUpdate& kSteeringForceUpdate = kVehicle.accessSteeringForceUpdate();
+		kSteeringForceUpdate.setForce( kProxy.getSteeringForceUpdate().getForce() );
 	}
 	else
 	{
-		kVehicle.setAngularVelocity( Vec3::zero );
-//		kVehicle.setLastSteeringForce( kProxy.lastSteeringForce() );
-		kVehicle.setLastSteeringForce( Vec3::zero );
+#if ET_STEERUPDATE_ADJUST_FORCE_00 // experimental code 1
+		kSteeringForceUpdate.setForce( kSteeringForceUpdate.getForce() * 0.75f );
+#endif
+#if ET_STEERUPDATE_ADJUST_FORCE_01 // experimental code 2
+		SteeringForceVehicleUpdate& kSteeringForceUpdate = kVehicle.accessSteeringForceUpdate();
+		// adjust the steering force each tick
+		Vec3 kCurrentForce = kSteeringForceUpdate.getForce();
+		Vec3 kAdjustedForce = kVehicle.adjustRawSteeringForce( kCurrentForce, elapsedTime );
+		kSteeringForceUpdate.setForce( kAdjustedForce );
+#endif
 	}
-	EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	SteeringForceVehicleUpdate& kSteeringForceUpdate = kVehicle.accessSteeringForceUpdate();
-	bool bSteeringForceUpdateEnabled = kSteeringForceUpdate.isEnabled();
-	if( false == kProxy.m_bHasNewData )
+	const bool bSteeringForceUpdateEnabled = kSteeringForceUpdate.isEnabled();
+	if( true == kProxy.m_bHasNewData )
 	{
-//		kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
+#if ET_STEERUPDATE_ACCELERATE
+		kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_Accelerate );
+		// new server data - apply those
+		kSteeringForceUpdate.setEnabled( false );
+#endif
 	}
-	kSteeringForceUpdate.setEnabled( false );
+	else
+	{
+#if ET_STEERUPDATE_ACCELERATE
+		kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_Accelerate );
+		// no server data - client side steering force computation
+		kSteeringForceUpdate.setEnabled( true );
+#endif
+#if ET_STEERUPDATE_NO_NEWDATA_INTEGRATE // experimental code 3
+		kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
+#endif
+	}
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
 	kSteeringForceUpdate.setEnabled( bSteeringForceUpdateEnabled );
-
 }
 
 //-------------------------------------------------------------------------

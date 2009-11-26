@@ -83,7 +83,8 @@ namespace OpenSteer {
 		
 		//---------------------------------------------------------------------------
 		// extension
-		SimpleProxyVehicle& accessProxyVehicle( void )
+
+		SimpleProxyVehicle& accessProxyVehicle( void ) const
 		{
 			return this->m_kProxyVehicle;
 		}
@@ -96,12 +97,13 @@ namespace OpenSteer {
 
 		// int to enable gui customization
 		static int ms_bReplicationDataConfig[ESerializeDataType_Count];
+		static size_t ms_uiReplicationDataBytes[ESerializeDataType_Count];
 	private:
 		// the core object responsible to create smoth moves
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
 		// in case of a client the data receiver
-		// in case of a server the extrapolator
-		SimpleProxyVehicle m_kProxyVehicle;
+		// in case of a server the extrapolation vehicle
+		mutable SimpleProxyVehicle m_kProxyVehicle;
 		TUpdatePeriod<osScalar, FloatMathLimits> m_kNetWriteUpdatePeriod;
 		mutable bool m_bWantsToSendData;
 		mutable bool m_bHasBeenSerialized;

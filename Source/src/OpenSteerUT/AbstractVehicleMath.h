@@ -100,6 +100,9 @@ namespace OpenSteer
 	class AbstractVehicleMath
 	{
 	public:
+		static osVector3 worldDirectionToLocal( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kWorld );
+		static osVector3 localDirectionToWorld( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kLocal );
+
 		static btQuaternion readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData );
 		static void writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData );
 	
@@ -108,6 +111,10 @@ namespace OpenSteer
 
 		static void compressUnitVector( const osVector3& kSource, char* kTarget );
 		static void expandUnitVector( const char* kSource, osVector3& kTarget  );
+
+		static void compressFixedLengthVector( const osVector3& kSource, float fMaxLength, char* psTarget );
+		static void expandFixedLengthVector( const char* psSource, float fMaxLength, osVector3& kTarget  );
+
 	};
 
 

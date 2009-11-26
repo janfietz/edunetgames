@@ -63,38 +63,42 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	// only in case a custom has been set ?
 	BaseClass::update( currentTime, elapsedTime );
 
-	switch( this->getUpdateMode() )
 	{
-	case( EEulerUpdateMode_Accelerate ):
+		ET_PROFILE( EulerVehicleUpdate );
+
+		switch( this->getUpdateMode() )
 		{
-			// compute acceleration and velocity
-			const Vec3 newVelocity = this->updateLinearVelocity( currentTime, elapsedTime );
-
-			// update Speed
-			this->vehicle().setSpeed( newVelocity.length() );
-
-			if( this->vehicle().speed() > 0 )
+		case( EEulerUpdateMode_Accelerate ):
 			{
-				// Euler integrate (per frame) velocity into position
-				const osVector3 kNewPosition = this->vehicle().position() + ( newVelocity * elapsedTime );
-				this->vehicle().setPosition( kNewPosition );
+				// compute acceleration and velocity
+				const Vec3 newVelocity = this->updateLinearVelocity( currentTime, elapsedTime );
 
-				// regenerate local space (by default: align vehicle's forward axis with
-				// new velocity, but this behavior may be overridden by derived classes.)
-				Vec3 newForward = newVelocity.normalized();
-				this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
+				// update Speed
+				this->vehicle().setSpeed( newVelocity.length() );
+
+				if( this->vehicle().speed() > 0 )
+				{
+					// Euler integrate (per frame) velocity into position
+					const osVector3 kNewPosition = this->vehicle().position() + ( newVelocity * elapsedTime );
+					this->vehicle().setPosition( kNewPosition );
+
+					// regenerate local space (by default: align vehicle's forward axis with
+					// new velocity, but this behavior may be overridden by derived classes.)
+					Vec3 newForward = newVelocity.normalized();
+					this->vehicle().regenerateLocalSpace( newForward, elapsedTime );
+				}
+				else
+				{
+					// maybe smth to turn at zero speed ?
+				}
 			}
-			else
+			break;
+		case( EEulerUpdateMode_IntegrateMotionState ):
 			{
-				// maybe smth to turn at zero speed ?
+				this->integrateMotionState( currentTime, elapsedTime );
 			}
+			break;
 		}
-		break;
-	case( EEulerUpdateMode_IntegrateMotionState ):
-		{
-			this->integrateMotionState( currentTime, elapsedTime );
-		}
-		break;
 	}
 }
 
@@ -155,24 +159,9 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 osScalar SteeringForceVehicleUpdate::ms_SteeringForceFPS = 30.0f;
 
 //-------------------------------------------------------------------------
-void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
+Vec3 SteeringForceVehicleUpdate::determineCombinedSteering( const osScalar elapsedTime ) const
 {
-	// only in case a custom has been set ?
-	BaseClass::update( currentTime, elapsedTime );
-	this->m_kUpdatePeriod.SetPeriodFrequency( SteeringForceVehicleUpdate::ms_SteeringForceFPS, true );
-	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
-	if( uiTicks == 0 )
-	{
-		// just do nothing
-		return;
-	}
-
-// this is not right as this is part of the physics engine
-// ...
-// 	if( this->vehicle().isRemoteObject() )
-// 	{
-// 		return;
-// 	}
+	ET_PROFILE( determineCombinedSteeringForce );
 
 	const Vec3 force = this->vehicle().determineCombinedSteering( elapsedTime );
 	Vec3 adjustedForce = this->vehicle().adjustRawSteeringForce( force, elapsedTime );
@@ -199,47 +188,58 @@ void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osSca
 			}
 		}
 	}
-	this->m_kForce = adjustedForce.truncateLength( this->vehicle().maxForce () );
+	return adjustedForce.truncateLength( this->vehicle().maxForce () );
+}
 
-	const Vec3 c1 = this->vehicle().position();
-	const Vec3 c2 = this->vehicle().position() + this->m_kForce;
-	const Color color = gBlue;
-	this->annotationLine (c1, c2, color);
-
-	float fForce = this->m_kForce.length();
-	if( fForce > 0 )
+//-------------------------------------------------------------------------
+void SteeringForceVehicleUpdate::setForce( const Vec3& kForce, bool bCompress )
+{ 
+	if( true == bCompress )
 	{
-		// compression prototype code
-		osVector3 kUnitForce = this->m_kForce / fForce;
-		kUnitForce.x = etClamp( kUnitForce.x, -1.0f, 1.0f );
-		kUnitForce.y = etClamp( kUnitForce.y, -1.0f, 1.0f );
-		kUnitForce.z = etClamp( kUnitForce.z, -1.0f, 1.0f );
-		float fForceFactor = fForce / this->vehicle().maxForce ();
-		fForceFactor = etClamp( fForceFactor, -1.0f, 1.0f );
+		AbstractVehicleMath::compressFixedLengthVector( 
+			kForce, this->vehicle().maxForce (), this->m_cForce );
 
-		this->m_cForce[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.x , -1.0f, 1.0f );
-		this->m_cForce[1] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.y , -1.0f, 1.0f );
-		this->m_cForce[2] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitForce.z , -1.0f, 1.0f );
-		this->m_cForce[3] = TCompressedFixpoint<float,char,8>::writeCompress( fForceFactor, -1.0f, 1.0f );
-
-		// inflate and apply to avoid inconsistencies
-		osVector3 kInflatedForce;
-		kInflatedForce.x = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[0] , -1.0f, 1.0f );
-		kInflatedForce.y = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[1] , -1.0f, 1.0f );
-		kInflatedForce.z = TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[2] , -1.0f, 1.0f );
-		kInflatedForce *= TCompressedFixpoint<float,char,8>::readInflate( this->m_cForce[3] , -1.0f, 1.0f );
-		kInflatedForce *= this->vehicle().maxForce();
-
-		osVector3 kCompressionError = kInflatedForce - this->m_kForce;
-		float fCompressionError = kCompressionError.length();
-		const size_t uiVe3Size = sizeof(osVector3);
-		const size_t uiCompressedSize = sizeof(this->m_cForce);
-
-		this->m_kForce = kInflatedForce;
+		// expand again to avoid inconsistencies
+		AbstractVehicleMath::expandFixedLengthVector( 
+			this->m_cForce, this->vehicle().maxForce (), this->m_kForce );
 	}
 	else
 	{
-		this->m_cForce[0] = this->m_cForce[1] = this->m_cForce[2] = this->m_cForce[3];
+		this->m_kForce = kForce; 
+	}
+}
+
+//-------------------------------------------------------------------------
+void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
+{
+	// only in case a custom has been set ?
+	BaseClass::update( currentTime, elapsedTime );
+	this->m_kUpdatePeriod.SetPeriodFrequency( SteeringForceVehicleUpdate::ms_SteeringForceFPS, true );
+	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
+	if( uiTicks == 0 )
+	{
+		// just do nothing
+		// meaning keeping the computed steering force for the next tick
+		return;
+	}
+
+	{
+		ET_PROFILE( SteeringForceVehicleUpdate );
+
+		// this is not right as this is part of the physics engine
+		// ...
+		// 	if( this->vehicle().isRemoteObject() )
+		// 	{
+		// 		return;
+		// 	}
+
+		// in case this update is enabled
+		if( this->isEnabled() )
+		{
+			const Vec3 force = this->determineCombinedSteering( elapsedTime );
+			const bool bCompress = ( false == this->vehicle().isRemoteObject() );
+			this->setForce( force, bCompress );
+		}
 	}
 }
 

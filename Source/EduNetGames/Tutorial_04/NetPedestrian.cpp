@@ -268,10 +268,8 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 			steeringForce += pathFollow * 0.5;
 		}
 	}
-	this->setLastSteeringForce( steeringForce.setYtoZero () );
-
 	// return steering constrained to global XZ "ground" plane
-	return this->lastSteeringForce();
+	return steeringForce.setYtoZero();
 }
 
 //-----------------------------------------------------------------------------
