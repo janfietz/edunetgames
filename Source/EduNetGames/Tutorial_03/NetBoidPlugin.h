@@ -57,9 +57,6 @@ public:
 	virtual void CreateContent( void );
 	virtual void DeleteContent( void );
 	
-	virtual void onChangedReplicationParams(
-		const ReplicationParams& kParams );
-
 private:
 	
 	class NetBoidReplicaFactory* m_pkBoidFactory;

@@ -185,15 +185,15 @@ public:
 
 
 	void setReplicationInterval( RakNetTime additionalTime );
-	ReplicationParams& getReplicationParams( void )
+	
+	ReplicationParams& accessReplicationParams( void )
 	{
 		return this->m_kReplicationParams;
 	}
-	virtual void onChangedReplicationParams(
-		const ReplicationParams& kParams ){};
+
+	virtual void onChangedReplicationParams( const ReplicationParams& kParams );
 
 	void getNetworkStatistics(RakNetStatistics& kStats);
-
 
 	void updateMotionStateProfile( const float currentTime, const float elapsedTime );
 	static void recordNetUpdate( 
@@ -204,10 +204,10 @@ protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
 
-	void setLocalReplicaParamsFromManager( 
+	void retrieveLocalReplicaManagerSendParams( 
 		class RakNet::ReplicaManager3* pkReplicaManager );
 
-	void addReplicaGuiWithManager( void* pkUserdata );
+	void addReplicaManagerGui( void* pkUserdata );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
@@ -216,6 +216,7 @@ protected:
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager* m_pkNetworkIdManager;
+	RakNet::ReplicaManager3* m_pkGamePluginReplicaManager;
 
 	unsigned int m_uiStartPort;
 	unsigned int m_uiPortPongCount;
@@ -253,7 +254,7 @@ private:
 	void drawNetworkPlot(const float currentTime,
 		const float elapsedTime);
 
-	void AddNetworkSimulator( void* pkUserdata );
+	void addNetworkSimulatorGui( void* pkUserdata );
 
 	NetworkAddress* m_pkAddress;
 	NetworkSimulatorData m_kSimulatorData;
