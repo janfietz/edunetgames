@@ -57,10 +57,10 @@ public:
 	SoccerPeerPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{	
-
+		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
-		this->setLocalReplicaParamsFromManager( &this->m_kReplicaManager);
+		this->retrieveLocalReplicaManagerSendParams( &this->m_kReplicaManager);
 
 		// remap the entity factory
 		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
@@ -98,10 +98,6 @@ public:
 	virtual void initGui( void* pkUserdata ) 
 	{
 		BaseClass::initGui( pkUserdata );
-		GLUI* glui = ::getRootGLUI();
-		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-		this->addReplicaGuiWithManager( pkUserdata );
 	};
 
 	//-------------------------------------------------------------------------
@@ -109,17 +105,6 @@ public:
 	{	
 		BaseClass::DeleteContent();
 	}
-
-	virtual void onChangedReplicationParams(
-		const ReplicationParams& kParams )
-	{
-		this->m_kReplicaManager.SetAutoSerializeInterval(
-			kParams.interval);
-		this->m_kReplicaManager.SetDefaultPacketReliability(
-			kParams.sendParameter.reliability);
-		this->m_kReplicaManager.SetDefaultPacketPriority(
-			kParams.sendParameter.priority);
-	};
 
 private:
 
@@ -161,6 +146,7 @@ public:
 	SoccerClientPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
+		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}

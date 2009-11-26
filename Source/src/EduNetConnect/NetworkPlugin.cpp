@@ -19,12 +19,13 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry ),
 		m_pNetInterface( NULL ),
 		m_pkNetworkIdManager( NULL ),
+		m_pkGamePluginReplicaManager( NULL ),
 		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1),
 		m_bDrawNetworkPlot(0)
 {
-
+	this->m_kReplicationParams.sendParameter.reliability = UNRELIABLE;
 }
 
 //-----------------------------------------------------------------------------
@@ -130,8 +131,9 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		pkControl->set_ptr_val( this );
 	}
 
-	this->AddNetworkSimulator( pluginPanel );
+	this->addNetworkSimulatorGui( pluginPanel );
 
+	this->addReplicaManagerGui( pluginPanel );
 }
 
 //-----------------------------------------------------------------------------
@@ -170,7 +172,7 @@ void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::AddNetworkSimulator( void* pkUserdata )
+void NetworkPlugin::addNetworkSimulatorGui( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
@@ -220,7 +222,7 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::setReplicationInterval( RakNetTime additionalTime )
 {
-	ReplicationParams& kReplicationParams = this->getReplicationParams();	
+	ReplicationParams& kReplicationParams = this->accessReplicationParams();	
 	kReplicationParams.interval += additionalTime;
 	//clamp interval
 	if( 5 > kReplicationParams.interval )
@@ -233,11 +235,16 @@ void NetworkPlugin::setReplicationInterval( RakNetTime additionalTime )
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::setLocalReplicaParamsFromManager( 
+void NetworkPlugin::retrieveLocalReplicaManagerSendParams( 
 	RakNet::ReplicaManager3* pkReplicaManager )
 {
 	this->m_kReplicationParams.sendParameter = 
 		pkReplicaManager->GetDefaultSendParameters();
+
+	// and change to UNRELIABLE
+	this->m_kReplicationParams.sendParameter.reliability = UNRELIABLE;
+	this->onChangedReplicationParams( this->m_kReplicationParams );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -248,7 +255,7 @@ void changeReplicationDelay(GLUI_Control* pkControl )
 	{
 		return;
 	}
-	ReplicationParams& kReplicationParams = pkPlugin->getReplicationParams();	
+	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();	
 	kReplicationParams.interval = pkControl->get_int_val();
 	pkPlugin->onChangedReplicationParams(kReplicationParams);
 }
@@ -261,7 +268,7 @@ void changeReplicationSendParams(GLUI_Control* pkControl )
 	{
 		return;
 	}
-	ReplicationParams& kReplicationParams = pkPlugin->getReplicationParams();	
+	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();	
 	GLUI_Listbox* pkList = pkControl->dynamicCastGLUI_Listbox();
 	if (NULL == pkList)
 	{
@@ -284,9 +291,9 @@ void changeReplicationSendParams(GLUI_Control* pkControl )
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::addReplicaGuiWithManager( void* pkUserdata  )
+void NetworkPlugin::addReplicaManagerGui( void* pkUserdata  )
 {
-	BaseClass::initGui( pkUserdata );
+//	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 	GLUI_Panel* replicaPanel = glui->add_rollout_to_panel( pluginPanel,
@@ -308,8 +315,9 @@ void NetworkPlugin::addReplicaGuiWithManager( void* pkUserdata  )
 	pluginList->add_item( RELIABLE, "Reliable" );
 	pluginList->add_item( RELIABLE_ORDERED, "Reliable Ordered" );
 	pluginList->add_item( RELIABLE_SEQUENCED, "Reliable Sequenced" );
-	pluginList->do_selection( this->m_kReplicationParams.sendParameter.reliability );
 	pluginList->set_ptr_val( this );
+//	pluginList->do_selection( this->m_kReplicationParams.sendParameter.reliability );
+	pluginList->do_selection( UNRELIABLE );
 
 	pluginList = 
 		glui->add_listbox_to_panel( replicaPanel,"Default Priority", NULL, 2, changeReplicationSendParams );
@@ -318,6 +326,8 @@ void NetworkPlugin::addReplicaGuiWithManager( void* pkUserdata  )
 	pluginList->add_item( LOW_PRIORITY, "Low" );
 	pluginList->do_selection( this->m_kReplicationParams.sendParameter.priority );
 	pluginList->set_ptr_val( this );
+
+
 }
 //-----------------------------------------------------------------------------
 void NetworkPlugin::open( void )
@@ -839,5 +849,22 @@ void NetworkPlugin::drawNetworkPlot(const float currentTime,
 					 const float elapsedTime)
 {
 	this->m_kNetworkPlot.draw();
+}
+
+//-----------------------------------------------------------------------------
+void NetworkPlugin::onChangedReplicationParams( 
+	const ReplicationParams& kParams )
+{
+	if( NULL == this->m_pkGamePluginReplicaManager )
+	{
+		return;
+	}
+	RakNet::ReplicaManager3& kReplicaManager = *this->m_pkGamePluginReplicaManager;
+	kReplicaManager.SetAutoSerializeInterval(
+		kParams.interval);
+	kReplicaManager.SetDefaultPacketReliability(
+		kParams.sendParameter.reliability);
+	kReplicaManager.SetDefaultPacketPriority(
+		kParams.sendParameter.priority);
 }
 

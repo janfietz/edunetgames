@@ -53,9 +53,10 @@ public:
 	PedestrianPeerPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
+		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
-		this->setLocalReplicaParamsFromManager(&this->m_kReplicaManager);
+		this->retrieveLocalReplicaManagerSendParams(&this->m_kReplicaManager);
 
 		// attach vehicle factory
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
@@ -93,10 +94,6 @@ public:
 	virtual void initGui( void* pkUserdata ) 
 	{
 		BaseClass::initGui( pkUserdata );
-		GLUI* glui = ::getRootGLUI();
-		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-		this->addReplicaGuiWithManager( pkUserdata );
 	};
 
 	//-------------------------------------------------------------------------
@@ -105,16 +102,6 @@ public:
 		BaseClass::DeleteContent();
 	}
 
-	virtual void onChangedReplicationParams(
-		const ReplicationParams& kParams )
-	{
-		this->m_kReplicaManager.SetAutoSerializeInterval(
-			kParams.interval);
-		this->m_kReplicaManager.SetDefaultPacketReliability(
-			kParams.sendParameter.reliability);
-		this->m_kReplicaManager.SetDefaultPacketPriority(
-			kParams.sendParameter.priority);
-	};
 
 private:
 	struct ReplicationParams
@@ -137,6 +124,7 @@ public:
 	PedestrianClientPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
+		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}

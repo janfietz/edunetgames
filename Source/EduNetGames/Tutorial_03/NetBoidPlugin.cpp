@@ -12,8 +12,9 @@
 NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry )
 {
+	this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-	this->setLocalReplicaParamsFromManager(&this->m_kReplicaManager);
+	this->retrieveLocalReplicaManagerSendParams(&this->m_kReplicaManager);
 
 	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);
 	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
@@ -51,25 +52,9 @@ void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
 }
 
 //-----------------------------------------------------------------------------
-void NetPeerBoidPlugin::onChangedReplicationParams( 
-	const ReplicationParams& kParams )
-{
-	this->m_kReplicaManager.SetAutoSerializeInterval(
-		kParams.interval);
-	this->m_kReplicaManager.SetDefaultPacketReliability(
-		kParams.sendParameter.reliability);
-	this->m_kReplicaManager.SetDefaultPacketPriority(
-		kParams.sendParameter.priority);
-}
-
-//-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::initGui( void* pkUserdata ) 
 {
 	BaseClass::initGui( pkUserdata );
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-	this->addReplicaGuiWithManager(pkUserdata);
 };
 
 
@@ -86,6 +71,7 @@ void NetPeerBoidPlugin::DeleteContent( void )
 NetClientBoidPlugin::NetClientBoidPlugin(bool bAddToRegistry):
 	BaseClass(bAddToRegistry)
 {
+	this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
 	this->m_kGamePlugin.setEntityFactory( NULL  );
 }
