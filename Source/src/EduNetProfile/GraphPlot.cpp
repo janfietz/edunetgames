@@ -283,7 +283,7 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height ) const
+void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle ) const
 {
 	const float sw( OpenSteer::drawGetWindowWidth() ), 
 		sh( OpenSteer::drawGetWindowHeight() );
@@ -294,28 +294,42 @@ void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height ) 
 	kGraphLocation.width = width;
 	kGraphLocation.height = height;
 	kGraphLocation.kMin.y = 0;
-	this->drawGraphFrame( kGraphLocation );
+	this->drawGraphFrame( kGraphLocation, bRectangle );
 	OpenSteer::end2dDrawing (originalMatrixMode);
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation ) const
+void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation, bool bRectangle ) const
 {
 	const GraphValue& kMin = kGraphLocation.kMin;
 	const GraphValue& kScale = kGraphLocation.kScale;
 
 	// graph border
-	glColor3ub(0, 0, 0);
-	GraphPlot::drawRectangle( 
-		kGraphLocation.sx, 
-		kGraphLocation.sy, 
-		kGraphLocation.sx + kGraphLocation.width, 
-		kGraphLocation.sy + kGraphLocation.height );
+	if( true == bRectangle )
+	{
+		glColor3ub(0, 0, 0);
+		GraphPlot::drawRectangle( 
+			kGraphLocation.sx, 
+			kGraphLocation.sy, 
+			kGraphLocation.sx + kGraphLocation.width, 
+			kGraphLocation.sy + kGraphLocation.height );
+	}
+	else
+	{
+		OpenSteer::Color kColor( 0.0f, 0.0f, 0.0f, 0.75f );
+		glColor4f( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
+		GraphPlot::drawQuad( 
+			kGraphLocation.sx, 
+			kGraphLocation.sy, 
+			kGraphLocation.sx + kGraphLocation.width, 
+			kGraphLocation.sy + kGraphLocation.height );
+	}
 
 	if( kMin.y < 0 )
 	{
 		// baseline
 		GraphValue kRenderValue( kGraphLocation.sx, kGraphLocation.sy - ( kMin.y * kScale.y ), 0 );
+		glColor3ub(0, 0, 0);
 		glBegin(GL_LINE_STRIP);
 		glVertex2f(kRenderValue.x,kRenderValue.y);
 		kRenderValue.x += kGraphLocation.width;

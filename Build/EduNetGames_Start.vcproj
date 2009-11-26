@@ -191,10 +191,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Source\EduNetGames\Start\MapDrive.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\Source\EduNetGames\Start\MultiplePursuit.cpp"
 				>
 			</File>

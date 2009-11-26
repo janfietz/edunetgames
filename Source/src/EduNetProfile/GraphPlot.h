@@ -283,7 +283,7 @@ namespace Profile
 			float sx, float sy, float width, float height ) const;
 		void draw( const GraphValues& kValues, 
 			float sx, float sy, float width, float height ) const;
-		void drawGraphFrame( float sx, float sy, float width, float height ) const;
+		void drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle = true ) const;
 	private:
 		typedef struct TGraphLocation
 		{
@@ -306,7 +306,7 @@ namespace Profile
 		void draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
 			float sx, float sy, float width, float height ) const;
 		void drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
-		void drawGraphFrame( const GraphLocation& kGraphLocation ) const;
+		void drawGraphFrame( const GraphLocation& kGraphLocation, bool bRectangle = true ) const;
 
 		static void drawRectangle( float x0, float y0, float x1, float y1);
 		static void drawQuad( float x0, float y0, float x1, float y1);

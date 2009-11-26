@@ -316,40 +316,50 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void AbstractVehicleMath::compressFixedLengthVector( const osVector3& kSource, float fMaxLength, char* psTarget )
+	void AbstractVehicleMath::compressFixedLengthVector( const osVector3& kSource, float fMaxLength, CompressedVector& kTarget )
 	{
 		osVector3 kFixedSource = kSource;
 		kFixedSource.truncateLength( fMaxLength );
 		const float fLength = kFixedSource.length();
+		osVector3 kUnitSource = kFixedSource;
+		float fUnitFactor;
 		if( fLength > 0 )
 		{
-			osVector3 kUnitSource = kFixedSource / fLength;
+			kUnitSource /= fLength;
 			kUnitSource.x = etClamp( kUnitSource.x, -1.0f, 1.0f );
 			kUnitSource.y = etClamp( kUnitSource.y, -1.0f, 1.0f );
 			kUnitSource.z = etClamp( kUnitSource.z, -1.0f, 1.0f );
-			float fUnitFactor = fLength / fMaxLength;
-			fUnitFactor = etClamp( fUnitFactor, -1.0f, 1.0f );
-
-			psTarget[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.x , -1.0f, 1.0f );
-			psTarget[1] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.y , -1.0f, 1.0f );
-			psTarget[2] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.z , -1.0f, 1.0f );
-			psTarget[3] = TCompressedFixpoint<float,char,8>::writeCompress( fUnitFactor, -1.0f, 1.0f );
+			fUnitFactor = fLength / fMaxLength;
+			fUnitFactor = etClamp( fUnitFactor, 0.0f, 1.0f );
 		}
 		else
 		{
-			psTarget[0] = psTarget[1] = psTarget[2] = psTarget[3] = 0;
+			fUnitFactor = 
+			kUnitSource.x = 
+			kUnitSource.y = 
+			kUnitSource.z = 0;
 		}
+		kTarget.m_cValues[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.x , -1.0f, 1.0f );
+		kTarget.m_cValues[1] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.y , -1.0f, 1.0f );
+		kTarget.m_cValues[2] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.z , -1.0f, 1.0f );
+		kTarget.m_cUnitFactor = TCompressedFixpoint<float,short,16>::writeCompress( fUnitFactor, 0.0f, 1.0f );
 	}
 
 	//-------------------------------------------------------------------------
-	void AbstractVehicleMath::expandFixedLengthVector( const char* psSource, float fMaxLength, osVector3& kTarget  )
+	void AbstractVehicleMath::expandFixedLengthVector( const CompressedVector& kSource, float fMaxLength, osVector3& kTarget  )
 	{
 		// expand
-		kTarget.x = TCompressedFixpoint<float,char,8>::readInflate( psSource[0] , -1.0f, 1.0f );
-		kTarget.y = TCompressedFixpoint<float,char,8>::readInflate( psSource[1] , -1.0f, 1.0f );
-		kTarget.z = TCompressedFixpoint<float,char,8>::readInflate( psSource[2] , -1.0f, 1.0f );
-		kTarget *= TCompressedFixpoint<float,char,8>::readInflate( psSource[3] , -1.0f, 1.0f );
-		kTarget *= fMaxLength;
+		kTarget.x = TCompressedFixpoint<float,char,8>::readInflate( kSource.m_cValues[0] , -1.0f, 1.0f );
+		kTarget.y = TCompressedFixpoint<float,char,8>::readInflate( kSource.m_cValues[1] , -1.0f, 1.0f );
+		kTarget.z = TCompressedFixpoint<float,char,8>::readInflate( kSource.m_cValues[2] , -1.0f, 1.0f );
+		const float fLength = kTarget.length();
+		if( fLength > 0 )
+		{
+			kTarget /= fLength;
+			const float fUnitFactor = TCompressedFixpoint<float,short,16>::readInflate( kSource.m_cUnitFactor, 0.0f, 1.0f );
+			kTarget *= fUnitFactor;
+			kTarget *= fMaxLength;
+		}
 	}
 
 

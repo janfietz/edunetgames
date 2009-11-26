@@ -36,7 +36,7 @@ size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count]
 	sizeof(btQuaternion) + 1, //   ESerializeDataType_Orientation
 	sizeof(OpenSteer::Vec3) + 2, // 	ESerializeDataType_CompressedOrientation1,
 	sizeof(char) * 3 + 2, // 	ESerializeDataType_CompressedOrientation2,
-	sizeof(char) * 4 + 1, // 	ESerializeDataType_CompressedForce,
+	sizeof(CompressedVector) + 1, // 	ESerializeDataType_CompressedForce,
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_AngularVelocity,
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_LinearVelocity,
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_UpdateTicks,
@@ -266,9 +266,9 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_CompressedForce;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
-		const char* pcForce = kSteeringForceUpdate.getCompressedForce();
-		char cForce[4] = { pcForce[0], pcForce[1], pcForce[2], pcForce[3] };
-		kStream.WriteAlignedBytes((const unsigned char*)&cForce,sizeof(cForce));
+// 		const char* pcForce = kSteeringForceUpdate.getCompressedForce();
+// 		char cForce[4] = { pcForce[0], pcForce[1], pcForce[2], pcForce[3] };
+		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getCompressedForce(),sizeof(CompressedVector));
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
 	{
@@ -323,6 +323,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	char cVector[3];
 	char cFixedSizeVector[4];
 	size_t uiValue;
+	CompressedVector kCompressedVector;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
 	{
@@ -345,10 +346,10 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 			break;
 		case(ESerializeDataType_CompressedForce):
 			{
-				kStream.ReadAlignedBytes((unsigned char*)&cFixedSizeVector,sizeof(cFixedSizeVector));
+				kStream.ReadAlignedBytes((unsigned char*)&kCompressedVector,sizeof(kCompressedVector));
 				// expand
 				AbstractVehicleMath::expandFixedLengthVector( 
-					cFixedSizeVector, this->maxForce(), kVec );
+					kCompressedVector, this->maxForce(), kVec );
 			}
 			break;
 		case(ESerializeDataType_CompressedOrientation1):

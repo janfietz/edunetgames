@@ -102,7 +102,7 @@ void EulerVehicleUpdate::update( const osScalar currentTime, const osScalar elap
 	}
 }
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 Vec3 EulerVehicleUpdate::updateLinearVelocity( const osScalar currentTime, const osScalar elapsedTime )
 {
 	Vec3 newVelocity = this->vehicle().velocity();
@@ -129,7 +129,7 @@ Vec3 EulerVehicleUpdate::updateLinearVelocity( const osScalar currentTime, const
 	return newVelocity;
 }
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void EulerVehicleUpdate::updateMotionState( const osScalar currentTime, 
 					   const osScalar elapsedTime
 					   )
@@ -152,13 +152,22 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 	}
 }
 
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 osScalar SteeringForceVehicleUpdate::ms_SteeringForceFPS = 30.0f;
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+SteeringForceVehicleUpdate::SteeringForceVehicleUpdate( AbstractVehicle* pkVehicle ):
+BaseClass( pkVehicle ),
+m_kForce(Vec3::zero)
+{
+	AbstractVehicleMath::compressFixedLengthVector( 
+		m_kForce, this->vehicle().maxForce (), this->m_cForce );
+}
+
+//-----------------------------------------------------------------------------
 Vec3 SteeringForceVehicleUpdate::determineCombinedSteering( const osScalar elapsedTime ) const
 {
 	ET_PROFILE( determineCombinedSteeringForce );
@@ -191,7 +200,7 @@ Vec3 SteeringForceVehicleUpdate::determineCombinedSteering( const osScalar elaps
 	return adjustedForce.truncateLength( this->vehicle().maxForce () );
 }
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void SteeringForceVehicleUpdate::setForce( const Vec3& kForce, bool bCompress )
 { 
 	if( true == bCompress )
@@ -202,6 +211,16 @@ void SteeringForceVehicleUpdate::setForce( const Vec3& kForce, bool bCompress )
 		// expand again to avoid inconsistencies
 		AbstractVehicleMath::expandFixedLengthVector( 
 			this->m_cForce, this->vehicle().maxForce (), this->m_kForce );
+		if( kForce.length() > 0.0f )
+		{
+			float fCompressionError = kForce.length() - this->m_kForce.length();
+			if( fCompressionError > 1.0f )
+			{
+				bool bTest = true;
+				bTest = false;
+			}
+			this->m_kForce = kForce;
+		}
 	}
 	else
 	{
@@ -209,7 +228,7 @@ void SteeringForceVehicleUpdate::setForce( const Vec3& kForce, bool bCompress )
 	}
 }
 
-//-------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osScalar elapsedTime )
 {
 	// only in case a custom has been set ?

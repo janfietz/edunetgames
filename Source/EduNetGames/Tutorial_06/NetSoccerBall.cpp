@@ -46,7 +46,7 @@ NetSoccerBall::~NetSoccerBall()
 // reset state
 void NetSoccerBall::reset ( void )
 {
-    SimpleVehicle::reset (); // reset the vehicle
+    BaseClass::reset (); // reset the vehicle
     setSpeed ( 0.0f );       // speed along Forward direction.
     setMaxForce ( 9.0f );    // steering force is clipped to this magnitude
     setMaxSpeed ( 9.0f );       // velocity is clipped to this magnitude
@@ -88,6 +88,7 @@ void NetSoccerBall::kick ( Vec3 dir, const float elapsedTime )
 void NetSoccerBall::draw ( const float currentTime,
                            const float elapsedTime )
 {
+	BaseClass::draw( currentTime, elapsedTime );
     drawBasic2dCircularVehicle ( *this, Color ( 0.0f,1.0f,0.0f ) );
     drawTrail ();
 }
