@@ -102,7 +102,7 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 		Camera::camera.fixedPosition.set(80, 60, 0);
 	}
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle );
+	kVG.addVehicle( pkVehicle, this->accessProximityDataBase() );
 }
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)

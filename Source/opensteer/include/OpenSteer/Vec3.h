@@ -70,6 +70,7 @@ namespace OpenSteer {
 
         //! constructors
         Vec3 (void): x( 0.0f ), y( 0.0f ), z( 0.0f ) {}
+		Vec3 ( const Vec3& kOther ) : x( kOther.x ), y( kOther.y ), z( kOther.z ) {}
         Vec3 (float X, float Y, float Z) : x( X ), y( Y ), z( Z ) {}
 
         //! vector addition

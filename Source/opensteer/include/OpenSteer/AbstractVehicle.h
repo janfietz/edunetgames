@@ -70,7 +70,8 @@ namespace OpenSteer {
         virtual float setRadius (float) OS_ABSTRACT;
 
         //! velocity of vehicle
-        virtual const Vec3& velocity (void) const OS_ABSTRACT;
+//        virtual const Vec3& velocity (void) const OS_ABSTRACT;
+		virtual Vec3 velocity (void) const OS_ABSTRACT;
 
         //! speed of vehicle  (may be faster than taking magnitude of velocity)
         virtual float speed (void) const OS_ABSTRACT;
