@@ -313,7 +313,7 @@ void NetSoccerPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	}
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle );
+	kVG.addVehicle( pkVehicle, this->accessProximityDataBase() );
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)

@@ -239,6 +239,7 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 {
 
     const Vec3 adjustedForce = adjustRawSteeringForce (force, elapsedTime);
+//	const Vec3 adjustedForce = force;//adjustRawSteeringForce (force, elapsedTime);
 
     // enforce limit on magnitude of steering force
     const Vec3 clippedForce = adjustedForce.truncateLength (maxForce ());
@@ -265,6 +266,7 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 
     // update Speed
     setSpeed (newVelocity.length());
+	setLinearVelocity( newVelocity );
 
     // Euler integrate (per frame) velocity into position
     setPosition (position() + (newVelocity * elapsedTime));

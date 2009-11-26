@@ -54,7 +54,7 @@ RakNet::Replica3* NetBoidReplicaConnection::AllocReplica(
 	if (typeName==kReplica.GetName()){
 		NetBoidReplica* pkNewReplica = ET_NEW NetBoidReplica( this->m_pBoidPlugin, true  );
 		OpenSteer::AbstractVehicleGroup kVG( this->m_pBoidPlugin->allVehicles() );
-		kVG.addVehicle( pkNewReplica->accessEntity() );
+		kVG.addVehicle( pkNewReplica->accessEntity(), this->m_pBoidPlugin->accessProximityDataBase() );
 		return pkNewReplica; 
 	}
 	if (typeName==kReplicaCondition.GetName()){

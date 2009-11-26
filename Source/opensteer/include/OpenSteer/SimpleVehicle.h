@@ -139,29 +139,35 @@ namespace OpenSteer {
         virtual float setMass (float m) {return _mass = m;}
 
         //! get velocity of vehicle
-        virtual const Vec3& velocity (void) const { return this->linearVelocity();/*forward() * _speed;*/ }
+//		virtual const Vec3& velocity (void) const 
+        virtual Vec3 velocity (void) const 
+		{
+			return forward() * _speed;
+//			return this->linearVelocity();
+			/*forward() * _speed;*/ 
+		}
 
         //! get/set speed of vehicle  (may be faster than taking mag of velocity)
         virtual float speed (void) const {return _speed;}
         virtual float setSpeed (float s) 
 		{
-			if( s == 0 )
-			{
-				this->setLinearVelocity( Vec3::zero );
-			}
-			else
-			{
-				// get current velocity
-				if( this->_linearVelocity.length() == 0 )
-				{
-					this->_linearVelocity = this->_forward;
-				}
-				else
-				{
-					this->_linearVelocity.normalize();
-				}
-				this->_linearVelocity *= s;
-			}
+// 			if( s == 0 )
+// 			{
+// 				this->setLinearVelocity( Vec3::zero );
+// 			}
+// 			else
+// 			{
+// 				// get current velocity
+// 				if( this->_linearVelocity.length() == 0 )
+// 				{
+// 					this->_linearVelocity = this->_forward;
+// 				}
+// 				else
+// 				{
+// 					this->_linearVelocity.normalize();
+// 				}
+// 				this->_linearVelocity *= s;
+// 			}
 			return _speed = s;
 		}
 
