@@ -105,14 +105,14 @@ namespace Profile
 				}
 			}
 			GraphValue v( x, y, 0 );
-			GraphValue& kMin = this->m_kMin;
-			GraphValue& kMax = this->m_kMax;
-			kMin.x = ::etMin( kMin.x, v.x );
-			kMin.y = ::etMin( kMin.y, v.y );
-			kMin.z = ::etMin( kMin.z, v.z );
-			kMax.x = ::etMax( kMax.x, v.x );
-			kMax.y = ::etMax( kMax.y, v.y );
-			kMax.z = ::etMax( kMax.z, v.z );
+// 			GraphValue& kMin = this->m_kMin;
+// 			GraphValue& kMax = this->m_kMax;
+// 			kMin.x = ::etMin( kMin.x, v.x );
+// 			kMin.y = ::etMin( kMin.y, v.y );
+// 			kMin.z = ::etMin( kMin.z, v.z );
+// 			kMax.x = ::etMax( kMax.x, v.x );
+// 			kMax.y = ::etMax( kMax.y, v.y );
+// 			kMax.z = ::etMax( kMax.z, v.z );
 
 
 			this->push_back( v );
@@ -206,8 +206,8 @@ namespace Profile
 			this->m_kMax = GraphValue::ms_Min;
 		}
 
-		GraphValue m_kMin;
-		GraphValue m_kMax;
+		mutable GraphValue m_kMin;
+		mutable GraphValue m_kMax;
 		mutable GraphValue m_kScale;
 
 	private:

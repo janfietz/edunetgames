@@ -62,6 +62,7 @@
 
 #include "OpenSteer/SimpleVehicle.h"
 #include <algorithm>
+#include <iomanip>
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
 #include "OpenSteer/Draw.h"
 #endif //! NOT_OPENSTEERDEMO
@@ -71,6 +72,7 @@
 // for which additional information may be displayed.  Clicking the mouse
 // near a vehicle causes it to become the Selected Vehicle.
 OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
+OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
 
 //-----------------------------------------------------------------------------
 // constructor
@@ -102,6 +104,11 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 	{
 		SimpleVehicle::selectedVehicle = NULL;
 	}
+	if( this == SimpleVehicle::nearestMouseVehicle )
+	{
+		SimpleVehicle::nearestMouseVehicle = NULL;
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -112,15 +119,47 @@ void OpenSteer::SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStr
 		<< "-"
 		<< this->getEntityId()
 		<< std::endl;
+	const char* spacer = "      ";
+	kStream << spacer << "speed: " << (this->speed() * 3.6f) << "km/h" << std::endl;
+//	annote << spacer << "2: cam dist: " << camDistance << std::endl;
+
 }
 
 //-----------------------------------------------------------------------------
 void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime*/ ) 
 {
-//	if( OpenSteer::SimpleVehicle::selectedVehicle == this )
+//	if (&selected && &nearMouse && OpenSteer::annotationIsOn())
+//	if( SimpleVehicle::selectedVehicle == this )
+	bool bAnnotate = ( ( SimpleVehicle::nearestMouseVehicle == this ) && this->isAnnotated() );
+	if( false == bAnnotate )
+	{
+		// maybe this vehicle is close to the nearest mouse vehicle
+		AbstractVehicle* vehicle = this;
+		const float nearDistance = 6;
+		const Vec3& vp = vehicle->position();
+		if( NULL != SimpleVehicle::nearestMouseVehicle )
+		{
+			const Vec3& np = SimpleVehicle::nearestMouseVehicle->position();
+			if( (Vec3::distance (vp, np) < nearDistance) )
+			{
+				bAnnotate = true;
+			}
+		}
+		if( false == bAnnotate )
+		{
+			const Vec3& np = SimpleVehicle::selectedVehicle->position();
+			if( (Vec3::distance (vp, np) < nearDistance) )
+			{
+				bAnnotate = true;
+			}
+		}
+	}
+	if( true == bAnnotate )
 	{
 		std::ostringstream kStream;
+		kStream << std::setprecision(2) << std::setiosflags(std::ios::fixed);
 		this->collect3DTextAnnotation( kStream );
+		kStream	<< std::ends;
 
 		Color textColor (0.8f, 1, 0.8f);
 		Vec3 textOffset (0, 0.25f, 0);

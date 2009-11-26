@@ -504,9 +504,9 @@ void Application::drawProfile (const float currentTime,
 	if( ( 0 != this->m_bShowCPUProfileGraph ) )
 	{
 		Profile::GraphPlot kPlot;
-		const float fYSpacing = 2.0f;
-		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
+		const float fYSpacing = 4.0f;
 		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, fYSpacing, tw, th );
+		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
 	}
 #endif
 }

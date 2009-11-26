@@ -237,16 +237,41 @@ const AVGroup& PluginArray::allVehicles(void) const
 	}
 	TPluginArray::const_iterator kIter = this->begin();
 	TPluginArray::const_iterator kEnd = this->end();
+
+	// non remote plugins first
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		const AVGroup& kVehicles = pkPlugin->allVehicles();
-		if( kVehicles.size() > 0 )
+		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
+		assert( NULL != pkPluginEntity );
+		if( false == pkPluginEntity->isRemoteObject() )
 		{
-			return kVehicles;
+			const AVGroup& kVehicles = pkPlugin->allVehicles();
+			if( kVehicles.size() > 0 )
+			{
+				return kVehicles;
+			}
 		}
 		++kIter;
 	}
+	kIter = this->begin();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
+		assert( NULL != pkPluginEntity );
+		if( true == pkPluginEntity->isRemoteObject() )
+		{
+			const AVGroup& kVehicles = pkPlugin->allVehicles();
+			if( kVehicles.size() > 0 )
+			{
+				return kVehicles;
+			}
+		}
+		++kIter;
+	}
+
+
 	return this->m_kVehicles;
 }
 
@@ -265,10 +290,31 @@ AVGroup& PluginArray::allVehicles(void)
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		AVGroup& kVehicles = pkPlugin->allVehicles();
-		if( kVehicles.size() > 0 )
+		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
+		assert( NULL != pkPluginEntity );
+		if( false == pkPluginEntity->isRemoteObject() )
 		{
-			return kVehicles;
+			AVGroup& kVehicles = pkPlugin->allVehicles();
+			if( kVehicles.size() > 0 )
+			{
+				return kVehicles;
+			}
+		}
+		++kIter;
+	}
+	kIter = this->begin();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
+		assert( NULL != pkPluginEntity );
+		if( true == pkPluginEntity->isRemoteObject() )
+		{
+			AVGroup& kVehicles = pkPlugin->allVehicles();
+			if( kVehicles.size() > 0 )
+			{
+				return kVehicles;
+			}
 		}
 		++kIter;
 	}

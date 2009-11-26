@@ -73,9 +73,6 @@ public:
 	// implement to initialize additional gui functionality
 	virtual void initGui( void* pkUserdata );
 
-	void serialNumberAnnotationUtility (const osAbstractVehicle& selected,
-		const osAbstractVehicle& nearMouse);
-
 	void drawPathAndObstacles (void);
 
 	void addPedestrianToCrowd(void);

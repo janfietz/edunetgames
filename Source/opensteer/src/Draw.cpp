@@ -529,7 +529,7 @@ OpenSteer::drawBasic2dCircularVehicle (const AbstractVehicle& vehicle,
 //-----------------------------------------------------------------------------
 void 
 OpenSteer::drawBasic2dCircularLocalSpace (const LocalSpaceData& vehicle,
-									   const Color& color, float fRadius, bool bDrawCircle )
+									   const Color& color, float fRadius, bool bDrawCircle, float fUpOffset )
 {
 	// "aspect ratio" of body (as seen from above)
 	const float x = 0.5f;
@@ -537,9 +537,15 @@ OpenSteer::drawBasic2dCircularLocalSpace (const LocalSpaceData& vehicle,
 
 	// radius and position of vehicle
 	const float r = fRadius;
-	const Vec3& p = vehicle._position;
+//	const Vec3& p = vehicle._position;
+	Vec3 p = vehicle._position;
+	if( fUpOffset != 0 )
+	{
+		p += vehicle._up * fUpOffset;
+	}
 
 	// shape of triangular body
+//	const Vec3 u = r * fUpOffset * Vec3::up; // slightly up
 	const Vec3 u = r * 0.05f * Vec3::up; // slightly up
 	const Vec3 f = r * vehicle._forward;
 	const Vec3 s = r * vehicle._side * x;

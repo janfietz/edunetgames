@@ -34,16 +34,25 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 // draws a gray disk on the XZ plane under a given vehicle
 void 
-VehicleUtilities::highlightVehicleUtility (const AbstractVehicle& vehicle)
+VehicleUtilities::highlightVehicleUtility( const AbstractVehicle& vehicle )
 {
-	if (&vehicle != NULL)
-		OpenSteer::drawXZDisk (vehicle.radius(), vehicle.position(), gGray60, 20);
+	if( &vehicle != NULL )
+	{
+		if( vehicle.movesPlanar() )
+		{
+			OpenSteer::drawXZDisk( vehicle.radius(), vehicle.position(), gGray60, 20 );
+		}
+		else
+		{
+			VehicleUtilities::circleHighlightVehicleUtility( vehicle );
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
 // draws a gray circle on the XZ plane under a given vehicle
 void 
-VehicleUtilities::circleHighlightVehicleUtility (const AbstractVehicle& vehicle)
+VehicleUtilities::circleHighlightVehicleUtility( const AbstractVehicle& vehicle )
 {
 	if (&vehicle != NULL) OpenSteer::drawXZCircle (vehicle.radius () * 1.1f,
 		vehicle.position(),

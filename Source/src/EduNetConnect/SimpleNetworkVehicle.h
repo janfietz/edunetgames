@@ -41,6 +41,7 @@ namespace OpenSteer {
 	//-------------------------------------------------------------------------
 	class SimpleProxyVehicle : public SimplePhysicsVehicle
 	{
+		ET_DECLARE_BASE( SimplePhysicsVehicle )
 	public:
 		SimpleProxyVehicle():m_bHasNewData(false)
 		{
@@ -50,9 +51,13 @@ namespace OpenSteer {
 		{
 
 		}
+		virtual void draw( const float currentTime, const float elapsedTime );
+		virtual void update (const float currentTime, const float elapsedTime);
+
 		bool m_bHasNewData;
 		bool m_bReveivedDataConfig[ESerializeDataType_Count];
 		PhysicsMotionState m_kProxyMotionState;
+		LocalSpaceDataArray m_kLocalSpaceData; // received / send data cue
 	private:
 	};
 
@@ -107,6 +112,7 @@ namespace OpenSteer {
 		TUpdatePeriod<osScalar, FloatMathLimits> m_kNetWriteUpdatePeriod;
 		mutable bool m_bWantsToSendData;
 		mutable bool m_bHasBeenSerialized;
+		mutable bool m_bCollectsAnnotations;
 
 
 	};

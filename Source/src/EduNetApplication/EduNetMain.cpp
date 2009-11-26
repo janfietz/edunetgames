@@ -16,13 +16,13 @@ int EduNetMain (int argc, char **argv)
 		if( true ==  EduNetOptions::accessOptions().continueProcess() )
 		{
 			// initialize graphics
-			OpenSteer::initializeGraphics (argc, argv);
+			OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
 
 			// initialize OpenSteerDemo application
 			OpenSteer::OpenSteerDemo::initialize ();
 
 			// run the main event processing loop
-			OpenSteer::runGraphics ();  
+			OpenSteer::OpenSteerDemo::runGraphics ();  
 		}
 		iExitCode = EXIT_SUCCESS;
 	}

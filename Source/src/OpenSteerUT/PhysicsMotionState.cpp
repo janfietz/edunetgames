@@ -97,6 +97,15 @@ namespace OpenSteer
 		if( writeToMatrix( kLocalSpaceData, kWorldTransform1 ) )
 		{
 			this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
+			// open steer is all ways treating the forward vector
+			// as linear velocity direction
+			// so - right now add this little correction here ???
+#if 0
+			this->m_kLinearVelocity = kLocalSpaceData._forward;
+			this->m_kLinearVelocity *= this->m_fLinearVelocity;
+			this->m_kLocalLinearVelocity = Vec3.forward;
+			this->m_kLocalLinearVelocity *= this->m_fLinearVelocity;
+#endif
 			return true;
 		}
 		else

@@ -275,6 +275,9 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
     // switch to Draw phase
     pushPhase (drawPhase);
 
+	// nearest mouse (to be highlighted)
+	SimpleVehicle::nearestMouseVehicle = OpenSteerDemo::vehicleNearestToMouse();
+
     // invoke selected Plugin's Draw method
     OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
 
