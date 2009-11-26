@@ -145,10 +145,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		GridPlugin::setGridCenter( SimpleVehicle::selectedVehicle->position() );
 	}
 
-
-	// Pedestrian nearest mouse (to be highlighted)
-	AbstractVehicle* nearMouse = OpenSteerDemo::vehicleNearestToMouse();
-
 	// draw and annotate each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.redraw( currentTime, elapsedTime );
@@ -158,15 +154,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	if( this->m_fLastRenderTime != currentTime )
 	{
 		this->drawPathAndObstacles ();
-	}
-
-	if( ( NULL != nearMouse ) && ( NULL != selected ) )
-	{
-		// highlight Pedestrian nearest mouse
-		VehicleUtilities::highlightVehicleUtility (*nearMouse);
-
-		// textual annotation (at the vehicle's screen position)
-		serialNumberAnnotationUtility(*selected, *nearMouse);
 	}
 
 	// display status in the upper left corner of the window
@@ -202,35 +189,6 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 
 
 	this->m_fLastRenderTime = currentTime;
-}
-
-//-----------------------------------------------------------------------------
-void NetPedestrianPlugin::serialNumberAnnotationUtility (const AbstractVehicle& selected,
-	const AbstractVehicle& nearMouse)
-{
-	// display a Pedestrian's serial number as a text label near its
-	// screen position when it is near the selected vehicle or mouse.
-	if (&selected && &nearMouse && OpenSteer::annotationIsOn())
-	{
-		const AVGroup& kAllVehicles = this->allVehicles();
-		for (AVGroup::const_iterator i = kAllVehicles.begin(); i != kAllVehicles.end(); i++)
-		{
-			AbstractVehicle* vehicle = *i;
-			const float nearDistance = 6;
-			const osVector3& vp = vehicle->position();
-			const osVector3& np = nearMouse.position();
-			if ((osVector3::distance (vp, selected.position()) < nearDistance)
-				||
-				(&nearMouse && (osVector3::distance (vp, np) < nearDistance)))
-			{
-				NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(vehicle);
-				if( NULL != pkPedestrian )
-				{
-					pkPedestrian->annotationUtility();
-				}
-			}
-		}
-	}
 }
 
 //-----------------------------------------------------------------------------

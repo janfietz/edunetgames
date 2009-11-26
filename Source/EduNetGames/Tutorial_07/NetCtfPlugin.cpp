@@ -249,7 +249,7 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 
 	// vehicle nearest mouse (to be highlighted)
-	AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();
+	AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
 
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
@@ -269,9 +269,6 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.redraw( currentTime, elapsedTime );
-
-	// highlight vehicle nearest mouse
-	VehicleUtilities::highlightVehicleUtility (nearMouse);
 
 	// display status in the upper left corner of the window
 	std::ostringstream status;

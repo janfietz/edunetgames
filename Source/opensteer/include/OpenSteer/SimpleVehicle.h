@@ -143,6 +143,7 @@ namespace OpenSteer {
         virtual Vec3 velocity (void) const 
 		{
 			return forward() * _speed;
+// TODO: later
 //			return this->linearVelocity();
 			/*forward() * _speed;*/ 
 		}
@@ -151,6 +152,7 @@ namespace OpenSteer {
         virtual float speed (void) const {return _speed;}
         virtual float setSpeed (float s) 
 		{
+// TODO: later
 // 			if( s == 0 )
 // 			{
 // 				this->setLinearVelocity( Vec3::zero );
@@ -293,6 +295,7 @@ namespace OpenSteer {
 		//! for which additional information may be displayed.  Clicking the mouse
 		//! near a vehicle causes it to become the Selected Vehicle.
 		static AbstractVehicle* selectedVehicle;
+		static AbstractVehicle* nearestMouseVehicle;
 
 		// TODO: make private !
 		//! a pointer to this vehicles's interface object for the proximity database
@@ -312,9 +315,6 @@ namespace OpenSteer {
 		float _mass;       //! mass (defaults to unity so acceleration=force)
 
 		float _radius;     //! size of bounding sphere, for obstacle avoidance, etc.
-
-		float _speed;      //! speed along Forward direction.  Because local space
-		//! is velocity-aligned, velocity = Forward * Speed
 
 		float _maxForce;   //! the maximum steering force this vehicle can apply
 		//! (steering force is clipped to this magnitude)

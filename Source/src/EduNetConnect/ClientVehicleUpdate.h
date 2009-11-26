@@ -37,6 +37,7 @@ namespace OpenSteer {
 	enum EVehicleUpdateMode
 	{
 		EVehicleUpdateMode_Unknown,
+		EVehicleUpdateMode_Position,
 		EVehicleUpdateMode_BruteForce,
 		EVehicleUpdateMode_PhysicsMotion,
 		EVehicleUpdateMode_ForwardSpeed,
@@ -66,6 +67,7 @@ namespace OpenSteer {
 			static const char* pszModes[EVehicleUpdateMode_Count] =
 			{
 				"Unknown",
+				"Position",
 				"BruteForce",
 				"PhysicsMotion",
 				"ForwardSpeed",
@@ -77,6 +79,7 @@ namespace OpenSteer {
 		
 		EVehicleUpdateMode determineUpdateMode( const class SimpleNetworkVehicle& kVehicle ) const;
 
+		void updatePosition( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updateBruteForce( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updatePhysicsMotion( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updateForwardSpeed( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );

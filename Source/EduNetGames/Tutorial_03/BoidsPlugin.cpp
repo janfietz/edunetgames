@@ -122,20 +122,10 @@ void BoidsPlugin::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 {
-    // selected vehicle (user can mouse click to select another)
-    AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
-
-    // vehicle nearest mouse (to be highlighted)
-    AbstractVehicle& nearMouse = *OpenSteerDemo::vehicleNearestToMouse ();	
-
     // draw each boid in flock
-    for (iterator i = flock.begin(); i != flock.end(); i++) (**i).draw (currentTime, elapsedTime);
+    for (iterator i = flock.begin(); i != flock.end(); i++) 
+		(**i).draw (currentTime, elapsedTime);
 
-    // highlight vehicle nearest mouse
-    VehicleUtilities::drawCircleHighlightOnVehicle (nearMouse, 1, gGray70);
-
-    // highlight selected vehicle
-    VehicleUtilities::drawCircleHighlightOnVehicle (selected, 1, gGray50);
 
 	std::ostringstream status;
 	const float h = drawGetWindowHeight ();

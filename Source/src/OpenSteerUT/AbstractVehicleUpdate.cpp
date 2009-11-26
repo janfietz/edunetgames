@@ -134,11 +134,6 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 					   const osScalar elapsedTime
 					   )
 {
-	if( this->getUpdateMode() == EEulerUpdateMode_IntegrateMotionState )
-	{
-		// do not do anything in this case;
-		return;
-	}
 	bool bSuccess = 
 		this->m_kMotionState.updateMotionState( &this->vehicle(), currentTime, elapsedTime );
 	if( false == bSuccess )
@@ -147,6 +142,11 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 	}
 	else
 	{
+		if( this->getUpdateMode() == EEulerUpdateMode_IntegrateMotionState )
+		{
+			// do not do anything in this case;
+//			return;
+		}
 		this->vehicle().setAngularVelocity( this->m_kMotionState.m_kAngularVelocity );
 		this->vehicle().setLinearVelocity( this->m_kMotionState.m_kLinearVelocity );
 	}

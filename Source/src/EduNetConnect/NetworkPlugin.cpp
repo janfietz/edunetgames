@@ -383,16 +383,14 @@ void NetworkPlugin::recordNetUpdate(
 //-----------------------------------------------------------------------------
 void NetworkPlugin::updateMotionStateProfile( const float currentTime, const float elapsedTime )
 {
-	if( 0 == NetworkPlugin::ms_bShowMotionStatePlot )
-	{
-		return;
-	}
 	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
 	{
 		// find the selected vehicle by id
 		AbstractPlugin* pkHostedPlugin = this->getHostedPlugin();
 		AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkHostedPlugin );
 		assert( NULL != pkPluginEntity );
+
+		bool bTrySelectServerVehicle = false;
 		if( true == pkPluginEntity->isRemoteObject() )
 		{
 			bool bTest = true;
@@ -400,16 +398,35 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 		}
 		else
 		{
-			bool bTest = true;
-			bTest = false;
+			if( true == OpenSteer::SimpleVehicle::selectedVehicle->isRemoteObject() )
+			{
+				bTrySelectServerVehicle = true;
+			}
 		}
-		AbstractVehicleGroup kAV( pkHostedPlugin->allVehicles() );
-		NetworkId networkId = OpenSteer::SimpleVehicle::selectedVehicle->getNetworkId();
-		AVGroup::iterator kFound = kAV.findNetworkVehicle( networkId );
-		if( kFound != kAV.end() )
+
+		if( ( 0 != NetworkPlugin::ms_bShowMotionStatePlot ) || ( true == bTrySelectServerVehicle ) )
 		{
-			// update motion state plot
-			NetworkPlugin::ms_kMotionStateProfile.recordUpdate( *kFound, currentTime, elapsedTime );
+			AbstractVehicleGroup kAV( pkHostedPlugin->allVehicles() );
+			NetworkId networkId = OpenSteer::SimpleVehicle::selectedVehicle->getNetworkId();
+			AVGroup::iterator kFound = kAV.findNetworkVehicle( networkId );
+			if( kFound != kAV.end() )
+			{
+				AbstractVehicle* pkVehicle = *kFound;
+				if( pkVehicle != OpenSteer::SimpleVehicle::selectedVehicle )
+				{
+					if( false == pkVehicle->isRemoteObject() )
+					{
+						// switch to the server object
+						OpenSteer::SimpleVehicle::selectedVehicle = pkVehicle;
+					}
+				}
+
+				if( ( 0 != NetworkPlugin::ms_bShowMotionStatePlot ) )
+				{
+					// update motion state plot
+					NetworkPlugin::ms_kMotionStateProfile.recordUpdate( *kFound, currentTime, elapsedTime );
+				}
+			}
 		}
 	}
 

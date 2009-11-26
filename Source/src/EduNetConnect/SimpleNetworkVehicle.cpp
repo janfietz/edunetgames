@@ -21,7 +21,7 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_CompressedForce,
 	0, // 	ESerializeDataType_AngularVelocity,
 	0, // 	ESerializeDataType_LinearVelocity,
-	0, // 	ESerializeDataType_UpdateTicks,
+	1, // 	ESerializeDataType_UpdateTicks,
 };
 
 size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count] =
@@ -42,6 +42,42 @@ size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count]
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_UpdateTicks,
 };
 
+//-----------------------------------------------------------------------------
+void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime )
+{
+//	BaseClass::draw( currentTime, elapsedTime );
+	if( this->isRemoteObject() )
+	{
+		LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
+		LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
+		Color kColor = gBlue;
+		kColor.setR( 0.3f );
+		kColor.setG( 0.4f );
+		kColor.setB( 0.0f );
+		kColor.setA( 0.2f );
+		float fUpOffset = 0.2f;
+		while( kIter != kEnd )
+		{
+			const LocalSpaceData& kLocalSpaceData = *kIter;
+			drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
+			fUpOffset += 0.02f;
+			++kIter;
+			kColor.setA( kColor.a() + 0.05f );
+			kColor.setB( kColor.b() + 0.1f );
+		}
+	}
+	else
+	{
+
+	}
+}
+
+//-----------------------------------------------------------------------------
+void SimpleProxyVehicle::update (const float currentTime, const float elapsedTime)
+{
+}
+
+
 //-------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
@@ -61,6 +97,7 @@ SimpleNetworkVehicle::~SimpleNetworkVehicle()
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
 {
+	this->m_bCollectsAnnotations = true;
 	BaseClass::collect3DTextAnnotation( kStream );
 	this->m_kNetworkVehicleUpdate.collect3DTextAnnotation( kStream );
 }
@@ -68,7 +105,12 @@ void SimpleNetworkVehicle::collect3DTextAnnotation( std::ostringstream& kStream 
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::draw( const float currentTime, const float elapsedTime )
 {
+	this->m_bCollectsAnnotations = false;
 	BaseClass::draw( currentTime, elapsedTime );
+	if( true == this->m_bCollectsAnnotations )
+	{
+		this->accessProxyVehicle().draw( currentTime, elapsedTime );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -313,7 +355,9 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 
 	// store last update tick to check if new data has arrived
 	const size_t lastServerUpdateTicks = pkSerializeTarget->accessLocalSpaceData()._updateTicks;
-	pkSerializeTarget->accessLocalSpaceData()._updateTicks = 0;
+
+	// zero out all received local space data
+	pkSerializeTarget->accessLocalSpaceData().resetLocalSpaceData();
 
 	float fValue;
 	osVector3 kVec;
@@ -321,7 +365,6 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	btQuaternion kRotation;
 	unsigned char dataTypes;
 	char cVector[3];
-	char cFixedSizeVector[4];
 	size_t uiValue;
 	CompressedVector kCompressedVector;
 	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));

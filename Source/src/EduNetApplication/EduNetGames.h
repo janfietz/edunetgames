@@ -137,8 +137,17 @@ namespace OpenSteer {
 
         // ------------------------------------------------ graphics and annotation
 
-        // do all initialization related to graphics
-        static void initializeGraphics (void);
+
+		//-----------------------------------------------------------------------------
+		// run graphics event loop
+		static void runGraphics( void);
+
+		//-----------------------------------------------------------------------------
+		// do all initialization related to graphics
+		static void initializeGraphics( int argc, char **argv );
+		
+		// do all initialization related to graphics
+        static void initializeGraphics(void);
 
 
         // ----------------------------------------------------------- console text
@@ -170,18 +179,6 @@ namespace OpenSteer {
         static const int overheadPhase;
     };
 
-    //-----------------------------------------------------------------------------
-    // do all initialization related to graphics
-
-
-    void initializeGraphics (int argc, char **argv);
-
-
-    //-----------------------------------------------------------------------------
-    // run graphics event loop
-
-
-    void runGraphics (void);
 
 
     //-----------------------------------------------------------------------------

@@ -68,9 +68,6 @@ public:
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
 	virtual AbstractVehicle* cloneVehicle( void ) const;
 
-
-	void annotationUtility( void ) const;
-
 	static bool gWanderSwitch;
 	static bool gUseDirectedPathFollowing;
 

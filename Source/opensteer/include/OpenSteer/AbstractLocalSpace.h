@@ -75,11 +75,106 @@ namespace OpenSteer {
 		Vec3 _up;       //!  upward-pointing unit basis vector
 		Vec3 _forward;  //! forward-pointing unit basis vector
 		Vec3 _position; //! origin of local space
+// additions for demo purpose
 		Vec3 _angularVelocity; //! angular velocity of this object
 		Vec3 _linearVelocity;  //! linear velocity of this object
+		Vec3 _steeringForce;  //! steering force applied to this object
+		float _speed;//! speed along Forward direction.  Because local space
+		//! is velocity-aligned, velocity = Forward * Speed
 		size_t _updateTicks; //! used for network examples
+		size_t _userType; //! used to flag the record
+
+		void resetLocalSpaceData(void)
+		{
+			this->_forward = Vec3::forward;
+			this->_side = Vec3::side;
+			this->_up = Vec3::up;
+			this->_position.set (0, 0, 0);
+			this->_angularVelocity =
+				this->_linearVelocity = 
+				this->_steeringForce = 
+				Vec3::zero;
+			this->_speed = 0;
+			this->_updateTicks = 0;
+			this->_userType = 0;
+		};
+
 	} LocalSpaceData;
 
+	typedef std::vector<LocalSpaceData> TLocalSpaceDataArray;
+	typedef TLocalSpaceDataArray::const_iterator LocalSpaceDataCIterator;
+	typedef TLocalSpaceDataArray::iterator LocalSpaceDataIterator;
+
+
+	//-------------------------------------------------------------------------
+	class LocalSpaceDataArray : public /* TODO protected*/ TLocalSpaceDataArray
+	{
+	public:
+		LocalSpaceDataArray( size_t uiMaxRecords = 10 ):
+		  m_uiMaxRecords( uiMaxRecords )
+		{
+		  this->reserve( uiMaxRecords + 1 );
+		  this->reset();
+		}
+
+		virtual ~LocalSpaceDataArray()
+		{
+		}
+
+		void reset()
+		{
+			this->clear();
+			this->setMaxRecords( m_uiMaxRecords );
+		}
+#if 0
+		TLocalSpaceDataArray::const_iterator begin( void ) const
+		{
+			return TLocalSpaceDataArray::begin();
+		}
+
+		TLocalSpaceDataArray::const_iterator end( void ) const
+		{
+			return TLocalSpaceDataArray::end();
+		}
+
+		TLocalSpaceDataArray::iterator begin( void )
+		{
+			return TLocalSpaceDataArray::begin();
+		}
+
+		TLocalSpaceDataArray::iterator end( void )
+		{
+			return TLocalSpaceDataArray::end();
+		}
+#endif
+		LocalSpaceData& addValue( const LocalSpaceData& kValue )
+		{
+			this->push_back( kValue );
+			if( this->size() > this->m_uiMaxRecords )
+			{
+				this->erase( this->begin() );
+			}
+			return (*this)[ this->size() - 1 ];;
+		}
+
+
+		LocalSpaceDataArray& setMaxRecords( size_t uiValue ) 
+		{ 
+		  m_uiMaxRecords = uiValue; 
+		  if( this->capacity() < m_uiMaxRecords )
+		  {
+			  this->reserve( m_uiMaxRecords );
+		  }
+		  return (*this);
+		}
+
+		size_t getMaxRecords( void ) const { return m_uiMaxRecords; }
+
+	private:
+		size_t m_uiMaxRecords;
+	};
+
+	//-------------------------------------------------------------------------
 	class AbstractLocalSpace
     {
     public:

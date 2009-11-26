@@ -128,7 +128,14 @@ int OpenSteer::OpenSteerDemo::phaseStack [OpenSteer::OpenSteerDemo::phaseStackSi
 OpenSteer::AbstractVehicle* 
 OpenSteer::OpenSteerDemo::vehicleNearestToMouse( void )
 {
-	return ( mouseInWindow ? VehicleUtilities::findVehicleNearestScreenPosition ( mouseX, mouseY ) : NULL);
+	if( mouseInWindow )
+	{
+		return VehicleUtilities::findVehicleNearestScreenPosition ( mouseX, mouseY );
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -269,6 +276,9 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 {
 	// switch to Draw phase
 	pushPhase (drawPhase);
+
+	// nearest mouse (to be highlighted)
+	SimpleVehicle::nearestMouseVehicle = OpenSteerDemo::vehicleNearestToMouse();
 
 	// invoke selected Plugin's Draw method
 	EduNet::Application::AccessApplication().redrawSelectedPlugin( currentTime, elapsedTime );
@@ -566,8 +576,10 @@ namespace {
 	void 
 		mouseEnterExitWindowFunc (int state)
 	{
-		if (state == GLUT_ENTERED) OpenSteer::OpenSteerDemo::mouseInWindow = true;
-		if (state == GLUT_LEFT)    OpenSteer::OpenSteerDemo::mouseInWindow = false;
+		if (state == GLUT_ENTERED)
+			OpenSteer::OpenSteerDemo::mouseInWindow = true;
+		if (state == GLUT_LEFT)    
+			OpenSteer::OpenSteerDemo::mouseInWindow = false;
 	}
 
 	// This is used to control the frame rate (60Hz).
@@ -1108,7 +1120,7 @@ namespace {
 
 //-----------------------------------------------------------------------------
 void 
-OpenSteer::initializeGraphics (int argc, char **argv)
+OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 {
 	// initialize GLUT state based on command line arguments
 	#ifndef WIN32
@@ -1124,8 +1136,8 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 
 	// create and initialize our window with GLUT tools
 	// (center window on screen with size equal to "ws" times screen size)
-	const int sw = glutGet (GLUT_SCREEN_WIDTH) / 2;
-	const int sh = glutGet (GLUT_SCREEN_HEIGHT)/ 2;
+	const int sw = glutGet(GLUT_SCREEN_WIDTH);
+	const int sh = glutGet(GLUT_SCREEN_HEIGHT);
 	const float ws = 0.8f; // window_size / screen_size
 	const int ww = (int) (sw * ws);
 	const int wh = (int) (sh * ws);
@@ -1192,7 +1204,7 @@ OpenSteer::initializeGraphics (int argc, char **argv)
 //-----------------------------------------------------------------------------
 // run graphics event loop
 void 
-OpenSteer::runGraphics (void)
+OpenSteer::OpenSteerDemo::runGraphics (void)
 {
 	// Use a timer to control the frame rate.
 	glutTimerFunc(framePeriod, timerFunc, 0);

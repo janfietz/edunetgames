@@ -40,6 +40,9 @@ void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScala
 	if( true == kProxy.m_bHasNewData )
 	{
 		this->m_eLastUpdateMode = this->determineUpdateMode( *pkNetworkVehicle );
+		// add the new data to the history
+		kProxy.m_kLocalSpaceData.addValue( kProxy.getLocalSpaceData() )._steeringForce = 
+			kProxy.getSteeringForceUpdate().getForce();
 	}
 	else
 	{
@@ -49,6 +52,9 @@ void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScala
 	{
 	case( EVehicleUpdateMode_Unknown ):
 		this->updateUnknown( *pkNetworkVehicle, currentTime, elapsedTime );
+		break;
+	case( EVehicleUpdateMode_Position ):
+		this->updatePosition( *pkNetworkVehicle, currentTime, elapsedTime );
 		break;
 	case( EVehicleUpdateMode_BruteForce ):
 		this->updateBruteForce( *pkNetworkVehicle, currentTime, elapsedTime );
@@ -111,7 +117,70 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 	{
 		eType = EVehicleUpdateMode_BruteForce;
 	}
+	else if( bHasPositionUpdate )
+	{
+		eType = EVehicleUpdateMode_Position;
+	}
 	return eType;
+}
+
+//-------------------------------------------------------------------------
+void ClientVehicleUpdate::updatePosition( 
+class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
+{
+	SimpleProxyVehicle& kProxy = kVehicle.accessProxyVehicle();
+	if( true == kProxy.m_bHasNewData )
+	{
+		LocalSpaceData& kCurrentLocalSpaceData = kVehicle.accessLocalSpaceData();
+		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
+		// preserve client updateTicks ?
+		const bool bPreserveUpdateTicks = true;
+
+		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+
+		size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size(); 
+		if( uiReceivedRecords >= 2 )
+		{
+			const LocalSpaceData* pkLocalSpaceData[2] =
+			{
+				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 2 ], // 0 previous
+				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 1 ], // 1 last
+			};
+
+			// compute direction
+			osVector3 kDirection = pkLocalSpaceData[1]->_position - pkLocalSpaceData[0]->_position;
+			const float fDistance = kDirection.length();
+			float fSpeed = 0;
+			if( fDistance > 0 )
+			{
+				kVehicle.setForward( kDirection / fDistance );
+				kVehicle.regenerateLocalSpace( kVehicle.forward(), 0 );
+
+				// compute velocity
+				const size_t uiTickDifference = pkLocalSpaceData[1]->_updateTicks - pkLocalSpaceData[0]->_updateTicks;
+				if( uiTickDifference > 0 )
+				{
+					float fTickDifferenceTime = kVehicle.getUpdateTickTime() * uiTickDifference;
+					fSpeed = fDistance / fTickDifferenceTime;
+					kProxy.setSpeed( fSpeed );
+					kVehicle.setSpeed( kProxy.speed() );
+					kVehicle.setLinearVelocity( kVehicle.velocity() );
+				}
+			}
+		}
+	}
+	else
+	{
+		kVehicle.setAngularVelocity( Vec3::zero );
+	}
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
+	kVehicle.updateBase( currentTime, elapsedTime );
+	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
+
+	kVehicle.setSpeed( kProxy.speed() );
+	kVehicle.setLinearVelocity( kVehicle.velocity() );
+
 }
 
 //-------------------------------------------------------------------------
@@ -175,16 +244,23 @@ void ClientVehicleUpdate::updateForwardSpeed(
 		const bool bPreserveUpdateTicks = true;
 
 		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+
+		kVehicle.accessEulerUpdate().updateMotionState( currentTime, elapsedTime );
+
+		kVehicle.setSpeed( kProxy.speed() );
+		kVehicle.setLinearVelocity( kVehicle.velocity() );
 	}
 	else
 	{
 		kVehicle.setAngularVelocity( Vec3::zero );
-		kVehicle.setSpeed( kProxy.speed() );
 	}
 	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
+
+	kVehicle.setSpeed( kProxy.speed() );
+	kVehicle.setLinearVelocity( kVehicle.velocity() );
 }
 
 #define ET_STEERUPDATE_ACCELERATE 1

@@ -234,7 +234,7 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 			++kIter;
 		}
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation );
+		this->drawGraphFrame( kGraphLocation, false );
 		OpenSteer::end2dDrawing (originalMatrixMode);
 	}
 }
@@ -255,8 +255,8 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 
 	float fGraphOffSet = kGraphLocation.height;
 
-	kGraphLocation.sy += 30;
-	kGraphLocation.height -= 30;
+	kGraphLocation.sy += 20;
+	kGraphLocation.height -= 20;
 
 	TGraphPointerArray::const_iterator kIter = kValues.begin();
 	TGraphPointerArray::const_iterator kEnd = kValues.end();
@@ -347,11 +347,11 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 	}
 
 	const GraphValue& kMinDraw = kGraphLocation.kMinDraw;
-	const GraphValue& kMin = kGraphLocation.kMin;
-	const GraphValue& kMax = kGraphLocation.kMax;
+	const GraphValue& kMin = kValues.m_kMin; //kGraphLocation.kMin;
+	const GraphValue& kMax = kValues.m_kMax; //kGraphLocation.kMax;
 	const GraphValue& kInterval = kGraphLocation.kInterval;
 	//const 
-	GraphValue& kScale = kValues.m_kScale;//kGraphLocation.kScale;
+	GraphValue kScale = kValues.m_kScale;//kGraphLocation.kScale;
  	kScale.y = kGraphLocation.kScale.y;
 
 	const GraphValue& kEndValue = kValues[kValues.size() - 1];
@@ -413,10 +413,14 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 		}
 		sn	<< std::ends;
 
+		// GLUT_BITMAP_8_BY_13
+		const float fTextHeight = 16;
 		osVector3 screenLocation( 
 			kGraphLocation.sx, 
-			kGraphLocation.sy - ( 19 * ( 1 - kGraphLocation.fGraphIndex ) ), 
+			kGraphLocation.sy - ( fTextHeight * ( 1 - kGraphLocation.fGraphIndex ) ), 
 			0 );
+
+		screenLocation.y += 3;
 		OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
 	}
 
@@ -525,31 +529,46 @@ void GraphPlot::computeGraphLocation( const GraphValues& kValues, GraphLocation&
 		kMax.z = ::etMax( kMax.z, kValues.m_kMax.z );
 	}
 
+	GraphValue& kMinG = kValues.m_kMin;
+	GraphValue& kMaxG = kValues.m_kMax;
+	kMinG = GraphValue::ms_Max;
+	kMaxG = GraphValue::ms_Min;
+
 	// iterate once to determine min max values
 	while( kIter != kEnd )
 	{
-		const GraphValue& kRenderValue = (*kIter);
-		kMin.x = ::etMin( kMin.x, kRenderValue.x );
-		kMax.x = ::etMax( kMax.x, kRenderValue.x );
+		const GraphValue& kValue = (*kIter);
+		kMin.x = ::etMin( kMin.x, kValue.x );
+		kMax.x = ::etMax( kMax.x, kValue.x );
 		if( false == bGlobalStats )
 		{
 			if( kValues.getGraphType() == EGraphType_Dots )
 			{
-				if( kRenderValue.y != 0.0 )
+				if( kValue.y != 0.0 )
 				{
-					kMin.y = ::etMin( kMin.y, kRenderValue.y );
-					kMax.y = ::etMax( kMax.y, kRenderValue.y );
+					kMin.y = ::etMin( kMin.y, kValue.y );
+					kMax.y = ::etMax( kMax.y, kValue.y );
 				}
 			}
 			else
 			{
-				kMin.y = ::etMin( kMin.y, kRenderValue.y );
-				kMax.y = ::etMax( kMax.y, kRenderValue.y );
+				kMin.y = ::etMin( kMin.y, kValue.y );
+				kMax.y = ::etMax( kMax.y, kValue.y );
 			}
 
-			kMin.z = ::etMin( kMin.z, kRenderValue.z );
-			kMax.z = ::etMax( kMax.z, kRenderValue.z );
+			kMin.z = ::etMin( kMin.z, kValue.z );
+			kMax.z = ::etMax( kMax.z, kValue.z );
 		}
+
+		{
+			kMinG.x = ::etMin( kMinG.x, kValue.x );
+			kMinG.y = ::etMin( kMinG.y, kValue.y );
+			kMinG.z = ::etMin( kMinG.z, kValue.z );
+			kMaxG.x = ::etMax( kMaxG.x, kValue.x );
+			kMaxG.y = ::etMax( kMaxG.y, kValue.y );
+			kMaxG.z = ::etMax( kMaxG.z, kValue.z );
+		}
+
 		++kIter;
 	}
 
