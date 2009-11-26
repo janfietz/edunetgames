@@ -148,6 +148,7 @@ m_fSimulationFPS( fSimulationFPS ),
 m_fTimeFactor(1.0f),
 m_bFixedSimulationFPS(1),
 m_bEnableAnnotation(0),
+m_bShowOpenSteerProfile( 0 ),
 m_bShowCPUProfile(0),
 m_bShowCPUProfileGraph(0),
 m_bUpdateCPUProfile(0),
@@ -238,6 +239,9 @@ void Application::addGuiElements( GLUI* glui )
 		GLUI_Rollout* rollout = glui->add_rollout( "Profile", false );	
 		GLUI_Panel* subPanel = rollout;
 
+		glui->add_checkbox_to_panel( subPanel, "Show OpenSteer Profile", &this->m_bShowOpenSteerProfile);
+
+		glui->add_separator_to_panel( subPanel );
 		profileModesList = glui->add_listbox_to_panel( subPanel, "Modes", &profReportMode );
 		profileModesList->add_item(0, "Self Time");
 		profileModesList->add_item(1, "Hierarchical Time");
@@ -473,6 +477,18 @@ void Application::sleep( size_t uiMilliseconds )
 }
 
 //-----------------------------------------------------------------------------
+bool Application::isOpenSteerProfileVisible( void ) const
+{
+	return ( ( 0 != this->m_bShowOpenSteerProfile ) );
+}
+
+//-----------------------------------------------------------------------------
+bool Application::isProfileVisible( void ) const
+{
+	return ( ( 0 != this->m_bShowCPUProfile ) || ( 0 != this->m_bShowCPUProfileGraph ) );
+}
+
+//-----------------------------------------------------------------------------
 void Application::drawProfile (const float currentTime,
 				  const float elapsedTime)
 {
@@ -488,8 +504,9 @@ void Application::drawProfile (const float currentTime,
 	if( ( 0 != this->m_bShowCPUProfileGraph ) )
 	{
 		Profile::GraphPlot kPlot;
-		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, 8.0 * 50 );
-		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, 8.0, tw, th );
+		const float fYSpacing = 2.0f;
+		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
+		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, fYSpacing, tw, th );
 	}
 #endif
 }

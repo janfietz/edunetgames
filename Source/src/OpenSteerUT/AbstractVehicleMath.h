@@ -96,6 +96,14 @@ namespace OpenSteer
 		osVector3& kLinearVelocity, osVector3& kAngularVelocity );
 
 
+
+	//-------------------------------------------------------------------------
+	typedef struct TCompressedVector
+	{
+		char m_cValues[3];
+		unsigned short m_cUnitFactor;
+	} CompressedVector;
+
 	//-------------------------------------------------------------------------
 	class AbstractVehicleMath
 	{
@@ -112,8 +120,8 @@ namespace OpenSteer
 		static void compressUnitVector( const osVector3& kSource, char* kTarget );
 		static void expandUnitVector( const char* kSource, osVector3& kTarget  );
 
-		static void compressFixedLengthVector( const osVector3& kSource, float fMaxLength, char* psTarget );
-		static void expandFixedLengthVector( const char* psSource, float fMaxLength, osVector3& kTarget  );
+		static void compressFixedLengthVector( const osVector3& kSource, float fMaxLength, CompressedVector& kTarget );
+		static void expandFixedLengthVector( const CompressedVector& kSource, float fMaxLength, osVector3& kTarget  );
 
 	};
 

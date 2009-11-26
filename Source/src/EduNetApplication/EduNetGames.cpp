@@ -1004,14 +1004,21 @@ namespace {
 				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime()
 				);
 
-			// draw text showing (smoothed, rounded) "frames per second" rate
-			drawDisplayFPS ();
-
 			// draw the name of the selected Plugin
 			drawDisplayPluginName ();
 
-			// draw the name of the camera's current mode
-			drawDisplayCameraModeName ();
+			if( false == EduNet::Application::AccessApplication().isProfileVisible() )
+			{
+				if( true == EduNet::Application::AccessApplication().isOpenSteerProfileVisible() )
+				{
+					// draw text showing (smoothed, rounded) "frames per second" rate
+					drawDisplayFPS ();
+
+
+					// draw the name of the camera's current mode
+					drawDisplayCameraModeName ();
+				}
+			}
 
 			// draw crosshairs to indicate aimpoint (xxx for debugging only?)
 			// drawReticle ();

@@ -39,7 +39,7 @@ NetSoccerPlayer::NetSoccerPlayer () :
 // reset state
 void NetSoccerPlayer::reset (void)
 {
-  SimpleVehicle::reset (); // reset the vehicle
+  BaseClass::reset (); // reset the vehicle
   setSpeed (0.0f);         // speed along Forward direction.
   setMaxForce (3000.7f);      // steering force is clipped to this magnitude
   setMaxSpeed (10);         // velocity is clipped to this magnitude
@@ -57,7 +57,7 @@ osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
     const float distToBall = osVector3::distance (position(), m_Ball->position());
     const float sumOfRadii = radius() + m_Ball->radius();
     if (distToBall < sumOfRadii)
-	m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
+		m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
 
 	osVector3 kSteeringForce( osVector3::zero );
     // otherwise consider avoiding collisions with others
@@ -105,8 +105,9 @@ osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 // draw this character/vehicle into the scene
 void NetSoccerPlayer::draw (const float currentTime, const float elapsedTime)
 {
+	BaseClass::draw( currentTime, elapsedTime );
     drawBasic2dCircularVehicle (*this, b_ImTeamA ? OpenSteer::Color(1.0f,0.0f,0.0f):OpenSteer::Color(0.0f,0.0f,1.0f));
-    drawTrail ();
+    drawTrail();
 }
 
 //-----------------------------------------------------------------------------

@@ -155,19 +155,14 @@ namespace OpenSteer
 	class SteeringForceVehicleUpdate : public AbstractVehicleUpdate {
 		OS_DECLARE_BASE(AbstractVehicleUpdate)
 	public:
-		SteeringForceVehicleUpdate( AbstractVehicle* pkVehicle ):
-		BaseClass( pkVehicle ),
-			m_kForce(Vec3::zero)
-		{
-			m_cForce[0] = m_cForce[1] = m_cForce[2] = m_cForce[3] = 0;
-		}
+		SteeringForceVehicleUpdate( AbstractVehicle* pkVehicle );
 		virtual ~SteeringForceVehicleUpdate(){}
 
 		Vec3 determineCombinedSteering( const osScalar elapsedTime ) const;
 		
 		void setForce( const Vec3& kForce, bool bCompress = true );
 		const Vec3& getForce( void ) const { return this->m_kForce; }
-		const char* getCompressedForce( void ) const { return m_cForce; }
+		const CompressedVector& getCompressedForce( void ) const { return m_cForce; }
 
 		//---------------------------------------------------------------------
 		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
@@ -175,7 +170,7 @@ namespace OpenSteer
 		static osScalar ms_SteeringForceFPS;
 	private:
 		Vec3 m_kForce;
-		char m_cForce[4];
+		CompressedVector m_cForce;
 		TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
 	};
 
