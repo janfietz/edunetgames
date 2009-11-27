@@ -32,6 +32,7 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/LocalPlayer.h"
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
@@ -157,6 +158,12 @@ public:
 #if ET_TEST_PLAYERREPLICATION
 		this->m_kGamePlugin.setEntityFactory( this->m_pkClientEntityFactory );
 		this->m_pkNetworkPlayer = this->m_pkClientEntityFactory->createEntity( OS_CID_PLAYER );
+		osAbstractController* pkController = OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer )->accessController();
+		if( NULL != pkController )
+		{
+			pkController->setCustomUpdated( OpenSteer::LocalPlayerController::accessLocalPlayerController() );
+		}
+
 		this->m_kGamePlugin.setEntityFactory( NULL );
 		this->m_kGamePlugin.addPlayer( OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer ) );
 #endif
@@ -177,11 +184,11 @@ public:
 
 	void update (const float currentTime, const float elapsedTime)
 	{
-		BaseClass::update( currentTime,  elapsedTime );
 		if( NULL != this->m_pkNetworkPlayer )
 		{
-
+			OpenSteer::CastToAbstractUpdated( m_pkNetworkPlayer )->update( currentTime, elapsedTime );
 		}
+		BaseClass::update( currentTime,  elapsedTime );
 	};
 
 private:

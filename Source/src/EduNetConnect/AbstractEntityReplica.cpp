@@ -154,6 +154,12 @@ RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::Serializ
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
+	osAbstractPlayer* pkPlayer = OpenSteer::CastToAbstractPlayer( this->accessEntity() );
+	if( NULL != pkPlayer )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }

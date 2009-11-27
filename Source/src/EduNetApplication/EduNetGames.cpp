@@ -239,6 +239,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	//       values from the local to the in game controller
 	//       the same mechanism might be used for a networking
 	//       client controller
+#if ET_HAVE_LOCALPLAYER_CONTROL
 	AbstractPlayer* pkPlayer = SimplePlayer::accessLocalPlayer();
 	AbstractController* pkController = pkPlayer->accessController();
 	if( NULL != pkController )
@@ -264,6 +265,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 		}
 		pkPlayer->play( pkNewControlledEntity );
 	}
+#endif
 
 	// invoke selected Plugin's Update method
 	EduNet::Application::AccessApplication().updateSelectedPlugin( currentTime, elapsedTime );
