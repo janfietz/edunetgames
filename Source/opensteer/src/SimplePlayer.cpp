@@ -77,6 +77,13 @@ void SimpleController::update( const osScalar currentTime, const osScalar elapse
 
 	fBackwardForward = OpenSteer::clamp( fBackwardForward, -1.0f, 1.0f );
 	fLeftRight = OpenSteer::clamp( fLeftRight, -1.0f, 1.0f );
+	if( fLeftRight != 0 )
+	{
+		if( fBackwardForward != 0 )
+		{
+			fBackwardForward *= -0.5f;
+		}
+	}
 
 	const bool bRightHanded = true;
 	if( true == bRightHanded )
