@@ -38,6 +38,7 @@
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/GridPlugin.h"
+#include "OpenSteerUT/AbstractEntityQuery.h"
 
 using namespace OpenSteer;
 
@@ -231,6 +232,40 @@ void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
+
+	// any players ?
+	if( ( this->allPlayers().size() > 0 ) && ( false == this->isRemoteObject() ) )
+	{
+		// any player without controlled entity ?
+		NoControlledEntityQuery kNoControlledEntityQuery;
+		AbstractPlayerQuery kPlayerQuery( this->allPlayers(), &kNoControlledEntityQuery );
+		AbstractPlayer* pkPlayer = kPlayerQuery.findType();
+		if( NULL != pkPlayer )
+		{
+			// any vehicle without player ?
+			NoPlayerEntityQuery kNoPlayerEntityQuery;
+			AVQuery kEntityQuery( this->allVehicles(), &kNoPlayerEntityQuery );
+			osAbstractVehicle* pkVehicle = kEntityQuery.findType( );
+			if( NULL != pkVehicle )
+			{
+				pkPlayer->play( pkVehicle );
+				std::ostringstream message;
+				message << "player starts playing ";
+				message << '"' << pkVehicle->name() << '"' << std::ends;
+				EduNet::Log::printMessage (message);
+			}
+		}
+	}
+	AbstractPlayerGroup& kAllPlayers = this->allPlayers( );
+	AbstractPlayerGroup::iterator kIter = kAllPlayers.begin();
+	AbstractPlayerGroup::iterator kEnd = kAllPlayers.end();
+	while( kIter != kEnd )
+	{
+		OpenSteer::CastToAbstractUpdated( *kIter )->update( currentTime, elapsedTime );
+		++kIter;
+	}
+
+
 	NetCtfGameLogic kGameLogic;
 	kGameLogic.setPlugin( this );
 	kGameLogic.update( currentTime, elapsedTime );
@@ -295,6 +330,15 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::close (void)
 {
+	AbstractPlayerGroup& kAllPlayers = this->allPlayers( );
+	AbstractPlayerGroup::iterator kPIter = kAllPlayers.begin();
+	AbstractPlayerGroup::iterator kPEnd = kAllPlayers.end();
+	while( kPIter != kPEnd )
+	{
+		( *kPIter )->play( NULL );
+		++kPIter;
+	}
+
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	// delete all Pedestrians
 	while( kVG.population() > 0 )

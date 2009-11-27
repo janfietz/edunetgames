@@ -75,6 +75,37 @@ namespace OpenSteer {
 	};
 
 	//-------------------------------------------------------------------------
+	class NoPlayerEntityQuery : public AbstractEntityQuery
+	{
+	public:
+		NoPlayerEntityQuery( void ) {}
+		virtual ~NoPlayerEntityQuery() {}
+		virtual bool isEntityMatch( const AbstractEntity* pkEntity ) const
+		{
+			return ( pkEntity->getPlayer() == NULL );
+		}
+	private:
+	};
+
+	//-------------------------------------------------------------------------
+	class NoControlledEntityQuery : public AbstractEntityQuery
+	{
+	public:
+		NoControlledEntityQuery( void ) {}
+		virtual ~NoControlledEntityQuery() {}
+		virtual bool isEntityMatch( const AbstractEntity* pkEntity ) const
+		{
+			const osAbstractPlayer* pkPlayer = OpenSteer::CastToAbstractPlayer( pkEntity );
+			if( NULL != pkPlayer )
+			{
+				return ( pkPlayer->getControlledEntity() == NULL );
+			}
+			return false;
+		}
+	private:
+	};
+
+	//-------------------------------------------------------------------------
 	template <class ContainerType, class EntityType >
 	class TEntityQuery
 	{

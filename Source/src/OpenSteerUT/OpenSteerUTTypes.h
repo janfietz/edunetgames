@@ -98,6 +98,8 @@ typedef OpenSteer::Vec3 osVector3;
 typedef OpenSteer::LocalSpaceData osLocalSpaceData;
 typedef OpenSteer::AbstractLocalSpace osAbstractLocalSpace;
 typedef OpenSteer::AbstractEntity osAbstractEntity;
+typedef OpenSteer::AbstractPlayer osAbstractPlayer;
+typedef OpenSteer::AbstractController osAbstractController;
 typedef OpenSteer::AbstractVehicle osAbstractVehicle;
 typedef OpenSteer::Color osColor;
 
