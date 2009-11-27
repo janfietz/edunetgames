@@ -37,15 +37,18 @@
 namespace OpenSteer
 {
 
+	// contoller mixin templates
 	typedef EntityVisibilityMixin<AbstractController> TAbstractController_000;
 	typedef EntityParentMixin<TAbstractController_000> TAbstractController_00;
 	typedef EntityMixin<TAbstractController_00> TAbstractController_0;
 
+	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
+
+	// player mixin templates
 	typedef EntityVisibilityMixin<AbstractPlayer> TAbstractPlayer_000;
 	typedef EntityParentMixin<TAbstractPlayer_000> TAbstractPlayer_00;
 	typedef EntityMixin<TAbstractPlayer_00> TAbstractPlayer_0;
 
-	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
 	typedef AbstractUpdatedMixin<TAbstractPlayer_0> TAbstractPlayer;
 
 	//-------------------------------------------------------------------------
@@ -113,8 +116,6 @@ namespace OpenSteer
 		// AbstractUpdated interface
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
 
-
-
 	private:
 		AbstractController* m_pkController;
 		bool m_bIsLocalPlayer;
@@ -122,4 +123,4 @@ namespace OpenSteer
 
 }
 
-#endif //  __ABSTRACTPLAYER_H__
+#endif //  __SIMPLEPLAYER_H__
