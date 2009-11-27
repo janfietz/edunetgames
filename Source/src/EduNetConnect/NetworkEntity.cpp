@@ -93,6 +93,7 @@ int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializePa
 		{
 			const osAbstractController* pkController = pkPlayer->getController();
 			unsigned char dataTypes = 5; // how many variables will be send
+			kStream.WriteAlignedBytes(&dataTypes,sizeof(unsigned char));
 
 			unsigned char controllerAction;
 			float fValue;
