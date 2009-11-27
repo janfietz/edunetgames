@@ -22,6 +22,8 @@ int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 	0, // 	ESerializeDataType_AngularVelocity,
 	0, // 	ESerializeDataType_LinearVelocity,
 	1, // 	ESerializeDataType_UpdateTicks,
+	0, // 	ESerializeDataType_ControllerAction,
+
 };
 
 size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count] =
@@ -40,6 +42,7 @@ size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count]
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_AngularVelocity,
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_LinearVelocity,
 	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_UpdateTicks,
+	sizeof(float) + 1, // 	ESerializeDataType_ControllerAction,
 };
 
 //-----------------------------------------------------------------------------
