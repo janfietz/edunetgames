@@ -63,11 +63,17 @@ public:
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 		// remap the entity factory
-		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
-		this->m_kGamePlugin.setEntityFactory( this->m_pkNetCtfFactory );
+		this->m_pkPeerEntityFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+		this->m_kGamePlugin.setEntityFactory( this->m_pkPeerEntityFactory );
 	}
+
+	virtual ~CtfPeerPlugin()
+	{
+		ET_SAFE_DELETE( this->m_pkPeerEntityFactory );
+	}
+
 	OS_IMPLEMENT_CLASSNAME( CtfPeerPlugin )
-		virtual const char* name() const { return this->getClassName(); };
+	virtual const char* name() const { return this->getClassName(); };
 
 	//-------------------------------------------------------------------------
 	void StartNetworkSession( void )
@@ -101,7 +107,7 @@ public:
 	}
 
 private:
-	AbstractEntityReplicaFactory* m_pkNetCtfFactory;
+	AbstractEntityReplicaFactory* m_pkPeerEntityFactory;
 	AbstractEntityReplicaManager m_kReplicaManager;
 };
 
@@ -115,15 +121,23 @@ class CtfClientPlugin : public TCtfClientPlugin
 	ET_DECLARE_BASE(TCtfClientPlugin)
 public:
 	CtfClientPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
+	BaseClass( bAddToRegistry ),
+		m_pkNetworkPlayer( NULL )
 	{
 		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
+
+		this->m_pkClientEntityFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}
 
+	virtual ~CtfClientPlugin()
+	{
+		ET_SAFE_DELETE( this->m_pkClientEntityFactory );
+	}
+
 	OS_IMPLEMENT_CLASSNAME( CtfClientPlugin )
-		virtual const char* name() const { return this->getClassName(); };
+	virtual const char* name() const { return this->getClassName(); };
 
 	//-------------------------------------------------------------------------
 	void StartNetworkSession( void )
@@ -136,17 +150,34 @@ public:
 	void CreateContent( void )
 	{
 		BaseClass::CreateContent();
+		this->m_kGamePlugin.setEntityFactory( this->m_pkClientEntityFactory );
+		this->m_pkNetworkPlayer = this->m_pkClientEntityFactory->createEntity( OS_CID_PLAYER );
+		this->m_kGamePlugin.setEntityFactory( NULL );
+		this->m_kGamePlugin.addPlayer( OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer ) );
 	}
 
 	//-------------------------------------------------------------------------
 	void DeleteContent( void )
 	{	
+		this->m_kGamePlugin.setEntityFactory( this->m_pkClientEntityFactory );
+		this->m_kGamePlugin.removePlayer(  OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer ) );
+		this->m_kGamePlugin.setEntityFactory( NULL );
+		this->m_pkClientEntityFactory->destroyEntity( this->m_pkNetworkPlayer );
 		BaseClass::DeleteContent();
 	}
-private:
 
-	AbstractEntityReplicaFactory* m_pkBoidFactory;
+	void update (const float currentTime, const float elapsedTime)
+	{
+		if( NULL != this->m_pkNetworkPlayer )
+		{
+
+		}
+	};
+
+private:
+	AbstractEntityReplicaFactory* m_pkClientEntityFactory;
 	AbstractEntityReplicaManager m_kReplicaManager;
+	AbstractEntity* m_pkNetworkPlayer;
 };
 
 //-----------------------------------------------------------------------------
@@ -161,12 +192,23 @@ public:
 	OfflineCtfPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new NetCtfPlugin( false ) );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflineCtfPlugin )
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new NetCtfPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
 };
 
 OfflineCtfPlugin gCtfPlugin;
@@ -176,16 +218,27 @@ OfflineCtfPlugin gCtfPlugin;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class CtfRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<CtfClientPlugin>
+class CtfRenderClientPlugin : public OpenSteer::PluginArray
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<CtfClientPlugin> )
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
 public:
 	CtfRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~CtfRenderClientPlugin() {};
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new CtfClientPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
 
 	OS_IMPLEMENT_CLASSNAME( CtfRenderClientPlugin )
 };
@@ -197,16 +250,27 @@ CtfRenderClientPlugin gCtfClientPlugin( true );
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class CtfRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<CtfPeerPlugin>
+class CtfRenderPeerPlugin : public OpenSteer::PluginArray
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<CtfPeerPlugin> )
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
 public:
 	CtfRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~CtfRenderPeerPlugin() {};
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new CtfPeerPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
 
 	OS_IMPLEMENT_CLASSNAME( CtfRenderPeerPlugin )
 };
@@ -228,6 +292,20 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( CtfClientServerPlugin );
 
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new CtfPeerPlugin( false ) );
+		this->addPlugin( new CtfClientPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
 	//---------------------------------------------------------------------
 	// interface AbstractPlugin
 	virtual void initGui( void* pkUserdata );
@@ -237,10 +315,6 @@ public:
 CtfClientServerPlugin::CtfClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
-	this->addPlugin( new OpenSteer::CameraPlugin() );
-	this->addPlugin( new OpenSteer::GridPlugin() );
-	this->addPlugin( new CtfPeerPlugin( false ) );
-	this->addPlugin( new CtfClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------

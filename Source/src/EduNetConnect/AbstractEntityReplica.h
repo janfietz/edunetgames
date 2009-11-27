@@ -39,7 +39,12 @@ class AbstractEntityReplica : public OSReplica< OpenSteer::AbstractEntity >
 	ET_DECLARE_BASE( OSReplica< OpenSteer::AbstractEntity > )
 public:
 	AbstractEntityReplica();
-	AbstractEntityReplica( OpenSteer::AbstractPlugin* pPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject );
+	AbstractEntityReplica( 
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica = false );
+
+	virtual ~AbstractEntityReplica();
 
 	//-------------------------------------------------------------------------
 	// replica interface

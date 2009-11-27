@@ -76,7 +76,7 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 		}
 		else
 		{
-			AbstractEntityReplica* pkNewReplica = new AbstractEntityReplica( pkPlugin, classId, true  );
+			AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pkPlugin, classId, true  );
 			return pkNewReplica; 
 		}
 	}
@@ -90,7 +90,12 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer::EntityClassId classId ) const
 {
-	AbstractEntityReplica* pkNewReplica = new AbstractEntityReplica( this->m_pkReplicaManager->getPlugin(), classId, false );	
+	osAbstractPlugin* pkPlugin = this->m_pkReplicaManager->getPlugin();
+	osAbstractEntity* pkPluginEntity = OpenSteer::CastToAbstractEntity( pkPlugin );
+	assert( NULL != pkPluginEntity );
+
+	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( 
+		pkPlugin, classId, false, pkPluginEntity->isRemoteObject() );	
 	if( NULL != pkNewReplica )
 	{
 		this->m_pkReplicaManager->Reference( pkNewReplica );
@@ -99,9 +104,12 @@ OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer
 		{
 			this->m_uidMap.Set( pkEntity->getEntityId(), pkNewReplica );
 
-			NetworkID kNetWorkId = pkNewReplica->GetNetworkID();
-			OpenSteer::NetworkId networkId = kNetWorkId.guid.g;
-			pkEntity->setNetworkId( networkId );
+			if( false == pkPluginEntity->isRemoteObject() )
+			{
+				NetworkID kNetWorkId = pkNewReplica->GetNetworkID();
+				OpenSteer::NetworkId networkId = kNetWorkId.guid.g;
+				pkEntity->setNetworkId( networkId );
+			}
 		}
 		return pkEntity;
 	}

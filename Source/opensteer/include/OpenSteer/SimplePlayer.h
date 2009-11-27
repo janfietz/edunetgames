@@ -133,6 +133,8 @@ namespace OpenSteer
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
 
 	private:
+		SimpleController m_kDefaultController;
+
 		AbstractController* m_pkController;
 		bool m_bIsLocalPlayer;
 	};

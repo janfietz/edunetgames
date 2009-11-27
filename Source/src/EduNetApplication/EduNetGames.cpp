@@ -235,6 +235,10 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 	doDelayedResetPluginXXX();
 
 	// update the local player object
+	// note: we simply use the custom update mechanism to pass
+	//       values from the local to the in game controller
+	//       the same mechanism might be used for a networking
+	//       client controller
 	AbstractPlayer* pkPlayer = SimplePlayer::accessLocalPlayer();
 	AbstractController* pkController = pkPlayer->accessController();
 	if( NULL != pkController )
