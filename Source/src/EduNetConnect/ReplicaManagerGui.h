@@ -1,6 +1,5 @@
-#ifndef __SERVERVEHICLEUPDATE_H__
-#define __SERVERVEHICLEUPDATE_H__
-
+#ifndef __REPLICAMANAGERGUI_H__
+#define __REPLICAMANAGERGUI_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,35 +28,52 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "EduNetConnect/ReplicationTypes.h"
+
 
 //-----------------------------------------------------------------------------
-namespace OpenSteer {
+class ReplicaManagerGui
+{
+public:
+	ReplicaManagerGui( void );
+	virtual ~ReplicaManagerGui( void );
 
-	//-------------------------------------------------------------------------
-	class ServerVehicleUpdate : public AbstractVehicleUpdate {
-		OS_DECLARE_BASE(AbstractVehicleUpdate)
-	public:
-		ServerVehicleUpdate( AbstractVehicle* pkVehicle ):
-		BaseClass( pkVehicle )
-		{
-		}
-		virtual ~ServerVehicleUpdate(){}
+	//----------------------------------------------------------------------------
+	// GLUI user interface
+	void initGui( void* pkUserdata );
 
-		//-------------------------------------------------------------------
-		// interface AbstractUpdated
-		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
-		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+	void setReplicaManager( RakNet::ReplicaManager3* pkReplicaManager );
 
-		//-------------------------------------------------------------------
-		// GLUI interface
-		static void initGui( GLUI_Panel* parentPanel );
+	void incrementReplicationInterval( int );
 
-	private:
-	};
+private:
+
+	static void changeReplicationDelay( GLUI_Control* pkControl );
+	static void changeReplicationSendParams( GLUI_Control* pkControl );
 
 
+	ReplicationParams& accessReplicationParams( void )
+	{
+		return this->m_kReplicationParams;
+	}
 
-} // namespace OpenSteer
+	const ReplicationParams& getReplicationParams( void )
+	{
+		return this->m_kReplicationParams;
+	}
 
-#endif // __SIMPLENETWORKVEHICLEUPDATE_H__
+	void onChangedReplicationParams( const ReplicationParams& kParams );
+
+	void addReplicaManagerGui( void* pkUserdata );
+
+	void retrieveReplicaManagerDefaultSendParams( 
+		class RakNet::ReplicaManager3* pkReplicaManager );
+
+
+	RakNet::ReplicaManager3* m_pkReplicaManager;
+	ReplicationParams m_kReplicationParams;
+
+};
+
+
+#endif // __REPLICAMANAGERGUI_H__

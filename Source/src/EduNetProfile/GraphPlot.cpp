@@ -208,6 +208,7 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 	kInterval = GraphValue::ms_Min;
 //	kScale = GraphValue::ms_Min;
 	kScale = GraphValue::ms_Max;
+	kGraphLocation.m_bWireFrame = kValues.m_bWireFrame;
 
 	TGraphValuesArray::const_iterator kIter = kValues.begin();
 	TGraphValuesArray::const_iterator kEnd = kValues.end();
@@ -234,7 +235,7 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 			++kIter;
 		}
 		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation, false );
+		this->drawGraphFrame( kGraphLocation, kGraphLocation.m_bWireFrame );
 		OpenSteer::end2dDrawing (originalMatrixMode);
 	}
 }
@@ -265,6 +266,7 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 		const GraphValuesArray* pkGraphValues = *kIter;
 		if( NULL != pkGraphValues )
 		{
+			pkGraphValues->m_bWireFrame = kValues.m_bWireFrame;
 			GraphValue& kMin = kGraphLocation.kMin;
 			GraphValue& kMax = kGraphLocation.kMax;
 			GraphValue& kInterval = kGraphLocation.kInterval;

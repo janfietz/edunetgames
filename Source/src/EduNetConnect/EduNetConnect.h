@@ -42,3 +42,6 @@
 
 #endif // __EDUNETCONNECT_H__
 
+// not inside include guards
+#undef EDUNET_NO_OPENSTEER_INCLUDES
+

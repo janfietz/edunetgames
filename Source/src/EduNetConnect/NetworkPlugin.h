@@ -30,76 +30,16 @@
 
 #define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
 #include "EduNetConnect/EduNetConnect.h"
+
+#include "EduNetConnect/ReplicaManagerGui.h"
+
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 
 #include "OpenSteer/Plugin.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
-#define CLIENT_PORT  23456
-#define SERVER_PORT  12345
 
-//-----------------------------------------------------------------------------
-enum ENetworkSessionType
-{
-	ENetworkSessionType_Undefined,
-	ENetworkSessionType_Client,
-	ENetworkSessionType_Peer,
-	ENetworkSessionType_Count
-};
-
-
-//-----------------------------------------------------------------------------
-typedef struct TNetworkStats
-{
-	TNetworkStats():
-	m_uiPacketsReceived(0)
-	{
-	}
-
-	void reset()
-	{
-		m_uiPacketsReceived = 0;
-	}
-
-	size_t m_uiPacketsReceived;
-} NetworkStats;
-
-//-----------------------------------------------------------------------------
-typedef struct TNetworkAddress
-{
-public:
-	TNetworkAddress():
-		addressString("127.0.0.1"),
-		port(SERVER_PORT){}
-	RakNet::RakString addressString;
-	unsigned short port;
-}NetworkAddress;
-
-//-----------------------------------------------------------------------------
-typedef struct TNetworkSimulatorData
-{
-public:
-	TNetworkSimulatorData():
-		enabled(0),
-		packetloss(0.0f),
-		minExtraPing(0),
-		extraPingVariance(0){}
-	int enabled;
-	float packetloss;
-	int minExtraPing;
-	int extraPingVariance;
-}NetworkSimulatorData;
-
-//-----------------------------------------------------------------------------
-typedef struct TReplicationParams
-{
-public:
-	TReplicationParams():
-		interval(30){}		
-	RakNetTime interval;
-	RakNet::PRO sendParameter;
-}ReplicationParams;
 
 //-----------------------------------------------------------------------------
 class AbstractNetworkPlugin
@@ -184,16 +124,8 @@ public:
 	}
 
 
-	void setReplicationInterval( RakNetTime additionalTime );
+	void incrementReplicationInterval( int additionalTime );
 	
-	ReplicationParams& accessReplicationParams( void )
-	{
-		return this->m_kReplicationParams;
-	}
-
-	virtual void onChangedReplicationParams( const ReplicationParams& kParams );
-
-	void getNetworkStatistics(RakNetStatistics& kStats);
 
 	void updateMotionStateProfile( const float currentTime, const float elapsedTime );
 	static void recordNetUpdate( 
@@ -204,19 +136,23 @@ protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
 
-	void retrieveLocalReplicaManagerSendParams( 
-		class RakNet::ReplicaManager3* pkReplicaManager );
+	void gatherNetworkStatistics( RakNetStatistics& kStats );
 
 	void addReplicaManagerGui( void* pkUserdata );
 
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
 
+	void setGamePluginReplicaManager( RakNet::ReplicaManager3* pkReplicaManager )
+	{
+		this->m_pkGamePluginReplicaManager = pkReplicaManager;
+		this->m_kReplicaManagerGui.setReplicaManager( pkReplicaManager );
+	}
+
 	static OpenSteer::AbstractVehicleMotionStatePlot ms_kMotionStateProfile;
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager* m_pkNetworkIdManager;
-	RakNet::ReplicaManager3* m_pkGamePluginReplicaManager;
 
 	unsigned int m_uiStartPort;
 	unsigned int m_uiPortPongCount;
@@ -228,7 +164,6 @@ protected:
 	RakNetTime m_kPongEndTime;
 	ENetworkSessionType m_eNetworkSessionType;
 	NetworkStats m_kStats;
-	ReplicationParams m_kReplicationParams;
 
 	// settings
 	int m_bAutoConnect;
@@ -241,7 +176,7 @@ private:
 	void InitializeServerPortSettings( void );
 	virtual void InitializeServerPortAndPongCount( void );
 
-	virtual bool AddConnectBox( void ){ return false; }
+	virtual bool addConnectBox( void ){ return false; }
 
 	void ReceivePackets( void );
 	void ReceivedPongPacket( Packet* pPacket );
@@ -255,6 +190,9 @@ private:
 		const float elapsedTime);
 
 	void addNetworkSimulatorGui( void* pkUserdata );
+
+	RakNet::ReplicaManager3* m_pkGamePluginReplicaManager;
+	ReplicaManagerGui m_kReplicaManagerGui;
 
 	NetworkAddress* m_pkAddress;
 	NetworkSimulatorData m_kSimulatorData;
