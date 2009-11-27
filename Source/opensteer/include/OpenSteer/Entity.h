@@ -40,10 +40,14 @@
 namespace OpenSteer {
 
 
+	AbstractUpdated* CastToAbstractUpdated( AbstractEntity* pkEntity );
 	AbstractPlayer* CastToAbstractPlayer( AbstractEntity* pkEntity );
 	AbstractPlugin* CastToAbstractPlugin( AbstractEntity* pkEntity );
 	AbstractEntity* CastToAbstractEntity( AbstractPlugin* pkPlugin );
 
+	const AbstractPlayer* CastToAbstractPlayer( const AbstractEntity* pkEntity );
+	const AbstractPlugin* CastToAbstractPlugin( const AbstractEntity* pkEntity );
+	const AbstractEntity* CastToAbstractEntity( const AbstractPlugin* pkPlugin );
 	//-------------------------------------------------------------------------
 	template <class Super>
 	class EntityPossessionMixin : public Super

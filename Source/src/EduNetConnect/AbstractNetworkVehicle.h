@@ -60,6 +60,7 @@ namespace OpenSteer {
 		ESerializeDataType_AngularVelocity,
 		ESerializeDataType_LinearVelocity,
 		ESerializeDataType_UpdateTicks,
+		ESerializeDataType_ControllerAction,
 		ESerializeDataType_Count,
 	};
 

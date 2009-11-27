@@ -36,6 +36,12 @@ using namespace OpenSteer;
 InstanceTracker EntityInstance::ms_InstanceTracker;
 
 //-----------------------------------------------------------------------------
+AbstractUpdated* OpenSteer::CastToAbstractUpdated( AbstractEntity* pkEntity )
+{
+	return dynamic_cast<AbstractUpdated*>( pkEntity );
+}
+
+//-----------------------------------------------------------------------------
 AbstractPlayer* OpenSteer::CastToAbstractPlayer( AbstractEntity* pkEntity )
 {
 	return dynamic_cast<AbstractPlayer*>( pkEntity );
@@ -52,4 +58,23 @@ AbstractPlugin* OpenSteer::CastToAbstractPlugin( AbstractEntity* pkEntity )
 AbstractEntity* OpenSteer::CastToAbstractEntity( AbstractPlugin* pkPlugin )
 {
 	return dynamic_cast<AbstractEntity*>( pkPlugin );
+}
+
+//-----------------------------------------------------------------------------
+const AbstractPlayer* OpenSteer::CastToAbstractPlayer( const AbstractEntity* pkEntity )
+{
+	return dynamic_cast<const AbstractPlayer*>( pkEntity );
+}
+
+
+//-----------------------------------------------------------------------------
+const AbstractPlugin* OpenSteer::CastToAbstractPlugin( const AbstractEntity* pkEntity )
+{
+	return dynamic_cast<const AbstractPlugin*>( pkEntity );
+}
+
+//-----------------------------------------------------------------------------
+const AbstractEntity* OpenSteer::CastToAbstractEntity( const AbstractPlugin* pkPlugin )
+{
+	return dynamic_cast<const AbstractEntity*>( pkPlugin );
 }

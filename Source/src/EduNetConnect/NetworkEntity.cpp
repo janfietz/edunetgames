@@ -27,7 +27,9 @@
 //-----------------------------------------------------------------------------
 
 #include "NetworkEntity.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 #include "OpenSteer/Obstacle.h"
+#include "OpenSteer/AbstractPlayer.h"
 
 using namespace OpenSteer;
 
@@ -66,12 +68,12 @@ int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializePa
 	{
 		RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 
+		unsigned char dataType;
 		// sphere obstacle
 		const SphereObstacle* pkSphere = dynamic_cast<const SphereObstacle*>(this->m_pkEntity);
 		if( NULL != pkSphere )
 		{
 			unsigned char dataTypes = 2; // how many variables will be send
-			unsigned char dataType;
 
 			kStream.WriteAlignedBytes(&dataTypes,sizeof(unsigned char));
 
@@ -83,6 +85,61 @@ int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializePa
 			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 			kStream.WriteAlignedBytes((const unsigned char*)&pkSphere->radius,sizeof(float));
 			return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+		}
+
+		// player
+		const osAbstractPlayer* pkPlayer = dynamic_cast<const osAbstractPlayer*>(this->m_pkEntity);
+		if( NULL != pkPlayer )
+		{
+			const osAbstractController* pkController = pkPlayer->getController();
+			unsigned char dataTypes = 5; // how many variables will be send
+			kStream.WriteAlignedBytes(&dataTypes,sizeof(unsigned char));
+
+			unsigned char controllerAction;
+			float fValue;
+
+			dataType = ESerializeDataType_ControllerAction;
+			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+			controllerAction = EControllerAction_Left;
+			fValue = pkController->getActionValue( EControllerAction_Left );
+			kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+			kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+			dataType = ESerializeDataType_ControllerAction;
+			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+			controllerAction = EControllerAction_Right;
+			fValue = pkController->getActionValue( EControllerAction_Right );
+			kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+			kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+			dataType = ESerializeDataType_ControllerAction;
+			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+			controllerAction = EControllerAction_Backward;
+			fValue = pkController->getActionValue( EControllerAction_Backward );
+			kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+			kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+			dataType = ESerializeDataType_ControllerAction;
+			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+			controllerAction = EControllerAction_Forward;
+			fValue = pkController->getActionValue( EControllerAction_Forward );
+			kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+			kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+			dataType = ESerializeDataType_ControllerAction;
+			kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+			controllerAction = EControllerAction_Kick;
+			fValue = pkController->getActionValue( EControllerAction_Kick );
+			kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+			kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+			return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+
 		}
 	}
 	return -1;
@@ -101,6 +158,7 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 		SphereObstacle* pkSphere = dynamic_cast<SphereObstacle*>(this->m_pkEntity);
 		AbstractLocalSpace* pkLocalSpace = dynamic_cast<AbstractLocalSpace*>(this->m_pkEntity);
 
+		unsigned char controllerAction;
 		unsigned char dataTypes = 0; // how many variables to read
 		RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
 		kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
@@ -134,6 +192,12 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 					kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
 				}
 				break;
+			case(ESerializeDataType_ControllerAction):
+				{
+					kStream.ReadAlignedBytes((unsigned char*)&controllerAction,sizeof(unsigned char));
+					kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+				}
+				break;
 			default:
 				{
 					assert( true == false );
@@ -153,6 +217,17 @@ void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deseri
 						}
 					}
 					break;
+				case(ESerializeDataType_ControllerAction):
+					{
+						osAbstractPlayer* pkPlayer = dynamic_cast<osAbstractPlayer*>(this->m_pkEntity);
+						if( NULL != pkPlayer )
+						{
+							osAbstractController* pkController = pkPlayer->accessController();
+							pkController->setActionValue( (EControllerAction)controllerAction, fValue );
+						}
+					}
+					break;
+
 				}
 			}
 		}
