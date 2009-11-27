@@ -114,6 +114,7 @@ private:
 //-----------------------------------------------------------------------------
 // client plugin
 //-----------------------------------------------------------------------------
+#define ET_TEST_PLAYERREPLICATION 1
 
 //-----------------------------------------------------------------------------
 class CtfClientPlugin : public TCtfClientPlugin
@@ -126,7 +127,11 @@ public:
 	{
 		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 
-		this->m_pkClientEntityFactory = NULL;//ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+#if ET_TEST_PLAYERREPLICATION
+		this->m_pkClientEntityFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+#else
+		this->m_pkClientEntityFactory = NULL;
+#endif
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}
@@ -145,7 +150,6 @@ public:
 		BaseClass::StartNetworkSession();
 		this->m_pNetInterface->AttachPlugin( &this->m_kReplicaManager );
 	}
-#define ET_TEST_PLAYERREPLICATION 0
 	//-------------------------------------------------------------------------
 	void CreateContent( void )
 	{
@@ -173,6 +177,7 @@ public:
 
 	void update (const float currentTime, const float elapsedTime)
 	{
+		BaseClass::update( currentTime,  elapsedTime );
 		if( NULL != this->m_pkNetworkPlayer )
 		{
 

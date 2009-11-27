@@ -55,12 +55,12 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 		kColor.setG( 0.4f );
 		kColor.setB( 0.0f );
 		kColor.setA( 0.2f );
-		float fUpOffset = 0.2f;
+		float fUpOffset = 0.01f;
 		while( kIter != kEnd )
 		{
 			const LocalSpaceData& kLocalSpaceData = *kIter;
 			drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
-			fUpOffset += 0.02f;
+			fUpOffset += 0.01f;
 			++kIter;
 			kColor.setA( kColor.a() + 0.05f );
 			kColor.setB( kColor.b() + 0.1f );
