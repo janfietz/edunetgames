@@ -43,6 +43,8 @@ namespace OpenSteer
 
 		static AbstractController* accessLocalPlayerController( void );
 
+		void configure( void );
+
 		virtual void setOutputForce( const Vec3& kOutput )
 		{
 			LocalPlayerController::ms_kOutput = kOutput;
@@ -58,6 +60,7 @@ namespace OpenSteer
 		static bool keyboardFunc( unsigned char key, int x, int y );
 		static bool keyboardFuncUp( unsigned char key, int x, int y );
 	private:
+		static LocalPlayerController& accessController( void );
 		static Vec3 ms_kOutput;
 	};
 }
