@@ -70,6 +70,10 @@ void GridPlugin::initGui( void* pkUserdata )
 //-----------------------------------------------------------------------------
 void GridPlugin::redraw (const float currentTime, const float elapsedTime) 
 { 
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	// draw "ground plane"
 	GridPlugin::gridUtility( GridPlugin::ms_kGridCenter );
 }

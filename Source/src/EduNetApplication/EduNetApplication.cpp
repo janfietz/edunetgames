@@ -34,6 +34,7 @@
 #include "EduNetCommon/EduNetOptions.h"
 #include "EduNetProfile/GraphPlot.h"
 
+#include "OpenSteerUT/AbstractPluginUtilities.h"
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
 
@@ -335,9 +336,7 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 		{
 			if( pluginPanel == NULL )
 			{
-				GLUI_Rollout* pluginRollout = appGlui->add_rollout( pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
-				pluginPanel = pluginRollout;
-				pkPlugin->initGui( pluginPanel );
+				pluginPanel = AbstractPluginGui::initRootPluginGui( pkPlugin );
 			}
 		}
 	}
@@ -425,6 +424,9 @@ void Application::updateSelectedPlugin (const float currentTime,
 		this->m_kUpdateClock.update();
 		const osScalar preUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
 
+		osAbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(OpenSteer::Plugin::selectedPlugin);
+		assert( NULL != pkUpdatedPlugin );
+
 		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
 		{
 			OpenSteer::enableAnnotation = false;
@@ -434,7 +436,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 				{
 					OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
 				}
-				OpenSteer::Plugin::selectedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
+				pkUpdatedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
 				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
 				--uiTicks;
 			}
@@ -443,7 +445,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 		{
 			OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
 			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
-			OpenSteer::Plugin::selectedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
+			pkUpdatedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
 		}
 
 		this->m_kUpdateClock.update();

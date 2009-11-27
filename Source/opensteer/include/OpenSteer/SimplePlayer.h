@@ -37,8 +37,13 @@
 namespace OpenSteer
 {
 
-	typedef EntityMixin<AbstractController> TAbstractController_0;
-	typedef EntityMixin<AbstractPlayer> TAbstractPlayer_0;
+	typedef EntityVisibilityMixin<AbstractController> TAbstractController_000;
+	typedef EntityParentMixin<TAbstractController_000> TAbstractController_00;
+	typedef EntityMixin<TAbstractController_00> TAbstractController_0;
+
+	typedef EntityVisibilityMixin<AbstractPlayer> TAbstractPlayer_000;
+	typedef EntityParentMixin<TAbstractPlayer_000> TAbstractPlayer_00;
+	typedef EntityMixin<TAbstractPlayer_00> TAbstractPlayer_0;
 
 	typedef AbstractUpdatedMixin<TAbstractController_0> TAbstractController;
 	typedef AbstractUpdatedMixin<TAbstractPlayer_0> TAbstractPlayer;

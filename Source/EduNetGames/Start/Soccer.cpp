@@ -296,6 +296,10 @@ namespace {
 
         void update (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
             // update simulation of test vehicle
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
                 TeamA[i]->update (currentTime, elapsedTime);
@@ -318,6 +322,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // draw test vehicle
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
                 TeamA[i]->draw ();

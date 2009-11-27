@@ -61,12 +61,15 @@ public:
 	virtual bool isEnabled( void ) const { return this->m_bEnabled; }; 
 	virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; }; 
 
+	//-------------------------------------------------------------------------
+	// vehicle group tools
+	void addVehicleToPlugin( AbstractVehicle* pkVehicle, AbstractPlugin* pkPlugin );
+	void removeVehicleFromPlugin( const AbstractVehicle* pkVehicle );
+
 	void redraw (const float currentTime, const float elapsedTime);
 	void reset( void );
 	void allocateProximityToken( ProximityDatabase* pd );
 
-	void addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase = NULL );
- 	void removeVehicle( const AbstractVehicle* pkVehicle );
  	AVGroup::iterator findVehicle( const AbstractVehicle* pkVehicle ) const;
 	AVGroup::iterator findNetworkVehicle( NetworkId networkId ) const;
 
@@ -74,6 +77,9 @@ public:
 	AVGroup::iterator end() { return m_kVehicles.end(); }
 	size_t population() const { return m_kVehicles.size(); }
 private:
+#if 0
+	void addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase = NULL );
+#endif
 	AbstractVehicleGroup( void );
 	AVGroup& m_kVehicles;
 	AbstractUpdated* m_pkCustomUpdated;

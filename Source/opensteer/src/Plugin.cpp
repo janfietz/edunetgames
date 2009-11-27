@@ -58,7 +58,6 @@ on_plugin_selected_func OpenSteer::Plugin::ms_on_plugin_selected_func = NULL;
 //-----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
-	m_pkParentPlugin( NULL ),
 	m_pkEntityFactory( NULL )
 {
     // save this new instance in the registry
@@ -385,22 +384,28 @@ OpenSteer::Plugin::resetSelectedPlugin (void)
 void OpenSteer::Plugin::addVehicle ( 
 	OpenSteer::AbstractVehicle* pkVehicle)
 {
-	
+	assert( true == false );
 }
 
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::removeVehicle (
 	OpenSteer::AbstractVehicle* pkVehicle)
 {
-	
+	assert( true == false );
 }
 
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::addObstacle (
 	OpenSteer::AbstractObstacle* pkObstacle)
 {
+	if( NULL == pkObstacle )
+	{
+		return;
+	}
+	pkObstacle->setParentEntity( this );
 	this->allObstacles().push_back( pkObstacle );
 }
+
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::removeObstacle (
 	OpenSteer::AbstractObstacle* pkObstacle)
@@ -408,15 +413,23 @@ void OpenSteer::Plugin::removeObstacle (
 	ObstacleGroup::iterator kIter = std::find( this->m_kAllObstacles.begin(), this->m_kAllObstacles.end(), pkObstacle );
 	if( kIter != this->m_kAllObstacles.end() )
 	{
+		pkObstacle->setParentEntity( NULL );
 		this->m_kAllObstacles.erase( kIter );
 	}
 }
+
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::addPlayer (
 	OpenSteer::AbstractPlayer* pkPlayer)
 {
+	if( NULL == pkPlayer )
+	{
+		return;
+	}
+	pkPlayer->setParentEntity( this );
 	this->allPlayers().push_back( pkPlayer );
 }
+
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::removePlayer (
 	OpenSteer::AbstractPlayer* pkPlayer)
@@ -424,6 +437,7 @@ void OpenSteer::Plugin::removePlayer (
 	AbstractPlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
 	if( kIter != this->m_kAllPlayers.end() )
 	{
+		pkPlayer->setParentEntity( NULL );
 		this->m_kAllPlayers.erase( kIter );
 	}
 }

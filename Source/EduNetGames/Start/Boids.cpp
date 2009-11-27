@@ -356,6 +356,10 @@ namespace {
 
         void update (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
     #ifndef NO_LQ_BIN_STATS
             Boid::maxNeighbors = Boid::totalNeighbors = 0;
             Boid::minNeighbors = std::numeric_limits<int>::max();
@@ -370,6 +374,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // selected vehicle (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

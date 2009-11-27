@@ -102,13 +102,13 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 		Camera::camera.fixedPosition.set(80, 60, 0);
 	}
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle, this->accessProximityDataBase() );
+	kVG.addVehicleToPlugin( pkVehicle, this );
 }
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
 {
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.removeVehicle( pkVehicle );
+	kVG.removeVehicleFromPlugin( pkVehicle );
 }
 
 //-----------------------------------------------------------------------------
@@ -227,6 +227,10 @@ void NetCtfPlugin::open (void)
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	NetCtfGameLogic kGameLogic;
 	kGameLogic.setPlugin( this );
 	kGameLogic.update( currentTime, elapsedTime );
@@ -245,6 +249,10 @@ void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	// selected vehicle (user can mouse click to select another)
 	AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

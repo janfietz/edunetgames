@@ -81,6 +81,7 @@ namespace OpenSteer {
 namespace OpenSteer {
 
 	class AbstractPlayer;
+	class AbstractPlugin;
 
 	//-------------------------------------------------------------------------
 	class AbstractEntity
@@ -114,15 +115,36 @@ namespace OpenSteer {
 		//! return a pointer to this instance's character string name
 		virtual const char* name (void) const OS_ABSTRACT;
 
+		//! assign a parent to this entity
+		virtual void setParentEntity( AbstractEntity* ) OS_ABSTRACT;
+
+		//! return the parent of this entity
+		virtual AbstractEntity* getParentEntity( void ) const OS_ABSTRACT; 
+
+		//! return the host plugin of this entity
+		virtual AbstractPlugin* getHostPlugin( void ) const OS_ABSTRACT; 
+
+		//! call to let a player play the specified entity
 		virtual void play( AbstractEntity* ) OS_ABSTRACT;
 
+		//! called in case a player plays this entity
 		virtual void possessBy( AbstractEntity* ) OS_ABSTRACT;
 
+		//! return the player of this entity
 		virtual AbstractPlayer* getPlayer( void ) const OS_ABSTRACT;
 
+		//! return true if this entity is possessed by a player
 		virtual bool isPossessed( void ) const OS_ABSTRACT;
 
+		//! return true if this entity is a player
 		virtual bool isPlayer( void ) const  OS_ABSTRACT;
+
+		//! return true if this entity is visible
+		virtual bool isVisible( void ) const  OS_ABSTRACT;
+
+		//! set if this entity is visible
+		virtual void setVisible( bool bValue )  OS_ABSTRACT;
+
 	};
 
 

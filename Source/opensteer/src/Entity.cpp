@@ -28,6 +28,7 @@
 
 #include "OpenSteer/Entity.h"
 #include "OpenSteer/AbstractPlayer.h"
+#include "OpenSteer/AbstractPlugin.h"
 
 using namespace OpenSteer;
 
@@ -41,3 +42,14 @@ AbstractPlayer* OpenSteer::CastToAbstractPlayer( AbstractEntity* pkEntity )
 }
 
 
+//-----------------------------------------------------------------------------
+AbstractPlugin* OpenSteer::CastToAbstractPlugin( AbstractEntity* pkEntity )
+{
+	return dynamic_cast<AbstractPlugin*>( pkEntity );
+}
+
+//-----------------------------------------------------------------------------
+AbstractEntity* OpenSteer::CastToAbstractEntity( AbstractPlugin* pkPlugin )
+{
+	return dynamic_cast<AbstractEntity*>( pkPlugin );
+}

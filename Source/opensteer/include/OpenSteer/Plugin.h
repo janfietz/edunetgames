@@ -99,10 +99,16 @@ namespace OpenSteer {
         AbstractPlugin* next (void) const;
 
 		//! returns pointer to the parent Plugin
-		virtual AbstractPlugin* getParentPlugin(void) const { return m_pkParentPlugin; };
+		virtual AbstractPlugin* getParentPlugin(void) const 
+		{ 
+			return this->getHostPlugin(); 
+		};
 
 		//! set a parent Plugin
-		virtual void setParentPlugin( AbstractPlugin* pkPlugin ) { m_pkParentPlugin = pkPlugin; };
+		virtual void setParentPlugin( AbstractPlugin* pkPlugin ) 
+		{
+			this->setParentEntity( OpenSteer::CastToAbstractEntity( pkPlugin) ); 
+		};
 
 		//! implement to initialize additional gui functionality
 		virtual void initGui( void* /*pkUserdata*/ ) {};
@@ -196,9 +202,6 @@ namespace OpenSteer {
 		AbstractPlayerGroup m_kAllPlayers;
 
     private:
-
-		AbstractPlugin* m_pkParentPlugin;
-
         //! This array stores a list of all Plugins.  It is manipulated by the
         //! constructor and destructor, and used in findByName and applyToAll.
         static const int totalSizeOfRegistry;

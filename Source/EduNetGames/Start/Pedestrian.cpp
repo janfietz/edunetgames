@@ -492,6 +492,10 @@ namespace {
 
         void update (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
             // update each Pedestrian
             for (iterator i = crowd.begin(); i != crowd.end(); i++)
             {
@@ -501,6 +505,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // selected Pedestrian (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

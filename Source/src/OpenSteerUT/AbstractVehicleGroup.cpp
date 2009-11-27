@@ -134,6 +134,34 @@ void AbstractVehicleGroup::reset( void )
 }
 
 //-----------------------------------------------------------------------------
+void AbstractVehicleGroup::addVehicleToPlugin( AbstractVehicle* pkVehicle, AbstractPlugin* pkPlugin )
+{
+	// do not add NULL vehicles
+	if( NULL == pkVehicle )
+	{
+		return;
+	}
+	assert( NULL != pkPlugin );
+	ProximityDatabase* pkProximityDatabase = pkPlugin->accessProximityDataBase();
+	// allocate a proximity token in case there is a proximity database
+	pkVehicle->allocateProximityToken( pkProximityDatabase );
+	pkVehicle->setParentEntity( OpenSteer::CastToAbstractEntity( pkPlugin ) );
+	m_kVehicles.push_back( pkVehicle );
+	if( m_kVehicles.size() == 1 )
+	{
+		SimpleVehicle::selectedVehicle = pkVehicle;
+	}
+	else
+	{
+		if( NULL == SimpleVehicle::selectedVehicle )
+		{
+			SimpleVehicle::selectedVehicle = pkVehicle;
+		}
+	}
+}
+
+#if 0
+//-----------------------------------------------------------------------------
 void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle, ProximityDatabase* pkProximityDatabase )
 {
 	// do not add NULL vehicles
@@ -156,15 +184,16 @@ void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle, ProximityData
 		}
 	}
 }
-
+#endif
 //-----------------------------------------------------------------------------
-void AbstractVehicleGroup::removeVehicle( const AbstractVehicle* pkVehicle )
+void AbstractVehicleGroup::removeVehicleFromPlugin( const AbstractVehicle* pkVehicle )
 {
 	AVGroup::iterator kIter = this->findVehicle( pkVehicle );
 	if(kIter != m_kVehicles.end())
 	{
 		// release the proximity token in case allocated
 		(*kIter)->allocateProximityToken( NULL );
+		(*kIter)->setParentEntity( NULL );
 		m_kVehicles.erase( kIter );
  		// if it is SimpleVehicle's selected vehicle, unselect it
  		if( pkVehicle == SimpleVehicle::selectedVehicle )

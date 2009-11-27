@@ -94,7 +94,8 @@ namespace OpenSteer {
         
         //! generic Plugin actions: open, update, redraw, close and reset
         virtual void open (void) OS_ABSTRACT;
-        virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
+// see AbstractUpdated
+//       virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
         virtual void redraw (const float currentTime, const float elapsedTime) OS_ABSTRACT;
         virtual void close (void) OS_ABSTRACT;
         virtual void reset (void) OS_ABSTRACT;

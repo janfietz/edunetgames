@@ -244,6 +244,10 @@
 				Name="plugins"
 				>
 				<File
+					RelativePath="..\Source\src\OpenSteerUT\AbstractPluginUtilities.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\src\OpenSteerUT\AbstractPluginUtilities.h"
 					>
 				</File>

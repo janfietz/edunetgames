@@ -26,17 +26,18 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "PluginArray.h"
+#include "OpenSteerUT/PluginArray.h"
 
 #include "EduNetCommon/EduNetDraw.h"
-#include "AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractPluginUtilities.h"
 
 
 using namespace OpenSteer;
 
 
 //-----------------------------------------------------------------------------
-PluginArray::PluginArray(bool bAddToRegistry):m_pkParentPlugin(NULL)
+PluginArray::PluginArray( bool bAddToRegistry )
 {
 	if( true == bAddToRegistry )
 	{
@@ -49,6 +50,19 @@ PluginArray::~PluginArray()
 {
 	this->removeAllPlugins();
 }
+
+//-----------------------------------------------------------------------------
+AbstractPlugin* PluginArray::getParentPlugin(void) const 
+{ 
+	return this->getHostPlugin(); 
+};
+
+//-----------------------------------------------------------------------------
+void PluginArray::setParentPlugin( AbstractPlugin* pkPlugin ) 
+{
+	this->setParentEntity( OpenSteer::CastToAbstractEntity( pkPlugin) ); 
+};
+
 //-----------------------------------------------------------------------------
 void PluginArray::removeAllPlugins( void )
 {
@@ -134,12 +148,18 @@ void PluginArray::open(void)
 //-----------------------------------------------------------------------------
 void PluginArray::update(const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	TPluginArray::iterator kIter = this->begin();
 	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		pkPlugin->update( currentTime, elapsedTime );
+		AbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(pkPlugin);
+		assert( NULL != pkUpdatedPlugin );
+		pkUpdatedPlugin->update( currentTime, elapsedTime );
 		++kIter;
 	}
 }
@@ -147,6 +167,10 @@ void PluginArray::update(const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void PluginArray::redraw(const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	TPluginArray::iterator kIter = this->begin();
 	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
@@ -324,16 +348,21 @@ AVGroup& PluginArray::allVehicles(void)
 //-----------------------------------------------------------------------------
 void PluginArray::addVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
 {
-	
+	assert( true == false );
 }
 //-----------------------------------------------------------------------------
 void PluginArray::removeVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
 {
-	
+	assert( true == false );
 }
 //-----------------------------------------------------------------------------
 void PluginArray::addObstacle ( OpenSteer::AbstractObstacle* pkObstacle)
 {
+	if( NULL == pkObstacle )
+	{
+		return;
+	}
+	pkObstacle->setParentEntity( this );
 	this->allObstacles().push_back( pkObstacle );
 }
 //-----------------------------------------------------------------------------
@@ -342,12 +371,18 @@ void PluginArray::removeObstacle ( OpenSteer::AbstractObstacle* pkObstacle)
 	ObstacleGroup::iterator kIter = std::find( this->m_kAllObstacles.begin(), this->m_kAllObstacles.end(), pkObstacle );
 	if( kIter != this->m_kAllObstacles.end() )
 	{
+		pkObstacle->setParentEntity( NULL );
 		this->m_kAllObstacles.erase( kIter );
 	}
 }
 //-----------------------------------------------------------------------------
 void PluginArray::addPlayer ( OpenSteer::AbstractPlayer* pkPlayer)
 {
+	if( NULL == pkPlayer )
+	{
+		return;
+	}
+	pkPlayer->setParentEntity( this );
 	this->allPlayers().push_back( pkPlayer );
 }
 //-----------------------------------------------------------------------------
@@ -356,6 +391,7 @@ void PluginArray::removePlayer ( OpenSteer::AbstractPlayer* pkPlayer)
 	AbstractPlayerGroup::iterator kIter = std::find( this->m_kAllPlayers.begin(), this->m_kAllPlayers.end(), pkPlayer );
 	if( kIter != this->m_kAllPlayers.end() )
 	{
+		pkPlayer->setParentEntity( NULL );
 		this->m_kAllPlayers.erase( kIter );
 	}
 }
@@ -377,9 +413,11 @@ void PluginArray::initGui( void* pkUserdata )
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
-		GLUI_Panel* subPluginPanel = pluginRollout;
-		pkPlugin->initGui( subPluginPanel );
+		GLUI_Panel* subPluginPanel = AbstractPluginGui::initSubPluginGui( pkPlugin, pkUserdata );
+		if( NULL != subPluginPanel )
+		{
+
+		}
 		++kIter;
 	}
 }

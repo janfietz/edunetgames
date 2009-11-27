@@ -257,7 +257,9 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
     }
 
     // invoke selected Plugin's Update method
-    OpenSteer::Plugin::selectedPlugin->update (currentTime, elapsedTime);
+	AbstractUpdated* pkUpdatedPlugin = dynamic_cast<AbstractUpdated*>(OpenSteer::Plugin::selectedPlugin);
+	assert( NULL != pkUpdatedPlugin );
+    pkUpdatedPlugin->update (currentTime, elapsedTime);
 
     // return to previous phase
     popPhase ();

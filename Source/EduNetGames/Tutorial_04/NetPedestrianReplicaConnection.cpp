@@ -52,7 +52,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 		{
 			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pkPlugin, true  );
 			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
-			kVG.addVehicle( pkNewReplica->accessEntity(), pkPlugin->accessProximityDataBase() );
+			kVG.addVehicleToPlugin( pkNewReplica->accessEntity(), pkPlugin );
 			return pkNewReplica; 
 		}
 	}

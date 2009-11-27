@@ -283,6 +283,10 @@ void TNetworkPlugin< PluginClass >::reset()
 template < class PluginClass >
 void TNetworkPlugin< PluginClass >::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	const bool bIsRemoteObject = m_kGamePlugin.isRemoteObject();
 	if( true == bIsRemoteObject )
 	{

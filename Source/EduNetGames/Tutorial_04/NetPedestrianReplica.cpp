@@ -62,7 +62,7 @@ RakNet::RakString NetPedestrianReplica::GetName(void) const
 void NetPedestrianReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	AbstractVehicleGroup kVG( m_pkHostPlugin->allVehicles() );
-	kVG.removeVehicle( this->accessEntity() );
+	kVG.removeVehicleFromPlugin( this->accessEntity() );
 	this->releaseEntity();
 	ET_DELETE this;
 }

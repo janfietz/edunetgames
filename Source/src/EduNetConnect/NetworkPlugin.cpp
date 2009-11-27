@@ -236,6 +236,10 @@ void NetworkPlugin::reset (void)
 //-----------------------------------------------------------------------------
 void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	if( NULL == this->m_pNetInterface )
 	{
 		return;
@@ -325,6 +329,10 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 //-----------------------------------------------------------------------------
 void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	// display status 
 	bool bIsClient = ( ENetworkSessionType_Client == this->m_eNetworkSessionType );
 
@@ -353,10 +361,15 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		SocketDescriptor& sd = this->m_kSocketDescriptor;
 		status << " Port: ";
 		status << sd.port << std::endl;;
-		status << "Packets Received: ";
-		status << this->m_kStats.m_uiPacketsReceived;// << std::endl;;
+		status << "Packets/Messages Received: ";
+		status << this->m_kStats.m_uiPacketsReceived;
+		status << "/";
+		status << this->m_kStats.m_uiMessagesReceived;
 		status << " Sent: ";
-		status << this->m_kStats.m_uiPacketsSent << std::endl;;
+		status << this->m_kStats.m_uiPacketsSent;
+		status << "/";
+		status << this->m_kStats.m_uiMessagesSent;
+		status << std::endl;
 		
 	}
 	const float h = OpenSteer::drawGetWindowHeight();
@@ -707,6 +720,8 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 	this->gatherNetworkStatistics( kStats );
 	this->m_kStats.m_uiPacketsSent = kStats.packetsSent;
 	this->m_kStats.m_uiPacketsReceived = kStats.packetsReceived;
+	this->m_kStats.m_uiMessagesSent = kStats.messagesSent[ SYSTEM_PRIORITY ] + kStats.messagesSent[ HIGH_PRIORITY ] + kStats.messagesSent[ MEDIUM_PRIORITY ] + kStats.messagesSent[ LOW_PRIORITY ];
+	this->m_kStats.m_uiMessagesReceived = kStats.messagesSent[ SYSTEM_PRIORITY ] + kStats.messagesSent[ HIGH_PRIORITY ] + kStats.messagesSent[ MEDIUM_PRIORITY ] + kStats.messagesSent[ LOW_PRIORITY ];
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
 		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
@@ -743,7 +758,7 @@ void NetworkPlugin::gatherNetworkStatistics( RakNetStatistics& kStats )
 void NetworkPlugin::drawNetworkPlot(const float currentTime,
 					 const float elapsedTime)
 {
-	this->m_kNetworkPlot.draw();
+	this->m_kNetworkPlot.draw( this );
 }
 
 
