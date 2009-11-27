@@ -340,6 +340,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="player"
+				>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\SerilizablePlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\src\EduNetConnect\SerilizablePlayer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"

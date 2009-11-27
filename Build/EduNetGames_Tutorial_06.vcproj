@@ -197,6 +197,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerClientPlugin.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerClientPlugin.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerEntityFactory.cpp"
 			>
 		</File>
