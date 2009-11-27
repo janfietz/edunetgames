@@ -26,13 +26,14 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "NetSoccerPlugin.h"
+#include "NetSoccerClientPlugin.h"
+
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
-#include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 
 #include "EduNetConnect/AbstractEntityReplica.h"
@@ -42,8 +43,6 @@
 // network plugins
 //-----------------------------------------------------------------------------
 typedef PeerPlugin<NetSoccerPlugin> TSoccerPeerPlugin;
-typedef ClientPlugin<NetSoccerPlugin> TSoccerClientPlugin;
-
 
 //-----------------------------------------------------------------------------
 // soccer peer plugin
@@ -128,45 +127,6 @@ public:
 // client plugin
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-class SoccerClientPlugin : public TSoccerClientPlugin
-{
-	ET_DECLARE_BASE(TSoccerClientPlugin)
-public:
-	SoccerClientPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{
-		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
-		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-		this->m_kGamePlugin.setEntityFactory( NULL );
-	}
-
-	OS_IMPLEMENT_CLASSNAME( SoccerClientPlugin )
-		virtual const char* name() const { return this->getClassName(); };
-
-	//-------------------------------------------------------------------------
-	void StartNetworkSession( void )
-	{
-		BaseClass::StartNetworkSession();
-		this->m_pNetInterface->AttachPlugin( &this->m_kReplicaManager );
-	}
-
-	//-------------------------------------------------------------------------
-	void CreateContent( void )
-	{
-		BaseClass::CreateContent();
-	}
-
-	//-------------------------------------------------------------------------
-	void DeleteContent( void )
-	{	
-		BaseClass::DeleteContent();
-	}
-private:
-
-	AbstractEntityReplicaFactory* m_pkBoidFactory;
-	AbstractEntityReplicaManager m_kReplicaManager;
-};
 
 //-----------------------------------------------------------------------------
 // render server plugin

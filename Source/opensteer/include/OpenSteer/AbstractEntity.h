@@ -50,15 +50,16 @@ namespace OpenSteer {
 
 	// player control interface ids
 	static const EntityClassId g_clasId_Player(3);
-	static const EntityClassId g_clasId_PlayerController(4);
+	static const EntityClassId g_clasId_Client_Player(4);
+	static const EntityClassId g_clasId_PlayerController(5);
 
 
 	// obstacle interface ids
-	static const EntityClassId g_clasId_Obstacle(5);
-	static const EntityClassId g_clasId_SphereObstacle(6);
-	static const EntityClassId g_clasId_BoxObstacle(7);
-	static const EntityClassId g_clasId_PlaneObstacle(8);
-	static const EntityClassId g_clasId_RectangleObstacle(9);
+	static const EntityClassId g_clasId_Obstacle(6);
+	static const EntityClassId g_clasId_SphereObstacle(7);
+	static const EntityClassId g_clasId_BoxObstacle(8);
+	static const EntityClassId g_clasId_PlaneObstacle(9);
+	static const EntityClassId g_clasId_RectangleObstacle(10);
 	static const EntityClassId g_clasId_LastReserved(1000);
 }
 
@@ -66,6 +67,7 @@ namespace OpenSteer {
 #define OS_CID_LOCALSPACE OpenSteer::g_clasId_LocalSpace
 
 #define OS_CID_PLAYER OpenSteer::g_clasId_Player
+#define OS_CID_CLIENT_PLAYER OpenSteer::g_clasId_Client_Player
 #define OS_CID_PLAYERCONTROLLER OpenSteer::g_clasId_PlayerController
 
 #define OS_CID_OBSTACLE OpenSteer::g_clasId_Obstacle
