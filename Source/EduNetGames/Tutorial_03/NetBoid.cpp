@@ -67,6 +67,7 @@ void Boid::reset (void)
 // draw this boid into the scene
 void Boid::draw( const float currentTime, const float elapsedTime )
 {
+	BaseClass::draw( currentTime, elapsedTime );
 	drawBasic3dSphericalVehicle (*this,
 		(this->isRemoteObject()) ? gOrange : gGray70);
 	// drawTrail ();

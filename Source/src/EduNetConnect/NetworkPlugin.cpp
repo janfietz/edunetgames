@@ -333,31 +333,37 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
-	// display status 
-	bool bIsClient = ( ENetworkSessionType_Client == this->m_eNetworkSessionType );
 
-	std::ostringstream status;
-	status << std::setprecision (2);
-	status << std::setiosflags (std::ios::fixed);
 	if( false == this->IsConnected() )
 	{
 
 	}
 	else
 	{
+		// display status 
+		const bool bIsClient = this->isRemoteObject();
+
+		Color kColorNetStats = gGray80;
+		std::ostringstream status;
+		status << std::setprecision (2);
+		status << std::setiosflags (std::ios::fixed);
+
 		switch( this->m_eNetworkSessionType )
 		{
 		case(ENetworkSessionType_Client):
 			{
 				status << "Client";
+				kColorNetStats = gOrange;
 				break;
 			}
 		case(ENetworkSessionType_Peer):
 			{
 				status << "Server";
+				kColorNetStats = gGreen;
 				break;
 			}
 		}
+
 		SocketDescriptor& sd = this->m_kSocketDescriptor;
 		status << " Port: ";
 		status << sd.port << std::endl;;
@@ -369,16 +375,17 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		status << this->m_kStats.m_uiPacketsSent;
 		status << "/";
 		status << this->m_kStats.m_uiMessagesSent;
+
 		status << std::endl;
+		const float h = OpenSteer::drawGetWindowHeight();
+		osVector3 screenLocation( 10, h, 0);
+		float fOffset = 100.0f;
+		fOffset += bIsClient ? 50.0f : 100.0f;
+		screenLocation.y -= fOffset;
+		OpenSteer::draw2dTextAt2dLocation(
+			status, screenLocation, kColorNetStats, drawGetWindowWidth(), drawGetWindowHeight() );
 		
 	}
-	const float h = OpenSteer::drawGetWindowHeight();
-	osVector3 screenLocation( 10, h, 0);
-	float fOffset = 100.0f;
-	fOffset += bIsClient ? 50.0f : 100.0f;
-	screenLocation.y -= fOffset;
-	OpenSteer::draw2dTextAt2dLocation(
-		status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
 
 	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
 	{
