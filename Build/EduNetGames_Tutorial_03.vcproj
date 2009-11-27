@@ -222,6 +222,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidPlugins.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidPlugins.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Source\EduNetGames\Tutorial_03\NetBoidReplica.cpp"
 					>
 				</File>

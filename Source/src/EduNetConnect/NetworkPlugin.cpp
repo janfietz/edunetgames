@@ -728,7 +728,7 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 	this->m_kStats.m_uiPacketsSent = kStats.packetsSent;
 	this->m_kStats.m_uiPacketsReceived = kStats.packetsReceived;
 	this->m_kStats.m_uiMessagesSent = kStats.messagesSent[ SYSTEM_PRIORITY ] + kStats.messagesSent[ HIGH_PRIORITY ] + kStats.messagesSent[ MEDIUM_PRIORITY ] + kStats.messagesSent[ LOW_PRIORITY ];
-	this->m_kStats.m_uiMessagesReceived = kStats.messagesSent[ SYSTEM_PRIORITY ] + kStats.messagesSent[ HIGH_PRIORITY ] + kStats.messagesSent[ MEDIUM_PRIORITY ] + kStats.messagesSent[ LOW_PRIORITY ];
+	this->m_kStats.m_uiMessagesReceived = kStats.messagesReceived;
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
 		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
