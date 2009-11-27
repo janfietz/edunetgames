@@ -1142,7 +1142,8 @@ OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 	// (center window on screen with size equal to "ws" times screen size)
 	const int sw = glutGet(GLUT_SCREEN_WIDTH);
 	const int sh = glutGet(GLUT_SCREEN_HEIGHT);
-	const float ws = 0.8f; // window_size / screen_size
+	const float ws = 0.5f; // window_size / screen_size
+//	const float ws = 0.8f; // window_size / screen_size
 	const int ww = (int) (sw * ws);
 	const int wh = (int) (sh * ws);
 	glutInitWindowPosition ((int) (sw * (1-ws)/2), (int) (sh * (1-ws)/2));
