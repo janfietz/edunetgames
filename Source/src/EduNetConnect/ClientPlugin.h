@@ -27,7 +27,7 @@ public:
 	virtual bool Connect();
 private:
 
-	virtual bool AddConnectBox( void ){ return true; }
+	virtual bool addConnectBox( void ){ return true; }
 
 };
 

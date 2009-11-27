@@ -2,7 +2,7 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetApplication/EduNetApplication.h"
-#include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "EduNetConnect/ServerVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 static const int SERVER_PONG_COUNT = 32;
@@ -25,7 +25,6 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_bAutoConnect(1),
 		m_bDrawNetworkPlot(0)
 {
-	this->m_kReplicationParams.sendParameter.reliability = UNRELIABLE;
 }
 
 //-----------------------------------------------------------------------------
@@ -84,33 +83,13 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
 		if( false == pkPluginEntity->isRemoteObject() )
 		{
-			GLUI_Rollout* replicationRollout = glui->add_rollout_to_panel( profileRollout, "Entity Replication", false );	
-			GLUI_Panel* replicationPanel = replicationRollout;
-			glui->add_checkbox_to_panel( replicationPanel, "UpdateTicks", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks]);
-			glui->add_separator_to_panel( replicationPanel );
-			glui->add_checkbox_to_panel( replicationPanel, "Position", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Position]);
-			glui->add_separator_to_panel( replicationPanel );
-			glui->add_checkbox_to_panel( replicationPanel, "Forward", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Forward]);
-			glui->add_checkbox_to_panel( replicationPanel, "Side", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Side]);
-			glui->add_checkbox_to_panel( replicationPanel, "Up", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Up]);
-			glui->add_checkbox_to_panel( replicationPanel, "Orientation", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Orientation]);
-			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation1", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1]);
-			glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation2", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2]);
-			glui->add_separator_to_panel( replicationPanel );
-			glui->add_checkbox_to_panel( replicationPanel, "AngularVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity]);
-			glui->add_checkbox_to_panel( replicationPanel, "LinearVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity]);
-			glui->add_checkbox_to_panel( replicationPanel, "Speed", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Speed]);
-			glui->add_separator_to_panel( replicationPanel );
-			glui->add_checkbox_to_panel( replicationPanel, "Force", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Force]);
-			glui->add_checkbox_to_panel( replicationPanel, "CompressedForce", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedForce]);
-			glui->add_separator_to_panel( replicationPanel );
-			glui->add_checkbox_to_panel( replicationPanel, "Radius", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Radius]);
+			ServerVehicleUpdate::initGui( profileRollout );
 		}
 	}
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
 
-	if( true == this->AddConnectBox() )
+	if( true == this->addConnectBox() )
 	{
 		const NetworkAddress& kAddress = this->getCurrentAddress();
 		
@@ -219,116 +198,19 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 		}
 	}	
 }
-//-----------------------------------------------------------------------------
-void NetworkPlugin::setReplicationInterval( RakNetTime additionalTime )
-{
-	ReplicationParams& kReplicationParams = this->accessReplicationParams();	
-	kReplicationParams.interval += additionalTime;
-	//clamp interval
-	if( 5 > kReplicationParams.interval )
-	{
-		kReplicationParams.interval = 5;
-	}
-	printf("Changed replication interval to: %d ms\n",
-		kReplicationParams.interval);
-	this->onChangedReplicationParams( kReplicationParams );
-}
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::retrieveLocalReplicaManagerSendParams( 
-	RakNet::ReplicaManager3* pkReplicaManager )
+void NetworkPlugin::incrementReplicationInterval( int additionalTime )
 {
-	this->m_kReplicationParams.sendParameter = 
-		pkReplicaManager->GetDefaultSendParameters();
-
-	// and change to UNRELIABLE
-	this->m_kReplicationParams.sendParameter.reliability = UNRELIABLE;
-	this->onChangedReplicationParams( this->m_kReplicationParams );
-
-}
-
-//-----------------------------------------------------------------------------
-void changeReplicationDelay(GLUI_Control* pkControl )
-{
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	if (NULL == pkPlugin)
-	{
-		return;
-	}
-	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();	
-	kReplicationParams.interval = pkControl->get_int_val();
-	pkPlugin->onChangedReplicationParams(kReplicationParams);
-}
-
-//-----------------------------------------------------------------------------
-void changeReplicationSendParams(GLUI_Control* pkControl )
-{
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	if (NULL == pkPlugin)
-	{
-		return;
-	}
-	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();	
-	GLUI_Listbox* pkList = pkControl->dynamicCastGLUI_Listbox();
-	if (NULL == pkList)
-	{
-		return;
-	}
-	GLUI_Listbox_Item* pkItem = pkList->get_item_ptr( pkList->curr_text.c_str() );
-	switch( pkControl->get_id() )
-	{
-	case 1: 
-		{
-			kReplicationParams.sendParameter.reliability = (PacketReliability)pkItem->id;
-		}break;
-	case 2: 
-		{
-			kReplicationParams.sendParameter.priority = (PacketPriority)pkItem->id;
-		}break;
-	}
-	
-	pkPlugin->onChangedReplicationParams(kReplicationParams);
+	this->m_kReplicaManagerGui.incrementReplicationInterval( additionalTime );
 }
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::addReplicaManagerGui( void* pkUserdata  )
 {
-//	BaseClass::initGui( pkUserdata );
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	GLUI_Panel* replicaPanel = glui->add_rollout_to_panel( pluginPanel,
-		"Replication Settings", false );
-
-
-	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(replicaPanel, "ReplicationDelay",
-			GLUI_SPINNER_INT, NULL, -1, changeReplicationDelay);
-	repSpinner->set_int_limits(5, 1000000);
-	repSpinner->set_int_val(this->m_kReplicationParams.interval);
-	repSpinner->set_speed(0.01f);
-	repSpinner->set_ptr_val( this );
-
-	GLUI_Listbox* pluginList = 
-		glui->add_listbox_to_panel( replicaPanel, "Default Reliability", NULL, 1, changeReplicationSendParams );
-	pluginList->add_item( UNRELIABLE, "Unreliable" );
-	pluginList->add_item( UNRELIABLE_SEQUENCED, "Unreliable Sequenced" );
-	pluginList->add_item( RELIABLE, "Reliable" );
-	pluginList->add_item( RELIABLE_ORDERED, "Reliable Ordered" );
-	pluginList->add_item( RELIABLE_SEQUENCED, "Reliable Sequenced" );
-	pluginList->set_ptr_val( this );
-//	pluginList->do_selection( this->m_kReplicationParams.sendParameter.reliability );
-	pluginList->do_selection( UNRELIABLE );
-
-	pluginList = 
-		glui->add_listbox_to_panel( replicaPanel,"Default Priority", NULL, 2, changeReplicationSendParams );
-	pluginList->add_item( HIGH_PRIORITY, "High" );
-	pluginList->add_item( MEDIUM_PRIORITY, "Medium" );
-	pluginList->add_item( LOW_PRIORITY, "Low" );
-	pluginList->do_selection( this->m_kReplicationParams.sendParameter.priority );
-	pluginList->set_ptr_val( this );
-
-
+	this->m_kReplicaManagerGui.initGui( pkUserdata );
 }
+
 //-----------------------------------------------------------------------------
 void NetworkPlugin::open( void )
 {	
@@ -373,10 +255,7 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 
 	this->ReceivePackets();
 
-	if( 0 != this->m_bDrawNetworkPlot )
-	{
-		this->recordNetworkStatistics( currentTime, elapsedTime );
-	}
+	this->recordNetworkStatistics( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
@@ -421,12 +300,14 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 			AVGroup::iterator kFound = kAV.findNetworkVehicle( networkId );
 			if( kFound != kAV.end() )
 			{
+				// TODO: move to own service function
 				AbstractVehicle* pkVehicle = *kFound;
 				if( pkVehicle != OpenSteer::SimpleVehicle::selectedVehicle )
 				{
 					if( false == pkVehicle->isRemoteObject() )
 					{
 						// switch to the server object
+						// as this will not jitter
 						OpenSteer::SimpleVehicle::selectedVehicle = pkVehicle;
 					}
 				}
@@ -439,15 +320,12 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 			}
 		}
 	}
-
 }
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 {
-
 	// display status 
-
 	bool bIsClient = ( ENetworkSessionType_Client == this->m_eNetworkSessionType );
 
 	std::ostringstream status;
@@ -475,16 +353,18 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		SocketDescriptor& sd = this->m_kSocketDescriptor;
 		status << " Port: ";
 		status << sd.port << std::endl;;
-		status << "PacketsReceived: ";
-		status << this->m_kStats.m_uiPacketsReceived << std::endl;;
+		status << "Packets Received: ";
+		status << this->m_kStats.m_uiPacketsReceived;// << std::endl;;
+		status << " Sent: ";
+		status << this->m_kStats.m_uiPacketsSent << std::endl;;
 		
 	}
-	const float h = drawGetWindowHeight();
+	const float h = OpenSteer::drawGetWindowHeight();
 	osVector3 screenLocation( 10, h, 0);
 	float fOffset = 100.0f;
 	fOffset += bIsClient ? 50.0f : 100.0f;
 	screenLocation.y -= fOffset;
-	draw2dTextAt2dLocation(
+	OpenSteer::draw2dTextAt2dLocation(
 		status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
 
 	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
@@ -505,6 +385,18 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void NetworkPlugin::handleFunctionKeys (int keyNumber)
 {
+	// TODO: client server difference ?
+	switch (keyNumber)
+	{
+	case GLUT_KEY_UP:  
+		incrementReplicationInterval(5);         
+		break; //GLUT_KEY_UP
+	case GLUT_KEY_DOWN:  
+		incrementReplicationInterval(-5);    
+		break; //GLUT_KEY_DOWN  
+	default: 
+		BaseClass::handleFunctionKeys(keyNumber);
+	}	
 }
 
 //-----------------------------------------------------------------------------
@@ -625,7 +517,6 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 	return bStarted;
 }
 
-
 //-----------------------------------------------------------------------------
 void NetworkPlugin::StopNetworkSession( void )
 {	
@@ -676,7 +567,6 @@ void NetworkPlugin::ReceivePackets( void )
 		Packet* pPacket = this->m_pNetInterface->Receive();
 		if( 0 != pPacket )
 		{
-			++this->m_kStats.m_uiPacketsReceived;
 			this->OnReceivedPacket( pPacket );
 			this->m_pNetInterface->DeallocatePacket(pPacket);
 		} 
@@ -814,12 +704,17 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 	const float elapsedTime)
 {
 	RakNetStatistics kStats;
-	this->getNetworkStatistics( kStats );
-	this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
+	this->gatherNetworkStatistics( kStats );
+	this->m_kStats.m_uiPacketsSent = kStats.packetsSent;
+	this->m_kStats.m_uiPacketsReceived = kStats.packetsReceived;
+	if( 0 != this->m_bDrawNetworkPlot )
+	{
+		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
+	}
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::getNetworkStatistics(RakNetStatistics& kStats)
+void NetworkPlugin::gatherNetworkStatistics( RakNetStatistics& kStats )
 {
 
 	DataStructures::List<SystemAddress> kAddresses;
@@ -851,20 +746,4 @@ void NetworkPlugin::drawNetworkPlot(const float currentTime,
 	this->m_kNetworkPlot.draw();
 }
 
-//-----------------------------------------------------------------------------
-void NetworkPlugin::onChangedReplicationParams( 
-	const ReplicationParams& kParams )
-{
-	if( NULL == this->m_pkGamePluginReplicaManager )
-	{
-		return;
-	}
-	RakNet::ReplicaManager3& kReplicaManager = *this->m_pkGamePluginReplicaManager;
-	kReplicaManager.SetAutoSerializeInterval(
-		kParams.interval);
-	kReplicaManager.SetDefaultPacketReliability(
-		kParams.sendParameter.reliability);
-	kReplicaManager.SetDefaultPacketPriority(
-		kParams.sendParameter.priority);
-}
 

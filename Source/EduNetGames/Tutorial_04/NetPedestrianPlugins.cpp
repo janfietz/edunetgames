@@ -53,10 +53,8 @@ public:
 	PedestrianPeerPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
+		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-
-		this->retrieveLocalReplicaManagerSendParams(&this->m_kReplicaManager);
 
 		// attach vehicle factory
 		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
@@ -82,12 +80,6 @@ public:
 	//-------------------------------------------------------------------------
 	void handleFunctionKeys (int keyNumber)
 	{
-		switch (keyNumber)
-		{
-		case 101:  setReplicationInterval(5);         break; //GLUT_KEY_UP
-		case 103:  setReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
-		default: BaseClass::handleFunctionKeys(keyNumber);
-		}	
 	}
 	
 	//-------------------------------------------------------------------------
@@ -104,16 +96,9 @@ public:
 
 
 private:
-	struct ReplicationParams
-	{
-		ReplicationParams():
-	interval(30){}		
-	RakNetTime interval;
-	};
 	NetPedestrianReplicaFactory* m_pkNetPedestrianFactory;
 	NetPedestrianReplicaManager m_kReplicaManager;
 
-	ReplicationParams m_kReplicationSettings;
 };
 
 //-----------------------------------------------------------------------------
@@ -124,7 +109,7 @@ public:
 	PedestrianClientPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-		this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
+		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}

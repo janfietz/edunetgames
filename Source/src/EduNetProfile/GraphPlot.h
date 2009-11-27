@@ -42,6 +42,12 @@ namespace OpenSteer
 //-----------------------------------------------------------------------------
 namespace Profile
 {
+	typedef struct TGraphLayout
+	{
+		TGraphLayout():m_bWireFrame(false){}
+		mutable bool m_bWireFrame;
+	} GraphLayout;
+
 	//-------------------------------------------------------------------------
 	typedef struct TGraphValue
 	{
@@ -220,7 +226,7 @@ namespace Profile
 	
 	typedef std::vector<GraphValues> TGraphValuesArray;
 	//-------------------------------------------------------------------------
-	class GraphValuesArray : public TGraphValuesArray
+	class GraphValuesArray : public TGraphValuesArray, public GraphLayout
 	{
 	public:
 		GraphValuesArray()
@@ -267,7 +273,14 @@ namespace Profile
 
 	};
 
-	typedef std::vector<GraphValuesArray*> TGraphPointerArray;
+
+	//-------------------------------------------------------------------------
+	typedef std::vector<GraphValuesArray*> _TGraphPointerArray;
+	class TGraphPointerArray : public _TGraphPointerArray, public GraphLayout
+	{
+	public:
+		virtual ~TGraphPointerArray(){}
+	};
 
 
 	//-------------------------------------------------------------------------
@@ -285,7 +298,7 @@ namespace Profile
 			float sx, float sy, float width, float height ) const;
 		void drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle = true ) const;
 	private:
-		typedef struct TGraphLocation
+		typedef struct TGraphLocation : public GraphLayout
 		{
 			TGraphLocation():fGraphIndex(0)
 			{

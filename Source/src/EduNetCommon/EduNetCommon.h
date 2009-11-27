@@ -46,7 +46,7 @@
 #include "EduNetTypes.h"
 #include "EduNetGuiTypes.h"
 #include "EduNetMacros.h"
-
+#include "EduNetMath.h"
 
 #endif // __EDUNETCOMMON_H__
 

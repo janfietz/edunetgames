@@ -12,9 +12,8 @@
 NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry )
 {
-	this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
+	this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-	this->retrieveLocalReplicaManagerSendParams(&this->m_kReplicaManager);
 
 	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);
 	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
@@ -43,12 +42,6 @@ void NetPeerBoidPlugin::CreateContent( void )
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::handleFunctionKeys (int keyNumber)
 {
-	switch (keyNumber)
-    {
-    case 101:  setReplicationInterval(5);         break; //GLUT_KEY_UP
-    case 103:  setReplicationInterval(-5);    break; //GLUT_KEY_DOWN  
-	default: BaseClass::handleFunctionKeys(keyNumber);
-    }	
 }
 
 //-----------------------------------------------------------------------------
@@ -71,7 +64,7 @@ void NetPeerBoidPlugin::DeleteContent( void )
 NetClientBoidPlugin::NetClientBoidPlugin(bool bAddToRegistry):
 	BaseClass(bAddToRegistry)
 {
-	this->m_pkGamePluginReplicaManager = &this->m_kReplicaManager;
+	this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
 	this->m_kGamePlugin.setEntityFactory( NULL  );
 }

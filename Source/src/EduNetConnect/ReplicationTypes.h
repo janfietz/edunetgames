@@ -1,3 +1,6 @@
+#ifndef __REPLICATIONTYPES_H__
+#define __REPLICATIONTYPES_H__
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -25,51 +28,82 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "NetworkPlot.h"
+
+#define EDUNET_NO_OPENSTEER_INCLUDES 1 // do not include opensteer
+#include "EduNetConnect/EduNetConnect.h"
+
+#define CLIENT_PORT  23456
+#define SERVER_PORT  12345
+
+#define ET_DEFAULT_REPLICATION_FPS 25
+#define ET_DEFAULT_REPLICATION_INTERVAL 1000 / ET_DEFAULT_REPLICATION_FPS
 
 //-----------------------------------------------------------------------------
-NetworkPlot::NetworkPlot()
+typedef struct TReplicationParams
 {
-	this->m_kBandwith.accessValues(0).
-		setName( "Bytes/sec Send    " ).
-		setColor( 0.75f, 0.25, 0.25 );
-	this->m_kBandwith.accessValues(1).
-		setName( "Bytes/sec Received" ).
-		setColor( 0.25f, 0.75, 0.25 );
-}
+public:
+	TReplicationParams():
+	  fReplicationFrameRate( ET_DEFAULT_REPLICATION_FPS ),
+	  interval(ET_DEFAULT_REPLICATION_INTERVAL){}		
+	  RakNet::PRO sendParameter;
+	  float fReplicationFrameRate;
+	  RakNetTime interval;
+} ReplicationParams;
 
 //-----------------------------------------------------------------------------
-NetworkPlot::~NetworkPlot()
+enum ENetworkSessionType
 {
+	ENetworkSessionType_Undefined,
+	ENetworkSessionType_Client,
+	ENetworkSessionType_Peer,
+	ENetworkSessionType_Count
+};
 
-}
 
 //-----------------------------------------------------------------------------
-void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
-	const float currentTime, const float elapsedTime )
+typedef struct TNetworkStats
 {
-
-	float fBytesPerSecondSend = (float)(kStats.bitsPerSecondSent / 8.0);
-	float fBytesPerSecontReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
-	Profile::GraphValues& kBandWidthValuesSend = 
-		this->m_kBandwith.accessValues(0);
-	kBandWidthValuesSend.addValue( currentTime, fBytesPerSecondSend);
-
-	Profile::GraphValues& kBandWidthValuesReceive = 
-		this->m_kBandwith.accessValues(1);
-	kBandWidthValuesReceive.addValue( currentTime, fBytesPerSecontReceived);
+	TNetworkStats():
+m_uiPacketsReceived(0),
+m_uiPacketsSent(0)
+{
 }
-							   
+
+void reset()
+{
+	m_uiPacketsReceived = 
+		m_uiPacketsSent =
+		0;
+}
+
+size_t m_uiPacketsReceived;
+size_t m_uiPacketsSent;
+} NetworkStats;
+
 //-----------------------------------------------------------------------------
-void NetworkPlot::draw( void ) const
+typedef struct TNetworkAddress
 {
-	// draw bandwidth state plot
-	const float fGraphStart = 220;
-	const float fGraphHeight = 200;
-	const float fGraphWidth = 400;
-	Profile::GraphPlot kPlot;
-	Profile::TGraphPointerArray kGraphArray;
-	kGraphArray.push_back( &this->m_kBandwith );
-	kGraphArray.m_bWireFrame = true;
-	kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
-}
+public:
+	TNetworkAddress():
+	  addressString("127.0.0.1"),
+		  port(SERVER_PORT){}
+	  RakNet::RakString addressString;
+	  unsigned short port;
+}NetworkAddress;
+
+//-----------------------------------------------------------------------------
+typedef struct TNetworkSimulatorData
+{
+public:
+	TNetworkSimulatorData():
+	  enabled(0),
+		  packetloss(0.0f),
+		  minExtraPing(0),
+		  extraPingVariance(0){}
+	  int enabled;
+	  float packetloss;
+	  int minExtraPing;
+	  int extraPingVariance;
+}NetworkSimulatorData;
+
+#endif // __REPLICATIONTYPES_H__
