@@ -55,27 +55,27 @@ public:
 		RakNet::Connection_RM3 *destinationConnection,
 		RakNet::ReplicaManager3 *replicaManager3)
 	{
-		return QueryConstruction_ClientConstruction(destinationConnection);
+		return QueryConstruction_ClientConstruction( destinationConnection );
 	}
 	
-	virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection)
+	virtual bool QueryRemoteConstruction( RakNet::Connection_RM3 *sourceConnection )
 	{
-		return QueryRemoteConstruction_ClientConstruction(sourceConnection);
+		return QueryRemoteConstruction_ClientConstruction( sourceConnection );
 	}	
 
 	virtual RakNet::RM3QuerySerializationResult QuerySerialization(
 		RakNet::Connection_RM3 *destinationConnection)
 	{
-		return QuerySerialization_ClientSerializable(destinationConnection);
+		return QuerySerialization_ClientSerializable( destinationConnection );
 	}
 
 	virtual RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(
 		RakNet::Connection_RM3 *droppedConnection) const
 	{
-		return QueryActionOnPopConnection_Client(droppedConnection);
+		return QueryActionOnPopConnection_Client( droppedConnection );
 	}	
 
-	virtual void PostDeserializeConstruction(RakNet::Connection_RM3 *sourceConnection);
+	virtual void PostDeserializeConstruction( RakNet::Connection_RM3 *sourceConnection );
 
 	virtual void DeserializeConstructionRequestAccepted(
 		RakNet::BitStream *serializationBitstream,

@@ -188,13 +188,13 @@ float SimpleController::getActionValue( EControllerAction eAction ) const
 SimplePlayer::SimplePlayer( bool bIsLocalPlayer ):
 	m_pkController(NULL),m_bIsLocalPlayer( bIsLocalPlayer )
 {
-
+	this->setController( &m_kDefaultController );
 }
 
 //-----------------------------------------------------------------------------
 SimplePlayer::~SimplePlayer()
 {
-
+	this->setController( NULL );
 }
 
 //-----------------------------------------------------------------------------

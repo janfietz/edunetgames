@@ -42,9 +42,24 @@ AbstractEntityReplica::AbstractEntityReplica():m_pkHostPlugin(NULL)
 }
 
 //-----------------------------------------------------------------------------
-AbstractEntityReplica::AbstractEntityReplica( OpenSteer::AbstractPlugin* pkHostPlugin, OpenSteer::EntityClassId classId, bool bIsRemoteObject  ):
-m_pkHostPlugin(pkHostPlugin)
+AbstractEntityReplica::AbstractEntityReplica( 
+	OpenSteer::AbstractPlugin* pkHostPlugin, 
+	OpenSteer::EntityClassId classId, bool bIsRemoteObject, bool bClientReplica ):
+	OSReplica<OpenSteer::AbstractEntity>( bClientReplica ),
+	m_pkHostPlugin(pkHostPlugin)
 {
+	if( classId == OS_CID_PLAYER )
+	{
+		bool bTest = true;
+		bTest = false;
+		printf( "creating player replica %s\n", this->isClientReplica() ? "CLIENT" : "PEER" );
+	}
+	if( true == bClientReplica )
+	{
+		bool bTest = true;
+		bTest = false;
+		printf( "creating client replica\n" );
+	}
 	this->m_classId = classId;
 	// now retrieve the original game entity factory
 	OpenSteer::AbstractPlugin* pkParentPlugin = pkHostPlugin->getParentPlugin();
@@ -77,6 +92,17 @@ m_pkHostPlugin(pkHostPlugin)
 		}
 	}
 };
+
+//-----------------------------------------------------------------------------
+AbstractEntityReplica::~AbstractEntityReplica()
+{
+	if( this->m_classId == OS_CID_PLAYER )
+	{
+		printf( "destroy player replica %s\n", this->isClientReplica() ? "CLIENT" : "PEER" );
+		bool bTest = true;
+		bTest = false;
+	}
+}
 
 //-----------------------------------------------------------------------------
 RakNet::RakString AbstractEntityReplica::GetName(void) const
@@ -131,6 +157,7 @@ void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deseriali
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }
+
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::SerializeConstruction(RakNet::BitStream *constructionBitstream,
 	RakNet::Connection_RM3 *destinationConnection)
@@ -138,6 +165,7 @@ void AbstractEntityReplica::SerializeConstruction(RakNet::BitStream *constructio
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.serializeConstruction( constructionBitstream );
 }
+
 //-----------------------------------------------------------------------------
 bool AbstractEntityReplica::DeserializeConstruction(RakNet::BitStream *constructionBitstream,
 	RakNet::Connection_RM3 *sourceConnection)

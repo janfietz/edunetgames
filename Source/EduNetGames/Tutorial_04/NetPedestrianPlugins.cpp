@@ -153,12 +153,23 @@ public:
 	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
 	BaseClass( bAddToRegistry )
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new NetPedestrianPlugin( false ) );
 	}
 
 	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new NetPedestrianPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
 };
 
 OfflinePedestrianPlugin gPedestrianPlugin;
@@ -168,18 +179,32 @@ OfflinePedestrianPlugin gPedestrianPlugin;
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin>
+//class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin>
+class PedestrianRenderClientPlugin : public OpenSteer::PluginArray
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArray )
 public:
 	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~PedestrianRenderClientPlugin() {};
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianRenderClientPlugin )
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new PedestrianClientPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
+
 };
 
 PedestrianRenderClientPlugin gPedestrianClientPlugin( true );
@@ -189,18 +214,30 @@ PedestrianRenderClientPlugin gPedestrianClientPlugin( true );
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class PedestrianRenderPeerPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianPeerPlugin>
+class PedestrianRenderPeerPlugin : public OpenSteer::PluginArray
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<PedestrianPeerPlugin> )
+	ET_DECLARE_BASE( OpenSteer::PluginArray )
 public:
 	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
 	};
 	virtual ~PedestrianRenderPeerPlugin() {};
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianRenderPeerPlugin )
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new PedestrianPeerPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
 };
 
 PedestrianRenderPeerPlugin gPedestrianPeerPlugin( true );
@@ -223,16 +260,27 @@ public:
 	//---------------------------------------------------------------------
 	// interface AbstractPlugin
 	virtual void initGui( void* pkUserdata );
+
+	virtual void open(void)
+	{
+		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( new OpenSteer::GridPlugin() );
+		this->addPlugin( new PedestrianPeerPlugin( false ) );
+		this->addPlugin( new PedestrianClientPlugin( false ) );
+		BaseClass::open();
+	}
+	virtual void close(void)
+	{
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+
 };
 
 //-----------------------------------------------------------------------------
 PedestrianClientServerPlugin::PedestrianClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
-	this->addPlugin( new OpenSteer::CameraPlugin() );
-	this->addPlugin( new OpenSteer::GridPlugin() );
-	this->addPlugin( new PedestrianPeerPlugin( false ) );
-	this->addPlugin( new PedestrianClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------
