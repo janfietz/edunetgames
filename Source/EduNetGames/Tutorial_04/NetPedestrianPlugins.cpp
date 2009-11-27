@@ -157,11 +157,16 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
 
-	virtual void open(void)
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetPedestrianPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -191,11 +196,16 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianRenderClientPlugin )
 
-	virtual void open(void)
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new PedestrianClientPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -225,11 +235,16 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( PedestrianRenderPeerPlugin )
 
-	virtual void open(void)
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new PedestrianPeerPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -263,10 +278,6 @@ public:
 
 	virtual void open(void)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new PedestrianPeerPlugin( false ) );
-		this->addPlugin( new PedestrianClientPlugin( false ) );
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -292,6 +303,10 @@ PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
 //-----------------------------------------------------------------------------
 void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
 {
+	this->addPlugin( new OpenSteer::CameraPlugin() );
+	this->addPlugin( new OpenSteer::GridPlugin() );
+	this->addPlugin( new PedestrianPeerPlugin( false ) );
+	this->addPlugin( new PedestrianClientPlugin( false ) );
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

@@ -125,6 +125,10 @@ OpenSteer::AbstractVehicle* AbstractEntityReplicaFactory::createVehicle( OpenSte
 //-----------------------------------------------------------------------------
 void AbstractEntityReplicaFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
 {
+	if( NULL == pkEntity )
+	{
+		return;
+	}
 	const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();	
 	if(true == this->m_uidMap.Has( uiEntityId ))
 	{

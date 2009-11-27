@@ -126,7 +126,7 @@ public:
 	{
 		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 
-		this->m_pkClientEntityFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+		this->m_pkClientEntityFactory = NULL;//ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 	}
@@ -145,24 +145,29 @@ public:
 		BaseClass::StartNetworkSession();
 		this->m_pNetInterface->AttachPlugin( &this->m_kReplicaManager );
 	}
-
+#define ET_TEST_PLAYERREPLICATION 0
 	//-------------------------------------------------------------------------
 	void CreateContent( void )
 	{
 		BaseClass::CreateContent();
+#if ET_TEST_PLAYERREPLICATION
 		this->m_kGamePlugin.setEntityFactory( this->m_pkClientEntityFactory );
 		this->m_pkNetworkPlayer = this->m_pkClientEntityFactory->createEntity( OS_CID_PLAYER );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 		this->m_kGamePlugin.addPlayer( OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer ) );
+#endif
 	}
 
 	//-------------------------------------------------------------------------
 	void DeleteContent( void )
 	{	
+#if ET_TEST_PLAYERREPLICATION
 		this->m_kGamePlugin.setEntityFactory( this->m_pkClientEntityFactory );
 		this->m_kGamePlugin.removePlayer(  OpenSteer::CastToAbstractPlayer( this->m_pkNetworkPlayer ) );
 		this->m_kGamePlugin.setEntityFactory( NULL );
 		this->m_pkClientEntityFactory->destroyEntity( this->m_pkNetworkPlayer );
+		this->m_pkNetworkPlayer = NULL;
+#endif
 		BaseClass::DeleteContent();
 	}
 
@@ -196,11 +201,16 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( OfflineCtfPlugin )
 
-	virtual void open(void)
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new NetCtfPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -227,11 +237,18 @@ public:
 	};
 	virtual ~CtfRenderClientPlugin() {};
 
-	virtual void open(void)
+	OS_IMPLEMENT_CLASSNAME( CtfRenderClientPlugin )
+
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new CtfClientPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -240,7 +257,6 @@ public:
 		this->removeAllPlugins();
 	}
 
-	OS_IMPLEMENT_CLASSNAME( CtfRenderClientPlugin )
 };
 
 CtfRenderClientPlugin gCtfClientPlugin( true );
@@ -259,11 +275,18 @@ public:
 	};
 	virtual ~CtfRenderPeerPlugin() {};
 
-	virtual void open(void)
+	OS_IMPLEMENT_CLASSNAME( CtfRenderPeerPlugin )
+
+	virtual void initGui(void* pkUserdata)
 	{
 		this->addPlugin( new OpenSteer::CameraPlugin() );
 		this->addPlugin( new OpenSteer::GridPlugin() );
 		this->addPlugin( new CtfPeerPlugin( false ) );
+		BaseClass::initGui( pkUserdata );
+	}
+
+	virtual void open(void)
+	{
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -272,7 +295,6 @@ public:
 		this->removeAllPlugins();
 	}
 
-	OS_IMPLEMENT_CLASSNAME( CtfRenderPeerPlugin )
 };
 
 CtfRenderPeerPlugin gCtfPeerPlugin( true );
@@ -294,10 +316,6 @@ public:
 
 	virtual void open(void)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new CtfPeerPlugin( false ) );
-		this->addPlugin( new CtfClientPlugin( false ) );
 		BaseClass::open();
 	}
 	virtual void close(void)
@@ -326,6 +344,10 @@ CtfClientServerPlugin::~CtfClientServerPlugin()
 //-----------------------------------------------------------------------------
 void CtfClientServerPlugin::initGui( void* pkUserdata ) 
 {
+	this->addPlugin( new OpenSteer::CameraPlugin() );
+	this->addPlugin( new OpenSteer::GridPlugin() );
+	this->addPlugin( new CtfPeerPlugin( false ) );
+	this->addPlugin( new CtfClientPlugin( false ) );
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
