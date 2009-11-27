@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/SimplePlayer.h"
+#include "OpenSteer/Utilities.h"
 
 using namespace OpenSteer;
 
@@ -56,13 +57,124 @@ bTest1 = false;
 //-----------------------------------------------------------------------------
 SimpleController::SimpleController()
 {
-
+	this->reset();
 }
 
 //-----------------------------------------------------------------------------
 SimpleController::~SimpleController()
 {
 
+}
+
+//-----------------------------------------------------------------------------
+void SimpleController::update( const osScalar currentTime, const osScalar elapsedTime )
+{
+	BaseClass::update( currentTime, elapsedTime );
+	float fBackwardForward = this->getActionValue( EControllerAction_Forward ) - 
+		this->getActionValue( EControllerAction_Backward );
+	float fLeftRight = this->getActionValue(EControllerAction_Left) - 
+		this->getActionValue(EControllerAction_Right);
+
+	fBackwardForward = OpenSteer::clamp( fBackwardForward, -1.0f, 1.0f );
+	fLeftRight = OpenSteer::clamp( fLeftRight, -1.0f, 1.0f );
+
+	const bool bRightHanded = true;
+	if( true == bRightHanded )
+	{
+		this->m_kOutput = Vec3::forward * fBackwardForward + Vec3::side * -fLeftRight;
+	}
+	else
+	{
+		this->m_kOutput = Vec3::forward * fBackwardForward + Vec3::side * fLeftRight;
+	}
+	const float fOutputLength = this->m_kOutput.length();
+	if( fOutputLength > 0 )
+	{
+		this->m_kOutput /= fOutputLength;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void SimpleController::reset( void )
+{
+	for( size_t i = 0; i < EAxis_Count; ++i )
+	{
+		this->m_bAxisMapped[i] = false;
+	}
+	for( size_t i = 0; i < EControllerAction_Count; ++i )
+	{
+		this->m_iAxisMapping[i][0] = -1;
+		this->m_iAxisMapping[i][1] = -1;
+		this->m_fActionValue[i] = 0.0f;
+	}
+	this->m_kOutput = Vec3::zero;
+}
+
+//-----------------------------------------------------------------------------
+void SimpleController::setAxisValue( size_t uiAxis, float fValue )
+{
+	if( uiAxis < EAxis_Count )
+	{
+		fValue = OpenSteer::clamp( fValue, -1.0f, 1.0f );
+		// as we want to submit this stuff to the network we also need to
+		// set the corresponding action value
+		for( size_t i = 0; i < EControllerAction_Count; ++i )
+		{
+			if( this->m_iAxisMapping[i][0] == uiAxis )
+			{
+				this->setActionValue( (EControllerAction)i, fValue );
+				break;
+			}
+			else if( this->m_iAxisMapping[i][1] == uiAxis )
+			{
+				this->setActionValue( (EControllerAction)i, fValue );
+				break;
+			}
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+void SimpleController::setActionValue( EControllerAction eAction, float fValue )
+{
+	EControllerAction eClampedAction = OpenSteer::clamp( eAction, EControllerAction_First, EControllerAction_Last );
+	if( eClampedAction == eAction )
+	{
+		this->m_fActionValue[eAction] = fValue;
+	}
+}
+
+//-----------------------------------------------------------------------------
+void SimpleController::setAxisMapping( size_t uiAxis, EControllerAction eAction, size_t uiIdx )
+{
+	EControllerAction eClampedAction = OpenSteer::clamp( eAction, EControllerAction_First, EControllerAction_Last );
+	uiIdx = OpenSteer::clamp( uiIdx, (size_t)0, (size_t)1 );
+	if( ( uiAxis < EAxis_Count ) && ( eClampedAction == eAction ) )
+	{
+		this->m_iAxisMapping[eAction][uiIdx] = uiAxis;
+		this->m_bAxisMapped[uiAxis] = true;
+	}
+}
+
+//-----------------------------------------------------------------------------
+bool SimpleController::hasAxisMapping( size_t uiAxis ) const
+{
+	if( uiAxis < EAxis_Count )
+	{
+		return this->m_bAxisMapped[uiAxis];
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+float SimpleController::getActionValue( EControllerAction eAction ) const
+{
+	EControllerAction eClampedAction = OpenSteer::clamp( eAction, EControllerAction_First, EControllerAction_Last );
+	if( eClampedAction == eAction )
+	{
+		return this->m_fActionValue[eAction];
+	}
+	return 0.0f;
 }
 
 //-----------------------------------------------------------------------------

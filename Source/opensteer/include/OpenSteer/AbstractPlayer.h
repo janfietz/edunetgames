@@ -39,15 +39,48 @@ namespace OpenSteer
 	class Vec3;
 	class AbstractEntity;
 
+	enum EControllerAction
+	{
+		EControllerAction_Yaw,
+		EControllerAction_Pitch,
+		EControllerAction_Roll,
+		EControllerAction_Left,
+		EControllerAction_Right,
+		EControllerAction_Backward,
+		EControllerAction_Forward,
+		EControllerAction_Thrust,
+		EControllerAction_Jump,
+		EControllerAction_Duck,
+		EControllerAction_Prone,
+		EControllerAction_Shoot,
+		EControllerAction_Move,
+		EControllerAction_Kick,
+		EControllerAction_Special_00,
+		EControllerAction_Special_01,
+		EControllerAction_Special_02,
+		EControllerAction_Special_03,
+		EControllerAction_Special_04,
+		EControllerAction_Special_05,
+		EControllerAction_Special_06,
+		EControllerAction_Special_07,
+		EControllerAction_Special_08,
+		EControllerAction_Special_09,
+		EControllerAction_Special_10,
+		EControllerAction_Count,
+		EControllerAction_First = EControllerAction_Yaw,
+		EControllerAction_Last = EControllerAction_Count - 1,
+	};
+
 	//-------------------------------------------------------------------------
 	class AbstractController : public AbstractEntity, public AbstractUpdated
 	{
 	public:
 		virtual ~AbstractController(){}
 
-		virtual void setOutputForce( const Vec3& ) OS_ABSTRACT;
 		virtual const Vec3& getOutputForce( void ) const OS_ABSTRACT;
 
+		virtual float getActionValue( EControllerAction eAction ) const OS_ABSTRACT;
+		virtual void setActionValue( EControllerAction eAction, float fValue ) OS_ABSTRACT;
 	};
 
 	//-------------------------------------------------------------------------

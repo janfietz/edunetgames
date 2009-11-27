@@ -49,7 +49,7 @@ Vec3 LocalPlayerController::ms_kOutput(Vec3::zero);
 //-----------------------------------------------------------------------------
 LocalPlayerController::LocalPlayerController()
 {
-
+	this->configure();
 }
 
 //-----------------------------------------------------------------------------
@@ -61,70 +61,48 @@ LocalPlayerController::~LocalPlayerController()
 //-----------------------------------------------------------------------------
 AbstractController* LocalPlayerController::accessLocalPlayerController( void )
 {
+	return &LocalPlayerController::accessController();
+}
+
+//-----------------------------------------------------------------------------
+LocalPlayerController& LocalPlayerController::accessController( void )
+{
 	static LocalPlayerController kLocalPlayerController;
-	return &kLocalPlayerController;
+	return kLocalPlayerController;
+}
+
+//-----------------------------------------------------------------------------
+void LocalPlayerController::configure( void )
+{
+	this->setAxisMapping( 'w', EControllerAction_Forward );
+	this->setAxisMapping( 'a', EControllerAction_Left );
+	this->setAxisMapping( 's', EControllerAction_Backward );
+	this->setAxisMapping( 'd', EControllerAction_Right );
+	this->setAxisMapping( 'k', EControllerAction_Kick );
 }
 
 //-----------------------------------------------------------------------------
 bool LocalPlayerController::keyboardFunc( unsigned char key, int x, int y )
 {
-	// references
-	float& forwardComponent = LocalPlayerController::ms_kOutput.z;
-	float& sideComponent = LocalPlayerController::ms_kOutput.x;
-	bool bHasAxis = false;
-	switch (key)
+	LocalPlayerController& kController = LocalPlayerController::accessController();
+	if( true == kController.hasAxisMapping( key ) )
 	{
-		// reset selected Plugin
-	case 'w':
-		forwardComponent = 1.0f;
-		bHasAxis = true;
-		break;
-	case 'a':
-		sideComponent = 1.0f;
-		bHasAxis = true;
-		break;
-	case 's':
-		forwardComponent = -1.0f;
-		bHasAxis = true;
-		break;
-	case 'd':
-		sideComponent = -1.0f;
-		bHasAxis = true;
-		break;
+		kController.setAxisValue( key, 1.0f );
+		return true;
 	}
-	if( true == bHasAxis )
-	{
-		LocalPlayerController::ms_kOutput.normalize();
-	}
-	return bHasAxis;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
 bool LocalPlayerController::keyboardFuncUp( unsigned char key, int x, int y )
 {
-	// references
-	float& forwardComponent = LocalPlayerController::ms_kOutput.z;
-	float& sideComponent = LocalPlayerController::ms_kOutput.x;
-
-	bool bHasAxis = false;
-	switch (key)
+	LocalPlayerController& kController = LocalPlayerController::accessController();
+	if( true == kController.hasAxisMapping( key ) )
 	{
-	case 'w':
-	case 's':
-		forwardComponent = 0.0f;
-		bHasAxis = true;
-		break;
-	case 'd':
-	case 'a':
-		sideComponent = 0.0f;
-		bHasAxis = true;
-		break;
+		kController.setAxisValue( key, 0.0f );
+		return true;
 	}
-	if( true == bHasAxis )
-	{
-		LocalPlayerController::ms_kOutput.normalize();
-	}
-	return bHasAxis;
+	return false;
 }
 
 //-----------------------------------------------------------------------------
@@ -134,7 +112,12 @@ void LocalPlayerController::updateCustom(
 	AbstractController* pkTargetController = dynamic_cast<AbstractController*>(pkParent);
 	if( NULL != pkTargetController )
 	{
-		// pass the control force from here to the actual 'in game' controller
-		pkTargetController->setOutputForce( this->getOutputForce() );
+		for( size_t i = 0; i < EControllerAction_Count; ++i )
+		{
+			EControllerAction eAction = (EControllerAction)i;
+			// pass the control force from here to the actual 'in game' controller
+			pkTargetController->setActionValue( eAction, this->getActionValue( eAction ) );
+		}
+		pkTargetController->update( currentTime, elapsedTime );
 	}
 }

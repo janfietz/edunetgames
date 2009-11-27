@@ -60,18 +60,34 @@ namespace OpenSteer
 		virtual ~SimpleController();
 		OS_IMPLEMENT_CLASSNAME( SimpleController )
 
-		virtual void setOutputForce( const Vec3& kOutput )
-		{
-			this->m_kOutput = kOutput;
-		}
+		void reset( void );
 
 		virtual const Vec3& getOutputForce( void ) const
 		{
 			return this->m_kOutput;
 		}
 
+		virtual float getActionValue( EControllerAction eAction ) const;
+		virtual void setActionValue( EControllerAction eAction, float fValue );
+
+		//---------------------------------------------------------------------
+		// AbstractUpdated interface
+		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+
+	protected:
+		void setAxisValue( size_t uiAxis, float fValue );
+		void setAxisMapping( size_t uiAxis, EControllerAction eAction, size_t uiIdx = 0 );
+		bool hasAxisMapping( size_t uiAxis ) const;
 	private:
 		Vec3 m_kOutput;
+		int m_iAxisMapping[EControllerAction_Count][2];
+		enum
+		{
+			EAxis_Count = 1024
+		};
+		float m_fActionValue[EControllerAction_Count];
+		float m_fAxisValue[EAxis_Count];
+		bool m_bAxisMapped[EAxis_Count];
 	};
 
 	//-------------------------------------------------------------------------
