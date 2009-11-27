@@ -109,9 +109,11 @@ public:
 	virtual ~NetBoidRenderOfflinePlugin() {};
 
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderOfflinePlugin )
+
+	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+
 };
 
-NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( );
 
 //-----------------------------------------------------------------------------
 // render client plugin
@@ -133,7 +135,6 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderClientPlugin )
 };
 
-NetBoidRenderClientPlugin gNetBoidRenderClientPlugin( true );
 
 //-----------------------------------------------------------------------------
 // render server plugin
@@ -156,7 +157,6 @@ public:
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderPeerPlugin )
 };
 
-NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );
 
 //-----------------------------------------------------------------------------
 // client server plugin
@@ -201,4 +201,17 @@ void NetBoidClientServerPlugin::initGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 };
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// namespace
+// {
+// 	using namespace OpenSteer;
+// 	BoidsPlugin gBoidsPlugin(true);
+// }
+
+
+NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( true );
+NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );
+NetBoidRenderClientPlugin gNetBoidRenderClientPlugin( true );
 NetBoidClientServerPlugin gClientServerPlugin;

@@ -574,9 +574,3 @@ void BoidsPlugin::tempDrawBox (const BoxObstacle& box, const Color& color)
     drawLine (v4, v8, color);
 }
 
-namespace
-{
-	using namespace OpenSteer;
-	BoidsPlugin gBoidsPlugin(true);
-}
-

@@ -440,7 +440,7 @@ public:
 	// optional methods (see comments in AbstractPlugin for explanation):
 	void reset (void) { } // default is to reset by doing close-then-open
 	float selectionOrderSortKey (void) const {return 1234;}
-	bool requestInitialSelection (void) const {return true;}
+	bool requestInitialSelection (void) const {return false;}
 	void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
 	void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
 private:

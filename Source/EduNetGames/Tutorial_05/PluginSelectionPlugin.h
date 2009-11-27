@@ -24,8 +24,8 @@ public:
 
 	virtual const char* name (void) const;
 
-	 bool requestInitialSelection (void) const {return true;}
-	 virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+	bool requestInitialSelection (void) const {return true;}
+	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 	 
 	virtual bool needRedraw ( void ) const { return false; }	
 
@@ -106,8 +106,8 @@ public:
 
 	virtual const char* name (void) const;
 
-	 bool requestInitialSelection (void) const {return true;}
-	 virtual float selectionOrderSortKey (void) const { return 2.0f ;}
+	bool requestInitialSelection (void) const {return true;}
+	virtual float selectionOrderSortKey (void) const { return 2.0f ;}
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	

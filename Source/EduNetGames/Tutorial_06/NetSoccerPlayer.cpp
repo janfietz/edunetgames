@@ -52,13 +52,6 @@ void NetSoccerPlayer::reset (void)
 // (parameter names commented out to prevent compiler warning from "-W")
 osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 {
-    // if I hit the ball, kick it.
-
-    const float distToBall = osVector3::distance (position(), m_Ball->position());
-    const float sumOfRadii = radius() + m_Ball->radius();
-    if (distToBall < sumOfRadii)
-		m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
-
 	osVector3 kSteeringForce( osVector3::zero );
     // otherwise consider avoiding collisions with others
     osVector3 collisionAvoidance = steerToAvoidNeighbors(1, (OpenSteer::AVGroup&)*m_AllPlayers);
@@ -99,6 +92,17 @@ osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 	}
 	// return steering constrained to global XZ "ground" plane
 	return kSteeringForce.setYtoZero();
+}
+
+// if I hit the ball, kick it.
+//-----------------------------------------------------------------------------
+void NetSoccerPlayer::update(const float currentTime, const float elapsedTime)
+{
+	BaseClass::update( currentTime, elapsedTime );
+	const float distToBall = osVector3::distance (position(), m_Ball->position());
+	const float sumOfRadii = radius() + m_Ball->radius();
+	if (distToBall < sumOfRadii)
+	m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------

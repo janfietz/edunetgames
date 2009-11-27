@@ -124,8 +124,6 @@ public:
 	OS_IMPLEMENT_CLASSNAME( RenderSoccerPeerPlugin )
 };
 
-RenderSoccerPeerPlugin gSoccerPeerPlugin( true );
-
 //-----------------------------------------------------------------------------
 // client plugin
 //-----------------------------------------------------------------------------
@@ -190,8 +188,6 @@ public:
 	OS_IMPLEMENT_CLASSNAME( RenderSoccerClientPlugin )
 };
 
-RenderSoccerClientPlugin gSoccerClientPlugin( true );
-
 //-----------------------------------------------------------------------------
 // client server plugin
 //-----------------------------------------------------------------------------
@@ -219,7 +215,6 @@ BaseClass( bAddToRegistry )
 	this->addPlugin( new OpenSteer::CameraPlugin() );
 }
 
-SoccerClientServerPlugin gSoccerClientServerPlugin( true );
 
 //-----------------------------------------------------------------------------
 class NetSoccerRenderOfflinePlugin :
@@ -241,4 +236,12 @@ public:
     OS_IMPLEMENT_CLASSNAME ( SoccerOfflinePlugin )
 };
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
 NetSoccerRenderOfflinePlugin gNetNetSoccerRenderOfflinePlugin ( true );
+RenderSoccerClientPlugin gSoccerClientPlugin( true );
+RenderSoccerPeerPlugin gSoccerPeerPlugin( true );
+SoccerClientServerPlugin gSoccerClientServerPlugin( true );
+

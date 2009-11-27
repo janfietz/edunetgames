@@ -42,10 +42,11 @@ public:
 	NetPeerBoidPlugin(bool bAddToRegistry = true);
 	virtual ~NetPeerBoidPlugin(){};
 
-	virtual const char* name (void) const {return "NetPeerBoidPlugin";};
+	OS_IMPLEMENT_CLASSNAME( NetPeerBoidPlugin )
+	virtual const char* name() const { return this->getClassName(); };
 
-	 bool requestInitialSelection (void) const {return true;}
-	 virtual float selectionOrderSortKey (void) const { return 2.0f ;}
+//	bool requestInitialSelection (void) const {return true;}
+	virtual float selectionOrderSortKey (void) const { return 2.0f ;}
 	 
 	virtual bool needRedraw ( void ) const { return false; }
 	
@@ -74,7 +75,8 @@ public:
 	NetClientBoidPlugin(bool bAddToRegistry = true);
 	virtual ~NetClientBoidPlugin(){};
 
-	virtual const char* name (void) const {return "NetClientBoidPlugin";};
+	OS_IMPLEMENT_CLASSNAME( NetClientBoidPlugin )
+	virtual const char* name() const { return this->getClassName(); };
 
 	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
 
