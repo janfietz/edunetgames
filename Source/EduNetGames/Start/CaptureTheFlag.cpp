@@ -710,6 +710,10 @@ namespace {
 
     void CtfSeeker::update (const float currentTime, const float elapsedTime)
     {
+		if( false == this->isEnabled() )
+		{
+			return;
+		}
         // do behavioral state transitions, as needed
         updateState (currentTime);
 
@@ -868,6 +872,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // selected vehicle (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

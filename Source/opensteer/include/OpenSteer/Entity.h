@@ -41,6 +41,8 @@ namespace OpenSteer {
 
 
 	AbstractPlayer* CastToAbstractPlayer( AbstractEntity* pkEntity );
+	AbstractPlugin* CastToAbstractPlugin( AbstractEntity* pkEntity );
+	AbstractEntity* CastToAbstractEntity( AbstractPlugin* pkPlugin );
 
 	//-------------------------------------------------------------------------
 	template <class Super>
@@ -253,6 +255,72 @@ namespace OpenSteer {
 	};
 
 	//-------------------------------------------------------------------------
+	template <class Super>
+	class EntityParentMixin : public Super
+	{
+	public:
+		EntityParentMixin():m_pkParentEntity(NULL)
+		{
+		}
+
+		virtual ~EntityParentMixin()
+		{
+		}
+
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual void setParentEntity( AbstractEntity* pkParentEntity )
+		{
+			this->m_pkParentEntity = pkParentEntity;
+		}
+
+		//! return the parent of this entity
+		virtual AbstractEntity* getParentEntity( void ) const
+		{
+			return this->m_pkParentEntity;
+		}
+
+		virtual AbstractPlugin* getHostPlugin( void ) const
+		{
+			return OpenSteer::CastToAbstractPlugin( this->getParentEntity() );
+		}
+
+	private:
+		AbstractEntity* m_pkParentEntity;
+
+	};
+
+	//-------------------------------------------------------------------------
+	template <class Super>
+	class EntityVisibilityMixin : public Super
+	{
+	public:
+		EntityVisibilityMixin():m_bIsVisible(true)
+		{
+		}
+
+		virtual ~EntityVisibilityMixin()
+		{
+		}
+
+		//---------------------------------------------------------------------
+		// AbstractEntity interface
+		virtual void setVisible( bool bValue )
+		{
+			this->m_bIsVisible = bValue;
+		}
+
+		virtual bool isVisible( void ) const
+		{
+			return this->m_bIsVisible;
+		}
+
+	private:
+		bool m_bIsVisible;
+
+	};
+
+	//-------------------------------------------------------------------------
 	template <class Super, EntityClassId classId = 0>
 	class EntityClassIdMixin : public Super
 	{
@@ -281,7 +349,10 @@ namespace OpenSteer {
 
 	};
 
-	typedef EntityMixin<AbstractEntity> Entity;
+	typedef EntityVisibilityMixin<AbstractEntity> TVisibleEntity;
+	typedef EntityParentMixin<TVisibleEntity> TEntityParent;
+	typedef EntityMixin<TEntityParent> TEntity;
+	typedef TEntity Entity;
 
 	const Entity gGlobalEntity;
 

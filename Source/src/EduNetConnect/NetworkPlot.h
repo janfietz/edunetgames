@@ -31,6 +31,7 @@
 
 #include "EduNetConnect/EduNetConnect.h"
 #include "EduNetProfile/GraphPlot.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 //-------------------------------------------------------------------------
 class NetworkPlot
@@ -41,7 +42,7 @@ public:
 
 	void recordUpdate( RakNetStatistics& kStats,
 		const float currentTime, const float elapsedTime );
-	void draw( void ) const;
+	void draw( osAbstractPlugin* pkNetworkPlugin ) const;
 
 	mutable Profile::GraphValuesArray m_kBandwith;
 	mutable Profile::GraphValuesArray m_kMessageQueues;

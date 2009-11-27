@@ -126,6 +126,10 @@ void NetSoccerPlugin::createTeam(unsigned int uiTeamMemberCount,
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime )
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 
 	NetSoccerGameLogic kGameLogic;
 	kGameLogic.setPlugin( this );
@@ -170,6 +174,10 @@ bool NetSoccerPlugin::checkForGoal( void )
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::redraw ( const float currentTime, const float elapsedTime )
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	/*this->drawTeam( this->m_kTeamA );
 	this->drawTeam( this->m_kTeamB );
     
@@ -313,7 +321,7 @@ void NetSoccerPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	}
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle, this->accessProximityDataBase() );
+	kVG.addVehicleToPlugin( pkVehicle, this );
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
@@ -346,7 +354,7 @@ void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
 	}
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.removeVehicle( pkVehicle );
+	kVG.removeVehicleFromPlugin( pkVehicle );
 }
 
 //-----------------------------------------------------------------------------

@@ -65,7 +65,9 @@ typedef struct TNetworkStats
 {
 	TNetworkStats():
 m_uiPacketsReceived(0),
-m_uiPacketsSent(0)
+m_uiPacketsSent(0),
+m_uiMessagesReceived(0),
+m_uiMessagesSent(0)
 {
 }
 
@@ -73,11 +75,15 @@ void reset()
 {
 	m_uiPacketsReceived = 
 		m_uiPacketsSent =
+		m_uiMessagesReceived = 
+		m_uiMessagesSent =
 		0;
 }
 
 size_t m_uiPacketsReceived;
 size_t m_uiPacketsSent;
+size_t m_uiMessagesReceived;
+size_t m_uiMessagesSent;
 } NetworkStats;
 
 //-----------------------------------------------------------------------------

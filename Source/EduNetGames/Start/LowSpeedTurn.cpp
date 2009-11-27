@@ -175,6 +175,10 @@ namespace {
 
         void update (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
             // update, draw and annotate each agent
             for (iterator i = all.begin(); i != all.end(); i++)
             {
@@ -184,6 +188,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // selected vehicle (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

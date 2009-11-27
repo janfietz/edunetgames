@@ -58,7 +58,7 @@ RakNet::RakString NetBoidReplica::GetName(void) const
 void NetBoidReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
 {
 	OpenSteer::AbstractVehicleGroup kVG( m_pBoidPlugin->allVehicles() );
-	kVG.removeVehicle( this->accessEntity() );
+	kVG.removeVehicleFromPlugin( this->accessEntity() );
 	this->releaseEntity();
 	ET_DELETE this;
 }

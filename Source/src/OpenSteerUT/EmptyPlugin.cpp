@@ -71,6 +71,10 @@ void EmptyPlugin::open (void)
 //-----------------------------------------------------------------------------
 void EmptyPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	AbstractVehicleGroup kVehicles( m_kVehicles );
 	kVehicles.update( currentTime, elapsedTime );
 	if( 0 == m_bShowMotionStatePlot )
@@ -87,6 +91,10 @@ void EmptyPlugin::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
 		// update camera, tracking test vehicle

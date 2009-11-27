@@ -26,6 +26,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "NetworkPlot.h"
+#include "OpenSteer/Plugin.h"
 
 //-----------------------------------------------------------------------------
 NetworkPlot::NetworkPlot()
@@ -48,25 +49,29 @@ NetworkPlot::~NetworkPlot()
 void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
 	const float currentTime, const float elapsedTime )
 {
-
 	float fBytesPerSecondSend = (float)(kStats.bitsPerSecondSent / 8.0);
-	float fBytesPerSecontReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
+	float fBytesPerSecondReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
 	Profile::GraphValues& kBandWidthValuesSend = 
 		this->m_kBandwith.accessValues(0);
 	kBandWidthValuesSend.addValue( currentTime, fBytesPerSecondSend);
 
 	Profile::GraphValues& kBandWidthValuesReceive = 
 		this->m_kBandwith.accessValues(1);
-	kBandWidthValuesReceive.addValue( currentTime, fBytesPerSecontReceived);
+	kBandWidthValuesReceive.addValue( currentTime, fBytesPerSecondReceived);
 }
 							   
 //-----------------------------------------------------------------------------
-void NetworkPlot::draw( void ) const
+void NetworkPlot::draw( osAbstractPlugin* pkNetworkPlugin ) const
 {
+	osAbstractEntity* pkPluginEntity = dynamic_cast<osAbstractEntity*>(pkNetworkPlugin);
 	// draw bandwidth state plot
-	const float fGraphStart = 220;
+	float fGraphStart = 220;
 	const float fGraphHeight = 200;
 	const float fGraphWidth = 400;
+	if( NULL != pkPluginEntity && pkPluginEntity->isRemoteObject() )
+	{
+		fGraphStart += fGraphHeight;
+	}
 	Profile::GraphPlot kPlot;
 	Profile::TGraphPointerArray kGraphArray;
 	kGraphArray.push_back( &this->m_kBandwith );

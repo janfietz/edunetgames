@@ -460,6 +460,35 @@ namespace OpenSteer {
 			AbstractPlayer* pkThisPlayer = OpenSteer::CastToAbstractPlayer( pkThisEntity );
 			return ( NULL != pkThisPlayer );
 		}
+
+		//---------------------------------------------------------------------
+		virtual void setParentEntity( AbstractEntity* pkParentEntity )
+		{
+			this->m_kEntity.setParentEntity( pkParentEntity );
+		}
+
+		//! return the parent of this entity
+		virtual AbstractEntity* getParentEntity( void ) const
+		{
+			return this->m_kEntity.getParentEntity();
+		}
+
+		virtual AbstractPlugin* getHostPlugin( void ) const
+		{
+			return OpenSteer::CastToAbstractPlugin( this->getParentEntity() );
+		}
+
+		//---------------------------------------------------------------------
+		virtual void setVisible( bool bValue )
+		{
+			this->m_kEntity.setVisible( bValue );
+		}
+
+		virtual bool isVisible( void ) const
+		{
+			return this->m_kEntity.isVisible();
+		}
+
 	private:
 		AbstractEntity* m_pkPossessor;
 		AbstractEntity* m_pkPossessed;
@@ -472,7 +501,9 @@ namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
 	//! Concrete EntityLocalSpace class, and a global constant for the identity transform
-	typedef EntityLocalSpaceMixin<AbstractEntityLocalSpace> EntityLocalSpace;
+	typedef AbstractUpdatedMixin<AbstractEntityUpdatedLocalSpace> EntityUpdatedLocalSpace;
+	typedef EntityLocalSpaceMixin<EntityUpdatedLocalSpace> EntityLocalSpace;
+//	typedef EntityLocalSpaceMixin<AbstractEntityLocalSpace> EntityLocalSpace;
 	const EntityLocalSpace gGlobalEntitySpace;
 
 } //! namespace OpenSteer

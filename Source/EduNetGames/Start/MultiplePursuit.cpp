@@ -196,7 +196,11 @@ namespace {
 
         void update (const float currentTime, const float elapsedTime)
         {
-            // update the wanderer
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
+           // update the wanderer
             wanderer->update (currentTime, elapsedTime);
           
             // update each pursuer
@@ -208,6 +212,10 @@ namespace {
 
         void redraw (const float currentTime, const float elapsedTime)
         {
+			if( false == this->isVisible() )
+			{
+				return;
+			}
             // selected vehicle (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 

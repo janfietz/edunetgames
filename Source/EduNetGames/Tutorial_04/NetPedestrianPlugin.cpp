@@ -127,15 +127,22 @@ void NetPedestrianPlugin::reset (void)
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
 	// update each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.update( currentTime, elapsedTime );
-
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	// selected Pedestrian (user can mouse click to select another)
 	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
 
@@ -249,7 +256,7 @@ void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle, pd );
+	kVG.addVehicleToPlugin( pkVehicle, this );
 }
 
 //-----------------------------------------------------------------------------

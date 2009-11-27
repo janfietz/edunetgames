@@ -11,6 +11,7 @@ public:
 	ClientPlugin(bool bAddToRegistry = true):
 	  BaseClass( bAddToRegistry )
 	  {
+		  this->setIsRemoteObject( true );
 		  this->m_kGamePlugin.setIsRemoteObject( true );
 	  };
 	virtual ~ClientPlugin(void){};
@@ -36,6 +37,10 @@ template < class PluginClass >
 void ClientPlugin<PluginClass>::redraw (const float currentTime,
 	const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
 	BaseClass::redraw( currentTime, elapsedTime );
 }

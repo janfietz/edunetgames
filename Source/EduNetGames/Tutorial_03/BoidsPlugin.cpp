@@ -105,6 +105,11 @@ void BoidsPlugin::open (void)
 //-----------------------------------------------------------------------------
 void BoidsPlugin::update (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isEnabled() )
+	{
+		return;
+	}
+
 #ifndef NO_LQ_BIN_STATS
     Boid::maxNeighbors = Boid::totalNeighbors = 0;
     Boid::minNeighbors = std::numeric_limits<int>::max();
@@ -122,6 +127,10 @@ void BoidsPlugin::update (const float currentTime, const float elapsedTime)
 //-----------------------------------------------------------------------------
 void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
     // draw each boid in flock
     for (iterator i = flock.begin(); i != flock.end(); i++) 
 		(**i).draw (currentTime, elapsedTime);
@@ -321,7 +330,7 @@ void BoidsPlugin::addBoidToFlock (void)
 {    
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETBOID );
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicle( pkVehicle, pd );
+	kVG.addVehicleToPlugin( pkVehicle, this );
 }
 
 

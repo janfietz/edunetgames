@@ -30,9 +30,12 @@
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetMacros.h"
 
+#if EDUNET_NO_OPENSTEER_INCLUDES
+#else
 #include "OpenSteer/OpenSteerTypes.h"
 #include "OpenSteer/Proximity.h"
 #include "OpenSteer/AbstractVehicle.h"
+#endif // #if EDUNET_NO_OPENSTEER_INCLUDES
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer{
@@ -42,6 +45,9 @@ namespace OpenSteer{
 	using namespace OpenSteer;
 
 	//-------------------------------------------------------------------------
+	class Vec3;
+	class Color;
+
 	class AbstractUpdated;
 	class AbstractEntity;
 	class AbstractPlayer;
@@ -60,8 +66,11 @@ namespace OpenSteer{
 	typedef uint64_t EntityClassId;
 
 	//-------------------------------------------------------------------------
+#if EDUNET_NO_OPENSTEER_INCLUDES
+#else
 	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
 	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
+#endif // #if EDUNET_NO_OPENSTEER_INCLUDES
 
 
 	class PolylineSegmentedPathwaySingleRadius;
@@ -76,17 +85,24 @@ namespace OpenSteer{
 
 }
 
+#if EDUNET_NO_OPENSTEER_INCLUDES
+#else
+	typedef OpenSteer::AVGroup osAVGroup;
+	typedef OpenSteer::AVGroup::iterator osAVIterator;
+	typedef OpenSteer::AVGroup::const_iterator osAVCIterator;
+	typedef OpenSteer::ProximityDatabase osProximityDatabase;
+	typedef OpenSteer::ProximityToken osProximityToken;
+#endif
+
 typedef OpenSteer::Vec3 osVector3;
 typedef OpenSteer::LocalSpaceData osLocalSpaceData;
 typedef OpenSteer::AbstractLocalSpace osAbstractLocalSpace;
+typedef OpenSteer::AbstractEntity osAbstractEntity;
 typedef OpenSteer::AbstractVehicle osAbstractVehicle;
-typedef OpenSteer::AVGroup osAVGroup;
-typedef OpenSteer::AVGroup::iterator osAVIterator;
-typedef OpenSteer::AVGroup::const_iterator osAVCIterator;
-typedef OpenSteer::ProximityDatabase osProximityDatabase;
-typedef OpenSteer::ProximityToken osProximityToken;
 typedef OpenSteer::Color osColor;
 
 typedef OpenSteer::EntityClassId osEntityClassId;
+typedef OpenSteer::AbstractPlugin osAbstractPlugin;
+typedef OpenSteer::AbstractUpdated osAbstractUpdated;
 
 #endif //  __OPENSTEERUTTYPES_H__

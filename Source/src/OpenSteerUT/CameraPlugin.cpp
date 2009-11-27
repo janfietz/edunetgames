@@ -178,6 +178,10 @@ CameraPlugin::updateCamera (const float currentTime,
 //-----------------------------------------------------------------------------
 void CameraPlugin::redraw( const float currentTime, const float elapsedTime ) 
 { 
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	// selected Pedestrian (user can mouse click to select another)
 	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
 	// TODO: determine paused state

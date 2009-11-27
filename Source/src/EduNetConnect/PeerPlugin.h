@@ -37,6 +37,10 @@ template < class PluginClass >
 void PeerPlugin<PluginClass>::redraw (const float currentTime,
 	const float elapsedTime)
 {
+	if( false == this->isVisible() )
+	{
+		return;
+	}
 	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
 	BaseClass::redraw( currentTime, elapsedTime );
 }

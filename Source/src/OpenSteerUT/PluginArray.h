@@ -82,11 +82,10 @@ namespace OpenSteer
 
 		virtual AbstractPlugin* next(void) const;
 
-		// returns pointer to the parent Plugin
-		virtual AbstractPlugin* getParentPlugin(void) const { return m_pkParentPlugin; };
-
-		// set a parent Plugin
-		virtual void setParentPlugin( AbstractPlugin* pkPlugin ) { m_pkParentPlugin = pkPlugin; };
+		//! returns pointer to the parent Plugin
+		virtual AbstractPlugin* getParentPlugin(void) const;
+		//! set a parent Plugin
+		virtual void setParentPlugin( AbstractPlugin* pkPlugin );
 
 		// implement to initialize additional gui functionality
 		virtual void initGui( void* pkUserdata );
@@ -123,7 +122,6 @@ namespace OpenSteer
 		AbstractPlayerGroup m_kAllPlayers;
 		ObstacleGroup m_kAllObstacles;
 		AVGroup m_kVehicles;
-		AbstractPlugin* m_pkParentPlugin;
 
 	};
 
@@ -182,12 +180,21 @@ namespace OpenSteer
 		}
 		virtual void update(const float currentTime, const float elapsedTime)
 		{
+			if( false == this->isEnabled() )
+			{
+				return;
+			}
+
 			const char* pszClassName = this->name();
 			this->m_kPluginArray.update( currentTime, elapsedTime );
 			Super::update( currentTime, elapsedTime );
 		}
 		virtual void redraw(const float currentTime, const float elapsedTime)
 		{
+			if( false == this->isVisible() )
+			{
+				return;
+			}
 			this->m_kPluginArray.redraw( currentTime, elapsedTime );
 			Super::redraw( currentTime, elapsedTime );
 		}
