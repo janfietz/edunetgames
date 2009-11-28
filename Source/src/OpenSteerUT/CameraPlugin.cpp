@@ -59,15 +59,29 @@
 //-----------------------------------------------------------------------------
 
 #include "CameraPlugin.h"
+#include "EduNetCommon/EduNetDraw.h"
+#include "OpenSteer/Utilities.h"
 
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 // some camera-related default constants
-const float CameraPlugin::camera2dElevation = 8;
-const float CameraPlugin::cameraTargetDistance = 13;
+const float CameraPlugin::camera2dElevation = 6;
+const float CameraPlugin::cameraTargetDistance = 10;
 const OpenSteer::Vec3 CameraPlugin::cameraTargetOffset( Vec3::up * CameraPlugin::camera2dElevation );
 //	0, CameraPlugin::camera2dElevation, 0 );
+
+
+//-----------------------------------------------------------------------------
+void CameraPlugin::initGui( void* pkUserdata )
+{
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	GLUI_Spinner* lookdownDistanceSpinner =
+		glui->add_spinner_to_panel( pluginPanel, "Look Down Distance", GLUI_SPINNER_FLOAT, &Camera::camera.lookdownDistance);
+	lookdownDistanceSpinner->set_float_limits(0.1f, 50.0f);
+}
+
 
 //-----------------------------------------------------------------------------
 // set a certain initial camera state used by several plug-ins
@@ -125,6 +139,15 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 	// SimpleVehicle::selectedVehicle = &selected;
 	if (&selected)
 	{
+		Vec3 direction = selected.position() - Camera::camera.position();
+		float fDirection = direction.length();
+		if( fDirection > 0 )
+		{
+			direction /= fDirection;
+			Camera::camera.setForward( direction );
+			Camera::camera.regenerateOrthonormalBasisUF( Camera::camera.forward() );
+		}
+
 		const Vec3 behind = selected.forward() * -distance;
 		OpenSteer::Camera::camera.setPosition (selected.position() + behind);
 		OpenSteer::Camera::camera.target = selected.position();
@@ -137,13 +160,30 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 		OpenSteer::Camera::camera.setPosition( behind );
 		OpenSteer::Camera::camera.target = Vec3::zero;
 	}
+
+	Camera::camera.doNotSmoothNextMove ();
+
+	if (&selected)
+	{
+		CameraPlugin::updateCamera( 0, 0, selected );
+	}
 }
 
 //-----------------------------------------------------------------------------
 void 
 CameraPlugin::position2dCamera( AbstractVehicle& selected )
 {
-	CameraPlugin::position2dCamera (selected, cameraTargetDistance, camera2dElevation);
+	float distance = cameraTargetDistance;
+	float elevation = camera2dElevation;
+	if( &selected )
+	{
+		Vec3 dir = selected.position() - OpenSteer::Camera::camera.position();
+		if( dir.length() > 0 )
+		{
+			distance = ::etMin( distance, dir.length() );
+		}
+	}
+	CameraPlugin::position2dCamera( selected, distance, elevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -159,6 +199,11 @@ CameraPlugin::position2dCamera( AbstractVehicle& selected,
 	Vec3 position3d = OpenSteer::Camera::camera.position();
 	position3d.y += elevation;
 	OpenSteer::Camera::camera.setPosition (position3d);
+	Camera::camera.doNotSmoothNextMove ();
+	if (&selected)
+	{
+		CameraPlugin::updateCamera( 0, 0, selected );
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -193,7 +238,7 @@ void CameraPlugin::redraw( const float currentTime, const float elapsedTime )
 	}
 	else
 	{
-		OpenSteer::Camera::camera.vehicleToTrack = NULL;
-		Camera::camera.update( currentTime, elapsedTime, simulationPaused );
+// 		OpenSteer::Camera::camera.vehicleToTrack = NULL;
+// 		Camera::camera.update( currentTime, elapsedTime, simulationPaused );
 	}
 }

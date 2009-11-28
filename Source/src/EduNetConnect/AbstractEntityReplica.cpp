@@ -48,6 +48,7 @@ AbstractEntityReplica::AbstractEntityReplica(
 	OSReplica<OpenSteer::AbstractEntity>( bClientReplica ),
 	m_pkHostPlugin(pkHostPlugin)
 {
+#if 0
 	if( classId == OS_CID_PLAYER )
 	{
 		bool bTest = true;
@@ -60,6 +61,7 @@ AbstractEntityReplica::AbstractEntityReplica(
 		bTest = false;
 		printf( "creating client replica\n" );
 	}
+#endif
 	this->m_classId = classId;
 	// now retrieve the original game entity factory
 	OpenSteer::AbstractPlugin* pkParentPlugin = pkHostPlugin->getParentPlugin();
@@ -91,7 +93,7 @@ AbstractEntityReplica::AbstractEntityReplica(
 			pkHostPlugin->addPlayer( pkPlayer );
 		}
 	}
-};
+}
 
 //-----------------------------------------------------------------------------
 AbstractEntityReplica::~AbstractEntityReplica()
@@ -154,12 +156,12 @@ RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::Serializ
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-	osAbstractPlayer* pkPlayer = OpenSteer::CastToAbstractPlayer( this->accessEntity() );
-	if( NULL != pkPlayer )
-	{
-		bool bTest = true;
-		bTest = false;
-	}
+// 	osAbstractPlayer* pkPlayer = OpenSteer::CastToAbstractPlayer( this->accessEntity() );
+// 	if( NULL != pkPlayer )
+// 	{
+// 		bool bTest = true;
+// 		bTest = false;
+// 	}
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }

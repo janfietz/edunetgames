@@ -43,8 +43,11 @@ namespace OpenSteer
 		{};
 
 		OS_IMPLEMENT_CLASSNAME( CameraPlugin )
-			// required methods:
-			const char* name (void) const {return this->getClassName();}
+		//----------------------------------------------------------------------------
+		// OpenSteer::Plugin interface
+		virtual void initGui( void* pkUserdata );
+		// required methods:
+		const char* name (void) const {return this->getClassName();}
 		void open (void) { }
 		void update (const float currentTime, const float elapsedTime) { }
 		void redraw (const float currentTime, const float elapsedTime);

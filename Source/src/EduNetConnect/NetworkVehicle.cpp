@@ -27,6 +27,46 @@
 //-----------------------------------------------------------------------------
 
 #include "NetworkVehicle.h"
+#include "SimpleNetworkVehicle.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 using namespace OpenSteer;
 
+//-------------------------------------------------------------------------
+void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
+{
+	assert( NULL != parentPanel );
+	GLUI* glui = ::getRootGLUI();
+	// network vehicle  gui
+	GLUI_Rollout* replicationRollout = glui->add_rollout_to_panel( parentPanel, "Entity Replication", true );	
+	GLUI_Panel* replicationPanel = replicationRollout;
+	if( true == bRemoteGui )
+	{
+		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowClientNetworkTrail);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "UpdateTicks", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks]);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "Position", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Position]);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "Forward", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Forward]);
+		glui->add_checkbox_to_panel( replicationPanel, "Side", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Side]);
+		glui->add_checkbox_to_panel( replicationPanel, "Up", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Up]);
+		glui->add_checkbox_to_panel( replicationPanel, "Orientation", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Orientation]);
+		glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation1", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1]);
+		glui->add_checkbox_to_panel( replicationPanel, "CompressedOrientation2", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2]);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "AngularVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity]);
+		glui->add_checkbox_to_panel( replicationPanel, "LinearVelocity", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity]);
+		glui->add_checkbox_to_panel( replicationPanel, "Speed", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Speed]);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "Force", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Force]);
+		glui->add_checkbox_to_panel( replicationPanel, "CompressedForce", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_CompressedForce]);
+		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "Radius", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Radius]);
+	}
+	else
+	{
+		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowServerNetworkTrail);
+//		glui->add_separator_to_panel( replicationPanel );
+	}
+}
