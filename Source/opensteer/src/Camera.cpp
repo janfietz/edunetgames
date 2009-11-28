@@ -146,10 +146,23 @@ OpenSteer::Camera::update (const float /*currentTime*/,
         break;
 
     case cmFixedDistanceOffset:
+		{
         if (noVehicle) break;
-        newUp = Vec3::up; // xxx maybe this should be v.up ?
-        newTarget = v.predictFuturePosition (predictionTime);
-        newPosition = constDistHelper (elapsedTime);
+//         newUp = Vec3::up; // xxx maybe this should be v.up ?
+//         newTarget = v.predictFuturePosition (predictionTime);
+// 		newPosition = constDistHelper (elapsedTime);
+
+// doesn't work so fine
+		newUp = Vec3::up;
+		newTarget = v.predictFuturePosition( predictionTime );
+
+		Vec3 kDirection;
+		kDirection = Vec3::forward;
+		kDirection *= fixedDistDistance;
+		kDirection.y = fixedDistVOffset;
+		newPosition = v.globalizePosition( kDirection );
+
+		}
         break;
 
     case cmStraightDown:
@@ -239,8 +252,12 @@ OpenSteer::Camera::smoothCameraMove (const Vec3& newPosition,
 //
 // parameter names commented out to prevent compiler warning from "-W"
 OpenSteer::Vec3 
-OpenSteer::Camera::constDistHelper (const float /*elapsedTime*/)
+OpenSteer::Camera::constDistHelper (const float elapsedTime )
 {
+	if( elapsedTime == 0 )
+	{
+		return position();
+	}
     // is the "global up"/"vertical" offset constraint enabled?  (it forces
     // the camera's global-up (Y) cordinate to be a above/below the target
     // vehicle by a given offset.)

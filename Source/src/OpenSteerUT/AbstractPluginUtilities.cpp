@@ -35,6 +35,9 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
+
+	int AbstractPluginGui::ms_bDebugNetStats = 1;
+
 	//-------------------------------------------------------------------------
 	void AbstractPluginGui::changePluginBoolValue( GLUI_Control* pkControl )
 	{
@@ -72,7 +75,7 @@ namespace OpenSteer
 		// enable/disable
 		// visibility
 		GLUI* glui = ::getRootGLUI();
-		GLUI_Rollout* pluginSettingsRollout = glui->add_rollout_to_panel( pluginPanel, "Settings", true );
+		GLUI_Rollout* pluginSettingsRollout = glui->add_rollout_to_panel( pluginPanel, "Settings", false );
 		GLUI_Panel* subPanel = pluginSettingsRollout;
 
 		osAbstractEntity* pkPluginEntity = OpenSteer::CastToAbstractEntity( pkPlugin );
@@ -91,6 +94,10 @@ namespace OpenSteer
 			pkControl->set_ptr_val( pkPluginEntity );
 			pkControl->set_int_val( enabled );
 		}
+
+		pkControl = 
+			glui->add_checkbox_to_panel( subPanel, "Network Statistics", &AbstractPluginGui::ms_bDebugNetStats );
+
 	}
 
 	//-------------------------------------------------------------------------

@@ -228,7 +228,6 @@ public:
 	virtual void close(void)
 	{
 		BaseClass::close();
-		this->removeAllPlugins();
 	}
 
 };
@@ -266,7 +265,6 @@ public:
 	virtual void close(void)
 	{
 		BaseClass::close();
-		this->removeAllPlugins();
 	}
 
 };
@@ -304,7 +302,6 @@ public:
 	virtual void close(void)
 	{
 		BaseClass::close();
-		this->removeAllPlugins();
 	}
 
 };
@@ -333,7 +330,6 @@ public:
 	virtual void close(void)
 	{
 		BaseClass::close();
-		this->removeAllPlugins();
 	}
 
 	//---------------------------------------------------------------------

@@ -613,8 +613,17 @@ namespace {
 	void 
 		drawDisplayCameraModeName (void)
 	{
+		const OpenSteer::Vec3& camPosition = OpenSteer::Camera::camera.position();
 		std::ostringstream message;
-		message << "Camera: " << OpenSteer::Camera::camera.modeName () << std::ends;
+		message << std::setprecision (2);
+		message << std::setiosflags (std::ios::fixed);
+
+		message << "Camera: " 
+			<< OpenSteer::Camera::camera.modeName () 
+			<< " ( " << camPosition.x 
+			<< ", " << camPosition.y 
+			<< ", " << camPosition.z 
+			<< " ) fixedDistDistance( " << OpenSteer::Camera::camera.fixedDistDistance << " )" << std::ends;
 		const OpenSteer::Vec3 screenLocation (10, 10, 0);
 		OpenSteer::draw2dTextAt2dLocation (message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
 	}
