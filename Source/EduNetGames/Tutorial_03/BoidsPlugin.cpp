@@ -232,12 +232,12 @@ void BoidsPlugin::nextPD (void)
             const float diameter = Boid::worldRadius * 1.1f * 2;
             const Vec3 dimensions (diameter, diameter, diameter);
             typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
-            pd = new LQPDAV (center, dimensions, divisions);
+            pd = ET_NEW LQPDAV (center, dimensions, divisions);
             break;
         }
     case 1:
         {
-            pd = new BruteForceProximityDatabase<AbstractVehicle*> ();
+            pd = ET_NEW BruteForceProximityDatabase<AbstractVehicle*> ();
             break;
         }
     }

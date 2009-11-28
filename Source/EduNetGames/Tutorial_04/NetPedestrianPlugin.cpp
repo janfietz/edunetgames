@@ -312,12 +312,12 @@ void NetPedestrianPlugin::nextPD (void)
 			const float diameter = 80.0f; //XXX need better way to get this
 			const osVector3 dimensions (diameter, diameter, diameter);
 			typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
-			pd = new LQPDAV (center, dimensions, divisions);
+			pd = ET_NEW LQPDAV (center, dimensions, divisions);
 			break;
 		}
 	case 1:
 		{
-			pd = new BruteForceProximityDatabase<AbstractVehicle*> ();
+			pd = ET_NEW BruteForceProximityDatabase<AbstractVehicle*> ();
 			break;
 		}
 	}

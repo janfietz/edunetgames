@@ -460,9 +460,9 @@ void PluginArray::TestPluginArray( void )
 
 		PluginArray* pkAdd[] = 
 		{
-			new PluginArray,
-			new PluginArray,
-			new PluginArray
+			ET_NEW PluginArray,
+			ET_NEW PluginArray,
+			ET_NEW PluginArray
 		};
 		gTestPluginArray.addPlugin( pkAdd[0] );
 		gTestPluginArray.addPlugin( pkAdd[1] );

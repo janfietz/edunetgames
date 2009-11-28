@@ -350,7 +350,7 @@ namespace OpenSteer {
 		// AbstractEntity interface
 		virtual AbstractEntity* cloneEntity( void ) const
 		{
-			return new EntityClassIdMixin();
+			return OS_NEW EntityClassIdMixin();
 		}
 
 		virtual EntityClassId getClassId( void ) const

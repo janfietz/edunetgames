@@ -55,7 +55,7 @@ public:
 
 	void prepare(void)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	}
 	
 	virtual void close(void)
@@ -94,7 +94,7 @@ public:
 
 	void prepare(void)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );		
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );		
 	}
 
 	virtual void close(void)
@@ -132,7 +132,7 @@ public:
 
 	void prepare(void)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );		
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );		
 	}
 
 	virtual void close(void)
@@ -172,9 +172,9 @@ public:
 
 	  void prepare(void)
 	  {
-		  this->addPlugin( new OpenSteer::CameraPlugin() );
-		  this->addPlugin( new NetPeerBoidPlugin( false ) );
-		  this->addPlugin( new NetClientBoidPlugin( false ) );		  
+		  this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		  this->addPlugin( ET_NEW NetPeerBoidPlugin( false ) );
+		  this->addPlugin( ET_NEW NetClientBoidPlugin( false ) );		  
 	  }
 
 	  virtual void close(void)

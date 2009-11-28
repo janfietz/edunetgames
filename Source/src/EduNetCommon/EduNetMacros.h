@@ -80,4 +80,12 @@
 // Macro to supress warning that parameters aren't used.
 #define ET_UNUSED_PARAMETER(expr) (void)expr
 
+
+
+#define ET_SET_FUNC( x, y, prefix )       EF_FORCEINLINE void set##y( x t )  { this->m_##y = t; };
+#define ET_GET_FUNC( x, y, prefix )       EF_FORCEINLINE x get##y() const { return this->m_##y; };
+#define ET_GET_SET_FUNC( x, y, prefix )   ET_GET_FUNC( x, y, prefix ) ET_SET_FUNC( x, y, prefix )
+
+
+
 #endif // __EDUNETMACROS_H__

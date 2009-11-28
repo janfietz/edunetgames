@@ -71,11 +71,11 @@ void NetSoccerPlugin::open ( void )
 
 
     // Make a field
-    m_bbox = new NetSoccerGame::AABBox ( Vec3 ( -20,0,-10 ),  Vec3 ( 20,0,10 ) );
+    m_bbox = ET_NEW NetSoccerGame::AABBox ( Vec3 ( -20,0,-10 ),  Vec3 ( 20,0,10 ) );
     // Red goal
-    m_TeamAGoal = new NetSoccerGame::AABBox ( Vec3 ( -21,0,-7 ),  Vec3 ( -19,0,7 ) );
+    m_TeamAGoal = ET_NEW NetSoccerGame::AABBox ( Vec3 ( -21,0,-7 ),  Vec3 ( -19,0,7 ) );
     // Blue Goal
-    m_TeamBGoal = new NetSoccerGame::AABBox ( Vec3 ( 19,0,-7 ),  Vec3 ( 21,0,7 ) );
+    m_TeamBGoal = ET_NEW NetSoccerGame::AABBox ( Vec3 ( 19,0,-7 ),  Vec3 ( 21,0,7 ) );
     // Make a ball
 
 	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETSOCCER_BALL );

@@ -191,7 +191,7 @@ namespace OpenSteer {
         //! allocate a token to represent a given client object in this database
         tokenType* allocateToken (ContentType parentObject)
         {
-            return new tokenType (parentObject, *this);
+            return OS_NEW tokenType (parentObject, *this);
         }
 
         //! return the number of tokens currently in the database
@@ -304,7 +304,7 @@ namespace OpenSteer {
         //! allocate a token to represent a given client object in this database
         tokenType* allocateToken (ContentType parentObject)
         {
-            return new tokenType (parentObject, *this);
+            return OS_NEW tokenType (parentObject, *this);
         }
 
         //! count the number of tokens currently in the database

@@ -30,7 +30,11 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetConnect/AbstractReplica.h"
-#include "BoidsPlugin.h"
+//-----------------------------------------------------------------------------
+namespace OpenSteer
+{
+	class BoidsPlugin;
+}
 
 //-----------------------------------------------------------------------------
 class NetBoidConditionReplica : public EduNet::AbstractReplica

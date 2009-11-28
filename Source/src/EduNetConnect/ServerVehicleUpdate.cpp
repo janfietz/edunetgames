@@ -38,6 +38,23 @@ void ServerVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScala
 {
 	SimpleNetworkVehicle* pkNetworkVehicle = dynamic_cast<SimpleNetworkVehicle*>(pkParent);
 	SimpleProxyVehicle& kProxy = pkNetworkVehicle->accessProxyVehicle();
+	if( true == kProxy.m_bHasNewData )
+	{
+		this->m_eLastServerVehicleMode = this->determineServerVehicleMode( *pkNetworkVehicle );
+		// add the new data to the history
+		kProxy.m_kLocalSpaceData.addValue( kProxy.getLocalSpaceData() )._steeringForce = 
+			kProxy.getSteeringForceUpdate().getForce();
+	}
+	else
+	{
+
+	}
+	switch( this->m_eLastServerVehicleMode )
+	{
+	case( EServerVehicleMode_ExtrapolateProxy ):
+		this->updateExtrapolateProxy( *pkNetworkVehicle, currentTime, elapsedTime );
+		break;
+	}
 	pkNetworkVehicle->updateBase( currentTime, elapsedTime );
 }
 
@@ -47,4 +64,39 @@ void ServerVehicleUpdate::update( const osScalar currentTime, const osScalar ela
 
 }
 
+//-------------------------------------------------------------------------
+EServerVehicleMode ServerVehicleUpdate::determineServerVehicleMode( const class SimpleNetworkVehicle& kVehicle ) const
+{
+	EServerVehicleMode eType = EServerVehicleMode_Unknown;
+	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
 
+	const bool bHasPositionUpdate = 
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Position ] );
+	const bool bHasOrientationUpdate = 
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Forward ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Side ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Up ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Orientation ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation1 ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation2 ] );
+	const bool bHasForceUpdate = 
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Force ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedForce ] );
+	const bool bHasVelocityUpdate = 
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_AngularVelocity ] ) &&
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_LinearVelocity ] );
+	const bool bHasSpeedUpdate = 
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Speed ] ) ;
+
+	if( bHasPositionUpdate && bHasOrientationUpdate && bHasVelocityUpdate )
+	{
+		eType = EServerVehicleMode_ExtrapolateProxy;
+	}
+	return eType;
+}
+
+//-------------------------------------------------------------------------
+void ServerVehicleUpdate::updateExtrapolateProxy( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
+{
+	printf("updateExtrapolateProxy\n");
+}

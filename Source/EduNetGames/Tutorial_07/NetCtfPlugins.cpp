@@ -215,9 +215,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new NetCtfPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW NetCtfPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -252,9 +252,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new CtfClientPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW CtfClientPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -289,9 +289,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new CtfPeerPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -352,10 +352,10 @@ CtfClientServerPlugin::~CtfClientServerPlugin()
 //-----------------------------------------------------------------------------
 void CtfClientServerPlugin::initGui( void* pkUserdata ) 
 {
-	this->addPlugin( new OpenSteer::CameraPlugin() );
-	this->addPlugin( new OpenSteer::GridPlugin() );
-	this->addPlugin( new CtfPeerPlugin( false ) );
-	this->addPlugin( new CtfClientPlugin( false ) );
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+	this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
+	this->addPlugin( ET_NEW CtfClientPlugin( false ) );
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

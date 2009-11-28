@@ -1,4 +1,5 @@
 #include "NetBoidConditionReplica.h"
+#include "BoidsPlugin.h"
 
 
 //-----------------------------------------------------------------------------

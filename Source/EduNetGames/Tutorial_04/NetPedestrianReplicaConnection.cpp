@@ -50,7 +50,7 @@ RakNet::Replica3* NetPedestrianReplicaConnection::AllocReplica(
 		static NetPedestrianReplica kReplica;
 		if ( typeName == kReplica.GetName() )
 		{
-			NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( pkPlugin, true  );
+			NetPedestrianReplica* pkNewReplica = ET_NEW NetPedestrianReplica( pkPlugin, true  );
 			OpenSteer::AbstractVehicleGroup kVG( pkPlugin->allVehicles() );
 			kVG.addVehicleToPlugin( pkNewReplica->accessEntity(), pkPlugin );
 			return pkNewReplica; 
@@ -68,7 +68,7 @@ OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenStee
 {
 	if( classId == ET_CID_NETPEDESTRIAN )
 	{
-		NetPedestrianReplica* pkNewReplica = new NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
+		NetPedestrianReplica* pkNewReplica = ET_NEW NetPedestrianReplica( this->m_pkReplicaManager->getPlugin(), false );		
 		this->m_pkReplicaManager->Reference( pkNewReplica );
 		OpenSteer::AbstractVehicle* pkVehicle = pkNewReplica->accessEntity();
 		this->m_uidMap.Set( pkVehicle->getEntityId(), pkNewReplica );

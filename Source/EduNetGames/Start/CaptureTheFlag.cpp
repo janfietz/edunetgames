@@ -794,7 +794,7 @@ namespace {
             while (minClearance < requiredClearance);
 
             // add new non-overlapping obstacle to registry
-            allObstacles.push_back (new SphereObstacle (r, c));
+            allObstacles.push_back (ET_NEW SphereObstacle (r, c));
             obstacleCount++;
         }
     }
@@ -838,14 +838,14 @@ namespace {
         void open (void)
         {
             // create the seeker ("hero"/"attacker")
-            ctfSeeker = new CtfSeeker;
+            ctfSeeker = ET_NEW CtfSeeker;
             all.push_back (ctfSeeker);
 
             // create the specified number of enemies, 
             // storing pointers to them in an array.
             for (int i = 0; i<ctfEnemyCount; i++)
             {
-                ctfEnemies[i] = new CtfEnemy;
+                ctfEnemies[i] = ET_NEW CtfEnemy;
                 all.push_back (ctfEnemies[i]);
             }
 

@@ -29,11 +29,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "AbstractNetworkVehicle.h"
-#include "NetworkEntity.h"
+#include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "EduNetConnect/AbstractNetworkVehicle.h"
 
 namespace OpenSteer {
 
+	//-------------------------------------------------------------------------
+	enum EVehicleUpdateMode
+	{
+		EVehicleUpdateMode_Unknown,
+		EVehicleUpdateMode_Position,
+		EVehicleUpdateMode_BruteForce,
+		EVehicleUpdateMode_PhysicsMotion,
+		EVehicleUpdateMode_ForwardSpeed,
+		EVehicleUpdateMode_Steer,
+		EVehicleUpdateMode_Count,
+	};
+
+	//-------------------------------------------------------------------------
+	enum EServerVehicleMode
+	{
+		EServerVehicleMode_Unknown,
+		EServerVehicleMode_ExtrapolateProxy,
+		EServerVehicleMode_Count,
+	};
 
 	//-------------------------------------------------------------------------
 	template <class Super>
@@ -87,6 +106,38 @@ namespace OpenSteer {
 	public:
 		static void initGui( GLUI_Panel* parentPanel, bool bRemoteGui );
 
+		static const char* getVehicleUpdateModeString( EVehicleUpdateMode eMode )
+		{
+			static const char* pszModes[EVehicleUpdateMode_Count] =
+			{
+				"Unknown",
+				"Position",
+				"BruteForce",
+				"PhysicsMotion",
+				"ForwardSpeed",
+				"Steer"
+			};
+			return pszModes[eMode];
+		}
+	};
+
+	//----------------------------------------------------------------------------
+	class NetworkVehicleUpdate : public AbstractVehicleUpdate {
+		OS_DECLARE_BASE(AbstractVehicleUpdate)
+	public:
+		NetworkVehicleUpdate( AbstractVehicle* pkVehicle ):
+		BaseClass( pkVehicle ),
+			m_eLastUpdateMode( EVehicleUpdateMode_Unknown ),
+			m_eLastServerVehicleMode( EServerVehicleMode_Unknown )
+		{
+		}
+		virtual ~NetworkVehicleUpdate(){}
+
+		EVehicleUpdateMode getVehicleUpdateMode( void ) const { return m_eLastUpdateMode; }
+		EServerVehicleMode getServerVehicleMode( void ) const { return m_eLastServerVehicleMode; }
+	protected:
+		EVehicleUpdateMode m_eLastUpdateMode;
+		EServerVehicleMode m_eLastServerVehicleMode;
 	};
 
 } // namespace OpenSteer

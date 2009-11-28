@@ -38,6 +38,7 @@
 //-----------------------------------------------------------------------------
 
 
+#include "OpenSteer/OpenSteerMacros.h"
 #include "OpenSteer/OldPathway.h"
 
 
@@ -70,9 +71,9 @@ OpenSteer::Old::PolylinePathway::initialize (const int _pointCount,
     cyclic = _cyclic;
     pointCount = _pointCount;
     if (cyclic) pointCount++;
-    lengths = new float    [pointCount];
-    points  = new Vec3 [pointCount];
-    normals = new Vec3 [pointCount];
+    lengths = OS_NEW float    [pointCount];
+    points  = OS_NEW Vec3 [pointCount];
+    normals = OS_NEW Vec3 [pointCount];
 
     // loop over all points
     for (int i = 0; i < pointCount; i++)

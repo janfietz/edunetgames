@@ -297,11 +297,11 @@ OpenSteer::AnnotationMixin<Super>::setTrailParameters (const float duration,
 
     //! prepare trailVertices array: free old one if needed, allocate new one
     delete[] trailVertices;
-    trailVertices = new Vec3[trailVertexCount];
+    trailVertices = OS_NEW Vec3[trailVertexCount];
 
     //! prepare trailFlags array: free old one if needed, allocate new one
     delete[] trailFlags;
-    trailFlags = new char[trailVertexCount];
+    trailFlags = OS_NEW char[trailVertexCount];
 
     //! initializing all flags to zero means "do not draw this segment"
     for (int i = 0; i < trailVertexCount; i++) trailFlags[i] = 0;

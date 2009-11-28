@@ -13,8 +13,8 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
-	this->m_pkBoidFactory = new NetBoidReplicaFactory(&this->m_kReplicaManager);
-	OpenSteer::Boid* pkBoid = new OpenSteer::Boid();
+	this->m_pkBoidFactory = ET_NEW NetBoidReplicaFactory(&this->m_kReplicaManager);
+	OpenSteer::Boid* pkBoid = ET_NEW OpenSteer::Boid();
 	pkBoid->setParentPlugin( &this->m_kGamePlugin );
 	this->m_pkBoidFactory->setMasterVehicle( pkBoid );
 	this->m_kGamePlugin.setEntityFactory( this->m_pkBoidFactory );
@@ -33,7 +33,7 @@ void NetPeerBoidPlugin::CreateContent( void )
 	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
-		new NetBoidConditionReplica(&this->m_kGamePlugin);
+		ET_NEW NetBoidConditionReplica(&this->m_kGamePlugin);
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 
@@ -80,7 +80,7 @@ void NetClientBoidPlugin::CreateContent( void )
 	BaseClass::CreateContent();
 
 	m_pkConditionReplic = 
-		new NetBoidConditionReplica(&this->m_kGamePlugin);
+		ET_NEW NetBoidConditionReplica(&this->m_kGamePlugin);
 	m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 

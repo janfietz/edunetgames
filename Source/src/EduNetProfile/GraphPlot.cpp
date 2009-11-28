@@ -318,7 +318,7 @@ void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation, bool bRecta
 	}
 	else
 	{
-		OpenSteer::Color kColor( 0.0f, 0.0f, 0.0f, 0.75f );
+		OpenSteer::Color kColor( 0.2f, 0.2f, 0.2f, 0.5f );
 		glColor4f( kColor.r(), kColor.g(), kColor.b(), kColor.a() );
 		GraphPlot::drawQuad( 
 			kGraphLocation.sx, 

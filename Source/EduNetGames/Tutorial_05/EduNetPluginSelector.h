@@ -143,13 +143,13 @@ class PluginSelectorReplicaManager : public RakNet::ReplicaManager3
 	{
 		if(false == m_bIsClient)
 		{
-			return new PluginSelectorClientConnection(
+			return ET_NEW PluginSelectorClientConnection(
 						this->m_rpc3Inst,
 						this->m_pkPluginHost,
 						systemAddress,
 						rakNetGUID);
 		}
-		return new PluginSelectorConnection(
+		return ET_NEW PluginSelectorConnection(
 						systemAddress,
 						rakNetGUID);
 		

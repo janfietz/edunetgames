@@ -1,3 +1,8 @@
+#if !defined( EDUNET_OPENSTEER_INCLUDED ) && ( EDUNET_INCLUDE_OPENSTEER == 1 )
+#undef __EDUNETCOMMON_H__
+#endif
+
+
 #ifndef __EDUNETCOMMON_H__
 #define __EDUNETCOMMON_H__
 
@@ -40,9 +45,14 @@
 #endif
 
 #include "EduNetConfig.h"
+
 #if EDUNET_INCLUDE_OPENSTEER
+#ifndef EDUNET_OPENSTEER_INCLUDED
+#define EDUNET_OPENSTEER_INCLUDED
+#endif
 #include "EduNetExternal.h"
 #endif
+
 #include "EduNetTypes.h"
 #include "EduNetGuiTypes.h"
 #include "EduNetMacros.h"

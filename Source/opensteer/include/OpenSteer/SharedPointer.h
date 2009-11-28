@@ -106,7 +106,7 @@ namespace OpenSteer {
          *
          * @throw @c std::bad_alloc if memory could not be obtained.
          */
-        SharedPointer() : data_( 0 ), referenceCount_( new SharedPointerReferenceCount() ) {
+        SharedPointer() : data_( 0 ), referenceCount_( OS_NEW SharedPointerReferenceCount() ) {
             //! Nothing to do.
         }
         
@@ -117,7 +117,7 @@ namespace OpenSteer {
          *
          * @throw @c std::bad_alloc if memory could not be obtained.
          */
-        explicit SharedPointer( T* _data ) : data_( _data ), referenceCount_( new SharedPointerReferenceCount() ) {
+        explicit SharedPointer( T* _data ) : data_( _data ), referenceCount_( OS_NEW SharedPointerReferenceCount() ) {
             //! Nothing to do.
         }
         
