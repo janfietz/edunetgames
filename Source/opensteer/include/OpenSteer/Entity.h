@@ -96,9 +96,18 @@ namespace OpenSteer {
 			}
 			else
 			{
+				if( NULL != this->m_pkPossessed )
+				{
+					this->m_pkPossessed->setPossessor( NULL );
+				}
 				this->m_pkPossessed = NULL;
 			}
 		};
+
+		virtual void setPossessor( AbstractEntity* pkEntity )
+		{
+			this->m_pkPossessor = pkEntity;
+		}
 
 		virtual void possessBy( AbstractEntity* pkEntity )
 		{
@@ -106,7 +115,7 @@ namespace OpenSteer {
 			{
 				this->m_pkPossessor->play( NULL );
 			}
-			this->m_pkPossessor = pkEntity;
+			this->setPossessor( pkEntity );
 		}
 
 		virtual AbstractPlayer* getPlayer( void ) const

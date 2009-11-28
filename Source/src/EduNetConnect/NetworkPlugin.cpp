@@ -81,7 +81,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		GLUI_Panel* subPanel = profileRollout;
 		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &NetworkPlugin::ms_bShowMotionStatePlot);
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
-		if( false == pkPluginEntity->isRemoteObject() )
+		if( true == pkPluginEntity->isRemoteObject() )
 		{
 			ServerVehicleUpdate::initGui( profileRollout );
 		}

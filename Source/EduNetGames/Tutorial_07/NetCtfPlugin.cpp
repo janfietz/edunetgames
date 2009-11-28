@@ -249,10 +249,10 @@ void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 			if( NULL != pkVehicle )
 			{
 				pkPlayer->play( pkVehicle );
-				std::ostringstream message;
-				message << "player starts playing ";
-				message << '"' << pkVehicle->name() << '"' << std::ends;
-				EduNet::Log::printMessage (message);
+// 				std::ostringstream message;
+// 				message << "player starts playing ";
+// 				message << '"' << pkVehicle->name() << '"' << std::endl;
+// 				EduNet::Log::printMessage (message);
 			}
 		}
 	}
