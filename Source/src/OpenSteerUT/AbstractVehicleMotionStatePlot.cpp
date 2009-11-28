@@ -207,7 +207,7 @@ namespace OpenSteer {
 		}
 		this->m_currentTime = currentTime;
 		// draw motion state plot
-		const float fGraphStart = 100;
+		const float fGraphStart = 50;
 		const float fGraphHeight = 150;
 		const float fGraphWidth = 600;
 		Profile::GraphPlot kPlot;

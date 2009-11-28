@@ -65,7 +65,7 @@ void NetworkPlot::draw( osAbstractPlugin* pkNetworkPlugin ) const
 {
 	osAbstractEntity* pkPluginEntity = dynamic_cast<osAbstractEntity*>(pkNetworkPlugin);
 	// draw bandwidth state plot
-	float fGraphStart = 220;
+	float fGraphStart = 50;
 	const float fGraphHeight = 200;
 	const float fGraphWidth = 400;
 	if( NULL != pkPluginEntity && pkPluginEntity->isRemoteObject() )

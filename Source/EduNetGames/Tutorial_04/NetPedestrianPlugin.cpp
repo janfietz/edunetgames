@@ -49,6 +49,21 @@ namespace
 	//-------------------------------------------------------------------------
 	// How many pedestrians to create when the plugin starts first?
 	int const gPedestrianStartCount = 1; // 100
+
+	void initPluginCamera( osAbstractVehicle& kVehicle )
+	{
+		// camera setup
+		CameraPlugin::init2dCamera( kVehicle );
+		// Camera::camera.mode = Camera::cmFixedDistanceOffset;
+		Camera::camera.mode = Camera::cmStraightDown;
+		Camera::camera.fixedTarget.set( 15, 0, 0 );
+		Camera::camera.fixedPosition.set( 20, 20, 20 );
+		Camera::camera.lookdownDistance = 15;
+		// make camera jump immediately to new position
+		Camera::camera.doNotSmoothNextMove ();
+
+	}
+
 }
 
 //-----------------------------------------------------------------------------
@@ -75,6 +90,12 @@ NetPedestrianPlugin::~NetPedestrianPlugin()
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::open (void)
 {
+	// camera setup
+	Camera::camera.mode = Camera::cmFixedDistanceOffset;
+	Camera::camera.fixedTarget.set (15, 0, 30);
+	Camera::camera.fixedPosition.set (15, 70, -70);
+	Camera::camera.lookdownDistance = 15;
+
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
 	this->nextPD();
@@ -86,20 +107,7 @@ void NetPedestrianPlugin::open (void)
 	}
 
 	// initialize camera and selectedVehicle
-	CameraPlugin::init3dCamera( *SimpleVehicle::selectedVehicle );
-// 	const AVGroup& kAllVehicles = this->allVehicles();
-// 	if( kAllVehicles.size() > 0 )
-// 	{
-// 		AbstractVehicle* pkVehicle = *kAllVehicles.begin();
-// 		if( NULL != pkVehicle )
-// 		{
-// 			AbstractVehicle& firstPedestrian = *pkVehicle;
-// 			CameraPlugin::init3dCamera( firstPedestrian );
-// 		}
-// 	}
-	Camera::camera.mode = Camera::cmFixedDistanceOffset;
-	Camera::camera.fixedTarget.set (15, 0, 30);
-	Camera::camera.fixedPosition.set (15, 70, -70);
+	initPluginCamera( *SimpleVehicle::selectedVehicle );
 }
 
 //-----------------------------------------------------------------------------
@@ -189,7 +197,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	else
 	{
 		status << "Client Crowd size: " << kVG.population();
-		screenLocation.y -= 80.0f;
+		screenLocation.y -= 60.0f;
 		kColor = gGray50;
 	}
 	draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());

@@ -55,6 +55,19 @@ namespace	{
 
 	const float gMinStartRadius = 30;
 	const float gMaxStartRadius = 40;
+
+	void initPluginCamera( osAbstractVehicle& kVehicle )
+	{
+		// camera setup
+		CameraPlugin::init2dCamera( kVehicle );
+		// Camera::camera.mode = Camera::cmFixedDistanceOffset;
+		Camera::camera.mode = Camera::cmStraightDown;
+		Camera::camera.fixedTarget.set( 15, 0, 0 );
+		Camera::camera.fixedPosition.set( 20, 20, 20 );
+		Camera::camera.lookdownDistance = 15;
+		// make camera jump immediately to new position
+		Camera::camera.doNotSmoothNextMove ();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -96,11 +109,7 @@ void NetCtfPlugin::addVehicle( AbstractVehicle* pkVehicle )
 	if( NULL != pkSeeker )
 	{
 		this->m_pkSeeker = pkSeeker;
-		// initialize camera
-		CameraPlugin::init2dCamera( *this->m_pkSeeker );
-		Camera::camera.mode = Camera::cmFixedDistanceOffset;
-		Camera::camera.fixedTarget.set(15, 0, 0);
-		Camera::camera.fixedPosition.set(80, 60, 0);
+		initPluginCamera( *this->m_pkSeeker );
 	}
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicleToPlugin( pkVehicle, this );
@@ -216,12 +225,9 @@ void NetCtfPlugin::open (void)
 	// initialize camera
 	// in case no seeker has been created
 	// this might happen on the client side
-	if( NULL == this->m_pkSeeker )
+	if( NULL != this->m_pkSeeker )
 	{
-		CameraPlugin::init2dCamera( *this->m_pkSeeker );
-		Camera::camera.mode = Camera::cmFixedDistanceOffset;
-		Camera::camera.fixedTarget.set(15, 0, 0);
-		Camera::camera.fixedPosition.set(80, 60, 0);
+		initPluginCamera( *this->m_pkSeeker );
 	}
 }
 
@@ -288,14 +294,11 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
+
 	// selected vehicle (user can mouse click to select another)
-	AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
-
-	// vehicle nearest mouse (to be highlighted)
-	AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
-
 	if( NULL != SimpleVehicle::selectedVehicle )
 	{
+		AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
 		// draw "ground plane" centered between base and selected vehicle
 		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::camera.position();
 		const Vec3 goalDirection = goalOffset.normalized ();
@@ -315,16 +318,31 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	// display status in the upper left corner of the window
 	std::ostringstream status;
-	if( NULL != this->m_pkSeeker )
+	const float h = drawGetWindowHeight ();
+	osVector3 screenLocation (10, h - 50, 0);
+	Color kColor = gGray80;
+	if( false == this->isRemoteObject() )
 	{
-		status << this->m_pkSeeker->getSeekerStateString() << std::endl;
+		if( NULL != this->m_pkSeeker )
+		{
+			status << this->m_pkSeeker->getSeekerStateString() << std::endl;
+		}
+		status << this->allObstacles().size() << " obstacles [F1/F2]" << std::endl;
+		status << this->resetCount << " restarts" << std::ends;
 	}
-	status << this->allObstacles().size() << " obstacles [F1/F2]" << std::endl;
-	status << this->resetCount << " restarts" << std::ends;
-	const float h = drawGetWindowHeight();
-	const Vec3 screenLocation(10, h-50, 0);
-	draw2dTextAt2dLocation( status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
+	else
+	{
+		if( NULL != this->m_pkSeeker )
+		{
+			status << this->m_pkSeeker->getSeekerStateString() << std::endl;
+		}
+		status << this->allObstacles().size() << " obstacles" << std::endl;
+		status << this->resetCount << " restarts" << std::ends;
+		screenLocation.y -= 50.0f;
+		kColor = gGray50;
+	}
 
+	draw2dTextAt2dLocation( status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
 }
 
 //-----------------------------------------------------------------------------
@@ -408,10 +426,14 @@ void NetCtfPlugin::reset (void)
 	}
 
 	// reset camera position
-	CameraPlugin::position2dCamera( *SimpleVehicle::selectedVehicle );
-
-	// make camera jump immediately to new position
-	Camera::camera.doNotSmoothNextMove ();
+	// camera setup
+	if( false == this->isRemoteObject() )
+	{
+		// reset camera position
+		CameraPlugin::position2dCamera( *this->m_pkSeeker );
+		// make camera jump immediately to new position
+		Camera::camera.doNotSmoothNextMove ();
+	}
 }
 
 //-----------------------------------------------------------------------------
