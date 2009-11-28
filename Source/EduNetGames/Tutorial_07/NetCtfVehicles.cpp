@@ -28,6 +28,7 @@
 
 #include "NetCtfVehicles.h"
 #include "NetCtfGameLogic.h"
+#include "EduNetCommon/EduNetLog.h"
 
 using namespace OpenSteer;
 
@@ -73,7 +74,10 @@ NetCtfBaseVehicle::NetCtfBaseVehicle( OpenSteer::ProximityDatabase* pd )
 //-----------------------------------------------------------------------------
 NetCtfBaseVehicle::~NetCtfBaseVehicle()
 {
-
+// 	std::ostringstream message;
+// 	message << "NetCtfBaseVehicle::~NetCtfBaseVehicle";
+// 	message << '"' << this->name() << '"' <<  this->getEntityId() << std::endl;
+// 	EduNet::Log::printMessage (message);
 }
 
 //-----------------------------------------------------------------------------

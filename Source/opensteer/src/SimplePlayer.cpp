@@ -28,6 +28,7 @@
 
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteer/Utilities.h"
+#include <sstream>
 
 using namespace OpenSteer;
 
@@ -194,7 +195,11 @@ SimplePlayer::SimplePlayer( bool bIsLocalPlayer ):
 //-----------------------------------------------------------------------------
 SimplePlayer::~SimplePlayer()
 {
-	this->setController( NULL );
+// 	std::ostringstream message;
+// 	message << "SimplePlayer::~SimplePlayer";
+// 	message << '"' << this->name() << '"' <<  this->getEntityId() << std::endl;
+// 	printf(message.str().c_str());
+// 	this->setController( NULL );
 }
 
 //-----------------------------------------------------------------------------

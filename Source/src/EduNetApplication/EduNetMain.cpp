@@ -6,9 +6,41 @@
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
+void etMemoryDebugBegin();
+void etMemoryDebugEnd();
+
+//-----------------------------------------------------------------------------
+EF_FORCEINLINE 
+void etMemoryDebugBegin()
+{
+#ifdef _DEBUG
+	int tmpDbgFlag;
+	tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	tmpDbgFlag |= _CRTDBG_ALLOC_MEM_DF;
+	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+	_CrtSetDbgFlag(tmpDbgFlag);
+	// uncomment this line to see a sample leak output in the output
+	// console at program exit
+	//int* piaLeak = new int[10];
+	//_CrtSetBreakAlloc(5207700);
+#endif
+}
+
+//-----------------------------------------------------------------------------
+EF_FORCEINLINE 
+void etMemoryDebugEnd()
+{
+#ifdef _DEBUG
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
+	//	_CrtDumpMemoryLeaks();
+#endif
+}
+
 //-----------------------------------------------------------------------------
 int EduNetMain (int argc, char **argv) 
 {
+	::etMemoryDebugBegin();
 	int iExitCode = EXIT_FAILURE;
 	EduNet::Application::_SDMInit();
 	if( EXIT_SUCCESS == EduNetOptions::accessOptions().parseCommandLine( argc, argv ) )
@@ -27,6 +59,7 @@ int EduNetMain (int argc, char **argv)
 		iExitCode = EXIT_SUCCESS;
 	}
 	EduNet::Application::_SDMShutdown();
+	::etMemoryDebugEnd();
 	return iExitCode;
 }
 

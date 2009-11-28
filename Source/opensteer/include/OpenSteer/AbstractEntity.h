@@ -130,6 +130,9 @@ namespace OpenSteer {
 		//! called in case a player plays this entity
 		virtual void possessBy( AbstractEntity* ) OS_ABSTRACT;
 
+		//! do not call by yourself !!!
+		virtual void setPossessor( AbstractEntity* ) OS_ABSTRACT;
+
 		//! return the player of this entity
 		virtual AbstractPlayer* getPlayer( void ) const OS_ABSTRACT;
 
