@@ -98,5 +98,5 @@ EServerVehicleMode ServerVehicleUpdate::determineServerVehicleMode( const class 
 //-------------------------------------------------------------------------
 void ServerVehicleUpdate::updateExtrapolateProxy( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
-	printf("updateExtrapolateProxy\n");
+//	printf("updateExtrapolateProxy\n");
 }
