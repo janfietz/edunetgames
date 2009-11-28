@@ -179,3 +179,45 @@ bool AbstractEntityReplica::DeserializeConstruction(RakNet::BitStream *construct
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	return kSerializer.deserializeConstruction( constructionBitstream );
 }
+
+
+//-----------------------------------------------------------------------------
+AbstractEntityCCReplica::AbstractEntityCCReplica()
+{
+
+}
+//-----------------------------------------------------------------------------
+AbstractEntityCCReplica::AbstractEntityCCReplica(
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,
+	bool bClientReplica) : BaseClass(pPlugin, classId, bIsRemoteObject, bClientReplica)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+RakNet::RM3ConstructionState AbstractEntityCCReplica::QueryConstruction(
+	RakNet::Connection_RM3 *destinationConnection,
+	RakNet::ReplicaManager3 *replicaManager3)
+{
+	return QueryConstruction_ClientConstruction( destinationConnection );
+}
+//-----------------------------------------------------------------------------
+bool AbstractEntityCCReplica::QueryRemoteConstruction(
+	RakNet::Connection_RM3 *sourceConnection)
+{
+	return QueryRemoteConstruction_ClientConstruction( sourceConnection );
+}
+//-----------------------------------------------------------------------------
+RakNet::RM3QuerySerializationResult AbstractEntityCCReplica::QuerySerialization(
+	RakNet::Connection_RM3 *destinationConnection)
+{
+	return QuerySerialization_ClientSerializable( destinationConnection );
+}
+//-----------------------------------------------------------------------------
+RakNet::RM3ActionOnPopConnection AbstractEntityCCReplica::QueryActionOnPopConnection(
+	RakNet::Connection_RM3 *droppedConnection) const
+{
+	return QueryActionOnPopConnection_Client(droppedConnection);
+}

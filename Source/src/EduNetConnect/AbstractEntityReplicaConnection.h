@@ -81,11 +81,33 @@ public:
 	  virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
 	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
+	  OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId,
+		  osAbstractPlugin* pkPlugin ) const;
+
+protected:
+	virtual class AbstractEntityReplica* createEntityReplica( 
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica) const;
+
 private:
 
 	class AbstractEntityReplicaManager* m_pkReplicaManager;
 	mutable DataStructures::Map<OpenSteer::InstanceTracker::Id, RakNet::Replica3* > m_uidMap;
 };
 
+//-----------------------------------------------------------------------------
+class AbstractEntityCCReplicaFactory : public AbstractEntityReplicaFactory
+{
+	ET_DECLARE_BASE( AbstractEntityReplicaFactory );
+public:
+	AbstractEntityCCReplicaFactory(AbstractEntityReplicaManager* pkManager):
+	  BaseClass( pkManager ) {}
+
+protected:
+	virtual AbstractEntityReplica* createEntityReplica( OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica) const;
+};
 
 #endif // __ABSTRACTENTITYREPLICACONNECTION_H__

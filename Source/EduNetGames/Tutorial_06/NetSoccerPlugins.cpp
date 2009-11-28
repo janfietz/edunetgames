@@ -60,8 +60,8 @@ public:
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 		// remap the entity factory
-		this->m_pkNetCtfFactory = new AbstractEntityReplicaFactory( &this->m_kReplicaManager );
-		this->m_kGamePlugin.setEntityFactory( this->m_pkNetCtfFactory );
+		this->m_pkNetBoidFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
+		this->m_kGamePlugin.setEntityFactory( this->m_pkNetBoidFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( SoccerPeerPlugin )
 	virtual const char* name() const { return this->getClassName(); };
@@ -99,7 +99,7 @@ public:
 
 private:
 
-	AbstractEntityReplicaFactory* m_pkNetCtfFactory;
+	AbstractEntityReplicaFactory* m_pkNetBoidFactory;
 	AbstractEntityReplicaManager m_kReplicaManager;	
 };
 

@@ -67,5 +67,32 @@ private:
 	ET_IMPLEMENT_CLASS_NO_COPY( AbstractEntityReplica );
 };
 
+//-----------------------------------------------------------------------------
+class AbstractEntityCCReplica : public AbstractEntityReplica
+{
+	ET_DECLARE_BASE( AbstractEntityReplica )
+public:
+
+	AbstractEntityCCReplica();
+	AbstractEntityCCReplica( 
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica = false );
+
+	virtual ~AbstractEntityCCReplica(){}
+
+	virtual RakNet::RM3ConstructionState QueryConstruction(
+		RakNet::Connection_RM3 *destinationConnection,
+		RakNet::ReplicaManager3 *replicaManager3);
+
+	virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection);
+
+	virtual RakNet::RM3QuerySerializationResult QuerySerialization(
+		RakNet::Connection_RM3 *destinationConnection);
+
+	virtual RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(
+		RakNet::Connection_RM3 *droppedConnection) const;
+
+};
 
 #endif //  __ABSTRACTENTITYREPLICA_H__
