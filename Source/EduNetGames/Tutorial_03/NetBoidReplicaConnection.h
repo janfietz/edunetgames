@@ -49,7 +49,7 @@ class NetBoidReplicaManager : public RakNet::ReplicaManager3
 {
 	virtual RakNet::Connection_RM3* AllocConnection(SystemAddress systemAddress, RakNetGUID rakNetGUID) const 
 	{
-		return new NetBoidReplicaConnection(systemAddress,rakNetGUID, this->m_pBoidPlugin);
+		return ET_NEW NetBoidReplicaConnection(systemAddress,rakNetGUID, this->m_pBoidPlugin);
 	}
 	virtual void DeallocConnection(RakNet::Connection_RM3 *connection) const {
 		delete connection;

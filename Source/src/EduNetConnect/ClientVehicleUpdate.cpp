@@ -84,22 +84,22 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
 
 	const bool bHasPositionUpdate = 
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Position ] );
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Position ] );
 	const bool bHasOrientationUpdate = 
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Forward ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Side ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Up ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Orientation ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_CompressedOrientation1 ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_CompressedOrientation2 ] );
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Forward ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Side ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Up ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Orientation ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation1 ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation2 ] );
 	const bool bHasForceUpdate = 
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Force ] ) ||
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_CompressedForce ] );
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Force ] ) ||
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedForce ] );
 	const bool bHasVelocityUpdate = 
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_AngularVelocity ] ) &&
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_LinearVelocity ] );
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_AngularVelocity ] ) &&
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_LinearVelocity ] );
 	const bool bHasSpeedUpdate = 
-		( kProxy.m_bReveivedDataConfig[ ESerializeDataType_Speed ] ) ;
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Speed ] ) ;
 
 	if( bHasPositionUpdate && bHasOrientationUpdate && bHasVelocityUpdate )
 	{

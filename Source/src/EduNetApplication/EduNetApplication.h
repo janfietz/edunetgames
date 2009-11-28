@@ -68,6 +68,14 @@ public:
 	static void _SDMShutdown( void );
 
 	static void sleep( size_t uiMilliseconds );
+	bool allowLocalPlayer( void )
+	{
+		return m_bAllowLocalPlayer;
+	}
+	void setAllowLocalPlayer( bool bValue )
+	{
+		m_bAllowLocalPlayer = bValue;
+	}
 
 
 	float m_fSimulationFPS;
@@ -87,6 +95,7 @@ private:
 	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
 	OpenSteer::Clock m_kUpdateClock;
 	osScalar m_fUpdateCPUTime;
+	bool m_bAllowLocalPlayer;
 
 };
 

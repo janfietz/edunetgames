@@ -61,7 +61,7 @@ class NetPedestrianReplicaManager : public TPluginReplicaManager
 	// replica manager interface
 	virtual RakNet::Connection_RM3* AllocConnection(SystemAddress systemAddress, RakNetGUID rakNetGUID) const 
 	{
-		return new NetPedestrianReplicaConnection( systemAddress,rakNetGUID, this->getPlugin() );
+		return ET_NEW NetPedestrianReplicaConnection( systemAddress,rakNetGUID, this->getPlugin() );
 	}
 	virtual void DeallocConnection(RakNet::Connection_RM3 *connection) const {
 		delete connection;

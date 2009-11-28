@@ -39,6 +39,7 @@ namespace OpenSteer
 	class Vec3;
 	class AbstractEntity;
 
+	//-------------------------------------------------------------------------
 	enum EControllerAction
 	{
 		EControllerAction_Yaw,
@@ -101,6 +102,7 @@ namespace OpenSteer
 
 	};
 
+	//-------------------------------------------------------------------------
 	typedef std::vector<AbstractPlayer*> AbstractPlayerGroup;
 
 

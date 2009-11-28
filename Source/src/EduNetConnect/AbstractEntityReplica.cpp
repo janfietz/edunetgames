@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "AbstractEntityReplica.h"
+#include "NetworkEntity.h"
 #include "NetworkVehicle.h"
 #include "NetworkPlugin.h"
 

@@ -39,7 +39,7 @@ RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(
 	allocationId->Read( kId );
 	if ( typeName == "PluginSelector" ){
 		printf("Create PluginSelector instance.");
-		PluginSelector* pkNewInstance = new PluginSelector();
+		PluginSelector* pkNewInstance = ET_NEW PluginSelector();
 		pkNewInstance->Initialize( this->m_rpc3Inst, this->m_pkPluginHost);
 		return pkNewInstance;
 	}	

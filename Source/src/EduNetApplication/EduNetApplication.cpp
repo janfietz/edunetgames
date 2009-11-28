@@ -153,7 +153,8 @@ m_bShowOpenSteerProfile( 0 ),
 m_bShowCPUProfile(0),
 m_bShowCPUProfileGraph(0),
 m_bUpdateCPUProfile(0),
-m_fUpdateCPUTime( 0.0f )
+m_fUpdateCPUTime( 0.0f ),
+m_bAllowLocalPlayer(false)
 {
 	setDefaultSettings();
 	this->m_kUpdatePeriod.SetPeriodFrequency( m_fSimulationFPS );

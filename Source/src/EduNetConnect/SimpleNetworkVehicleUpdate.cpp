@@ -38,7 +38,7 @@ void SimpleNetworkVehicleUpdate::collect3DTextAnnotation( std::ostringstream& kS
 	if( this->vehicle().isRemoteObject() )
 	{
 		kStream << "UpdateMode: "
-			<< ClientVehicleUpdate::getVehicleUpdateModeString( 
+			<< NetworkVehicle::getVehicleUpdateModeString( 
 			this->m_kClientVehicleUpdate.getVehicleUpdateMode() )
 			<< std::endl;
 	}

@@ -32,6 +32,7 @@
 
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteer/Plugin.h"
+#include "EduNetConnect/NetworkEntity.h"
 
 using namespace OpenSteer;
 

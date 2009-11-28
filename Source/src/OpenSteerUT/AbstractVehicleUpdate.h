@@ -31,6 +31,7 @@
 
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetCommon/TUpdatePeriod.h"
+#include "OpenSteer/Annotation.h"
 #include "OpenSteerUT/PhysicsMotionState.h"
 
 class btTransform;

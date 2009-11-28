@@ -30,13 +30,14 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "EduNetConnect/NetworkVehicle.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
-	class ServerVehicleUpdate : public AbstractVehicleUpdate {
-		OS_DECLARE_BASE(AbstractVehicleUpdate)
+	class ServerVehicleUpdate : public NetworkVehicleUpdate {
+		OS_DECLARE_BASE(NetworkVehicleUpdate)
 	public:
 		ServerVehicleUpdate( AbstractVehicle* pkVehicle ):
 		BaseClass( pkVehicle )
@@ -50,10 +51,11 @@ namespace OpenSteer {
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
 
 		//-------------------------------------------------------------------
-		// GLUI interface
-		static void initGui( GLUI_Panel* parentPanel );
-
 	private:
+		EServerVehicleMode determineServerVehicleMode( const class SimpleNetworkVehicle& kVehicle ) const;
+
+		void updateExtrapolateProxy( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+
 	};
 
 

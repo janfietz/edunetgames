@@ -79,7 +79,7 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 		gEndpoint0 = pathPoints[0];
 		gEndpoint1 = pathPoints[pathPointCount-1];
 
-		gTestPath = new PolylineSegmentedPathwaySingleRadius (pathPointCount,
+		gTestPath = ET_NEW PolylineSegmentedPathwaySingleRadius (pathPointCount,
 			pathPoints,
 			pathRadius,
 			false);

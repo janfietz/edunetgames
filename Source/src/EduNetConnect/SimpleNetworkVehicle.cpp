@@ -1,8 +1,9 @@
-#include "SimpleNetworkVehicle.h"
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/EduNetExternal.h"
-#include "OpenSteerUT/AbstractVehicleMath.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
+
 #include "EduNetConnect/NetworkPlugin.h"
+#include "EduNetConnect/NetworkEntity.h"
+
+#include "OpenSteerUT/AbstractVehicleMath.h"
 
 using namespace OpenSteer;
 
@@ -80,8 +81,6 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 	{
 		if( 1 == SimpleNetworkVehicle::ms_bShowServerNetworkTrail )
 		{
-			LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
-			LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
 
 			float fUpOffset = 0.1f;
 			// show send data
@@ -93,6 +92,8 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 			kColor.setB( 0.3f );
 			kColor.setA( 0.2f );
 			fUpOffset = 0.01f;
+			LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
+			LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
 			while( kIter != kEnd )
 			{
 				const LocalSpaceData& kLocalSpaceData = *kIter;
@@ -192,13 +193,10 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	this->m_kNetworkVehicleUpdate.updateCustom( this, currentTime, elapsedTime );
 	this->setCustomUpdated( pkCustomUpdated );
 
-	if( true == this->isRemoteObject() )
-	{
-		// once the real vehicle update function has been called
-		// one has to assume the new data have made their way into the simulation
-		SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
-		kProxy.m_bHasNewData = false;
-	}
+	// once the real vehicle update function has been called
+	// one has to assume the new data have made their way into the simulation
+	// this applies to the server and the client
+	kProxy.m_bHasNewData = false;
 
 	// server or client side send dots
 	if( true == bRecordNetGraph )
@@ -233,6 +231,8 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	if( false == this->m_bHasBeenSerialized )
 	{
 		// serialize is called for the first connection time now
+		// zero out all send local space data
+		kProxy.accessLocalSpaceData().resetLocalSpaceData();
 
 		// now a special case arises
 		// in case the steering force is replicated
@@ -246,8 +246,6 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.accessSteeringForceUpdate().setForce( kNextSteeringForce );
 		}
 		bUpdatedProxy = true;
-		// zero out all received local space data
-		kProxy.accessLocalSpaceData().resetLocalSpaceData();
 	}
 
 	// mark as serialized for the following connections
@@ -263,6 +261,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	{
 		if( ms_bReplicationDataConfig[i] != 0 )
 		{
+			kProxy.m_bSerializedDataTypes[i] = true;
 			++dataTypes;
 		}
 	}
@@ -446,7 +445,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
 	for( size_t i = 0; i < ESerializeDataType_Count; ++i )
 	{
-		kProxy.m_bReveivedDataConfig[i] = false;
+		kProxy.m_bSerializedDataTypes[i] = false;
 	}
 
 	// do not directly write into the scene vehicle
@@ -473,7 +472,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		unsigned char dataType;
 		kStream.ReadAlignedBytes(&dataType,sizeof(unsigned char));
 		ESerializeDataType eDataType = static_cast<ESerializeDataType>(dataType);
-		this->m_kProxyVehicle.m_bReveivedDataConfig[eDataType] = true;
+		this->m_kProxyVehicle.m_bSerializedDataTypes[eDataType] = true;
 		switch( eDataType )
 		{
 		case(ESerializeDataType_Position):

@@ -57,7 +57,7 @@ public:
 		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 		// attach vehicle factory
-		this->m_pkNetPedestrianFactory = new NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
+		this->m_pkNetPedestrianFactory = ET_NEW NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
 		this->m_kGamePlugin.setEntityFactory( this->m_pkNetPedestrianFactory );
 	}
 	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
@@ -159,9 +159,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new NetPedestrianPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW NetPedestrianPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -197,9 +197,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new PedestrianClientPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -235,9 +235,9 @@ public:
 
 	virtual void initGui(void* pkUserdata)
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
-		this->addPlugin( new OpenSteer::GridPlugin() );
-		this->addPlugin( new PedestrianPeerPlugin( false ) );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
 		BaseClass::initGui( pkUserdata );
 	}
 
@@ -299,10 +299,10 @@ PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
 //-----------------------------------------------------------------------------
 void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
 {
-	this->addPlugin( new OpenSteer::CameraPlugin() );
-	this->addPlugin( new OpenSteer::GridPlugin() );
-	this->addPlugin( new PedestrianPeerPlugin( false ) );
-	this->addPlugin( new PedestrianClientPlugin( false ) );
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+	this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
+	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

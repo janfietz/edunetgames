@@ -28,7 +28,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
+#define EDUNET_INCLUDE_OPENSTEER 1
 #include "EduNetCommon/EduNetCommon.h"
 
 #include "bullet/src/LinearMath/btVector3.h"

@@ -114,7 +114,7 @@ class RenderSoccerPeerPlugin : public OpenSteer::PluginArrayPluginMixin<SoccerPe
 public:
 	RenderSoccerPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	};
 	virtual ~RenderSoccerPeerPlugin() {};
 
@@ -139,7 +139,7 @@ class RenderSoccerClientPlugin : public OpenSteer::PluginArrayPluginMixin<Soccer
 public:
 	RenderSoccerClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
 	{
-		this->addPlugin( new OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	};
 	virtual ~RenderSoccerClientPlugin() {};
 
@@ -170,9 +170,9 @@ public:
 SoccerClientServerPlugin::SoccerClientServerPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry )
 {
-	this->addPlugin( new SoccerPeerPlugin( false ) );
-	this->addPlugin( new SoccerClientPlugin( false ) );
-	this->addPlugin( new OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW SoccerPeerPlugin( false ) );
+	this->addPlugin( ET_NEW SoccerClientPlugin( false ) );
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 }
 
 
@@ -186,7 +186,7 @@ public:
             BaseClass ( bAddToRegistry )
     {
         this->addPlugin ( ET_NEW NetSoccerPlugin ( false ) );
-        this->addPlugin ( new OpenSteer::CameraPlugin() );
+        this->addPlugin ( ET_NEW OpenSteer::CameraPlugin() );
     };
 
     virtual ~NetSoccerRenderOfflinePlugin() {};

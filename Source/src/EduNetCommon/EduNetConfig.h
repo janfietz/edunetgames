@@ -124,6 +124,11 @@
 
 #endif
 
+
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
+
 #endif  // WIN32
 
 

@@ -29,7 +29,6 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
 
 

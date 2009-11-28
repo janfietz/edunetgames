@@ -14,8 +14,8 @@ ClientServerPlugin::ClientServerPlugin()
 {
 	Plugin::addToRegistry(this);
 
-	this->addPlugin( new EmptyServerPlugin( false ) );
-	this->addPlugin( new EmptyClientPlugin( false ) );
+	this->addPlugin( ET_NEW EmptyServerPlugin( false ) );
+	this->addPlugin( ET_NEW EmptyClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------

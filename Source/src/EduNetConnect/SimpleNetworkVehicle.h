@@ -55,7 +55,7 @@ namespace OpenSteer {
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		bool m_bHasNewData;
-		bool m_bReveivedDataConfig[ESerializeDataType_Count];
+		bool m_bSerializedDataTypes[ESerializeDataType_Count];
 		PhysicsMotionState m_kProxyMotionState;
 		LocalSpaceDataArray m_kLocalSpaceData; // received / send data cue
 	private:

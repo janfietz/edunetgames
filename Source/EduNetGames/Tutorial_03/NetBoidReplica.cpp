@@ -30,6 +30,7 @@
 #include "NetBoid.h"
 #include "NetBoidFactory.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "EduNetConnect/NetworkEntity.h"
 
 NetBoidFactory gNetBoidFactory;
 

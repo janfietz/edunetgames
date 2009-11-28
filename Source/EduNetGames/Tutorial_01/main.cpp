@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
+#include "EduNetApplication/EduNetApplication.h"
 #include "OpenSteerUT/EmptyPlugin.h"
 
 EduNet::EmptyPlugin gEmptyPlugin;
@@ -34,6 +35,8 @@ EduNet::EmptyPlugin gEmptyPlugin;
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
+	EduNet::Application::AccessApplication().setAllowLocalPlayer( true );
+
 	return ::EduNetMain( argc, argv );
 }
 

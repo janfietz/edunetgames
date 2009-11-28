@@ -29,7 +29,7 @@ void PluginClientPlugin::InitializeRpcSystem( void )
 void PluginClientPlugin::CreateContent( void )
 {
 	BaseClass::CreateContent();
-	PluginSelector* pkNewSelector = new PluginSelector();
+	PluginSelector* pkNewSelector = ET_NEW PluginSelector();
 	pkNewSelector->Initialize(&this->m_kRpc3Inst, this);	
 	this->m_kReplicaManager.Reference( pkNewSelector );	
 }

@@ -26,8 +26,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetworkVehicle.h"
-#include "SimpleNetworkVehicle.h"
+#include "EduNetConnect/NetworkVehicle.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
 #include "EduNetCommon/EduNetDraw.h"
 
 using namespace OpenSteer;
