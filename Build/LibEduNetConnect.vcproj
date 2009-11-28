@@ -344,11 +344,11 @@
 				Name="player"
 				>
 				<File
-					RelativePath="..\Source\src\EduNetConnect\SerilizablePlayer.cpp"
+					RelativePath="..\Source\src\EduNetConnect\SerializablePlayer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Source\src\EduNetConnect\SerilizablePlayer.h"
+					RelativePath="..\Source\src\EduNetConnect\SerializablePlayer.h"
 					>
 				</File>
 			</Filter>

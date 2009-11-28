@@ -1,7 +1,7 @@
 #include "PluginSelectionPlugin.h"
 
 // TODO: remove cross link
-#include "../../EduNetGames/Tutorial_03/NetBoidPlugin.h"
+#include "EduNetGames/Tutorial_03/NetBoidPlugins.h"
 
 namespace{
 
@@ -12,14 +12,21 @@ namespace{
 			const char* pszPluginName )
 		{
 			RakNet::RakString kPluginName(pszPluginName);
-			if(kPluginName == "NetPeerBoidPlugin")
+			if(kPluginName == "NetBoidRenderPeerPlugin")
 			{
-				return new NetClientBoidPlugin();
+				return ET_NEW NetBoidRenderClientPlugin();
+			}
+			if(kPluginName == "NetBoidClientServerPlugin")
+			{
+				return ET_NEW NetBoidRenderClientPlugin();
 			}
 			return NULL;
 		}
+
+		virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 	};
 
-	PluginServerPlugin<NetPeerBoidPlugin> gNetServerHost;
+	PluginServerPlugin<NetBoidRenderPeerPlugin> gNetServerHost;
+	PluginServerPlugin<NetBoidClientServerPlugin> gNetClientServerHost;
 	NetPluginClientHost gNetClientHost;
 }

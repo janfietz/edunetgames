@@ -88,13 +88,23 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer::EntityClassId classId ) const
+OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( 
+	OpenSteer::EntityClassId classId ) const
 {
 	osAbstractPlugin* pkPlugin = this->m_pkReplicaManager->getPlugin();
+	return this->createEntity( classId, pkPlugin );
+	
+}
+
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( 
+	OpenSteer::EntityClassId classId,
+	osAbstractPlugin* pkPlugin ) const
+{
 	osAbstractEntity* pkPluginEntity = OpenSteer::CastToAbstractEntity( pkPlugin );
 	assert( NULL != pkPluginEntity );
 
-	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( 
+	AbstractEntityReplica* pkNewReplica = this->createEntityReplica( 
 		pkPlugin, classId, false, pkPluginEntity->isRemoteObject() );	
 	if( NULL != pkNewReplica )
 	{
@@ -114,6 +124,15 @@ OpenSteer::AbstractEntity* AbstractEntityReplicaFactory::createEntity( OpenSteer
 		return pkEntity;
 	}
 	return NULL;
+}
+//-----------------------------------------------------------------------------
+AbstractEntityReplica* AbstractEntityReplicaFactory::createEntityReplica( 
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,  bool bClientReplica) const
+{
+	return ET_NEW AbstractEntityReplica( 
+		pPlugin, classId, bIsRemoteObject, bClientReplica );	
 }
 
 //-----------------------------------------------------------------------------
@@ -145,6 +164,16 @@ void AbstractEntityReplicaFactory::destroyEntity( OpenSteer::AbstractEntity* pkE
 void AbstractEntityReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
 {
 	this->destroyEntity( pkVehicle );
+}
+
+//-----------------------------------------------------------------------------
+AbstractEntityReplica* AbstractEntityCCReplicaFactory::createEntityReplica( 
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,  bool bClientReplica) const
+{
+	return ET_NEW AbstractEntityCCReplica( 
+		pPlugin, classId, bIsRemoteObject, bClientReplica );	
 }
 
 
