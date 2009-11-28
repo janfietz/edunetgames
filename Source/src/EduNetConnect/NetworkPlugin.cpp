@@ -4,6 +4,7 @@
 #include "EduNetApplication/EduNetApplication.h"
 #include "EduNetConnect/ServerVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/AbstractPluginUtilities.h"
 
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
@@ -81,10 +82,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		GLUI_Panel* subPanel = profileRollout;
 		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &NetworkPlugin::ms_bShowMotionStatePlot);
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
-		if( true == pkPluginEntity->isRemoteObject() )
-		{
-			ServerVehicleUpdate::initGui( profileRollout );
-		}
+		NetworkVehicle::initGui( profileRollout, pkPluginEntity->isRemoteObject() );
 	}
 
 	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
@@ -338,7 +336,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 
 	}
-	else
+	else if( 0 != AbstractPluginGui::ms_bDebugNetStats )
 	{
 		// display status 
 		const bool bIsClient = this->isRemoteObject();

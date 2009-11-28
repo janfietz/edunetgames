@@ -6,6 +6,10 @@
 
 using namespace OpenSteer;
 
+int SimpleNetworkVehicle::ms_bShowClientNetworkTrail = 0;
+int SimpleNetworkVehicle::ms_bShowServerNetworkTrail = 0;
+
+
 int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
 {
 	1, // 	ESerializeDataType_Position,
@@ -51,27 +55,54 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 //	BaseClass::draw( currentTime, elapsedTime );
 	if( this->isRemoteObject() )
 	{
-		LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
-		LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
-		Color kColor = gBlue;
-		kColor.setR( 0.3f );
-		kColor.setG( 0.4f );
-		kColor.setB( 0.0f );
-		kColor.setA( 0.2f );
-		float fUpOffset = 0.01f;
-		while( kIter != kEnd )
+		if( 1 == SimpleNetworkVehicle::ms_bShowClientNetworkTrail )
 		{
-			const LocalSpaceData& kLocalSpaceData = *kIter;
-			drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
-			fUpOffset += 0.01f;
-			++kIter;
-			kColor.setA( kColor.a() + 0.05f );
-			kColor.setB( kColor.b() + 0.1f );
+			LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
+			LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
+			Color kColor = gBlue;
+			kColor.setR( 0.3f );
+			kColor.setG( 0.4f );
+			kColor.setB( 0.0f );
+			kColor.setA( 0.2f );
+			float fUpOffset = 0.01f;
+			while( kIter != kEnd )
+			{
+				const LocalSpaceData& kLocalSpaceData = *kIter;
+				drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
+				fUpOffset += 0.01f;
+				++kIter;
+				kColor.setA( kColor.a() + 0.05f );
+				kColor.setB( kColor.b() + 0.1f );
+			}
 		}
 	}
 	else
 	{
+		if( 1 == SimpleNetworkVehicle::ms_bShowServerNetworkTrail )
+		{
+			LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
+			LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
 
+			float fUpOffset = 0.1f;
+			// show send data
+			Color kColor = gCyan;
+			drawBasic2dCircularLocalSpace( this->accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
+
+			kColor.setR( 0.0f );
+			kColor.setG( 0.4f );
+			kColor.setB( 0.3f );
+			kColor.setA( 0.2f );
+			fUpOffset = 0.01f;
+			while( kIter != kEnd )
+			{
+				const LocalSpaceData& kLocalSpaceData = *kIter;
+				drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
+				fUpOffset += 0.01f;
+				++kIter;
+				kColor.setA( kColor.a() + 0.05f );
+				kColor.setR( kColor.r() + 0.1f );
+			}
+		}
 	}
 }
 
@@ -86,7 +117,7 @@ void SimpleProxyVehicle::update (const float currentTime, const float elapsedTim
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_kNetworkVehicleUpdate(this),
-	m_bWantsToSendData( false ),
+	m_bWillSendData( false ),
 	m_bHasBeenSerialized( false )
 { 
 }
@@ -128,7 +159,6 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	kProxy.setRadius( this->radius() );
 	kProxy.setMovesPlanar( this->movesPlanar() );
 
-
 	// simple send data control
 	// note: not connection specific
 	bool bRecordNetGraph = false;
@@ -136,16 +166,16 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 	{
 		if( this->m_bHasBeenSerialized )
 		{
-			this->m_bWantsToSendData = false;
+			this->m_bWillSendData = false;
 			this->m_bHasBeenSerialized = false;
 		}
 		// set this frequency each update cycle as it might get changed by the gui
 		this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
 		size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
-		if( false == this->m_bWantsToSendData )
+		if( false == this->m_bWillSendData )
 		{
-			this->m_bWantsToSendData = ( uiTicks > 0 );
-			bRecordNetGraph = this->m_bWantsToSendData;
+			this->m_bWillSendData = ( uiTicks > 0 );
+			bRecordNetGraph = this->m_bWillSendData;
 		}
 	}
 	else
@@ -190,17 +220,19 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 {
 	// note: serialize is called for each connection
 	//       so here we have loads of optimization possibilities
-	if( false == this->m_bWantsToSendData )
+	if( false == this->m_bWillSendData )
 	{
 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
 	}
 
 	ET_PROFILE( serializeNetworkVehicle );
 
+	// reset the send proxy data
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+	bool bUpdatedProxy = false;
 	if( false == this->m_bHasBeenSerialized )
 	{
-		// serialize is called the first time now
+		// serialize is called for the first connection time now
 
 		// now a special case arises
 		// in case the steering force is replicated
@@ -213,9 +245,14 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			Vec3 kNextSteeringForce = this->getSteeringForceUpdate().determineCombinedSteering( this->getUpdateElapsedTime() );
 			kProxy.accessSteeringForceUpdate().setForce( kNextSteeringForce );
 		}
+		bUpdatedProxy = true;
+		// zero out all received local space data
+		kProxy.accessLocalSpaceData().resetLocalSpaceData();
 	}
 
+	// mark as serialized for the following connections
 	this->m_bHasBeenSerialized = true;
+
 
 	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
 
@@ -236,24 +273,43 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_Position;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->position(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setPosition( this->position() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Forward] != 0 )
 	{
 		dataType = ESerializeDataType_Forward;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->forward(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setForward( this->forward() );
+			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Side] != 0 )
 	{
 		dataType = ESerializeDataType_Side;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->side(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setSide( this->side() );
+			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Up] != 0 )
 	{
 		dataType = ESerializeDataType_Up;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->up(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setUp( this->up() );
+			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Force] != 0 )
 	{
@@ -262,6 +318,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 
 		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
 		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getForce(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			// nothing to do here se code above
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Radius] != 0 )
 	{
@@ -269,6 +329,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		float fValue = this->radius();
 		kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setRadius( this->radius() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Speed] != 0 )
 	{
@@ -276,6 +340,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		float fValue = this->speed();
 		kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setSpeed( this->speed() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_Orientation] != 0 )
 	{
@@ -283,6 +351,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
+		if( true == bUpdatedProxy )
+		{
+			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
 	{
@@ -293,6 +365,11 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		kStream.WriteAlignedBytes((const unsigned char*)&kCompressedRotation,sizeof(osVector3));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
+		if( true == bUpdatedProxy )
+		{
+			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
+			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
 	{
@@ -305,27 +382,43 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		AbstractVehicleMath::compressUnitVector( kCompressedRotation, cVector );
 		kStream.WriteAlignedBytes((const unsigned char*)&cVector,sizeof(cVector));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
+		if( true == bUpdatedProxy )
+		{
+			AbstractVehicleMath::expandUnitVector( cVector, kCompressedRotation );
+			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
+			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedForce;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
-// 		const char* pcForce = kSteeringForceUpdate.getCompressedForce();
-// 		char cForce[4] = { pcForce[0], pcForce[1], pcForce[2], pcForce[3] };
 		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getCompressedForce(),sizeof(CompressedVector));
+		if( true == bUpdatedProxy )
+		{
+			// nothing to do here ... see code above
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
 	{
 		dataType = ESerializeDataType_AngularVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->angularVelocity(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setAngularVelocity( this->angularVelocity() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity] != 0 )
 	{
 		dataType = ESerializeDataType_LinearVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->linearVelocity(),sizeof(OpenSteer::Vec3));
+		if( true == bUpdatedProxy )
+		{
+			kProxy.setLinearVelocity( this->linearVelocity() );
+		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks] != 0 )
 	{
@@ -333,6 +426,10 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		size_t updateTicks = this->getLocalSpaceData()._updateTicks;
 		kStream.WriteAlignedBytes((const unsigned char*)&updateTicks,sizeof(size_t));
+		if( true == bUpdatedProxy )
+		{
+			kProxy._updateTicks = updateTicks;
+		}
 	}
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;

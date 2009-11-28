@@ -428,7 +428,12 @@ namespace OpenSteer {
         return minXXX( v0, minXXX( v1, v2 ) );
     }
     
-    
+	template< typename T >
+	T
+		min( T const& v0, T const& v1 ) {
+			return minXXX( v0, v1 );
+	}
+   
     /**
      * Compares the absolute value of @a v with @a tolerance.
      *

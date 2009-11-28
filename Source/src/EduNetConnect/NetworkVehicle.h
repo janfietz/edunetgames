@@ -81,6 +81,13 @@ namespace OpenSteer {
 		btest = false;
 	}
 
+	//----------------------------------------------------------------------------
+	class NetworkVehicle
+	{
+	public:
+		static void initGui( GLUI_Panel* parentPanel, bool bRemoteGui );
+
+	};
 
 } // namespace OpenSteer
 
