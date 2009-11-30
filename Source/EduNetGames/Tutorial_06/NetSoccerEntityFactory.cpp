@@ -56,10 +56,10 @@ NetSoccerEntityFactory::NetSoccerEntityFactory()
 {
 	static NetNetSoccerPlayerEntityFactory gNetNetSoccerPlayerEntityFactory;
 	static NetNetSoccerBallEntityFactory gNetNetSoccerBallEntityFactory;
-	//static ClientSerializablePlayerFactory gClientSerializablePlayerFactory;
+	static ClientSerializablePlayerFactory gClientSerializablePlayerFactory;
 	this->addEntityFactory( &gNetNetSoccerPlayerEntityFactory );
 	this->addEntityFactory( &gNetNetSoccerBallEntityFactory );
-	//this->addEntityFactory( &gClientSerializablePlayerFactory );
+	this->addEntityFactory( &gClientSerializablePlayerFactory );
 }
 //-----------------------------------------------------------------------------
 NetSoccerEntityFactory::~NetSoccerEntityFactory()

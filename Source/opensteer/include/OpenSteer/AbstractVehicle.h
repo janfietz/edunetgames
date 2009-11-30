@@ -120,8 +120,6 @@ namespace OpenSteer {
         virtual Vec3 adjustRawSteeringForce (const Vec3& force,
                                              const float deltaTime) const OS_ABSTRACT;
 
-		virtual AbstractVehicle* cloneVehicle( void ) const OS_ABSTRACT;
-
 		virtual bool movesPlanar( void ) const OS_ABSTRACT;
 		//! CP --
    };

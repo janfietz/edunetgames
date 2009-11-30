@@ -37,7 +37,11 @@ OpenSteer::AbstractEntity* EntityFactory::createEntity( OpenSteer::EntityClassId
 	OpenSteer::AbstractEntity* pkEntity = OpenSteer::Plugin::createSystemEntity( classId );
 	if( NULL == pkEntity )
 	{
-		pkEntity = this->createVehicle( classId );
+		OpenSteer::AbstractEntity* pkMasterEntity = this->accessMasterEntity( classId );
+		if( NULL != pkMasterEntity )
+		{
+			pkEntity = pkMasterEntity->cloneEntity();
+		}
 	}
 	return pkEntity;
 }
@@ -45,10 +49,10 @@ OpenSteer::AbstractEntity* EntityFactory::createEntity( OpenSteer::EntityClassId
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
-	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
+	OpenSteer::AbstractEntity* pkMasterVehicle = this->createEntity( classId );
 	if( NULL != pkMasterVehicle )
 	{
-		return pkMasterVehicle->cloneVehicle(  );
+		return dynamic_cast<OpenSteer::AbstractVehicle*>(pkMasterVehicle->cloneEntity(  ) );
 	}
 	return NULL;
 }
@@ -56,11 +60,11 @@ OpenSteer::AbstractVehicle* EntityFactory::createVehicle( OpenSteer::EntityClass
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactory::createVehicle(  ) const
 {
-	if( NULL != this->m_pkMasterVehicle )
+	if( NULL != this->m_pkMasterEntity )
 	{
 		// for debugging
-		const OpenSteer::EntityClassId classId = this->m_pkMasterVehicle->getClassId();
-		return this->m_pkMasterVehicle->cloneVehicle( );
+		const OpenSteer::EntityClassId classId = this->m_pkMasterEntity->getClassId();
+		return dynamic_cast<OpenSteer::AbstractVehicle*>(this->m_pkMasterEntity->cloneEntity( ));
 	}
 	return NULL;
 };
@@ -139,7 +143,11 @@ OpenSteer::AbstractEntity* EntityFactoryArray::createEntity( OpenSteer::EntityCl
 	OpenSteer::AbstractEntity* pkEntity = OpenSteer::Plugin::createSystemEntity( classId );
 	if( NULL == pkEntity )
 	{
-		pkEntity = this->createVehicle( classId );
+		OpenSteer::AbstractEntity* pkMasterEntity = this->accessMasterEntity( classId );
+		if( NULL != pkMasterEntity )
+		{
+			pkEntity = pkMasterEntity->cloneEntity();
+		}
 	}
 	return pkEntity;
 }
@@ -147,10 +155,10 @@ OpenSteer::AbstractEntity* EntityFactoryArray::createEntity( OpenSteer::EntityCl
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactoryArray::createVehicle( OpenSteer::EntityClassId classId ) const
 {
-	OpenSteer::AbstractVehicle* pkMasterVehicle = this->accessMasterVehicle( classId );
-	if( NULL != pkMasterVehicle )
+	OpenSteer::AbstractEntity* pkMasterEntity = this->accessMasterEntity( classId );
+	if( NULL != pkMasterEntity )
 	{
-		return pkMasterVehicle->cloneVehicle(  );
+		return dynamic_cast<OpenSteer::AbstractVehicle*>(pkMasterEntity->cloneEntity());
 	}
 	return NULL;
 }

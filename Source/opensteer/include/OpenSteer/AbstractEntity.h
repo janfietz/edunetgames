@@ -150,6 +150,7 @@ namespace OpenSteer {
 		//! set if this entity is visible
 		virtual void setVisible( bool bValue )  OS_ABSTRACT;
 
+
 	};
 
 

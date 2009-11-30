@@ -201,14 +201,14 @@ void Application::_SDMCleanup( void )
 //-----------------------------------------------------------------------------
 void Application::_SDMShutdown( void )
 {
-	EduNet::Log::printMessage( "Application shutdown ..." );
+	//EduNet::Log::printMessage( "Application shutdown ..." );
 	static bool bShutdown = false;
 	if( true == bShutdown )
 	{
 		return;
 	}
 	bShutdown = true;
-	EduNet::Log::printMessage( "Application shutdown - done." );
+	//sEduNet::Log::printMessage( "Application shutdown - done." );
 }
 
 

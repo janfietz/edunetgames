@@ -89,21 +89,21 @@ public:
 
 	//---------------------------------------------------------------------------
 	// AbstractNetworkVehicle interface
-	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const {};
+	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const { return 0;};
 	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) {};
 	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream) {};
-	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream ) {};
+	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream ) {return true;};
 
 
 };
 
-//////-----------------------------------------------------------------------------
-//class ClientSerializablePlayerFactory : public OpenSteer::TEntityFactory<ClientSerializablePlayer>
-//{
-//	ET_DECLARE_BASE( OpenSteer::TEntityFactory<ClientSerializablePlayer> );
-//public:
-//	ClientSerializablePlayerFactory(){};
-//	virtual ~ClientSerializablePlayerFactory(){};
-//};
+//-----------------------------------------------------------------------------
+class ClientSerializablePlayerFactory : public OpenSteer::TEntityFactory<ClientSerializablePlayer>
+{
+	ET_DECLARE_BASE( OpenSteer::TEntityFactory<ClientSerializablePlayer> );
+public:
+	ClientSerializablePlayerFactory(){};
+	virtual ~ClientSerializablePlayerFactory(){};
+};
 
 #endif // __SerilizablePlayer_H__
