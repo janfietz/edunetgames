@@ -656,11 +656,15 @@ void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 void NetworkPlugin::ConnectToAddress( const NetworkAddress& kAddress )
 {
 	this->CloseOpenConnections();
-	
+
+	RakNetTime uiTimeout = 0;
+#ifdef _DEBUG
+	uiTimeout = 3600000;
+#endif
 
 	this->m_pNetInterface->Connect(
 		kAddress.addressString.C_String(),
-		kAddress.port,0,0);
+		kAddress.port,0,0, 0, 12, 500, uiTimeout);
 }
 
 //-----------------------------------------------------------------------------
