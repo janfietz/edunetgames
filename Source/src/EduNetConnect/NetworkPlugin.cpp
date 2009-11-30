@@ -563,6 +563,8 @@ void NetworkPlugin::CloseOpenConnections( void )
 		
 		this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
 		unsigned int usCount = kAddresses.Size();
+		if( 0 < usCount )
+		{	
 		for(unsigned int us = 0; us < usCount; ++us)
 		{
 			this->m_pNetInterface->CloseConnection(
@@ -572,6 +574,7 @@ void NetworkPlugin::CloseOpenConnections( void )
 		while(IsConnected())
 		{
 			EduNet::Application::sleep( 100 );
+		}
 		}
 	}
 }
