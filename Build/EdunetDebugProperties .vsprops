@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="EdunetDebugProperties"
+	>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStaticDebug.lib opensteerd.lib"
+		AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
+		OutputFile="$(OutDir)/$(ProjectName)d.exe"
+	/>
+</VisualStudioPropertySheet>
