@@ -221,6 +221,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPeerPlugin.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPeerPlugin.h"
+			>
+		</File>
+		<File
 			RelativePath="..\Source\EduNetGames\Tutorial_06\NetSoccerPlayer.cpp"
 			>
 		</File>

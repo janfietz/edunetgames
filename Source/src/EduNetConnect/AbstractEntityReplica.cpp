@@ -67,7 +67,13 @@ AbstractEntityReplica::AbstractEntityReplica(
 	// now retrieve the original game entity factory
 	OpenSteer::AbstractPlugin* pkParentPlugin = pkHostPlugin->getParentPlugin();
 	AbstractNetworkPlugin* pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pkParentPlugin );
+	if(NULL == pkNetworkPlugin)
+	{
+		pkParentPlugin = pkHostPlugin;
+	}
+	pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pkParentPlugin );
 	OpenSteer::AbstractEntityFactory* pkEntityFactory = pkNetworkPlugin->getGamePluginEntityFactory();
+	
 	assert( NULL != pkEntityFactory );
 	this->setEntity( pkEntityFactory->createEntity( classId ) );
 

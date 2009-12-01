@@ -28,6 +28,7 @@
 
 #include "AbstractEntityReplicaConnection.h"
 #include "AbstractEntityReplica.h"
+#include "NetworkPlugin.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/VehicleClassIds.h"
 #include "OpenSteer/Plugin.h"
@@ -75,7 +76,21 @@ RakNet::Replica3* AbstractEntityReplicaConnection::AllocReplica(
 		}
 		else
 		{
-			AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pkPlugin, classId, true  );
+			OpenSteer::AbstractPlugin* pkParentPlugin = pkPlugin->getParentPlugin();
+			if(NULL == pkParentPlugin)
+			{
+				pkParentPlugin = pkPlugin;
+			}
+			AbstractNetworkPlugin* pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pkParentPlugin );	
+
+			AbstractEntityReplica* pkNewReplica(NULL);
+			if(NULL != pkNetworkPlugin)
+			{
+				pkNewReplica = pkNetworkPlugin->allocEntityReplica( pkPlugin, classId, true , false);
+			}else
+			{
+				pkNewReplica = ET_NEW AbstractEntityReplica( pkPlugin, classId, true  );
+			}
 			return pkNewReplica; 
 		}
 	}

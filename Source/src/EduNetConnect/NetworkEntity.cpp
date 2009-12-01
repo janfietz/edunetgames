@@ -58,7 +58,7 @@ void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetworkVeh
 //-----------------------------------------------------------------------------
 int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkVehicle);
+	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
 		this->querySendParameters( pkNetworkVehicle, serializeParameters->pro );

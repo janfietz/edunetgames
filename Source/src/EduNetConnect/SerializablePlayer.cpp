@@ -27,3 +27,138 @@
 //-----------------------------------------------------------------------------
 
 #include "SerializablePlayer.h"
+
+using namespace OpenSteer;
+//-----------------------------------------------------------------------------
+AbstractEntity* ClientSerializablePlayer::cloneEntity( void ) const
+{
+	return ET_NEW ClientSerializablePlayer();
+}
+//-----------------------------------------------------------------------------
+int ClientSerializablePlayer::serialize( 
+	RakNet::SerializeParameters *serializeParameters ) const
+{ 
+	
+	return this->serializeController( serializeParameters );	
+}
+//-----------------------------------------------------------------------------
+int ClientSerializablePlayer::serializeController(
+	RakNet::SerializeParameters *serializeParameters)const
+{
+	RakNet::BitStream& kStream = serializeParameters->outputBitstream[0];
+	const osAbstractController* pkController = this->getController();
+	unsigned char dataTypes = 5; // how many variables will be send
+
+	kStream.WriteAlignedBytes(&dataTypes,sizeof(unsigned char));
+
+	unsigned char dataType;
+	unsigned char controllerAction;
+	float fValue;
+
+	dataType = ESerializeDataType_ControllerAction;
+	kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+	controllerAction = EControllerAction_Left;
+	fValue = pkController->getActionValue( EControllerAction_Left );
+	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+	dataType = ESerializeDataType_ControllerAction;
+	kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+	controllerAction = EControllerAction_Right;
+	fValue = pkController->getActionValue( EControllerAction_Right );
+	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+	dataType = ESerializeDataType_ControllerAction;
+	kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+	controllerAction = EControllerAction_Backward;
+	fValue = pkController->getActionValue( EControllerAction_Backward );
+	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+	dataType = ESerializeDataType_ControllerAction;
+	kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+	controllerAction = EControllerAction_Forward;
+	fValue = pkController->getActionValue( EControllerAction_Forward );
+	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+	dataType = ESerializeDataType_ControllerAction;
+	kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
+
+	controllerAction = EControllerAction_Kick;
+	fValue = pkController->getActionValue( EControllerAction_Kick );
+	printf("Send kick val: %f \n");
+	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
+	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
+
+	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
+
+}
+//-----------------------------------------------------------------------------
+void ClientSerializablePlayer::deserialize( 
+	RakNet::DeserializeParameters *deserializeParameters )
+{
+	this->deserializeController( deserializeParameters );
+}
+//-----------------------------------------------------------------------------
+void ClientSerializablePlayer::deserializeController(
+	RakNet::DeserializeParameters *deserializeParameters)
+{
+	printf( "deserialize controller");
+	unsigned char controllerAction;
+	unsigned char dataTypes = 0; // how many variables to read
+	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
+	for( unsigned char i = 0; i < dataTypes; ++i )
+	{
+		Vec3 kVec;
+		float fValue;
+		unsigned char dataType;
+		kStream.ReadAlignedBytes(&dataType,sizeof(unsigned char));
+		ESerializeDataType eDataType = static_cast<ESerializeDataType>(dataType);
+		switch( eDataType )
+		{
+		
+		case(ESerializeDataType_ControllerAction):
+			{
+				kStream.ReadAlignedBytes((unsigned char*)&controllerAction,sizeof(unsigned char));
+				kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+			}
+			break;
+		default:
+			{
+				assert( true == false );
+			}
+			break;
+		}
+
+		
+		switch( eDataType )
+		{
+		case(ESerializeDataType_ControllerAction):
+			{					
+				osAbstractController* pkController = this->accessController();
+				pkController->setActionValue( (EControllerAction)controllerAction, fValue );				
+			}
+			break;
+
+		}	
+	}
+
+}
+//-----------------------------------------------------------------------------
+void ClientSerializablePlayer::serializeConstruction(
+	RakNet::BitStream *constructionBitstream)
+{
+
+}
+//-----------------------------------------------------------------------------
+bool ClientSerializablePlayer::deserializeConstruction(
+	RakNet::BitStream *constructionBitstream ) 
+{
+	return true;
+}

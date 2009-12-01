@@ -89,12 +89,22 @@ public:
 
 	//---------------------------------------------------------------------------
 	// AbstractNetworkVehicle interface
-	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const { return 0;};
-	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) {};
-	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream) {};
-	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream ) {return true;};
+	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
+	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
+	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
+	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
 
+	virtual OpenSteer::EntityClassId getClassId( void ) const
+	{
+		return OS_CID_CLIENT_PLAYER;
+	}
 
+	virtual OpenSteer::AbstractEntity* cloneEntity( void ) const;
+
+private:
+
+	int serializeController(RakNet::SerializeParameters *serializeParameters)const;
+	void deserializeController(RakNet::DeserializeParameters *deserializeParameters);
 };
 
 //-----------------------------------------------------------------------------

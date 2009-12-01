@@ -770,4 +770,14 @@ void NetworkPlugin::drawNetworkPlot(const float currentTime,
 	this->m_kNetworkPlot.draw( this );
 }
 
+//-----------------------------------------------------------------------------
+AbstractEntityReplica* NetworkPlugin::allocEntityReplica(  
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,  bool bClientReplica ) const
+{
+	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pPlugin, classId, bIsRemoteObject, bClientReplica  );
+	return pkNewReplica; 
+}
+
 
