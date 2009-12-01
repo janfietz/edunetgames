@@ -35,6 +35,7 @@
 
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "EduNetConnect/AbstractEntityReplica.h"
 
 #include "OpenSteer/Plugin.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
@@ -56,6 +57,11 @@ public:
 
 	virtual OpenSteer::AbstractEntityFactory* getGamePluginEntityFactory( void ) const ET_ABSTRACT;
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const ET_ABSTRACT;
+
+	virtual AbstractEntityReplica* allocEntityReplica(  
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica ) const ET_ABSTRACT;
 
 };
 
@@ -88,6 +94,11 @@ public:
 	virtual bool DoAutoConnect( void ) const;
 	virtual bool Connect();
 	virtual void Disconnect();
+
+	virtual AbstractEntityReplica* allocEntityReplica(  
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica ) const;
 
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );

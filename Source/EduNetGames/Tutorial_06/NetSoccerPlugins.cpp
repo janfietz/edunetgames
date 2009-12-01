@@ -27,85 +27,16 @@
 //-----------------------------------------------------------------------------
 #include "NetSoccerPlugin.h"
 #include "NetSoccerClientPlugin.h"
-
+#include "NetSoccerPeerPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
-#include "EduNetConnect/PeerPlugin.h"
 
 #include "EduNetConnect/AbstractEntityReplica.h"
 #include "EduNetConnect/AbstractEntityReplicaConnection.h"
-
-//-----------------------------------------------------------------------------
-// network plugins
-//-----------------------------------------------------------------------------
-typedef PeerPlugin<NetSoccerPlugin> TSoccerPeerPlugin;
-
-//-----------------------------------------------------------------------------
-// soccer peer plugin
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-class SoccerPeerPlugin : public TSoccerPeerPlugin
-{
-	ET_DECLARE_BASE(TSoccerPeerPlugin)
-public:
-	SoccerPeerPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{	
-		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
-		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-
-		// remap the entity factory
-		this->m_pkNetBoidFactory = ET_NEW AbstractEntityReplicaFactory( &this->m_kReplicaManager );
-		this->m_kGamePlugin.setEntityFactory( this->m_pkNetBoidFactory );
-	}
-	OS_IMPLEMENT_CLASSNAME( SoccerPeerPlugin )
-	virtual const char* name() const { return this->getClassName(); };
-
-	//-------------------------------------------------------------------------
-	void StartNetworkSession( void )
-	{
-		BaseClass::StartNetworkSession();
-		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
-	}
-
-	//-------------------------------------------------------------------------
-	void CreateContent( void )
-	{
-		BaseClass::CreateContent();
-
-	}
-
-	//-------------------------------------------------------------------------
-	void handleFunctionKeys (int keyNumber)
-	{
-	}	
-
-	//-------------------------------------------------------------------------
-	virtual void initGui( void* pkUserdata ) 
-	{
-		BaseClass::initGui( pkUserdata );
-	};
-
-	//-------------------------------------------------------------------------
-	void DeleteContent( void )
-	{	
-		BaseClass::DeleteContent();
-	}
-
-private:
-
-	AbstractEntityReplicaFactory* m_pkNetBoidFactory;
-	AbstractEntityReplicaManager m_kReplicaManager;	
-};
-
-//-----------------------------------------------------------------------------
-// render server plugin
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 class RenderSoccerPeerPlugin : public OpenSteer::PluginArrayPluginMixin<SoccerPeerPlugin>

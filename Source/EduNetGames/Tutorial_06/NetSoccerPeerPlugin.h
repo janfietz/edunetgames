@@ -1,5 +1,5 @@
-#ifndef __NETSOCCERCLIENTPLUGIN_H__
-#define __NETSOCCERCLIENTPLUGIN_H__
+#ifndef __NETSOCCERPEERPLUGIN_H__
+#define __NETSOCCERPEERPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,53 +28,45 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "NetSoccerPlugin.h"
-#include "EduNetConnect/ClientPlugin.h"
+#include "EduNetConnect/PeerPlugin.h"
 
 #include "EduNetConnect/SerializablePlayer.h"
 #include "EduNetConnect/AbstractEntityReplicaConnection.h"
 
-typedef ClientPlugin<NetSoccerPlugin> TSoccerClientPlugin;
+typedef PeerPlugin<NetSoccerPlugin> TSoccerPeerPlugin;
 
 //-----------------------------------------------------------------------------
-class SoccerClientPlugin : public TSoccerClientPlugin
+class SoccerPeerPlugin : public TSoccerPeerPlugin
 {
-	ET_DECLARE_BASE(TSoccerClientPlugin)
+	ET_DECLARE_BASE(TSoccerPeerPlugin)
 public:
-	SoccerClientPlugin( bool bAddToRegistry = true ):
-		BaseClass( bAddToRegistry ), 
-		m_pkClientFactory(NULL),
+	SoccerPeerPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry ),
 		m_kReplicaManager(NULL),
-		m_pkClientPlayer(NULL)
-	{
+		m_pkNetBoidFactory(NULL)
+	{	
 		
 	}
 
-	OS_IMPLEMENT_CLASSNAME( SoccerClientPlugin )
+	OS_IMPLEMENT_CLASSNAME( SoccerPeerPlugin )
 		virtual const char* name() const { return this->getClassName(); };
 
 	//-------------------------------------------------------------------------
-	virtual void StartNetworkSession( void )
-	{
-		BaseClass::StartNetworkSession();
-		this->m_kReplicaManager = ET_NEW AbstractEntityReplicaManager();
-	}
+	virtual void StartNetworkSession( void );
+	virtual void StopNetworkSession( void );
 
-	//-------------------------------------------------------------------------
 	virtual void CreateContent( void );
-
-	//-------------------------------------------------------------------------
 	virtual void DeleteContent( void );
 
-	virtual OpenSteer::AbstractEntityFactory* getGamePluginEntityFactory( void ) const;
-
-	virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
-	virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
-
+	virtual AbstractEntityReplica* allocEntityReplica(  
+		OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica ) const;
+	
 private:
-	AbstractEntityCCReplicaFactory* m_pkClientFactory;
-	OpenSteer::AbstractPlayer* m_pkClientPlayer;
+	AbstractEntityReplicaFactory* m_pkNetBoidFactory;
 	AbstractEntityReplicaManager* m_kReplicaManager;
 };
 
 
-#endif // __NETSOCCERCLIENTPLUGIN_H__
+#endif // __NETSOCCERPEERPLUGIN_H__

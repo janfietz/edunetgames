@@ -26,34 +26,78 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "NetSoccerClientPlugin.h"
+#include "NetSoccerEntityFactory.h"
+
+#include "OpenSteerUT/LocalPlayer.h"
 
 #include "EduNetConnect/AbstractEntityReplica.h"
 
+NetSoccerEntityFactory gCLientNetSoccerEntityFactory;
 
 //-------------------------------------------------------------------------
 void SoccerClientPlugin::CreateContent( void )
 {
-	BaseClass::CreateContent();
 
-	this->m_pkClientFactory = ET_NEW AbstractEntityCCReplicaFactory( &this->m_kReplicaManager );
+	this->setGamePluginReplicaManager( this->m_kReplicaManager );
+	this->m_kReplicaManager->setPlugin( &this->m_kGamePlugin );
+	this->m_kGamePlugin.setEntityFactory( NULL );
+
+	this->m_pNetInterface->AttachPlugin( this->m_kReplicaManager );	
+
+	this->m_pkClientFactory = ET_NEW AbstractEntityCCReplicaFactory( this->m_kReplicaManager );
 	
-//	AbstractEntity* pkNetworkPlayerEntity = this->m_pkClientFactory->createEntity( OS_CID_CLIENT_PLAYER, this );
-	//this->m_pkClientPlayer = OpenSteer::CastToAbstractPlayer( pkNetworkPlayerEntity ); 
+	AbstractEntity* pkNetworkPlayerEntity = this->m_pkClientFactory->createEntity( OS_CID_CLIENT_PLAYER, this );
+	OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( pkNetworkPlayerEntity );
+	if( NULL != pkPlayer )
+	{
+		this->addPlayer( pkPlayer );
+	}
+
+	BaseClass::CreateContent();
+	
 	
 }
 
 //-------------------------------------------------------------------------
 void SoccerClientPlugin::DeleteContent( void )
 {	
-	/*if (NULL != this->m_pkClientPlayer)
+	BaseClass::DeleteContent();
+	if (NULL != this->m_pkClientFactory)
 	{
 		this->removePlayer( this->m_pkClientPlayer );
-	}
-
-	this->m_pkClientFactory->destroyEntity( this->m_pkClientPlayer );	
-	this->m_pkClientPlayer = NULL;*/
-	
+		this->m_pkClientFactory->destroyEntity( this->m_pkClientPlayer );	
+	}	
 	ET_SAFE_DELETE( this->m_pkClientFactory );
 	
-	BaseClass::DeleteContent();
+	if (NULL != this->m_kReplicaManager)
+	{
+		this->m_pNetInterface->DetachPlugin( this->m_kReplicaManager );
+	}	
+	this->setGamePluginReplicaManager(NULL);
+	ET_SAFE_DELETE(this->m_kReplicaManager);
+
+	
+}
+//-------------------------------------------------------------------------
+void SoccerClientPlugin::addPlayer (OpenSteer::AbstractPlayer* pkPlayer)
+{
+	BaseClass::addPlayer(pkPlayer);
+	this->m_pkClientPlayer = pkPlayer;
+	osAbstractController* pkController = pkPlayer->accessController();
+	if( NULL != pkController )
+	{
+		pkController->setCustomUpdated( OpenSteer::LocalPlayerController::accessLocalPlayerController() );
+	}
+}
+
+//-------------------------------------------------------------------------
+void SoccerClientPlugin::removePlayer (OpenSteer::AbstractPlayer* pkPlayer)
+{
+	this->m_pkClientPlayer = NULL;
+	BaseClass::removePlayer(pkPlayer);
+}
+
+OpenSteer::AbstractEntityFactory* SoccerClientPlugin::getGamePluginEntityFactory( void ) const
+{
+	return &gCLientNetSoccerEntityFactory;
 }
