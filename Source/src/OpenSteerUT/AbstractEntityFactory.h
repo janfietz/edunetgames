@@ -41,11 +41,10 @@ namespace OpenSteer
 	public:
 		virtual ~AbstractEntityFactory() {}
 
-		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId ) const ET_ABSTRACT;
 		virtual OpenSteer::AbstractEntity* accessMasterEntity( OpenSteer::EntityClassId ) const ET_ABSTRACT;
-
-		virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const ET_ABSTRACT;
-		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const ET_ABSTRACT;
+		
+		virtual OpenSteer::AbstractEntity* getMasterEntity( void ) const ET_ABSTRACT;
+		virtual void setMasterEntity( OpenSteer::AbstractEntity* pkEntity ) const ET_ABSTRACT;
 
 		virtual OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId ) const ET_ABSTRACT;
 		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId ) const ET_ABSTRACT;
@@ -67,16 +66,6 @@ namespace OpenSteer
 
 		  virtual ~EntityFactory() {}
 
-		  virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
-		  {
-			  OpenSteer::AbstractVehicle* pkMasterVehicle = this->getMasterVehicle();
-			  if( ( NULL != pkMasterVehicle ) && ( classId == pkMasterVehicle->getClassId() ) )
-			  {
-				  return pkMasterVehicle;
-			  }
-			  return NULL;
-		  }
-
 		  virtual OpenSteer::AbstractEntity* accessMasterEntity( OpenSteer::EntityClassId classId ) const
 		  {
 			  if( ( NULL != this->m_pkMasterEntity ) && ( classId == this->m_pkMasterEntity->getClassId() ) )
@@ -85,18 +74,7 @@ namespace OpenSteer
 			  }
 			  return NULL;
 		  }
-
-
-		  virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const
-		  {
-			  return dynamic_cast<OpenSteer::AbstractVehicle*>( this->getMasterEntity() );
-		  }
-
-		  virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
-		  {
-			  this->setMasterEntity( pkVehicle );
-		  }
-
+		  
 		  virtual OpenSteer::AbstractEntity* getMasterEntity( void ) const
 		  {
 			  return this->m_pkMasterEntity;
@@ -137,16 +115,6 @@ namespace OpenSteer
 
 		AbstractEntityFactory* findEntityFactory( OpenSteer::EntityClassId classId ) const;
 
-		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
-		{
-			AbstractEntityFactory* pkFactory = this->findEntityFactory( classId );
-			if( NULL != pkFactory )
-			{
-				return pkFactory->accessMasterVehicle( classId );
-			}
-			return NULL;
-		}
-
 		virtual OpenSteer::AbstractEntity* accessMasterEntity( OpenSteer::EntityClassId classId ) const
 		{
 			AbstractEntityFactory* pkFactory = this->findEntityFactory( classId );
@@ -157,13 +125,16 @@ namespace OpenSteer
 			return NULL;
 		}
 
-		virtual OpenSteer::AbstractVehicle* getMasterVehicle( void ) const
+		virtual OpenSteer::AbstractEntity* getMasterEntity( void ) const
 		{
-			// a vehicle factory array does not have an own mastervehicle
+			// a vehicle factory array does not have an own master entity
 			return NULL;
 		}
 
-		virtual void setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+		virtual void setMasterEntity( OpenSteer::AbstractEntity* pkEntity ) const
+		{
+
+		}
 
 		virtual OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId ) const;
 
@@ -193,11 +164,6 @@ namespace OpenSteer
 		{
 
 		};
-
-		virtual OpenSteer::AbstractVehicle* accessMasterVehicle( OpenSteer::EntityClassId classId ) const
-		{
-			return BaseClass::accessMasterVehicle( classId );
-		}
 
 		virtual OpenSteer::AbstractEntity* accessMasterEntity( OpenSteer::EntityClassId classId ) const
 		{

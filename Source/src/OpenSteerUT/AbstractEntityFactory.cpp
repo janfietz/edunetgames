@@ -49,10 +49,10 @@ OpenSteer::AbstractEntity* EntityFactory::createEntity( OpenSteer::EntityClassId
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicle* EntityFactory::createVehicle( OpenSteer::EntityClassId classId ) const
 {
-	OpenSteer::AbstractEntity* pkMasterVehicle = this->createEntity( classId );
-	if( NULL != pkMasterVehicle )
+	OpenSteer::AbstractEntity* pkMasterEntity = this->createEntity( classId );
+	if( NULL != pkMasterEntity )
 	{
-		return dynamic_cast<OpenSteer::AbstractVehicle*>(pkMasterVehicle->cloneEntity(  ) );
+		return dynamic_cast<OpenSteer::AbstractVehicle*>(pkMasterEntity->cloneEntity(  ) );
 	}
 	return NULL;
 }
@@ -89,11 +89,11 @@ void EntityFactoryArray::addEntityFactory( AbstractEntityFactory* pkFactory )
 {
 	OpenSteer::EntityClassId classId(0);
 	// force initialize
-	OpenSteer::AbstractVehicle* pkMasterVehicle = NULL;
-	OpenSteer::AbstractVehicle* pkFactoryMasterVehicle = pkFactory->accessMasterVehicle( classId );
+	OpenSteer::AbstractEntity* pkMasterVehicle = NULL;
+	OpenSteer::AbstractEntity* pkFactoryMasterVehicle = pkFactory->accessMasterEntity( classId );
 	if( NULL == pkFactoryMasterVehicle )
 	{
-		pkMasterVehicle = pkFactory->getMasterVehicle( );
+		pkMasterVehicle = pkFactory->getMasterEntity( );
 	}
 	else
 	{
@@ -117,24 +117,14 @@ AbstractEntityFactory* EntityFactoryArray::findEntityFactory( OpenSteer::EntityC
 	TEntityFactoryArray::const_iterator kEnd = this->end();
 	while( kIter != kEnd )
 	{
-		OpenSteer::AbstractVehicle* pkMasterVehicle = (*kIter)->accessMasterVehicle( classId );
-		if( NULL != pkMasterVehicle )
+		OpenSteer::AbstractEntity* pkMasterEntity = (*kIter)->accessMasterEntity( classId );
+		if( NULL != pkMasterEntity )
 		{
 			return (*kIter);
 		}
 		++kIter;
 	}
 	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-void EntityFactoryArray::setMasterVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
-{
-	AbstractEntityFactory* pkFactory = this->findEntityFactory( pkVehicle->getClassId() );
-	if( NULL != pkFactory )
-	{
-		return pkFactory->setMasterVehicle( pkVehicle );
-	}
 }
 
 //-----------------------------------------------------------------------------

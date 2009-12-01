@@ -14,9 +14,6 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
 
 	this->m_pkBoidFactory = ET_NEW NetBoidReplicaFactory(&this->m_kReplicaManager);
-	OpenSteer::Boid* pkBoid = ET_NEW OpenSteer::Boid();
-	pkBoid->setParentPlugin( &this->m_kGamePlugin );
-	this->m_pkBoidFactory->setMasterVehicle( pkBoid );
 	this->m_kGamePlugin.setEntityFactory( this->m_pkBoidFactory );
 }
 
