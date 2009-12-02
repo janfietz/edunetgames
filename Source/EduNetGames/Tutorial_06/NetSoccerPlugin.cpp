@@ -131,6 +131,19 @@ void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime 
 		return;
 	}
 
+	if( false == this->isRemoteObject() )
+	{
+		AbstractPlayerGroup& kAllPlayers = this->allPlayers( );
+		AbstractPlayerGroup::iterator kIter = kAllPlayers.begin();
+		AbstractPlayerGroup::iterator kEnd = kAllPlayers.end();
+		while( kIter != kEnd )
+		{
+			AbstractPlayer* pkPlayer = *kIter;
+			const AbstractController* pkController = pkPlayer->getController();
+			OpenSteer::CastToAbstractUpdated( pkPlayer )->update( currentTime, elapsedTime );
+			++kIter;
+		}
+	}
 	NetSoccerGameLogic kGameLogic;
 	kGameLogic.setPlugin( this );
 	kGameLogic.update( currentTime, elapsedTime );
@@ -138,13 +151,6 @@ void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime 
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.setCustomUpdated( &kGameLogic );
 	kVG.update( currentTime, elapsedTime );
-
-
- //   // update simulation of test vehicle
-	//this->updateTeam(m_kTeamA, currentTime, elapsedTime);
-	//this->updateTeam(m_kTeamB, currentTime, elapsedTime);
- //   
- //   m_Ball->update ( currentTime, elapsedTime );
 
 	if(NULL != m_Ball)
 	{
@@ -356,6 +362,44 @@ void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.removeVehicleFromPlugin( pkVehicle );
 }
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::addPlayer (OpenSteer::AbstractPlayer* pkPlayer)
+{
+	printf( "add player");
+	NetSoccerPlayer* pkFreeSoccer = this->findUncontrolledSoccer( this->m_kTeamA );
+	if (NULL != pkFreeSoccer)
+	{
+		pkPlayer->play(pkFreeSoccer);
+		if( SimpleVehicle::selectedVehicle != pkFreeSoccer )
+		{
+			SimpleVehicle::selectedVehicle = pkFreeSoccer;
+		}
+	}
+	BaseClass::addPlayer( pkPlayer );
+}
 
+NetSoccerPlayer* NetSoccerPlugin::findUncontrolledSoccer( 
+	NetSoccerPlayer::Group& kTeam )
+{
+	NetSoccerPlayer::Group::iterator kIter = kTeam.begin();
+	NetSoccerPlayer::Group::iterator kIterEnd = kTeam.end();
+	while (kIterEnd != kIter)
+	{
+		NetSoccerPlayer* pkTmpVehicle = (*kIter);
+		if (false == pkTmpVehicle->isPossessed())
+		{
+			return pkTmpVehicle;
+		}
+		++kIter;		
+	}
+	return NULL;
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::removePlayer(OpenSteer::AbstractPlayer* pkPlayer)
+{
+	printf( "remove player");
+	pkPlayer->play(NULL);
+}
 //-----------------------------------------------------------------------------
 

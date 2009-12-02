@@ -119,5 +119,6 @@ void LocalPlayerController::updateCustom(
 			pkTargetController->setActionValue( eAction, this->getActionValue( eAction ) );
 		}
 		pkTargetController->update( currentTime, elapsedTime );
+
 	}
 }

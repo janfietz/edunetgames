@@ -81,6 +81,9 @@ public:
     virtual void addVehicle ( osAbstractVehicle* pkVehicle );
 	virtual void removeVehicle ( osAbstractVehicle* pkVehicle);
 
+	virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
+	virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
+
     //-------------------------------------------------------------------------
     void drawObstacles ( void );
 
@@ -106,6 +109,7 @@ private:
 	void createTeam(unsigned int uiTeamMemberCount,
 		NetSoccerPlayer::Group& kPlayerGroup, bool bTeamId);
 
+	NetSoccerPlayer* findUncontrolledSoccer( NetSoccerPlayer::Group& kTeam );
 	bool checkForGoal( void );
 };
 

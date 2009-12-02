@@ -92,7 +92,7 @@ int ClientSerializablePlayer::serializeController(
 
 	controllerAction = EControllerAction_Kick;
 	fValue = pkController->getActionValue( EControllerAction_Kick );
-	printf("Send kick val: %f \n");
+
 	kStream.WriteAlignedBytes(&controllerAction,sizeof(unsigned char));
 	kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
 
@@ -108,11 +108,11 @@ void ClientSerializablePlayer::deserialize(
 //-----------------------------------------------------------------------------
 void ClientSerializablePlayer::deserializeController(
 	RakNet::DeserializeParameters *deserializeParameters)
-{
-	printf( "deserialize controller");
+{	
 	unsigned char controllerAction;
 	unsigned char dataTypes = 0; // how many variables to read
 	RakNet::BitStream& kStream = deserializeParameters->serializationBitstream[0];
+	kStream.ReadAlignedBytes(&dataTypes,sizeof(unsigned char));
 	for( unsigned char i = 0; i < dataTypes; ++i )
 	{
 		Vec3 kVec;
@@ -127,6 +127,9 @@ void ClientSerializablePlayer::deserializeController(
 			{
 				kStream.ReadAlignedBytes((unsigned char*)&controllerAction,sizeof(unsigned char));
 				kStream.ReadAlignedBytes((unsigned char*)&fValue,sizeof(float));
+
+				printf( "Read ctrl val: %d : %f\n",
+					controllerAction, fValue);
 			}
 			break;
 		default:

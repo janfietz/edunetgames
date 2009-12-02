@@ -65,6 +65,8 @@ public:
 	//-------------------------------------------------------------------------
 	virtual void DeleteContent( void );
 
+	virtual void update (const float currentTime, const float elapsedTime);
+
 	virtual OpenSteer::AbstractEntityFactory* getGamePluginEntityFactory( void ) const;
 
 	virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);

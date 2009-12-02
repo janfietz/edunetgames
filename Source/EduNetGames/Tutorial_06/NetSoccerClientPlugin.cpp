@@ -37,7 +37,6 @@ NetSoccerEntityFactory gCLientNetSoccerEntityFactory;
 //-------------------------------------------------------------------------
 void SoccerClientPlugin::CreateContent( void )
 {
-
 	this->setGamePluginReplicaManager( this->m_kReplicaManager );
 	this->m_kReplicaManager->setPlugin( &this->m_kGamePlugin );
 	this->m_kGamePlugin.setEntityFactory( NULL );
@@ -97,6 +96,17 @@ void SoccerClientPlugin::removePlayer (OpenSteer::AbstractPlayer* pkPlayer)
 	BaseClass::removePlayer(pkPlayer);
 }
 
+//-------------------------------------------------------------------------
+void SoccerClientPlugin::update (const float currentTime, const float elapsedTime)
+{
+	if( NULL != this->m_pkClientPlayer )
+	{
+		OpenSteer::CastToAbstractUpdated( m_pkClientPlayer )->update( currentTime, elapsedTime );
+	}
+	BaseClass::update( currentTime,  elapsedTime );
+};
+
+//-------------------------------------------------------------------------
 OpenSteer::AbstractEntityFactory* SoccerClientPlugin::getGamePluginEntityFactory( void ) const
 {
 	return &gCLientNetSoccerEntityFactory;

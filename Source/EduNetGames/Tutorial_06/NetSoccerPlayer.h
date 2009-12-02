@@ -76,6 +76,9 @@ public:
     bool b_ImTeamA;
     unsigned int m_MyID;
     OpenSteer::Vec3 m_home;
+private:
+
+	bool isKicking( void ) const;
 };
 typedef OpenSteer::VehicleClassIdMixin<NetSoccerPlayer, ET_CID_NETSOCCER_PLAYER> TNetSoccerPlayer;
 #endif // __NETSOCCERPLAYER_H__

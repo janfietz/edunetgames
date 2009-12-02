@@ -218,6 +218,10 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 				if( kLocalSteeringForce.length() > 0.1 )
 				{
 					bHasControllerValues = true;
+					if( kLocalSteeringForce.x != 0.0f )
+					{
+						kLocalSteeringForce *= 0.1f;
+					}
 					OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
 					kControllerForce *= this->maxForce();
 
@@ -226,6 +230,11 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 					const Color color = gCyan;
 					this->annotationLine( c1, c2, color );
 				}
+				else
+				{
+					this->setSpeed( 0 );
+				}
+				bHasControllerValues = true;
 			}
 		}
 

@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 #include"NetSoccerPlayer.h"
 
-
+using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 NetSoccerPlayer::NetSoccerPlayer () :
   m_others(NULL), m_AllPlayers(NULL), m_Ball(NULL), b_ImTeamA(false), m_MyID(0)
@@ -100,9 +100,16 @@ void NetSoccerPlayer::update(const float currentTime, const float elapsedTime)
 {
 	BaseClass::update( currentTime, elapsedTime );
 	const float distToBall = osVector3::distance (position(), m_Ball->position());
-	const float sumOfRadii = radius() + m_Ball->radius();
+	// make it a little bit easyer for stupid humans 
+	const float controlledPlayerOffset = this->isPossessed() ? 0.5f : 0.0f;
+	const float sumOfRadii = radius() + m_Ball->radius()+ controlledPlayerOffset;
 	if (distToBall < sumOfRadii)
-	m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
+	{
+		if (true == this->isKicking() )
+		{
+			m_Ball->kick((m_Ball->position()-position())*50, elapsedTime);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -111,7 +118,27 @@ void NetSoccerPlayer::draw (const float currentTime, const float elapsedTime)
 {
 	BaseClass::draw( currentTime, elapsedTime );
     drawBasic2dCircularVehicle (*this, b_ImTeamA ? OpenSteer::Color(1.0f,0.0f,0.0f):OpenSteer::Color(0.0f,0.0f,1.0f));
+	if(true == this->isPossessed() )
+	{
+		drawXZCircle (1.2f, this->position(), gOrange, 20);
+		if (true == this->isKicking())
+		{
+			drawXZCircle (1.3f, this->position(), gMagenta, 20);
+		}
+	}
     drawTrail();
+}
+//-----------------------------------------------------------------------------
+bool  NetSoccerPlayer::isKicking( void ) const
+{
+	AbstractPlayer* pkOwner = this->getPlayer();
+	if (NULL != pkOwner)
+	{
+		const AbstractController* pkController = pkOwner->getController();
+		return 0.0f != pkController->getActionValue(EControllerAction_Kick);	
+	}
+	return true;
+	
 }
 
 //-----------------------------------------------------------------------------
