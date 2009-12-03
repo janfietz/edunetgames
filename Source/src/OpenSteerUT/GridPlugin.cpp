@@ -44,6 +44,8 @@ void GridPlugin::gridUtility( const Vec3& gridTarget )
 		(round (gridTarget.y * 0.5f) * 2) - .05f,
 		(round (gridTarget.z * 0.5f) * 2));
 
+
+
 	if( 1 == GridPlugin::ms_iSolid )
 	{
 		// colors for checkerboard
@@ -55,6 +57,7 @@ void GridPlugin::gridUtility( const Vec3& gridTarget )
 	else
 	{
 		// alternate style
+		drawXYLineGrid (50, 50, gridCenter, gBlack);
 		drawXZLineGrid (50, 50, gridCenter, gBlack);
 	}
 }

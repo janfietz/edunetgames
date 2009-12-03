@@ -125,17 +125,17 @@ namespace OpenSteer {
 		{
 			{
 				const OpenSteer::EulerVehicleUpdate& kEulerUpdate = pkPhysicsVehicle->getEulerUpdate();
-				//			const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
+				const PhysicsMotionState& kState = kEulerUpdate.getMotionState();
 
 				Profile::GraphValues& kLinearVelocityValues = 
 					this->m_kLinearVelocity.accessValues(uiRecordIndex);
-				//			kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
-				kLinearVelocityValues.addValue( currentTime, pkVehicle->linearVelocity().length() );
+				kLinearVelocityValues.addValue( currentTime, kState.m_fLinearVelocity );
+//				kLinearVelocityValues.addValue( currentTime, pkVehicle->linearVelocity().length() );
 
 				Profile::GraphValues& kAngularVelocityValues = 
 					this->m_kAngularVelocity.accessValues(uiRecordIndex);
-				//			kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
-				kAngularVelocityValues.addValue( currentTime, pkVehicle->angularVelocity().length() );
+				kAngularVelocityValues.addValue( currentTime, kState.m_fAngularVelocity );
+//				kAngularVelocityValues.addValue( currentTime, pkVehicle->angularVelocity().length() );
 
 				Profile::GraphValues& kSteeringForceValues = 
 					this->m_kSteeringForce.accessValues(uiRecordIndex);

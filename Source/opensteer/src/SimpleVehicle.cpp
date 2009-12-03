@@ -73,6 +73,7 @@
 // near a vehicle causes it to become the Selected Vehicle.
 OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
 OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
+int OpenSteer::SimpleVehicle::ms_collect3DAnnotations = 0;
 
 //-----------------------------------------------------------------------------
 // constructor
@@ -154,7 +155,7 @@ void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*
 			}
 		}
 	}
-	if( true == bAnnotate )
+	if( ( true == bAnnotate ) && ( OpenSteer::SimpleVehicle::ms_collect3DAnnotations != 0 ) )
 	{
 		std::ostringstream kStream;
 		kStream << std::setprecision(2) << std::setiosflags(std::ios::fixed);

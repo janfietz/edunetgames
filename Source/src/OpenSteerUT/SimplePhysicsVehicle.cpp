@@ -218,7 +218,7 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 				if( kLocalSteeringForce.length() > 0.1 )
 				{
 					bHasControllerValues = true;
-					if( kLocalSteeringForce.x != 0.0f )
+					if( kLocalSteeringForce.x != 0.0f && this->maxForce() > 100 )
 					{
 						kLocalSteeringForce *= 0.1f;
 					}

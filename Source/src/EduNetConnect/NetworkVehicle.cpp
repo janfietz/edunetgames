@@ -33,6 +33,9 @@
 using namespace OpenSteer;
 
 //-------------------------------------------------------------------------
+ClientSideInterpolation NetworkVehicle::ms_ClientSideInterpolation;
+
+//-------------------------------------------------------------------------
 void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
 {
 	assert( NULL != parentPanel );
@@ -40,9 +43,9 @@ void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
 	// network vehicle  gui
 	GLUI_Rollout* replicationRollout = glui->add_rollout_to_panel( parentPanel, "Entity Replication", true );	
 	GLUI_Panel* replicationPanel = replicationRollout;
-	if( true == bRemoteGui )
+	if( false == bRemoteGui )
 	{
-		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowClientNetworkTrail);
+		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowServerNetworkTrail);
 		glui->add_separator_to_panel( replicationPanel );
 		glui->add_checkbox_to_panel( replicationPanel, "UpdateTicks", &SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks]);
 		glui->add_separator_to_panel( replicationPanel );
@@ -66,7 +69,15 @@ void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
 	}
 	else
 	{
-		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowServerNetworkTrail);
 //		glui->add_separator_to_panel( replicationPanel );
+		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &SimpleNetworkVehicle::ms_bShowClientNetworkTrail);
+		GLUI_Spinner* distanceThreshHoldSpinner =
+			glui->add_spinner_to_panel( replicationPanel, "Interpolation Threshhold", GLUI_SPINNER_FLOAT, 
+			&NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold);
+		distanceThreshHoldSpinner->set_float_limits(0.01f, 5.0f);
+		GLUI_Spinner* interpolationFactorSpinner =
+			glui->add_spinner_to_panel( replicationPanel, "Interpolation Factor", GLUI_SPINNER_FLOAT, 
+			&NetworkVehicle::ms_ClientSideInterpolation.m_fInterpolationFactor);
+		interpolationFactorSpinner->set_float_limits(0.25f, 1.0f);
 	}
 }

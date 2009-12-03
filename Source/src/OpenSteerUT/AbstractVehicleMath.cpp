@@ -318,7 +318,7 @@ namespace OpenSteer
 	void AbstractVehicleMath::compressFixedLengthVector( const osVector3& kSource, float fMaxLength, CompressedVector& kTarget )
 	{
 		osVector3 kFixedSource = kSource;
-		kFixedSource.truncateLength( fMaxLength );
+		kFixedSource = kFixedSource.truncateLength( fMaxLength );
 		const float fLength = kFixedSource.length();
 		osVector3 kUnitSource = kFixedSource;
 		float fUnitFactor;

@@ -189,11 +189,9 @@ namespace OpenSteer
 			return;
 		}
 
-		btVector3 kLinearVelocity, kAngularVelocity, kLocalLinearVelocity, kLocalAngularVelocity;
+		btVector3 kLinearVelocity, kAngularVelocity;
 		getVector3( this->m_kLinearVelocity, kLinearVelocity );
 		getVector3( this->m_kAngularVelocity, kAngularVelocity );
-		getVector3( this->m_kLocalLinearVelocity, kLocalLinearVelocity );
-		getVector3( this->m_kLocalAngularVelocity, kLocalAngularVelocity );
 		btTransformUtil::integrateTransform(
 			this->m_kWorldTransform,
 			kLinearVelocity,
@@ -201,9 +199,22 @@ namespace OpenSteer
 			elapsedTime,
 			kTarget.m_kWorldTransform );
 
-		// update velocities
-		kTarget.m_kLocalLinearVelocity = this->m_kLocalLinearVelocity;
-		kTarget.m_kLocalAngularVelocity = this->m_kLocalAngularVelocity;
+		// compute local space velocities
+		btMatrix3x3 kLocalBasis = this->m_kWorldTransform.getBasis().inverse();
+		btVector3 kLocalLinearVelocity;
+		getVector3( this->m_kLinearVelocity, kLocalLinearVelocity );
+		kLocalLinearVelocity = kLocalBasis * kLocalLinearVelocity;
+		btVector3 kLocalAngularVelocity;
+		getVector3( this->m_kAngularVelocity, kLocalAngularVelocity );
+		kLocalAngularVelocity = kLocalBasis * kLocalAngularVelocity;
+
+		// set local velocities to integrated transform
+		getVector3( kLocalLinearVelocity, kTarget.m_kLocalLinearVelocity );
+		getVector3( kLocalAngularVelocity, kTarget.m_kLocalAngularVelocity );
+		kTarget.m_fLinearVelocity = kTarget.m_kLinearVelocity.length();
+		kTarget.m_fAngularVelocity = kTarget.m_kAngularVelocity.length();
+
+		// transform local velocities to new world space
 		kLinearVelocity = kTarget.m_kWorldTransform.getBasis() * kLocalLinearVelocity;
 		kAngularVelocity = kTarget.m_kWorldTransform.getBasis() * kLocalAngularVelocity;
 		getVector3( kLinearVelocity, kTarget.m_kLinearVelocity );

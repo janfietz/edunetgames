@@ -262,13 +262,17 @@ void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 			}
 		}
 	}
-	AbstractPlayerGroup& kAllPlayers = this->allPlayers( );
-	AbstractPlayerGroup::iterator kIter = kAllPlayers.begin();
-	AbstractPlayerGroup::iterator kEnd = kAllPlayers.end();
-	while( kIter != kEnd )
+
+	if( false == this->isRemoteObject() )
 	{
-		OpenSteer::CastToAbstractUpdated( *kIter )->update( currentTime, elapsedTime );
-		++kIter;
+		AbstractPlayerGroup& kAllPlayers = this->allPlayers( );
+		AbstractPlayerGroup::iterator kIter = kAllPlayers.begin();
+		AbstractPlayerGroup::iterator kEnd = kAllPlayers.end();
+		while( kIter != kEnd )
+		{
+			OpenSteer::CastToAbstractUpdated( *kIter )->update( currentTime, elapsedTime );
+			++kIter;
+		}
 	}
 
 

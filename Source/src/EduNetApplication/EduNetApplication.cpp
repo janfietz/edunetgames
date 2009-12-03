@@ -299,6 +299,7 @@ void Application::addGuiElements( GLUI* glui )
 
 	glui->add_separator();
 	glui->add_checkbox("Enable Annotation", &this->m_bEnableAnnotation);
+	glui->add_checkbox("Vehicle Annotation", &OpenSteer::SimpleVehicle::ms_collect3DAnnotations);
 
 	glui->add_separator();
 
