@@ -53,6 +53,7 @@ namespace OpenSteer {
 		
 	private:
 		
+	
 		EVehicleUpdateMode determineUpdateMode( const class SimpleNetworkVehicle& kVehicle ) const;
 
 		void updatePosition( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );

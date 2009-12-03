@@ -103,6 +103,10 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 				kColor.setA( kColor.a() + 0.05f );
 				kColor.setR( kColor.r() + 0.1f );
 			}
+
+			// show send data
+			kColor = gDarkYellow;
+			drawBasic2dCircularLocalSpace( m_kextrapolatedLocalSpace.accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
 		}
 	}
 }
@@ -171,10 +175,16 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 			this->m_bHasBeenSerialized = false;
 		}
 		// set this frequency each update cycle as it might get changed by the gui
-		this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
+		if( this->m_kNetworkVehicleUpdate.serverVehicleUpdate().getServerVehicleMode() == EServerVehicleMode_ExtrapolateProxy){
+			this->m_kNetWriteUpdatePeriod.SetPeriodTime(5.0f, true); //Set update time to 5 seconds
+		}else{
+			this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
+		}
+		
 		size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
 		if( false == this->m_bWillSendData )
 		{
+			this->m_kNetworkVehicleUpdate.serverVehicleUpdate().resetExtrapolationData(*this);
 			this->m_bWillSendData = ( uiTicks > 0 );
 			bRecordNetGraph = this->m_bWillSendData;
 		}
@@ -227,6 +237,9 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 
 	// reset the send proxy data
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+	//mark the proxy having new data
+	kProxy.m_bHasNewData = true;
+	
 	bool bUpdatedProxy = false;
 	if( false == this->m_bHasBeenSerialized )
 	{
@@ -274,6 +287,9 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes((const unsigned char*)&this->position(),sizeof(OpenSteer::Vec3));
 		if( true == bUpdatedProxy )
 		{
+			kProxy.setForward( this->_forward );
+			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
+
 			kProxy.setPosition( this->position() );
 		}
 	}

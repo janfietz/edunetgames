@@ -58,6 +58,7 @@ namespace OpenSteer {
 		bool m_bSerializedDataTypes[ESerializeDataType_Count];
 		PhysicsMotionState m_kProxyMotionState;
 		LocalSpaceDataArray m_kLocalSpaceData; // received / send data cue
+		LocalSpace m_kextrapolatedLocalSpace;
 	private:
 	};
 

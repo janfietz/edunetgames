@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
+#include "OpenSteerUT/PhysicsMotionState.h"
 #include "EduNetConnect/NetworkVehicle.h"
 
 //-----------------------------------------------------------------------------
@@ -49,12 +50,20 @@ namespace OpenSteer {
 		// interface AbstractUpdated
 		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
+		void resetExtrapolationData ( const class SimpleNetworkVehicle& kVehicle);
+		LocalSpace extrapolatedMotionStateLocalSpace()
+		{
+			LocalSpace kSpace;
+			m_kextrapolatedMotionState.writeLocalSpaceData(kSpace);
+			return kSpace;
+		}
 
 		//-------------------------------------------------------------------
 	private:
 		EServerVehicleMode determineServerVehicleMode( const class SimpleNetworkVehicle& kVehicle ) const;
 
 		void updateExtrapolateProxy( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		PhysicsMotionState m_kextrapolatedMotionState;
 
 	};
 
