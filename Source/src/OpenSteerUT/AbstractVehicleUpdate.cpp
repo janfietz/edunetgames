@@ -52,9 +52,27 @@ void EulerVehicleUpdate::integrateMotionState(
 	PhysicsMotionState kMotionState;
 	PhysicsMotionState kExtrapolatedMotionState;
 	kMotionState.readLocalSpaceData( this->vehicle().getLocalSpaceData() );
+
+	if( kMotionState.m_kLinearVelocity.length() > this->vehicle().maxSpeed() )
+	{
+		kMotionState.m_kLinearVelocity = 
+			kMotionState.m_kLinearVelocity.truncateLength( this->vehicle().maxSpeed() );
+	}
+
 	kMotionState.integrateMotionState( 
 		kExtrapolatedMotionState, elapsedTime );
+
+	if( kExtrapolatedMotionState.m_kLinearVelocity.length() > this->vehicle().maxSpeed() )
+	{
+		kMotionState.m_kLinearVelocity = 
+			kExtrapolatedMotionState.m_kLinearVelocity.truncateLength( this->vehicle().maxSpeed() );
+	}
+
 	kExtrapolatedMotionState.writeLocalSpaceData( this->vehicle() );
+//	this->vehicle().setSpeed( kExtrapolatedMotionState.m_kLinearVelocity.length() );
+	// eliminate speed overshooting
+
+
 }
 
 //-----------------------------------------------------------------------------
@@ -144,11 +162,20 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 	{
 		if( this->getUpdateMode() == EEulerUpdateMode_IntegrateMotionState )
 		{
-			// do not do anything in this case;
-//			return;
+			// do not do anything in this case
+			return;
 		}
+
 		this->vehicle().setAngularVelocity( this->m_kMotionState.m_kAngularVelocity );
-		this->vehicle().setLinearVelocity( this->m_kMotionState.m_kLinearVelocity );
+
+		Vec3 kLinearVelocity = this->m_kMotionState.m_kLinearVelocity;
+		// do not apply to high linear velocities !!!
+		if( kLinearVelocity.length() > this->vehicle().maxSpeed() )
+		{
+			kLinearVelocity = kLinearVelocity.truncateLength( this->vehicle().maxSpeed() );
+		}
+
+		this->vehicle().setLinearVelocity( kLinearVelocity );
 	}
 }
 

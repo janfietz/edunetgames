@@ -297,6 +297,8 @@ namespace OpenSteer {
 		static AbstractVehicle* selectedVehicle;
 		static AbstractVehicle* nearestMouseVehicle;
 
+		static int ms_collect3DAnnotations;
+
 		// TODO: make private !
 		//! a pointer to this vehicles's interface object for the proximity database
 		ProximityToken* m_pkProximityToken;

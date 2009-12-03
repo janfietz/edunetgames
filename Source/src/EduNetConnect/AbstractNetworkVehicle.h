@@ -64,6 +64,8 @@ namespace OpenSteer {
 		ESerializeDataType_Count,
 	};
 
+// TODO: rename AbstractNetworkVehicle to AbstractSerializable
+
 	class AbstractNetworkVehicle
 	{
 	public:

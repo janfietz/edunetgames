@@ -31,6 +31,7 @@
 #include "NetBoidPlugin.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 //-----------------------------------------------------------------------------
 class NetBoidRenderOfflinePlugin : 
@@ -55,6 +56,7 @@ public:
 
 	void prepare(void)
 	{
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );		
 		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	}
 	

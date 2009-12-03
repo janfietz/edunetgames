@@ -747,6 +747,46 @@ OpenSteer::drawXZLineGrid (const float size,
 }
 
 //-------------------------------------------------------------------------
+// draw a square grid of lines on the XZ (horizontal) plane.
+//
+// ("size" is the length of a side of the overall grid, "subsquares" is the
+// number of subsquares along each edge (for example a standard checkboard
+// has eight), "center" is the 3d position of the center of the grid, lines
+// are drawn in the specified "color".)
+void 
+OpenSteer::drawXYLineGrid (const float size,
+						   const int subsquares,
+						   const Vec3& center,
+						   const Color& color)
+{
+	warnIfInUpdatePhase ("drawXZLineGrid");
+
+	const float half = size/2;
+	const float spacing = size / subsquares;
+
+	// set grid drawing color
+	glColor3f (color.r(), color.g(), color.b());
+
+	// draw a square XZ grid with the given size and line count
+	glBegin (GL_LINES);
+	float q = -half;
+	for (int i = 0; i < (subsquares + 1); i++)
+	{
+		const Vec3 x1 (q, +half, 0 ); // along X parallel to Z
+		const Vec3 x2 (q, -half, 0);
+		const Vec3 z1 (+half, q, 0 ); // along Z parallel to X
+		const Vec3 z2 (-half, q, 0 );
+
+		iglVertexVec3 (x1 + center);
+		iglVertexVec3 (x2 + center);
+		iglVertexVec3 (z1 + center);
+		iglVertexVec3 (z2 + center);
+
+		q += spacing;
+	}
+	glEnd ();
+}
+//-------------------------------------------------------------------------
 // draw the three axes of a LocalSpace: three lines parallel to the
 // basis vectors of the space, centered at its origin, of lengths
 // given by the coordinates of "size".

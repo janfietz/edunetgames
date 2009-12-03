@@ -96,7 +96,7 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Force ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedForce ] );
 	const bool bHasVelocityUpdate = 
-		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_AngularVelocity ] ) &&
+		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_AngularVelocity ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_LinearVelocity ] );
 	const bool bHasSpeedUpdate = 
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Speed ] ) ;
@@ -180,7 +180,6 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 
 	kVehicle.setSpeed( kProxy.speed() );
 	kVehicle.setLinearVelocity( kVehicle.velocity() );
-
 }
 
 //-------------------------------------------------------------------------
@@ -217,18 +216,34 @@ void ClientVehicleUpdate::updatePhysicsMotion(
 	{
 		LocalSpaceData& kCurrentLocalSpaceData = kVehicle.accessLocalSpaceData();
 		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
-		// preserve client updateTicks ?
-		const bool bPreserveUpdateTicks = true;
-		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+
+		// client side interpolation
+		// compute distance between server and client position
+		Vec3 kDistance = kProxy.position() - kVehicle.position();
+		const float fDistanceThreshhold = NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold *
+			NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold;
+		if( kDistance.lengthSquared() > fDistanceThreshhold )
+		{
+			Vec3 kNewPosition = kVehicle.position() + kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fInterpolationFactor;
+			// preserve client updateTicks ?
+			const bool bPreserveUpdateTicks = true;
+			kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+			kVehicle.setPosition( kNewPosition );
+
+			// manually update the motion state once
+//			kVehicle.accessEulerUpdate().updateMotionState( currentTime, elapsedTime );
+		}
 	}
 	else
 	{
-
+		kVehicle.setAngularVelocity( Vec3::zero );
 	}
 	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
 	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
 	kVehicle.updateBase( currentTime, elapsedTime );
 	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
+
+//	printf( "vehicle speed %f\n", kVehicle.speed() );
 }
 
 //-------------------------------------------------------------------------

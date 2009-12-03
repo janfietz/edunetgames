@@ -100,6 +100,20 @@ namespace OpenSteer {
 		btest = false;
 	}
 
+
+	//----------------------------------------------------------------------------
+	typedef struct TClientSideInterpolation
+	{
+		TClientSideInterpolation():
+		m_fDistanceThreshHold(1.0),
+		m_fInterpolationFactor(0.5)
+		{
+
+		}
+		float m_fDistanceThreshHold;
+		float m_fInterpolationFactor;
+	} ClientSideInterpolation;
+
 	//----------------------------------------------------------------------------
 	class NetworkVehicle
 	{
@@ -119,6 +133,9 @@ namespace OpenSteer {
 			};
 			return pszModes[eMode];
 		}
+
+		static ClientSideInterpolation ms_ClientSideInterpolation;
+
 	};
 
 	//----------------------------------------------------------------------------

@@ -151,6 +151,11 @@ namespace OpenSteer {
                          const Vec3& center,
                          const Color& color);
 
+	void drawXYLineGrid (const float size,
+		const int subsquares,
+		const Vec3& center,
+		const Color& color);
+
 
     //-------------------------------------------------------------------------
     //! Circle/disk drawing utilities
