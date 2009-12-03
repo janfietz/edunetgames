@@ -465,6 +465,8 @@ void NetworkPlugin::DeleteContent( void )
 void NetworkPlugin::InitializeServerPortSettings( void )
 {
 	this->InitializeServerPortAndPongCount();
+	this->accessCurrentAddress().port = this->m_uiStartPort; 
+
 	this->m_iWaitForPongPort = -1 * this->m_uiStartPort;
 }
 

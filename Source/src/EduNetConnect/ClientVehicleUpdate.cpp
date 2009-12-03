@@ -131,6 +131,7 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 void ClientVehicleUpdate::updatePosition( 
 class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
+	float m_sThreshold = 0.1f;
 	SimpleProxyVehicle& kProxy = kVehicle.accessProxyVehicle();
 	if( true == kProxy.m_bHasNewData )
 	{
@@ -138,20 +139,34 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
 		// preserve client updateTicks ?
 		const bool bPreserveUpdateTicks = true;
-
-		kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+		osVector3 kDirection; 
+		Vec3 tmp = kProxy.position() - kVehicle.position() ;	
+		bool bTr = true;
+		if(tmp.length() > m_sThreshold){
+			tmp = kVehicle.position() + tmp * 0.5f;
+			kDirection = tmp - kVehicle.position();
+			kVehicle.setPosition(tmp);
+			bTr = false;
+		}
 
 		size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size(); 
 		if( uiReceivedRecords >= 2 )
 		{
+
 			const LocalSpaceData* pkLocalSpaceData[2] =
 			{
 				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 2 ], // 0 previous
 				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 1 ], // 1 last
 			};
 
+			
+			
+			
+			if(bTr) kDirection = pkLocalSpaceData[1]->_position - pkLocalSpaceData[0]->_position;
+			//kVehicle.setLocalSpaceData(kProxy.getLocalSpaceData(), bPreserveUpdateTicks);
+
 			// compute direction
-			osVector3 kDirection = pkLocalSpaceData[1]->_position - pkLocalSpaceData[0]->_position;
+			
 			const float fDistance = kDirection.length();
 			float fSpeed = 0;
 			if( fDistance > 0 )
@@ -161,7 +176,7 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 
 				// compute velocity
 				const size_t uiTickDifference = pkLocalSpaceData[1]->_updateTicks - pkLocalSpaceData[0]->_updateTicks;
-				if( uiTickDifference > 0 )
+				if( uiTickDifference > 0)
 				{
 					float fTickDifferenceTime = kVehicle.getUpdateTickTime() * uiTickDifference;
 					fSpeed = fDistance / fTickDifferenceTime;

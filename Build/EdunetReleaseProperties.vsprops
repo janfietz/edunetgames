@@ -6,7 +6,7 @@
 	>
 	<Tool
 		Name="VCLinkerTool"
-		AdditionalDependencies="glut32.lib ws2_32.lib RakNetLibStatic.lib opensteer.lib"
+		AdditionalDependencies="glut32.lib ws2_32.lib"
 		AdditionalLibraryDirectories="&quot;$(OutDir)/lib&quot;;&quot;$(ProjectDir)\..\..\ThirdParty\Raknet\Lib&quot;"
 		OutputFile="$(OutDir)/$(ProjectName).exe"
 	/>
