@@ -54,6 +54,9 @@ namespace OpenSteer {
 		virtual void update( const osScalar currentTime, const osScalar elapsedTime );
 
 		void collect3DTextAnnotation( std::ostringstream& kStream );
+
+		ServerVehicleUpdate& serverVehicleUpdate(void){ return this->m_kServerVehicleUpdate;}
+		ClientVehicleUpdate& clientVehicleUpdate(void){ return this->m_kClientVehicleUpdate;}
 	
 	private:
 		ServerVehicleUpdate m_kServerVehicleUpdate;
