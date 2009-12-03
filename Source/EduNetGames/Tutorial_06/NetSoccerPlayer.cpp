@@ -153,6 +153,8 @@ void NetSoccerPlayer::setHomeAndPosition(  const osVector3& kPos )
 {
 	this->m_home = kPos;
 	this->setPosition( this->m_home );
+	this->setForward( -kPos.normalized() );
+	this->regenerateLocalSpace( this->forward(), 0.0f);
 }
 
 //-----------------------------------------------------------------------------

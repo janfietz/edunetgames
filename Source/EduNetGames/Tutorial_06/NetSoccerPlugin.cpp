@@ -305,33 +305,49 @@ void NetSoccerPlugin::addVehicle( AbstractVehicle* pkVehicle )
 		return;
 	}
 
-	NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
-	if( NULL != pkPlayerVehicle )
-	{
-		if (pkPlayerVehicle->b_ImTeamA)
-		{
-			this->m_kTeamA.push_back(pkPlayerVehicle );
-		}else
-		{
-			this->m_kTeamB.push_back(pkPlayerVehicle );
-		}		
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.addVehicleToPlugin( pkVehicle, this );
 
-		m_AllPlayers.push_back ( pkPlayerVehicle );
+	if(false == pkVehicle->isRemoteObject() )
+	{
+		NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
+		if( NULL != pkPlayerVehicle )
+		{
+			if (pkPlayerVehicle->b_ImTeamA)
+			{
+				this->m_kTeamA.push_back(pkPlayerVehicle );
+			}else
+			{
+				this->m_kTeamB.push_back(pkPlayerVehicle );
+			}		
+
+			m_AllPlayers.push_back ( pkPlayerVehicle );
+		}
+
+		NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
+		if( NULL != pkBall )
+		{		
+			this->m_Ball = pkBall;
+			this->m_Ball->setBox(m_bbox);
+		}
+	}
+	
+}
+//-----------------------------------------------------------------------------
+void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
+{
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	if( kVG.end() == kVG.findVehicle( pkVehicle ) )
+	{
+		return;
 	}
 
 	NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
 	if( NULL != pkBall )
 	{		
-		this->m_Ball = pkBall;
-		this->m_Ball->setBox(m_bbox);
+		this->m_Ball = NULL;		
 	}
 
-	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicleToPlugin( pkVehicle, this );
-}
-//-----------------------------------------------------------------------------
-void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
-{
 	NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
 	if( NULL != pkPlayerVehicle )
 	{
@@ -353,13 +369,6 @@ void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
 			
 	}
 
-	NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
-	if( NULL != pkBall )
-	{		
-		this->m_Ball = NULL;		
-	}
-
-	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.removeVehicleFromPlugin( pkVehicle );
 }
 //-----------------------------------------------------------------------------

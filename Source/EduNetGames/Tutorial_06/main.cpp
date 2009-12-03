@@ -27,10 +27,17 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
+#include "EduNetConnect/SimpleNetworkVehicle.h"
+
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
+	SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Forward] = 0;
+	SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Orientation] = 1;
+	SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] = 1;
+	SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity] = 1;
 	return ::EduNetMain( argc, argv );
 }
 
