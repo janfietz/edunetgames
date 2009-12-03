@@ -88,15 +88,36 @@ EServerVehicleMode ServerVehicleUpdate::determineServerVehicleMode( const class 
 	const bool bHasSpeedUpdate = 
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Speed ] ) ;
 
-	if( bHasPositionUpdate && bHasOrientationUpdate && bHasVelocityUpdate )
+	//if( bHasPositionUpdate && bHasOrientationUpdate && bHasVelocityUpdate )
+	if( bHasPositionUpdate)
 	{
 		eType = EServerVehicleMode_ExtrapolateProxy;
 	}
 	return eType;
 }
 
+void ServerVehicleUpdate::resetExtrapolationData ( const class SimpleNetworkVehicle& kVehicle){
+	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
+	m_kextrapolatedMotionState.readLocalSpaceData(kProxy.getLocalSpaceData());
+	m_kextrapolatedMotionState.m_kLinearVelocity = kVehicle.linearVelocity();
+}
+
 //-------------------------------------------------------------------------
 void ServerVehicleUpdate::updateExtrapolateProxy( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
-//	printf("updateExtrapolateProxy\n");
+	float kThresholdPosition = 0.1f;
+	float kThresholdRotation = 0.1f;
+	
+	LocalSpace klocalSpace;
+	m_kextrapolatedMotionState.integrateMotionState(m_kextrapolatedMotionState,elapsedTime);
+	m_kextrapolatedMotionState.writeLocalSpaceData(klocalSpace);
+	
+	const Vec3& serverPosition = kVehicle.position();
+	const Vec3& serverForward = kVehicle.forward();
+
+	if((serverPosition-klocalSpace.position()).lengthSquared() > kThresholdPosition || serverForward.dot(klocalSpace.forward()) > kThresholdRotation){
+		kVehicle.forceSendData();
+	}
+
+	kVehicle.accessProxyVehicle().m_kextrapolatedLocalSpace.setLocalSpaceData(klocalSpace.getLocalSpaceData(), false);
 }
