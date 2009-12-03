@@ -377,7 +377,7 @@ void NetSoccerPlugin::addPlayer (OpenSteer::AbstractPlayer* pkPlayer)
 	}
 	BaseClass::addPlayer( pkPlayer );
 }
-
+//-----------------------------------------------------------------------------
 NetSoccerPlayer* NetSoccerPlugin::findUncontrolledSoccer( 
 	NetSoccerPlayer::Group& kTeam )
 {
@@ -400,6 +400,7 @@ void NetSoccerPlugin::removePlayer(OpenSteer::AbstractPlayer* pkPlayer)
 {
 	printf( "remove player");
 	pkPlayer->play(NULL);
+	BaseClass::removePlayer( pkPlayer );
 }
 //-----------------------------------------------------------------------------
 
