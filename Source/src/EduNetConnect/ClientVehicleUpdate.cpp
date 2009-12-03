@@ -56,6 +56,9 @@ void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScala
 	case( EVehicleUpdateMode_Position ):
 		this->updatePosition( *pkNetworkVehicle, currentTime, elapsedTime );
 		break;
+	case( EVehicleUpdateMode_PositionOrientation ):
+		this->updatePositionOrientation( *pkNetworkVehicle, currentTime, elapsedTime );
+		break;
 	case( EVehicleUpdateMode_BruteForce ):
 		this->updateBruteForce( *pkNetworkVehicle, currentTime, elapsedTime );
 		break;
@@ -115,7 +118,7 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 	}
 	else if( bHasPositionUpdate && bHasOrientationUpdate )
 	{
-		eType = EVehicleUpdateMode_BruteForce;
+		eType = EVehicleUpdateMode_PositionOrientation;
 	}
 	else if( bHasPositionUpdate )
 	{
@@ -183,6 +186,116 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 }
 
 //-------------------------------------------------------------------------
+void ClientVehicleUpdate::updatePositionOrientation( 
+class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
+{
+	SimpleProxyVehicle& kProxy = kVehicle.accessProxyVehicle();
+	if( true == kProxy.m_bHasNewData )
+	{
+		LocalSpaceData& kCurrentLocalSpaceData = kVehicle.accessLocalSpaceData();
+		const size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size(); 
+
+		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
+		// preserve client updateTicks ?
+		const bool bPreserveUpdateTicks = true;
+
+		float fSpeed = -1; // invalid
+
+		// first time data
+		if( uiReceivedRecords == 1 )
+		{
+			// preserve client updateTicks ?
+			const bool bPreserveUpdateTicks = true;
+			kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+			fSpeed = 0;
+		}
+		else
+		{
+			// client side interpolation
+			// compute distance between server and client position
+			Vec3 kDistance = kProxy.position() - kVehicle.position();
+			const float fDistanceSquared = kDistance.lengthSquared();
+			const float fDistanceThreshhold = NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold *
+				NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold;
+
+			// position interpolation
+			if( fDistanceSquared > fDistanceThreshhold )
+			{
+				const float fDistance = sqrtf( fDistanceSquared ) * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
+				fSpeed = fDistance / elapsedTime;
+				Vec3 kInterpolationOffset = kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
+				Vec3 kNewPosition = kVehicle.position() + kInterpolationOffset;
+				// preserve client updateTicks ?
+				const bool bPreserveUpdateTicks = true;
+				kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );
+				kVehicle.setPosition( kNewPosition );
+			}
+
+			// orientation interpolation
+			const float fDot = kVehicle.forward().dot( kProxy.forward() );
+			if( fDot > 0.5 )
+			{
+				Vec3 kNewForward = kProxy.forward() + kVehicle.forward();
+				kNewForward *= 0.5f;
+				kNewForward.normalize();
+				kVehicle.setForward( kNewForward );
+				kVehicle.regenerateLocalSpace( kVehicle.forward(), 0 );
+			}
+			else
+			{
+				kVehicle.setForward( kProxy.forward() );
+				kVehicle.regenerateLocalSpace( kVehicle.forward(), 0 );
+			}
+		}
+
+		if( uiReceivedRecords >= 2 && fSpeed < 0 )
+		{
+			const LocalSpaceData* pkLocalSpaceData[2] =
+			{
+				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 2 ], // 0 previous
+				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 1 ], // 1 last
+			};
+
+			// compute direction
+			osVector3 kDirection = pkLocalSpaceData[1]->_position - pkLocalSpaceData[0]->_position;
+			const float fDistance = kDirection.length();
+			if( fDistance > 0 )
+			{
+				// compute velocity
+				const size_t uiTickDifference = pkLocalSpaceData[1]->_updateTicks - pkLocalSpaceData[0]->_updateTicks;
+				if( uiTickDifference > 0 )
+				{
+					float fTickDifferenceTime = kVehicle.getUpdateTickTime() * uiTickDifference;
+					fSpeed = fDistance / fTickDifferenceTime;
+				}
+			}
+			else
+			{
+				fSpeed = 0;
+			}
+		}
+
+		if( fSpeed >= 0 )
+		{
+			kProxy.setSpeed( fSpeed );
+			kVehicle.setSpeed( kProxy.speed() );
+			kVehicle.setLinearVelocity( kVehicle.velocity() );
+		}
+	}
+	else
+	{
+		kVehicle.setAngularVelocity( Vec3::zero );
+	}
+	const EEulerUpdateMode ePrevMode = kVehicle.getEulerUpdate().getUpdateMode();
+	kVehicle.accessEulerUpdate().setUpdateMode( EEulerUpdateMode_IntegrateMotionState );
+	kVehicle.updateBase( currentTime, elapsedTime );
+	kVehicle.accessEulerUpdate().setUpdateMode( ePrevMode );
+
+	kVehicle.setSpeed( kProxy.speed() );
+	kVehicle.setLinearVelocity( kVehicle.velocity() );
+}
+
+//-------------------------------------------------------------------------
 void ClientVehicleUpdate::updateBruteForce( 
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
@@ -224,7 +337,7 @@ void ClientVehicleUpdate::updatePhysicsMotion(
 			NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold;
 		if( kDistance.lengthSquared() > fDistanceThreshhold )
 		{
-			Vec3 kNewPosition = kVehicle.position() + kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fInterpolationFactor;
+			Vec3 kNewPosition = kVehicle.position() + kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
 			// preserve client updateTicks ?
 			const bool bPreserveUpdateTicks = true;
 			kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );

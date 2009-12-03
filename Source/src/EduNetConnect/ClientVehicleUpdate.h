@@ -56,6 +56,7 @@ namespace OpenSteer {
 		EVehicleUpdateMode determineUpdateMode( const class SimpleNetworkVehicle& kVehicle ) const;
 
 		void updatePosition( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
+		void updatePositionOrientation( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updateBruteForce( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updatePhysicsMotion( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );
 		void updateForwardSpeed( class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime );

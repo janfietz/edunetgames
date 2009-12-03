@@ -76,8 +76,8 @@ void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
 			&NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold);
 		distanceThreshHoldSpinner->set_float_limits(0.01f, 5.0f);
 		GLUI_Spinner* interpolationFactorSpinner =
-			glui->add_spinner_to_panel( replicationPanel, "Interpolation Factor", GLUI_SPINNER_FLOAT, 
-			&NetworkVehicle::ms_ClientSideInterpolation.m_fInterpolationFactor);
+			glui->add_spinner_to_panel( replicationPanel, "Position Interpolation Factor", GLUI_SPINNER_FLOAT, 
+			&NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor);
 		interpolationFactorSpinner->set_float_limits(0.25f, 1.0f);
 	}
 }

@@ -39,6 +39,7 @@ namespace OpenSteer {
 	{
 		EVehicleUpdateMode_Unknown,
 		EVehicleUpdateMode_Position,
+		EVehicleUpdateMode_PositionOrientation,
 		EVehicleUpdateMode_BruteForce,
 		EVehicleUpdateMode_PhysicsMotion,
 		EVehicleUpdateMode_ForwardSpeed,
@@ -105,13 +106,13 @@ namespace OpenSteer {
 	typedef struct TClientSideInterpolation
 	{
 		TClientSideInterpolation():
-		m_fDistanceThreshHold(1.0),
-		m_fInterpolationFactor(0.5)
+		m_fDistanceThreshHold(0.05f),
+		m_fPositionInterpolationFactor(0.5f)
 		{
 
 		}
 		float m_fDistanceThreshHold;
-		float m_fInterpolationFactor;
+		float m_fPositionInterpolationFactor;
 	} ClientSideInterpolation;
 
 	//----------------------------------------------------------------------------
