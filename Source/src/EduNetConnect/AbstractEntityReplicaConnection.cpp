@@ -190,4 +190,13 @@ AbstractEntityReplica* AbstractEntityCCReplicaFactory::createEntityReplica(
 		pPlugin, classId, bIsRemoteObject, bClientReplica );	
 }
 
+//-----------------------------------------------------------------------------
+AbstractEntityReplica* AbstractEntitySSReplicaFactory::createEntityReplica( 
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,  bool bClientReplica) const
+{
+	return ET_NEW AbstractEntitySSReplica( 
+		pPlugin, classId, bIsRemoteObject, bClientReplica );	
+}
 
