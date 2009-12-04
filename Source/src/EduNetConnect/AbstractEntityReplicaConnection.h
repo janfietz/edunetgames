@@ -110,4 +110,18 @@ protected:
 		bool bIsRemoteObject,  bool bClientReplica) const;
 };
 
+//-----------------------------------------------------------------------------
+class AbstractEntitySSReplicaFactory : public AbstractEntityReplicaFactory
+{
+	ET_DECLARE_BASE( AbstractEntityReplicaFactory );
+public:
+	AbstractEntitySSReplicaFactory(AbstractEntityReplicaManager* pkManager):
+	  BaseClass( pkManager ) {}
+
+protected:
+	virtual AbstractEntityReplica* createEntityReplica( OpenSteer::AbstractPlugin* pPlugin, 
+		OpenSteer::EntityClassId classId, 
+		bool bIsRemoteObject,  bool bClientReplica) const;
+};
+
 #endif // __ABSTRACTENTITYREPLICACONNECTION_H__

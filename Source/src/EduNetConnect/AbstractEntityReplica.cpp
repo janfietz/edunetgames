@@ -230,3 +230,44 @@ RakNet::RM3ActionOnPopConnection AbstractEntityCCReplica::QueryActionOnPopConnec
 {
 	return QueryActionOnPopConnection_Client(droppedConnection);
 }
+
+//-----------------------------------------------------------------------------
+AbstractEntitySSReplica::AbstractEntitySSReplica()
+{
+
+}
+//-----------------------------------------------------------------------------
+AbstractEntitySSReplica::AbstractEntitySSReplica(
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject,
+	bool bClientReplica) : BaseClass(pPlugin, classId, bIsRemoteObject, bClientReplica)
+{
+
+}
+
+//-----------------------------------------------------------------------------
+RakNet::RM3ConstructionState AbstractEntitySSReplica::QueryConstruction(
+	RakNet::Connection_RM3 *destinationConnection,
+	RakNet::ReplicaManager3 *replicaManager3)
+{
+	return QueryConstruction_ServerConstruction( destinationConnection );
+}
+//-----------------------------------------------------------------------------
+bool AbstractEntitySSReplica::QueryRemoteConstruction(
+	RakNet::Connection_RM3 *sourceConnection)
+{
+	return QueryRemoteConstruction_ServerConstruction( sourceConnection );
+}
+//-----------------------------------------------------------------------------
+RakNet::RM3QuerySerializationResult AbstractEntitySSReplica::QuerySerialization(
+	RakNet::Connection_RM3 *destinationConnection)
+{
+	return QuerySerialization_ServerSerializable( destinationConnection );
+}
+//-----------------------------------------------------------------------------
+RakNet::RM3ActionOnPopConnection AbstractEntitySSReplica::QueryActionOnPopConnection(
+	RakNet::Connection_RM3 *droppedConnection) const
+{
+	return QueryActionOnPopConnection_Server(droppedConnection);
+}
