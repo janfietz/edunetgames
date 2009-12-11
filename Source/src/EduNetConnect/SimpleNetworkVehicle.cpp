@@ -124,13 +124,13 @@ SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_kNetworkVehicleUpdate(this),
 	m_bWillSendData( false ),
 	m_bHasBeenSerialized( false )
-{ 
+{
 }
 #pragma warning(pop)
 
 //-----------------------------------------------------------------------------
-SimpleNetworkVehicle::~SimpleNetworkVehicle() 
-{ 
+SimpleNetworkVehicle::~SimpleNetworkVehicle()
+{
 }
 
 //-----------------------------------------------------------------------------
@@ -180,7 +180,7 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 		}else{
 			this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
 		}
-		
+
 		size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
 		if( false == this->m_bWillSendData )
 		{
@@ -221,8 +221,8 @@ void SimpleNetworkVehicle::updateBase(const float currentTime, const float elaps
 	BaseClass::update( currentTime, elapsedTime );
 }
 
-// TODO: implement specialized connection specific QuerySerialization implementations 
-// 
+// TODO: implement specialized connection specific QuerySerialization implementations
+//
 //-----------------------------------------------------------------------------
 int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
@@ -239,7 +239,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
 	//mark the proxy having new data
 	kProxy.m_bHasNewData = true;
-	
+
 	bool bUpdatedProxy = false;
 	if( false == this->m_bHasBeenSerialized )
 	{
@@ -443,7 +443,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes((const unsigned char*)&updateTicks,sizeof(size_t));
 		if( true == bUpdatedProxy )
 		{
-			kProxy._updateTicks = updateTicks;
+			//kProxy._updateTicks = updateTicks;
 		}
 	}
 
@@ -506,7 +506,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 			{
 				kStream.ReadAlignedBytes((unsigned char*)&kCompressedVector,sizeof(kCompressedVector));
 				// expand
-				AbstractVehicleMath::expandFixedLengthVector( 
+				AbstractVehicleMath::expandFixedLengthVector(
 					kCompressedVector, this->maxForce(), kVec );
 			}
 			break;
@@ -566,7 +566,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 			case(ESerializeDataType_Force):
 				{
 					SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.accessSteeringForceUpdate();
-					kSteeringForceUpdate.setForce( kVec );	
+					kSteeringForceUpdate.setForce( kVec );
 				}
 				break;
 			case(ESerializeDataType_Speed):
