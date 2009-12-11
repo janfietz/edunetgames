@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 //
 //
-//! Proximity 
+//! Proximity
 //
 //! Data structures for accelerating proximity/locality/neighborhood queries
 //
@@ -47,6 +47,7 @@
 #include <vector>
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/lq.h"   //! XXX temp?
+#include "OpenSteer/OpenSteerMacros.h"
 
 
 namespace OpenSteer {
@@ -91,9 +92,9 @@ namespace OpenSteer {
         //! type for the "tokens" manipulated by this spatial database
         typedef AbstractTokenForProximityDatabase<ContentType> tokenType;
 
-        
+
         virtual ~AbstractProximityDatabase() { /* Nothing to do? */ }
-        
+
         //! allocate a token to represent a given client object in this database
         virtual tokenType* allocateToken (ContentType parentObject) = 0;
 
@@ -186,7 +187,7 @@ namespace OpenSteer {
         };
 
         typedef std::vector<tokenType*> tokenVector;
-        typedef typename tokenVector::const_iterator tokenIterator;    
+        typedef typename tokenVector::const_iterator tokenIterator;
 
         //! allocate a token to represent a given client object in this database
         tokenType* allocateToken (ContentType parentObject)
@@ -199,7 +200,7 @@ namespace OpenSteer {
         {
             return (int) group.size();
         }
-        
+
     private:
         //! STL vector containing all tokens in database
         tokenVector group;
@@ -223,8 +224,8 @@ namespace OpenSteer {
             const Vec3 halfsize (dimensions * 0.5f);
             const Vec3 origin (center - halfsize);
 
-            lq = lqCreateDatabase (origin.x, origin.y, origin.z, 
-                                   dimensions.x, dimensions.y, dimensions.z,  
+            lq = lqCreateDatabase (origin.x, origin.y, origin.z,
+                                   dimensions.x, dimensions.y, dimensions.z,
                                    (int) round (divisions.x),
                                    (int) round (divisions.y),
                                    (int) round (divisions.z));
@@ -266,7 +267,7 @@ namespace OpenSteer {
                                 const float radius,
                                 std::vector<ContentType>& results)
             {
-                lqMapOverAllObjectsInLocality (lq, 
+                lqMapOverAllObjectsInLocality (lq,
                                                center.x, center.y, center.z,
                                                radius,
                                                perNeighborCallBackFunction,
@@ -314,7 +315,7 @@ namespace OpenSteer {
             lqMapOverAllObjects (lq, counterCallBackFunction, &count);
             return count;
         }
-        
+
         //! (parameter names commented out to prevent compiler warning from "-W")
         static void counterCallBackFunction  (void* /*clientObject*/,
                                               float /*distanceSquared*/,

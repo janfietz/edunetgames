@@ -9,11 +9,11 @@ aux_source_directory(${EduNetApplication_SOURCE_DIR} EduNetApplication_LIB_SRC)
 
 
 LINK_LIBRARIES(
- opensteer  
+ opensteer
  ${GLUT_glut_LIBRARY}
  EduNetCommon
 EduNetConnect
-EduNetApplication
+IProf
 EduNetProfile
 ${RakNet_LIBRARY}
  GLUI
