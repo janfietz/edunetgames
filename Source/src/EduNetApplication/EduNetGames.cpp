@@ -1094,7 +1094,7 @@ namespace {
 	// ------------------------------------------------------------------------
 	void idleFunc( void )
 	{
-#ifdef _DEBUG
+#ifdef ET_DEBUG
 		EduNet::Application::sleep( 5 );
 #else
 		EduNet::Application::sleep( 1 );

@@ -29,7 +29,7 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 }
 
 //-----------------------------------------------------------------------------
-NetworkPlugin::~NetworkPlugin(void) 
+NetworkPlugin::~NetworkPlugin(void)
 {
 
 }
@@ -38,7 +38,7 @@ NetworkPlugin::~NetworkPlugin(void)
 void setPort(GLUI_Control* pkControl )
 {
 	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
-	
+
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
 	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
 	kAddress.port = pkTextBox->get_int_val();
@@ -47,10 +47,10 @@ void setPort(GLUI_Control* pkControl )
 void setAddress(GLUI_Control* pkControl )
 {
 	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
-	
+
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
 	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
-	kAddress.addressString = pkTextBox->get_text();	
+	kAddress.addressString = pkTextBox->get_text();
 }
 //-----------------------------------------------------------------------------
 void connectToAddress(GLUI_Control* pkControl )
@@ -71,14 +71,14 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	assert( NULL != pkPluginEntity );
 	if( NULL != pkPlugin )
 	{
-		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->pluginName() : "Plugin", false );	
+		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->pluginName() : "Plugin", false );
 		GLUI_Panel* subPluginPanel = pluginRollout;
 		pkPlugin->initGui( subPluginPanel );
 	}
 
 	// general network plugin gui
 	{
-		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );	
+		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );
 		GLUI_Panel* subPanel = profileRollout;
 		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &NetworkPlugin::ms_bShowMotionStatePlot);
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
@@ -90,7 +90,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	if( true == this->addConnectBox() )
 	{
 		const NetworkAddress& kAddress = this->getCurrentAddress();
-		
+
 		GLUI_EditText* pkTextControl;
 		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Address", GLUI_EDITTEXT_TEXT,
 			NULL, -1, setAddress );
@@ -102,7 +102,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 		pkTextControl->set_int_val( kAddress.port );
 		pkTextControl->set_int_limits(0, (unsigned short)-1 );
 		pkTextControl->set_ptr_val( this );
-		
+
 		GLUI_Control* pkControl;
 		pkControl = glui->add_button_to_panel( pluginPanel, "Connect", -1 , connectToAddress );
 		pkControl->set_ptr_val( this );
@@ -121,29 +121,29 @@ void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
 	{
 		return;
 	}
-	
+
 	NetworkSimulatorData& kData = pkPlugin->GetNetworkSimulatorSettings();
 	switch( pkControl->get_id() )
 	{
-	case 1: 
+	case 1:
 		{
 			GLUI_Checkbox* pkCheckBox = (GLUI_Checkbox*)pkControl;
 			kData.enabled = pkCheckBox->get_int_val();
 		}break;
-	case 2: 
+	case 2:
 		{
 			kData.packetloss = pkControl->get_float_val();
 		}break;
 	case 3:
-		{		
+		{
 			kData.minExtraPing = pkControl->get_int_val();
 		}break;
 	case 4:
-		{			
+		{
 			kData.extraPingVariance = pkControl->get_int_val();
 		}break; break;
 	}
-	
+
 	pkPlugin->UpdateNetworkSimulatorSettings();
 
 }
@@ -155,7 +155,7 @@ void NetworkPlugin::addNetworkSimulatorGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 	GLUI_Panel* simulatorPanel = glui->add_rollout_to_panel( pluginPanel, "Network Simulator", false );
 
-	GLUI_Checkbox* pkControl = 
+	GLUI_Checkbox* pkControl =
 		glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", NULL, 1, changeNetworkSimulatorSettings );
 	pkControl->set_ptr_val( this );
 
@@ -194,7 +194,7 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 		{
 			this->m_pNetInterface->ApplyNetworkSimulator(0.0, 0, 0);
 		}
-	}	
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -211,9 +211,9 @@ void NetworkPlugin::addReplicaManagerGui( void* pkUserdata  )
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::open( void )
-{	
+{
 	this->CreateNetworkInterface();
-	this->StartNetworkSession(); 
+	this->StartNetworkSession();
 	this->CreateContent();
 }
 
@@ -221,7 +221,7 @@ void NetworkPlugin::open( void )
 void NetworkPlugin::close( void )
 {
 	this->StopNetworkSession();
-	this->DeleteContent(); 	
+	this->DeleteContent();
 	this->DestroyNetworkInterface();
 }
 
@@ -261,7 +261,7 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::recordNetUpdate( 
+void NetworkPlugin::recordNetUpdate(
 	osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
 {
 	if( 0 == NetworkPlugin::ms_bShowMotionStatePlot )
@@ -338,7 +338,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	}
 	else if( 0 != AbstractPluginGui::ms_bDebugNetStats )
 	{
-		// display status 
+		// display status
 		const bool bIsClient = this->isRemoteObject();
 
 		Color kColorNetStats = gGray80;
@@ -382,7 +382,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		screenLocation.y -= fOffset;
 		OpenSteer::draw2dTextAt2dLocation(
 			status, screenLocation, kColorNetStats, drawGetWindowWidth(), drawGetWindowHeight() );
-		
+
 	}
 
 	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
@@ -406,15 +406,15 @@ void NetworkPlugin::handleFunctionKeys (int keyNumber)
 	// TODO: client server difference ?
 	switch (keyNumber)
 	{
-	case GLUT_KEY_UP:  
-		incrementReplicationInterval(5);         
+	case GLUT_KEY_UP:
+		incrementReplicationInterval(5);
 		break; //GLUT_KEY_UP
-	case GLUT_KEY_DOWN:  
-		incrementReplicationInterval(-5);    
-		break; //GLUT_KEY_DOWN  
-	default: 
+	case GLUT_KEY_DOWN:
+		incrementReplicationInterval(-5);
+		break; //GLUT_KEY_DOWN
+	default:
 		BaseClass::handleFunctionKeys(keyNumber);
-	}	
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -465,7 +465,7 @@ void NetworkPlugin::DeleteContent( void )
 void NetworkPlugin::InitializeServerPortSettings( void )
 {
 	this->InitializeServerPortAndPongCount();
-	this->accessCurrentAddress().port = this->m_uiStartPort; 
+	this->accessCurrentAddress().port = this->m_uiStartPort;
 
 	this->m_iWaitForPongPort = -1 * this->m_uiStartPort;
 }
@@ -512,7 +512,7 @@ void NetworkPlugin::StartClientNetworkSession( void )
 	{
 		this->m_eNetworkSessionType = ENetworkSessionType_Client;
 	}
-	printf("Starting client at port: %d.\n", sd.port);	
+	printf("Starting client at port: %d.\n", sd.port);
 }
 
 //-----------------------------------------------------------------------------
@@ -539,13 +539,13 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::StopNetworkSession( void )
-{	
+{
 	if( NULL != this->m_pNetInterface )
 	{
 		// do not allow any further connections
 		this->m_pNetInterface->SetMaximumIncomingConnections( 0 );
 	}
-	this->CloseOpenConnections();	
+	this->CloseOpenConnections();
 
 	if( NULL != this->m_pNetInterface )
 	{
@@ -562,11 +562,11 @@ void NetworkPlugin::CloseOpenConnections( void )
 	DataStructures::List<RakNetGUID> kGuids;
 	if( NULL != this->m_pNetInterface )
 	{
-		
+
 		this->m_pNetInterface->GetSystemList( kAddresses, kGuids );
 		unsigned int usCount = kAddresses.Size();
 		if( 0 < usCount )
-		{	
+		{
 		for(unsigned int us = 0; us < usCount; ++us)
 		{
 			this->m_pNetInterface->CloseConnection(
@@ -592,7 +592,7 @@ void NetworkPlugin::ReceivePackets( void )
 		{
 			this->OnReceivedPacket( pPacket );
 			this->m_pNetInterface->DeallocatePacket(pPacket);
-		} 
+		}
 		else
 		{
 			return;
@@ -606,10 +606,10 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 	switch( pPacket->data[0] )
 	{
 	case ID_CONNECTION_ATTEMPT_FAILED:
-		printf("ID_CONNECTION_ATTEMPT_FAILED\n");		
+		printf("ID_CONNECTION_ATTEMPT_FAILED\n");
 		break;
 	case ID_NO_FREE_INCOMING_CONNECTIONS:
-		printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");		
+		printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
 		break;
 	case ID_CONNECTION_REQUEST_ACCEPTED:
 		printf("ID_CONNECTION_REQUEST_ACCEPTED\n");
@@ -639,14 +639,14 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 {
 	if( true == this->WaitForPong() )
-	{		
+	{
 		if( pPacket->systemAddress != this->m_pNetInterface->GetInternalID() )
 		{
-			printf("Got pong from %s(%s) with time %i\n", 
+			printf("Got pong from %s(%s) with time %i\n",
 				pPacket->systemAddress.ToString(),
 				pPacket->guid.ToString(),
 				this->m_kPongEndTime - RakNet::GetTime() );
-			
+
 			NetworkAddress kAddress;
 			kAddress.addressString = pPacket->systemAddress.ToString(false);
 			kAddress.port = pPacket->systemAddress.port;
@@ -663,7 +663,7 @@ void NetworkPlugin::ConnectToAddress( const NetworkAddress& kAddress )
 	this->CloseOpenConnections();
 
 	RakNetTime uiTimeout = 0;
-#ifdef _DEBUG
+#ifdef ET_DEBUG
 	uiTimeout = 3600000;
 #endif
 
@@ -680,8 +680,8 @@ bool NetworkPlugin::WaitForPong( void ) const
 
 //-----------------------------------------------------------------------------
 bool NetworkPlugin::Connect()
-{	
-	return this->PingForOtherPeers( -1* this->m_iWaitForPongPort);	
+{
+	return this->PingForOtherPeers( -1* this->m_iWaitForPongPort);
 }
 
 //-----------------------------------------------------------------------------
@@ -694,14 +694,14 @@ void NetworkPlugin::Disconnect()
 bool NetworkPlugin::PingForOtherPeers( const int iPort )
 {
 	if( false == this->WaitForPong() )
-	{	
-		unsigned short usMyPort = 
+	{
+		unsigned short usMyPort =
 			this->m_pNetInterface->GetInternalID( UNASSIGNED_SYSTEM_ADDRESS,0 ).port;
 		if (usMyPort != iPort)
-		{		
+		{
 			if( true == this->m_pNetInterface->Ping("255.255.255.255", iPort, true) )
 			{
-				this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;				
+				this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;
 			}
 		}
 
@@ -758,14 +758,14 @@ void NetworkPlugin::gatherNetworkStatistics( RakNetStatistics& kStats )
 		for(unsigned int us = 0; us < usCount; ++us)
 		{
 			RakNetStatistics kSystemStats;
-			RakNetStatistics* pkResult = 
+			RakNetStatistics* pkResult =
 				this->m_pNetInterface->GetStatistics(kAddresses[us], &kSystemStats);
 			if (NULL != pkResult)
 			{
 				kStats += kSystemStats;
-			}			
+			}
 		}	*/
-	}	
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -776,13 +776,13 @@ void NetworkPlugin::drawNetworkPlot(const float currentTime,
 }
 
 //-----------------------------------------------------------------------------
-AbstractEntityReplica* NetworkPlugin::allocEntityReplica(  
-	OpenSteer::AbstractPlugin* pPlugin, 
-	OpenSteer::EntityClassId classId, 
+AbstractEntityReplica* NetworkPlugin::allocEntityReplica(
+	OpenSteer::AbstractPlugin* pPlugin,
+	OpenSteer::EntityClassId classId,
 	bool bIsRemoteObject,  bool bClientReplica ) const
 {
 	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pPlugin, classId, bIsRemoteObject, bClientReplica  );
-	return pkNewReplica; 
+	return pkNewReplica;
 }
 
 
