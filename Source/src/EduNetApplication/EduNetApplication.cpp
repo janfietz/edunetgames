@@ -477,7 +477,7 @@ void Application::sleep( size_t uiMilliseconds )
 #ifdef WIN32
 	::Sleep( static_cast<DWORD>(uiMilliseconds) );
 #else
-	::sleep(uiMilliseconds);
+	::usleep(1000 * uiMilliseconds);
 #endif
 }
 
