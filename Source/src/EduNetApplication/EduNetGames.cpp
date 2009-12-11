@@ -35,7 +35,7 @@
 // its members are static (belong to the class as a whole.)
 //
 // 10-04-04 bk:  put everything into the OpenSteer namespace
-// 11-14-02 cwr: created 
+// 11-14-02 cwr: created
 //
 //
 //-----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace
 
 	bool gDelayedResetPluginXXX = false;
 
-	void printPlugin (OpenSteer::AbstractPlugin& pi) 
+	void printPlugin (OpenSteer::AbstractPlugin& pi)
 	{
 		std::ostringstream message;
 		message << " " << pi;
@@ -125,7 +125,7 @@ int OpenSteer::OpenSteerDemo::phaseStack [OpenSteer::OpenSteerDemo::phaseStackSi
 // Find the AbstractVehicle whose screen position is nearest the current the
 // mouse position.  Returns NULL if mouse is outside this window or if
 // there are no AbstractVehicle.
-OpenSteer::AbstractVehicle* 
+OpenSteer::AbstractVehicle*
 OpenSteer::OpenSteerDemo::vehicleNearestToMouse( void )
 {
 	if( mouseInWindow )
@@ -139,7 +139,7 @@ OpenSteer::OpenSteerDemo::vehicleNearestToMouse( void )
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::initialize (void)
 {
 	// select and initialize the default Plugin
@@ -149,13 +149,13 @@ OpenSteer::OpenSteerDemo::initialize (void)
 		// XXX this block is for debugging purposes,
 		// XXX should it be replaced with something permanent?
 		std::ostringstream message0;
-		message0 << "Known plugins:" << std::ends;  
+		message0 << "Known plugins:" << std::ends;
 		EduNet::Log::printLine( message0 );
 
- 		Plugin::applyToAll( printPlugin );                         
+ 		Plugin::applyToAll( printPlugin );
 
 		// identify default Plugin
-		if (!OpenSteer::Plugin::selectedPlugin) 
+		if (!OpenSteer::Plugin::selectedPlugin)
 			errorExit ("no default Plugin");
 
 		std::ostringstream message;
@@ -168,7 +168,7 @@ OpenSteer::OpenSteerDemo::initialize (void)
 
 //-----------------------------------------------------------------------------
 // main update function: step simulation forward and redraw scene
-void 
+void
 OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 {
 	// update global simulation clock
@@ -190,7 +190,7 @@ OpenSteer::OpenSteerDemo::updateSimulationAndRedraw (void)
 
 //-----------------------------------------------------------------------------
 // exit OpenSteerDemo with a given text message or error code
-void 
+void
 OpenSteer::OpenSteerDemo::errorExit (const char* message)
 {
 	EduNet::Log::printMessage (message);
@@ -201,7 +201,7 @@ OpenSteer::OpenSteerDemo::errorExit (const char* message)
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::exit (int exitCode)
 {
 	OpenSteer::Plugin::selectPlugin( NULL );
@@ -210,7 +210,7 @@ OpenSteer::OpenSteerDemo::exit (int exitCode)
 
 //-----------------------------------------------------------------------------
 // select the default Plugin
-void 
+void
 OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 {
 	const char* pszPluginName = EduNetOptions::accessOptions().getSelectedPlugin();
@@ -224,9 +224,9 @@ OpenSteer::OpenSteerDemo::selectDefaultPlugin (void)
 
 //-----------------------------------------------------------------------------
 // do a simulation update for the currently selected plug-in
-void 
+void
 OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
-												const float elapsedTime)
+                                                const float elapsedTime)
 {
 	// switch to Update phase
 	pushPhase( updatePhase );
@@ -250,7 +250,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 		}
 		pkPlayer->update( currentTime, elapsedTime );
 		AbstractEntity* pkControlledEntity = pkPlayer->getControlledEntity();
-		AbstractEntity* pkNewControlledEntity = pkControlledEntity;  
+		AbstractEntity* pkNewControlledEntity = pkControlledEntity;
 		if( SimpleVehicle::selectedVehicle != pkNewControlledEntity )
 		{
 			pkNewControlledEntity = SimpleVehicle::selectedVehicle;
@@ -279,7 +279,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin (const float currentTime,
 
 //-----------------------------------------------------------------------------
 // redraw graphics for the currently selected plug-in
-void 
+void
 OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 												const float elapsedTime)
 {
@@ -301,14 +301,14 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin (const float currentTime,
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::queueDelayedResetPluginXXX (void)
 {
 	gDelayedResetPluginXXX = true;
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::doDelayedResetPluginXXX (void)
 {
 	if (gDelayedResetPluginXXX)
@@ -329,7 +329,7 @@ bool OpenSteer::OpenSteerDemo::mouseInWindow = false;
 //
 // XXX this list should be assembled automatically,
 // XXX perhaps from a list of "command" objects created at initialization
-void 
+void
 OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 {
 	EduNet::Log::printMessage ("");
@@ -349,7 +349,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
 	OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
 }
 
-void 
+void
 OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 {
 	updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
@@ -369,7 +369,7 @@ OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::popPhase (void)
 {
 	// update timer for current (old) phase: add in time since last switch
@@ -386,7 +386,7 @@ float OpenSteer::OpenSteerDemo::phaseTimerBase = 0;
 float OpenSteer::OpenSteerDemo::phaseTimers [drawPhase+1];
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::initPhaseTimers (void)
 {
 	phaseTimers[drawPhase] = 0;
@@ -396,7 +396,7 @@ OpenSteer::OpenSteerDemo::initPhaseTimers (void)
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::updatePhaseTimers (void)
 {
 	const float currentRealTime = clock.realTimeSinceFirstClockUpdate();
@@ -413,7 +413,7 @@ namespace {
 	// initialize GL mode settings
 
 
-	void 
+	void
 		initGL (void)
 	{
 		// background = dark gray
@@ -447,7 +447,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// handler for window resizing
-	void 
+	void
 		reshapeFunc (int width, int height)
 	{
 		GLUI_Master.get_viewport_area( &viewPort.tx, &viewPort.ty, &viewPort.tw, &viewPort.th );
@@ -470,7 +470,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// This is called (by GLUT) each time a mouse button pressed or released.
-	void 
+	void
 		mouseButtonFunc (int button, int state, int x, int y)
 	{
 		// if the mouse button has just been released
@@ -535,7 +535,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// called when mouse moves and any buttons are down
-	void 
+	void
 		mouseMotionFunc (int x, int y)
 	{
 		// are we currently in the process of mouse-adjusting the camera?
@@ -573,7 +573,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// called when mouse moves and no buttons are down
-	void 
+	void
 		mousePassiveMotionFunc (int x, int y)
 	{
 		OpenSteer::OpenSteerDemo::mouseX = x;
@@ -582,12 +582,12 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// called when mouse enters or exits the window
-	void 
+	void
 		mouseEnterExitWindowFunc (int state)
 	{
 		if (state == GLUT_ENTERED)
 			OpenSteer::OpenSteerDemo::mouseInWindow = true;
-		if (state == GLUT_LEFT)    
+		if (state == GLUT_LEFT)
 			OpenSteer::OpenSteerDemo::mouseInWindow = false;
 	}
 
@@ -601,7 +601,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// draw PlugI name in upper lefthand corner of screen
-	void 
+	void
 		drawDisplayPluginName (void)
 	{
 		const float h = glutGet (GLUT_WINDOW_HEIGHT);
@@ -613,7 +613,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// draw camera mode name in lower lefthand corner of screen
-	void 
+	void
 		drawDisplayCameraModeName (void)
 	{
 		const OpenSteer::Vec3& camPosition = OpenSteer::Camera::camera.position();
@@ -621,11 +621,11 @@ namespace {
 		message << std::setprecision (2);
 		message << std::setiosflags (std::ios::fixed);
 
-		message << "Camera: " 
-			<< OpenSteer::Camera::camera.modeName () 
-			<< " ( " << camPosition.x 
-			<< ", " << camPosition.y 
-			<< ", " << camPosition.z 
+		message << "Camera: "
+			<< OpenSteer::Camera::camera.modeName ()
+			<< " ( " << camPosition.x
+			<< ", " << camPosition.y
+			<< ", " << camPosition.z
 			<< " ) fixedDistDistance( " << OpenSteer::Camera::camera.fixedDistDistance << " )" << std::ends;
 		const OpenSteer::Vec3 screenLocation (10, 10, 0);
 		OpenSteer::draw2dTextAt2dLocation (message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
@@ -633,7 +633,7 @@ namespace {
 
 	//-------------------------------------------------------------------------
 	// helper for drawDisplayFPS
-	void 
+	void
 		writePhaseTimerReportToStream (float phaseTimer,
 		std::ostringstream& stream)
 	{
@@ -773,27 +773,27 @@ namespace {
 
 	// ------------------------------------------------------------------------
 	// cycle through frame rate presets  (XXX move this to OpenSteerDemo)
-	void 
+	void
 		selectNextPresetFrameRate (void)
 	{
-		// note that the cases are listed in reverse order, and that 
+		// note that the cases are listed in reverse order, and that
 		// the default is case 0 which causes the index to wrap around
 		static int frameRatePresetIndex = 0;
 		switch (++frameRatePresetIndex)
 		{
-		case 3: 
+		case 3:
 			// animation mode at 60 fps
 			OpenSteer::OpenSteerDemo::clock.setFixedFrameRate (60);
 			OpenSteer::OpenSteerDemo::clock.setAnimationMode (true);
 			OpenSteer::OpenSteerDemo::clock.setVariableFrameRateMode (false);
 			break;
-		case 2: 
+		case 2:
 			// real-time fixed frame rate mode at 60 fps
 			OpenSteer::OpenSteerDemo::clock.setFixedFrameRate (60);
 			OpenSteer::OpenSteerDemo::clock.setAnimationMode (false);
 			OpenSteer::OpenSteerDemo::clock.setVariableFrameRateMode (false);
 			break;
-		case 1: 
+		case 1:
 			// real-time fixed frame rate mode at 24 fps
 			OpenSteer::OpenSteerDemo::clock.setFixedFrameRate (24);
 			OpenSteer::OpenSteerDemo::clock.setAnimationMode (false);
@@ -820,8 +820,8 @@ namespace {
 	{
 	}
 
-	void 
-		keyboardFuncUp( unsigned char key, int x, int y ) 
+	void
+		keyboardFuncUp( unsigned char key, int x, int y )
 	{
 		if( OpenSteer::LocalPlayerController::keyboardFuncUp( key, x, y ) )
 		{
@@ -829,8 +829,8 @@ namespace {
 		}
 	}
 
-	void 
-		keyboardFunc( unsigned char key, int x, int y ) 
+	void
+		keyboardFunc( unsigned char key, int x, int y )
 	{
 		if( OpenSteer::LocalPlayerController::keyboardFunc( key, x, y ) )
 		{
@@ -915,7 +915,7 @@ namespace {
 			OpenSteer::OpenSteerDemo::keyboardMiniHelp ();
 			break;
 
-			// exit application with normal status 
+			// exit application with normal status
 		case esc:
 			{
 #if 0
@@ -960,7 +960,7 @@ namespace {
 	// function keys are handled by the Plugin
 	//
 	// parameter names commented out to prevent compiler warning from "-W"
-	void 
+	void
 		keyboardSpecialFunc (int key, int /*x*/, int /*y*/)
 	{
 		// 		if (demo)
@@ -1000,7 +1000,7 @@ namespace {
 	}
 
 
-	void 
+	void
 		displayFunc000 (void)
 	{
 		{
@@ -1022,14 +1022,14 @@ namespace {
 
 		{
 			ET_PROFILE(draw);
-		
+
 			// run simulation and draw associated graphics
 			//		OpenSteer::OpenSteerDemo::updateSimulationAndRedraw ();
 
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// redraw selected Plugin (based on real time)
-			OpenSteer::OpenSteerDemo::redrawSelectedPlugin ( 
+			OpenSteer::OpenSteerDemo::redrawSelectedPlugin (
 				OpenSteer::OpenSteerDemo::clock.getTotalRealTime(),
 				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime()
 				);
@@ -1058,7 +1058,7 @@ namespace {
 
 		}
 		{
-			EduNet::Application::AccessApplication().drawProfile(  
+			EduNet::Application::AccessApplication().drawProfile(
 				OpenSteer::OpenSteerDemo::clock.getTotalRealTime(),
 				OpenSteer::OpenSteerDemo::clock.getElapsedRealTime()
 				);
@@ -1081,7 +1081,7 @@ namespace {
 		{
 			new_window = ((GLUI_Main*)GLUI_Master.gluis.first_child())->getMainWindowId();
 		}
-		if ( (new_window > 0) && (new_window != current_window )) 
+		if ( (new_window > 0) && (new_window != current_window ))
 		{
 			//--- Window is changed only if its not already the current window ---
 			glutSetWindow( new_window );
@@ -1091,8 +1091,6 @@ namespace {
 
 		glutSetWindow( current_window );
 	}
-	/*
-*/
 	// ------------------------------------------------------------------------
 	void idleFunc( void )
 	{
@@ -1137,12 +1135,12 @@ namespace {
 
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 {
 	// initialize GLUT state based on command line arguments
 	#ifndef WIN32
-	glutInit (&argc, argv);  
+	glutInit (&argc, argv);
 	#else
 	__glutInitWithExit (&argc, argv, consoleExit);
 	#endif //WIN32
@@ -1162,19 +1160,19 @@ OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 	const int wh = (int) (sh * ws);
 	glutInitWindowPosition ((int) (sw * (1-ws)/2), (int) (sh * (1-ws)/2));
 	glutInitWindowSize (ww, wh);
-	
+
 	#ifndef WIN32
 	  windowID = glutCreateWindow (appVersionName);
 	#else
 	  windowID = __glutCreateWindowWithExit (appVersionName, windowExit);
 	#endif //WIN32
-	
+
 
 	reshapeFunc (ww, wh);
 	initGL ();
 
 	// register our display function, make it the idle handler too
-	glutDisplayFunc (&displayFunc);  
+	glutDisplayFunc (&displayFunc);
 	glutIdleFunc (&idleFunc);
 
 	// register handler for window reshaping
@@ -1199,17 +1197,17 @@ OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 	glutEntryFunc (mouseEnterExitWindowFunc);
 
 	// gui elements
-	GLUI* glui = GLUI_Master.create_glui_subwindow( windowID, 
+	GLUI* glui = GLUI_Master.create_glui_subwindow( windowID,
 		GLUI_SUBWINDOW_RIGHT );
 
 	// GLUI setup
-	GLUI_Master.set_glutReshapeFunc(reshapeFunc);  
-	GLUI_Master.set_glutKeyboardFunc(keyboardFunc);
-	GLUI_Master.set_glutSpecialFunc(keyboardSpecialFunc);
-	GLUI_Master.set_glutIdleFunc(idleFunc);
-	GLUI_Master.set_glutDisplayFunc(displayFunc);
-	GLUI_Master.set_glutSpecialUpFunc(keyboardSpecialUpFunc);
-	GLUI_Master.set_glutMouseFunc(mouseButtonFunc);
+	GLUI_Master.set_glutReshapeFunc(&reshapeFunc);
+	GLUI_Master.set_glutKeyboardFunc(&keyboardFunc);
+	GLUI_Master.set_glutSpecialFunc(&keyboardSpecialFunc);
+	GLUI_Master.set_glutIdleFunc(&idleFunc);
+	GLUI_Master.set_glutDisplayFunc(&displayFunc);
+	GLUI_Master.set_glutSpecialUpFunc(&keyboardSpecialUpFunc);
+	GLUI_Master.set_glutMouseFunc(&mouseButtonFunc);
 
 	glui->set_main_gfx_window( windowID );
 
@@ -1222,18 +1220,18 @@ OpenSteer::OpenSteerDemo::initializeGraphics (int argc, char **argv)
 
 //-----------------------------------------------------------------------------
 // run graphics event loop
-void 
+void
 OpenSteer::OpenSteerDemo::runGraphics (void)
 {
 	// Use a timer to control the frame rate.
 	glutTimerFunc(framePeriod, timerFunc, 0);
-	glutMainLoop ();  
+	glutMainLoop ();
 }
 
 //-----------------------------------------------------------------------------
 // accessors for GLUT's window dimensions
-float 
-OpenSteer::drawGetWindowHeight (void) 
+float
+OpenSteer::drawGetWindowHeight (void)
 {
 	if( viewPort.th > 0 )
 	{
@@ -1243,8 +1241,8 @@ OpenSteer::drawGetWindowHeight (void)
 }
 
 //-----------------------------------------------------------------------------
-float 
-OpenSteer::drawGetWindowWidth  (void) 
+float
+OpenSteer::drawGetWindowWidth  (void)
 {
 	if( viewPort.tw > 0 )
 	{
