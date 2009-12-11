@@ -29,8 +29,8 @@
 //
 //
 // OpenSteer Boids
-// 
-// 09-26-02 cwr: created 
+//
+// 09-26-02 cwr: created
 //
 //
 //-----------------------------------------------------------------------------
@@ -66,7 +66,7 @@ using namespace OpenSteer;
 
 namespace
 {
-#ifdef _DEBUG
+#ifdef ET_DEBUG
 	size_t uiInitialFlockSize = 10;
 #else
 	size_t uiInitialFlockSize = 50;
@@ -76,7 +76,7 @@ namespace
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 void BoidsPlugin::open (void)
-{	
+{
     // make the database used to accelerate proximity queries
     cyclePD = -1;
 	this->pd = NULL;
@@ -85,7 +85,7 @@ void BoidsPlugin::open (void)
 	if( false == this->isRemoteObject() )
 	{
 		// make default-sized flock
-		for (size_t i = 0; i < uiInitialFlockSize; i++) 
+		for (size_t i = 0; i < uiInitialFlockSize; i++)
 			addBoidToFlock ();
 	}
 
@@ -132,7 +132,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 		return;
 	}
     // draw each boid in flock
-    for (iterator i = flock.begin(); i != flock.end(); i++) 
+    for (iterator i = flock.begin(); i != flock.end(); i++)
 		(**i).draw (currentTime, elapsedTime);
 
 
@@ -143,7 +143,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 	Color kColor = gGray80;
 	if (NULL != this->getEntityFactory())
 	{
-		// display status in the upper left corner of the window		
+		// display status in the upper left corner of the window
 		status << "[F1/F2] " << kVG.population() << " boids";
 		status << "\n[F3]    PD type: ";
 		switch (cyclePD)
@@ -180,7 +180,7 @@ void BoidsPlugin::redraw (const float currentTime, const float elapsedTime)
 		screenLocation.y -= 80;
 		kColor = gGray50;
 	}
-    
+
     draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
 
     drawObstacles ();
@@ -194,7 +194,7 @@ void BoidsPlugin::close (void)
     while (kVG.population() > 0) removeBoidFromFlock ();
 
     // delete the proximity database
-	ET_SAFE_DELETE( pd );    
+	ET_SAFE_DELETE( pd );
 }
 
 //-----------------------------------------------------------------------------
@@ -243,7 +243,7 @@ void BoidsPlugin::nextPD (void)
     }
 
     // switch each boid to new PD
-    for (iterator i=flock.begin(); i!=flock.end(); i++) 
+    for (iterator i=flock.begin(); i!=flock.end(); i++)
 		(**i).allocateProximityToken(pd);
 
     // delete old PD (if any)
@@ -302,7 +302,7 @@ void BoidsPlugin::printLQbinStats (void)
               << std::setiosflags (std::ios::fixed);
     std::cout << "Bin populations: min, max, average: "
               << min << ", " << max << ", " << average
-              << " (non-empty bins)" << std::endl; 
+              << " (non-empty bins)" << std::endl;
     std::cout << "Boid neighbors:  min, max, average: "
               << Boid::minNeighbors << ", "
               << Boid::maxNeighbors << ", "
@@ -327,7 +327,7 @@ void BoidsPlugin::printMiniHelpForFunctionKeys (void) const
 
 //-----------------------------------------------------------------------------
 void BoidsPlugin::addBoidToFlock (void)
-{    
+{
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETBOID );
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicleToPlugin( pkVehicle, this );
@@ -356,10 +356,10 @@ void BoidsPlugin::removeBoidFromFlock (void)
 		}
 		boid = NULL;
 	}
-}  
+}
 
 //-----------------------------------------------------------------------------
-AbstractVehicle* BoidsPlugin::createVehicle( 
+AbstractVehicle* BoidsPlugin::createVehicle(
 	EntityClassId classId ) const
 {
 	AbstractVehicle* pkVehicle = NULL;
@@ -367,7 +367,7 @@ AbstractVehicle* BoidsPlugin::createVehicle(
 	if( NULL != pkFactory )
 	{
 		pkVehicle = pkFactory->createVehicle( classId );
-	}	
+	}
 	return pkVehicle;
 }
 //-----------------------------------------------------------------------------
@@ -385,15 +385,15 @@ Boid::groupType::iterator BoidsPlugin::FindBoid( const Boid* pkBoid )
 	}
 	return kIterEnd;
 }
-  
+
 
 //-----------------------------------------------------------------------------
 void BoidsPlugin::nextBoundaryCondition (void)
-{    
+{
 	SetCurrentBoundaryCondition((EBoidConstraintType) ((int) constraint + 1));
 }
 
-void BoidsPlugin::SetCurrentBoundaryCondition( 
+void BoidsPlugin::SetCurrentBoundaryCondition(
 	const EBoidConstraintType  eType,
 	bool bLocalChange )
 {
@@ -402,7 +402,7 @@ void BoidsPlugin::SetCurrentBoundaryCondition(
 		this->bWasLocalChange = bLocalChange;
 		this->constraint = eType;
 		updateObstacles ();
-	}	
+	}
 }
 //-----------------------------------------------------------------------------
 void BoidsPlugin::initObstacles (void)

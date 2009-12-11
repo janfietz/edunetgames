@@ -10,10 +10,11 @@ void etMemoryDebugBegin();
 void etMemoryDebugEnd();
 
 //-----------------------------------------------------------------------------
-EF_FORCEINLINE 
+EF_FORCEINLINE
 void etMemoryDebugBegin()
 {
-#ifdef _DEBUG
+#ifdef ET_DEBUG
+#ifdef WIN32
 	int tmpDbgFlag;
 	tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	tmpDbgFlag |= _CRTDBG_ALLOC_MEM_DF;
@@ -24,21 +25,25 @@ void etMemoryDebugBegin()
 	//int* piaLeak = new int[10];
 	//_CrtSetBreakAlloc(5207700);
 #endif
-}
-
-//-----------------------------------------------------------------------------
-EF_FORCEINLINE 
-void etMemoryDebugEnd()
-{
-#ifdef _DEBUG
-	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
-	//	_CrtDumpMemoryLeaks();
 #endif
 }
 
 //-----------------------------------------------------------------------------
-int EduNetMain (int argc, char **argv) 
+EF_FORCEINLINE
+void etMemoryDebugEnd()
+{
+#ifdef ET_DEBUG
+#ifdef WIN32
+        _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
+
+	//	_CrtDumpMemoryLeaks();
+#endif
+#endif
+}
+
+//-----------------------------------------------------------------------------
+int EduNetMain (int argc, char **argv)
 {
 	::etMemoryDebugBegin();
 	int iExitCode = EXIT_FAILURE;
@@ -54,7 +59,7 @@ int EduNetMain (int argc, char **argv)
 			OpenSteer::OpenSteerDemo::initialize ();
 
 			// run the main event processing loop
-			OpenSteer::OpenSteerDemo::runGraphics ();  
+			OpenSteer::OpenSteerDemo::runGraphics ();
 		}
 		iExitCode = EXIT_SUCCESS;
 	}
