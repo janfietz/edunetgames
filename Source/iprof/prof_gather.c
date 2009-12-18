@@ -7,7 +7,7 @@
 Prof_Define(_global);
 
 Prof_Zone_Stack Prof_dummy  ;  // impossible parent
-Prof_Zone_Stack Prof_dummy2 ; 
+Prof_Zone_Stack Prof_dummy2 ;
 Prof_Zone_Stack *Prof_stack = &Prof_dummy2;
 
 int Prof_num_zones;

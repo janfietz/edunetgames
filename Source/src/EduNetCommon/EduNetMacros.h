@@ -28,7 +28,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
+#include <assert.h>
 //-----------------------------------------------------------------------------
 // memory
 //-----------------------------------------------------------------------------
@@ -59,8 +59,8 @@
 //-----------------------------------------------------------------------------
 //! implement an empty private copy constructor and a private assignment
 #define ET_IMPLEMENT_CLASS_NO_COPY( classname ) private:\
-	classname( const classname& );\
-	classname& operator=( const classname& );
+        classname( const classname& );\
+        classname& operator=( const classname& );
 
 //-----------------------------------------------------------------------------
 //  macros spit out 'clickable' file and line number
@@ -88,13 +88,19 @@
 
 #ifndef linux
 #ifdef _DEBUG
-  #define ET_DEBUG 1
+#define ET_DEBUG 1
 #endif
 #define EF_FORCEINLINE __forceinline
 #else
 #ifndef NDEBUG
-  #define ET_DEBUG 1
+#define ET_DEBUG 1
 #endif
+#endif
+
+#ifdef ET_DEBUG
+#define ET_ASSERT( expr ) assert(expr);
+#else
+#define ET_ASSERT( expr ) noop;
 #endif
 
 
