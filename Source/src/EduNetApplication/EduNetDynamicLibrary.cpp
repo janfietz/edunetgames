@@ -48,6 +48,7 @@ EduNetDynamicLibrary::~EduNetDynamicLibrary ( void )
 //-----------------------------------------------------------------------------
 bool EduNetDynamicLibrary::LoadLibrary ( const char* pszLibName )
 {
+    ET_ASSERT( NULL != pszLibName );
     if ( NULL != this->m_pLibHandle )
     {
         return false;
@@ -57,8 +58,6 @@ bool EduNetDynamicLibrary::LoadLibrary ( const char* pszLibName )
 #else
     std::string kName ( "./" );
     kName += pszLibName;
-    std::ostringstream message;
-
     kName += ".so";
     this->m_pLibHandle = dlopen ( kName.c_str(), RTLD_LAZY );
 #endif
