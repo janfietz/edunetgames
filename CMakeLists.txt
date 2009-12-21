@@ -1,0 +1,130 @@
+cmake_minimum_required(VERSION 2.6)
+
+PROJECT(EDUNET_GAMES)
+SET(EDUNET_GAMES 0.01)
+
+IF (NOT CMAKE_BUILD_TYPE)
+# SET(CMAKE_BUILD_TYPE "Debug")
+ SET(CMAKE_BUILD_TYPE "Release")
+ENDIF (NOT CMAKE_BUILD_TYPE)
+
+# string (REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+remove_definitions(-D_WINDOWS )
+
+IF(COMMAND cmake_policy)
+   cmake_policy(SET CMP0003 NEW)
+ENDIF(COMMAND cmake_policy)
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
+
+# This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
+# This should be the case.
+
+FIND_PACKAGE(OpenGL)
+IF (OPENGL_FOUND)
+MESSAGE("OPENGL FOUND")
+MESSAGE(${OPENGL_LIBRARIES})
+ELSE (OPENGL_FOUND)
+MESSAGE("OPENGL NOT FOUND")
+SET(OPENGL_gl_LIBRARY opengl32)
+SET(OPENGL_glu_LIBRARY glu32)
+ENDIF (OPENGL_FOUND)
+
+# ADD_DEFINITIONS(-DBT_USE_FREEGLUT)
+
+FIND_PACKAGE(GLU)
+
+FIND_PACKAGE(GLUT)
+IF (GLUT_FOUND)
+ELSE (GLUT_FOUND)
+	MESSAGE("GLUT NOT FOUND")
+	Set( GLUT_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/glut)
+	IF (MSVC)
+		MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
+		SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/bin/win32/lib/glut32.lib)
+	ENDIF (MSVC)
+ENDIF (GLUT_FOUND)
+
+FIND_PACKAGE(Boost)
+IF (Boost_FOUND)
+MESSAGE(${Boost_LIBRARY})
+ELSE (Boost_FOUND)	
+	Set( Boost_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/boost_1_40_0)
+	IF(DEBUG)
+		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/debug )
+	ELSE(DEBUG)
+		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/release)
+	ENDIF(DEBUG)
+	MESSAGE("Boost NOT FOUND use ${Boost_INCLUDE_DIR} instead")
+ENDIF (Boost_FOUND)
+
+FIND_PACKAGE(RakNet)
+IF (RakNet_FOUND)
+MESSAGE("RakNet FOUND")
+MESSAGE(${RakNet_LIBRARY})
+ELSE (RakNet_FOUND)
+	Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
+	IF(DEBUG)
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/debug/RakNet.lib )
+	ELSE(DEBUG)
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/release/RakNet.lib)
+	ENDIF(DEBUG)
+	MESSAGE("Raknet NOT FOUND use ${RakNet_INCLUDES} instead")
+ENDIF (RakNet_FOUND)
+Set( RakNet_SOURCES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet )
+
+FIND_PACKAGE(Argtable)
+IF (Argtable_FOUND)
+ELSE (Argtable_FOUND)
+	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty )
+	Set( Argtable_SOURCES ${Argtable_INCLUDES}/argtable2-11 )
+	IF(DEBUG)
+		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtabled.lib )
+	ELSE(DEBUG)
+		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtable.lib )
+	ENDIF(DEBUG)
+	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
+ENDIF (Argtable_FOUND)
+
+
+IF (MINGW)
+MESSAGE ("GLUT NOT FOUND not found, trying to use MINGW glut32")
+SET(GLUT_glut_LIBRARY glut32)
+ENDIF (MINGW)
+
+
+
+INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source
+${EDUNET_GAMES_SOURCE_DIR}/Source/src
+${EDUNET_GAMES_SOURCE_DIR}/External
+${GLUT_INCLUDE_DIR}
+${Boost_INCLUDE_DIR}
+${RakNet_INCLUDES}
+${Argtable_INCLUDES}
+ )
+
+IF (WIN32)
+  SET(EDUNET_NEEDED_WIN_LIBRARY ws2_32.lib)
+ELSE (WIN32)
+  SET(EDUNET_NEEDED_WIN_LIBRARY)
+  INCLUDE_DIRECTORIES(/usr/include /usr/local/include )
+ENDIF (WIN32)
+
+SET(EDUNET_COMMON_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+ 
+  
+Set( EduNet_DEFAULT_LIBRARIES 
+opensteer  
+${GLUT_glut_LIBRARY}
+EduNetCommon
+EduNetConnect
+EduNetApplication
+EduNetProfile
+${EDUNET_NEEDED_WIN_LIBRARY}
+GLUI
+${Argtable_LIBRARY}
+)
+
+add_subdirectory(Source)
+add_subdirectory(External)
