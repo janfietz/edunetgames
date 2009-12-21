@@ -1,5 +1,5 @@
-#ifndef EDUNETDYNAMICLIBRARY_H
-#define EDUNETDYNAMICLIBRARY_H
+#ifndef EDUNET_PLUGIN_FACTORY_H
+#define EDUNET_PLUGIN_FACTORY_H
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -31,27 +31,20 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include <boost/shared_ptr.hpp>
 
-
-class EduNetDynamicLibrary
+class EduNetPluginFactory
 {
-  public:
-    EduNetDynamicLibrary( void );
-	virtual ~EduNetDynamicLibrary( void );
+public:
+	EduNetPluginFactory(void);
+	typedef size_t (*getPluginNamesFunc)( void );
+	typedef OpenSteer::AbstractPlugin* (*createPluginByNameFunc)( const char* );
 
-    bool loadLib(const char* pszLibName);
-    bool unloadLib( void );
-	void* accessProcAddress(const char* pszProcName);
-
-  protected:
-    
-  private:
-	  static bool isDynamicLib(const char* pszFileName);
-    void* m_pLibHandle;
+	static size_t getPluginNames( void );
+	static OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
+protected:
+	virtual void fillStringArrayWithPluginName(void) const{};
+	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+		const char* pszName ) const { return NULL; }
 };
 
-typedef boost::shared_ptr<EduNetDynamicLibrary> EduNetDynamicLibraryPtr;
-typedef std::vector<EduNetDynamicLibraryPtr> EduNetDynamicLibraries;
-
-#endif // EDUNETDYNAMICLIBRARY_H
+#endif EDUNET_PLUGIN_FACTORY_H

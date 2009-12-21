@@ -94,7 +94,7 @@ bool EduNetDynamicLibrary::unloadLib ( void )
     if ( NULL != this->m_pLibHandle )
     {
 #ifdef WIN32
-        bResult = 1 == FreeLibrary ( ( HINSTANCE ) this->m_pLibHandle );
+		bResult = 1 == ::FreeLibrary ( ( HINSTANCE ) this->m_pLibHandle );
 #else
         bResult = 0 == dlclose ( this->m_pLibHandle );
 #endif
@@ -102,7 +102,17 @@ bool EduNetDynamicLibrary::unloadLib ( void )
     }
     return bResult;
 }
-
+//-----------------------------------------------------------------------------
+void*  EduNetDynamicLibrary::accessProcAddress(const char* pszProcName)
+{
+	ET_ASSERT( NULL != this->m_pLibHandle );
+	ET_ASSERT( NULL != pszProcName );
+#ifdef WIN32
+	return ::GetProcAddress( ( HINSTANCE )this->m_pLibHandle,pszProcName);
+#else
+	return dlsym( this->m_pLibHandle, pszProcName );
+#endif
+}
 //-----------------------------------------------------------------------------
 bool EduNetDynamicLibrary::isDynamicLib(const char* pszFileName)
 {
