@@ -5,6 +5,10 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${RakNet_SOURCES}/DependentExtensions
  )
 
-aux_source_directory(${EduNetConnect_SOURCE_DIR} EduNetConnect_LIB_SRC)
+file (GLOB EduNetConnect_LIB_SRC "${EduNetConnect_SOURCE_DIR}/*.cpp")
+file (GLOB EduNetConnect_LIB_Hdrs "${EduNetConnect_SOURCE_DIR}/*.h")
 
-add_library(${PROJECT_NAME} STATIC ${EduNetConnect_LIB_SRC})
+add_library(${PROJECT_NAME} STATIC
+	${EduNetConnect_LIB_Hdrs} ${EduNetConnect_LIB_SRC})
+set_target_properties( ${PROJECT_NAME} PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )

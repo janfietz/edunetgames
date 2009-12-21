@@ -47,6 +47,9 @@ arcball.cpp			glui_button.cpp			glui_filebrowser.cpp		glui_node.cpp			glui_separ
 
 )
 
+set_target_properties( GLUI PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
+	
 IF (BUILD_SHARED_LIBS)
   TARGET_LINK_LIBRARIES(GLUI ${GLUT_glut_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 ENDIF (BUILD_SHARED_LIBS)

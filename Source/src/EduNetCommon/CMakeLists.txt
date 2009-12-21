@@ -4,13 +4,19 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${RakNet_SOURCES}/DependentExtensions }
  )
 
-aux_source_directory(${EduNetCommon_SOURCE_DIR} EduNetCommon_LIB_SRC)
-aux_source_directory(${EduNetCommon_SOURCE_DIR}/../OpenSteerUT OpenSteerUT_LIB_SRC)
+file (GLOB EduNetCommon_LIB_SRC "${EduNetCommon_SOURCE_DIR}/*.cpp")
+file (GLOB EduNetCommon_LIB_Hdrs "${EduNetCommon_SOURCE_DIR}/*.h")
+file (GLOB OpenSteerUT_LIB_SRC "${EduNetCommon_SOURCE_DIR}/../OpenSteerUT/*.cpp")
+file (GLOB OpenSteerUT_LIB_Hdrs "${EduNetCommon_SOURCE_DIR}/../OpenSteerUT/*.h")
 
 MESSAGE( ${OpenSteerUT_LIB_SRC} )
 
 add_library(${PROJECT_NAME} STATIC
 ${EduNetCommon_LIB_SRC}
+${EduNetCommon_LIB_Hdrs}
 ${OpenSteerUT_LIB_SRC}
-${RakNet_SOURCES}/DependentExtensions/RPC3/RPC3.cpp
-)
+${OpenSteerUT_LIB_Hdrs}
+${RakNet_SOURCES}/DependentExtensions/RPC3/RPC3.cpp)
+
+set_target_properties( ${PROJECT_NAME} PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )

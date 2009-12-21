@@ -5,8 +5,8 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet-3.705/DependentExtensions
  )
 
-aux_source_directory(${EduNetApplication_SOURCE_DIR} EduNetApplication_LIB_SRC)
-
+file (GLOB EduNetApplication_LIB_SRC "${EduNetApplication_SOURCE_DIR}/*.cpp")
+file (GLOB EduNetApplication_LIB_Hdrs "${EduNetApplication_SOURCE_DIR}/*.h")
 
 LINK_LIBRARIES(
  opensteer
@@ -20,4 +20,7 @@ ${RakNet_LIBRARY}
 ${Argtable_LIBRARY}
 )
 
-add_library(${PROJECT_NAME} STATIC ${EduNetApplication_LIB_SRC})
+add_library(${PROJECT_NAME} STATIC 
+	${EduNetApplication_LIB_Hdrs} ${EduNetApplication_LIB_SRC})
+set_target_properties( ${PROJECT_NAME} PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )

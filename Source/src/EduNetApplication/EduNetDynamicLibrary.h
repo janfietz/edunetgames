@@ -38,16 +38,19 @@ class EduNetDynamicLibrary
 {
   public:
     EduNetDynamicLibrary( void );
+	virtual ~EduNetDynamicLibrary( void );
 
-    bool LoadLibrary(const char* pszLibName);
-    bool UnLoadLibrary( void );
+    bool loadLib(const char* pszLibName);
+    bool unloadLib( void );
 
   protected:
-    ~EduNetDynamicLibrary( void );
+    
   private:
+	  static bool isDynamicLib(const char* pszFileName);
     void* m_pLibHandle;
 };
 
 typedef boost::shared_ptr<EduNetDynamicLibrary> EduNetDynamicLibraryPtr;
+typedef std::vector<EduNetDynamicLibraryPtr> EduNetDynamicLibraries;
 
 #endif // EDUNETDYNAMICLIBRARY_H
