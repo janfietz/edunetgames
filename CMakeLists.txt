@@ -36,47 +36,54 @@ FIND_PACKAGE(GLU)
 
 FIND_PACKAGE(GLUT)
 IF (GLUT_FOUND)
-MESSAGE("GLUT FOUND")
-MESSAGE(${GLUT_glut_LIBRARY})
 ELSE (GLUT_FOUND)
 	MESSAGE("GLUT NOT FOUND")
 	Set( GLUT_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/glut)
+	IF (MSVC)
+		MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
+		SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/bin/win32/lib/glut32.lib)
+	ENDIF (MSVC)
 ENDIF (GLUT_FOUND)
+
+FIND_PACKAGE(Boost)
+IF (Boost_FOUND)
+MESSAGE(${Boost_LIBRARY})
+ELSE (Boost_FOUND)	
+	Set( Boost_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/boost_1_40_0)
+	IF(DEBUG)
+		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/debug )
+	ELSE(DEBUG)
+		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/release)
+	ENDIF(DEBUG)
+	MESSAGE("Boost NOT FOUND use ${Boost_INCLUDE_DIR} instead")
+ENDIF (Boost_FOUND)
 
 FIND_PACKAGE(RakNet)
 IF (RakNet_FOUND)
 MESSAGE("RakNet FOUND")
 MESSAGE(${RakNet_LIBRARY})
 ELSE (RakNet_FOUND)
-	MESSAGE("Raknet NOT FOUND")
 	Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
-	MESSAGE("Raknet include " ${RakNet_INCLUDES} )
 	IF(DEBUG)
-		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStatic.lib )
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/debug/RakNet.lib )
 	ELSE(DEBUG)
-		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/lib/RakNetLibStaticDebug.lib )
+		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/release/RakNet.lib)
 	ENDIF(DEBUG)
+	MESSAGE("Raknet NOT FOUND use ${RakNet_INCLUDES} instead")
 ENDIF (RakNet_FOUND)
 Set( RakNet_SOURCES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet )
 
-#FIND_PACKAGE(GLUI)
-#IF (GLUI_FOUND)
-#MESSAGE(${GLUI_LIBRARY})
-#ELSE (GLUI_FOUND)
-#MESSAGE("GLUI NOT FOUND")
-#ENDIF (GLUI_FOUND)
-
 FIND_PACKAGE(Argtable)
 IF (Argtable_FOUND)
-MESSAGE(${Argtable_LIBRARY})
 ELSE (Argtable_FOUND)
-MESSAGE("ArtableNOT FOUND")
-	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src )
+	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty )
+	Set( Argtable_SOURCES ${Argtable_INCLUDES}/argtable2-11 )
 	IF(DEBUG)
-		Set( Argtable_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src/argtable.lib )
+		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtabled.lib )
 	ELSE(DEBUG)
-		Set( Argtable_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/argtable2-11/src/argtabled.lib )
+		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtable.lib )
 	ENDIF(DEBUG)
+	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
 ENDIF (Argtable_FOUND)
 
 
@@ -85,24 +92,39 @@ MESSAGE ("GLUT NOT FOUND not found, trying to use MINGW glut32")
 SET(GLUT_glut_LIBRARY glut32)
 ENDIF (MINGW)
 
-IF (MSVC)
-MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
-SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/Glut/glut32.lib)
-ENDIF (MSVC)
+
 
 INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source
 ${EDUNET_GAMES_SOURCE_DIR}/Source/src
 ${EDUNET_GAMES_SOURCE_DIR}/External
 ${GLUT_INCLUDE_DIR}
-${RakNet_INCLUDES}/raknet
+${Boost_INCLUDE_DIR}
+${RakNet_INCLUDES}
 ${Argtable_INCLUDES}
  )
 
 IF (WIN32)
-  #INCLUDE_DIRECTORIES(${GLUT_INCLUDE_DIR} ${RakNet_INCLUDES}/raknet ${Argtable_INCLUDES} )
+  SET(EDUNET_NEEDED_WIN_LIBRARY ws2_32.lib)
 ELSE (WIN32)
-  # This is the lines for linux.  This should always work if everything is installed and working fine.
+  SET(EDUNET_NEEDED_WIN_LIBRARY)
   INCLUDE_DIRECTORIES(/usr/include /usr/local/include )
 ENDIF (WIN32)
 
-SUBDIRS(Source External)
+SET(EDUNET_COMMON_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
+ 
+  
+Set( EduNet_DEFAULT_LIBRARIES 
+opensteer  
+${GLUT_glut_LIBRARY}
+EduNetCommon
+EduNetConnect
+EduNetApplication
+EduNetProfile
+${EDUNET_NEEDED_WIN_LIBRARY}
+GLUI
+${Argtable_LIBRARY}
+)
+
+add_subdirectory(Source)
+add_subdirectory(External)

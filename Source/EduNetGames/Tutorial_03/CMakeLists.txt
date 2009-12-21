@@ -1,28 +1,19 @@
 project(Tutorial03)
 INCLUDE_DIRECTORIES( 
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
-
- ${RakNet_SOURCES}/DependentExtensions
+${RakNet_SOURCES}/DependentExtensions
 )
 
-aux_source_directory(${Tutorial03_SOURCE_DIR} Tutorial_Src)
-
-MESSAGE(${Tutorial_Src})
+file (GLOB Tutorial_Src "${Tutorial03_SOURCE_DIR}/*.cpp")
+file (GLOB Tutorial_Hdrs "${Tutorial03_SOURCE_DIR}/*.h")
 
 LINK_LIBRARIES(
- opensteer  
- ${GLUT_glut_LIBRARY}
- EduNetCommon
-EduNetConnect
-EduNetApplication
-EduNetProfile
+${EduNet_DEFAULT_LIBRARIES} 
 ${RakNet_LIBRARY}
- GLUI
-${Argtable_LIBRARY}
 )
 
-SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-add_executable(${PROJECT_NAME} ${Tutorial_Src})
+add_executable(${PROJECT_NAME} ${Tutorial_Hdrs} ${Tutorial_Src})
+set_target_properties( ${PROJECT_NAME} PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
 
 
