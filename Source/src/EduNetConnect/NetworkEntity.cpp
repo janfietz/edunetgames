@@ -47,7 +47,7 @@ NetworkEntitySerializer::NetworkEntitySerializer( OpenSteer::AbstractVehicle* pk
 }
 
 //-----------------------------------------------------------------------------
-void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetworkVehicle* pkVehicle, RakNet::PRO& kPro ) const
+void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetSerializable* pkVehicle, RakNet::PRO& kPro ) const
 {
 	// TODO: query the send parameters from the vehicle itself
 	kPro.priority = LOW_PRIORITY;
@@ -58,7 +58,7 @@ void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetworkVeh
 //-----------------------------------------------------------------------------
 int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkEntity);
+	AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
 		this->querySendParameters( pkNetworkVehicle, serializeParameters->pro );
@@ -148,7 +148,7 @@ int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializePa
 //-----------------------------------------------------------------------------
 void NetworkEntitySerializer::deserialize( RakNet::DeserializeParameters *deserializeParameters )
 {
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkEntity);
+	AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
 		pkNetworkVehicle->deserialize( deserializeParameters );
@@ -314,7 +314,7 @@ bool NetworkEntitySerializer::setLocalSpaceDataVariable(
 void NetworkEntitySerializer::serializeConstruction(
 	RakNet::BitStream *constructionBitstream)
 {
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkEntity);
+	AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
 		pkNetworkVehicle->serializeConstruction( constructionBitstream );
@@ -324,7 +324,7 @@ void NetworkEntitySerializer::serializeConstruction(
 bool NetworkEntitySerializer::deserializeConstruction(
 	RakNet::BitStream *constructionBitstream )
 {
-	AbstractNetworkVehicle* pkNetworkVehicle = dynamic_cast<AbstractNetworkVehicle*>(this->m_pkEntity);
+	AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
 		return pkNetworkVehicle->deserializeConstruction( constructionBitstream );

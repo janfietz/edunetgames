@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "EduNetConnect/AbstractNetworkVehicle.h"
+#include "EduNetConnect/AbstractNetSerializable.h"
 
 namespace OpenSteer {
 
@@ -57,7 +57,7 @@ namespace OpenSteer {
 
 	//-------------------------------------------------------------------------
 	template <class Super>
-	class NetworkVehicleMixin : public Super, public AbstractNetworkVehicle
+	class NetworkVehicleMixin : public Super, public AbstractNetSerializable
 	{
 		ET_DECLARE_BASE( Super )
 	public:
@@ -68,8 +68,11 @@ namespace OpenSteer {
 		// destructor
 		virtual ~NetworkVehicleMixin ();
 
-		// AbstractNetworkVehicle interface
-		virtual void testFunction();
+		// AbstractNetSerializable interface
+		virtual void querySendParameters( RakNet::PRO& kPro ) const
+		{
+
+		}
 
 	private:
 
@@ -93,13 +96,6 @@ namespace OpenSteer {
 
 	//----------------------------------------------------------------------------
 	// interface
-	template<class Super>
-	void
-	NetworkVehicleMixin<Super>::testFunction(void)
-	{
-		bool btest = true;
-		btest = false;
-	}
 
 
 	//----------------------------------------------------------------------------

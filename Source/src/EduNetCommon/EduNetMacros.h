@@ -28,7 +28,9 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include <assert.h>
+
+// no includes inside this header please
+// #include <assert.h>
 //-----------------------------------------------------------------------------
 // memory
 //-----------------------------------------------------------------------------
@@ -90,7 +92,6 @@
 #ifdef _DEBUG
 #define ET_DEBUG 1
 #endif
-#define EF_FORCEINLINE __forceinline
 #else
 #ifndef NDEBUG
 #define ET_DEBUG 1
@@ -107,10 +108,29 @@
 //-----------------------------------------------------------------------------
 // DLL SUPPORT
 //-----------------------------------------------------------------------------
+// there should be a specialized header for this stuff
+// for each lib which will make it to a dll interface
+// EduNetMacros is the wrong place !
+#ifdef linux
+#define ET_COMMON_NO_DLL
+#endif
+
+#ifndef ET_COMMON_NO_DLL
+#  ifdef ET_COMMON_EXPORTS
+#    define ET_COMMON_API __declspec(dllexport)
+#  else
+#    define ET_COMMON_API __declspec(dllimport)
+#  endif
+#else
+#  define ET_COMMON_API
+#endif
+
+#if 0 // kick this one please
 #if defined DLL_EXPORT
 #define ET_EXPORT __declspec(dllexport)
 #else
 #define ET_EXPORT __declspec(dllimport)
+#endif
 #endif
 
 

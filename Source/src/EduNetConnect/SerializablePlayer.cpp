@@ -34,6 +34,7 @@ AbstractEntity* ClientSerializablePlayer::cloneEntity( void ) const
 {
 	return ET_NEW ClientSerializablePlayer();
 }
+
 //-----------------------------------------------------------------------------
 int ClientSerializablePlayer::serialize( 
 	RakNet::SerializeParameters *serializeParameters ) const

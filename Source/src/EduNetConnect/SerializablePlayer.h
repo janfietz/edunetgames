@@ -27,13 +27,13 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "AbstractNetworkVehicle.h"
+#include "AbstractNetSerializable.h"
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteerUT/AbstractEntityFactory.h"
 
 //-------------------------------------------------------------------------
 template <class Super>
-class SerializablePlayerMixin : public Super, public OpenSteer::AbstractNetworkVehicle
+class SerializablePlayerMixin : public Super, public OpenSteer::AbstractNetSerializable
 {
 	ET_DECLARE_BASE( Super )
 public:
@@ -44,8 +44,8 @@ public:
 	// destructor
 	virtual ~SerializablePlayerMixin ();
 
-	// AbstractNetworkVehicle interface
-	virtual void testFunction();
+	// AbstractNetSerializable interface
+	virtual void querySendParameters( RakNet::PRO& kPro ) const;
 
 	
 
@@ -66,15 +66,16 @@ SerializablePlayerMixin<Super>::~SerializablePlayerMixin(void)
 {
 }
 
+//-----------------------------------------------------------------------------
+template<class Super>
+void SerializablePlayerMixin<Super>::querySendParameters( RakNet::PRO& kPro ) const
+{
+
+}
+
+
 //----------------------------------------------------------------------------
 // interface
-template<class Super>
-void
-SerializablePlayerMixin<Super>::testFunction(void)
-{
-	bool btest = true;
-	btest = false;
-}
 
 //---------------------------------------------------------------------------
 class ClientSerializablePlayer : public SerializablePlayerMixin<OpenSteer::SimplePlayer>
@@ -88,11 +89,11 @@ public:
 	OS_IMPLEMENT_CLASSNAME( ClientSerializablePlayer )
 
 	//---------------------------------------------------------------------------
-	// AbstractNetworkVehicle interface
+	// AbstractNetSerializable interface
 	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
-	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
-	virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
+	virtual void serializeConstruction( RakNet::BitStream *constructionBitstream );
+	virtual bool deserializeConstruction( RakNet::BitStream *constructionBitstream );
 
 	virtual OpenSteer::EntityClassId getClassId( void ) const
 	{

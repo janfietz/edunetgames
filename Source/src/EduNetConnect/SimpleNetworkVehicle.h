@@ -81,7 +81,7 @@ namespace OpenSteer {
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		//---------------------------------------------------------------------------
-		// AbstractNetworkVehicle interface
+		// AbstractNetSerializable interface
 		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
 		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);

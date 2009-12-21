@@ -1,5 +1,5 @@
-#ifndef __NETWORKENTITY_H__
-#define __NETWORKENTITY_H__
+#ifndef __ABSTRACTNETSERIALIZABLE_H__
+#define __ABSTRACTNETSERIALIZABLE_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -29,40 +29,61 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "AbstractNetSerializable.h"
-#include "OpenSteerUT/OpenSteerUTTypes.h"
+//-----------------------------------------------------------------------------
+#include "EduNetConnect/EduNetConnect.h"
 
+//-----------------------------------------------------------------------------
+namespace RakNet
+{
+	class BitStream;
+	struct SerializeParameters;
+	struct DeserializeParameters;
+	struct PRO;
+}
+
+//-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-
+	//-------------------------------------------------------------------------
+	enum ESerializeDataType
+	{
+		ESerializeDataType_Position,
+		ESerializeDataType_Forward,
+		ESerializeDataType_Side,
+		ESerializeDataType_Up,
+		ESerializeDataType_Force,
+		ESerializeDataType_Radius,
+		ESerializeDataType_Speed,
+		ESerializeDataType_Orientation,
+		ESerializeDataType_CompressedOrientation1,
+		ESerializeDataType_CompressedOrientation2,
+		ESerializeDataType_CompressedForce,
+		ESerializeDataType_AngularVelocity,
+		ESerializeDataType_LinearVelocity,
+		ESerializeDataType_UpdateTicks,
+		ESerializeDataType_ControllerAction,
+		ESerializeDataType_Count,
+	};
 
 	//-------------------------------------------------------------------------
-	class NetworkEntitySerializer : public AbstractNetSerializable
+	class AbstractNetSerializable
 	{
 	public:
-		NetworkEntitySerializer( OpenSteer::AbstractEntity* pkEntity );
-		NetworkEntitySerializer( OpenSteer::AbstractVehicle* pkVehicle );
-		virtual ~NetworkEntitySerializer(){};
-		virtual void querySendParameters( RakNet::PRO& kPro ) const
-		{
 
-		}
-		virtual void querySendParameters( OpenSteer::AbstractNetSerializable* pkVehicle, RakNet::PRO& kPro ) const;
-		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
-		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
-		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
-		virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream );
+		virtual ~AbstractNetSerializable() { /* Nothing to do. */ };
 
-		static bool setLocalSpaceVariable( ESerializeDataType eVariable, AbstractLocalSpace* pkLocalSpace, const osVector3& kValue );
-		static bool setLocalSpaceDataVariable( ESerializeDataType eVariable, LocalSpaceData& pkLocalSpace, const osVector3& kValue );
-	private:
-		OpenSteer::AbstractVehicle* m_pkVehicle;
-		OpenSteer::AbstractEntity* m_pkEntity;
-
+		virtual void querySendParameters( RakNet::PRO& kPro ) const ET_ABSTRACT;
+		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const ET_ABSTRACT;
+		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) ET_ABSTRACT;
+		virtual void serializeConstruction( RakNet::BitStream *constructionBitstream ) ET_ABSTRACT;
+		virtual bool deserializeConstruction( RakNet::BitStream *constructionBitstream ) ET_ABSTRACT;
 	};
 
 
 
 } // namespace OpenSteer
 
-#endif
+
+
+
+#endif // __ABSTRACTNETSERIALIZABLE_H__

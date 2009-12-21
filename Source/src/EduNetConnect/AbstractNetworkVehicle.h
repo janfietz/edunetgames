@@ -33,58 +33,7 @@
 #include "EduNetConnect/EduNetConnect.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 
-//-----------------------------------------------------------------------------
-namespace RakNet
-{
-	class BitStream;
-	struct SerializeParameters;
-	struct DeserializeParameters;
-}
-
-//-----------------------------------------------------------------------------
-namespace OpenSteer {
-
-	enum ESerializeDataType
-	{
-		ESerializeDataType_Position,
-		ESerializeDataType_Forward,
-		ESerializeDataType_Side,
-		ESerializeDataType_Up,
-		ESerializeDataType_Force,
-		ESerializeDataType_Radius,
-		ESerializeDataType_Speed,
-		ESerializeDataType_Orientation,
-		ESerializeDataType_CompressedOrientation1,
-		ESerializeDataType_CompressedOrientation2,
-		ESerializeDataType_CompressedForce,
-		ESerializeDataType_AngularVelocity,
-		ESerializeDataType_LinearVelocity,
-		ESerializeDataType_UpdateTicks,
-		ESerializeDataType_ControllerAction,
-		ESerializeDataType_Count,
-	};
-
-// TODO: rename AbstractNetworkVehicle to AbstractSerializable
-
-	class AbstractNetworkVehicle
-	{
-	public:
-
-		virtual ~AbstractNetworkVehicle() { /* Nothing to do. */ };
-
-		virtual void testFunction() = 0;
-
-		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const ET_ABSTRACT;
-		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters ) ET_ABSTRACT;
-		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream) ET_ABSTRACT;
-		virtual bool deserializeConstruction(RakNet::BitStream *constructionBitstream ) ET_ABSTRACT;
-	};
 
 
 
-} // namespace OpenSteer
-
-
-
-
-#endif // 
+#endif // __ABSTRACTNETWORKVEHICLE_H__
