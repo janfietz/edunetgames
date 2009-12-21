@@ -28,10 +28,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#if defined NetBoidDll_EXPORTS
+#define DLL_EXPORT 1
+#else
+#define DLL_EXPORT 0
+#endif
+
 #include "NetBoidPlugin.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/GridPlugin.h"
+#include "EduNetApplication/EduNetPluginFactory.h"
+
+class ET_EXPORT BoidPluginFactory : public EduNetPluginFactory
+{
+	ET_DECLARE_BASE( EduNetPluginFactory )
+public:
+	BoidPluginFactory();
+protected:
+	~BoidPluginFactory();
+
+	virtual void fillStringArrayWithPluginName(void) const;
+	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+		const char* pszName ) const;
+};
 
 //-----------------------------------------------------------------------------
 class NetBoidRenderOfflinePlugin : 

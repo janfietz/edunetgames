@@ -28,6 +28,8 @@
 
 #include "DllTestPlugin.h"
 
+#include "EduNetApplication/EduNetPluginFactory.h"
+
 #include<boost/filesystem/operations.hpp>
 #include<iostream>
 
@@ -38,6 +40,24 @@ void DllTestPlugin::open(void)
 {
 	BaseClass::open();
 	this->listAllFiles(NULL);
+
+	if (0 < this->m_kLibraries.size() )
+	{
+		EduNetDynamicLibraries::iterator kIter = this->m_kLibraries.begin();
+		EduNetDynamicLibraries::const_iterator kIterEnd = this->m_kLibraries.end();
+		while (kIterEnd != kIter)
+		{
+			EduNetDynamicLibrary* pkLib = (*kIter).get();
+			EduNetPluginFactory::getPluginNamesFunc kFunc = 
+				(EduNetPluginFactory::getPluginNamesFunc)pkLib->accessProcAddress("getPluginNames");
+			if (NULL != kFunc)
+			{
+				bool bTest = false;
+				bTest = true ;
+			}
+			++kIter;
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
