@@ -31,20 +31,21 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
+#include <boost/shared_ptr.hpp>
+
+typedef std::vector<std::string> EdutNetStringList;
 
 class EduNetPluginFactory
 {
 public:
 	EduNetPluginFactory(void);
-	typedef size_t (*getPluginNamesFunc)( void );
-	typedef OpenSteer::AbstractPlugin* (*createPluginByNameFunc)( const char* );
-
-	static size_t getPluginNames( void );
-	static OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
+	
+	void getPluginNames( EdutNetStringList& kNames ) const;
+	OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
 protected:
-	virtual void fillStringArrayWithPluginName(void) const{};
+	virtual void fillStringArrayWithPluginName( EdutNetStringList& kNames ) const{};
 	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
 		const char* pszName ) const { return NULL; }
 };
-
+typedef boost::shared_ptr<EduNetPluginFactory>  EduNetPluginFactoryPtr;
 #endif EDUNET_PLUGIN_FACTORY_H

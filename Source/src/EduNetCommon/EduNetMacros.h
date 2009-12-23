@@ -103,16 +103,4 @@
 #define ET_ASSERT( expr ) __noop;
 #endif
 
-
-//-----------------------------------------------------------------------------
-// DLL SUPPORT
-//-----------------------------------------------------------------------------
-#if defined DLL_EXPORT
-#define ET_EXPORT __declspec(dllexport)
-#else
-#define ET_EXPORT __declspec(dllimport)
-#endif
-
-
-
 #endif // __EDUNETMACROS_H__
