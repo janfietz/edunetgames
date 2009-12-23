@@ -10,6 +10,7 @@ message(STATUS ${Tutorial_Hdrs} ${Tutorial_Src} )
 
 LINK_LIBRARIES(
 ${EduNet_DEFAULT_LIBRARIES} 
+EduNetModule
 ${RakNet_LIBRARY}
 )
 

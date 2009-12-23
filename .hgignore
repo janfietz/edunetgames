@@ -16,3 +16,4 @@ FindRaknet.cmake~
 syntax: regexp
 ^Temp/.*
 ^buildlinux/.*
+^buildwin32/.*

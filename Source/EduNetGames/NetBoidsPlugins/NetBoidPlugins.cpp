@@ -27,28 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetBoidPlugins.h"
-//-----------------------------------------------------------------------------
-BoidPluginFactory::BoidPluginFactory()
-{
 
-}
-//-----------------------------------------------------------------------------
-BoidPluginFactory::~BoidPluginFactory()
-{
-
-}
-//-----------------------------------------------------------------------------
-void BoidPluginFactory::fillStringArrayWithPluginName(void) const
-{
-	
-}
-
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
-{
-	return NULL;
-}
 
 //NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( true );
 //NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );

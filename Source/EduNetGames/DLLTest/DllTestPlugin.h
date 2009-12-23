@@ -32,7 +32,7 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/GridPlugin.h"
-#include "EduNetApplication/EduNetDynamicLibrary.h"
+#include "EduNetModule/EduNetModule.h"
 
 //-----------------------------------------------------------------------------
 class DllTestPlugin : 
@@ -73,7 +73,8 @@ private:
 	void listAllFiles(const char* pszDirectory);
 	bool addFile(const char* pszFileName);	
 
-	EduNetDynamicLibraries m_kLibraries;
+	typedef std::vector<EduNetRawModulePtr> EduNetRawModules;
+	EduNetRawModules m_kModules;
 };
 
 #endif //__DLLTESTPLUGIN_H__
