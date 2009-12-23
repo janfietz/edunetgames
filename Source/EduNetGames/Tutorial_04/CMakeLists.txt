@@ -7,6 +7,8 @@ ${RakNet_SOURCES}/DependentExtensions
 file (GLOB Tutorial_Src "${Tutorial04_SOURCE_DIR}/*.cpp")
 file (GLOB Tutorial_Hdrs "${Tutorial04_SOURCE_DIR}/*.h")
 
+LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARYDIR} )
+
 LINK_LIBRARIES(
 ${EduNet_DEFAULT_LIBRARIES} 
 ${RakNet_LIBRARY}

@@ -29,6 +29,7 @@
 #include "DllTestPlugin.h"
 #include "EduNetCommon/EduNetLog.h"
 //#include "EduNetModule/EduNetPluginFactory.h"
+#include "EduNetApplication/EduNetGames.h"
 
 #include<boost/filesystem/operations.hpp>
 #include<iostream>
@@ -64,6 +65,11 @@ void DllTestPlugin::open(void)
 				EdutNetStringList::iterator kNameIterEnd = kList.end();
 				while (kNameIterEnd != kNameIter)
 				{
+					AbstractPlugin* pkPlugin = pkFactory->createPluginByName( (*kNameIter).c_str() );
+					if (NULL != pkPlugin)
+					{
+						m_kPlugins.addPlugin( pkPlugin );					
+					}
 					message << '"' << (*kNameIter).c_str() << '"' << "\n";
 					++kNameIter;
 				}

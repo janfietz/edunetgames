@@ -31,7 +31,7 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetDynamicLibrary.h"
+#include "EduNetDynamicLibrary.h"
 #include "EduNetPluginFactory.h"
 #include <boost/shared_ptr.hpp>
 
@@ -99,5 +99,6 @@ private:
 	EduNetModuleEntry* m_pEntry;
 };
 typedef boost::shared_ptr<EduNetRawModule>  EduNetRawModulePtr;
+typedef std::vector<EduNetRawModulePtr> EduNetRawModules;
 
 #endif EDUNET_MODULE_H

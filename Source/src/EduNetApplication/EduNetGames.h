@@ -53,6 +53,9 @@
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Utilities.h"
 
+#include "EduNetModule/EduNetModule.h"
+#include "OpenSteerUT/PluginArray.h"
+
 
 namespace OpenSteer {
 
@@ -149,6 +152,11 @@ namespace OpenSteer {
 		// do all initialization related to graphics
         static void initializeGraphics(void);
 
+		//-----------------------------------------------------------------------------
+		// do all initialization related to graphics
+		static void loadModules( void );
+		static void unloadModules( void );
+
 
         // ----------------------------------------------------------- console text
         // print list of known commands
@@ -167,7 +175,10 @@ namespace OpenSteer {
         static void popPhase (void);
         static void updatePhaseTimers (void);
 
-
+		static void loadModulesFromDirectory(const char* pszDirectory);
+		static void createPluginsFromModules( void );
+		static void createPluginsFromModule( EduNetRawModule* pkModule );
+		static bool addFile(const char* pszFileName);
 
         // XXX apparently MS VC6 cannot handle initialized static const members,
         // XXX so they have to be initialized not-inline.
@@ -177,6 +188,9 @@ namespace OpenSteer {
         static const int drawPhase;
         static const int updatePhase;
         static const int overheadPhase;
+
+		static EduNetRawModules s_modules;
+		static OpenSteer::PluginArray s_Plugins;
     };
 
 

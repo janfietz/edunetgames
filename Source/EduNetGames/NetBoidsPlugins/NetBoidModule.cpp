@@ -53,6 +53,23 @@ void BoidPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames
 OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
 	const char* pszName ) const
 {
+	std::string kName(pszName);
+	if (0 == kName.compare("NetBoidRenderOfflinePlugin"))
+	{
+		return ET_NEW NetBoidRenderOfflinePlugin(false);
+	}
+	if (0 == kName.compare("NetBoidRenderClientPlugin"))
+	{
+		return ET_NEW NetBoidRenderClientPlugin(false);
+	}
+	if (0 == kName.compare("NetBoidRenderPeerPlugin"))
+	{
+		return ET_NEW NetBoidRenderPeerPlugin(false);
+	}
+	if (0 == kName.compare("NetBoidClientServerPlugin"))
+	{
+		return ET_NEW NetBoidClientServerPlugin(false);
+	}
 	return NULL;
 }
 

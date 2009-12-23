@@ -119,6 +119,7 @@ opensteer
 ${GLUT_glut_LIBRARY}
 EduNetCommon
 EduNetConnect
+EduNetModule
 EduNetApplication
 EduNetProfile
 ${EDUNET_NEEDED_WIN_LIBRARY}

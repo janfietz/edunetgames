@@ -8,9 +8,10 @@ file (GLOB Tutorial_Src "${NetBoidDll_SOURCE_DIR}/*.cpp")
 file (GLOB Tutorial_Hdrs "${NetBoidDll_SOURCE_DIR}/*.h")
 message(STATUS ${Tutorial_Hdrs} ${Tutorial_Src} )
 
+LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARYDIR} )
+
 LINK_LIBRARIES(
 ${EduNet_DEFAULT_LIBRARIES} 
-EduNetModule
 ${RakNet_LIBRARY}
 )
 
