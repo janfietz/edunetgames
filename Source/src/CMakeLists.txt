@@ -1,3 +1,3 @@
 
-SUBDIRS( EduNetConnect EduNetCommon EduNetApplication EduNetProfile )
+SUBDIRS( EduNetConnect EduNetCommon EduNetApplication EduNetProfile EduNetModule )
 
