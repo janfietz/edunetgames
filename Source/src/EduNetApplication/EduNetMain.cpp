@@ -52,6 +52,8 @@ int EduNetMain (int argc, char **argv)
 	{
 		if( true ==  EduNetOptions::accessOptions().continueProcess() )
 		{
+			OpenSteer::OpenSteerDemo::loadModules();
+
 			// initialize graphics
 			OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
 
@@ -60,6 +62,8 @@ int EduNetMain (int argc, char **argv)
 
 			// run the main event processing loop
 			OpenSteer::OpenSteerDemo::runGraphics ();
+
+			OpenSteer::OpenSteerDemo::unloadModules();
 		}
 		iExitCode = EXIT_SUCCESS;
 	}

@@ -71,10 +71,10 @@ public:
 private:
 	
 	void listAllFiles(const char* pszDirectory);
-	bool addFile(const char* pszFileName);	
-
-	typedef std::vector<EduNetRawModulePtr> EduNetRawModules;
+	bool addFile(const char* pszFileName);
+	
 	EduNetRawModules m_kModules;
+	OpenSteer::PluginArray m_kPlugins;
 };
 
 #endif //__DLLTESTPLUGIN_H__

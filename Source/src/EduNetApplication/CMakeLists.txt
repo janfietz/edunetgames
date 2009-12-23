@@ -8,14 +8,16 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
 file (GLOB EduNetApplication_LIB_SRC "${EduNetApplication_SOURCE_DIR}/*.cpp")
 file (GLOB EduNetApplication_LIB_Hdrs "${EduNetApplication_SOURCE_DIR}/*.h")
 
+LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARYDIR} )
+
 LINK_LIBRARIES(
- opensteer
- ${GLUT_glut_LIBRARY}
- EduNetCommon
+opensteer
+${GLUT_glut_LIBRARY}
+EduNetCommon
 EduNetConnect
+EduNetModule
 IProf
 EduNetProfile
-${RakNet_LIBRARY}
  GLUI
 ${Argtable_LIBRARY}
 )
