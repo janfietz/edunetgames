@@ -104,35 +104,4 @@
 #define ET_ASSERT( expr ) __noop;
 #endif
 
-
-//-----------------------------------------------------------------------------
-// DLL SUPPORT
-//-----------------------------------------------------------------------------
-// there should be a specialized header for this stuff
-// for each lib which will make it to a dll interface
-// EduNetMacros is the wrong place !
-#ifdef linux
-#define ET_COMMON_NO_DLL
-#endif
-
-#ifndef ET_COMMON_NO_DLL
-#  ifdef ET_COMMON_EXPORTS
-#    define ET_COMMON_API __declspec(dllexport)
-#  else
-#    define ET_COMMON_API __declspec(dllimport)
-#  endif
-#else
-#  define ET_COMMON_API
-#endif
-
-#if 0 // kick this one please
-#if defined DLL_EXPORT
-#define ET_EXPORT __declspec(dllexport)
-#else
-#define ET_EXPORT __declspec(dllimport)
-#endif
-#endif
-
-
-
 #endif // __EDUNETMACROS_H__

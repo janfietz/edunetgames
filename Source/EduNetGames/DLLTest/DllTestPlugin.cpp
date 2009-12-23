@@ -27,8 +27,9 @@
 //-----------------------------------------------------------------------------
 
 #include "DllTestPlugin.h"
-
-#include "EduNetApplication/EduNetPluginFactory.h"
+#include "EduNetCommon/EduNetLog.h"
+//#include "EduNetModule/EduNetPluginFactory.h"
+#include "EduNetApplication/EduNetGames.h"
 
 #include<boost/filesystem/operations.hpp>
 #include<iostream>
@@ -41,22 +42,44 @@ void DllTestPlugin::open(void)
 	BaseClass::open();
 	this->listAllFiles(NULL);
 
-	if (0 < this->m_kLibraries.size() )
+	if (0 < this->m_kModules.size() )
 	{
-		EduNetDynamicLibraries::iterator kIter = this->m_kLibraries.begin();
-		EduNetDynamicLibraries::const_iterator kIterEnd = this->m_kLibraries.end();
+		
+		EduNetRawModules::iterator kIter = this->m_kModules.begin();
+		EduNetRawModules::const_iterator kIterEnd = this->m_kModules.end();
 		while (kIterEnd != kIter)
 		{
-			EduNetDynamicLibrary* pkLib = (*kIter).get();
-			EduNetPluginFactory::getPluginNamesFunc kFunc = 
-				(EduNetPluginFactory::getPluginNamesFunc)pkLib->accessProcAddress("getPluginNames");
-			if (NULL != kFunc)
+			EduNetRawModule* pkModule = (*kIter).get();
+			EduNetModuleEntry* pkEntry = pkModule->accessEntry();
+			if (NULL != pkEntry)
 			{
-				bool bTest = false;
-				bTest = true ;
+				EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
+				EduNetPluginFactoryPtr spFactory(pkFactory);
+				
+				EdutNetStringList kList;
+				pkFactory->getPluginNames(kList);
+
+				std::ostringstream message;
+				message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";		
+				EdutNetStringList::iterator kNameIter = kList.begin();
+				EdutNetStringList::iterator kNameIterEnd = kList.end();
+				while (kNameIterEnd != kNameIter)
+				{
+					AbstractPlugin* pkPlugin = pkFactory->createPluginByName( (*kNameIter).c_str() );
+					if (NULL != pkPlugin)
+					{
+						m_kPlugins.addPlugin( pkPlugin );					
+					}
+					message << '"' << (*kNameIter).c_str() << '"' << "\n";
+					++kNameIter;
+				}
+				message << std::ends;
+				EduNet::Log::printMessage( message );
 			}
 			++kIter;
 		}
+		
+
 	}
 }
 
@@ -94,15 +117,16 @@ void DllTestPlugin::listAllFiles(const char* pszDirectory)
 
 //-----------------------------------------------------------------------------
 bool DllTestPlugin::addFile(const char* pszFileName)
-{	
-	EduNetDynamicLibraryPtr spNewLib( ET_NEW EduNetDynamicLibrary() );
-	EduNetDynamicLibrary* pkNewLib = spNewLib.get();
-	bool bLoaded = pkNewLib->loadLib( pszFileName ) ;
-	if(true == bLoaded)
+{
+	EduNetRawModulePtr spNewLib( ET_NEW EduNetRawModule() );
+	EduNetRawModule* pkNewmodule = spNewLib.get();
+
+	bool bResult = pkNewmodule->load( pszFileName );
+	if(true == bResult)
 	{
-		this->m_kLibraries.push_back( spNewLib );
+		this->m_kModules.push_back( spNewLib );
 	}
-	return bLoaded;
+	return bResult;
 }
 
 DllTestPlugin gDllTestPlugin( true );

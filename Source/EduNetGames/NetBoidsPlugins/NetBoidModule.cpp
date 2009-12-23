@@ -1,5 +1,3 @@
-#ifndef __DLLTESTPLUGIN_H__
-#define __DLLTESTPLUGIN_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,53 +26,68 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteerUT/EmptyPlugin.h"
-#include "OpenSteerUT/PluginArray.h"
-#include "OpenSteerUT/CameraPlugin.h"
-#include "OpenSteerUT/GridPlugin.h"
-#include "EduNetModule/EduNetModule.h"
+#include "NetBoidModule.h"
+#include "NetBoidPlugins.h"
 
 //-----------------------------------------------------------------------------
-class DllTestPlugin : 
-	public OpenSteer::PluginArrayPluginMixin<EduNet::EmptyPlugin>
+BoidPluginFactory::BoidPluginFactory()
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<EduNet::EmptyPlugin> )
-public:
-	DllTestPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry ) {}
 
-	virtual ~DllTestPlugin() {};
+}
+//-----------------------------------------------------------------------------
+BoidPluginFactory::~BoidPluginFactory()
+{
 
-	OS_IMPLEMENT_CLASSNAME( DllTestPlugin )
+}
+//-----------------------------------------------------------------------------
+void BoidPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
+{
+	kNames.push_back("NetBoidRenderOfflinePlugin");
+	kNames.push_back("NetBoidRenderClientPlugin");
+	kNames.push_back("NetBoidRenderPeerPlugin");
+	kNames.push_back("NetBoidClientServerPlugin");
 
-	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+}
 
-	virtual void initGui( void* pkUserdata )
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
+	const char* pszName ) const
+{
+	std::string kName(pszName);
+	if (0 == kName.compare("NetBoidRenderOfflinePlugin"))
 	{
-		this->prepare();
-		BaseClass::initGui( pkUserdata );
+		return ET_NEW NetBoidRenderOfflinePlugin(false);
 	}
-
-	void prepare(void)
+	if (0 == kName.compare("NetBoidRenderClientPlugin"))
 	{
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );		
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		return ET_NEW NetBoidRenderClientPlugin(false);
 	}
-
-	virtual void open(void);
-	
-	virtual void close(void)
-	{		
-		BaseClass::close();
-		this->removeAllPlugins();
+	if (0 == kName.compare("NetBoidRenderPeerPlugin"))
+	{
+		return ET_NEW NetBoidRenderPeerPlugin(false);
 	}
-private:
-	
-	void listAllFiles(const char* pszDirectory);
-	bool addFile(const char* pszFileName);
-	
-	EduNetRawModules m_kModules;
-	OpenSteer::PluginArray m_kPlugins;
-};
+	if (0 == kName.compare("NetBoidClientServerPlugin"))
+	{
+		return ET_NEW NetBoidClientServerPlugin(false);
+	}
+	return NULL;
+}
 
-#endif //__DLLTESTPLUGIN_H__
+//-----------------------------------------------------------------------------
+const char* NetBoidModuleEntry::getName( void ) const
+{
+	return "netboid";
+}
+
+//-----------------------------------------------------------------------------
+const char* NetBoidModuleEntry::getAbout( void ) const
+{
+	return "netboid";
+}
+
+//-----------------------------------------------------------------------------
+EduNetPluginFactory* NetBoidModuleEntry::createPluginFactory( void ) const
+{
+	return ET_NEW BoidPluginFactory();
+}
+ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetBoid, NetBoidModuleEntry)

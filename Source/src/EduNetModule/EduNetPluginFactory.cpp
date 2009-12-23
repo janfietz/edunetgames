@@ -7,13 +7,13 @@ EduNetPluginFactory::EduNetPluginFactory(void)
 }
 
 //-----------------------------------------------------------------------------
-size_t EduNetPluginFactory::getPluginNames( void )
+void EduNetPluginFactory::getPluginNames( EdutNetStringList& kNames ) const
 {
-	return 0;
+	this->fillStringArrayWithPluginName( kNames );
 }
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin* EduNetPluginFactory::createPluginByName( 
 	const char* pszName )
 {
-	return NULL;
+	return this->createPluginByNameInternal( pszName );
 }
