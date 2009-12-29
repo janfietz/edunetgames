@@ -7,7 +7,7 @@ ${RakNet_SOURCES}/DependentExtensions
 file (GLOB Tutorial_Src "${NetBoidDll_SOURCE_DIR}/*.cpp")
 file (GLOB Tutorial_Hdrs "${NetBoidDll_SOURCE_DIR}/*.h")
 
-LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARYDIR} )
+LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(
 ${EduNet_DEFAULT_LIBRARIES} 
