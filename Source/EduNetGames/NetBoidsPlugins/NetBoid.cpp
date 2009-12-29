@@ -22,14 +22,14 @@ Boid::Boid()
 	_movesPlanar = false;
 
 	// reset all boid state
-	reset ();	
+	reset ();
 }
 //-----------------------------------------------------------------------------
 Boid::~Boid ()
 {
 }
 
-void Boid::setParentPlugin( BoidsPlugin* pPlugin)
+void Boid::setParentPlugin( NetBoidsPlugin* pPlugin)
 {
 	this->m_pkParentPlugin = pPlugin;
 }
@@ -175,7 +175,7 @@ void Boid::sphericalWrapAround (void)
 		if (this == SimpleVehicle::selectedVehicle)
 		{
 			CameraPlugin::position3dCamera
-				(*SimpleVehicle::selectedVehicle); 
+				(*SimpleVehicle::selectedVehicle);
 			Camera::camera.doNotSmoothNextMove ();
 		}
 	}
@@ -212,7 +212,7 @@ void Boid::regenerateLocalSpaceForTerrainFollowing  (const Vec3& newForward,
 	const Vec3 newFor = newForward.perpendicularComponent(newUp);
 // 	const float newSpeed = newVel.length();
 // 	const Vec3 newFor = newVel / newSpeed;
-// 
+//
 // 	setSpeed (newSpeed);
 	setPosition( newPos );
 	setUp( newUp );

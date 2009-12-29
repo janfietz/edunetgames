@@ -1,5 +1,5 @@
 project(NetBoidDll)
-INCLUDE_DIRECTORIES( 
+INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${RakNet_SOURCES}/DependentExtensions
 )
@@ -10,7 +10,7 @@ file (GLOB Tutorial_Hdrs "${NetBoidDll_SOURCE_DIR}/*.h")
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(
-${EduNet_DEFAULT_LIBRARIES} 
+${EduNet_DEFAULT_LIBRARIES}
 ${RakNet_LIBRARY}
 )
 

@@ -1,148 +1,191 @@
-#ifndef BOID_H
-#define BOID_H
+#ifndef NETBOIDPLUGIN_H
+#define NETBOIDPLUGIN_H
+//-----------------------------------------------------------------------------
+// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without modification,
+// are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above copyright notice,
+//   this list of conditions and the following disclaimer.
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+// * Neither the name of EduNetGames nor the names of its contributors
+//   may be used to endorse or promote products derived from this software
+//   without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//-----------------------------------------------------------------------------
 
-#include "EduNetConnect/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 #include "OpenSteer/Plugin.h"
 
 #include "NetBoid.h"
-#include "NetBoidFactory.h"
-namespace OpenSteer{
 
-    // Include names declared in the OpenSteer namespace into the
-    // namespaces to search to find names.
-    using namespace OpenSteer;
-	
+// Include names declared in the OpenSteer namespace into the
+// namespaces to search to find names.
+//using namespace OpenSteer;
 
-	// enumerate demos of various constraints on the flock
-	enum EBoidConstraintType {
-		EBoidConstraintType_none,
-		EBoidConstraintType_insideSphere,
-		EBoidConstraintType_outsideSphere,
-		EBoidConstraintType_outsideSpheres,
-		EBoidConstraintType_outsideSpheresNoBig,
-		EBoidConstraintType_rectangle,
-		EBoidConstraintType_rectangleNoBig,
-		EBoidConstraintType_outsideBox,
-		EBoidConstraintType_insideBox
-	};
+namespace OpenSteer
+{
+// enumerate demos of various constraints on the flock
+enum EBoidConstraintType
+{
+    EBoidConstraintType_none,
+    EBoidConstraintType_insideSphere,
+    EBoidConstraintType_outsideSphere,
+    EBoidConstraintType_outsideSpheres,
+    EBoidConstraintType_outsideSpheresNoBig,
+    EBoidConstraintType_rectangle,
+    EBoidConstraintType_rectangleNoBig,
+    EBoidConstraintType_outsideBox,
+    EBoidConstraintType_insideBox
+};
 
-	//-------------------------------------------------------------------------
-    // Plugin for OpenSteerDemo
-	class BoidsPlugin : public Plugin
+//-----------------------------------------------------------------------------
+class NetBoidsPlugin : public OpenSteer::Plugin
+{
+    ET_DECLARE_BASE ( OpenSteer::Plugin );
+public:
+    NetBoidsPlugin ( bool bAddToRegistry = false );
+    virtual ~NetBoidsPlugin() {} // be more "nice" to avoid a compiler warning
+
+    const char* name ( void ) const
     {
-		ET_DECLARE_BASE(Plugin);
-    public:
-		BoidsPlugin (bool bAddToRegistry = false):
-		BaseClass(bAddToRegistry)
-		{
-			pd = NULL;
-			this->setEntityFactory( &this->m_kOfflineBoidFactory );
-		};
-		virtual ~BoidsPlugin() {} // be more "nice" to avoid a compiler warning
-		
-		const char* name (void) const {return "Boids";}
+        return "Boids";
+    }
 
-        float selectionOrderSortKey (void) const {return 0.03f;}
+    float selectionOrderSortKey ( void ) const
+    {
+        return 0.03f;
+    }
 
-		void open (void);
-		void close (void);
-		void reset (void);
-		void update (const float currentTime, const float elapsedTime);
-		void redraw (const float currentTime, const float elapsedTime);
+    void open ( void );
+    void close ( void );
+    void reset ( void );
+    void update ( const float currentTime, const float elapsedTime );
+    void redraw ( const float currentTime, const float elapsedTime );
 
-		void nextPD (void);
-		void handleFunctionKeys (int keyNumber);
-		void printLQbinStats (void);
-		void printMiniHelpForFunctionKeys (void) const;
+    void nextPD ( void );
+    void handleFunctionKeys ( int keyNumber );
+    void printLQbinStats ( void );
+    void printMiniHelpForFunctionKeys ( void ) const;
 
-		 // return an AVGroup containing each boid of the flock
-        const AVGroup& allVehicles (void) const {return (const AVGroup&)flock;}
-		AVGroup& allVehicles (void) {return ( AVGroup&)flock;}
+    // return an AVGroup containing each boid of the flock
+    const OpenSteer::AVGroup& allVehicles ( void ) const
+    {
+        return ( const OpenSteer::AVGroup& ) flock;
+    }
+    OpenSteer::AVGroup& allVehicles ( void )
+    {
+        return ( OpenSteer::AVGroup& ) flock;
+    }
 
-		// JF ++ 
-		virtual ProximityDatabase* accessProximityDataBase( void ) const
-		{
-			return this->pd;
-		}		
+    // JF ++
+    virtual OpenSteer::ProximityDatabase* accessProximityDataBase ( void ) const
+    {
+        return this->pd;
+    }
 
-		const EBoidConstraintType GetCurrentBoundaryCondition( void ) const
-		{
-			return this->constraint;
-		}
+    const EBoidConstraintType GetCurrentBoundaryCondition ( void ) const
+    {
+        return this->constraint;
+    }
 
-		const bool WasBoundaryConditionChangedLocally( void ) const
-		{
-			return this->bWasLocalChange;
-		}
+    const bool WasBoundaryConditionChangedLocally ( void ) const
+    {
+        return this->bWasLocalChange;
+    }
 
-		void SetCurrentBoundaryCondition( const EBoidConstraintType  eType,
-			bool bLocalChange = true);
+    void SetCurrentBoundaryCondition ( const EBoidConstraintType  eType,
+                                       bool bLocalChange = true );
 
-		void initGui( void* pkUserdata );
-		void addBoidToFlock (void);
-		void removeBoidFromFlock (void);
+    void initGui ( void* pkUserdata );
+    void addBoidToFlock ( void );
+    void removeBoidFromFlock ( void );
 
-		virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
-		// JF --
+    virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;
+    // JF --
 
-	private:
-		
-		// select next "boundary condition / constraint / obstacle"
-		void nextBoundaryCondition (void);
+private:
 
-		void initObstacles (void);
-		// update Boid::obstacles list when constraint changes
-        void updateObstacles (void);
-		void drawObstacles (void);
+    // select next "boundary condition / constraint / obstacle"
+    void nextBoundaryCondition ( void );
 
-		class SO : public SphereObstacle
-        {void draw (const bool filled, const Color& color, const Vec3& vp) const
-            {drawSphereObstacle (*this, 10.0f, filled, color, vp);}};
+    void initObstacles ( void );
+    // update Boid::obstacles list when constraint changes
+    void updateObstacles ( void );
+    void drawObstacles ( void );
 
-        class RO : public RectangleObstacle
-        {void draw (const bool, const Color& color, const Vec3&) const
-            {tempDrawRectangle (*this, color);}};
+    class SO : public OpenSteer::SphereObstacle
+    {
+        void draw ( const bool filled, const OpenSteer::Color& color, const OpenSteer::Vec3& vp ) const
+        {
+            drawSphereObstacle ( *this, 10.0f, filled, color, vp );
+        }
+    };
 
-        class BO : public BoxObstacle
-        {void draw (const bool, const Color& color, const Vec3&) const
-            {tempDrawBox (*this, color);}};
+    class RO : public OpenSteer::RectangleObstacle
+    {
+        void draw ( const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
+        {
+            tempDrawRectangle ( *this, color );
+        }
+    };
 
-
-		static void tempDrawRectangle (const RectangleObstacle& rect, const Color& color);
-		static void tempDrawBox (const BoxObstacle& box, const Color& color);
-
-		// flock: a group (STL vector) of pointers to all boids
-        Boid::groupType flock;
-        typedef Boid::groupType::const_iterator iterator;
-
-		// JF ++ 
-		Boid::groupType::iterator FindBoid( const Boid* pkBoid );
-		// JF --
-        // pointer to database used to accelerate proximity queries
-        ProximityDatabase* pd;
+    class BO : public OpenSteer::BoxObstacle
+    {
+        void draw ( const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
+        {
+            tempDrawBox ( *this, color );
+        }
+    };
 
 
-        // which of the various proximity databases is currently in use
-        int cyclePD;
+    static void tempDrawRectangle ( const OpenSteer::RectangleObstacle& rect, const OpenSteer::Color& color );
+    static void tempDrawBox ( const OpenSteer::BoxObstacle& box, const OpenSteer::Color& color );
 
-        // --------------------------------------------------------
-        // the rest of this plug-in supports the various obstacles:
-        // --------------------------------------------------------
+    // flock: a group (STL vector) of pointers to all boids
+    OpenSteer::Boid::groupType flock;
+    typedef OpenSteer::Boid::groupType::const_iterator iterator;
 
-        
-        EBoidConstraintType constraint;
-		bool bWasLocalChange;
+    // JF ++
+    OpenSteer::Boid::groupType::iterator FindBoid ( const OpenSteer::Boid* pkBoid );
+    // JF --
+    // pointer to database used to accelerate proximity queries
+    OpenSteer::ProximityDatabase* pd;
 
-		
-        RO bigRectangle;
-        BO outsideBigBox, insideBigBox;
-        SO insideBigSphere, outsideSphere0, outsideSphere1, outsideSphere2,
-           outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
-		NetBoidFactory m_kOfflineBoidFactory;
-	
-	};
+    // which of the various proximity databases is currently in use
+    int cyclePD;
+
+    // --------------------------------------------------------
+    // the rest of this plug-in supports the various obstacles:
+    // --------------------------------------------------------
+
+
+    EBoidConstraintType constraint;
+    bool bWasLocalChange;
+
+
+    RO bigRectangle;
+    BO outsideBigBox, insideBigBox;
+    SO insideBigSphere, outsideSphere0, outsideSphere1, outsideSphere2,
+    outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
+
+};
 }
 
-#endif //BOID_H
+
+#endif //NETBOIDPLUGIN_H

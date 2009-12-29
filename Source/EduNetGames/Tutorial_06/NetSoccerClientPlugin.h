@@ -41,12 +41,12 @@ class SoccerClientPlugin : public TSoccerClientPlugin
 	ET_DECLARE_BASE(TSoccerClientPlugin)
 public:
 	SoccerClientPlugin( bool bAddToRegistry = true ):
-		BaseClass( bAddToRegistry ), 
+		BaseClass( bAddToRegistry ),
 		m_pkClientFactory(NULL),
 		m_kReplicaManager(NULL),
 		m_pkClientPlayer(NULL)
 	{
-		
+
 	}
 
 	OS_IMPLEMENT_CLASSNAME( SoccerClientPlugin )

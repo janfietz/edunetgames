@@ -1,5 +1,4 @@
-#ifndef __NETBOID_MODULE_H__
-#define __NETBOID_MODULE_H__
+/*
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,32 +26,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+*/
 
-#include "EduNetModule/EduNetPluginFactory.h"
-#include "EduNetModule/EduNetModule.h"
+#ifndef NETBOIDENTITYFACTORY_H
+#define NETBOIDENTITYFACTORY_H
 
-class BoidPluginFactory : public EduNetPluginFactory
+#include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/AbstractEntityFactory.h"
+
+class NetBoidFactory: public OpenSteer::EntityFactoryArray
 {
-	ET_DECLARE_BASE( EduNetPluginFactory )
+        ET_DECLARE_BASE( OpenSteer::EntityFactoryArray );
 public:
-	BoidPluginFactory();
-protected:
-	~BoidPluginFactory();
-
-	virtual void fillStringArrayWithPluginName( EdutNetStringList& kNames ) const;
-	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
-		const char* pszName ) const;
+        NetBoidFactory();
+        virtual ~NetBoidFactory();
 };
 
-class NetBoidModuleEntry : public EduNetModuleEntry
-{
-	ET_DECLARE_BASE( EduNetPluginFactory )
-public:
-	virtual const char* getName( void ) const;
-	virtual const char* getAbout( void ) const;
-
-	virtual EduNetPluginFactory* createPluginFactory( void ) const;
-};
-ET_DECLARE_MODULE_ENTRYFUNC(ModuleEntry_NetBoid);
-
-#endif //__NETBOID_MODULE_H__
+#endif // NETBOIDENTITYFACTORY_H
