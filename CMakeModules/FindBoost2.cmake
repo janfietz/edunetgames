@@ -254,9 +254,7 @@ ENDFUNCTION()
 #  
 #-------------------------------------------------------------------------------
 
-
-message(STATUS "[ ${CMAKE_CURRENT_LIST_FILE}:${CMAKE_CURRENT_LIST_LINE} ] "
-                   "FindBoost2 Components: ${Boost2_FIND_COMPONENTS}")
+#do this to be compatible to FindBoost.cmake which comes with cmake itself
 SET(Boost_FIND_COMPONENTS ${Boost2_FIND_COMPONENTS})
 SET(Boost_FIND_VERSION_MAJOR ${Boost2_FIND_VERSION_MAJOR})
 SET(Boost_FIND_VERSION_MINOR ${Boost2_FIND_VERSION_MINOR})
@@ -302,7 +300,7 @@ endif(Boost_FIND_VERSION_EXACT)
 # Boost.
 set(Boost_ERROR_REASON)
 
-#SET( _boost_IN_CACHE TRUE)
+SET( _boost_IN_CACHE TRUE)
 IF(Boost_INCLUDE_DIR)
   # On versions < 1.35, remove the System library from the considered list
   # since it wasn't added until 1.35.
