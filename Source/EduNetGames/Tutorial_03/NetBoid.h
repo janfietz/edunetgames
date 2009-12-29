@@ -46,7 +46,7 @@ namespace OpenSteer{
 
 		virtual AbstractVehicle* cloneVehicle( void ) const;
 
-	
+
 
 	#ifndef NO_LQ_BIN_STATS
 		static size_t minNeighbors, maxNeighbors, totalNeighbors;
@@ -54,7 +54,7 @@ namespace OpenSteer{
 
 
 		static float worldRadius;
-		void setParentPlugin( class BoidsPlugin* pPlugin);		
+		void setParentPlugin( class BoidsPlugin* pPlugin);
 	private:
 		// group of all obstacles to be avoided by each Boid
 		//        static ObstacleGroup obstacles;

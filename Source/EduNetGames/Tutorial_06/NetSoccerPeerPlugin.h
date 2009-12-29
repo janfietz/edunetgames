@@ -40,29 +40,32 @@ class SoccerPeerPlugin : public TSoccerPeerPlugin
 {
 	ET_DECLARE_BASE(TSoccerPeerPlugin)
 public:
-	SoccerPeerPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry ),
-		m_kReplicaManager(NULL),
-		m_pkNetBoidFactory(NULL)
-	{	
-		
-	}
+ SoccerPeerPlugin ( bool bAddToRegistry = true ) :
+            BaseClass ( bAddToRegistry ),
+            m_kReplicaManager ( NULL ),
+            m_pkNetBoidFactory ( NULL )
+    {
 
-	OS_IMPLEMENT_CLASSNAME( SoccerPeerPlugin )
-		virtual const char* name() const { return this->getClassName(); };
+    }
 
-	//-------------------------------------------------------------------------
-	virtual void StartNetworkSession( void );
-	virtual void StopNetworkSession( void );
+    OS_IMPLEMENT_CLASSNAME ( SoccerPeerPlugin )
+    virtual const char* name() const
+    {
+        return this->getClassName();
+    };
 
-	virtual void CreateContent( void );
-	virtual void DeleteContent( void );
+    //-------------------------------------------------------------------------
+    virtual void StartNetworkSession ( void );
+    virtual void StopNetworkSession ( void );
 
-	virtual AbstractEntityReplica* allocEntityReplica(  
-		OpenSteer::AbstractPlugin* pPlugin, 
-		OpenSteer::EntityClassId classId, 
-		bool bIsRemoteObject,  bool bClientReplica ) const;
-	
+    virtual void CreateContent ( void );
+    virtual void DeleteContent ( void );
+
+    virtual AbstractEntityReplica* allocEntityReplica (
+        OpenSteer::AbstractPlugin* pPlugin,
+        OpenSteer::EntityClassId classId,
+        bool bIsRemoteObject,  bool bClientReplica ) const;
+
 private:
 	AbstractEntityReplicaFactory* m_pkNetBoidFactory;
 	AbstractEntityReplicaManager* m_kReplicaManager;
