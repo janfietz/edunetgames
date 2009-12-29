@@ -38,7 +38,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/OldPathway.h
  ../include/OpenSteer/Path.h
  ../include/OpenSteer/Pathway.h
- ../include/OpenSteer/PlugIn.h
+ ../include/OpenSteer/Plugin.h
  ../include/OpenSteer/PolylineSegmentedPath.h
  ../include/OpenSteer/PolylineSegmentedPathwaySegmentRadii.h
  ../include/OpenSteer/PolylineSegmentedPathwaySingleRadius.h
@@ -61,7 +61,11 @@ SET(OPENTSTEER_LIB_HDRS
 ../include/OpenSteer/SimplePlayer.h
 )
 
-#SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+#set compiler options to link the lib into a shared lib
+IF (NOT WIN32)
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+   SET(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+ENDIF (NOT WIN32)
 
 add_library(opensteer STATIC ${OPENTSTEER_LIB_HDRS} ${OPENTSTEER_LIB_SRC})
 set_target_properties( opensteer PROPERTIES
@@ -72,6 +76,6 @@ if ( WIN32 )
    message(STATUS "${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}")
    message(STATUS "${PROJECT_NAME} builds to ${LIBRARY_OUTPUT_PATH} ${CMAKE_CFG_INTDIR}")
 else(UNIX)
-    MESSAGE(STATUS "Not created")
+
 endif()
 

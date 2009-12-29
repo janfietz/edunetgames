@@ -39,7 +39,7 @@ class EduNetPluginFactory
 {
 public:
 	EduNetPluginFactory(void);
-	
+
 	void getPluginNames( EdutNetStringList& kNames ) const;
 	OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
 protected:
@@ -48,4 +48,4 @@ protected:
 		const char* pszName ) const { return NULL; }
 };
 typedef boost::shared_ptr<EduNetPluginFactory>  EduNetPluginFactoryPtr;
-#endif EDUNET_PLUGIN_FACTORY_H
+#endif //EDUNET_PLUGIN_FACTORY_H

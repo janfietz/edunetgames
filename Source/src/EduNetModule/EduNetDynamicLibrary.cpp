@@ -58,13 +58,13 @@ bool EduNetDynamicLibrary::loadLib ( const char* pszLibName )
 	{
 		return false;
 	}
-	
+
 #ifdef WIN32
 	this->m_pLibHandle = ::LoadLibrary( pszLibName );
 #else
     std::string kName ( "./" );
     kName += pszLibName;
-    kName += ".so";
+   // kName += ".so";
     this->m_pLibHandle = dlopen ( kName.c_str(), RTLD_LAZY );
 #endif
 
@@ -117,13 +117,13 @@ void*  EduNetDynamicLibrary::accessProcAddress(const char* pszProcName)
 bool EduNetDynamicLibrary::isDynamicLib(const char* pszFileName)
 {
 #ifdef WIN32
-	const char* pszLibraryType = ".dll"; 
+	const char* pszLibraryType = ".dll";
 #else
 	const char* pszLibraryType = ".so";
 #endif
 	std::string kName(pszFileName);
 	size_t kFindResult = kName.find( pszLibraryType );
-	return std::string.npos != kFindResult;
+	return std::string::npos != kFindResult;
 }
 
 
