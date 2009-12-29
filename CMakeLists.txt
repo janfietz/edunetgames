@@ -45,24 +45,29 @@ ELSE (GLUT_FOUND)
 	ENDIF (MSVC)
 ENDIF (GLUT_FOUND)
 
-FIND_PACKAGE(Boost)
-IF (Boost_FOUND)
-MESSAGE(${Boost_LIBRARY})
-ELSE (Boost_FOUND)	
+#### BOOST
+IF (WIN32)
 	Set( Boost_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/boost_1_40_0)
 	IF(DEBUG)
 		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/debug )
 	ELSE(DEBUG)
 		Set( Boost_LIBRARYDIR ${Boost_INCLUDE_DIR}/build/lib/release)
 	ENDIF(DEBUG)
+ELSE (WIN32)
+	#SET(Boost_DIR /usr/local/)
+	#SET(BOOST_LIBRARYDIR /usr/local/lib/boost-1.41.0)
+	SET(BOOST_INCLUDEDIR /usr/local/include/boost-1.41.0)
+ENDIF (WIN32)
+SET(Boost_DEBUG TRUE)
+FIND_PACKAGE(Boost2 COMPONENTS system filesystem)
+IF (NOT Boost_FOUND)
 	MESSAGE("Boost NOT FOUND use ${Boost_INCLUDE_DIR} instead")
-ENDIF (Boost_FOUND)
+ENDIF (NOT Boost_FOUND)
 
+
+#### RakNet
 FIND_PACKAGE(RakNet)
-IF (RakNet_FOUND)
-MESSAGE("RakNet FOUND")
-MESSAGE(${RakNet_LIBRARY})
-ELSE (RakNet_FOUND)
+IF (NOT RakNet_FOUND)
 	Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
 	IF(DEBUG)
 		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/debug/RakNet.lib )
@@ -70,12 +75,11 @@ ELSE (RakNet_FOUND)
 		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/release/RakNet.lib)
 	ENDIF(DEBUG)
 	MESSAGE("Raknet NOT FOUND use ${RakNet_INCLUDES} instead")
-ENDIF (RakNet_FOUND)
+ENDIF (NOT RakNet_FOUND)
 Set( RakNet_SOURCES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet )
 
 FIND_PACKAGE(Argtable)
-IF (Argtable_FOUND)
-ELSE (Argtable_FOUND)
+IF (NOT Argtable_FOUND)
 	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty )
 	Set( Argtable_SOURCES ${Argtable_INCLUDES}/argtable2-11 )
 	IF(DEBUG)
@@ -84,7 +88,7 @@ ELSE (Argtable_FOUND)
 		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtable.lib )
 	ENDIF(DEBUG)
 	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
-ENDIF (Argtable_FOUND)
+ENDIF (NOT Argtable_FOUND)
 
 
 IF (MINGW)
@@ -112,10 +116,10 @@ ENDIF (WIN32)
 
 SET(EDUNET_COMMON_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
- 
-  
-Set( EduNet_DEFAULT_LIBRARIES 
-opensteer  
+
+
+Set( EduNet_DEFAULT_LIBRARIES
+opensteer
 ${GLUT_glut_LIBRARY}
 EduNetCommon
 EduNetConnect
@@ -125,6 +129,7 @@ EduNetProfile
 ${EDUNET_NEEDED_WIN_LIBRARY}
 GLUI
 ${Argtable_LIBRARY}
+${Boost_LIBRARIES}
 )
 
 add_subdirectory(Source)

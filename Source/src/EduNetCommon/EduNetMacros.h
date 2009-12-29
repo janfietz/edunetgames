@@ -101,7 +101,11 @@
 #ifdef ET_DEBUG
 #define ET_ASSERT( expr ) assert(expr);
 #else
-#define ET_ASSERT( expr ) __noop;
+  #ifdef WIN32
+    #define ET_ASSERT( expr ) __noop;
+  #else
+    #define ET_ASSERT( expr )
+  #endif
 #endif
 
 #endif // __EDUNETMACROS_H__

@@ -38,9 +38,9 @@
 //-----------------------------------------------------------------------------
 // DLL SUPPORT
 //-----------------------------------------------------------------------------
-#if defined WIN32	
+#if defined WIN32
 	#define ET_DLL_EXPORT __declspec(dllexport)
-	#define ET_DLL_IMPORT __declspec(dllimport)	
+	#define ET_DLL_IMPORT __declspec(dllimport)
 #else
 	#define ET_DLL_EXPORT
 	#define ET_DLL_IMPORT
@@ -67,7 +67,7 @@
 	ET_MODULE_ENTRYFUNC_EXPORT(ET_STD_ENTRY_FUNC){ \
 		static entryClass kEntry; \
 		return &kEntry; }
-	
+
 class EduNetModuleEntry
 {
 public:
@@ -91,7 +91,7 @@ public:
 	};
 
 private:
-	
+
 	EduNetModuleEntryFunc* accessEntryFunction( void );
 	void queryEntry( void );
 
@@ -101,4 +101,4 @@ private:
 typedef boost::shared_ptr<EduNetRawModule>  EduNetRawModulePtr;
 typedef std::vector<EduNetRawModulePtr> EduNetRawModules;
 
-#endif EDUNET_MODULE_H
+#endif //EDUNET_MODULE_H

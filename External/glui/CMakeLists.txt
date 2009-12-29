@@ -36,6 +36,10 @@ ELSE (WIN32)
 #  TARGET_LINK_LIBRARIES(checker ${GLUT_glut_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 ENDIF (WIN32)
 
+#set compiler options to link the lib into a shared lib
+IF (NOT WIN32)
+   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+ENDIF (NOT WIN32)
 
 ADD_LIBRARY(GLUI
 	arcball.h			glui_checkbox.cpp		glui_internal.h			glui_panel.cpp			glui_spinner.cpp		glui_treepanel.cpp
@@ -49,7 +53,7 @@ arcball.cpp			glui_button.cpp			glui_filebrowser.cpp		glui_node.cpp			glui_separ
 
 set_target_properties( GLUI PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
-	
+
 IF (BUILD_SHARED_LIBS)
   TARGET_LINK_LIBRARIES(GLUI ${GLUT_glut_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 ENDIF (BUILD_SHARED_LIBS)
