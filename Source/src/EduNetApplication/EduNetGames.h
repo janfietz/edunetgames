@@ -34,8 +34,8 @@
 // the services it provides to its plug-ins
 //
 // 10-04-04 bk:  put everything into the OpenSteer namespace
-// 11-14-02 cwr: recast App class as OpenSteerDemo 
-// 06-26-02 cwr: App class created 
+// 11-14-02 cwr: recast App class as OpenSteerDemo
+// 06-26-02 cwr: App class created
 //
 //
 //-----------------------------------------------------------------------------
@@ -57,152 +57,169 @@
 #include "OpenSteerUT/PluginArray.h"
 
 
-namespace OpenSteer {
+namespace OpenSteer
+{
 
-    class Color;
-    class Vec3;
-    
+class Color;
+class Vec3;
 
-    class OpenSteerDemo
+
+class OpenSteerDemo
+{
+public:
+    // ------------------------------------------------------ component objects
+
+    // clock keeps track of both "real time" and "simulation time"
+    static Clock& clock;
+
+    // ------------------------------------------ addresses of selected objects
+
+    // -------------------------------------------- initialize, update and exit
+
+    // initialize OpenSteerDemo
+    //     XXX  if I switch from "totally static" to "singleton"
+    //     XXX  class structure this becomes the constructor
+    static void initialize ( void );
+
+    // main update function: step simulation forward and redraw scene
+    static void updateSimulationAndRedraw ( void );
+
+    // exit OpenSteerDemo with a given text message or error code
+    static void errorExit ( const char* message );
+    static void exit ( int exitCode );
+
+    // ------------------------------------------------------- Plugin interface
+
+    // select the default Plugin
+    static void selectDefaultPlugin ( void );
+
+
+    // do a simulation update for the currently selected plug-in
+    static void updateSelectedPlugin ( const float currentTime,
+                                       const float elapsedTime );
+
+    // redraw graphics for the currently selected plug-in
+    static void redrawSelectedPlugin ( const float currentTime,
+                                       const float elapsedTime );
+
+
+
+    // ---------------------------------------------------- OpenSteerDemo phase
+
+    static bool phaseIsDraw ( void )
     {
-    public:
-        // ------------------------------------------------------ component objects
+        return phase == drawPhase;
+    }
+    static bool phaseIsUpdate ( void )
+    {
+        return phase == updatePhase;
+    }
+    static bool phaseIsOverhead ( void )
+    {
+        return phase == overheadPhase;
+    }
 
-        // clock keeps track of both "real time" and "simulation time"
-        static Clock& clock;
+    static float phaseTimerDraw ( void )
+    {
+        return phaseTimers[drawPhase];
+    }
+    static float phaseTimerUpdate ( void )
+    {
+        return phaseTimers[updatePhase];
+    }
+    // XXX get around shortcomings in current implementation, see note
+    // XXX in updateSimulationAndRedraw
+    //static float phaseTimerOverhead(void){return phaseTimers[overheadPhase];}
+    static float phaseTimerOverhead ( void )
+    {
+        return ( clock.getElapsedRealTime() -
+                 ( phaseTimerDraw() + phaseTimerUpdate() ) );
+    }
 
-        // ------------------------------------------ addresses of selected objects
+    // ------------------------------------------------------ delayed reset XXX
 
-        // -------------------------------------------- initialize, update and exit
+    // XXX to be reconsidered
+    static void queueDelayedResetPluginXXX ( void );
+    static void doDelayedResetPluginXXX ( void );
 
-        // initialize OpenSteerDemo
-        //     XXX  if I switch from "totally static" to "singleton"
-        //     XXX  class structure this becomes the constructor
-        static void initialize (void);
+    // ------------------------------------------------------ vehicle selection
 
-        // main update function: step simulation forward and redraw scene
-        static void updateSimulationAndRedraw (void);
+    // Find the AbstractVehicle whose screen position is nearest the
+    // current the mouse position.  Returns NULL if mouse is outside
+    // this window or if there are no AbstractVehicles.
+    static AbstractVehicle* vehicleNearestToMouse ( void );
 
-        // exit OpenSteerDemo with a given text message or error code
-        static void errorExit (const char* message);
-        static void exit (int exitCode);
+    // for storing most recent mouse state
+    static int mouseX;
+    static int mouseY;
+    static bool mouseInWindow;
 
-        // ------------------------------------------------------- Plugin interface
-
-        // select the default Plugin
-        static void selectDefaultPlugin (void);
-      
-
-        // do a simulation update for the currently selected plug-in
-        static void updateSelectedPlugin (const float currentTime,
-                                          const float elapsedTime);
-
-        // redraw graphics for the currently selected plug-in
-        static void redrawSelectedPlugin (const float currentTime,
-                                          const float elapsedTime);
-
-
-
-        // ---------------------------------------------------- OpenSteerDemo phase
-
-        static bool phaseIsDraw     (void) {return phase == drawPhase;}
-        static bool phaseIsUpdate   (void) {return phase == updatePhase;}
-        static bool phaseIsOverhead (void) {return phase == overheadPhase;}
-
-        static float phaseTimerDraw     (void) {return phaseTimers[drawPhase];}
-        static float phaseTimerUpdate   (void) {return phaseTimers[updatePhase];}
-        // XXX get around shortcomings in current implementation, see note
-        // XXX in updateSimulationAndRedraw
-        //static float phaseTimerOverhead(void){return phaseTimers[overheadPhase];}
-        static float phaseTimerOverhead (void)
-        {
-            return (clock.getElapsedRealTime() -
-                    (phaseTimerDraw() + phaseTimerUpdate()));
-        }
-
-        // ------------------------------------------------------ delayed reset XXX
-
-        // XXX to be reconsidered
-        static void queueDelayedResetPluginXXX (void);
-        static void doDelayedResetPluginXXX (void);
-
-        // ------------------------------------------------------ vehicle selection
-
-		// Find the AbstractVehicle whose screen position is nearest the
-		// current the mouse position.  Returns NULL if mouse is outside
-		// this window or if there are no AbstractVehicles.
-		static AbstractVehicle* vehicleNearestToMouse (void);
-
-        // for storing most recent mouse state
-        static int mouseX;
-        static int mouseY;
-        static bool mouseInWindow;
-
-        // ------------------------------------------------ graphics and annotation
-
-
-		//-----------------------------------------------------------------------------
-		// run graphics event loop
-		static void runGraphics( void);
-
-		//-----------------------------------------------------------------------------
-		// do all initialization related to graphics
-		static void initializeGraphics( int argc, char **argv );
-		
-		// do all initialization related to graphics
-        static void initializeGraphics(void);
-
-		//-----------------------------------------------------------------------------
-		// do all initialization related to graphics
-		static void loadModules( void );
-		static void unloadModules( void );
-
-
-        // ----------------------------------------------------------- console text
-        // print list of known commands
-        static void keyboardMiniHelp (void);
-
-        // ---------------------------------------------------------------- private
-		static void initPhaseTimers (void);
-    private:
-        static int phase;
-        static int phaseStack[];
-        static int phaseStackIndex;
-        static float phaseTimers[];
-        static float phaseTimerBase;
-        static const int phaseStackSize;
-        static void pushPhase (const int newPhase);
-        static void popPhase (void);
-        static void updatePhaseTimers (void);
-
-		static void loadModulesFromDirectory(const char* pszDirectory);
-		static void createPluginsFromModules( void );
-		static void createPluginsFromModule( EduNetRawModule* pkModule );
-		static bool addFile(const char* pszFileName);
-
-        // XXX apparently MS VC6 cannot handle initialized static const members,
-        // XXX so they have to be initialized not-inline.
-        // static const int drawPhase = 2;
-        // static const int updatePhase = 1;
-        // static const int overheadPhase = 0;
-        static const int drawPhase;
-        static const int updatePhase;
-        static const int overheadPhase;
-
-		static EduNetRawModules s_modules;
-		static OpenSteer::PluginArray s_Plugins;
-    };
-
+    // ------------------------------------------------ graphics and annotation
 
 
     //-----------------------------------------------------------------------------
-    // accessors for GLUT's window dimensions
-    float drawGetWindowHeight (void);
-    float drawGetWindowWidth (void);
+    // run graphics event loop
+    static void runGraphics ( void );
+
+    //-----------------------------------------------------------------------------
+    // do all initialization related to graphics
+    static void initializeGraphics ( int argc, char **argv );
+
+    // do all initialization related to graphics
+    static void initializeGraphics ( void );
+
+    //-----------------------------------------------------------------------------
+    // do all initialization related to graphics
+    static void loadModules ( void );
+    static void unloadModules ( void );
+
+
+    // ----------------------------------------------------------- console text
+    // print list of known commands
+    static void keyboardMiniHelp ( void );
+
+    // ---------------------------------------------------------------- private
+    static void initPhaseTimers ( void );
+private:
+    static int phase;
+    static int phaseStack[];
+    static int phaseStackIndex;
+    static float phaseTimers[];
+    static float phaseTimerBase;
+    static const int phaseStackSize;
+    static void pushPhase ( const int newPhase );
+    static void popPhase ( void );
+    static void updatePhaseTimers ( void );
+
+    static void loadModulesFromDirectory ( const char* pszDirectory );
+    static void createPluginsFromModules ( void );
+    static void createPluginsFromModule ( EduNetRawModule* pkModule );
+    static bool addFile ( const char* pszFileName );
+    static bool appWantsToLoadModule( const char* kModuleName );
+
+    // XXX apparently MS VC6 cannot handle initialized static const members,
+    // XXX so they have to be initialized not-inline.
+    // static const int drawPhase = 2;
+    // static const int updatePhase = 1;
+    // static const int overheadPhase = 0;
+    static const int drawPhase;
+    static const int updatePhase;
+    static const int overheadPhase;
+
+    static EduNetRawModules s_modules;
+    static OpenSteer::PluginArray s_Plugins;
+};
+
+
+
+//-----------------------------------------------------------------------------
+// accessors for GLUT's window dimensions
+float drawGetWindowHeight ( void );
+float drawGetWindowWidth ( void );
 
 } // namespace OpenSteer
-    
-    
+
+
 //-----------------------------------------------------------------------------
 
 

@@ -29,9 +29,9 @@
 //
 //
 // OpenSteerDemo Plugin class
-// 
+//
 // 10-04-04 bk:  put everything into the OpenSteer namespace
-// 11-13-02 cwr: created 
+// 11-13-02 cwr: created
 //
 //
 //-----------------------------------------------------------------------------
@@ -69,7 +69,7 @@ OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 
 //-----------------------------------------------------------------------------
 // destructor
-OpenSteer::Plugin::~Plugin() 
+OpenSteer::Plugin::~Plugin()
 {
 	if( this == OpenSteer::Plugin::selectedPlugin )
 	{
@@ -78,7 +78,7 @@ OpenSteer::Plugin::~Plugin()
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractEntity* 
+OpenSteer::AbstractEntity*
 OpenSteer::Plugin::createEntity( EntityClassId classId ) const
 {
 	OpenSteer::AbstractEntity* pkEntity = Plugin::createSystemEntity( classId );
@@ -90,7 +90,7 @@ OpenSteer::Plugin::createEntity( EntityClassId classId ) const
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractEntity* 
+OpenSteer::AbstractEntity*
 OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
 {
 	OpenSteer::AbstractEntity* pkEntity = NULL;
@@ -146,14 +146,14 @@ OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
 //-----------------------------------------------------------------------------
 // returns pointer to the next Plugin in "selection order"
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* 
+OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::next (void) const
 {
 	return OpenSteer::Plugin::findNextPlugin( this );
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* 
+OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 {
 	for (int i = 0; i < itemsInRegistry; i++)
@@ -183,7 +183,7 @@ int OpenSteer::Plugin::getPluginIdx( const AbstractPlugin* pkPlugin )
 //-----------------------------------------------------------------------------
 // search the class registry for a Plugin with the given name
 // returns NULL if none is found
-OpenSteer::AbstractPlugin* 
+OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findByName (const char* string)
 {
     if (string)
@@ -204,7 +204,7 @@ OpenSteer::Plugin::findByName (const char* string)
 
 //-----------------------------------------------------------------------------
 // apply a given function to all Plugins in the registry
-void 
+void
 OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 {
     for (int i = 0; i < itemsInRegistry; i++)
@@ -217,7 +217,7 @@ OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 // sort Plugin registry by "selection order"
 //
 // XXX replace with STL utilities
-void 
+void
 OpenSteer::Plugin::sortBySelectionOrder (void)
 {
     // I know, I know, just what the world needs:
@@ -244,7 +244,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 
 //-----------------------------------------------------------------------------
 // returns pointer to default Plugin (currently, first in registry)
-OpenSteer::AbstractPlugin* 
+OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findDefault (void)
 {
     // return NULL if no PlugIns exist
@@ -263,7 +263,7 @@ OpenSteer::Plugin::findDefault (void)
 //-----------------------------------------------------------------------------
 // save this instance in the class's registry of instances
 // (for use by contractors)
-void 
+void
 OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {
     // save this instance in the registry
@@ -273,7 +273,7 @@ OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 //-----------------------------------------------------------------------------
 // return a group (an STL vector of AbstractVehicle pointers) of all
 // vehicles(/agents/characters) defined by the currently selected Plugin
-const OpenSteer::AVGroup& 
+const OpenSteer::AVGroup&
 OpenSteer::Plugin::allVehiclesOfSelectedPlugin (void)
 {
 	static OpenSteer::AVGroup kTrash;
@@ -284,7 +284,7 @@ OpenSteer::Plugin::allVehiclesOfSelectedPlugin (void)
 }
 
 //-----------------------------------------------------------------------------
-void 
+void
 OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 {
 	if( pkPlugin == OpenSteer::Plugin::selectedPlugin )
@@ -302,7 +302,7 @@ OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 
 //-----------------------------------------------------------------------------
 // select the "next" plug-in, cycling through "plug-in selection order"
-void 
+void
 OpenSteer::Plugin::selectNextPlugin (void)
 {
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
@@ -325,7 +325,7 @@ void OpenSteer::Plugin::selectPluginByIndex (size_t idx)
 
 //-----------------------------------------------------------------------------
 // handle function keys an a per-plug-in basis
-void 
+void
 OpenSteer::Plugin::functionKeyForPlugin (int keyNumber)
 {
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
@@ -337,7 +337,7 @@ OpenSteer::Plugin::functionKeyForPlugin (int keyNumber)
 
 //-----------------------------------------------------------------------------
 // return name of currently selected plug-in
-const char* 
+const char*
 OpenSteer::Plugin::nameOfSelectedPlugin (void)
 {
 	return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
@@ -345,7 +345,7 @@ OpenSteer::Plugin::nameOfSelectedPlugin (void)
 
 //-----------------------------------------------------------------------------
 // open the currently selected plug-in
-void 
+void
 OpenSteer::Plugin::openSelectedPlugin (void)
 {
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
@@ -359,7 +359,7 @@ OpenSteer::Plugin::openSelectedPlugin (void)
 
 //-----------------------------------------------------------------------------
 // close the currently selected plug-in
-void 
+void
 OpenSteer::Plugin::closeSelectedPlugin (void)
 {
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
@@ -371,7 +371,7 @@ OpenSteer::Plugin::closeSelectedPlugin (void)
 
 //-----------------------------------------------------------------------------
 // reset the currently selected plug-in
-void 
+void
 OpenSteer::Plugin::resetSelectedPlugin (void)
 {
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
@@ -381,7 +381,7 @@ OpenSteer::Plugin::resetSelectedPlugin (void)
 	OpenSteer::Plugin::selectedPlugin->reset ();
 }
 //-----------------------------------------------------------------------------
-void OpenSteer::Plugin::addVehicle ( 
+void OpenSteer::Plugin::addVehicle (
 	OpenSteer::AbstractVehicle* pkVehicle)
 {
 	assert( true == false );

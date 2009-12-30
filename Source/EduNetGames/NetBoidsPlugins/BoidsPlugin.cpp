@@ -60,6 +60,7 @@
 #include <limits> // for numeric_limits::max()
 #endif // NO_LQ_BIN_STATS
 
+#include "NetBoidGameLogic.h"
 #include "NetBoidEntityFactory.h"
 NetBoidFactory gOfflineNetBoidFactory;
 
@@ -117,19 +118,19 @@ void NetBoidsPlugin::update ( const float currentTime, const float elapsedTime )
     {
         return;
     }
+    NetBoidGameLogic kGameLogic;
+    kGameLogic.setPlugin ( this );
+    kGameLogic.update ( currentTime, elapsedTime );
+
+    AbstractVehicleGroup kVG ( this->allVehicles() );
+    kVG.setCustomUpdated ( &kGameLogic );
+    kVG.update ( currentTime, elapsedTime );
 
 #ifndef NO_LQ_BIN_STATS
     Boid::maxNeighbors = Boid::totalNeighbors = 0;
     Boid::minNeighbors = std::numeric_limits<int>::max();
 #endif // NO_LQ_BIN_STATS
 
-    // update flock simulation for each boid
-    for ( iterator i = flock.begin(); i != flock.end(); i++ )
-    {
-        Boid* pkBoid = ( *i );
-       // pkBoid->setParentPlugin ( this );
-        pkBoid->update ( currentTime, elapsedTime );
-    }
 }
 
 //-----------------------------------------------------------------------------
@@ -140,7 +141,7 @@ void NetBoidsPlugin::redraw ( const float currentTime, const float elapsedTime )
         return;
     }
     // draw each boid in flock
-    for ( iterator i = flock.begin(); i != flock.end(); i++ )
+    for ( Boid::groupType::iterator i = flock.begin(); i != flock.end(); i++ )
         ( **i ).draw ( currentTime, elapsedTime );
 
 
@@ -223,7 +224,8 @@ void NetBoidsPlugin::close ( void )
 void NetBoidsPlugin::reset ( void )
 {
     // reset each boid in flock
-    for ( iterator i = flock.begin(); i != flock.end(); i++ ) ( **i ).reset();
+    for ( Boid::groupType::iterator i = flock.begin(); i != flock.end(); i++ )
+        ( **i ).reset();
 
     // reset camera position
     CameraPlugin::position3dCamera ( *SimpleVehicle::selectedVehicle );
@@ -265,7 +267,7 @@ void NetBoidsPlugin::nextPD ( void )
     }
 
     // switch each boid to new PD
-    for ( iterator i=flock.begin(); i!=flock.end(); i++ )
+    for ( Boid::groupType::iterator i=flock.begin(); i!=flock.end(); i++ )
         ( **i ).allocateProximityToken ( pd );
 
     // delete old PD (if any)
@@ -362,8 +364,7 @@ void NetBoidsPlugin::printMiniHelpForFunctionKeys ( void ) const
 void NetBoidsPlugin::addBoidToFlock ( void )
 {
     osAbstractVehicle* pkVehicle = this->createVehicle ( ET_CID_NETBOID );
-    AbstractVehicleGroup kVG ( this->allVehicles() );
-    kVG.addVehicleToPlugin ( pkVehicle, this );
+    this->addVehicle ( pkVehicle );
 }
 
 
@@ -387,6 +388,7 @@ void NetBoidsPlugin::removeBoidFromFlock ( void )
         {
             pkFactory->destroyVehicle ( boid );
         }
+        this->removeVehicle( boid );
         boid = NULL;
     }
 }
@@ -402,6 +404,18 @@ AbstractVehicle* NetBoidsPlugin::createVehicle (
         pkVehicle = pkFactory->createVehicle ( classId );
     }
     return pkVehicle;
+}
+//-----------------------------------------------------------------------------
+void NetBoidsPlugin::addVehicle ( osAbstractVehicle* pkVehicle )
+{
+    AbstractVehicleGroup kVG ( this->allVehicles() );
+    kVG.addVehicleToPlugin ( pkVehicle, this );
+}
+//-----------------------------------------------------------------------------
+void NetBoidsPlugin::removeVehicle ( osAbstractVehicle* pkVehicle )
+{
+    AbstractVehicleGroup kVG ( this->allVehicles() );
+    kVG.removeVehicleFromPlugin ( pkVehicle );
 }
 //-----------------------------------------------------------------------------
 Boid::groupType::iterator NetBoidsPlugin::FindBoid ( const Boid* pkBoid )

@@ -122,7 +122,7 @@ public:
 
 	  virtual ~NetBoidMultiplePeerPlugin(){}
 
-	  OS_IMPLEMENT_CLASSNAME( NetBoidClientServerPlugin );
+	  OS_IMPLEMENT_CLASSNAME( NetBoidMultiplePeerPlugin );
 
 	  virtual float selectionOrderSortKey (void) const { return 4.0f ;}
 

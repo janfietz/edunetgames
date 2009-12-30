@@ -34,6 +34,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 
 #define GCC_VERSION (__GNUC__ * 10000 \
                                + __GNUC_MINOR__ * 100 \
@@ -54,7 +55,8 @@
   #endif
 #endif
 
-
+// define a vector for stl string
+typedef std::vector<std::string> EtStrings;
 
 
 #endif // __EDUNETTYPES_H__
