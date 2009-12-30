@@ -114,9 +114,16 @@ public:
     void initGui ( void* pkUserdata );
     void addBoidToFlock ( void );
     void removeBoidFromFlock ( void );
+    virtual void addVehicle( osAbstractVehicle* pkVehicle );
+    virtual void removeVehicle ( osAbstractVehicle* pkVehicle);
+
 
     virtual osAbstractVehicle* createVehicle ( osEntityClassId ) const;
-    // JF --
+
+    OpenSteer::Boid::groupType& accessFlock( void )
+    {
+      return this->flock;
+    }
 
 private:
 
@@ -158,7 +165,6 @@ private:
 
     // flock: a group (STL vector) of pointers to all boids
     OpenSteer::Boid::groupType flock;
-    typedef OpenSteer::Boid::groupType::const_iterator iterator;
 
     // JF ++
     OpenSteer::Boid::groupType::iterator FindBoid ( const OpenSteer::Boid* pkBoid );

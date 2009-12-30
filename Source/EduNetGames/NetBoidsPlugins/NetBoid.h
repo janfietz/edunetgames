@@ -54,19 +54,20 @@ namespace OpenSteer{
 
 
 		static float worldRadius;
-		void setParentPlugin( class NetBoidsPlugin* pPlugin);
+
+                void setObstacles( ObstacleGroup* pkObstacles)
+                {
+                  this->m_pkObstacles = pkObstacles;
+                };
 	private:
 		// group of all obstacles to be avoided by each Boid
 		//        static ObstacleGroup obstacles;
 		const ObstacleGroup& allObstacles(void) const;
-		ObstacleGroup& allObstacles(void);
 		// allocate one and share amoung instances just to save memory usage
 		// (change to per-instance allocation to be more MP-safe)
 		//static AVGroup neighbors;
 		AVGroup neighbors;
-
-		class NetBoidsPlugin* m_pkParentPlugin;
-
+                ObstacleGroup* m_pkObstacles;
 	};
 
 }

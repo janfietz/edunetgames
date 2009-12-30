@@ -215,6 +215,7 @@ void NetworkPlugin::open( void )
 	this->CreateNetworkInterface();
 	this->StartNetworkSession();
 	this->CreateContent();
+        this->acceptConnections();
 }
 
 //-----------------------------------------------------------------------------
@@ -554,7 +555,16 @@ void NetworkPlugin::StopNetworkSession( void )
 	this->m_eNetworkSessionType = ENetworkSessionType_Undefined;
 	this->m_kStats.reset();
 }
-
+//-----------------------------------------------------------------------------
+void NetworkPlugin::acceptConnections( void )
+{
+  this->m_pNetInterface->SetMaximumIncomingConnections( this->getMaxIncomingConnections() );
+}
+//-----------------------------------------------------------------------------
+unsigned short NetworkPlugin::getMaxIncomingConnections( void ) const
+{
+  return 0;
+}
 //-----------------------------------------------------------------------------
 void NetworkPlugin::CloseOpenConnections( void )
 {
