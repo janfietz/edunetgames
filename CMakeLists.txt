@@ -2,6 +2,25 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(EDUNET_GAMES)
 SET(EDUNET_GAMES 0.01)
+######################################################################
+# return a list of directories that we should add_subdirectory()
+macro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
+  file(GLOB EDUNET_PLUGIN_CMAKE_FILES
+    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*/${filename}")
+  foreach(EDUNET_PLUGIN_CMAKE_FILE ${EDUNET_PLUGIN_CMAKE_FILES})
+	get_filename_component(EDUNET_PLUGIN_DIR ${EDUNET_PLUGIN_CMAKE_FILE} PATH)
+    set(${varname} ${${varname}} ${EDUNET_PLUGIN_DIR})
+  endforeach(EDUNET_PLUGIN_CMAKE_FILE ${EDUNET_PLUGIN_CMAKE_FILES})
+endmacro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
+
+macro(ADD_SUBDIRECTORIES prefix header )
+  message(STATUS "- ${header} -")
+  foreach(subdir ${ARGN})
+    message(STATUS "${prefix}${subdir}")
+    add_subdirectory(${subdir})
+  endforeach(subdir ${ARGN})
+endmacro(ADD_SUBDIRECTORIES prefix header)
+######################################################################
 
 IF (NOT CMAKE_BUILD_TYPE)
 # SET(CMAKE_BUILD_TYPE "Debug")
@@ -21,29 +40,25 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 # This should be the case.
 
 FIND_PACKAGE(OpenGL)
-IF (OPENGL_FOUND)
-MESSAGE("OPENGL FOUND")
-MESSAGE(${OPENGL_LIBRARIES})
-ELSE (OPENGL_FOUND)
+IF (NOT OPENGL_FOUND)
 MESSAGE("OPENGL NOT FOUND")
 SET(OPENGL_gl_LIBRARY opengl32)
 SET(OPENGL_glu_LIBRARY glu32)
-ENDIF (OPENGL_FOUND)
+ENDIF (NOT OPENGL_FOUND)
 
 # ADD_DEFINITIONS(-DBT_USE_FREEGLUT)
 
 FIND_PACKAGE(GLU)
 
 FIND_PACKAGE(GLUT)
-IF (GLUT_FOUND)
-ELSE (GLUT_FOUND)
+IF (NOT GLUT_FOUND)
 	MESSAGE("GLUT NOT FOUND")
 	Set( GLUT_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/glut)
 	IF (MSVC)
 		MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
 		SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/bin/win32/lib/glut32.lib)
 	ENDIF (MSVC)
-ENDIF (GLUT_FOUND)
+ENDIF(NOT GLUT_FOUND)
 
 #### BOOST
 IF (WIN32)
