@@ -26,7 +26,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetMemory/EduNetMemory.h"
+#include "EduNetCore/EduNetCore.h"
+//#include "EduNetCommon/EduNetCommon.h"
 
 class MyMemoryTest
 {

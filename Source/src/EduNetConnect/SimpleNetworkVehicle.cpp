@@ -3,7 +3,7 @@
 #include "EduNetConnect/NetworkPlugin.h"
 #include "EduNetConnect/NetworkEntity.h"
 
-#include "OpenSteerUT/AbstractVehicleMath.h"
+
 
 using namespace OpenSteer;
 

@@ -225,7 +225,7 @@ const		unsigned int	m_alloc_free           = 8;
 static		unsigned int	prefixPattern          = 0xbaadf00d; // Fill pattern for bytes preceeding allocated blocks
 static		unsigned int	postfixPattern         = 0xdeadc0de; // Fill pattern for bytes following allocated blocks
 static		unsigned int	unusedPattern          = 0xfeedface; // Fill pattern for freshly allocated blocks
-static		unsigned int	releasedPattern        = 0xdeadbeef; // Fill pattern for deallocated blocks
+static		unsigned int	releasedPattern        = 0xdeadbeef; // Fill__USEMMGR_MAKROS_ pattern for deallocated blocks
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // Other locals

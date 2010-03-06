@@ -28,17 +28,7 @@
 
 
 #include "EduNetApplication.h"
-#include "EduNetCommon/EduNetLog.h"
-
-#include "EduNetCommon/EduNetDraw.h"
-#include "EduNetCommon/EduNetOptions.h"
 #include "EduNetProfile/GraphPlot.h"
-
-#include "OpenSteerUT/AbstractPluginUtilities.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "OpenSteerUT/SimplePhysicsVehicle.h"
-#include "iprof/prof.h"
-
 
 using namespace EduNet;
 using namespace OpenSteer;

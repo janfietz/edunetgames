@@ -133,6 +133,8 @@ SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 Set( EduNet_DEFAULT_LIBRARIES
 opensteer
 ${GLUT_glut_LIBRARY}
+EduNetMemory
+EduNetCore
 EduNetCommon
 EduNetConnect
 EduNetModule

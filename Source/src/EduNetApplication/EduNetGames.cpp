@@ -41,16 +41,15 @@
 //-----------------------------------------------------------------------------
 
 // 10-30-09 cp/jf: modified for educational purpose
-
+#include<boost/filesystem/operations.hpp>
 #include "EduNetGames.h"
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
 
-#include "OpenSteer/SimplePlayer.h"
-#include "OpenSteerUT/LocalPlayer.h"
 
-#include<boost/filesystem/operations.hpp>
+
+
 namespace bfs = boost::filesystem;
 
 typedef struct TViewPort

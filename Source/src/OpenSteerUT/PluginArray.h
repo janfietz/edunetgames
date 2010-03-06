@@ -29,8 +29,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
-
+//#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/EduNetMacros.h"
+#include "OpenSteer/Plugin.h"
 #include "boost/smart_ptr.hpp"
 
 

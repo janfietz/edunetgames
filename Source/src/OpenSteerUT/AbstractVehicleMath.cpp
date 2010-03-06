@@ -1,33 +1,34 @@
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without modification, 
+//
+// Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
-// * Redistributions of source code must retain the above copyright notice, 
+//
+// * Redistributions of source code must retain the above copyright notice,
 //   this list of conditions and the following disclaimer.
-// * Redistributions in binary form must reproduce the above copyright notice, 
-//   this list of conditions and the following disclaimer in the documentation 
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
 //   and/or other materials provided with the distribution.
 // * Neither the name of EduNetGames nor the names of its contributors
 //   may be used to endorse or promote products derived from this software
 //   without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
 #include "AbstractVehicleMath.h"
 #include "EduNetCommon/TCompressed.h"
+#include "EduNetCommon/EduNetMath.h"
 
 
 namespace OpenSteer
@@ -139,7 +140,7 @@ namespace OpenSteer
 #endif
 		};
 #endif
-		kWorldRotation.setValue( 
+		kWorldRotation.setValue(
 			kTargetRow[0].x(), kTargetRow[1].x(), kTargetRow[2].x(),
 			kTargetRow[0].y(), kTargetRow[1].y(), kTargetRow[2].y(),
 			kTargetRow[0].z(), kTargetRow[1].z(), kTargetRow[2].z());
@@ -200,8 +201,8 @@ namespace OpenSteer
 		osVector3& kLinearVelocity, osVector3& kAngularVelocity )
 	{
 		btVector3 _LinearVelocity, _AngularVelocity;
-		btTransformUtil::calculateVelocity( 
-			kWorldTransform0, kWorldTransform1, fDeltaTime, 
+		btTransformUtil::calculateVelocity(
+			kWorldTransform0, kWorldTransform1, fDeltaTime,
 			_LinearVelocity, _AngularVelocity );
 		getVector3( _LinearVelocity, kLinearVelocity );
 		getVector3( _AngularVelocity, kAngularVelocity );
@@ -285,8 +286,8 @@ namespace OpenSteer
 		//	w2 = 1 - (x2 + y2 + z2)
 		// w = sqrt( 1 - (x2 + y2 + z2) )
 		btQuaternion kUnitRotation( kCompressed.x, kCompressed.y, kCompressed.z, 0 );
-		kUnitRotation.setW( 
-			wSign * btSqrt( btScalar(1) - 
+		kUnitRotation.setW(
+			wSign * btSqrt( btScalar(1) -
 			( kUnitRotation.getX() * kUnitRotation.getX() +
 			kUnitRotation.getY() * kUnitRotation.getY() +
 			kUnitRotation.getZ() * kUnitRotation.getZ()
@@ -333,9 +334,9 @@ namespace OpenSteer
 		}
 		else
 		{
-			fUnitFactor = 
-			kUnitSource.x = 
-			kUnitSource.y = 
+			fUnitFactor =
+			kUnitSource.x =
+			kUnitSource.y =
 			kUnitSource.z = 0;
 		}
 		kTarget.m_cValues[0] = TCompressedFixpoint<float,char,8>::writeCompress( kUnitSource.x , -1.0f, 1.0f );
