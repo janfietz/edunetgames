@@ -1,34 +1,34 @@
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without modification, 
+//
+// Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
-// * Redistributions of source code must retain the above copyright notice, 
+//
+// * Redistributions of source code must retain the above copyright notice,
 //   this list of conditions and the following disclaimer.
-// * Redistributions in binary form must reproduce the above copyright notice, 
-//   this list of conditions and the following disclaimer in the documentation 
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
 //   and/or other materials provided with the distribution.
 // * Neither the name of EduNetGames nor the names of its contributors
 //   may be used to endorse or promote products derived from this software
 //   without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
 #include "EduNetConnect/ClientVehicleUpdate.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
-#include "OpenSteerUT/AbstractVehicleMath.h"
+
 
 using namespace OpenSteer;
 
@@ -41,7 +41,7 @@ void ClientVehicleUpdate::updateCustom( AbstractUpdated* pkParent, const osScala
 	{
 		this->m_eLastUpdateMode = this->determineUpdateMode( *pkNetworkVehicle );
 		// add the new data to the history
-		kProxy.m_kLocalSpaceData.addValue( kProxy.getLocalSpaceData() )._steeringForce = 
+		kProxy.m_kLocalSpaceData.addValue( kProxy.getLocalSpaceData() )._steeringForce =
 			kProxy.getSteeringForceUpdate().getForce();
 	}
 	else
@@ -86,22 +86,22 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 	EVehicleUpdateMode eType = EVehicleUpdateMode_Unknown;
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
 
-	const bool bHasPositionUpdate = 
+	const bool bHasPositionUpdate =
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Position ] );
-	const bool bHasOrientationUpdate = 
+	const bool bHasOrientationUpdate =
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Forward ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Side ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Up ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Orientation ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation1 ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedOrientation2 ] );
-	const bool bHasForceUpdate = 
+	const bool bHasForceUpdate =
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Force ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_CompressedForce ] );
-	const bool bHasVelocityUpdate = 
+	const bool bHasVelocityUpdate =
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_AngularVelocity ] ) ||
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_LinearVelocity ] );
-	const bool bHasSpeedUpdate = 
+	const bool bHasSpeedUpdate =
 		( kProxy.m_bSerializedDataTypes[ ESerializeDataType_Speed ] ) ;
 
 	if( bHasPositionUpdate && bHasOrientationUpdate && bHasVelocityUpdate )
@@ -128,7 +128,7 @@ EVehicleUpdateMode ClientVehicleUpdate::determineUpdateMode( const class SimpleN
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updatePosition( 
+void ClientVehicleUpdate::updatePosition(
 class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	float m_sThreshold = 0.1f;
@@ -139,8 +139,8 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
 		// preserve client updateTicks ?
 		const bool bPreserveUpdateTicks = true;
-		osVector3 kDirection; 
-		Vec3 tmp = kProxy.position() - kVehicle.position() ;	
+		osVector3 kDirection;
+		Vec3 tmp = kProxy.position() - kVehicle.position() ;
 		bool bTr = true;
 		if(tmp.length() > m_sThreshold){
 			tmp = kVehicle.position() + tmp * 0.5f;
@@ -149,7 +149,7 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 			bTr = false;
 		}
 
-		size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size(); 
+		size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size();
 		if( uiReceivedRecords >= 2 )
 		{
 
@@ -159,14 +159,14 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 				&kProxy.m_kLocalSpaceData[ uiReceivedRecords - 1 ], // 1 last
 			};
 
-			
-			
-			
+
+
+
 			if(bTr) kDirection = pkLocalSpaceData[1]->_position - pkLocalSpaceData[0]->_position;
 			//kVehicle.setLocalSpaceData(kProxy.getLocalSpaceData(), bPreserveUpdateTicks);
 
 			// compute direction
-			
+
 			const float fDistance = kDirection.length();
 			float fSpeed = 0;
 			if( fDistance > 0 )
@@ -201,14 +201,14 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updatePositionOrientation( 
+void ClientVehicleUpdate::updatePositionOrientation(
 class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	SimpleProxyVehicle& kProxy = kVehicle.accessProxyVehicle();
 	if( true == kProxy.m_bHasNewData )
 	{
 		LocalSpaceData& kCurrentLocalSpaceData = kVehicle.accessLocalSpaceData();
-		const size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size(); 
+		const size_t uiReceivedRecords = kProxy.m_kLocalSpaceData.size();
 
 		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
 		// preserve client updateTicks ?
@@ -311,7 +311,7 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updateBruteForce( 
+void ClientVehicleUpdate::updateBruteForce(
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
@@ -336,7 +336,7 @@ void ClientVehicleUpdate::updateBruteForce(
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updatePhysicsMotion( 
+void ClientVehicleUpdate::updatePhysicsMotion(
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
@@ -375,7 +375,7 @@ void ClientVehicleUpdate::updatePhysicsMotion(
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updateForwardSpeed( 
+void ClientVehicleUpdate::updateForwardSpeed(
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
@@ -412,7 +412,7 @@ void ClientVehicleUpdate::updateForwardSpeed(
 #define ET_STEERUPDATE_ADJUST_FORCE_01 0
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updateSteer( 
+void ClientVehicleUpdate::updateSteer(
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	const SimpleProxyVehicle& kProxy = kVehicle.getProxyVehicle();
@@ -468,7 +468,7 @@ void ClientVehicleUpdate::updateSteer(
 }
 
 //-------------------------------------------------------------------------
-void ClientVehicleUpdate::updateUnknown( 
+void ClientVehicleUpdate::updateUnknown(
 	class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar elapsedTime )
 {
 	kVehicle.updateBase( currentTime, elapsedTime );

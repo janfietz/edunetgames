@@ -29,10 +29,12 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCommon/EduNetCommon.h"
+//#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCommon/EduNetMacros.h"
 #include "OpenSteer/AbstractEntity.h"
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/Obstacle.h"
+#include "OpenSteerUT/OpenSteerUTTypes.h"
 
 namespace OpenSteer {
 

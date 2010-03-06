@@ -29,21 +29,6 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-// no includes inside this header please
-// #include <assert.h>
-//-----------------------------------------------------------------------------
-// memory
-//-----------------------------------------------------------------------------
-
-#define ET_NEW new
-#define ET_DELETE delete
-
-#define ET_MALLOC malloc
-#define ET_FREE free
-
-#define ET_SAFE_DELETE( p ) { if( 0 != p ) { ET_DELETE p; p = 0; } }
-#define ET_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { ET_DELETE[] p; p = 0; } }
-#define ET_SAFE_FREE( p ) { if( 0 != p ) { ET_FREE( p ); p = 0; } }
 
 #ifndef linux
 #define EF_FORCEINLINE __forceinline

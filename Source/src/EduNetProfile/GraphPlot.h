@@ -4,28 +4,28 @@
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
-// 
-// Redistribution and use in source and binary forms, with or without modification, 
+//
+// Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
-// 
-// * Redistributions of source code must retain the above copyright notice, 
+//
+// * Redistributions of source code must retain the above copyright notice,
 //   this list of conditions and the following disclaimer.
-// * Redistributions in binary form must reproduce the above copyright notice, 
-//   this list of conditions and the following disclaimer in the documentation 
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
 //   and/or other materials provided with the distribution.
 // * Neither the name of EduNetGames nor the names of its contributors
 //   may be used to endorse or promote products derived from this software
 //   without specific prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, 
-// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
-// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+// ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ namespace Profile
 		TGraphValue( float _x, float _y, float _z ):x(_x), y(_y), z(_z), scale_y(1){}
 		union {
 			float m_fValues[4];
-			struct  
+			struct
 			{
 				float x,y,z;
 				float scale_y;
@@ -85,10 +85,10 @@ namespace Profile
 		  m_uiMaxRecords( uiMaxRecords ),
 		  m_eGrapType( EGraphType_Lines )
 		{
-			this->m_fColor[0] = 
-				this->m_fColor[1] = 
-				this->m_fColor[2] = 
-				this->m_fColor[3] = 
+			this->m_fColor[0] =
+				this->m_fColor[1] =
+				this->m_fColor[2] =
+				this->m_fColor[3] =
 				0;
 			this->reserve( uiMaxRecords + 1 );
 			this->reset();
@@ -131,9 +131,9 @@ namespace Profile
 
 		size_t getMaxRecords( void ) const { return m_uiMaxRecords; }
 
-		GraphValues& setMaxRecords( size_t uiValue ) 
-		{ 
-			m_uiMaxRecords = uiValue; 
+		GraphValues& setMaxRecords( size_t uiValue )
+		{
+			m_uiMaxRecords = uiValue;
 			if( this->capacity() < m_uiMaxRecords )
 			{
 				this->reserve( m_uiMaxRecords );
@@ -141,9 +141,9 @@ namespace Profile
 			return (*this);
 		}
 
-		GraphValues& setId( size_t id ) 
-		{ 
-			m_uiId = id; 
+		GraphValues& setId( size_t id )
+		{
+			m_uiId = id;
 			return (*this);
 		}
 		size_t getId( void ) const { return m_uiId; }
@@ -223,7 +223,7 @@ namespace Profile
 		EGraphType m_eGrapType;
 		std::string m_kName;
 	};
-	
+
 	typedef std::vector<GraphValues> TGraphValuesArray;
 	//-------------------------------------------------------------------------
 	class GraphValuesArray : public TGraphValuesArray, public GraphLayout
@@ -290,11 +290,11 @@ namespace Profile
 		GraphPlot( void );
 		virtual ~GraphPlot();
 
-		void draw( const TGraphPointerArray& kValues, 
+		void draw( const TGraphPointerArray& kValues,
 			float sx, float sy, float width, float height ) const;
-		void draw( const GraphValuesArray& kValues, 
+		void draw( const GraphValuesArray& kValues,
 			float sx, float sy, float width, float height ) const;
-		void draw( const GraphValues& kValues, 
+		void draw( const GraphValues& kValues,
 			float sx, float sy, float width, float height ) const;
 		void drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle = true ) const;
 	private:
@@ -316,7 +316,7 @@ namespace Profile
 
 		} GraphLocation;
 		void computeGraphLocation( const GraphValues& kValues, GraphLocation& kGraphLocation ) const;
-		void draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
+		void draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues,
 			float sx, float sy, float width, float height ) const;
 		void drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
 		void drawGraphFrame( const GraphLocation& kGraphLocation, bool bRectangle = true ) const;

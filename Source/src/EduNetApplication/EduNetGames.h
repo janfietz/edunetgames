@@ -45,17 +45,7 @@
 #define OPENSTEER_OPENSTEERDEMO_H
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCommon/EduNetLog.h"
-#include "OpenSteerUT/AbstractVehicleUtilities.h"
-
-#include "OpenSteer/Clock.h"
-#include "OpenSteer/Plugin.h"
-#include "OpenSteer/Camera.h"
-#include "OpenSteer/Utilities.h"
-
 #include "EduNetModule/EduNetModule.h"
-#include "OpenSteerUT/PluginArray.h"
-
 
 namespace OpenSteer
 {

@@ -39,7 +39,7 @@
 #if __APPLE__ && __MACH__
 #define EDUNET_HAVE_PROFILE 1
 #else
-#define EDUNET_HAVE_PROFILE 0
+#define EDUNET_HAVE_PROFILE 1
 #endif
 #endif
 #ifndef EDUNET_HAVE_PROFILE
