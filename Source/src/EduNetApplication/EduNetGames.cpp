@@ -41,16 +41,11 @@
 //-----------------------------------------------------------------------------
 
 // 10-30-09 cp/jf: modified for educational purpose
-#include<boost/filesystem/operations.hpp>
 #include "EduNetGames.h"
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
 
-
-
-
-namespace bfs = boost::filesystem;
 
 typedef struct TViewPort
 {
@@ -122,8 +117,6 @@ const int OpenSteer::OpenSteerDemo::phaseStackSize = 5;
 int OpenSteer::OpenSteerDemo::phaseStack [OpenSteer::OpenSteerDemo::phaseStackSize];
 
 
-EduNetRawModules  OpenSteer::OpenSteerDemo::s_modules;
-OpenSteer::PluginArray OpenSteer::OpenSteerDemo::s_Plugins;
 //-----------------------------------------------------------------------------
 // initialize OpenSteerDemo application
 
@@ -1258,122 +1251,6 @@ OpenSteer::drawGetWindowWidth ( void )
         return viewPort.tw;
     }
     return glutGet ( GLUT_WINDOW_WIDTH );
-}
-//-----------------------------------------------------------------------------
-void OpenSteer::OpenSteerDemo::loadModules ( void )
-{
-  // load modules in working directory
-    loadModulesFromDirectory (  "./" );
-    createPluginsFromModules();
-}
-//-----------------------------------------------------------------------------
-void OpenSteer::OpenSteerDemo::unloadModules ( void )
-{
-    s_Plugins.removeAllPlugins();
-    s_modules.clear();
-}
-//-----------------------------------------------------------------------------
-void OpenSteer::OpenSteerDemo::loadModulesFromDirectory ( const char* pszDirectory )
-{
-    bfs::path p ( pszDirectory );
-    unsigned long fc=0, dc=0;
-    if ( !bfs::exists ( p ) )
-        std::cout<<"\nFile Not Found:"<<p.native_file_string() <<"\n";
-    else if ( !bfs::is_directory ( p ) )
-        std::cout<<"\nFound: " <<p.native_file_string() <<"\n";
-    std::cout<<"In directory:"<<p.native_file_string() <<"\n";
-    bfs::directory_iterator iter ( p ), end_iter;
-    for ( ; iter != end_iter; ++iter )
-    {
-        try
-        {
-            if ( bfs::is_directory ( *iter ) )
-            {
-                ++dc;
-                std::cout<<iter->leaf() <<"[Directory]\n";
-            }
-            else
-            {
-                ++fc;
-                addFile ( iter->leaf().c_str() );
-                std::cout<<iter->leaf() <<"\n";
-            }
-        }
-        catch ( const std::exception & ex )
-        {
-            std::cout<<iter->leaf() <<": " <<ex.what() <<std::endl;
-        }
-        std::cout<<fc<<" "<<dc<<std::endl;
-    }  //for
-}
-//-----------------------------------------------------------------------------
-bool OpenSteer::OpenSteerDemo::addFile ( const char* pszFileName )
-{
-    EduNetRawModulePtr spNewLib ( ET_NEW EduNetRawModule() );
-    EduNetRawModule* pkNewmodule = spNewLib.get();
-
-    bool bResult = pkNewmodule->load ( pszFileName );
-    if ( true == bResult )
-    {
-        s_modules.push_back ( spNewLib );
-    }
-    return bResult;
-}
-//-----------------------------------------------------------------------------
-void OpenSteer::OpenSteerDemo::createPluginsFromModules ( void )
-{
-    EduNetRawModules::iterator kIter = s_modules.begin();
-    EduNetRawModules::const_iterator kIterEnd = s_modules.end();
-    while ( kIterEnd != kIter )
-    {
-        EduNetRawModule* pkModule = ( *kIter ).get();
-        createPluginsFromModule ( pkModule );
-        ++kIter;
-    }
-}
-//-----------------------------------------------------------------------------
-void OpenSteer::OpenSteerDemo::createPluginsFromModule (
-    EduNetRawModule* pkModule )
-{
-    EduNetModuleEntry* pkEntry = pkModule->accessEntry();
-    bool bWantsHaveModule = appWantsToLoadModule( pkEntry->getName() );
-    if ( (NULL != pkEntry)  && (true == bWantsHaveModule) )
-    {
-        EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
-        EduNetPluginFactoryPtr spFactory ( pkFactory );
-
-        EdutNetStringList kList;
-        pkFactory->getPluginNames ( kList );
-
-        std::ostringstream message;
-        message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
-        EdutNetStringList::iterator kNameIter = kList.begin();
-        EdutNetStringList::iterator kNameIterEnd = kList.end();
-        while ( kNameIterEnd != kNameIter )
-        {
-            AbstractPlugin* pkPlugin = pkFactory->createPluginByName ( ( *kNameIter ).c_str() );
-            if ( NULL != pkPlugin )
-            {
-                s_Plugins.addPlugin ( pkPlugin );
-                // little hack
-                OpenSteer::Plugin::addToRegistry ( pkPlugin );
-            }
-            message << '"' << ( *kNameIter ).c_str() << '"' << "\n";
-            ++kNameIter;
-        }
-        message << std::ends;
-        EduNet::Log::printMessage ( message );
-    }
-}
-//-----------------------------------------------------------------------------
-bool OpenSteer::OpenSteerDemo::appWantsToLoadModule (
-    const char* kModuleName )
-{
-    const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
-    std::string kName(kModuleName);
-    EtStrings::const_iterator kIter = std::find(kNames.begin(), kNames.end(), kName);
-
-    return kIter != kNames.end();
 }
 
 

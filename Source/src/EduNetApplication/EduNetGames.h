@@ -45,7 +45,6 @@
 #define OPENSTEER_OPENSTEERDEMO_H
 
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetModule/EduNetModule.h"
 
 namespace OpenSteer
 {
@@ -158,12 +157,6 @@ public:
     // do all initialization related to graphics
     static void initializeGraphics ( void );
 
-    //-----------------------------------------------------------------------------
-    // do all initialization related to graphics
-    static void loadModules ( void );
-    static void unloadModules ( void );
-
-
     // ----------------------------------------------------------- console text
     // print list of known commands
     static void keyboardMiniHelp ( void );
@@ -181,12 +174,6 @@ private:
     static void popPhase ( void );
     static void updatePhaseTimers ( void );
 
-    static void loadModulesFromDirectory ( const char* pszDirectory );
-    static void createPluginsFromModules ( void );
-    static void createPluginsFromModule ( EduNetRawModule* pkModule );
-    static bool addFile ( const char* pszFileName );
-    static bool appWantsToLoadModule( const char* kModuleName );
-
     // XXX apparently MS VC6 cannot handle initialized static const members,
     // XXX so they have to be initialized not-inline.
     // static const int drawPhase = 2;
@@ -195,9 +182,6 @@ private:
     static const int drawPhase;
     static const int updatePhase;
     static const int overheadPhase;
-
-    static EduNetRawModules s_modules;
-    static OpenSteer::PluginArray s_Plugins;
 };
 
 

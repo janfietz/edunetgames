@@ -29,6 +29,7 @@
 
 #include "EduNetApplication.h"
 #include "EduNetProfile/GraphPlot.h"
+#include "EduNetCommon/EduNetOptions.h"
 
 using namespace EduNet;
 using namespace OpenSteer;
@@ -129,11 +130,11 @@ void gluiProfSelectParent()
 //-----------------------------------------------------------------------------
 Application& Application::AccessApplication( void )
 {
-	static Application kApplication;
 	Plugin::ms_on_plugin_selected_func = OnPluginSelected;
-	return kApplication;
+	return *Application::accessInstance();
 }
 
+ET_IMPLEMENT_SINGLETON(Application);
 //-----------------------------------------------------------------------------
 Application::Application( void ):
 m_fSimulationFPS( fSimulationFPS ),
@@ -169,6 +170,7 @@ void fnExit0 (void)
 void Application::_SDMInit( void )
 {
 	atexit (fnExit0);
+	Application::createInstance();
 }
 
 //-----------------------------------------------------------------------------
@@ -199,6 +201,7 @@ void Application::_SDMShutdown( void )
 		return;
 	}
 	bShutdown = true;
+	Application::destroyInstance();
 	//sEduNet::Log::printMessage( "Application shutdown - done." );
 }
 
@@ -504,4 +507,89 @@ void Application::drawProfile (const float currentTime,
 		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
 	}
 #endif
+}
+
+//-----------------------------------------------------------------------------
+void Application::initialize ( void )
+{
+
+}
+//-----------------------------------------------------------------------------
+void Application::loadModules( const char* pszPath )
+{
+	// load modules in working directory
+	this->m_modules.loadModulesFromDirectory( pszPath );
+}
+//-----------------------------------------------------------------------------
+void Application::unloadModules( void )
+{
+	this->m_modules.unloadAll();
+}
+//-----------------------------------------------------------------------------
+void Application::initializeGraphics ( int argc, char **argv)
+{
+
+}
+//-----------------------------------------------------------------------------
+void Application::runGraphics ( void )
+{
+
+}
+//-----------------------------------------------------------------------------
+void Application::createPluginsFromModules ( void )
+{
+	const EduNetRawModules& kModules = this->m_modules.getModules();
+    EduNetRawModules::const_iterator kIter = kModules.begin();
+    EduNetRawModules::const_iterator kIterEnd = kModules.end();
+    while ( kIterEnd != kIter )
+    {
+        EduNetRawModule* pkModule = ( *kIter ).get();
+        createPluginsFromModule ( pkModule );
+        ++kIter;
+    }
+}
+
+//-----------------------------------------------------------------------------
+void Application::createPluginsFromModule (
+    EduNetRawModule* pkModule )
+{
+    EduNetModuleEntry* pkEntry = pkModule->accessEntry();
+    bool bWantsHaveModule = appWantsToLoadModule( pkEntry->getName() );
+    if ( (NULL != pkEntry)  && (true == bWantsHaveModule) )
+    {
+        EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
+        EduNetPluginFactoryPtr spFactory ( pkFactory );
+
+        EdutNetStringList kList;
+        pkFactory->getPluginNames ( kList );
+
+        std::ostringstream message;
+        message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
+        EdutNetStringList::iterator kNameIter = kList.begin();
+        EdutNetStringList::iterator kNameIterEnd = kList.end();
+        while ( kNameIterEnd != kNameIter )
+        {
+            AbstractPlugin* pkPlugin = pkFactory->createPluginByName ( ( *kNameIter ).c_str() );
+            if ( NULL != pkPlugin )
+            {
+                m_plugins.addPlugin ( pkPlugin );
+                // little hack
+                OpenSteer::Plugin::addToRegistry ( pkPlugin );
+            }
+            message << '"' << ( *kNameIter ).c_str() << '"' << "\n";
+            ++kNameIter;
+        }
+        message << std::ends;
+        EduNet::Log::printMessage ( message );
+    }
+}
+//-----------------------------------------------------------------------------
+bool Application::appWantsToLoadModule (
+    const char* kModuleName )
+{
+    const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
+    std::string kName(kModuleName);
+    EtStrings::const_iterator kIter = std::find(kNames.begin(), kNames.end(), kName);
+
+    return kIter != kNames.end();
 }
