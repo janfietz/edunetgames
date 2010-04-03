@@ -33,52 +33,62 @@
 #include "glui/glui_internal_control.h"
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCore/EduNetCore_Macros.h"
+#include "EduNetModule/EduNetModuleManager.h"
 
-
-
-
-namespace EduNet	{
+namespace EduNet
+{
 
 //-----------------------------------------------------------------------------
 class Application
 {
 public:
 
-	void addGuiElements( GLUI *glui );
+	void addGuiElements(GLUI *glui);
 
 	// do a simulation update for the currently selected plug-in
-	void updateSelectedPlugin (const float currentTime,
-		const float elapsedTime);
+	void updateSelectedPlugin(const float currentTime, const float elapsedTime);
 
 	// redraw graphics for the currently selected plug-in
-	void redrawSelectedPlugin (const float currentTime,
-		const float elapsedTime);
+	void redrawSelectedPlugin(const float currentTime, const float elapsedTime);
 
 	//! draw profiler output
-	void drawProfile (const float currentTime,
-		const float elapsedTime);
+	void drawProfile(const float currentTime, const float elapsedTime);
 
-	bool isProfileVisible( void ) const;
-	bool isOpenSteerProfileVisible( void ) const;
+	bool isProfileVisible(void) const;
+	bool isOpenSteerProfileVisible(void) const;
 
-	void onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin );
+	void onPluginSelected(OpenSteer::AbstractPlugin* pkPlugin);
 
-	static Application& AccessApplication( void );
+	void initialize(void);
 
-	static void _SDMInit( void );
-	static void _SDMCleanup( void );
-	static void _SDMShutdown( void );
+	void loadModules(const char* pszPath);
+	void unloadModules(void);
+	bool appWantsToLoadModule(const char* kModuleName);
 
-	static void sleep( size_t uiMilliseconds );
-	bool allowLocalPlayer( void )
+    void createPluginsFromModules ( void );
+    void createPluginsFromModule ( EduNetRawModule* pkModule );
+
+
+	void initializeGraphics(int argc, char **argv);
+	void runGraphics(void);
+
+	static Application& AccessApplication(void);
+
+	static void _SDMInit(void);
+	static void _SDMCleanup(void);
+	static void _SDMShutdown(void);
+
+
+	static void sleep(size_t uiMilliseconds);
+	bool allowLocalPlayer(void)
 	{
 		return m_bAllowLocalPlayer;
 	}
-	void setAllowLocalPlayer( bool bValue )
+	void setAllowLocalPlayer(bool bValue)
 	{
 		m_bAllowLocalPlayer = bValue;
 	}
-
 
 	float m_fSimulationFPS;
 	float m_fTimeFactor;
@@ -91,13 +101,18 @@ public:
 	int m_bUpdateCPUProfile;
 
 private:
-	Application( void );
-	virtual ~Application( void );
+	Application(void);
+	virtual ~Application(void);
 
 	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
 	OpenSteer::Clock m_kUpdateClock;
 	osScalar m_fUpdateCPUTime;
 	bool m_bAllowLocalPlayer;
+
+	EduNetModuleManager m_modules;
+	OpenSteer::PluginArray m_plugins;
+
+ET_DECLARE_SINGLETON(Application);
 
 };
 

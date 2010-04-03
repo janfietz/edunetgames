@@ -52,7 +52,11 @@ int EduNetMain (int argc, char **argv)
 	{
 		if( true ==  EduNetOptions::accessOptions().continueProcess() )
 		{
-			OpenSteer::OpenSteerDemo::loadModules();
+			EduNet::Application* pApp = EduNet::Application::accessInstance();
+
+			// load modules from working dir
+			pApp->loadModules( "./" );
+			pApp->createPluginsFromModules();
 
 			// initialize graphics
 			OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
@@ -63,7 +67,7 @@ int EduNetMain (int argc, char **argv)
 			// run the main event processing loop
 			OpenSteer::OpenSteerDemo::runGraphics ();
 
-			OpenSteer::OpenSteerDemo::unloadModules();
+			pApp->unloadModules();
 		}
 		iExitCode = EXIT_SUCCESS;
 	}

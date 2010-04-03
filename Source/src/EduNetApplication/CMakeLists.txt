@@ -11,6 +11,7 @@ file (GLOB EduNetApplication_LIB_Hdrs "${EduNetApplication_SOURCE_DIR}/*.h")
 LINK_LIBRARIES(
 opensteer
 ${GLUT_glut_LIBRARY}
+EduNetMemory
 EduNetCommon
 EduNetConnect
 EduNetModule
