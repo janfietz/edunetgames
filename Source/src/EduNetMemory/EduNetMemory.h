@@ -99,4 +99,12 @@
 #define ET_SAFE_DELETE_ARRAY( p ) { if( 0 != p ) { ET_DELETE[] p; p = 0; } }
 #define ET_SAFE_FREE( p ) { if( 0 != p ) { ET_FREE( p ); p = 0; } }
 
+//-----------------------------------------------------------------------------
+class EduNetMemTracker
+{
+public:
+	static void sdmInit( void );
+	static void sdmShutdown( void );
+};
+
 #endif // __EDUNETMEMORY_H__
