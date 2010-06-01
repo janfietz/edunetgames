@@ -184,6 +184,18 @@ void	operator delete[](void *reportedAddress) throw ();
 #define	mmgr_realloc(ptr,sz)	m_reallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_realloc,sz,ptr)
 #define	mmgr_free(ptr)	m_deallocator(__FILE__,__LINE__,__FUNCTION__,m_alloc_free,ptr)
 #endif
+
+
+
+class	MemStaticTimeTracker
+{
+public:
+	MemStaticTimeTracker() {}
+	~MemStaticTimeTracker() {}
+
+	static void sdmInit( void );
+	static void sdmShutdown( void );
+};
 // ---------------------------------------------------------------------------------------------------------------------------------
 // mmgr.h - End of file
 // ---------------------------------------------------------------------------------------------------------------------------------

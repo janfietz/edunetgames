@@ -631,16 +631,19 @@ static  void    dumpLeakReport( void )
 // We use a static class to let us know when we're in the midst of static deinitialization
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-class	MemStaticTimeTracker
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+void MemStaticTimeTracker::sdmInit( void )
 {
-public:
-	MemStaticTimeTracker() {doCleanupLogOnFirstRun();}
-	~MemStaticTimeTracker() {
-          staticDeinitTime = true;
-          dumpLeakReport();
-        }
-};
-static	MemStaticTimeTracker	mstt;
+	doCleanupLogOnFirstRun();
+}
+// ---------------------------------------------------------------------------------------------------------------------------------
+void MemStaticTimeTracker::sdmShutdown( void )
+{
+	staticDeinitTime = true;
+	dumpLeakReport();
+}
+//static	MemStaticTimeTracker	mstt;
 
 // ---------------------------------------------------------------------------------------------------------------------------------
 // -DOC- Flags & options -- Call these routines to enable/disable the following options

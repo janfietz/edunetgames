@@ -28,4 +28,18 @@
 
 #include "EduNetMemory.h"
 
+//-----------------------------------------------------------------------------
+void EduNetMemTracker::sdmInit( void )
+{
+#ifdef  ET_USE_FLUIDMEMORY_MGR
+	MemStaticTimeTracker::sdmInit();
+#endif	//ET_USE_FLUIDMEMORY_MGR
+}
 
+//-----------------------------------------------------------------------------
+void EduNetMemTracker::sdmShutdown( void )
+{
+#ifdef  ET_USE_FLUIDMEMORY_MGR
+	MemStaticTimeTracker::sdmShutdown();
+#endif	//ET_USE_FLUIDMEMORY_MGR
+}
