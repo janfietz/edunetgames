@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 
-#ifndef linux
+#if defined(_MSC_VER)
 #define EF_FORCEINLINE __forceinline
 #else
 #define EF_FORCEINLINE inline

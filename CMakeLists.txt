@@ -34,7 +34,23 @@ IF(COMMAND cmake_policy)
    cmake_policy(SET CMP0003 NEW)
 ENDIF(COMMAND cmake_policy)
 
+set(ET_USE_MMGR_FLUID "FALSE" CACHE BOOL "Use the fluid memory manager?")
+set(ET_USE_THIRDPARTYDIR "TRUE" CACHE BOOL "Search libs and include in thirdparty folder?")
+IF (ET_USE_THIRDPARTYDIR)
+	IF (NOT THIRD_PARTY_DIR)
+		SET( THIRD_PARTY_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty )
+	ENDIF (NOT THIRD_PARTY_DIR)
+	SET(CMAKE_INCLUDE_PATH ${THIRD_PARTY_DIR}/include)
+	SET(CMAKE_LIBRARY_PATH ${THIRD_PARTY_DIR}/lib)
+ENDIF (ET_USE_THIRDPARTYDIR)
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
+
+IF (WIN32)
+	SET(ET_PLATFORM_BUILD_DIR build_win32)	
+ELSE (WIN32)
+	SET(ET_PLATFORM_BUILD_DIR build_x)		
+ENDIF (WIN32)
 
 # This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
 # This should be the case.
@@ -53,7 +69,7 @@ FIND_PACKAGE(GLU)
 FIND_PACKAGE(GLUT)
 IF (NOT GLUT_FOUND)
 	MESSAGE("GLUT NOT FOUND")
-	Set( GLUT_INCLUDE_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/glut)
+	Set( GLUT_INCLUDE_DIR ${THIRD_PARTY_DIR}/glut)
 	IF (MSVC)
 		MESSAGE ("GLUT NOT FOUND, trying to use Bullet/Glut/glut32.lib for MSVC")
 		SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/bin/win32/lib/glut32.lib)
@@ -61,44 +77,21 @@ IF (NOT GLUT_FOUND)
 ENDIF(NOT GLUT_FOUND)
 
 #### BOOST
-IF (WIN32)
-	Set( BOOST_INCLUDEDIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/boost_1_40_0)
-	IF(DEBUG)
-		Set( BOOST_LIBRARYDIR ${BOOST_INCLUDEDIR}/build/lib/debug )
-	ELSE(DEBUG)
-		Set( BOOST_LIBRARYDIR ${BOOST_INCLUDEDIR}/build/lib/release)
-	ENDIF(DEBUG)
-ELSE (WIN32)
-	SET(BOOST_INCLUDEDIR /usr/local/include/boost-1.41.0)
-ENDIF (WIN32)
-FIND_PACKAGE(Boost2 COMPONENTS system filesystem)
-IF (NOT Boost_FOUND)
-	MESSAGE("Boost NOT FOUND use ${Boost_INCLUDE_DIR} instead")
-ENDIF (NOT Boost_FOUND)
 
+IF ( ET_USE_THIRDPARTYDIR )
+	SET( BOOST_ROOT ${THIRD_PARTY_DIR} )
+ENDIF( ET_USE_THIRDPARTYDIR )
+FIND_PACKAGE( Boost2 COMPONENTS system filesystem )
+IF( NOT Boost_FOUND )
+	MESSAGE( "Boost NOT FOUND use ${BOOST_INCLUDEDIR} instead" )
+ENDIF( NOT Boost_FOUND )
 
 #### RakNet
 FIND_PACKAGE(RakNet)
-IF (NOT RakNet_FOUND)
-	Set( RakNet_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/Source )
-	IF(DEBUG)
-		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/debug/RakNet.lib )
-	ELSE(DEBUG)
-		Set( RakNet_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet/buildwin32/release/RakNet.lib)
-	ENDIF(DEBUG)
-	MESSAGE("Raknet NOT FOUND use ${RakNet_INCLUDES} instead")
-ENDIF (NOT RakNet_FOUND)
-Set( RakNet_SOURCES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet )
+SET( RakNet_SOURCES ${THIRD_PARTY_DIR}/raknet )
 
 FIND_PACKAGE(Argtable)
 IF (NOT Argtable_FOUND)
-	Set( Argtable_INCLUDES ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty )
-	Set( Argtable_SOURCES ${Argtable_INCLUDES}/argtable2-11 )
-	IF(DEBUG)
-		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtabled.lib )
-	ELSE(DEBUG)
-		Set( Argtable_LIBRARY ${Argtable_SOURCES}/lib/win32/argtable.lib )
-	ENDIF(DEBUG)
 	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
 ENDIF (NOT Argtable_FOUND)
 
@@ -132,7 +125,9 @@ SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 
 Set( EduNet_DEFAULT_LIBRARIES
 opensteer
-${GLUT_glut_LIBRARY}
+${GLUT_glut_LIBRARY} 
+${OPENGL_gl_LIBRARY} 
+${OPENGL_glu_LIBRARY}
 EduNetMemory
 EduNetCore
 EduNetCommon

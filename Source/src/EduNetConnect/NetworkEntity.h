@@ -47,7 +47,8 @@ namespace OpenSteer {
 		{
 
 		}
-		virtual void querySendParameters( OpenSteer::AbstractNetSerializable* pkVehicle, RakNet::PRO& kPro ) const;
+		virtual void queryVehicleSendParameters( const AbstractNetSerializable* pkVehicle,
+										 RakNet::PRO& kPro ) const;
 		virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 		virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
 		virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);

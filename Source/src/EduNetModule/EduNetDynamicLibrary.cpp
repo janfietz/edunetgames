@@ -118,7 +118,9 @@ bool EduNetDynamicLibrary::isDynamicLib ( const char* pszFileName )
 {
 #ifdef WIN32
     const char* pszLibraryType = ".dll";
-#else
+#elif __APPLE__
+	const char* pszLibraryType = ".dylib";
+#else	
     const char* pszLibraryType = ".so";
 #endif
     std::string kName ( pszFileName );

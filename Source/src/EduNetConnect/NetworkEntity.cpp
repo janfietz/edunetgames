@@ -47,7 +47,7 @@ NetworkEntitySerializer::NetworkEntitySerializer( OpenSteer::AbstractVehicle* pk
 }
 
 //-----------------------------------------------------------------------------
-void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetSerializable* pkVehicle, RakNet::PRO& kPro ) const
+void NetworkEntitySerializer::queryVehicleSendParameters( const AbstractNetSerializable* pkVehicle, RakNet::PRO &kPro ) const
 {
 	// TODO: query the send parameters from the vehicle itself
 	kPro.priority = LOW_PRIORITY;
@@ -58,10 +58,11 @@ void NetworkEntitySerializer::querySendParameters( OpenSteer::AbstractNetSeriali
 //-----------------------------------------------------------------------------
 int NetworkEntitySerializer::serialize( RakNet::SerializeParameters *serializeParameters ) const
 {
-	AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
+	const AbstractNetSerializable* pkNetworkVehicle = dynamic_cast<AbstractNetSerializable*>(this->m_pkEntity);
 	if( NULL != pkNetworkVehicle )
 	{
-		this->querySendParameters( pkNetworkVehicle, serializeParameters->pro );
+		RakNet::PRO& kPro = *serializeParameters->pro;
+		this->queryVehicleSendParameters( pkNetworkVehicle, kPro );
 		return pkNetworkVehicle->serialize( serializeParameters );
 	}
 	else
