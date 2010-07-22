@@ -21,12 +21,7 @@ typedef int64_t Prof_Int64;
       void Prof_get_timestamp(Prof_Int64 *result)
       {
 #ifdef __APPLE__	
-		  __asm {
-			  rdtsc;
-			  mov    ebx, result
-			  mov    [ebx], eax
-			  mov    [ebx+4], edx
-		  }
+		  *result = 0;
 #else
 	struct timespec t;
 	*result = 0;

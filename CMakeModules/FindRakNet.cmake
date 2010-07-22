@@ -5,7 +5,7 @@
 #  RakNet_INCLUDES - the RakNet include directory
 #  RakNet_LIBRARY - Link these to use RakNet
 
-FIND_LIBRARY (RakNet_LIBRARY NAMES RakNet
+FIND_LIBRARY (RakNet_LIBRARY NAMES RakNetStatic
     PATHS
     ENV LD_LIBRARY_PATH
     ENV LIBRARY_PATH

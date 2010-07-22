@@ -2,13 +2,17 @@ project(EduNetMemory)
 
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src )
 
-SET( EduNetMemoryFuildSrc
-Fluid/mmgr.cpp
-)
-SET( EduNetMemoryFuildHdr
-Fluid/mmgr.h
-Fluid/nommgr.h
-)
+IF (ET_USE_MMGR_FLUID)
+	message(STATUS "Use Fluid memory manager")
+
+	SET( EduNetMemoryFuildSrc
+	Fluid/mmgr.cpp
+	)
+	SET( EduNetMemoryFuildHdr
+	Fluid/mmgr.h
+	Fluid/nommgr.h
+	)
+ENDIF(ET_USE_MMGR_FLUID)
 
 SET( EduNetMemorySrc
 EduNetMemory.cpp

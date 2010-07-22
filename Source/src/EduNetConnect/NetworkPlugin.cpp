@@ -742,10 +742,10 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 {
 	RakNetStatistics kStats;
 	this->gatherNetworkStatistics( kStats );
-	this->m_kStats.m_uiPacketsSent = kStats.packetsSent;
-	this->m_kStats.m_uiPacketsReceived = kStats.packetsReceived;
-	this->m_kStats.m_uiMessagesSent = kStats.messagesSent[ SYSTEM_PRIORITY ] + kStats.messagesSent[ HIGH_PRIORITY ] + kStats.messagesSent[ MEDIUM_PRIORITY ] + kStats.messagesSent[ LOW_PRIORITY ];
-	this->m_kStats.m_uiMessagesReceived = kStats.messagesReceived;
+	this->m_kStats.m_uiPacketsSent = kStats.runningTotal[USER_MESSAGE_BYTES_SENT];
+	this->m_kStats.m_uiPacketsReceived = kStats.runningTotal[USER_MESSAGE_BYTES_RECEIVED_PROCESSED];
+	this->m_kStats.m_uiMessagesSent = 0;
+	this->m_kStats.m_uiMessagesReceived = 0;
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
 		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);

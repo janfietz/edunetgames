@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #if __APPLE__ && __MACH__
-#define EDUNET_HAVE_RAKNET 0 // not jet
+#define EDUNET_HAVE_RAKNET 1 // not jet
 #endif
 
 // raknet

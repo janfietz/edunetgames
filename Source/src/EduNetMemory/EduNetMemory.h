@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 // select a certain memory manager
-#define ET_HAVE_MEMORYMANAGER_FLUID 1
+#define ET_HAVE_MEMORYMANAGER_FLUID 0
 //-----------------------------------------------------------------------------
 
 // Standard includes MUST come first

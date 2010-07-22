@@ -49,8 +49,8 @@ NetworkPlot::~NetworkPlot()
 void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
 	const float currentTime, const float elapsedTime )
 {
-	float fBytesPerSecondSend = (float)(kStats.bitsPerSecondSent / 8.0);
-	float fBytesPerSecondReceived = (float)(kStats.bitsPerSecondReceived / 8.0);
+	float fBytesPerSecondSend = (float)(kStats.valueOverLastSecond[ACTUAL_BYTES_SENT]);
+	float fBytesPerSecondReceived = (float)(kStats.valueOverLastSecond[ACTUAL_BYTES_RECEIVED]);
 	Profile::GraphValues& kBandWidthValuesSend = 
 		this->m_kBandwith.accessValues(0);
 	kBandWidthValuesSend.addValue( currentTime, fBytesPerSecondSend);
