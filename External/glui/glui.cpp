@@ -1,6 +1,6 @@
 /****************************************************************************
   
-  GLUI User Interface Toolkit (LGPL)
+  GLUI User Interface Toolkit 
   ---------------------------
 
      glui.cpp
@@ -12,19 +12,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+  This software is provided 'as-is', without any express or implied 
+  warranty. In no event will the authors be held liable for any damages 
+  arising from the use of this software. 
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+  Permission is granted to anyone to use this software for any purpose, 
+  including commercial applications, and to alter it and redistribute it 
+  freely, subject to the following restrictions: 
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  1. The origin of this software must not be misrepresented; you must not 
+  claim that you wrote the original software. If you use this software 
+  in a product, an acknowledgment in the product documentation would be 
+  appreciated but is not required. 
+  2. Altered source versions must be plainly marked as such, and must not be 
+  misrepresented as being the original software. 
+  3. This notice may not be removed or altered from any source distribution. 
 
 *****************************************************************************/
 #include "glui_internal_control.h"
@@ -310,48 +312,6 @@ void glui_keyboard_func(unsigned char key, int x, int y)
 }
 
 
-
-
-void glui_special_up_func(int key, int x, int y)
-{
-  GLUI              *glui;
-  int                current_window;
-  GLUI_Glut_Window  *glut_window;
-
-  current_window = glutGetWindow();
-  glut_window = GLUI_Master.find_glut_window( current_window );
-
-  if (glut_window) /**  Was event in a GLUT window?  **/
-  {
-    if ( GLUI_Master.active_control_glui AND GLUI_Master.active_control )
-    {
-      glutSetWindow( GLUI_Master.active_control_glui->get_glut_window_id() );
-      
-      GLUI_Master.active_control_glui->special_up(key,x,y);    
-      finish_drawing();
-      
-      glutSetWindow( current_window );
-    }
-    else
-    {
-      if (glut_window->glut_special_up_CB)
-        glut_window->glut_special_up_CB( key, x, y );
-    } 
-  }
-  else /***  Nope, event was in a standalone GLUI window  **/
-  {
-    glui = GLUI_Master.find_glui_by_window_id(glutGetWindow());
-
-    if ( glui )
-    {
-      glui->special_up(key,x,y);
-      finish_drawing();
-    }
-  }
-}
-
-
-
 /************************************************ glui_special_func() ********/
 
 void glui_special_func(int key, int x, int y)
@@ -623,10 +583,10 @@ void    GLUI_Main::display( void )
   }
 
   /*******    Draw GLUI window     ******/
-  glClearColor( (float) bkgd_color.r / 255.0,
-		(float) bkgd_color.g / 255.0,
-		(float) bkgd_color.b / 255.0,
-		1.0 );
+  glClearColor( bkgd_color[0] / 255.0f,
+		        bkgd_color[1] / 255.0f,
+		        bkgd_color[2] / 255.0f,
+		        1.0f );
   glClear( GL_COLOR_BUFFER_BIT ); /* | GL_DEPTH_BUFFER_BIT );          */
 
   set_ortho_projection();
@@ -770,17 +730,6 @@ void    GLUI_Main::keyboard(unsigned char key, int x, int y)
     if ( active_control != NULL )
       active_control->key_handler( key, curr_modifiers );
   }
-}
-
-
-
-void    GLUI_Main::special_up(int key, int x, int y)
-{
-  curr_modifiers = glutGetModifiers();
-
-  /*** Pass the keystroke onto the active control, if any ***/
-  if ( active_control != NULL )
-    active_control->special_up_handler( key, glutGetModifiers() );
 }
 
 
@@ -985,7 +934,7 @@ GLUI_Control  *GLUI_Main::find_control( int x, int y )
 
   node = main_panel;
   while( node != NULL ) {
-    if ( !node->dynamicCastGLUI_Column() AND
+    if ( !dynamic_cast<GLUI_Column*>(node) AND
          PT_IN_BOX( x, y, 
                     node->x_abs, node->x_abs + node->w, 
                     node->y_abs, node->y_abs + node->h ) 
@@ -997,7 +946,7 @@ GLUI_Control  *GLUI_Main::find_control( int x, int y )
         /*** SPECIAL CASE: for edittext boxes, we make sure click is
              in box, and not on name string.  This should be generalized
              for all controls later... ***/
-		  if ( node->dynamicCastGLUI_EditText() ) {
+        if ( dynamic_cast<GLUI_EditText*>(node) ) {
           if ( x < node->x_abs + ((GLUI_EditText*)node)->text_x_offset )
             return (GLUI_Control*) node->parent();
         }
@@ -1182,10 +1131,12 @@ GLUI_Main::GLUI_Main( void )
   curr_cursor             = GLUT_CURSOR_LEFT_ARROW;
 
   int r=200, g=200, b=200;
-  bkgd_color.set( r,g,b );
-  bkgd_color_f[0] = r / 255.0;
-  bkgd_color_f[1] = g / 255.0;
-  bkgd_color_f[2] = b / 255.0;
+  bkgd_color[0] = r;
+  bkgd_color[1] = g;
+  bkgd_color[2] = b;
+  bkgd_color_f[0] = r / 255.0f;
+  bkgd_color_f[1] = g / 255.0f;
+  bkgd_color_f[2] = b / 255.0f;
 
   /*** Create the main panel ***/
   main_panel              = new GLUI_Panel;
@@ -1201,7 +1152,7 @@ void      GLUI_Main::draw_raised_box( int x, int y, int w, int h )
   w = w+x;
   h = h+y;
 
-  glColor3ub( bkgd_color.r, bkgd_color.g, bkgd_color.b );
+  glColor3ubv( bkgd_color );
   glBegin( GL_LINE_LOOP );
   glVertex2i( x+1, y+1 );  glVertex2i( w-1, y+1 );
   glVertex2i( w-1, h-1 );  glVertex2i( x+1, h-1 );
@@ -1232,7 +1183,7 @@ void      GLUI_Main::draw_lowered_box( int x, int y, int w, int h )
   w = w+x;
   h = h+y;
 
-  glColor3ub( bkgd_color.r, bkgd_color.g, bkgd_color.b );
+  glColor3ubv( bkgd_color );
   glBegin( GL_LINE_LOOP );
   glVertex2i( x+1, y+1 );         glVertex2i( w-1, y+1 );
   glVertex2i( w-1, h-1 );     glVertex2i( x+1, h-1 );
@@ -1535,11 +1486,7 @@ void   GLUI_Master_Object::close_all( void )
 
 void   GLUI_Main::close_internal( void ) 
 {
-  int glutWindow = glutGetWindow();
-  if( glutWindow > 0 )
-  {
-	  glutDestroyWindow( glutWindow ); /** Close this window **/
-  }
+  glutDestroyWindow(glutGetWindow()); /** Close this window **/
 
   this->unlink();
   
@@ -1721,16 +1668,6 @@ void GLUI_Master_Object::set_glutKeyboardFunc(void (*f)(unsigned char key,
 
 
 /*********************** GLUI_Master_Object::set_glutSpecialFunc() **********/
-
-
-
-void GLUI_Master_Object::set_glutSpecialUpFunc(void (*f)(int key, 
-						       int x, int y))
-{
-  glutSpecialUpFunc( glui_special_up_func );
-  add_cb_to_glut_window( glutGetWindow(), GLUI_GLUT_SPECIAL_UP, (void*) f);
-}
-
 
 void GLUI_Master_Object::set_glutSpecialFunc(void (*f)(int key, 
 						       int x, int y))
@@ -1931,9 +1868,6 @@ void     GLUI_Master_Object::add_cb_to_glut_window(int window_id,
     break;
   case GLUI_GLUT_SPECIAL:
     window->glut_special_CB   = (void(*)(int,int,int)) cb;
-    break;
-  case GLUI_GLUT_SPECIAL_UP:
-    window->glut_special_up_CB   = (void(*)(int,int,int)) cb;
     break;
   case GLUI_GLUT_MOUSE:
     window->glut_mouse_CB     = (void(*)(int,int,int,int)) cb;

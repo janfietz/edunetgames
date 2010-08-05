@@ -9,9 +9,21 @@
 
   Copyright (c) 2004 John Kew, 1998 Paul Rademacher
 
-  This program is freely distributable without licensing fees and is
-  provided without guarantee or warrantee expressed or implied. This
-  program is -not- in the public domain.
+  This software is provided 'as-is', without any express or implied 
+  warranty. In no event will the authors be held liable for any damages 
+  arising from the use of this software. 
+
+  Permission is granted to anyone to use this software for any purpose, 
+  including commercial applications, and to alter it and redistribute it 
+  freely, subject to the following restrictions: 
+
+  1. The origin of this software must not be misrepresented; you must not 
+  claim that you wrote the original software. If you use this software 
+  in a product, an acknowledgment in the product documentation would be 
+  appreciated but is not required. 
+  2. Altered source versions must be plainly marked as such, and must not be 
+  misrepresented as being the original software. 
+  3. This notice may not be removed or altered from any source distribution. 
 
 *****************************************************************************/
 
@@ -322,7 +334,7 @@ void GLUI_Scrollbar::draw_scroll_arrow(int arrowtype, int x, int y)
       return; /* tri is NULL */
   }
 
-  glColor3ubv(&glui->bkgd_color.r);
+  glColor3ubv(glui->bkgd_color);
   glRecti(x,y,x+GLUI_SCROLL_ARROW_WIDTH,y+GLUI_SCROLL_ARROW_HEIGHT);
   if (!offset) {
     glui->draw_raised_box(x,y+1,GLUI_SCROLL_ARROW_WIDTH-1,GLUI_SCROLL_ARROW_HEIGHT-1);
@@ -414,7 +426,7 @@ void GLUI_Scrollbar::draw_scroll() {
 void GLUI_Scrollbar::draw_scroll_box(int x, int y, int w, int h)
 {
   if (!enabled) return;
-  glColor3ubv(&glui->bkgd_color.r);
+  glColor3ubv(glui->bkgd_color);
   glRecti(x,y,x+w,y+h);
   glui->draw_raised_box(x,y, w-1, h-1);
   
