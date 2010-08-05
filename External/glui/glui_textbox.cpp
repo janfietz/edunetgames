@@ -13,19 +13,21 @@
   WWW:    http://sourceforge.net/projects/glui/
   Forums: http://sourceforge.net/forum/?group_id=92496
 
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
+  This software is provided 'as-is', without any express or implied 
+  warranty. In no event will the authors be held liable for any damages 
+  arising from the use of this software. 
 
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
+  Permission is granted to anyone to use this software for any purpose, 
+  including commercial applications, and to alter it and redistribute it 
+  freely, subject to the following restrictions: 
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  1. The origin of this software must not be misrepresented; you must not 
+  claim that you wrote the original software. If you use this software 
+  in a product, an acknowledgment in the product documentation would be 
+  appreciated but is not required. 
+  2. Altered source versions must be plainly marked as such, and must not be 
+  misrepresented as being the original software. 
+  3. This notice may not be removed or altered from any source distribution. 
 
 *****************************************************************************/
 
@@ -319,7 +321,7 @@ int    GLUI_TextBox::key_handler( unsigned char key,int modifiers )
 void GLUI_TextBox::enable( void )
 {
   GLUI_Control::enable();
-  scrollbar->enable();
+  if (scrollbar) scrollbar->enable();
 }
 
 /****************************** GLUI_TextBox::disable() **********/
@@ -327,7 +329,7 @@ void GLUI_TextBox::enable( void )
 void GLUI_TextBox::disable( void )
 {
   GLUI_Control::disable();
-  scrollbar->disable();
+  if (scrollbar) scrollbar->disable();
 }
 
 /****************************** GLUI_TextBox::activate() **********/
@@ -338,13 +340,13 @@ void    GLUI_TextBox::activate( int how )
     dump( stdout, "-> ACTIVATE" );
   active = true;
 
+  orig_text = text;
+
   if ( how == GLUI_ACTIVATE_MOUSE )
     return;  /* Don't select everything if activated with mouse */
 
-  orig_text = text;
-
   sel_start    = 0;
-  sel_end      = int(text.length());
+  sel_end      = text.length();
   insertion_pt = 0;
   if ( debug )
     dump( stdout, "<- ACTIVATE" );
@@ -438,7 +440,7 @@ void    GLUI_TextBox::draw( int x, int y )
   /* Begin Drawing Lines of Text */
   substring_start = 0;
   substring_end = 0;
-  text_length = int(text.length())-1;
+  text_length = text.length()-1;
 
   /* Figure out how wide the box is */
   box_width = get_box_width();
@@ -496,7 +498,7 @@ void    GLUI_TextBox::draw( int x, int y )
 int    GLUI_TextBox::update_substring_bounds( void )
 {
   int box_width;
-  int text_len = int(text.length());
+  int text_len = text.length();
   int old_start, old_end;
 
   old_start = substring_start;
@@ -676,7 +678,7 @@ int  GLUI_TextBox::find_insertion_pt( int x, int y )
   insert_x = x;
   insert_y = y;
 
-  int text_length = int(text.length())-1;
+  int text_length = text.length()-1;
   int box_width = get_box_width();
 
   int sol = 0;
@@ -789,7 +791,7 @@ void     GLUI_TextBox::draw_insertion_pt( void )
 
   sol = 0;
   eol = 0;
-  text_length = int(text.length())-1;
+  text_length = text.length()-1;
 
   //while (eol < text_length && text[eol] != '\n' 
   //       && substring_width(sol, eol + 1) < box_width )
@@ -947,7 +949,7 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     // update keygoal_x!
   }
   else if ( key == GLUT_KEY_END ) {
-    insertion_pt = int(text.length());
+    insertion_pt = text.length();
     // update keygoal_x!
   }
 
@@ -958,11 +960,11 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     sel_start = sel_end = insertion_pt;
   
 
-  CLAMP( insertion_pt, 0, (int)text.length()); /* Make sure insertion_pt 
+  CLAMP( insertion_pt, 0, text.length()); /* Make sure insertion_pt 
                            is in bounds */
-  CLAMP( sel_start, 0, (int)text.length()); /* Make sure insertion_pt 
+  CLAMP( sel_start, 0, text.length()); /* Make sure insertion_pt 
                         is in bounds */
-  CLAMP( sel_end, 0, (int)text.length()); /* Make sure insertion_pt 
+  CLAMP( sel_end, 0, text.length()); /* Make sure insertion_pt 
                           is in bounds */
 
   /******** Now redraw text ***********/
@@ -984,7 +986,7 @@ int    GLUI_TextBox::find_word_break( int start, int direction )
 {
   int    i, j;
   char    breaks[] = " \n\t:-.,";
-  int     num_break_chars = (int)strlen(breaks), text_len = int(text.length());
+  int     num_break_chars = (int)strlen(breaks), text_len = text.length();
   int     new_pt;
 
   /** If we're moving left, we have to start two back, in case we're either
@@ -1046,7 +1048,7 @@ void    GLUI_TextBox::set_text( const char *new_text )
   text = new_text;
 
   substring_start = 0;
-  substring_end   = int(text.length()) - 1;
+  substring_end   = text.length() - 1;
   insertion_pt    = -1;
   sel_start       = 0;
   sel_end         = 0;
@@ -1092,7 +1094,7 @@ int    GLUI_TextBox::mouse_over( int state, int x, int y )
 }
 
 void GLUI_TextBox::scrollbar_callback(GLUI_Control *my_scrollbar) {
-	GLUI_Scrollbar *sb = my_scrollbar->dynamicCastGLUI_Scrollbar();
+  GLUI_Scrollbar *sb = dynamic_cast<GLUI_Scrollbar*>(my_scrollbar);
   if (!sb) return;
   GLUI_TextBox* me = (GLUI_TextBox*) sb->associated_object;
   if (me->scrollbar == NULL)

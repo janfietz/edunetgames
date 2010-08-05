@@ -42,13 +42,69 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)
 
 ADD_LIBRARY(GLUI
-	arcball.h			glui_checkbox.cpp		glui_internal.h			glui_panel.cpp			glui_spinner.cpp		glui_treepanel.cpp
-GL				glui.cpp			glui_column.cpp			glui_internal_control.h		glui_radio.cpp			glui_statictext.cpp		glui_window.cpp
-Jamfile				glui_add_controls.cpp		glui_commandline.cpp		glui_list.cpp			glui_rollout.cpp		glui_string.cpp			quaternion.cpp
-algebra3.cpp			glui_bitmap_img_data.cpp	glui_control.cpp		glui_listbox.cpp		glui_rotation.cpp		glui_textbox.cpp		quaternion.h
-algebra3.h			glui_bitmaps.cpp		glui_edittext.cpp		glui_mouse_iaction.cpp		glui_scrollbar.cpp		glui_translation.cpp
-arcball.cpp			glui_button.cpp			glui_filebrowser.cpp		glui_node.cpp			glui_separator.cpp		glui_tree.cpp
-
+algebra3.cpp
+algebra3.h
+arcball.cpp
+arcball.h
+glui.cpp
+glui_add_controls.cpp
+glui_bitmap_img_data.cpp
+glui_bitmaps.cpp
+glui_button.cpp
+glui_checkbox.cpp
+glui_column.cpp
+glui_commandline.cpp
+glui_control.cpp
+glui_edittext.cpp
+glui_filebrowser.cpp
+glui_img_checkbox_0.c
+glui_img_checkbox_0_dis.c
+glui_img_checkbox_1.c
+glui_img_checkbox_1_dis.c
+glui_img_downarrow.c
+glui_img_leftarrow.c
+glui_img_listbox_down.c
+glui_img_listbox_down.ppm
+glui_img_listbox_up.c
+glui_img_listbox_up.ppm
+glui_img_listbox_up_dis.c
+glui_img_listbox_up_dis.ppm
+glui_img_radiobutton_0.c
+glui_img_radiobutton_0_dis.c
+glui_img_radiobutton_1.c
+glui_img_radiobutton_1_dis.c
+glui_img_rightarrow.c
+glui_img_spindown_0.c
+glui_img_spindown_1.c
+glui_img_spindown_dis.c
+glui_img_spinup_0.c
+glui_img_spinup_1.c
+glui_img_spinup_dis.c
+glui_img_uparrow.c
+glui_internal.h
+glui_internal_control.h
+glui_list.cpp
+glui_listbox.cpp
+glui_mouse_iaction.cpp
+glui_node.cpp
+glui_panel.cpp
+glui_radio.cpp
+glui_rollout.cpp
+glui_rotation.cpp
+glui_scrollbar.cpp
+glui_separator.cpp
+glui_spinner.cpp
+glui_statictext.cpp
+glui_string.cpp
+glui_textbox.cpp
+glui_translation.cpp
+glui_tree.cpp
+glui_treepanel.cpp
+glui_window.cpp
+quaternion.cpp
+quaternion.h
+viewmodel.cpp
+viewmodel.h
 )
 
 set_target_properties( GLUI PROPERTIES

@@ -17,3 +17,5 @@ syntax: regexp
 ^Temp/.*
 ^buildlinux/.*
 ^buildwin32/.*
+build_osx
+build_eclipse
