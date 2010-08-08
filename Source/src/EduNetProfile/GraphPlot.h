@@ -236,7 +236,6 @@ namespace Profile
 		}
 		GraphValues& accessValues( size_t uiIdx )
 		{
-			size_t uiSize = this->size();
 			while( this->size() < uiIdx + 1 )
 			{
 				this->push_back( GraphValues() );

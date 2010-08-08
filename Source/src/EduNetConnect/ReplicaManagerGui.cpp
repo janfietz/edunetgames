@@ -188,12 +188,9 @@ void ReplicaManagerGui::changeReplicationSendParams( GLUI_Control* pkControl )
 	{
 		return;
 	}
-	GLUI_Listbox* pkList = pkControl->dynamicCastGLUI_Listbox();
-	if (NULL == pkList)
-	{
-		return;
-	}
-	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();	
+	ReplicationParams& kReplicationParams = pkPlugin->accessReplicationParams();
+
+	GLUI_Listbox* pkList = (GLUI_Listbox*)pkControl;
 	GLUI_Listbox_Item* pkItem = pkList->get_item_ptr( pkList->curr_text.c_str() );
 	switch( pkControl->get_id() )
 	{

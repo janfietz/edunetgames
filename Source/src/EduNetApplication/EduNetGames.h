@@ -173,6 +173,8 @@ private:
     static void pushPhase ( const int newPhase );
     static void popPhase ( void );
     static void updatePhaseTimers ( void );
+	
+	static void setGlutFunctions( void );
 
     // XXX apparently MS VC6 cannot handle initialized static const members,
     // XXX so they have to be initialized not-inline.
