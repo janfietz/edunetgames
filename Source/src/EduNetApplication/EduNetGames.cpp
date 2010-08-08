@@ -1077,21 +1077,23 @@ void displayFunc ( void )
 {
     ET_PROFILE ( displayFunc );
 
-    int current_window, new_window ( 0 );
-    current_window = glutGetWindow();
-    if ( GLUI_Master.gluis.first_child() != NULL )
-    {
-        new_window = ( ( GLUI_Main* ) GLUI_Master.gluis.first_child() )->getMainWindowId();
-    }
-    if ( ( new_window > 0 ) && ( new_window != current_window ) )
-    {
-        //--- Window is changed only if its not already the current window ---
-        glutSetWindow ( new_window );
-    }
+	
+    //int current_window, new_window ( 0 );
+//    current_window = glutGetWindow();
+//    if ( GLUI_Master.gluis.first_child() != NULL )
+//    {
+//        new_window = ( ( GLUI_Main* ) GLUI_Master.gluis.first_child() )->get_glut_window_id();
+//    }
+//    if ( ( new_window > 0 ) && ( new_window != current_window ) )
+//    {
+//        //--- Window is changed only if its not already the current window ---
+//        glutSetWindow ( new_window );
+//    }
+	 
 
     displayFunc000();
 
-    glutSetWindow ( current_window );
+    //glutSetWindow ( current_window );
 }
 // ------------------------------------------------------------------------
 void idleFunc ( void )
@@ -1101,7 +1103,7 @@ void idleFunc ( void )
 #else
     EduNet::Application::sleep ( 1 );
 #endif
-#if 0
+#if 1
     /* According to the GLUT specification, the current window is
     undefined during an idle callback.  So we need to explicitly change
     it if necessary */
@@ -1110,7 +1112,7 @@ void idleFunc ( void )
 
     glutPostRedisplay();
 #endif
-    displayFunc();
+    //displayFunc();
 //              glutSetWindow(windowID);
 //              glutPostRedisplay();
 }
@@ -1170,56 +1172,74 @@ OpenSteer::OpenSteerDemo::initializeGraphics ( int argc, char **argv )
 #endif //WIN32
 
 
-    reshapeFunc ( ww, wh );
+    //reshapeFunc ( ww, wh );
     initGL ();
 
     // register our display function, make it the idle handler too
-    glutDisplayFunc ( &displayFunc );
-    glutIdleFunc ( &idleFunc );
+	setGlutFunctions();
+	
+	GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
+    GLUI_Master.set_glutKeyboardFunc ( &keyboardFunc );
+    GLUI_Master.set_glutSpecialFunc ( NULL );
+    GLUI_Master.set_glutIdleFunc ( &idleFunc );
+    GLUI_Master.set_glutDisplayFunc ( &displayFunc );
+    GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
 
-    // register handler for window reshaping
-    glutReshapeFunc ( &reshapeFunc );
-
-    // register handler for keyboard events
-    glutKeyboardFunc ( &keyboardFunc );
-    glutKeyboardUpFunc ( &keyboardFuncUp );
-
-    glutSpecialFunc ( &keyboardSpecialFunc );
-
-    // register handler for mouse button events
-    glutMouseFunc ( &mouseButtonFunc );
-
-    // register handler to track mouse motion when any button down
-    glutMotionFunc ( mouseMotionFunc );
-
-    // register handler to track mouse motion when no buttons down
-    glutPassiveMotionFunc ( mousePassiveMotionFunc );
-
-    // register handler for when mouse enters or exists the window
-    glutEntryFunc ( mouseEnterExitWindowFunc );
-
-    // gui elements
+	/****************************************/
+	/*         Here's the GLUI code         */
+	/****************************************/
+	
+	printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
+	
     GLUI* glui = GLUI_Master.create_glui_subwindow ( windowID,
                  GLUI_SUBWINDOW_RIGHT );
+	
+	// sort plugins before adding them to the gui
+    Plugin::sortBySelectionOrder();
+    // add common gui elements
+    EduNet::Application::AccessApplication().addGuiElements ( glui );
 
     // GLUI setup
-    GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
+    /*GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
     GLUI_Master.set_glutKeyboardFunc ( &keyboardFunc );
     GLUI_Master.set_glutSpecialFunc ( &keyboardSpecialFunc );
     GLUI_Master.set_glutIdleFunc ( &idleFunc );
     GLUI_Master.set_glutDisplayFunc ( &displayFunc );
-    GLUI_Master.set_glutSpecialUpFunc ( &keyboardSpecialUpFunc );
     GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
-
+*/
+	
     glui->set_main_gfx_window ( windowID );
 
 
-    // sort plugins before adding them to the gui
-    Plugin::sortBySelectionOrder();
-    // add common gui elements
-    EduNet::Application::AccessApplication().addGuiElements ( glui );
+   
 }
-
+//-----------------------------------------------------------------------------
+void OpenSteer::OpenSteerDemo::setGlutFunctions( void )
+{
+	glutDisplayFunc ( &displayFunc );
+    glutIdleFunc ( &idleFunc );
+	
+    // register handler for window reshaping
+    glutReshapeFunc ( &reshapeFunc );
+	
+    // register handler for keyboard events
+    glutKeyboardFunc ( &keyboardFunc );
+    glutKeyboardUpFunc ( &keyboardFuncUp );
+	
+    glutSpecialFunc ( &keyboardSpecialFunc );
+	
+    // register handler for mouse button events
+    glutMouseFunc ( &mouseButtonFunc );
+	
+    // register handler to track mouse motion when any button down
+    glutMotionFunc ( mouseMotionFunc );
+	
+    // register handler to track mouse motion when no buttons down
+    glutPassiveMotionFunc ( mousePassiveMotionFunc );
+	
+    // register handler for when mouse enters or exists the window
+    glutEntryFunc ( mouseEnterExitWindowFunc );
+}
 //-----------------------------------------------------------------------------
 // run graphics event loop
 void
