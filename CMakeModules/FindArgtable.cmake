@@ -14,10 +14,12 @@ FIND_LIBRARY (Argtable_LIBRARY NAMES argtable2
     /usr/local/lib64
     /usr/local/lib
     /opt/local/lib
+	 ${ARGTABLE_ROOT}/lib
     )
 
 FIND_PATH (Argtable_INCLUDES argtable2.h
     ENV CPATH
+	${ARGTABLE_ROOT}/include
     /usr/include
     /usr/local/include
     /opt/local/include
