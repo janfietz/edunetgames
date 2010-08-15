@@ -30,11 +30,8 @@
 #include "EduNetLog.h"
 
 // command line parsing
-#if WIN32
-	#include "argtable2-11/src/argtable2.h"
-#else
-	#include "argtable2.h"
-#endif //
+#include "argtable2.h"
+
 // To include EXIT_SUCCESS
 #include <cstdlib>
 

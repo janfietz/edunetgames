@@ -5,7 +5,7 @@
 #  RakNet_INCLUDES - the RakNet include directory
 #  RakNet_LIBRARY - Link these to use RakNet
 
-FIND_LIBRARY (RakNet_LIBRARY NAMES RakNetStatic
+FIND_LIBRARY (RakNet_LIBRARY_RELEASE NAMES RakNetLibStatic
     PATHS
     ENV LD_LIBRARY_PATH
     ENV LIBRARY_PATH
@@ -14,21 +14,46 @@ FIND_LIBRARY (RakNet_LIBRARY NAMES RakNetStatic
     /usr/local/lib64
     /usr/local/lib
     /opt/local/lib
+	${RAKNET_ROOT}/lib
     )
+	
+FIND_LIBRARY (RakNet_LIBRARY_DEBUG NAMES RakNetLibStaticDebug
+    PATHS
+    ENV LD_LIBRARY_PATH
+    ENV LIBRARY_PATH
+    /usr/lib64
+    /usr/lib
+    /usr/local/lib64
+    /usr/local/lib
+    /opt/local/lib
+	${RAKNET_ROOT}/lib
+    )	
+	
+	
 
 FIND_PATH (RakNet_INCLUDES raknet/RakPeer.h
     ENV CPATH
     /usr/include
     /usr/local/include
     /opt/local/include
+	${RAKNET_ROOT}/include
     )
-
-IF(RakNet_INCLUDES AND RakNet_LIBRARY)
+ 
+IF(RakNet_INCLUDES AND RakNet_LIBRARY_RELEASE)
     SET(RakNet_FOUND TRUE)
-ENDIF(RakNet_INCLUDES AND RakNet_LIBRARY)
+ENDIF(RakNet_INCLUDES AND RakNet_LIBRARY_RELEASE)
 
 IF(RakNet_FOUND)
   SET(RakNet_INCLUDES ${RakNet_INCLUDES}/raknet)
+  
+  
+   IF (CMAKE_CONFIGURATION_TYPES OR CMAKE_BUILD_TYPE)
+        SET(RakNet_LIBRARY optimized ${RakNet_LIBRARY_RELEASE} debug ${RakNet_LIBRARY_DEBUG})
+      ELSE()
+        # if there are no configuration types and CMAKE_BUILD_TYPE has no value
+        # then just use the release libraries
+        SET(RakNet_LIBRARY ${RakNet_LIBRARY_RELEASE} )
+      ENDIF()
   IF(NOT RakNet_FIND_QUIETLY)
     MESSAGE(STATUS "Found RakNet: ${RakNet_LIBRARIES}")
   ENDIF(NOT RakNet_FIND_QUIETLY)
