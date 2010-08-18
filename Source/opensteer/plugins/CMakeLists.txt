@@ -33,7 +33,7 @@ SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 
 
 LINK_LIBRARIES(
- opensteer  ${GLUT_glut_LIBRARY}
+ opensteer  ${GLUT_glut_LIBRARY} IProf
 )
 
 add_executable(${PROJECT_NAME} ${opensteerDemoSrcs})

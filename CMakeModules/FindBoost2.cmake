@@ -541,6 +541,8 @@ message(STATUS "[ ${CMAKE_CURRENT_LIST_FILE}:${CMAKE_CURRENT_LIST_LINE} ] "
     # to work around the problems.
     if (MSVC90)
       SET (_boost_COMPILER "-vc90")
+	elseif (MSVC10)
+      SET (_boost_COMPILER "-vc100")
     elseif (MSVC80)
       SET (_boost_COMPILER "-vc80")
     elseif (MSVC71)
@@ -549,6 +551,8 @@ message(STATUS "[ ${CMAKE_CURRENT_LIST_FILE}:${CMAKE_CURRENT_LIST_LINE} ] "
       SET (_boost_COMPILER "-vc7") # yes, this is correct
     elseif (MSVC60) # Good luck!
       SET (_boost_COMPILER "-vc6") # yes, this is correct
+	elseif (MSVC) # Good luck!
+      SET (_boost_COMPILER "-vc") # yes, this is correct
     elseif (BORLAND)
       SET (_boost_COMPILER "-bcb")
     elseif("${CMAKE_CXX_COMPILER}" MATCHES "icl" 

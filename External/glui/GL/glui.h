@@ -1713,7 +1713,7 @@ public:
 
     enum { HIST_SIZE = 100 };
 
-    #ifdef _MSC_VER
+    #if (defined _MSC_VER && _MSC_VER < 1600)
     // Explicit template instantiation needed for dll
     template class GLUIAPI std::allocator<GLUI_String>;
     template class GLUIAPI std::vector<GLUI_String, std::allocator<GLUI_String> >;

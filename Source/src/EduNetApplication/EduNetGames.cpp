@@ -1077,23 +1077,12 @@ void displayFunc ( void )
 {
     ET_PROFILE ( displayFunc );
 
-	
-    //int current_window, new_window ( 0 );
-//    current_window = glutGetWindow();
-//    if ( GLUI_Master.gluis.first_child() != NULL )
-//    {
-//        new_window = ( ( GLUI_Main* ) GLUI_Master.gluis.first_child() )->get_glut_window_id();
-//    }
-//    if ( ( new_window > 0 ) && ( new_window != current_window ) )
-//    {
-//        //--- Window is changed only if its not already the current window ---
-//        glutSetWindow ( new_window );
-//    }
-	 
+	if ( glutGetWindow() != windowID )
+		glutSetWindow ( windowID );
 
     displayFunc000();
 
-    //glutSetWindow ( current_window );
+    
 }
 // ------------------------------------------------------------------------
 void idleFunc ( void )
@@ -1103,7 +1092,7 @@ void idleFunc ( void )
 #else
     EduNet::Application::sleep ( 1 );
 #endif
-#if 1
+#if 0
     /* According to the GLUT specification, the current window is
     undefined during an idle callback.  So we need to explicitly change
     it if necessary */
@@ -1112,9 +1101,7 @@ void idleFunc ( void )
 
     glutPostRedisplay();
 #endif
-    //displayFunc();
-//              glutSetWindow(windowID);
-//              glutPostRedisplay();
+    displayFunc();
 }
 
 //-----------------------------------------------------------------------------
