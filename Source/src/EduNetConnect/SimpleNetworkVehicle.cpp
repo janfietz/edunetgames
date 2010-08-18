@@ -488,7 +488,7 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		unsigned char dataType;
 		kStream.ReadAlignedBytes(&dataType,sizeof(unsigned char));
 		ESerializeDataType eDataType = static_cast<ESerializeDataType>(dataType);
-		this->m_kProxyVehicle.m_bSerializedDataTypes[eDataType] = true;
+		kProxy.m_bSerializedDataTypes[eDataType] = true;
 		switch( eDataType )
 		{
 		case(ESerializeDataType_Position):
@@ -588,12 +588,12 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 	{
 		if( lastServerUpdateTicks < newServerUpdateTicks )
 		{
-			this->m_kProxyVehicle.m_bHasNewData = true;
+			kProxy.m_bHasNewData = true;
 		}
 	}
 	else
 	{
-		this->m_kProxyVehicle.m_bHasNewData = true;
+		kProxy.m_bHasNewData = true;
 	}
 }
 //-----------------------------------------------------------------------------
