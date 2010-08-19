@@ -237,8 +237,11 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 
 	// reset the send proxy data
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
-	//mark the proxy having new data
-	kProxy.m_bHasNewData = true;
+
+	if(true == kProxy.m_bHasNewData )
+	{
+		bool bStop = true;
+	}	
 
 	bool bUpdatedProxy = false;
 	if( false == this->m_bHasBeenSerialized )
@@ -285,7 +288,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_Position;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->position(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setForward( this->_forward );
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
@@ -298,7 +301,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_Forward;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->forward(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setForward( this->forward() );
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
@@ -309,7 +312,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_Side;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->side(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setSide( this->side() );
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
@@ -320,7 +323,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_Up;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->up(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setUp( this->up() );
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
@@ -333,7 +336,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 
 		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
 		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getForce(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			// nothing to do here se code above
 		}
@@ -344,7 +347,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		float fValue = this->radius();
 		kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setRadius( this->radius() );
 		}
@@ -355,7 +358,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		float fValue = this->speed();
 		kStream.WriteAlignedBytes((const unsigned char*)&fValue,sizeof(float));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setSpeed( this->speed() );
 		}
@@ -366,7 +369,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
 		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
 		}
@@ -380,7 +383,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		kStream.WriteAlignedBytes((const unsigned char*)&kCompressedRotation,sizeof(osVector3));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
 			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
@@ -397,7 +400,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		AbstractVehicleMath::compressUnitVector( kCompressedRotation, cVector );
 		kStream.WriteAlignedBytes((const unsigned char*)&cVector,sizeof(cVector));
 		kStream.WriteAlignedBytes((const unsigned char*)&wSign,sizeof(char));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			AbstractVehicleMath::expandUnitVector( cVector, kCompressedRotation );
 			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
@@ -410,7 +413,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		const SteeringForceVehicleUpdate& kSteeringForceUpdate = kProxy.getSteeringForceUpdate();
 		kStream.WriteAlignedBytes((const unsigned char*)&kSteeringForceUpdate.getCompressedForce(),sizeof(CompressedVector));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			// nothing to do here ... see code above
 		}
@@ -420,7 +423,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_AngularVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->angularVelocity(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setAngularVelocity( this->angularVelocity() );
 		}
@@ -430,7 +433,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		dataType = ESerializeDataType_LinearVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		kStream.WriteAlignedBytes((const unsigned char*)&this->linearVelocity(),sizeof(OpenSteer::Vec3));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kProxy.setLinearVelocity( this->linearVelocity() );
 		}
@@ -441,11 +444,14 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
 		size_t updateTicks = this->getLocalSpaceData()._updateTicks;
 		kStream.WriteAlignedBytes((const unsigned char*)&updateTicks,sizeof(size_t));
-		if( true == bUpdatedProxy )
+		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			//kProxy._updateTicks = updateTicks;
 		}
 	}
+
+	//mark the proxy having new data
+	kProxy.m_bHasNewData = true;
 
 	return RakNet::RM3SR_BROADCAST_IDENTICALLY;
 }
@@ -459,6 +465,13 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 
 	// reset the received data configuration
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
+
+	if(kProxy.m_bHasNewData == true)
+	{
+		bool bStop = true;
+		return;
+	}
+
 	for( size_t i = 0; i < ESerializeDataType_Count; ++i )
 	{
 		kProxy.m_bSerializedDataTypes[i] = false;
