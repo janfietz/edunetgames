@@ -711,9 +711,12 @@ void    GLUI_EditText::draw_text( int x, int y )
       glColor3b( 32, 32, 32 );
       
     glRasterPos2i( text_x, 13);
-    for( i=substring_start; i<=substring_end; i++ ) {
-      glutBitmapCharacter( get_font(), this->text[i] );
-    }
+	if( 0< this->text.length() )
+	{
+		for( i=substring_start; i<=substring_end; i++ ) {
+			glutBitmapCharacter( get_font(), this->text[i] );
+		}
+	}
   }
   else {                          /* There is a selection */
     int x = text_x;
@@ -812,10 +815,12 @@ void     GLUI_EditText::draw_insertion_pt( void )
     + 2                             /* The edittext box has a 2-pixel margin */
     + GLUI_EDITTEXT_BOXINNERMARGINX;   /** plus this many pixels blank space
 					 between the text and the box       **/
-
-  for( i=substring_end; i>=insertion_pt; i-- ) {
-    curr_x -= char_width( text[i] ); 
-  }  
+  if( 0 < text.length() )
+  {
+	  for( i=substring_end; i>=insertion_pt; i-- ) {
+		  curr_x -= char_width( text[i] ); 
+	  }  
+  }
 
   glColor3f( 0.0, 0.0, 0.0 );
   glBegin( GL_LINE_LOOP );
@@ -844,10 +849,11 @@ int  GLUI_EditText::substring_width( int start, int end )
   int i, width;
 
   width = 0;
-
-  for( i=start; i<=end; i++ )
-    width += char_width( text[i] ); 
-
+  if (0 < text.length())
+  {
+	  for( i=start; i<=end; i++ )
+		  width += char_width( text[i] );
+  }  
   return width;
 }
  
