@@ -39,18 +39,6 @@
 #define ET_DEFAULT_REPLICATION_INTERVAL 1000 / ET_DEFAULT_REPLICATION_FPS
 
 //-----------------------------------------------------------------------------
-typedef struct TReplicationParams
-{
-public:
-	TReplicationParams():
-	  fReplicationFrameRate( ET_DEFAULT_REPLICATION_FPS ),
-	  interval(ET_DEFAULT_REPLICATION_INTERVAL){}		
-	  RakNet::PRO sendParameter;
-	  float fReplicationFrameRate;
-	  RakNetTime interval;
-} ReplicationParams;
-
-//-----------------------------------------------------------------------------
 enum ENetworkSessionType
 {
 	ENetworkSessionType_Undefined,
@@ -58,6 +46,29 @@ enum ENetworkSessionType
 	ENetworkSessionType_Peer,
 	ENetworkSessionType_Count
 };
+
+
+//-----------------------------------------------------------------------------
+typedef struct TReplicationParams
+{
+public:
+	TReplicationParams():
+	  fReplicationFrameRate( ET_DEFAULT_REPLICATION_FPS ),
+		  interval(ET_DEFAULT_REPLICATION_INTERVAL){}		
+	  RakNet::PRO sendParameter;
+	  float fReplicationFrameRate;
+	  RakNetTime interval;
+} ReplicationParams;
+
+//-----------------------------------------------------------------------------
+typedef struct TConnectSettings
+{
+public:
+	unsigned int uiServerStartPort;
+	unsigned int uiClientStartPort;
+	unsigned int uiPortPongCount;
+	RakNet::RakString sessionPassword;
+}ConnectSettings;
 
 
 //-----------------------------------------------------------------------------
@@ -111,5 +122,6 @@ public:
 	  int minExtraPing;
 	  int extraPingVariance;
 }NetworkSimulatorData;
+
 
 #endif // __REPLICATIONTYPES_H__
