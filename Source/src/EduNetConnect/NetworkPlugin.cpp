@@ -211,11 +211,13 @@ void NetworkPlugin::addReplicaManagerGui( void* pkUserdata  )
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::open( void )
-{
+{	
+	EduNetConnect::queryConnectionsSettings(this->m_ConnectionSettings);
+
 	this->CreateNetworkInterface();
 	this->StartNetworkSession();
 	this->CreateContent();
-        this->acceptConnections();
+    this->acceptConnections();
 }
 
 //-----------------------------------------------------------------------------
@@ -442,9 +444,11 @@ void NetworkPlugin::CheckPongTimeout( void )
 	if( kCurrent > this->m_kPongEndTime )
 	{
 		this->m_iWaitForPongPort += 1;
-		if(this->m_uiPortPongCount <= this->m_iWaitForPongPort - this->m_uiStartPort)
+
+		const unsigned int uiPortCount = this->m_ConnectionSettings.uiPortPongCount;		
+		if(uiPortCount <= this->m_iWaitForPongPort - this->m_uiStartPort)
 		{
-			this->m_iWaitForPongPort -= this->m_uiPortPongCount;
+			this->m_iWaitForPongPort -= uiPortCount;
 		}
 		this->m_iWaitForPongPort *= -1;
 	}
@@ -464,18 +468,11 @@ void NetworkPlugin::DeleteContent( void )
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::InitializeServerPortSettings( void )
-{
-	this->InitializeServerPortAndPongCount();
+{	
+	this->m_uiStartPort = this->m_ConnectionSettings.uiServerStartPort;	
+
 	this->accessCurrentAddress().port = this->m_uiStartPort;
-
 	this->m_iWaitForPongPort = -1 * this->m_uiStartPort;
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::InitializeServerPortAndPongCount( void )
-{
-	this->m_uiStartPort = SERVER_PORT;
-	this->m_uiPortPongCount = SERVER_PONG_COUNT;
 }
 
 //-----------------------------------------------------------------------------
@@ -505,9 +502,9 @@ void NetworkPlugin::DestroyNetworkInterface( void )
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::StartClientNetworkSession( void )
-{
+{	
+	this->m_uiStartPort = this->m_ConnectionSettings.uiClientStartPort;
 	SocketDescriptor& sd = this->m_kSocketDescriptor;
-	this->m_uiStartPort = CLIENT_PORT;
 	sd.port = this->m_uiStartPort;
 	if( true == this->StartupNetworkSession( sd, 1, 0 ) )
 	{
@@ -530,12 +527,22 @@ bool NetworkPlugin::StartupNetworkSession( SocketDescriptor& sd, unsigned short 
 				++sd.port;
 			if( true == this->m_pNetInterface->Startup( maxAllowed, threadSleepTimer, &sd, 1 ) )
 			{
+				//give a password
+				this->setIncommingPassword();
+
 				this->m_pNetInterface->SetMaximumIncomingConnections( maxIncoming );
 				bStarted = true;
 			}
 		}
 	}
 	return bStarted;
+}
+//-----------------------------------------------------------------------------
+void NetworkPlugin::setIncommingPassword( void )
+{
+	const char* pszIncommingPassword = this->m_ConnectionSettings.sessionPassword.C_String();
+	int	incommingPasswordLength =  this->m_ConnectionSettings.sessionPassword.GetLength();
+	this->m_pNetInterface->SetIncomingPassword( pszIncommingPassword, incommingPasswordLength );
 }
 
 //-----------------------------------------------------------------------------
@@ -633,6 +640,13 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 	case ID_CONNECTION_LOST:
 		printf("ID_CONNECTION_LOST\n");
 		break;
+	case ID_INVALID_PASSWORD:
+		printf("ID_INVALID_PASSWORD\n");
+		break;
+	case ID_MODIFIED_PACKET:
+		printf("ID_MODIFIED_PACKET\n");
+		break;
+
 	case ID_PONG:
 		{
 			//printf("ID_PONG\n");
@@ -677,9 +691,13 @@ void NetworkPlugin::ConnectToAddress( const NetworkAddress& kAddress )
 	uiTimeout = 3600000;
 #endif
 
+	const char* pszPassword = this->m_ConnectionSettings.sessionPassword.C_String();
+	size_t passwordLength = this->m_ConnectionSettings.sessionPassword.GetLength();
 	this->m_pNetInterface->Connect(
 		kAddress.addressString.C_String(),
-		kAddress.port,0,0, 0, 12, 500, uiTimeout);
+		kAddress.port,
+		pszPassword,passwordLength,
+		0, 12, 500, uiTimeout);
 }
 
 //-----------------------------------------------------------------------------

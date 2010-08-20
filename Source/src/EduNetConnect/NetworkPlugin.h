@@ -30,7 +30,6 @@
 
 #define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
 #include "EduNetConnect/EduNetConnect.h"
-
 #include "EduNetConnect/ReplicaManagerGui.h"
 
 #include "EduNetConnect/NetworkPlot.h"
@@ -40,6 +39,10 @@
 #include "OpenSteer/Plugin.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
+namespace EduNetConnect
+{
+	extern void queryConnectionsSettings( ConnectSettings& kSettings );
+}
 
 
 //-----------------------------------------------------------------------------
@@ -107,6 +110,7 @@ public:
 	bool StartupNetworkSession(
 		SocketDescriptor& sd, unsigned short maxAllowed, unsigned short maxIncoming );
 
+		
 	void ConnectToAddress( const NetworkAddress& kAddress );
 
 	const NetworkAddress& getCurrentAddress( void ) const
@@ -165,9 +169,9 @@ protected:
 
 	RakPeerInterface* m_pNetInterface;
 	NetworkIDManager* m_pkNetworkIdManager;
-
+	
+	ConnectSettings m_ConnectionSettings;
 	unsigned int m_uiStartPort;
-	unsigned int m_uiPortPongCount;
 
 	int m_iWaitForPongPort;
 	static int ms_bShowMotionStatePlot;
@@ -185,8 +189,7 @@ private:
 	void DestroyNetworkInterface( void );
 	virtual bool HasIdAuthority( void ) const {return false;}
 
-	void InitializeServerPortSettings( void );
-	virtual void InitializeServerPortAndPongCount( void );
+	void InitializeServerPortSettings( void );	
 
 	virtual bool addConnectBox( void ){ return false; }
 
@@ -203,6 +206,8 @@ private:
 
 	void addNetworkSimulatorGui( void* pkUserdata );
         void acceptConnections( void );
+
+	void setIncommingPassword( void );
 
 	RakNet::ReplicaManager3* m_pkGamePluginReplicaManager;
 	ReplicaManagerGui m_kReplicaManagerGui;
