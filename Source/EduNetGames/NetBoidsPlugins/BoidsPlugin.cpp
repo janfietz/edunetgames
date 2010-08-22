@@ -62,7 +62,6 @@
 
 #include "NetBoidGameLogic.h"
 #include "NetBoidEntityFactory.h"
-NetBoidFactory gOfflineNetBoidFactory;
 
 // Include names declared in the OpenSteer namespace into the
 // namespaces to search to find names.
@@ -79,13 +78,24 @@ size_t uiInitialFlockSize = 50;
 
 //-----------------------------------------------------------------------------
 NetBoidsPlugin::NetBoidsPlugin ( bool bAddToRegistry ) :
-        BaseClass ( bAddToRegistry )
-{
-    this->setEntityFactory ( &gOfflineNetBoidFactory );
+        BaseClass ( bAddToRegistry ),
+		pd(NULL)
+{	
+	this->m_boidFactory = ET_NEW NetBoidFactory();	
+	this->setEntityFactory(m_boidFactory);
 }
+
+//-----------------------------------------------------------------------------
+NetBoidsPlugin::~NetBoidsPlugin ( ) 
+{	
+	this->setEntityFactory( NULL );
+	ET_SAFE_DELETE (m_boidFactory );	
+}
+
 //-----------------------------------------------------------------------------
 void NetBoidsPlugin::open ( void )
 {
+	
     // make the database used to accelerate proximity queries
     cyclePD = -1;
     this->pd = NULL;
