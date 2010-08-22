@@ -33,9 +33,11 @@
 
 #include "NetBoid.h"
 
+
 // Include names declared in the OpenSteer namespace into the
 // namespaces to search to find names.
 //using namespace OpenSteer;
+class NetBoidFactory;
 
 namespace OpenSteer
 {
@@ -59,7 +61,7 @@ class NetBoidsPlugin : public OpenSteer::Plugin
     ET_DECLARE_BASE ( OpenSteer::Plugin );
 public:
     NetBoidsPlugin ( bool bAddToRegistry = false );
-    virtual ~NetBoidsPlugin() {} // be more "nice" to avoid a compiler warning
+    virtual ~NetBoidsPlugin();
 
     const char* name ( void ) const
     {
@@ -190,6 +192,7 @@ private:
     SO insideBigSphere, outsideSphere0, outsideSphere1, outsideSphere2,
     outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
+	class NetBoidFactory* m_boidFactory;
 };
 }
 
