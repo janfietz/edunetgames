@@ -28,6 +28,14 @@
 
 #include "NetBoidPlugins.h"
 
+//-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT;
+	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.sessionPassword = "NetBoidTutorials";
+	kSettings.uiPortPongCount = 10;
+}
 
 //NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( true );
 //NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );
