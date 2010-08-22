@@ -42,6 +42,15 @@
 #include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT;
+	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.sessionPassword = "Tutorial7";
+	kSettings.uiPortPongCount = 10;
+}
+
+//-----------------------------------------------------------------------------
 // network plugins
 //-----------------------------------------------------------------------------
 

@@ -32,6 +32,14 @@
 
 #include "EduNetConnect/AbstractEntityReplica.h"
 
+//-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT;
+	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.sessionPassword = "Tutorial6";
+	kSettings.uiPortPongCount = 10;
+}
 NetSoccerEntityFactory gCLientNetSoccerEntityFactory;
 
 //-------------------------------------------------------------------------
