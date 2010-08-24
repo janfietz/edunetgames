@@ -368,14 +368,10 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		SocketDescriptor& sd = this->m_kSocketDescriptor;
 		status << " Port: ";
 		status << sd.port << std::endl;;
-		status << "Packets/Messages Received: ";
-		status << this->m_kStats.m_uiPacketsReceived;
-		status << "/";
-		status << this->m_kStats.m_uiMessagesReceived;
+		status << "Bytes Received: ";
+		status << this->m_kStats.m_uiBytesReceived;
 		status << " Sent: ";
-		status << this->m_kStats.m_uiPacketsSent;
-		status << "/";
-		status << this->m_kStats.m_uiMessagesSent;
+		status << this->m_kStats.m_uiBytesSend;
 
 		status << std::endl;
 		const float h = OpenSteer::drawGetWindowHeight();
@@ -623,7 +619,7 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 	switch( pPacket->data[0] )
 	{
 	case ID_CONNECTION_ATTEMPT_FAILED:
-		printf("ID_CONNECTION_ATTEMPT_FAILED\n");
+		printf("ID_CONNECTION_ATTEMPT_FAILED %s\n", pPacket->systemAddress.ToString());
 		break;
 	case ID_NO_FREE_INCOMING_CONNECTIONS:
 		printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
@@ -635,16 +631,18 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 		printf("ID_NEW_INCOMING_CONNECTION from %s\n", pPacket->systemAddress.ToString());
 		break;
 	case ID_DISCONNECTION_NOTIFICATION:
-		printf("ID_DISCONNECTION_NOTIFICATION\n");
+		printf("ID_DISCONNECTION_NOTIFICATION %s\n", pPacket->systemAddress.ToString());
 		break;
 	case ID_CONNECTION_LOST:
-		printf("ID_CONNECTION_LOST\n");
+		printf("ID_CONNECTION_LOST %s\n", pPacket->systemAddress.ToString());
 		break;
 	case ID_INVALID_PASSWORD:
-		printf("ID_INVALID_PASSWORD\n");
+		printf("ID_INVALID_PASSWORD (%s) %s\n",
+			this->m_ConnectionSettings.sessionPassword.C_String(),
+			pPacket->systemAddress.ToString() );
 		break;
 	case ID_MODIFIED_PACKET:
-		printf("ID_MODIFIED_PACKET\n");
+		printf("ID_MODIFIED_PACKET %s\n", pPacket->systemAddress.ToString());
 		break;
 
 	case ID_PONG:
@@ -760,10 +758,8 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 {
 	RakNetStatistics kStats;
 	this->gatherNetworkStatistics( kStats );
-	this->m_kStats.m_uiPacketsSent = kStats.runningTotal[USER_MESSAGE_BYTES_SENT];
-	this->m_kStats.m_uiPacketsReceived = kStats.runningTotal[USER_MESSAGE_BYTES_RECEIVED_PROCESSED];
-	this->m_kStats.m_uiMessagesSent = 0;
-	this->m_kStats.m_uiMessagesReceived = 0;
+	this->m_kStats.m_uiBytesReceived = kStats.runningTotal[ACTUAL_BYTES_RECEIVED];
+	this->m_kStats.m_uiBytesSend = kStats.runningTotal[ACTUAL_BYTES_RECEIVED];
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
 		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);

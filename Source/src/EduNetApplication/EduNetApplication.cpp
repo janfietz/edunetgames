@@ -588,7 +588,14 @@ bool Application::appWantsToLoadModule (
     const char* kModuleName )
 {
     const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
-    std::string kName(kModuleName);
+    
+	// by default load all
+	if (true == kNames.empty())
+	{
+		return true;
+	}
+
+	std::string kName(kModuleName);
     EtStrings::const_iterator kIter = std::find(kNames.begin(), kNames.end(), kName);
 
     return kIter != kNames.end();

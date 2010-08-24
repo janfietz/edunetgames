@@ -71,6 +71,9 @@ template < class PluginClass >
 void PeerPlugin<PluginClass>::StartNetworkSession ( void )
 {
     this->m_pNetInterface->AttachPlugin ( &this->m_kfullyConnectedMeshPlugin );
+	this->m_kfullyConnectedMeshPlugin.SetConnectOnNewRemoteConnection( true,
+		this->m_ConnectionSettings.sessionPassword );
+
     this->m_pNetInterface->AttachPlugin ( &this->m_kconnectionGraphPlugin );
 
     SocketDescriptor& sd = this->m_kSocketDescriptor;
