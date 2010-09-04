@@ -1,11 +1,11 @@
-project(Tutorial02)
+project(Tutorial01)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${ET_RakNet_SOURCES}/DependentExtensions
 )
 
-file (GLOB Tutorial_Src "${Tutorial02_SOURCE_DIR}/*.cpp")
-file (GLOB Tutorial_Hdrs "${Tutorial02_SOURCE_DIR}/*.h")
+file (GLOB Tutorial_Src "${Tutorial01_SOURCE_DIR}/*.cpp")
+file (GLOB Tutorial_Hdrs "${Tutorial01_SOURCE_DIR}/*.h")
  
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 LINK_LIBRARIES(

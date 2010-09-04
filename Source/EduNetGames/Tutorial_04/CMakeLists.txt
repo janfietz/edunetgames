@@ -1,7 +1,7 @@
 project(Tutorial04)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
-${RakNet_SOURCES}/DependentExtensions
+${ET_RakNet_SOURCES}/DependentExtensions
 )
 
 file (GLOB Tutorial_Src "${Tutorial04_SOURCE_DIR}/*.cpp")
