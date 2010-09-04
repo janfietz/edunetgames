@@ -1,7 +1,7 @@
 project(EduNetCommon)
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
- ${RakNet_SOURCES}/DependentExtensions}
+ ${ET_RakNet_SOURCES}/DependentExtensions}
  )
 
 file (GLOB EduNetCommon_LIB_SRC "${EduNetCommon_SOURCE_DIR}/*.cpp")
@@ -19,7 +19,7 @@ ${EduNetCommon_LIB_SRC}
 ${EduNetCommon_LIB_Hdrs}
 ${OpenSteerUT_LIB_SRC}
 ${OpenSteerUT_LIB_Hdrs}
-${RakNet_SOURCES}/DependentExtensions/RPC3/RPC3.cpp
+${ET_RakNet_SOURCES}/DependentExtensions/RPC3/RPC3.cpp
 )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES
