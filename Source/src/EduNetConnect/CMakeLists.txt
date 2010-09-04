@@ -2,7 +2,7 @@ project(EduNetConnect)
 
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
- ${RakNet_SOURCES}/DependentExtensions
+ ${ET_RakNet_SOURCES}/DependentExtensions
  )
 
 file (GLOB EduNetConnect_LIB_SRC "${EduNetConnect_SOURCE_DIR}/*.cpp")
