@@ -1,7 +1,7 @@
 project(NetSoccer)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
-${RakNet_SOURCES}/DependentExtensions
+${ET_RakNet_SOURCES}/DependentExtensions
 )
 
 file (GLOB Tutorial_Src "${NetSoccer_SOURCE_DIR}/*.cpp")
