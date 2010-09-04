@@ -35,13 +35,17 @@
 //-----------------------------------------------------------------------------
 
 #ifndef EDUNET_NO_OPENSTEER_INCLUDES
-#define EDUNET_NO_OPENSTEER_INCLUDES 0
+#  define EDUNET_NO_OPENSTEER_INCLUDES 0
+#endif
+
+#ifdef EDUNET_INCLUDE_OPENSTEER
+#  undef EDUNET_INCLUDE_OPENSTEER
 #endif
 
 #if EDUNET_NO_OPENSTEER_INCLUDES
-#define EDUNET_INCLUDE_OPENSTEER 0
+#  define EDUNET_INCLUDE_OPENSTEER 0
 #else
-#define EDUNET_INCLUDE_OPENSTEER 1
+#  define EDUNET_INCLUDE_OPENSTEER 1
 #endif
 
 #include "EduNetConfig.h"
@@ -49,10 +53,10 @@
 
 
 #if EDUNET_INCLUDE_OPENSTEER
-#ifndef EDUNET_OPENSTEER_INCLUDED
-#define EDUNET_OPENSTEER_INCLUDED
-#endif
-#include "EduNetExternal.h"
+#  ifndef EDUNET_OPENSTEER_INCLUDED
+#    define EDUNET_OPENSTEER_INCLUDED
+#  endif
+#  include "EduNetExternal.h"
 #endif
 
 
