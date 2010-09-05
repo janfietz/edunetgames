@@ -38,13 +38,13 @@
 
 #define ET_DECLARE_SINGLETON( ClassName ) \
 	public: \
-		static ClassName* accessInstance( void ) { return s_pInstance; } \
-		static void createInstance( void ) { ClassName::s_pInstance = ET_NEW ClassName();} \
-		static void destroyInstance( void ) { ET_SAFE_DELETE(ClassName::s_pInstance);} \
+		static ClassName* accessInstance( void ) { return ClassName::ms_pInstance; } \
+		static void createInstance( void ) { ClassName::ms_pInstance = ET_NEW ClassName();} \
+		static void destroyInstance( void ) { ET_SAFE_DELETE(ClassName::ms_pInstance);} \
 	private: \
-		static ClassName* s_pInstance;
+		static ClassName* ms_pInstance;
 
-#define ET_IMPLEMENT_SINGLETON( ClassName ) ClassName* ClassName::s_pInstance = NULL;
+#define ET_IMPLEMENT_SINGLETON( ClassName ) ClassName* ClassName::ms_pInstance = NULL;
 
 
 #endif /* EDUNETCORE_MACROS_H_ */
