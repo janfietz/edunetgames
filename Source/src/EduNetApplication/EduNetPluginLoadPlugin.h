@@ -1,5 +1,7 @@
+#ifndef __EDUNET_PLUGINLOADPLUGIN_H__
+#define __EDUNET_PLUGINLOADPLUGIN_H__
 //-----------------------------------------------------------------------------
-// Copyright (c) Jan Fietz, Cyrus Preuss
+// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -25,31 +27,45 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
-#include "EduNetApplication/EduNetMain.h"
-
-#include "EduNetApplication/EduNetPluginLoadPlugin.h"
-
-namespace EduNet
-{
-	EduNetPluginLoadPlugin gLoadPlugin;
-	void initializeStaticPlugins( )
-	{
-		gLoadPlugin.loadModules("./");
-		gLoadPlugin.createPluginsFromModules();
-
-	}
-	void shutdownStaticPlugins( )
-	{
-		gLoadPlugin.unloadModules();
-	}
-}
+#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetModule/EduNetModuleManager.h"
 
 //-----------------------------------------------------------------------------
-int main (int argc, char **argv)
+class EduNetPluginLoadPlugin : public OpenSteer::PluginArray
 {
-	return ::EduNetMain( argc, argv );
-}
+	ET_DECLARE_BASE(OpenSteer::PluginArray)
+public:
+	EduNetPluginLoadPlugin( bool bAddToRegistry = false ):
+		BaseClass( bAddToRegistry )
+	{
+
+	}
+
+	OS_IMPLEMENT_CLASSNAME( EduNetPluginLoadPlugin )
+		virtual const char* name() const { return this->getClassName(); };
+
+	void loadModules(const char* pszPath);
+	void unloadModules(void);
+	bool appWantsToLoadModule(const char* kModuleName);
+
+	void createPluginsFromModules ( void );
+	void createPluginsFromModule ( EduNetRawModule* pkModule );
+
+	virtual OpenSteer::AbstractPlugin* createPluginByName(
+		const char* pszPluginName );
+
+protected:
+	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
+		EduNetPluginFactory* pkFactory,
+		const char* pszPluginName );
+
+private:
+
+	EduNetRawModule* findModuleForPlugin(
+		const char* pszPluginName );
+
+	EduNetModuleManager m_modules;
+};
 
 
-
+#endif // __EDUNET_PLUGINLOADPLUGIN_H__

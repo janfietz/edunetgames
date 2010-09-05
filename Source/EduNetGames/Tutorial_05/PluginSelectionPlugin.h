@@ -8,14 +8,15 @@
 
 #include "OpenSteerUT/PluginArray.h"
 
+#include "EduNetApplication/EduNetPluginLoadPlugin.h"
+
 //-----------------------------------------------------------------------------
-template < class PluginClass = OpenSteer::Plugin  >
-class PluginServerPlugin : public PeerPlugin<PluginClass>,
+class PluginServerPlugin : public PeerPlugin<OpenSteer::PluginArray>,
 	public EduNet::PluginHost
 {
-	ET_DECLARE_BASE(PeerPlugin<PluginClass>);
+	ET_DECLARE_BASE(PeerPlugin<OpenSteer::PluginArray>);
 public:
-	PluginServerPlugin(bool bAddToRegistry = true):
+	PluginServerPlugin(bool bAddToRegistry = false):
 	  BaseClass( bAddToRegistry )
 	{
 		m_bAutoConnect = 0;
@@ -36,64 +37,17 @@ public:
 	const char* getCurrentPluginName( void ) const;
 	virtual void SelectPluginByName( const char* pszPluginName ){ };
 
+	void addPlugin( OpenSteer::AbstractPlugin* pkPlugin );
+
 private:
 
 	void InitializeRpcSystem( void );
-
-	virtual void InitializeServerPortAndPongCount( void )
-	{
-		this->m_uiStartPort = 33456;
-//		this->m_uiPortPongCount = 1;
-	}
 
 	
 	PluginSelectorReplicaManager m_kReplicaManager;
 	RakNet::RPC3 m_kRpc3Inst;
 	
 };
-
-//-----------------------------------------------------------------------------
-template < class PluginClass>
-void PluginServerPlugin<PluginClass>::StartNetworkSession( void )
-{
-	BaseClass::StartNetworkSession();
-	this->InitializeRpcSystem();
-}
-
-//-----------------------------------------------------------------------------
-template < class PluginClass>
-void PluginServerPlugin<PluginClass>::InitializeRpcSystem( void )
-{
-	this->m_kRpc3Inst.SetNetworkIDManager( this->m_pkNetworkIdManager );	
-	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, false);
-	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
-	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
-
-	
-}
-//-----------------------------------------------------------------------------
-template < class PluginClass>
-void PluginServerPlugin<PluginClass>::CreateContent ( void )
-{
-	BaseClass::CreateContent();	
-}
-
-//-----------------------------------------------------------------------------
-template < class PluginClass>
-const char* PluginServerPlugin<PluginClass>::name (void) const {
-	const char* pszCurrentPluginName = this->getCurrentPluginName();
-	if(NULL != pszCurrentPluginName )
-	{
-		return pszCurrentPluginName ;
-	}
-	return "PluginServerPlugin";
-}
-//-----------------------------------------------------------------------------
-template < class PluginClass>
-const char* PluginServerPlugin<PluginClass>::getCurrentPluginName( void ) const
-{	
-	return this->m_kGamePlugin.name();	
-}
 
 //-----------------------------------------------------------------------------
 class PluginClientPlugin : public ClientPlugin<OpenSteer::PluginArray>,
@@ -127,12 +81,6 @@ private:
 	{
 		return NULL;
 	};
-
-	virtual void InitializeServerPortAndPongCount( void )
-	{
-		this->m_uiStartPort = 33456;
-//		this->m_uiPortPongCount = 1;
-	}
 
 	PluginSelectorReplicaManager m_kReplicaManager;
 	RakNet::RPC3 m_kRpc3Inst;	

@@ -1,9 +1,40 @@
 #include "PluginSelectionPlugin.h"
+#include "EduNetApplication/EduNetPluginLoadPlugin.h"
 
-// TODO: remove cross link
-#include "EduNetGames/Tutorial_03/NetBoidPlugins.h"
+class EduNetServerPluginLoadPlugin : public EduNetPluginLoadPlugin
+{
+	ET_DECLARE_BASE(EduNetPluginLoadPlugin)
+protected:
+	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
+		EduNetPluginFactory* pkFactory,
+		const char* pszPluginName )
+	{
+		OpenSteer::AbstractPlugin* pkPlugin = 
+			BaseClass::createPluginFromFactoryByName(pkFactory, pszPluginName);
+		if (NULL != pkPlugin)
+		{
+			// create wrapper plugin to serve it to the client
+			PluginServerPlugin* pkSrvPlugin = ET_NEW PluginServerPlugin();
+			pkSrvPlugin->addPlugin( pkPlugin );
+			return pkSrvPlugin;
+		}
+		return NULL;
+	}
+};
 
-namespace{
+namespace EduNet
+{
+	EduNetServerPluginLoadPlugin gLoadPlugin;
+	void initializeStaticPlugins( )
+	{
+		gLoadPlugin.loadModules("./");
+		gLoadPlugin.createPluginsFromModules();
+
+	}
+	void shutdownStaticPlugins( )
+	{
+		gLoadPlugin.unloadModules();
+	}
 
 	class NetPluginClientHost : public PluginClientPlugin
 	{
@@ -14,11 +45,15 @@ namespace{
 			RakNet::RakString kPluginName(pszPluginName);
 			if(kPluginName == "NetBoidRenderPeerPlugin")
 			{
-				return ET_NEW NetBoidRenderClientPlugin();
+				return gLoadPlugin.createPluginByName(kPluginName.C_String());
 			}
-			if(kPluginName == "NetBoidClientServerPlugin")
+			if(kPluginName == "NetBoidMultiplePeerPlugin")
 			{
-				return ET_NEW NetBoidRenderClientPlugin();
+				return gLoadPlugin.createPluginByName("NetBoidRenderPeerPlugin");
+			}
+			if(kPluginName == "NetBoidRenderServerPlugin")
+			{
+				return gLoadPlugin.createPluginByName("NetBoidClientPlugin");
 			}
 			return NULL;
 		}
@@ -26,7 +61,5 @@ namespace{
 		virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 	};
 
-	PluginServerPlugin<NetBoidRenderPeerPlugin> gNetServerHost;
-	PluginServerPlugin<NetBoidClientServerPlugin> gNetClientServerHost;
 	NetPluginClientHost gNetClientHost;
 }

@@ -34,11 +34,13 @@
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetCore/EduNetCore_Macros.h"
-#include "EduNetModule/EduNetModuleManager.h"
 
 namespace EduNet
 {
-
+	
+	extern void initializeStaticPlugins( );
+	extern void shutdownStaticPlugins( );
+	
 //-----------------------------------------------------------------------------
 class Application
 {
@@ -61,13 +63,6 @@ public:
 	void onPluginSelected(OpenSteer::AbstractPlugin* pkPlugin);
 
 	void initialize(void);
-
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadModule(const char* kModuleName);
-
-    void createPluginsFromModules ( void );
-    void createPluginsFromModule ( EduNetRawModule* pkModule );
 
 
 	void initializeGraphics(int argc, char **argv);
@@ -109,7 +104,6 @@ private:
 	osScalar m_fUpdateCPUTime;
 	bool m_bAllowLocalPlayer;
 
-	EduNetModuleManager m_modules;
 	OpenSteer::PluginArray m_plugins;
 
 ET_DECLARE_SINGLETON(Application);

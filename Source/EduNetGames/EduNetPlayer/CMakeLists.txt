@@ -1,5 +1,6 @@
 project(EduNetPlayer)
 INCLUDE_DIRECTORIES(
+ ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${EDUNET_GAMES_SOURCE_DIR}/Source/Src
 )
 file (GLOB Tutorial_Src "${EduNetPlayer_SOURCE_DIR}/*.cpp")

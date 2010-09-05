@@ -45,6 +45,8 @@ void BoidPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames
 	kNames.push_back("NetBoidRenderOfflinePlugin");
 	kNames.push_back("NetBoidRenderPeerPlugin");
 	kNames.push_back("NetBoidMultiplePeerPlugin");
+	kNames.push_back("NetBoidServerPlugin");
+	kNames.push_back("NetBoidClientPlugin");
 
 }
 
@@ -64,6 +66,14 @@ OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
 	if (0 == kName.compare("NetBoidMultiplePeerPlugin"))
 	{
 		return ET_NEW NetBoidMultiplePeerPlugin(false);
+	}
+	if (0 == kName.compare("NetBoidServerPlugin"))
+	{
+		return ET_NEW NetBoidRenderServerPlugin(false);
+	}
+	if (0 == kName.compare("NetBoidClientPlugin"))
+	{
+		return ET_NEW NetBoidRenderClientPlugin(false);
 	}
 	return NULL;
 }

@@ -36,7 +36,17 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.sessionPassword = "Tutorial3";
 	kSettings.uiPortPongCount = 10;
 }
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
 
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
 //-----------------------------------------------------------------------------
 NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( true );
 NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );

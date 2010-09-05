@@ -29,6 +29,7 @@
 //-----------------------------------------------------------------------------
 
 #include "NetBoidPeerPlugin.h"
+#include "NetBoidClientPlugin.h"
 #include "BoidsPlugin.h"
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/CameraPlugin.h"
@@ -149,6 +150,84 @@ public:
 };
 
 
+
+//-----------------------------------------------------------------------------
+// render client plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class NetBoidRenderClientPlugin : 
+	public OpenSteer::PluginArrayPluginMixin<NetClientBoidPlugin>
+{
+	ET_DECLARE_BASE( OpenSteer::PluginArrayPluginMixin<NetClientBoidPlugin> )
+public:
+	NetBoidRenderClientPlugin( bool bAddToRegistry = true ):
+	BaseClass( bAddToRegistry ) {}
+
+	virtual ~NetBoidRenderClientPlugin() {};
+
+	OS_IMPLEMENT_CLASSNAME( NetBoidRenderClientPlugin )
+
+		virtual float selectionOrderSortKey (void) const { return 2.0f ;}
+
+	virtual void initGui( void* pkUserdata )
+	{
+		this->prepare();
+		BaseClass::initGui( pkUserdata );
+	}
+
+	void prepare(void)
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );		
+	}
+
+	virtual void close(void)
+	{		
+		BaseClass::close();
+		this->removeAllPlugins();
+	}
+};
+
+
+//-----------------------------------------------------------------------------
+// client server plugin
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+class NetBoidRenderServerPlugin : public OpenSteer::PluginArray
+{
+	ET_DECLARE_BASE(OpenSteer::PluginArray);
+public:
+
+	NetBoidRenderServerPlugin(bool bAddToRegistry = true):
+	  BaseClass( bAddToRegistry ) {}
+
+	  virtual ~NetBoidRenderServerPlugin(){}
+
+	  OS_IMPLEMENT_CLASSNAME( NetBoidRenderServerPlugin );
+
+	  virtual float selectionOrderSortKey (void) const { return 4.0f ;}
+
+	  //---------------------------------------------------------------------
+	  // interface AbstractPlugin
+	  virtual void initGui( void* pkUserdata )
+	  {
+		  this->prepare();
+		  BaseClass::initGui( pkUserdata );
+	  }
+
+	  void prepare(void)
+	  {
+		  this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		  this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );		  
+	  }
+
+	  virtual void close(void)
+	  {		
+		  BaseClass::close();
+		  this->removeAllPlugins();
+	  }
+};
 
 
 #endif //__NETBOIDPLUGINS_H__

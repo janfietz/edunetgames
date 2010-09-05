@@ -29,17 +29,20 @@
 #include "EduNetApplication/EduNetMain.h"
 #include "EduNetApplication/EduNetApplication.h"
 
-EduNet::EmptyPlugin gEmptyPlugin;
-class MyMemoryTest
+namespace EduNet
 {
-  public:
-    char test[1024];
-};
+	void initializeStaticPlugins( )
+	{
+
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv)
 {
-  MyMemoryTest* t = ET_NEW MyMemoryTest();
-  //ET_DELETE(t);
 	EduNet::Application::AccessApplication().setAllowLocalPlayer( true );
 
 	return ::EduNetMain( argc, argv );

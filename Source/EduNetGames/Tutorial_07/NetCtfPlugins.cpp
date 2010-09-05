@@ -50,6 +50,17 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.uiPortPongCount = 10;
 }
 
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
+
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
 //-----------------------------------------------------------------------------
 // network plugins
 //-----------------------------------------------------------------------------

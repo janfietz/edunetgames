@@ -28,7 +28,17 @@
 
 #define EDUNET_LINK_NET 1
 #include "EduNetApplication/EduNetMain.h"
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
 
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {

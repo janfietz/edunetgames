@@ -27,7 +27,17 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
 
+	}
+	void shutdownStaticPlugins( )
+	{
+		
+	}
+}
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
