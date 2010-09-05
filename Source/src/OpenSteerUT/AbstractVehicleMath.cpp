@@ -246,7 +246,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	btQuaternion AbstractVehicleMath::readRotation( const osLocalSpaceData& kLocalSpaceData )
+	btQuaternion AbstractVehicleMath::computeQuaternionFromLocalSpace( const osLocalSpaceData& kLocalSpaceData )
 	{
 		btMatrix3x3 kWorldRotation;
 		OpenSteer::writeLocalSpaceToRotationMatrix( kLocalSpaceData, kWorldRotation );
@@ -257,7 +257,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void AbstractVehicleMath::writeRotation( const btQuaternion& kRotation, osLocalSpaceData& kLocalSpaceData )
+	void AbstractVehicleMath::writeQuaternionToLocalSpace( const btQuaternion& kRotation, osLocalSpaceData& kLocalSpaceData )
 	{
 		if( false == OpenSteer::isValidQuaterion( kRotation ) )
 		{
