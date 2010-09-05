@@ -89,8 +89,6 @@ int EduNetMain (int argc, char **argv)
 			// run the main event processing loop
 			OpenSteer::OpenSteerDemo::runGraphics ();
 
-
-			EduNet::shutdownStaticPlugins();
 		}
 		iExitCode = EXIT_SUCCESS;
 	}

@@ -191,11 +191,14 @@ void Application::_SDMCleanup( void )
 	}
 //	EduNet::Log::printMessage( "Application cleanup - done." );
 
+	EduNet::shutdownStaticPlugins();
+/*
 	EduNet::Application* pApp = EduNet::Application::accessInstance();
 	if( NULL != pApp )
 	{
 		pApp->unloadModules();
 	}
+*/
 }
 
 
