@@ -29,6 +29,18 @@
 #include "NetBoidModule.h"
 #include "NetBoidPlugins.h"
 
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
+
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
+
 //-----------------------------------------------------------------------------
 BoidPluginFactory::BoidPluginFactory()
 {

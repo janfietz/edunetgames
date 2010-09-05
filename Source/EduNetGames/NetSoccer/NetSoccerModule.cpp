@@ -29,6 +29,18 @@
 #include "NetSoccerModule.h"
 #include "NetSoccerPlugins.h"
 
+namespace EduNet
+{
+	void initializeStaticPlugins( )
+	{
+
+	}
+	void shutdownStaticPlugins( )
+	{
+
+	}
+}
+
 //-----------------------------------------------------------------------------
 NetSoccerPluginFactory::NetSoccerPluginFactory()
 {

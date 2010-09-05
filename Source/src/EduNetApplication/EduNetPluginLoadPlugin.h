@@ -30,6 +30,12 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetModule/EduNetModuleManager.h"
 
+// TODO: @JF [MH] please use an namespace here
+#if 0
+namespace EduNet
+{
+#endif
+
 //-----------------------------------------------------------------------------
 class EduNetPluginLoadPlugin : public OpenSteer::PluginArray
 {

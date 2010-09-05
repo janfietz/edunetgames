@@ -28,6 +28,13 @@
 #include "EduNetPluginLoadPlugin.h"
 #include "EduNetCommon/EduNetOptions.h"
 
+// TODO: @JF [MH] please use an namespace here
+#if 0
+namespace EduNet
+{
+#endif
+
+
 //-----------------------------------------------------------------------------
 void EduNetPluginLoadPlugin::loadModules( const char* pszPath )
 {
