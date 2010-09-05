@@ -43,7 +43,7 @@ private:
 	virtual void InitializeServerPortAndPongCount( void )
 	{
 		this->m_uiStartPort = 33456;
-		this->m_uiPortPongCount = 1;
+//		this->m_uiPortPongCount = 1;
 	}
 
 	
@@ -131,7 +131,7 @@ private:
 	virtual void InitializeServerPortAndPongCount( void )
 	{
 		this->m_uiStartPort = 33456;
-		this->m_uiPortPongCount = 1;
+//		this->m_uiPortPongCount = 1;
 	}
 
 	PluginSelectorReplicaManager m_kReplicaManager;

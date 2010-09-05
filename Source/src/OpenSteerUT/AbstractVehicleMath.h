@@ -80,20 +80,20 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void localToWorldSpace( osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget );
+	void localToWorldSpace( const osAbstractVehicle& kVehicle, const osVector3& kSource, osVector3& kTarget );
 
 
 	osVector3& getVector3( const btVector3& kSource, osVector3& kTarget );
 	btVector3& getVector3( const osVector3& kSource, btVector3& kTarget );
 
-	void readFromRotationMatrix( osLocalSpaceData& kLocalSpace, const btMatrix3x3& kWorldRotation );
-	void readFromMatrix( osLocalSpaceData& kLocalSpace, const btTransform& kWorldTransform );
-	void writeToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation );
-	bool writeToMatrix( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
+	void writeRotationMatrixToLocalSpace( const btMatrix3x3& kWorldRotation, osLocalSpaceData& kLocalSpace );
+	void writeTransformToLocalSpace( const btTransform& kWorldTransform, osLocalSpaceData& kLocalSpace );
+	void writeLocalSpaceToRotationMatrix( const osLocalSpaceData& kLocalSpace, btMatrix3x3& kWorldRotation );
+	bool writeLocalSpaceToTransform( const osLocalSpaceData& kLocalSpace, btTransform& kWorldTransform );
 
-	void readFromMatrix( osAbstractLocalSpace& kVehicle, const btTransform& kWorldTransform );
-	void readFromMatrix( osAbstractVehicle& kVehicle, const btTransform& kWorldTransform );
-	bool writeToMatrix( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
+	void writeTransformToLocalSpace( const btTransform& kWorldTransform, osAbstractLocalSpace& kVehicle );
+	void writeTransformToLocalSpace( const btTransform& kWorldTransform, osAbstractVehicle& kVehicle );
+	bool writeLocalSpaceToTransform( const AbstractVehicle& kVehicle, btTransform& kWorldTransform );
 
 	void calculateVelocity( const btTransform& kWorldTransform0, const btTransform& kWorldTransform1,
 		osScalar fDeltaTime,
@@ -112,11 +112,11 @@ namespace OpenSteer
 	class AbstractVehicleMath
 	{
 	public:
-		static osVector3 worldDirectionToLocal( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kWorld );
-		static osVector3 localDirectionToWorld( const OpenSteer::LocalSpaceData& kLocalSpaceData, const osVector3& kLocal );
+		static osVector3 worldDirectionToLocal( const osLocalSpaceData& kLocalSpaceData, const osVector3& kWorld );
+		static osVector3 localDirectionToWorld( const osLocalSpaceData& kLocalSpaceData, const osVector3& kLocal );
 
-		static btQuaternion readRotation( const OpenSteer::LocalSpaceData& kLocalSpaceData );
-		static void writeRotation( const btQuaternion& kRotation, OpenSteer::LocalSpaceData& kLocalSpaceData );
+		static btQuaternion readRotation( const osLocalSpaceData& kLocalSpaceData );
+		static void writeRotation( const btQuaternion& kRotation, osLocalSpaceData& kLocalSpaceData );
 
 		static osVector3 compressQuaternion( const btQuaternion& kRotation, char& wSign );
 		static btQuaternion expandQuaternion( const osVector3& kCompressed, float wSign );
