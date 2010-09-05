@@ -115,8 +115,8 @@ namespace OpenSteer
 		static osVector3 worldDirectionToLocal( const osLocalSpaceData& kLocalSpaceData, const osVector3& kWorld );
 		static osVector3 localDirectionToWorld( const osLocalSpaceData& kLocalSpaceData, const osVector3& kLocal );
 
-		static btQuaternion readRotation( const osLocalSpaceData& kLocalSpaceData );
-		static void writeRotation( const btQuaternion& kRotation, osLocalSpaceData& kLocalSpaceData );
+		static btQuaternion computeQuaternionFromLocalSpace( const osLocalSpaceData& kLocalSpaceData );
+		static void writeQuaternionToLocalSpace( const btQuaternion& kRotation, osLocalSpaceData& kLocalSpaceData );
 
 		static osVector3 compressQuaternion( const btQuaternion& kRotation, char& wSign );
 		static btQuaternion expandQuaternion( const osVector3& kCompressed, float wSign );

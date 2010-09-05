@@ -367,18 +367,18 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	{
 		dataType = ESerializeDataType_Orientation;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		btQuaternion kRotation = AbstractVehicleMath::computeQuaternionFromLocalSpace( this->getLocalSpaceData() );
 		kStream.WriteAlignedBytes((const unsigned char*)&kRotation,sizeof(btQuaternion));
 		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
-			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation1;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		btQuaternion kRotation = AbstractVehicleMath::computeQuaternionFromLocalSpace( this->getLocalSpaceData() );
 		char wSign = 0;
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		kStream.WriteAlignedBytes((const unsigned char*)&kCompressedRotation,sizeof(osVector3));
@@ -386,14 +386,14 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		if( true == bUpdatedProxy && (false == kProxy.m_bHasNewData) )
 		{
 			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
-			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation2;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
-		btQuaternion kRotation = AbstractVehicleMath::readRotation( this->getLocalSpaceData() );
+		btQuaternion kRotation = AbstractVehicleMath::computeQuaternionFromLocalSpace( this->getLocalSpaceData() );
 		char wSign = 0;
 		osVector3 kCompressedRotation = AbstractVehicleMath::compressQuaternion( kRotation, wSign );
 		char cVector[3];
@@ -404,7 +404,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		{
 			AbstractVehicleMath::expandUnitVector( cVector, kCompressedRotation );
 			kRotation = AbstractVehicleMath::expandQuaternion( kCompressedRotation, wSign == 1 ? 1.0f : -1.0f );
-			AbstractVehicleMath::writeRotation( kRotation, kProxy.accessLocalSpaceData() );
+			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
 	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
@@ -559,20 +559,20 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 			{
 			case(ESerializeDataType_Orientation):
 				{
-					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
+					AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, pkSerializeTarget->accessLocalSpaceData() );
 				}
 				break;
 			case(ESerializeDataType_CompressedOrientation1):
 				{
 					kRotation = AbstractVehicleMath::expandQuaternion( kVec, wSign == 1 ? 1.0f : -1.0f );
-					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
+					AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, pkSerializeTarget->accessLocalSpaceData() );
 				}
 				break;
 			case(ESerializeDataType_CompressedOrientation2):
 				{
 					AbstractVehicleMath::expandUnitVector( cVector, kVec );
 					kRotation = AbstractVehicleMath::expandQuaternion( kVec, wSign == 1 ? 1.0f : -1.0f );
-					AbstractVehicleMath::writeRotation( kRotation, pkSerializeTarget->accessLocalSpaceData() );
+					AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, pkSerializeTarget->accessLocalSpaceData() );
 				}
 				break;
 			case(ESerializeDataType_CompressedForce):
