@@ -818,6 +818,8 @@ namespace {
         if (obstacleCount > 0)
         {
             obstacleCount--;
+			LocalSpaceObstacle* o = allObstacles.back();
+			ET_DELETE( o );
             allObstacles.pop_back();
         }
     }
@@ -833,7 +835,9 @@ namespace {
 
         float selectionOrderSortKey (void) const {return 0.01f;}
 
-        virtual ~CtfPlugin() {} // be more "nice" to avoid a compiler warning
+        virtual ~CtfPlugin() {
+
+		} // be more "nice" to avoid a compiler warning
 
         void open (void)
         {

@@ -48,7 +48,7 @@
 #  define EDUNET_INCLUDE_OPENSTEER 1
 #endif
 
-#include "EduNetConfig.h"
+#include "EduNetCore/EduNetConfig.h"
 
 
 
@@ -62,11 +62,10 @@
 
 
 #include "EduNetTypes.h"
-#include "EduNetMacros.h"
+#include "EduNetCore/EduNetCore.h"
 #include "EduNetMath.h"
 #include "EduNetLog.h"
 
-#include "EduNetCore/EduNetCore.h"
 
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"

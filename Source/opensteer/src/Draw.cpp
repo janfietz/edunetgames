@@ -673,7 +673,7 @@ OpenSteer::drawXZCheckerboardGrid (const float size,
                                    const Color& color1,
                                    const Color& color2)
 {
-    const float half = size/2;
+    const float half = size * 0.5f;
     const float spacing = size / subsquares;
 
     beginDoubleSidedDrawing ();
@@ -720,7 +720,7 @@ OpenSteer::drawXZLineGrid (const float size,
 {
     warnIfInUpdatePhase ("drawXZLineGrid");
 
-    const float half = size/2;
+    const float half = size * 0.5f;
     const float spacing = size / subsquares;
 
     // set grid drawing color
@@ -761,7 +761,7 @@ OpenSteer::drawXYLineGrid (const float size,
 {
 	warnIfInUpdatePhase ("drawXZLineGrid");
 
-	const float half = size/2;
+	const float half = size * 0.5f;
 	const float spacing = size / subsquares;
 
 	// set grid drawing color
@@ -770,7 +770,7 @@ OpenSteer::drawXYLineGrid (const float size,
 	// draw a square XZ grid with the given size and line count
 	glBegin (GL_LINES);
 	float q = -half;
-	for (int i = 0; i < (subsquares + 1); i++)
+	for (int i = 0; i < (subsquares + 1); ++i)
 	{
 		const Vec3 x1 (q, +half, 0 ); // along X parallel to Z
 		const Vec3 x2 (q, -half, 0);

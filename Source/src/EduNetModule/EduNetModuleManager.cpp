@@ -31,16 +31,40 @@
 
 namespace bfs = boost::filesystem;
 
+// note: set to 1 to debug loadModulesFromDirectory
+#define ET_DEBUG_LOADMODULES 0
+
+//-----------------------------------------------------------------------------
+const EduNetModuleManager& EduNetModuleManager::operator<<( const char* pszString ) const
+{
+#if ET_DEBUG_LOADMODULES
+	std::cout << pszString;
+#else
+#endif
+	return (*this);
+}
+
+//-----------------------------------------------------------------------------
+const EduNetModuleManager& EduNetModuleManager::operator<<( unsigned long ul ) const
+{
+#if ET_DEBUG_LOADMODULES
+	std::cout << ul;
+#else
+#endif
+	return (*this);
+}
+
+
 //-----------------------------------------------------------------------------
 void EduNetModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 {
 	bfs::path p(pszDirectory);
 	unsigned long fc = 0, dc = 0;
 	if (!bfs::exists(p))
-		std::cout << "\nFile Not Found:" << p.native_file_string() << "\n";
+		(*this) << "\nFile Not Found:" << p.native_file_string().c_str() << "\n";
 	else if (!bfs::is_directory(p))
-		std::cout << "\nFound: " << p.native_file_string() << "\n";
-	std::cout << "In directory:" << p.native_file_string() << "\n";
+		(*this) << "\nFound: " << p.native_file_string().c_str() << "\n";
+	(*this) << "In directory:" << p.native_file_string().c_str() << "\n";
 	bfs::directory_iterator iter(p), end_iter;
 	for (; iter != end_iter; ++iter)
 	{
@@ -49,21 +73,23 @@ void EduNetModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 			if (bfs::is_directory(*iter))
 			{
 				++dc;
-				std::cout << iter->leaf() << "[Directory]\n";
-			} else
+				(*this) << iter->leaf().c_str() << "[Directory]\n";
+			} 
+			else
 			{
 				++fc;
 				addModuleFromFile(iter->leaf().c_str());
-				std::cout << iter->leaf() << "\n";
+				(*this) << iter->leaf().c_str() << "\n";
 			}
-		} catch (const std::exception & ex)
+		} 
+		catch (const std::exception & ex)
 		{
-			std::cout << iter->leaf() << ": " << ex.what() << std::endl;
+			(*this) << iter->leaf().c_str() << ": " << ex.what() << "\n";
 		}
-		std::cout << fc << " " << dc << std::endl;
+		(*this) << fc << " " << dc << "\n";
 	} //for
-
 }
+
 //-----------------------------------------------------------------------------
 bool EduNetModuleManager::addModuleFromFile(const char* pszFileName)
 {
@@ -83,6 +109,7 @@ void EduNetModuleManager::unloadAll( void )
 {
 	this->m_modules.clear();
 }
+
 //-----------------------------------------------------------------------------
 void EduNetModuleManager::unloadModule( const char* pszName )
 {

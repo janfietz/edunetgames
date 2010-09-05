@@ -49,6 +49,10 @@ public:
 
 
 private:
+
+	const EduNetModuleManager& operator<<( const char* ) const;
+	const EduNetModuleManager& operator<<( unsigned long ) const;
+
 	EduNetRawModules m_modules;
 
 };

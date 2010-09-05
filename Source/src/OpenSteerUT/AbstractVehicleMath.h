@@ -32,7 +32,7 @@
 #undef EDUNET_INCLUDE_OPENSTEER
 #endif
 #define EDUNET_INCLUDE_OPENSTEER 1
-#include "EduNetCommon/EduNetMacros.h"
+#include "EduNetCore/EduNetMacros.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 
 #include "bullet/src/LinearMath/btVector3.h"

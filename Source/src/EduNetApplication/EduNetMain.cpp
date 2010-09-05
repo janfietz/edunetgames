@@ -10,6 +10,28 @@ void etMemoryDebugBegin();
 void etMemoryDebugEnd();
 
 //-----------------------------------------------------------------------------
+class etMemoryDebug
+{
+public:
+	etMemoryDebug( void )
+	{
+		etMemoryDebugBegin();
+	}
+	virtual ~etMemoryDebug( void )
+	{
+		etMemoryDebugEnd();
+	}
+
+	void exitMain( void )
+	{
+		printf( "exit main." );
+	}
+};
+
+// install memory debugging facilities
+etMemoryDebug g_MemoryDebug;
+
+//-----------------------------------------------------------------------------
 EF_FORCEINLINE
 void etMemoryDebugBegin()
 {
@@ -22,7 +44,7 @@ void etMemoryDebugBegin()
 	_CrtSetDbgFlag(tmpDbgFlag);
 	// uncomment this line to see a sample leak output in the output
 	// console at program exit
-	//int* piaLeak = new int[10];
+	// int* piaLeak = new int[10];
 	//_CrtSetBreakAlloc(5207700);
 #endif
 #endif
@@ -34,7 +56,7 @@ void etMemoryDebugEnd()
 {
 #ifdef ET_DEBUG
 #ifdef WIN32
-        _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
 	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
 
 	//	_CrtDumpMemoryLeaks();
@@ -45,7 +67,6 @@ void etMemoryDebugEnd()
 //-----------------------------------------------------------------------------
 int EduNetMain (int argc, char **argv)
 {
-	::etMemoryDebugBegin();
 	int iExitCode = EXIT_FAILURE;
 	EduNet::Application::_SDMInit();
 	if( EXIT_SUCCESS == EduNetOptions::accessOptions().parseCommandLine( argc, argv ) )
@@ -68,14 +89,13 @@ int EduNetMain (int argc, char **argv)
 			// run the main event processing loop
 			OpenSteer::OpenSteerDemo::runGraphics ();
 
-			/*pApp->unloadModules();*/
 
 			EduNet::shutdownStaticPlugins();
 		}
 		iExitCode = EXIT_SUCCESS;
 	}
 	EduNet::Application::_SDMShutdown();
-	::etMemoryDebugEnd();
+	g_MemoryDebug.exitMain();
 	return iExitCode;
 }
 
