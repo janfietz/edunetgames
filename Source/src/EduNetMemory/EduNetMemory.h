@@ -28,6 +28,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "EduNetCore/EduNetMacros.h"
+#include "EduNetCore/EduNetConfig.h"
 
 // select a certain memory manager
 #define ET_HAVE_MEMORYMANAGER_FLUID 0
@@ -92,7 +94,11 @@
     # define ET_REALLOC realloc
 #endif
 
+#if ET_DEBUG
+#define ET_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__ )
+#else
 #define ET_NEW new
+#endif
 #define ET_DELETE delete
 
 #define ET_SAFE_DELETE( p ) { if( 0 != p ) { ET_DELETE p; p = 0; } }

@@ -1,6 +1,3 @@
-#ifndef __EDUNETMATH_H__
-#define __EDUNETMATH_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,66 +26,65 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include <math.h>
-#include <assert.h>
+#include "ZonePlugin.h"
+#include "EduNetCommon/EduNetDraw.h"
 
-#include "EduNetCore/EduNetMacros.h"
+using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-const T& etMin(const T& a, const T& b) 
+int ZonePlugin::ms_iSolid(0);
+
+
+//-----------------------------------------------------------------------------
+ZonePlugin::ZonePlugin( bool bAddToRegistry ):
+	BaseClass(bAddToRegistry),
+	m_kZoneCenter( osVector3::zero ),
+	m_kZoneExtent( OS_SCALAR( 10.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 10.0 ) )
 {
-	return a < b ? a : b ;
+
 }
 
 //-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-const T& etMax(const T& a, const T& b) 
+void ZonePlugin::zoneUtility( const Vec3& gridTarget )
 {
-	return  a > b ? a : b;
+	// round off target to the nearest multiple of 2 (because the
+	// checkerboard grid with a pitch of 1 tiles with a period of 2)
+	// then lower the grid a bit to put it under 2d annotation lines
+	const Vec3 gridCenter ((round (gridTarget.x * 0.5f) * 2),
+		(round (gridTarget.y * 0.5f) * 2) - .05f,
+		(round (gridTarget.z * 0.5f) * 2));
+
+	if( 1 == ZonePlugin::ms_iSolid )
+	{
+		// colors for checkerboard
+		const Color gray1(0.27f);
+		const Color gray2(0.30f);
+		// draw 50x50 checkerboard grid with 50 squares along each side
+		drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
+	}
+	else
+	{
+		// alternate style
+		drawXYLineGrid (50, 50, gridCenter, gBlack);
+		drawXZLineGrid (50, 50, gridCenter, gBlack);
+	}
 }
 
 //-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etClamp(const T& fValue, const T& fMin, const T& fMax) {
-	assert( fMin <= fMax );
-	T fValueOut = etMax( fValue, fMin );
-	fValueOut = etMin( fValueOut, fMax );
-	return fValueOut;
+void ZonePlugin::initGui( void* pkUserdata )
+{
+	GLUI* glui = ::getRootGLUI();
+	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	glui->add_checkbox_to_panel( pluginPanel, "Solid", &ZonePlugin::ms_iSolid);
 }
 
 //-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etClampSave(const T& fValue, const T& fMin, const T& fMax) {
-	T _fMin = etMin( fMin, fMax );
-	T _fMax = etMax( fMin, fMax );
-	T fValueOut = etMax( fValue, _fMin );
-	fValueOut = etMin( fValueOut, _fMax );
-	return fValueOut;
+void ZonePlugin::redraw (const float currentTime, const float elapsedTime) 
+{ 
+	if( false == this->isVisible() )
+	{
+		return;
+	}
+	// draw "zone area"
+	this->zoneUtility( this->m_kZoneCenter );
 }
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etSign(const T& fValue)
-{
-	return ( fValue > T( 0.0 ) ? T( +1.0 ) : ( fValue < T( 0.0 ) ? T( -1.0 ) : T( 0.0 ) ) );
-}	
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etInterval(const T& fMin, const T& fMax)
-{
-	assert( fMin <= fMax );
-	return ( fMax - fMin );
-}	
-
-
-
-
-#endif // __EDUNETMATH_H__

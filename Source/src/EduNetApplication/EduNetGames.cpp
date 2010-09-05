@@ -1097,7 +1097,9 @@ void idleFunc ( void )
     undefined during an idle callback.  So we need to explicitly change
     it if necessary */
     if ( glutGetWindow() != windowID )
+	{
         glutSetWindow ( windowID );
+	}
 
     glutPostRedisplay();
 #endif
@@ -1119,7 +1121,22 @@ void consoleExit ( int i )
 void windowExit ( int i )
 {
     EduNet::Log::printMessage ( "window exit ..." );
+	// note a valid cleanup at this point has to be implemented
+
     EduNet::Application::_SDMCleanup();
+	EduNet::Application::_SDMShutdown();
+// note: activate to see all the leaks
+#if 0
+#ifdef ET_DEBUG
+#ifdef WIN32
+	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
+	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
+
+	// manually dump leaks now as we are exiting the glut way
+	_CrtDumpMemoryLeaks();
+#endif
+#endif
+#endif
 }
 
 } // annonymous namespace

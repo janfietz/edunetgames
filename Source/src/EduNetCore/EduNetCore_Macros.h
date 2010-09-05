@@ -34,7 +34,6 @@
  *  Created on: 03.04.2010
  *      Author: jan
  */
-#include "EduNetMemory/EduNetMemory.h"
 
 #define ET_DECLARE_SINGLETON( ClassName ) \
 	public: \

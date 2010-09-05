@@ -1,5 +1,5 @@
-#ifndef __EDUNETMATH_H__
-#define __EDUNETMATH_H__
+#ifndef __ZONEPLUGIN_H__
+#define __ZONEPLUGIN_H__
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -28,67 +28,58 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "EduNetCommon/EduNetCommon.h"
 
-#include <math.h>
-#include <assert.h>
 
-#include "EduNetCore/EduNetMacros.h"
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-const T& etMin(const T& a, const T& b) 
+namespace OpenSteer
 {
-	return a < b ? a : b ;
+	//-------------------------------------------------------------------------
+	class ZonePlugin : public Plugin
+	{
+		ET_DECLARE_BASE(OpenSteer::Plugin)
+	public:
+		ZonePlugin ( bool bAddToRegistry = false );
+
+		OS_IMPLEMENT_CLASSNAME( ZonePlugin )
+		//----------------------------------------------------------------------------
+		// OpenSteer::Plugin interface
+		virtual void initGui( void* pkUserdata );
+		// required methods:
+		const char* name( void ) const {return this->getClassName();}
+		void open( void ) { }
+		void update( const float currentTime, const float elapsedTime ) { }
+		void redraw( const float currentTime, const float elapsedTime );
+		void close( void ) { }
+		const AVGroup& allVehicles( void ) const { return m_kVehicles; }
+		AVGroup& allVehicles( void ) { return m_kVehicles; }
+
+		// optional methods (see comments in AbstractPlugin for explanation):
+		void reset (void) { } // default is to reset by doing close-then-open
+		float selectionOrderSortKey( void ) const {return 1000000;}
+		bool requestInitialSelection( void ) const {return false;}
+		void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
+		void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
+
+		void setZoneCenter( const osVector3& kGridCenter )
+		{
+			this->m_kZoneCenter = kGridCenter;
+		}
+
+		static int ms_iSolid;
+	private:
+		void zoneUtility( const Vec3& gridTarget );
+
+		osColor m_kBorderColor;
+		osColor m_kGridColor;
+
+		AVGroup m_kVehicles;
+		osVector3 m_kZoneCenter;
+		osVector3 m_kZoneExtent;
+		ET_IMPLEMENT_CLASS_NO_COPY(ZonePlugin)
+
+	};
+
 }
 
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-const T& etMax(const T& a, const T& b) 
-{
-	return  a > b ? a : b;
-}
 
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etClamp(const T& fValue, const T& fMin, const T& fMax) {
-	assert( fMin <= fMax );
-	T fValueOut = etMax( fValue, fMin );
-	fValueOut = etMin( fValueOut, fMax );
-	return fValueOut;
-}
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etClampSave(const T& fValue, const T& fMin, const T& fMax) {
-	T _fMin = etMin( fMin, fMax );
-	T _fMax = etMax( fMin, fMax );
-	T fValueOut = etMax( fValue, _fMin );
-	fValueOut = etMin( fValueOut, _fMax );
-	return fValueOut;
-}
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etSign(const T& fValue)
-{
-	return ( fValue > T( 0.0 ) ? T( +1.0 ) : ( fValue < T( 0.0 ) ? T( -1.0 ) : T( 0.0 ) ) );
-}	
-
-//-----------------------------------------------------------------------------
-template <class T>
-EF_FORCEINLINE
-T etInterval(const T& fMin, const T& fMax)
-{
-	assert( fMin <= fMax );
-	return ( fMax - fMin );
-}	
-
-
-
-
-#endif // __EDUNETMATH_H__
+#endif  // __ZONEPLUGIN_H__

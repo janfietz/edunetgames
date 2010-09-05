@@ -163,7 +163,9 @@ Application::~Application( void )
 //-----------------------------------------------------------------------------
 void fnExit0 (void)
 {
-	Application::_SDMShutdown();
+	bool bTest = true;
+	bTest = false;
+//	Application::_SDMShutdown();
 }
 
 //-----------------------------------------------------------------------------
@@ -188,6 +190,12 @@ void Application::_SDMCleanup( void )
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 //	EduNet::Log::printMessage( "Application cleanup - done." );
+
+	EduNet::Application* pApp = EduNet::Application::accessInstance();
+	if( NULL != pApp )
+	{
+		pApp->unloadModules();
+	}
 }
 
 

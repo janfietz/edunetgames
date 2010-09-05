@@ -77,7 +77,18 @@ namespace OpenSteer {
 
 #define OS_CID_UNKNOWN OpenSteer::g_clasId_Unknown
 
-
+///The btScalar type abstracts floating point numbers, to easily switch between double and single floating point precision.
+#if defined(OS_USE_DOUBLE_PRECISION)
+typedef double osScalar;
+//this number could be bigger in double precision
+#define OS_LARGE_FLOAT 1e30
+#define OS_SCALAR(x) (x) 
+#else
 typedef float osScalar;
+//keep OS_LARGE_FLOAT * OS_LARGE_FLOAT < FLT_MAX
+#define OS_LARGE_FLOAT 1e18f
+#define OS_SCALAR(x) (x ## f) 
+#endif
+
 
 #endif //!  __OPENSTEERTYPES_H__

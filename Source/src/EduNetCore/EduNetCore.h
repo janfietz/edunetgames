@@ -29,7 +29,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include"EduNetMemory/EduNetMemory.h"
+#include "EduNetCore/EduNetMacros.h"
+#include "EduNetCore/EduNetConfig.h"
+#include "EduNetMemory/EduNetMemory.h"
 #include "EduNetCore/EduNetCoreDefines.h"
 
 #endif // __EDUNETCORE_H__
