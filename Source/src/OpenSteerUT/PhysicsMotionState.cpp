@@ -40,7 +40,7 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	bool TPhysicsMotionState::readLocalSpaceData( const LocalSpaceData& kLocalSpaceData )
 	{
-		if( writeToMatrix( kLocalSpaceData, this->m_kWorldTransform ) )
+		if( writeLocalSpaceToTransform( kLocalSpaceData, this->m_kWorldTransform ) )
 		{
 			this->m_kLinearVelocity = kLocalSpaceData._linearVelocity;
 			this->m_kAngularVelocity = kLocalSpaceData._angularVelocity;
@@ -70,7 +70,7 @@ namespace OpenSteer
 	//-------------------------------------------------------------------------
 	void TPhysicsMotionState::writeLocalSpaceData( AbstractLocalSpace& kLocalSpace )
 	{
-		readFromMatrix( kLocalSpace, this->m_kWorldTransform );
+		writeTransformToLocalSpace( this->m_kWorldTransform, kLocalSpace );
 		kLocalSpace.setAngularVelocity( this->m_kAngularVelocity );
 		kLocalSpace.setLinearVelocity( this->m_kLinearVelocity );
 	}
@@ -94,7 +94,7 @@ namespace OpenSteer
 	{
 		// store new world transform
 		btTransform kWorldTransform1;
-		if( writeToMatrix( kLocalSpaceData, kWorldTransform1 ) )
+		if( writeLocalSpaceToTransform( kLocalSpaceData, kWorldTransform1 ) )
 		{
 			this->updateMotionState( kWorldTransform1, currentTime, elapsedTime );
 			// open steer is all ways treating the forward vector

@@ -41,7 +41,7 @@ void EulerVehicleUpdate::setVehicle( AbstractVehicle* pkVehicle )
 	if( NULL != this->m_pkVehicle )
 	{
 		// store current world transform
-		writeToMatrix( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
+		writeLocalSpaceToTransform( this->vehicle(), this->m_kMotionState.m_kWorldTransform );
 	}
 }
 
