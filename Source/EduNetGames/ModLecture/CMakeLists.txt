@@ -1,11 +1,11 @@
-project(ModNetBoid)
+project(ModLecture)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${ET_RakNet_SOURCES}/DependentExtensions
 )
 
-file (GLOB Tutorial_Src "${ModNetBoid_SOURCE_DIR}/*.cpp")
-file (GLOB Tutorial_Hdrs "${ModNetBoid_SOURCE_DIR}/*.h")
+file (GLOB Tutorial_Src "${ModLecture_SOURCE_DIR}/*.cpp")
+file (GLOB Tutorial_Hdrs "${ModLecture_SOURCE_DIR}/*.h")
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
@@ -15,6 +15,7 @@ ${RakNet_LIBRARY}
 )
 
 add_library(${PROJECT_NAME} SHARED  ${Tutorial_Hdrs} ${Tutorial_Src})
+
 SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "Module")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EDUNET_COMMON_OUTPUT_DIRECTORY})

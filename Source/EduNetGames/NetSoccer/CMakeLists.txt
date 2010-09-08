@@ -4,8 +4,8 @@ ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${ET_RakNet_SOURCES}/DependentExtensions
 )
 
-file (GLOB Tutorial_Src "${NetSoccer_SOURCE_DIR}/*.cpp")
-file (GLOB Tutorial_Hdrs "${NetSoccer_SOURCE_DIR}/*.h")
+file (GLOB Tutorial_Src "${ModNetSoccer_SOURCE_DIR}/*.cpp")
+file (GLOB Tutorial_Hdrs "${ModNetSoccer_SOURCE_DIR}/*.h")
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
