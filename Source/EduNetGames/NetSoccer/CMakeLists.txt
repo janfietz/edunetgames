@@ -1,4 +1,4 @@
-project(NetSoccer)
+project(ModNetSoccer)
 INCLUDE_DIRECTORIES(
 ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${ET_RakNet_SOURCES}/DependentExtensions

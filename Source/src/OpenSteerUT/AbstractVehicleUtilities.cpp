@@ -164,6 +164,11 @@ VehicleUtilities::findVehicleNearestScreenPosition( int x, int y )
 	float minDistance = FLT_MAX;       // smallest distance found so far
 	AbstractVehicle* nearest = NULL;   // vehicle whose distance is smallest
 	const AVGroup& vehicles = Plugin::allVehiclesOfSelectedPlugin();
+	if (&vehicles == NULL)
+	{
+		return NULL;
+	}
+
 	for (AVIterator i = vehicles.begin(); i != vehicles.end(); i++)
 	{
 		// distance from this vehicle's center to the selection line:

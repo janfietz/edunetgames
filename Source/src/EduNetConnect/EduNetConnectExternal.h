@@ -37,22 +37,21 @@
 // raknet
 #if EDUNET_HAVE_RAKNET
 
-#include "ReplicaManager3.h"
-#include "FullyConnectedMesh2.h"
-#include "ConnectionGraph2.h"
-#include "BitStream.h"
+#include "raknet/ReplicaManager3.h"
+#include "raknet/FullyConnectedMesh2.h"
+#include "raknet/ConnectionGraph2.h"
+#include "raknet/BitStream.h"
 
-#include "MessageIdentifiers.h"
-#include "RakNetworkFactory.h"
-#include "RakPeerInterface.h"
-#include "RakPeerInterface.h"
-#include "RakNetTypes.h"
-#include "GetTime.h"
-#include "BitStream.h"
-#include "NetworkIDManager.h"
-#include "RakNetStatistics.h"
+#include "raknet/MessageIdentifiers.h"
+#include "raknet/RakNetworkFactory.h"
+#include "raknet/RakPeerInterface.h"
+#include "raknet/RakNetTypes.h"
+#include "raknet/GetTime.h"
+
+#include "raknet/NetworkIDManager.h"
+#include "raknet/RakNetStatistics.h"
 //#include <RakNetTypes.h>
-#include "SocketLayer.h"
+#include "raknet/SocketLayer.h"
 #include "RPC3/RPC3.h"
 
 #endif // EDUNET_HAVE_RAKNET
