@@ -33,25 +33,29 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include <boost/shared_ptr.hpp>
 
+namespace EduNet	{
 
-class EduNetDynamicLibrary
-{
-  public:
-    EduNetDynamicLibrary( void );
-	virtual ~EduNetDynamicLibrary( void );
+	class DynamicLibrary
+	{
+	public:
+		DynamicLibrary( void );
+		virtual ~DynamicLibrary( void );
 
-    bool loadLib(const char* pszLibName);
-    bool unloadLib( void );
-	void* accessProcAddress(const char* pszProcName);
+		static bool isDynamicLib(const char* pszFileName);
 
-  protected:
-    
-  private:
-	  static bool isDynamicLib(const char* pszFileName);
-    void* m_pLibHandle;
-};
+		bool loadLib(const char* pszLibName);
+		bool unloadLib( void );
+		void* accessProcAddress(const char* pszProcName);
 
-typedef boost::shared_ptr<EduNetDynamicLibrary> EduNetDynamicLibraryPtr;
-typedef std::vector<EduNetDynamicLibraryPtr> EduNetDynamicLibraries;
+	protected:
+
+	private:
+		void* m_pLibHandle;
+	};
+
+	typedef boost::shared_ptr<DynamicLibrary> DynamicLibraryPtr;
+	typedef std::vector<DynamicLibraryPtr> EduNetDynamicLibraries;
+
+}
 
 #endif // EDUNETDYNAMICLIBRARY_H

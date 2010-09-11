@@ -95,7 +95,7 @@ private:
 	EduNetModuleEntryFunc* accessEntryFunction( void );
 	void queryEntry( void );
 
-	EduNetDynamicLibraryPtr m_spLib;
+	EduNet::DynamicLibraryPtr m_spLib;
 	EduNetModuleEntry* m_pEntry;
 };
 typedef boost::shared_ptr<EduNetRawModule>  EduNetRawModulePtr;
