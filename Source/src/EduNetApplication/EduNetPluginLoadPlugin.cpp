@@ -28,27 +28,25 @@
 #include "EduNetPluginLoadPlugin.h"
 #include "EduNetCommon/EduNetOptions.h"
 
-// TODO: @JF [MH] please use an namespace here
-#if 0
 namespace EduNet
 {
-#endif
-
 
 //-----------------------------------------------------------------------------
-void EduNetPluginLoadPlugin::loadModules( const char* pszPath )
+void PluginLoadPlugin::loadModules( const char* pszPath )
 {
 	// load modules in working directory
 	this->m_modules.loadModulesFromDirectory( pszPath );
 }
+
 //-----------------------------------------------------------------------------
-void EduNetPluginLoadPlugin::unloadModules( void )
+void PluginLoadPlugin::unloadModules( void )
 {
 	this->removeAllPlugins();
 	this->m_modules.unloadAll();
 }
+
 //-----------------------------------------------------------------------------
-void EduNetPluginLoadPlugin::createPluginsFromModules ( void )
+void PluginLoadPlugin::createPluginsFromModules ( void )
 {
 	const EduNetRawModules& kModules = this->m_modules.getModules();
 	EduNetRawModules::const_iterator kIter = kModules.begin();
@@ -62,7 +60,7 @@ void EduNetPluginLoadPlugin::createPluginsFromModules ( void )
 }
 
 //-----------------------------------------------------------------------------
-void EduNetPluginLoadPlugin::createPluginsFromModule (
+void PluginLoadPlugin::createPluginsFromModule (
 	EduNetRawModule* pkModule )
 {
 	EduNetModuleEntry* pkEntry = pkModule->accessEntry();
@@ -97,7 +95,7 @@ void EduNetPluginLoadPlugin::createPluginsFromModule (
 	}
 }
 //-----------------------------------------------------------------------------
-bool EduNetPluginLoadPlugin::appWantsToLoadModule (
+bool PluginLoadPlugin::appWantsToLoadModule (
 										const char* kModuleName )
 {
 	const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
@@ -115,14 +113,14 @@ bool EduNetPluginLoadPlugin::appWantsToLoadModule (
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin*  EduNetPluginLoadPlugin::createPluginFromFactoryByName(
+OpenSteer::AbstractPlugin*  PluginLoadPlugin::createPluginFromFactoryByName(
 	EduNetPluginFactory* pkFactory,
 	const char* pszPluginName )
 {
 	return pkFactory->createPluginByName( pszPluginName );
 }
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* EduNetPluginLoadPlugin::createPluginByName(
+OpenSteer::AbstractPlugin* PluginLoadPlugin::createPluginByName(
 	const char* pszPluginName )
 {
 	EduNetRawModule* pkModule = this->findModuleForPlugin( pszPluginName );
@@ -140,7 +138,7 @@ OpenSteer::AbstractPlugin* EduNetPluginLoadPlugin::createPluginByName(
 }
 
 //-----------------------------------------------------------------------------
-EduNetRawModule* EduNetPluginLoadPlugin::findModuleForPlugin(
+EduNetRawModule* PluginLoadPlugin::findModuleForPlugin(
 	const char* pszPluginName )
 {
 	const EduNetRawModules& kModules = this->m_modules.getModules();
@@ -172,4 +170,7 @@ EduNetRawModule* EduNetPluginLoadPlugin::findModuleForPlugin(
 		++kIter;
 	}
 	return NULL;
+}
+
+
 }

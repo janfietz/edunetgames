@@ -32,10 +32,87 @@
 namespace bfs = boost::filesystem;
 
 // note: set to 1 to debug loadModulesFromDirectory
-#define ET_DEBUG_LOADMODULES 0
+#define ET_DEBUG_LOADMODULES 1
+
+namespace EduNet	{
+
 
 //-----------------------------------------------------------------------------
-const EduNetModuleManager& EduNetModuleManager::operator<<( const char* pszString ) const
+ModuleManager::ModuleManager()
+{
+#ifdef WIN32
+	int bytes = ::GetModuleFileNameA( NULL, m_pszCurrentModuleFileName, sizeof(m_pszCurrentModuleFileName) );
+	if(bytes == 0)
+	{
+		m_pszCurrentModuleFileName[0] = '\0';
+	}
+#else
+	assert( true == false );
+	// not tested ...
+	char szTmp[32];
+	sprintf(szTmp, "/proc/%d/exe", getpid());
+	int bytes = MIN(readlink(szTmp, m_pszCurrentModuleFileName, len), len - 1);
+	if(bytes >= 0)
+		m_pszCurrentModuleFileName[bytes] = '\0';
+	else
+		m_pszCurrentModuleFileName[0] = '\0';
+#endif
+	if( m_pszCurrentModuleFileName[0] != 0 )
+	{
+		// determine the module path
+		{
+			strcpy_s( m_pszCurrentModulePath, EMaxPath, m_pszCurrentModuleFileName );
+			size_t len = strlen( m_pszCurrentModulePath );
+			for( size_t i = len; i >= 0; --i )
+			{
+				if( ( m_pszCurrentModulePath[i] != '\\' ) && ( m_pszCurrentModulePath[i] != '/' ) )
+				{
+					m_pszCurrentModulePath[i] = '\0';
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		// determine the module type
+		this->queryModuleRuntimeTypeFromFileName( this->m_pszCurrentModuleFileName, this->m_moduleRuntimeType );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType ) const
+{
+	if( ( NULL == pszFileName ) || ( 0 == pszFileName[0] ) )
+	{
+		return;
+	}
+	// determine the module type
+	enString_t tempString(pszFileName);
+	size_t dotPos = tempString.rfind('.');
+	size_t underscorePos = tempString.rfind('_');
+
+	if( (dotPos != enString_t::npos) && (underscorePos != enString_t::npos) )
+	{
+		kModuleType = tempString.substr( underscorePos, dotPos - underscorePos );
+
+		// Convert the string to lowercase internally
+		if( !kModuleType.empty() )
+		{
+			_strlwr_s( (char*)kModuleType.c_str(), kModuleType.length() + 1 );
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+ModuleManager::~ModuleManager()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+const ModuleManager& ModuleManager::operator<<( const char* pszString ) const
 {
 #if ET_DEBUG_LOADMODULES
 	std::cout << pszString;
@@ -45,7 +122,7 @@ const EduNetModuleManager& EduNetModuleManager::operator<<( const char* pszStrin
 }
 
 //-----------------------------------------------------------------------------
-const EduNetModuleManager& EduNetModuleManager::operator<<( unsigned long ul ) const
+const ModuleManager& ModuleManager::operator<<( unsigned long ul ) const
 {
 #if ET_DEBUG_LOADMODULES
 	std::cout << ul;
@@ -54,16 +131,33 @@ const EduNetModuleManager& EduNetModuleManager::operator<<( unsigned long ul ) c
 	return (*this);
 }
 
+//-----------------------------------------------------------------------------
+const char* ModuleManager::getCurrentModuleFileName( void ) const
+{
+	return m_pszCurrentModuleFileName;
+}
 
 //-----------------------------------------------------------------------------
-void EduNetModuleManager::loadModulesFromDirectory(const char* pszDirectory)
+const char* ModuleManager::getCurrentModulePath( void ) const
+{
+	return m_pszCurrentModulePath;
+}
+
+//-----------------------------------------------------------------------------
+void ModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 {
 	bfs::path p(pszDirectory);
 	unsigned long fc = 0, dc = 0;
 	if (!bfs::exists(p))
+	{
 		(*this) << "\nFile Not Found:" << p.native_file_string().c_str() << "\n";
+		return;
+	}
 	else if (!bfs::is_directory(p))
+	{
 		(*this) << "\nFound: " << p.native_file_string().c_str() << "\n";
+		return;
+	}
 	(*this) << "In directory:" << p.native_file_string().c_str() << "\n";
 	bfs::directory_iterator iter(p), end_iter;
 	for (; iter != end_iter; ++iter)
@@ -73,46 +167,61 @@ void EduNetModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 			if (bfs::is_directory(*iter))
 			{
 				++dc;
-				(*this) << iter->leaf().c_str() << "[Directory]\n";
+				(*this) << iter->filename().c_str() << "[Directory]\n";
 			} 
 			else
 			{
 				++fc;
-				addModuleFromFile(iter->leaf().c_str());
-				(*this) << iter->leaf().c_str() << "\n";
+				const char* pszModuleFileName = iter->filename().c_str();
+				this->addModuleFromFile( iter->filename().c_str() );
+				(*this) << iter->filename().c_str() << "\n";
 			}
 		} 
 		catch (const std::exception & ex)
 		{
-			(*this) << iter->leaf().c_str() << ": " << ex.what() << "\n";
+			(*this) << iter->filename().c_str() << ": " << ex.what() << "\n";
 		}
 		(*this) << fc << " " << dc << "\n";
 	} //for
 }
 
 //-----------------------------------------------------------------------------
-bool EduNetModuleManager::addModuleFromFile(const char* pszFileName)
+bool ModuleManager::addModuleFromFile(const char* pszFileName)
 {
-	EduNetRawModulePtr spNewLib(ET_NEW EduNetRawModule() );
-	EduNetRawModule* pkNewmodule = spNewLib.get();
-
-	bool bResult = pkNewmodule->load ( pszFileName );
-	if ( true == bResult )
+	bool bResult = false;
+	// first check if the module type matches
+	enString_t moduleType;
+	this->queryModuleRuntimeTypeFromFileName( pszFileName, moduleType );
+	if( this->m_moduleRuntimeType.compare( moduleType ) == 0 )
 	{
-		this->m_modules.push_back ( spNewLib );
+		if( true == EduNet::DynamicLibrary::isDynamicLib( pszFileName ) )
+		{
+			EduNetRawModulePtr spNewLib(ET_NEW EduNetRawModule() );
+			EduNetRawModule* pkNewmodule = spNewLib.get();
+
+			bool bResult = pkNewmodule->load ( pszFileName );
+			if ( true == bResult )
+			{
+				this->m_modules.push_back ( spNewLib );
+			}
+		}
 	}
 	return bResult;
 }
 
 //-----------------------------------------------------------------------------
-void EduNetModuleManager::unloadAll( void )
+void ModuleManager::unloadAll( void )
 {
 	this->m_modules.clear();
 }
 
 //-----------------------------------------------------------------------------
-void EduNetModuleManager::unloadModule( const char* pszName )
+void ModuleManager::unloadModule( const char* pszName )
 {
+
+}
+
+
 
 }
 

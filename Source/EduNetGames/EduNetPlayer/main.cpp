@@ -29,19 +29,23 @@
 #include "EduNetApplication/EduNetMain.h"
 
 #include "EduNetApplication/EduNetPluginLoadPlugin.h"
+#include "EduNetModule/EduNetModuleManager.h"
 
 namespace EduNet
 {
-	EduNetPluginLoadPlugin gLoadPlugin;
+	PluginLoadPlugin* gLoadPlugin = NULL;
 	void initializeStaticPlugins( )
 	{
-		gLoadPlugin.loadModules("./");
-		gLoadPlugin.createPluginsFromModules();
+		ModuleManager kModuleManager;
+		gLoadPlugin = ET_NEW PluginLoadPlugin();
+		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
+		gLoadPlugin->createPluginsFromModules();
 
 	}
 	void shutdownStaticPlugins( )
 	{
-		gLoadPlugin.unloadModules();
+		gLoadPlugin->unloadModules();
+		ET_SAFE_DELETE( gLoadPlugin ); 
 	}
 }
 

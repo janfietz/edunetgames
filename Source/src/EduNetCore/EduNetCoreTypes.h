@@ -1,8 +1,8 @@
-#ifndef EDUNETMODULEMANAGER_H_
-#define EDUNETMODULEMANAGER_H_
+#ifndef __EDUNETCORETYPES_H__
+#define __EDUNETCORETYPES_H__
 
 //-----------------------------------------------------------------------------
-// Copyright (c) Jan Fietz, Cyrus Preuss
+// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -29,48 +29,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetModule/EduNetModule.h"
 
-namespace EduNet {
+typedef std::string enString_t;
 
+#endif // __EDUNETCORE_H__
 
-class ModuleManager
-{
-public:
-	ModuleManager();
-	virtual ~ModuleManager();
-
-	const char* getCurrentModuleFileName( void ) const;
-	const char* getCurrentModulePath( void ) const;
-	void queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType ) const;
-
-	void loadModulesFromDirectory ( const char* pszDirectory );
-	void unloadAll( void );
-	void unloadModule( const char* pszName );
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( EduNetRawModule* pkModule );
-	bool addModuleFromFile ( const char* pszFileName );
-
-	const EduNetRawModules& getModules( void ) const
-	{
-		return this->m_modules;
-	}
-
-
-private:
-
-	const ModuleManager& operator<<( const char* ) const;
-	const ModuleManager& operator<<( unsigned long ) const;
-
-	EduNetRawModules m_modules;
-	
-	enum { EMaxPath = 2048 };
-	char m_pszCurrentModuleFileName[EMaxPath];
-	char m_pszCurrentModulePath[EMaxPath];
-	enString_t m_moduleRuntimeType;
-
-};
-
-}
-
-#endif /* EDUNETMODULEMANAGER_H_ */

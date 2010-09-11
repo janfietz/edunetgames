@@ -33,6 +33,7 @@
 #include "EduNetCore/EduNetConfig.h"
 #include "EduNetMemory/EduNetMemory.h"
 #include "EduNetCore/EduNetCoreDefines.h"
+#include "EduNetCore/EduNetCoreTypes.h"
 
 #endif // __EDUNETCORE_H__
 

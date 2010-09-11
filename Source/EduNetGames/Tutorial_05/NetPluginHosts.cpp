@@ -1,9 +1,9 @@
 #include "PluginSelectionPlugin.h"
 #include "EduNetApplication/EduNetPluginLoadPlugin.h"
 
-class EduNetServerPluginLoadPlugin : public EduNetPluginLoadPlugin
+class EduNetServerPluginLoadPlugin : public EduNet::PluginLoadPlugin
 {
-	ET_DECLARE_BASE(EduNetPluginLoadPlugin)
+	ET_DECLARE_BASE(EduNet::PluginLoadPlugin)
 protected:
 	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
 		EduNetPluginFactory* pkFactory,

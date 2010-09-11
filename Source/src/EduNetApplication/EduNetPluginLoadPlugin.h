@@ -30,24 +30,21 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetModule/EduNetModuleManager.h"
 
-// TODO: @JF [MH] please use an namespace here
-#if 0
 namespace EduNet
 {
-#endif
 
 //-----------------------------------------------------------------------------
-class EduNetPluginLoadPlugin : public OpenSteer::PluginArray
+class PluginLoadPlugin : public OpenSteer::PluginArray
 {
 	ET_DECLARE_BASE(OpenSteer::PluginArray)
 public:
-	EduNetPluginLoadPlugin( bool bAddToRegistry = false ):
+	PluginLoadPlugin( bool bAddToRegistry = false ):
 		BaseClass( bAddToRegistry )
 	{
 
 	}
 
-	OS_IMPLEMENT_CLASSNAME( EduNetPluginLoadPlugin )
+	OS_IMPLEMENT_CLASSNAME( PluginLoadPlugin )
 		virtual const char* name() const { return this->getClassName(); };
 
 	void loadModules(const char* pszPath);
@@ -70,8 +67,9 @@ private:
 	EduNetRawModule* findModuleForPlugin(
 		const char* pszPluginName );
 
-	EduNetModuleManager m_modules;
+	EduNet::ModuleManager m_modules;
 };
 
+}
 
 #endif // __EDUNET_PLUGINLOADPLUGIN_H__

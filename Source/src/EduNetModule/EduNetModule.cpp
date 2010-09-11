@@ -36,8 +36,8 @@ EduNetRawModule::EduNetRawModule( void ):
 //-----------------------------------------------------------------------------
 bool EduNetRawModule::load(const char* pszLibName)
 {
-	EduNetDynamicLibraryPtr spNewLib( ET_NEW EduNetDynamicLibrary() );
-	EduNetDynamicLibrary* pkNewLib = spNewLib.get();
+	EduNet::DynamicLibraryPtr spNewLib( ET_NEW EduNet::DynamicLibrary() );
+	EduNet::DynamicLibrary* pkNewLib = spNewLib.get();
 	bool bLoaded = pkNewLib->loadLib( pszLibName ) ;
 	if(true == bLoaded)
 	{
@@ -61,7 +61,7 @@ void EduNetRawModule::queryEntry( void )
 EduNetModuleEntryFunc* EduNetRawModule::accessEntryFunction( void )
 {
 	EduNetModuleEntryFunc* pkEntryFunc(NULL);
-	EduNetDynamicLibrary* pkNewLib = this->m_spLib.get();
+	EduNet::DynamicLibrary* pkNewLib = this->m_spLib.get();
 	void* pkFunc = pkNewLib->accessProcAddress( "etModuleQueryEntry" );
 	if (NULL != pkFunc)
 	{

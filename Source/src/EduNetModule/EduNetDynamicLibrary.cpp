@@ -34,19 +34,21 @@
 #include <dlfcn.h>
 #endif
 
-using namespace EduNet;
+namespace EduNet	{
+
+
 //-----------------------------------------------------------------------------
-EduNetDynamicLibrary::EduNetDynamicLibrary ( void ) :
+DynamicLibrary::DynamicLibrary ( void ) :
         m_pLibHandle ( NULL )
 {
 }
 //-----------------------------------------------------------------------------
-EduNetDynamicLibrary::~EduNetDynamicLibrary ( void )
+DynamicLibrary::~DynamicLibrary ( void )
 {
     this->unloadLib();
 }
 //-----------------------------------------------------------------------------
-bool EduNetDynamicLibrary::loadLib ( const char* pszLibName )
+bool DynamicLibrary::loadLib ( const char* pszLibName )
 {
     ET_ASSERT ( NULL != pszLibName );
     if ( NULL != this->m_pLibHandle )
@@ -88,7 +90,7 @@ bool EduNetDynamicLibrary::loadLib ( const char* pszLibName )
     return NULL != this->m_pLibHandle;
 }
 //-----------------------------------------------------------------------------
-bool EduNetDynamicLibrary::unloadLib ( void )
+bool DynamicLibrary::unloadLib ( void )
 {
     bool bResult ( false );
     if ( NULL != this->m_pLibHandle )
@@ -103,7 +105,7 @@ bool EduNetDynamicLibrary::unloadLib ( void )
     return bResult;
 }
 //-----------------------------------------------------------------------------
-void*  EduNetDynamicLibrary::accessProcAddress ( const char* pszProcName )
+void*  DynamicLibrary::accessProcAddress ( const char* pszProcName )
 {
     ET_ASSERT ( NULL != this->m_pLibHandle );
     ET_ASSERT ( NULL != pszProcName );
@@ -114,7 +116,7 @@ void*  EduNetDynamicLibrary::accessProcAddress ( const char* pszProcName )
 #endif
 }
 //-----------------------------------------------------------------------------
-bool EduNetDynamicLibrary::isDynamicLib ( const char* pszFileName )
+bool DynamicLibrary::isDynamicLib ( const char* pszFileName )
 {
 #ifdef WIN32
     const char* pszLibraryType = ".dll";
@@ -130,3 +132,4 @@ bool EduNetDynamicLibrary::isDynamicLib ( const char* pszFileName )
 
 
 
+}
