@@ -29,8 +29,23 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include <vector>
 
 typedef std::string enString_t;
+typedef std::vector<enString_t> enStringArray_t;
+
+
+//-----------------------------------------------------------------------------
+inline 
+void tolower( enString_t& s )
+{
+	// Convert the string to lowercase internally
+	if( !s.empty() )
+	{
+		::_strlwr_s( (char*)s.c_str(), s.length() + 1 );
+	}
+}
+
 
 #endif // __EDUNETCORE_H__
 

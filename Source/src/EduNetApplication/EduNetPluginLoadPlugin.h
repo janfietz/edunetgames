@@ -49,10 +49,10 @@ public:
 
 	void loadModules(const char* pszPath);
 	void unloadModules(void);
-	bool appWantsToLoadModule(const char* kModuleName);
+	bool appWantsToLoadPlugin(const char* pszPluginName);
 
 	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( EduNetRawModule* pkModule );
+	void createPluginsFromModule ( RawModule* pkModule );
 
 	virtual OpenSteer::AbstractPlugin* createPluginByName(
 		const char* pszPluginName );
@@ -64,10 +64,10 @@ protected:
 
 private:
 
-	EduNetRawModule* findModuleForPlugin(
+	RawModule* findModuleForPlugin(
 		const char* pszPluginName );
 
-	EduNet::ModuleManager m_modules;
+	ModuleManager m_modules;
 };
 
 }

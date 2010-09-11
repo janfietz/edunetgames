@@ -54,7 +54,7 @@
 
 //-----------------------------------------------------------------------------
 #define ET_DECLARE_MODULE_ENTRYFUNC_S(fnc)\
-	class EduNetModuleEntry* fnc( void )
+	class ModuleEntry* fnc( void )
 //-----------------------------------------------------------------------------
 #define ET_MODULE_ENTRYFUNC_EXPORT(fnc) \
 	extern "C" ET_DLL_EXPORT \
@@ -68,7 +68,12 @@
 		static entryClass kEntry; \
 		return &kEntry; }
 
-class EduNetModuleEntry
+
+namespace EduNet	{
+
+typedef ET_DECLARE_MODULE_ENTRYFUNC_S(ModuleEntryFunc);
+
+class ModuleEntry
 {
 public:
 	virtual const char* getName( void ) const ET_ABSTRACT;
@@ -76,29 +81,30 @@ public:
 
 	virtual EduNetPluginFactory* createPluginFactory( void ) const ET_ABSTRACT;
 };
-typedef ET_DECLARE_MODULE_ENTRYFUNC_S(EduNetModuleEntryFunc);
 
 //-----------------------------------------------------------------------------
-class EduNetRawModule
+class RawModule
 {
 public:
-	EduNetRawModule( void );
+	RawModule( void );
 
 	bool load(const char* pszLibName);
-	EduNetModuleEntry* accessEntry( void ) const
+	ModuleEntry* accessEntry( void ) const
 	{
 		return this->m_pEntry;
 	};
 
 private:
 
-	EduNetModuleEntryFunc* accessEntryFunction( void );
+	ModuleEntryFunc* accessEntryFunction( void );
 	void queryEntry( void );
 
 	EduNet::DynamicLibraryPtr m_spLib;
-	EduNetModuleEntry* m_pEntry;
+	ModuleEntry* m_pEntry;
 };
-typedef boost::shared_ptr<EduNetRawModule>  EduNetRawModulePtr;
-typedef std::vector<EduNetRawModulePtr> EduNetRawModules;
+typedef boost::shared_ptr<RawModule>  RawModulePtr;
+typedef std::vector<RawModulePtr> RawModules;
+
+}
 
 #endif //EDUNET_MODULE_H
