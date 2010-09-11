@@ -66,7 +66,7 @@
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
 #include "OpenSteer/Draw.h"
 #endif //! NOT_OPENSTEERDEMO
-
+#include "OpenSteer/Camera.h"
 //-----------------------------------------------------------------------------
 // currently selected vehicle.  Generally the one the camera follows and
 // for which additional information may be displayed.  Clicking the mouse
@@ -108,6 +108,10 @@ OpenSteer::SimpleVehicle::~SimpleVehicle (void)
 	if( this == SimpleVehicle::nearestMouseVehicle )
 	{
 		SimpleVehicle::nearestMouseVehicle = NULL;
+	}
+	if( this == Camera::camera.vehicleToTrack )
+	{
+		Camera::camera.vehicleToTrack = NULL;
 	}
 
 }

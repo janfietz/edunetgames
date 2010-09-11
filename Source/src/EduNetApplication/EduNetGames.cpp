@@ -155,7 +155,9 @@ OpenSteer::OpenSteerDemo::initialize ( void )
 
         // identify default Plugin
         if ( !OpenSteer::Plugin::selectedPlugin )
+		{
             errorExit ( "no default Plugin" );
+		}
 
         std::ostringstream message;
         message << std::endl << "Default plugin:" << std::endl;

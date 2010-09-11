@@ -68,6 +68,7 @@ namespace OpenSteer
 		{
 			return this->name();
 		}
+		virtual void prepareOpen (void);
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime);
 		virtual void redraw(const float currentTime, const float elapsedTime);
@@ -119,6 +120,9 @@ namespace OpenSteer
 		virtual const AbstractPlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
 		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
 		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
+	protected:
+		void redrawChildren(const float currentTime, const float elapsedTime);
+
 	private:
 		AbstractPlayerGroup m_kAllPlayers;
 		ObstacleGroup m_kAllObstacles;
@@ -135,10 +139,6 @@ namespace OpenSteer
 		PluginArrayMixin(bool bAddToRegistry = true):Super( bAddToRegistry ),m_kPluginArray( false ) {};
 		virtual ~PluginArrayMixin() {};
 
-// 		virtual const char* pluginName (void) const
-// 		{
-// 			return this->name();
-// 		}
 		//---------------------------------------------------------------------
 		// functionality PluginArray
 		void addPlugin( AbstractPlugin* pkPlugin )

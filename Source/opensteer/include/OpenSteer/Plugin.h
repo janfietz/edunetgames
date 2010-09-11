@@ -76,7 +76,9 @@ namespace OpenSteer {
 			return this->name();
 		}
 
-       //! default reset method is to do a close then an open
+		virtual void prepareOpen (void) {};
+
+		//! default reset method is to do a close then an open
 		void reset (void) {close (); open ();}
 
         //! default sort key (after the "built ins")
@@ -185,12 +187,6 @@ namespace OpenSteer {
 
 		// return name of currently selected plug-in
 		static const char* nameOfSelectedPlugin( void );
-
-		// open the currently selected plug-in
-		static void openSelectedPlugin( void );
-
-		// close the currently selected plug-in
-		static void closeSelectedPlugin( void );
 
 		// reset the currently selected plug-in
 		static void resetSelectedPlugin( void );

@@ -91,9 +91,9 @@ void gluiSelectPlugin()
 }
 
 //-----------------------------------------------------------------------------
-void OnPluginSelected( void )
+void onPluginSelectedCallback( OpenSteer::AbstractPlugin* plugin )
 {
-	EduNet::Application::AccessApplication().onPluginSelected( OpenSteer::Plugin::selectedPlugin );
+	EduNet::Application::AccessApplication().onPluginSelected( plugin );
 }
 
 
@@ -130,7 +130,12 @@ void gluiProfSelectParent()
 //-----------------------------------------------------------------------------
 Application& Application::AccessApplication( void )
 {
-	Plugin::ms_on_plugin_selected_func = OnPluginSelected;
+	Plugin::ms_on_plugin_selected_func = onPluginSelectedCallback;
+	Application* application = Application::accessInstance();
+	if( NULL == application )
+	{
+		Application::createInstance();
+	}
 	return *Application::accessInstance();
 }
 

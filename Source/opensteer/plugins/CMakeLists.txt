@@ -1,4 +1,5 @@
-project(OpenSteerDemo)
+project(ExtOpenSteerDemo)
+
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include )
 SET(opensteerDemoSrcs
 Soccer.cpp
@@ -29,13 +30,14 @@ else(UNIX)
      
 endif()
 
-SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
 
 LINK_LIBRARIES(
- opensteer  ${GLUT_glut_LIBRARY} IProf
+ ExtOpensteer  ${GLUT_glut_LIBRARY} ExtIProf
 )
 
 add_executable(${PROJECT_NAME} ${opensteerDemoSrcs})
 
-
+set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )

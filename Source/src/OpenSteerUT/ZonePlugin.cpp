@@ -32,14 +32,28 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-int ZonePlugin::ms_iSolid(0);
-
+void initPluginCamera( void )
+{
+	// camera setup
+	osAbstractVehicle* vehicle = NULL;
+	osAbstractVehicle& kVehicle = *vehicle;
+	CameraPlugin::init2dCamera( kVehicle );
+	// Camera::camera.mode = Camera::cmFixedDistanceOffset;
+	Camera::camera.mode = Camera::cmStraightDown;
+	Camera::camera.fixedTarget.set( 15, 0, 0 );
+	Camera::camera.fixedPosition.set( 0, 20, 0 );
+	Camera::camera.lookdownDistance = 15;
+	// make camera jump immediately to new position
+	Camera::camera.doNotSmoothNextMove ();
+	Camera::camera.update( 0, 0, false );
+}
 
 //-----------------------------------------------------------------------------
 ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 	BaseClass(bAddToRegistry),
 	m_kZoneCenter( osVector3::zero ),
-	m_kZoneExtent( OS_SCALAR( 10.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 10.0 ) )
+	m_kZoneExtent( OS_SCALAR( 10.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 10.0 ) ),
+	m_iSolid(0)
 {
 
 }
@@ -54,7 +68,7 @@ void ZonePlugin::zoneUtility( const Vec3& gridTarget )
 		(round (gridTarget.y * 0.5f) * 2) - .05f,
 		(round (gridTarget.z * 0.5f) * 2));
 
-	if( 1 == ZonePlugin::ms_iSolid )
+	if( 1 == this->m_iSolid )
 	{
 		// colors for checkerboard
 		const Color gray1(0.27f);
@@ -71,16 +85,71 @@ void ZonePlugin::zoneUtility( const Vec3& gridTarget )
 }
 
 //-----------------------------------------------------------------------------
+void ZonePlugin::prepareOpen( void ) 
+{ 
+	this->addSubZones();
+	BaseClass::prepareOpen();
+}
+
+//-----------------------------------------------------------------------------
+void ZonePlugin::open( void ) 
+{ 
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the root zone
+	if( NULL == pkParentZone )
+	{
+		initPluginCamera();
+	}
+
+	BaseClass::open();
+}
+
+//-----------------------------------------------------------------------------
+void ZonePlugin::addSubZones( void )
+{
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the root zone
+	if( NULL == pkParentZone )
+	{
+		this->addPlugin( ET_NEW ZonePlugin() );
+		this->addPlugin( ET_NEW ZonePlugin() );
+		this->addPlugin( ET_NEW ZonePlugin() );
+		this->addPlugin( ET_NEW ZonePlugin() );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void ZonePlugin::update( const float currentTime, const float elapsedTime ) 
+{
+	BaseClass::update( currentTime, elapsedTime );
+}
+
+//-----------------------------------------------------------------------------
+void ZonePlugin::close( void ) 
+{ 
+	BaseClass::close();
+}
+
+//-----------------------------------------------------------------------------
 void ZonePlugin::initGui( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	glui->add_checkbox_to_panel( pluginPanel, "Solid", &ZonePlugin::ms_iSolid);
+	glui->add_checkbox_to_panel( pluginPanel, "Solid", &this->m_iSolid);
+	BaseClass::initGui( pkUserdata );
 }
 
 //-----------------------------------------------------------------------------
 void ZonePlugin::redraw (const float currentTime, const float elapsedTime) 
 { 
+
+	// right now do not call the base class
+	// as we want to see the children ...
+//	BaseClass::redraw( currentTime, elapsedTime );
+	BaseClass::redrawChildren( currentTime, elapsedTime );
 	if( false == this->isVisible() )
 	{
 		return;
