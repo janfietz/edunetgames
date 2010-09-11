@@ -34,9 +34,9 @@
 namespace OpenSteer
 {
 	//-------------------------------------------------------------------------
-	class ZonePlugin : public Plugin
+	class ZonePlugin : public OpenSteer::PluginArray
 	{
-		ET_DECLARE_BASE(OpenSteer::Plugin)
+		ET_DECLARE_BASE( OpenSteer::PluginArray )
 	public:
 		ZonePlugin ( bool bAddToRegistry = false );
 
@@ -45,29 +45,31 @@ namespace OpenSteer
 		// OpenSteer::Plugin interface
 		virtual void initGui( void* pkUserdata );
 		// required methods:
-		const char* name( void ) const {return this->getClassName();}
-		void open( void ) { }
-		void update( const float currentTime, const float elapsedTime ) { }
-		void redraw( const float currentTime, const float elapsedTime );
-		void close( void ) { }
-		const AVGroup& allVehicles( void ) const { return m_kVehicles; }
-		AVGroup& allVehicles( void ) { return m_kVehicles; }
+		const char* name( void ) const { return this->getClassName(); }
+		virtual void prepareOpen (void);
+		virtual void open( void );
+		virtual void update( const float currentTime, const float elapsedTime );
+		virtual void redraw( const float currentTime, const float elapsedTime );
+		virtual void close( void );
+		virtual const AVGroup& allVehicles( void ) const { return m_kVehicles; }
+		virtual AVGroup& allVehicles( void ) { return m_kVehicles; }
 
 		// optional methods (see comments in AbstractPlugin for explanation):
-		void reset (void) { } // default is to reset by doing close-then-open
-		float selectionOrderSortKey( void ) const {return 1000000;}
-		bool requestInitialSelection( void ) const {return false;}
-		void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
-		void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
+		virtual void reset (void) { } // default is to reset by doing close-then-open
+		virtual float selectionOrderSortKey( void ) const {return 1000000;}
+		virtual bool requestInitialSelection( void ) const {return false;}
+		virtual void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
+		virtual void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
 
 		void setZoneCenter( const osVector3& kGridCenter )
 		{
 			this->m_kZoneCenter = kGridCenter;
 		}
 
-		static int ms_iSolid;
+		int m_iSolid;
 	private:
 		void zoneUtility( const Vec3& gridTarget );
+		void addSubZones( void );
 
 		osColor m_kBorderColor;
 		osColor m_kGridColor;

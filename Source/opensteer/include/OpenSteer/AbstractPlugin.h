@@ -78,7 +78,6 @@ FooPlugin gFooPlugin;
 #include "OpenSteer/Obstacle.h"
 
 
-typedef void (*on_plugin_selected_func)( void );
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -92,7 +91,8 @@ namespace OpenSteer {
         
         virtual ~AbstractPlugin() { /* Nothing to do. */ }
         
-        //! generic Plugin actions: open, update, redraw, close and reset
+        //! generic Plugin actions: prepareOpen open, update, redraw, close and reset
+		virtual void prepareOpen (void) OS_ABSTRACT;
         virtual void open (void) OS_ABSTRACT;
 // see AbstractUpdated
 //       virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
@@ -175,6 +175,9 @@ namespace OpenSteer {
 
 } //! namespace OpenSteer    
     
+
+typedef void (*on_plugin_selected_func)( OpenSteer::AbstractPlugin* );
+
 
 //-----------------------------------------------------------------------------
 #endif //! OPENSTEER_ABSTRACTPLUGIN_H

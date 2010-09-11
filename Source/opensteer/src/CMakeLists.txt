@@ -1,4 +1,5 @@
-#project(opensteer)
+project(ExtOpensteer)
+
 INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 )
 
@@ -68,10 +69,16 @@ IF (NOT WIN32)
    SET(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF (NOT WIN32)
 
-add_library(opensteer STATIC ${OPENTSTEER_LIB_HDRS} ${OPENTSTEER_LIB_SRC})
-set_target_properties( opensteer PROPERTIES
+add_library(${PROJECT_NAME} STATIC ${OPENTSTEER_LIB_HDRS} ${OPENTSTEER_LIB_SRC})
+set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 
+set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )
+	
+	
 # APPLE
 if ( WIN32 )
    message(STATUS "${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}")

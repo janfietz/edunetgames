@@ -1,3 +1,4 @@
+PROJECT(ExtGLUI)
 # This is basically the overall name of the project in Visual Studio this is the name of the Solution File
 
 ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS)
@@ -41,7 +42,7 @@ IF (NOT WIN32)
    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 ENDIF (NOT WIN32)
 
-ADD_LIBRARY(GLUI
+ADD_LIBRARY(${PROJECT_NAME}
 algebra3.cpp
 algebra3.h
 arcball.cpp
@@ -83,9 +84,17 @@ viewmodel.cpp
 viewmodel.h
 )
 
-set_target_properties( GLUI PROPERTIES
+set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 
+set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )
+
+
+	
+	
 IF (BUILD_SHARED_LIBS)
   TARGET_LINK_LIBRARIES(GLUI ${GLUT_glut_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 ENDIF (BUILD_SHARED_LIBS)

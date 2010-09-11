@@ -21,6 +21,7 @@ namespace EduNet
 
 	}
 }
+
 ClientServerPlugin gClientServerPlugin;
 EmptyServerPlugin gPeerPlugin;
 EmptyClientPlugin gClientPlugin;

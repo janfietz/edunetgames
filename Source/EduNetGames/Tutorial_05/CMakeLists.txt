@@ -4,8 +4,8 @@ ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 ${ET_RakNet_SOURCES}/DependentExtensions
 )
 
-file (GLOB Tutorial_Src "${Tutorial05_SOURCE_DIR}/*.cpp")
-file (GLOB Tutorial_Hdrs "${Tutorial05_SOURCE_DIR}/*.h")
+file (GLOB Tutorial_Src "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
+file (GLOB Tutorial_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
  
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 LINK_LIBRARIES(
@@ -14,7 +14,10 @@ ${RakNet_LIBRARY}
 )
 
 add_executable(${PROJECT_NAME} ${Tutorial_Hdrs} ${Tutorial_Src})
-set_target_properties( ${PROJECT_NAME} PROPERTIES
-	RUNTIME_OUTPUT_DIRECTORY ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
+
+set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
+set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )
 
 

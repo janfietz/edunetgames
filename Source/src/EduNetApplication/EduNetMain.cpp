@@ -73,8 +73,10 @@ int EduNetMain (int argc, char **argv)
 	{
 		if( true ==  EduNetOptions::accessOptions().continueProcess() )
 		{
-			EduNet::Application* pApp = EduNet::Application::accessInstance();
+			//EduNet::Application* pApp = EduNet::Application::accessInstance();
 
+			// TODO: @JF @CP this is bad design
+			//       lets talk about this
 			EduNet::initializeStaticPlugins( );
 			// load modules from working dir
 			/*pApp->loadModules( "./" );

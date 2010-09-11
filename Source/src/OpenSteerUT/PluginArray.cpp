@@ -133,6 +133,19 @@ AbstractPlugin* PluginArray::getPlugin( size_t uiIdx ) const
 }
 
 //-----------------------------------------------------------------------------
+void PluginArray::prepareOpen(void)
+{
+	TPluginArray::iterator kIter = this->begin();
+	TPluginArray::iterator kEnd = this->end();
+	while( kIter != kEnd  )
+	{
+		AbstractPlugin* pkPlugin = (*kIter).get();
+		pkPlugin->prepareOpen();
+		++kIter;
+	}
+}
+
+//-----------------------------------------------------------------------------
 void PluginArray::open(void)
 {
 	TPluginArray::iterator kIter = this->begin();
@@ -171,6 +184,12 @@ void PluginArray::redraw(const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
+	this->redrawChildren( currentTime, elapsedTime );
+}
+
+//-----------------------------------------------------------------------------
+void PluginArray::redrawChildren(const float currentTime, const float elapsedTime)
+{
 	TPluginArray::iterator kIter = this->begin();
 	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )

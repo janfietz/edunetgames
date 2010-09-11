@@ -186,7 +186,7 @@ int OpenSteer::Plugin::getPluginIdx( const AbstractPlugin* pkPlugin )
 OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findByName (const char* string)
 {
-    if (string)
+    if ( string && string[0] )
     {
         for (int i = 0; i < itemsInRegistry; i++)
         {
@@ -291,13 +291,27 @@ OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 	{
 		return;
 	}
-	OpenSteer::Plugin::closeSelectedPlugin();
-	OpenSteer::Plugin::selectedPlugin = pkPlugin;
-	if( NULL != Plugin::ms_on_plugin_selected_func )
+	if( NULL != OpenSteer::Plugin::selectedPlugin )
 	{
-		Plugin::ms_on_plugin_selected_func();
+		OpenSteer::Plugin::selectedPlugin->close();
 	}
-	OpenSteer::Plugin::openSelectedPlugin();
+
+	// reset camera and selected vehicle
+	OpenSteer::Camera::camera.reset ();
+	SimpleVehicle::selectedVehicle = NULL;
+
+	OpenSteer::Plugin::selectedPlugin = pkPlugin;
+	if( NULL != OpenSteer::Plugin::selectedPlugin )
+	{
+		OpenSteer::Plugin::selectedPlugin->prepareOpen();
+		// note: call the application
+		//       might initialize the gui
+		if( NULL != Plugin::ms_on_plugin_selected_func )
+		{
+			Plugin::ms_on_plugin_selected_func( OpenSteer::Plugin::selectedPlugin );
+		}
+		OpenSteer::Plugin::selectedPlugin->open();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -344,42 +358,21 @@ OpenSteer::Plugin::nameOfSelectedPlugin (void)
 }
 
 //-----------------------------------------------------------------------------
-// open the currently selected plug-in
-void
-OpenSteer::Plugin::openSelectedPlugin (void)
-{
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::selectedVehicle = NULL;
-	OpenSteer::Plugin::selectedPlugin->open ();
-}
-
-//-----------------------------------------------------------------------------
-// close the currently selected plug-in
-void
-OpenSteer::Plugin::closeSelectedPlugin (void)
-{
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	OpenSteer::Plugin::selectedPlugin->close ();
-}
-
-//-----------------------------------------------------------------------------
 // reset the currently selected plug-in
 void
 OpenSteer::Plugin::resetSelectedPlugin (void)
 {
+	// reset camera and selected vehicle
+	OpenSteer::Camera::camera.reset ();
+	SimpleVehicle::selectedVehicle = NULL;
+
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
 	{
 		return;
 	}
 	OpenSteer::Plugin::selectedPlugin->reset ();
 }
+
 //-----------------------------------------------------------------------------
 void OpenSteer::Plugin::addVehicle (
 	OpenSteer::AbstractVehicle* pkVehicle)
