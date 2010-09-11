@@ -42,16 +42,17 @@ public:
 
 	const char* getCurrentModuleFileName( void ) const;
 	const char* getCurrentModulePath( void ) const;
-	void queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType ) const;
+	static void queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType );
 
 	void loadModulesFromDirectory ( const char* pszDirectory );
 	void unloadAll( void );
 	void unloadModule( const char* pszName );
 	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( EduNetRawModule* pkModule );
+	void createPluginsFromModule ( RawModule* pkModule );
 	bool addModuleFromFile ( const char* pszFileName );
+	bool appWantsToLoadModule( const char* pszkModuleName );
 
-	const EduNetRawModules& getModules( void ) const
+	const RawModules& getModules( void ) const
 	{
 		return this->m_modules;
 	}
@@ -62,7 +63,7 @@ private:
 	const ModuleManager& operator<<( const char* ) const;
 	const ModuleManager& operator<<( unsigned long ) const;
 
-	EduNetRawModules m_modules;
+	RawModules m_modules;
 	
 	enum { EMaxPath = 2048 };
 	char m_pszCurrentModuleFileName[EMaxPath];

@@ -27,7 +27,8 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetModuleManager.h"
-#include<boost/filesystem/operations.hpp>
+#include "EduNetCommon/EduNetOptions.h"
+#include <boost/filesystem/operations.hpp>
 
 namespace bfs = boost::filesystem;
 
@@ -82,7 +83,7 @@ ModuleManager::ModuleManager()
 }
 
 //-----------------------------------------------------------------------------
-void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType ) const
+void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType )
 {
 	if( ( NULL == pszFileName ) || ( 0 == pszFileName[0] ) )
 	{
@@ -96,12 +97,7 @@ void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName,
 	if( (dotPos != enString_t::npos) && (underscorePos != enString_t::npos) )
 	{
 		kModuleType = tempString.substr( underscorePos, dotPos - underscorePos );
-
-		// Convert the string to lowercase internally
-		if( !kModuleType.empty() )
-		{
-			_strlwr_s( (char*)kModuleType.c_str(), kModuleType.length() + 1 );
-		}
+		::tolower( kModuleType );
 	}
 }
 
@@ -194,19 +190,52 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 	this->queryModuleRuntimeTypeFromFileName( pszFileName, moduleType );
 	if( this->m_moduleRuntimeType.compare( moduleType ) == 0 )
 	{
-		if( true == EduNet::DynamicLibrary::isDynamicLib( pszFileName ) )
+		if( ( true == EduNet::DynamicLibrary::isDynamicLib( pszFileName ) ) )
 		{
-			EduNetRawModulePtr spNewLib(ET_NEW EduNetRawModule() );
-			EduNetRawModule* pkNewmodule = spNewLib.get();
-
-			bool bResult = pkNewmodule->load ( pszFileName );
-			if ( true == bResult )
+			bool bWantsToLoadModule = this->appWantsToLoadModule( pszFileName );
+			if( ( true == bWantsToLoadModule ) )
 			{
-				this->m_modules.push_back ( spNewLib );
+				RawModulePtr spNewLib(ET_NEW RawModule() );
+				RawModule* pkNewmodule = spNewLib.get();
+
+				bool bResult = pkNewmodule->load ( pszFileName );
+				if ( true == bResult )
+				{
+					this->m_modules.push_back ( spNewLib );
+				}
 			}
 		}
 	}
 	return bResult;
+}
+
+//-----------------------------------------------------------------------------
+bool ModuleManager::appWantsToLoadModule (
+	const char* pszModuleName )
+{
+	const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
+
+	// by default load all
+	if (true == kNames.empty())
+	{
+		return true;
+	}
+
+	enString_t moduleName(pszModuleName);
+	::tolower( moduleName );
+	enStringArray_t::const_iterator iter = kNames.begin();
+	enStringArray_t::const_iterator iterEnd = kNames.end();
+	while( iter != iterEnd )
+	{
+		enString_t temp(*iter);
+		::tolower( temp );
+		if( moduleName.find( temp ) != enString_t::npos )
+		{
+			return true;
+		}
+		++iter;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------------------

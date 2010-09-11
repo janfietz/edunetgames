@@ -33,7 +33,7 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include <boost/shared_ptr.hpp>
 
-typedef std::vector<std::string> EdutNetStringList;
+typedef enStringArray_t EdutNetStringList;
 
 class EduNetPluginFactory
 {

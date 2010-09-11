@@ -27,14 +27,16 @@
 //-----------------------------------------------------------------------------
 #include "EduNetModule.h"
 
+namespace EduNet	{
+
 //-----------------------------------------------------------------------------
-EduNetRawModule::EduNetRawModule( void ):
+RawModule::RawModule( void ):
 	m_pEntry(NULL)
 {
 
 }
 //-----------------------------------------------------------------------------
-bool EduNetRawModule::load(const char* pszLibName)
+bool RawModule::load(const char* pszLibName)
 {
 	EduNet::DynamicLibraryPtr spNewLib( ET_NEW EduNet::DynamicLibrary() );
 	EduNet::DynamicLibrary* pkNewLib = spNewLib.get();
@@ -49,23 +51,25 @@ bool EduNetRawModule::load(const char* pszLibName)
 }
 
 //-----------------------------------------------------------------------------
-void EduNetRawModule::queryEntry( void )
+void RawModule::queryEntry( void )
 {	
-	EduNetModuleEntryFunc* pkEntryFunc = this->accessEntryFunction();
+	ModuleEntryFunc* pkEntryFunc = this->accessEntryFunction();
 	if (NULL != pkEntryFunc)
 	{
 		this->m_pEntry = (*pkEntryFunc)();
 	}
 }
 //-----------------------------------------------------------------------------
-EduNetModuleEntryFunc* EduNetRawModule::accessEntryFunction( void )
+ModuleEntryFunc* RawModule::accessEntryFunction( void )
 {
-	EduNetModuleEntryFunc* pkEntryFunc(NULL);
+	ModuleEntryFunc* pkEntryFunc(NULL);
 	EduNet::DynamicLibrary* pkNewLib = this->m_spLib.get();
 	void* pkFunc = pkNewLib->accessProcAddress( "etModuleQueryEntry" );
 	if (NULL != pkFunc)
 	{
-		pkEntryFunc = (EduNetModuleEntryFunc*)pkFunc;
+		pkEntryFunc = (ModuleEntryFunc*)pkFunc;
 	}
 	return pkEntryFunc;
 }
+
+} 
