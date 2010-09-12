@@ -104,10 +104,14 @@ void PluginClientPlugin::SelectPluginByName(
 {
 	printf("Create plugin: %s \n", pszPluginName);
 
-OpenSteer::AbstractPlugin* pkNewPlugin = this->CreatePluginByName(
-		pszPluginName);
+	OpenSteer::AbstractPlugin* pkNewPlugin = this->CreatePluginByName(
+			pszPluginName);
 	if(NULL != pkNewPlugin)
 	{
+		// temporary fix
+		OpenSteer::SimpleVehicle::selectedVehicle = NULL;
+		OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
+
 		OpenSteer::AbstractPluginPtr spCurrentPlugin( 
 			this->m_kGamePlugin.getPlugin(0) );
 		if(NULL != spCurrentPlugin)

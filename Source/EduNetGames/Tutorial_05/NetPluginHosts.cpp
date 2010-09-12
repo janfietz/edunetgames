@@ -1,6 +1,7 @@
 #include "PluginSelectionPlugin.h"
 #include "EduNetApplication/EduNetPluginLoadPlugin.h"
 
+//-----------------------------------------------------------------------------
 class EduNetServerPluginLoadPlugin : public EduNet::PluginLoadPlugin
 {
 	ET_DECLARE_BASE(EduNet::PluginLoadPlugin)
@@ -22,12 +23,14 @@ protected:
 	}
 };
 
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
 	EduNetServerPluginLoadPlugin gLoadPlugin;
 	void initializeStaticPlugins( )
 	{
-		gLoadPlugin.loadModules("./");
+		ModuleManager kModuleManager;
+		gLoadPlugin.loadModules( kModuleManager.getCurrentModulePath() );
 		gLoadPlugin.createPluginsFromModules();
 
 	}
@@ -38,6 +41,7 @@ namespace EduNet
 
 	class NetPluginClientHost : public PluginClientPlugin
 	{
+		ET_DECLARE_BASE(PluginClientPlugin)
 	private:
 		OpenSteer::AbstractPlugin* CreatePluginByName(
 			const char* pszPluginName )
@@ -57,8 +61,18 @@ namespace EduNet
 			}
 			return NULL;
 		}
-
+	public:
 		virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+
+		//-----------------------------------------------------------------------------
+		virtual void update(const float currentTime, const float elapsedTime)
+		{
+			// temporary fix
+			OpenSteer::SimpleVehicle::selectedVehicle = NULL;
+			OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
+			BaseClass::update( currentTime, elapsedTime );
+		}
+
 	};
 
 	NetPluginClientHost gNetClientHost;

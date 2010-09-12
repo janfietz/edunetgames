@@ -34,15 +34,12 @@ namespace EduNet
 {
 
 //-----------------------------------------------------------------------------
-class PluginLoadPlugin : public OpenSteer::PluginArray
+class PluginLoadPlugin
 {
-	ET_DECLARE_BASE(OpenSteer::PluginArray)
 public:
-	PluginLoadPlugin( bool bAddToRegistry = false ):
-		BaseClass( bAddToRegistry )
-	{
+	PluginLoadPlugin( void );
 
-	}
+	virtual ~PluginLoadPlugin( void );
 
 	OS_IMPLEMENT_CLASSNAME( PluginLoadPlugin )
 		virtual const char* name() const { return this->getClassName(); };
@@ -68,6 +65,7 @@ private:
 		const char* pszPluginName );
 
 	ModuleManager m_modules;
+	OpenSteer::PluginArray m_plugins;
 };
 
 }

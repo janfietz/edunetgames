@@ -33,6 +33,18 @@ namespace EduNet
 {
 
 //-----------------------------------------------------------------------------
+PluginLoadPlugin::PluginLoadPlugin( void )
+{
+
+}
+
+//-----------------------------------------------------------------------------
+PluginLoadPlugin::~PluginLoadPlugin( void )
+{
+
+}
+
+//-----------------------------------------------------------------------------
 void PluginLoadPlugin::loadModules( const char* pszPath )
 {
 	// load modules in working directory
@@ -42,7 +54,7 @@ void PluginLoadPlugin::loadModules( const char* pszPath )
 //-----------------------------------------------------------------------------
 void PluginLoadPlugin::unloadModules( void )
 {
-	this->removeAllPlugins();
+	this->m_plugins.removeAllPlugins();
 	this->m_modules.unloadAll();
 }
 
@@ -84,7 +96,7 @@ void PluginLoadPlugin::createPluginsFromModule (
 			AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
 			if ( NULL != pkPlugin )
 			{
-				this->addPlugin ( pkPlugin );
+				this->m_plugins.addPlugin ( pkPlugin );
 				// little hack
 				OpenSteer::Plugin::addToRegistry ( pkPlugin );
 			}
