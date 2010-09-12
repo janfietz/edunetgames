@@ -142,7 +142,7 @@ OpenSteer::OpenSteerDemo::initialize ( void )
         Plugin::applyToAll ( printPlugin );
 
         // identify default Plugin
-        if ( !OpenSteer::Plugin::selectedPlugin )
+        if ( NULL == OpenSteer::Plugin::selectedPlugin )
 		{
             errorExit ( "no default Plugin" );
 		}
@@ -183,6 +183,8 @@ void
 OpenSteer::OpenSteerDemo::errorExit ( const char* message )
 {
     EduNet::Log::printMessage ( message );
+	EduNet::Application::_SDMCleanup();
+	EduNet::Application::_SDMShutdown();
 #ifdef _MSC_VER
     MessageBox ( 0, message, "OpenSteerDemo Unfortunate Event", MB_ICONERROR );
 #endif
@@ -194,6 +196,8 @@ void
 OpenSteer::OpenSteerDemo::exit ( int exitCode )
 {
     OpenSteer::Plugin::selectPlugin ( NULL );
+	EduNet::Application::_SDMCleanup();
+	EduNet::Application::_SDMShutdown();
     ::exit ( exitCode );
 }
 
@@ -928,6 +932,7 @@ keyboardFunc ( unsigned char key, int x, int y )
         }
 #endif
         EduNet::Application::_SDMCleanup();
+		EduNet::Application::_SDMShutdown();
         OpenSteer::OpenSteerDemo::exit ( 0 );
     }
     break;
@@ -1104,6 +1109,7 @@ void consoleExit ( int i )
 {
     EduNet::Log::printMessage ( "console exit ..." );
     EduNet::Application::_SDMCleanup();
+	EduNet::Application::_SDMShutdown();
 }
 
 //-----------------------------------------------------------------------------
@@ -1116,18 +1122,7 @@ void windowExit ( int i )
 
     EduNet::Application::_SDMCleanup();
 	EduNet::Application::_SDMShutdown();
-// note: activate to see all the leaks
-#if 0
-#ifdef ET_DEBUG
-#ifdef WIN32
-	_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
-	_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
-
-	// manually dump leaks now as we are exiting the glut way
-	_CrtDumpMemoryLeaks();
-#endif
-#endif
-#endif
+	::exit ( i );
 }
 
 } // annonymous namespace
@@ -1203,10 +1198,7 @@ OpenSteer::OpenSteerDemo::initializeGraphics ( int argc, char **argv )
     GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
 */
 	
-    glui->set_main_gfx_window ( windowID );
-
-
-   
+    glui->set_main_gfx_window ( windowID );   
 }
 //-----------------------------------------------------------------------------
 void OpenSteer::OpenSteerDemo::setGlutFunctions( void )

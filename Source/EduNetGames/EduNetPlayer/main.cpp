@@ -34,15 +34,15 @@
 namespace EduNet
 {
 	ModulePluginLoader* gLoadPlugin = NULL;
-	void initializeStaticPlugins( )
+	void initializeDynamicPlugins( )
 	{
 		ModuleManager kModuleManager;
 		gLoadPlugin = ET_NEW ModulePluginLoader();
 		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
 		gLoadPlugin->createPluginsFromModules();
-
 	}
-	void shutdownStaticPlugins( )
+
+	void shutdownDynamicPlugins( )
 	{
 		gLoadPlugin->unloadModules();
 		ET_SAFE_DELETE( gLoadPlugin ); 

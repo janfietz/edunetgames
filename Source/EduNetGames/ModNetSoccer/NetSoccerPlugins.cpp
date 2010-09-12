@@ -30,8 +30,8 @@
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-	kSettings.uiClientStartPort = CLIENT_PORT;
-	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.uiClientStartPort = CLIENT_PORT + 200;
+	kSettings.uiServerStartPort = SERVER_PORT + 200;
 	kSettings.sessionPassword = "NetSoccer";
 	kSettings.uiPortPongCount = 10;
 }

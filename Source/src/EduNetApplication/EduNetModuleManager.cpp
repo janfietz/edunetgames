@@ -35,7 +35,7 @@
 namespace bfs = boost::filesystem;
 
 // note: set to 1 to debug loadModulesFromDirectory
-#define ET_DEBUG_LOADMODULES 1
+#define ET_DEBUG_LOADMODULES 0
 
 namespace EduNet	{
 

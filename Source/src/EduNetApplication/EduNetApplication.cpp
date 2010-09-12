@@ -28,6 +28,7 @@
 
 
 #include "EduNetApplication.h"
+#include "EduNetGames.h"
 #include "EduNetProfile/GraphPlot.h"
 #include "EduNetCommon/EduNetOptions.h"
 #include "OpenSteerUT/OpenSteerUT.h"
@@ -40,7 +41,6 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 namespace
 {
-
 	OpenSteer::GlobalSelection g_globalSelection;
 
 	bool InitializeGlobals( void )
@@ -54,9 +54,7 @@ namespace
 
 	bool bGlobalsInitialized = InitializeGlobals();
 
-
 	int profReportMode = 0;
-
 
 	int pluginSelection = 0;
 	int pluginIndex = 0;
@@ -70,7 +68,6 @@ namespace
 
 	float fSimulationFPS = 50.0f;
 }
-
 
 //-----------------------------------------------------------------------------
 void setDefaultSettings()
@@ -107,7 +104,6 @@ void onPluginSelectedCallback( OpenSteer::AbstractPlugin* plugin )
 {
 	EduNet::Application::AccessApplication().onPluginSelected( plugin );
 }
-
 
 //-----------------------------------------------------------------------------
 void gluiProfMoveCursorNext()
@@ -174,27 +170,30 @@ Application::~Application( void )
 {
 	bool bTest = true;
 	bTest = false;
-	Application::_SDMCleanup();
 }
 
 //-----------------------------------------------------------------------------
 void fnExit0 (void)
 {
-	bool bTest = true;
-	bTest = false;
-//	Application::_SDMShutdown();
+	EduNet::Application::_SDMCleanup();
+	EduNet::Application::_SDMShutdown();
 }
 
 //-----------------------------------------------------------------------------
 void Application::_SDMInit( void )
 {
 	atexit (fnExit0);
-	Application::createInstance();
+	Application* application = Application::accessInstance();
+	if( NULL == application )
+	{
+		Application::createInstance();
+	}
 }
 
 //-----------------------------------------------------------------------------
 void Application::_SDMCleanup( void )
 {
+
 //	EduNet::Log::printMessage( "Application cleanup ..." );
 	static bool bCleanedup = false;
 	if( true == bCleanedup )
@@ -206,18 +205,20 @@ void Application::_SDMCleanup( void )
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
-//	EduNet::Log::printMessage( "Application cleanup - done." );
 
-	EduNet::shutdownStaticPlugins();
-/*
-	EduNet::Application* pApp = EduNet::Application::accessInstance();
-	if( NULL != pApp )
+	EduNet::shutdownDynamicPlugins();
+
+	if( NULL != g_openSteerUTData.appGlui )
 	{
-		pApp->unloadModules();
+//		GLUI_Master.close_all();
+//		g_openSteerUTData.appGlui->close_internal();
+// 		g_openSteerUTData.appGlui->close();
+// 		g_openSteerUTData.appGlui = NULL;
 	}
-*/
-}
 
+
+//	EduNet::Log::printMessage( "Application cleanup - done." );
+}
 
 //-----------------------------------------------------------------------------
 void Application::_SDMShutdown( void )
@@ -231,8 +232,56 @@ void Application::_SDMShutdown( void )
 	bShutdown = true;
 	Application::destroyInstance();
 	//sEduNet::Log::printMessage( "Application shutdown - done." );
+
+	static bool bDumpedMemLeaks = false;
+	if( false == bDumpedMemLeaks )
+	{
+		bDumpedMemLeaks = true;
+		// note: activate to see all the leaks
+#if 0
+#ifdef ET_DEBUG
+#ifdef WIN32
+		_CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_DEBUG);
+		_CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_DEBUG );
+
+		// manually dump leaks now as we are exiting the glut way
+		_CrtDumpMemoryLeaks();
+#endif
+#endif
+#endif
+	}
 }
 
+//-----------------------------------------------------------------------------
+int Application::Run(int argc, char **argv)
+{
+	// register dynamic plugins
+	EduNet::initializeDynamicPlugins( );
+
+	// check if there is a default plugin
+	const char* pszPluginName = EduNetOptions::accessOptions().getSelectedPlugin();
+	OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );
+	if ( NULL == pkPlugin )
+	{
+		pkPlugin = Plugin::findDefault();
+	}
+	if( NULL != pkPlugin )
+	{
+		// initialize graphics
+		OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
+
+		// initialize OpenSteerDemo application
+		OpenSteer::OpenSteerDemo::initialize ();
+
+		// run the main event processing loop
+		OpenSteer::OpenSteerDemo::runGraphics ();
+	}
+	else
+	{
+		printf( "no plugin found - shutting down\n" );
+	}
+	return EXIT_SUCCESS;
+}
 
 //-----------------------------------------------------------------------------
 void Application::addGuiElements( GLUI* glui )

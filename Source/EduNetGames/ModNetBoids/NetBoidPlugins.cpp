@@ -31,8 +31,8 @@
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-	kSettings.uiClientStartPort = CLIENT_PORT;
-	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.uiClientStartPort = CLIENT_PORT + 100;
+	kSettings.uiServerStartPort = SERVER_PORT + 100;
 	kSettings.sessionPassword = "NetBoidTutorials";
 	kSettings.uiPortPongCount = 10;
 }

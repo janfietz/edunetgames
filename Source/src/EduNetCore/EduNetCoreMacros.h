@@ -45,7 +45,7 @@
 #define ET_DECLARE_SINGLETON( ClassName ) \
 	public: \
 		static ClassName* accessInstance( void ) { return ClassName::ms_pInstance; } \
-		static void createInstance( void ) { ClassName::ms_pInstance = ET_NEW ClassName();} \
+		static void createInstance( void ) { if( NULL == ClassName::accessInstance() ) ClassName::ms_pInstance = ET_NEW ClassName();} \
 		static void destroyInstance( void ) { ET_SAFE_DELETE(ClassName::ms_pInstance);} \
 	private: \
 		static ClassName* ms_pInstance;

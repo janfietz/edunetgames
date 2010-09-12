@@ -83,6 +83,11 @@ public:
 	int resetCount;
 	class NetCtfSeekerVehicle* m_pkSeeker;
 
+	static class NetCtfEntityFactory* m_sOfflineNetCtfEntityFactory;
+	static void allocateEntityFactory( void );
+	static void destroyEntityFactory( void );
+
+
 };
 
 

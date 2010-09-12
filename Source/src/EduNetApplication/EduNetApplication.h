@@ -37,8 +37,8 @@
 namespace EduNet
 {
 	
-	extern void initializeStaticPlugins( );
-	extern void shutdownStaticPlugins( );
+	extern void initializeDynamicPlugins( );
+	extern void shutdownDynamicPlugins( );
 	
 //-----------------------------------------------------------------------------
 class Application
@@ -72,6 +72,8 @@ public:
 	static void _SDMInit(void);
 	static void _SDMCleanup(void);
 	static void _SDMShutdown(void);
+
+	static int Run(int argc, char **argv);
 
 	bool allowLocalPlayer(void)
 	{

@@ -72,13 +72,25 @@ namespace	{
 
 //-----------------------------------------------------------------------------
 // now 1 global vehicle factory
-NetCtfEntityFactory gOfflineNetCtfEntityFactory;
+NetCtfEntityFactory* NetCtfPlugin::m_sOfflineNetCtfEntityFactory = NULL;
+
+//-----------------------------------------------------------------------------
+void NetCtfPlugin::allocateEntityFactory( void )
+{
+	NetCtfPlugin::m_sOfflineNetCtfEntityFactory = ET_NEW NetCtfEntityFactory();
+}
+
+//-----------------------------------------------------------------------------
+void NetCtfPlugin::destroyEntityFactory( void )
+{
+	ET_SAFE_DELETE( NetCtfPlugin::m_sOfflineNetCtfEntityFactory ); 
+}
 
 //-----------------------------------------------------------------------------
 NetCtfPlugin::NetCtfPlugin( bool bAddToRegistry ):
 BaseClass( bAddToRegistry ),resetCount(0),m_pkSeeker(NULL)
 {
-	this->setEntityFactory( &gOfflineNetCtfEntityFactory );
+	this->setEntityFactory( NetCtfPlugin::m_sOfflineNetCtfEntityFactory );
 }
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetCtfPlugin::createVehicle( EntityClassId classId) const

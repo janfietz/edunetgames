@@ -47,18 +47,6 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.uiPortPongCount = 10;
 }
 
-namespace EduNet
-{
-	void initializeStaticPlugins( )
-	{
-
-	}
-	void shutdownStaticPlugins( )
-	{
-
-	}
-}
-
 //-----------------------------------------------------------------------------
 // now the basic network plugins
 //-----------------------------------------------------------------------------
@@ -197,7 +185,6 @@ public:
 
 };
 
-OfflinePedestrianPlugin gPedestrianPlugin;
 
 //-----------------------------------------------------------------------------
 // render client plugin
@@ -236,7 +223,6 @@ public:
 
 };
 
-PedestrianRenderClientPlugin gPedestrianClientPlugin( true );
 
 //-----------------------------------------------------------------------------
 // render server plugin
@@ -273,7 +259,6 @@ public:
 
 };
 
-PedestrianRenderPeerPlugin gPedestrianPeerPlugin( true );
 
 //-----------------------------------------------------------------------------
 // client server plugin
@@ -329,4 +314,33 @@ void PedestrianClientServerPlugin::initGui( void* pkUserdata )
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 };
 
-PedestrianClientServerPlugin gClientServerPlugin;
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+OfflinePedestrianPlugin* pedestrianPlugin = NULL;
+PedestrianClientServerPlugin* clientServerPlugin = NULL;
+PedestrianRenderClientPlugin* pedestrianClientPlugin = NULL;
+PedestrianRenderPeerPlugin* pedestrianPeerPlugin = NULL;
+
+//-----------------------------------------------------------------------------
+namespace EduNet
+{
+	void initializeDynamicPlugins( )
+	{
+		pedestrianPlugin = ET_NEW OfflinePedestrianPlugin();
+		clientServerPlugin = ET_NEW PedestrianClientServerPlugin();
+		pedestrianClientPlugin = ET_NEW PedestrianRenderClientPlugin( true );
+		pedestrianPeerPlugin = ET_NEW PedestrianRenderPeerPlugin( true );
+
+	}
+	void shutdownDynamicPlugins( )
+	{
+		ET_SAFE_DELETE( pedestrianPlugin );
+		ET_SAFE_DELETE( clientServerPlugin );
+		ET_SAFE_DELETE( pedestrianClientPlugin );
+		ET_SAFE_DELETE( pedestrianPeerPlugin );
+
+	}
+}
+

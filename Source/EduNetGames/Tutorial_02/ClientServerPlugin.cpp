@@ -10,18 +10,24 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.uiPortPongCount = 10;
 }
 
+ClientServerPlugin* clientServerPlugin = NULL;
+EmptyServerPlugin* peerPlugin = NULL;
+EmptyClientPlugin* clientPlugin = NULL;
+
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
-	void initializeStaticPlugins( )
+	void initializeDynamicPlugins( )
 	{
-
+		clientServerPlugin = ET_NEW ClientServerPlugin();
+		peerPlugin = ET_NEW EmptyServerPlugin();
+		clientPlugin = ET_NEW EmptyClientPlugin();
 	}
-	void shutdownStaticPlugins( )
+	void shutdownDynamicPlugins( )
 	{
-
+		ET_SAFE_DELETE( clientServerPlugin );
+		ET_SAFE_DELETE( peerPlugin );
+		ET_SAFE_DELETE( clientPlugin );
 	}
 }
 
-ClientServerPlugin gClientServerPlugin;
-EmptyServerPlugin gPeerPlugin;
-EmptyClientPlugin gClientPlugin;

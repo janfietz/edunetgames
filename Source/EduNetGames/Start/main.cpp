@@ -27,17 +27,20 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
+
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
-	void initializeStaticPlugins( )
+	void initializeDynamicPlugins( )
 	{
 
 	}
-	void shutdownStaticPlugins( )
+	void shutdownDynamicPlugins( )
 	{
 		
 	}
 }
+
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {

@@ -61,6 +61,11 @@ public:
 	{
 		return QueryConstruction_PeerToPeer(destinationConnection);
 	}
+
+	virtual ~NetBoidConditionReplica( void )
+	{
+
+	}
 	
 	virtual bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection)
 	{

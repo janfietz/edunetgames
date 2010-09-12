@@ -85,7 +85,7 @@ namespace EduNet
 	NetPluginClientHost* gNetClientHost = NULL;
 
 	//-----------------------------------------------------------------------------
-	void initializeStaticPlugins( )
+	void initializeDynamicPlugins( )
 	{
 		gLoadPlugin = ET_NEW ServerModulePluginLoader();
 		ModuleManager kModuleManager;
@@ -96,7 +96,7 @@ namespace EduNet
 	}
 
 	//-----------------------------------------------------------------------------
-	void shutdownStaticPlugins( )
+	void shutdownDynamicPlugins( )
 	{
 		ET_SAFE_DELETE( gNetClientHost );
 
