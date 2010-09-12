@@ -189,6 +189,25 @@ ${Argtable_LIBRARY}
 ${Boost_LIBRARIES}
 )
 
+Set( EduNet_MODULE_LIBRARIES
+ExtOpensteer
+${GLUT_glut_LIBRARY} 
+${OPENGL_gl_LIBRARY} 
+${OPENGL_glu_LIBRARY}
+EduNetMemory
+EduNetCore
+EduNetCommon
+EduNetConnect
+EduNetModule
+EduNetProfile
+${EDUNET_NEEDED_WIN_LIBRARY}
+ExtGLUI
+ExtLinearMath
+ExtIProf
+${Argtable_LIBRARY}
+${Boost_LIBRARIES}
+)
+
 add_subdirectory(Source)
 add_subdirectory(External)
 

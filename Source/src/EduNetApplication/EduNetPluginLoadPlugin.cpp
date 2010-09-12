@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include "EduNetPluginLoadPlugin.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "EduNetModule/EduNetPluginFactory.h"
 
 namespace EduNet
 {

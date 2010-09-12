@@ -1,5 +1,5 @@
-#ifndef EDUNETCORE_DEFINES_H_
-#define EDUNETCORE_DEFINES_H_
+#ifndef EDUNETCORE_MACROS_H_
+#define EDUNETCORE_MACROS_H_
 
 //-----------------------------------------------------------------------------
 // Copyright (c) Jan Fietz, Cyrus Preuss
@@ -29,7 +29,8 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-
+//-----------------------------------------------------------------------------
+// a macro to have the possibility to deprecate code
 #ifdef __GNUC__
 #define DEPRECATED(func) func __attribute__ ((deprecated))
 #elif defined(_MSC_VER)
@@ -39,4 +40,17 @@
 #define DEPRECATED(func) func
 #endif
 
-#endif /* EDUNETCORE_DEFINES_H_ */
+//-----------------------------------------------------------------------------
+// a macro to declare and implement a dynamically allocated singleton
+#define ET_DECLARE_SINGLETON( ClassName ) \
+	public: \
+		static ClassName* accessInstance( void ) { return ClassName::ms_pInstance; } \
+		static void createInstance( void ) { ClassName::ms_pInstance = ET_NEW ClassName();} \
+		static void destroyInstance( void ) { ET_SAFE_DELETE(ClassName::ms_pInstance);} \
+	private: \
+		static ClassName* ms_pInstance;
+
+#define ET_IMPLEMENT_SINGLETON( ClassName ) ClassName* ClassName::ms_pInstance = NULL;
+
+
+#endif /* EDUNETCORE_MACROS_H_ */

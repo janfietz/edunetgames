@@ -1,8 +1,7 @@
-#ifndef EDUNETCORE_MACROS_H_
-#define EDUNETCORE_MACROS_H_
-
+#ifndef __OPENSTEERUT_H__
+#define	__OPENSTEERUT_H__
 //-----------------------------------------------------------------------------
-// Copyright (c) Jan Fietz, Cyrus Preuss
+// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -28,22 +27,42 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-/*
- * EduNetCore_Macros.h
- *
- *  Created on: 03.04.2010
- *      Author: jan
- */
-
-#define ET_DECLARE_SINGLETON( ClassName ) \
-	public: \
-		static ClassName* accessInstance( void ) { return ClassName::ms_pInstance; } \
-		static void createInstance( void ) { ClassName::ms_pInstance = ET_NEW ClassName();} \
-		static void destroyInstance( void ) { ET_SAFE_DELETE(ClassName::ms_pInstance);} \
-	private: \
-		static ClassName* ms_pInstance;
-
-#define ET_IMPLEMENT_SINGLETON( ClassName ) ClassName* ClassName::ms_pInstance = NULL;
 
 
-#endif /* EDUNETCORE_MACROS_H_ */
+//-----------------------------------------------------------------------------
+#include "glui/glui_internal_control.h"
+#include "EduNetCommon/TUpdatePeriod.h"
+#include "EduNetCommon/EduNetCommon.h"
+
+//-----------------------------------------------------------------------------
+typedef struct ViewPort_t
+{
+	ViewPort_t( void ) :tx(0),ty(0),tw(0),th(0)
+	{
+	}
+	int tx, ty, tw, th;
+} ViewPort;
+
+//-----------------------------------------------------------------------------
+typedef struct OpenSteerUTData_t
+{
+	OpenSteerUTData_t( void ):
+		appGlui(NULL),
+		updatePhaseActive(false),
+		drawPhaseActive(false)
+	{
+	}
+
+	GLUI* appGlui;
+	ViewPort viewPort;
+	bool updatePhaseActive;
+	bool drawPhaseActive;
+
+
+} OpenSteerUTData;
+
+extern OpenSteerUTData g_openSteerUTData;
+extern OpenSteerUTData* g_openSteerUTDataPtr;
+
+
+#endif // __OPENSTEERUT_H__

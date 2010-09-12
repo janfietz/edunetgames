@@ -28,6 +28,8 @@
 
 #include "EduNetModuleManager.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "OpenSteerUT/OpenSteerUT.h"
+
 #include <boost/filesystem/operations.hpp>
 
 namespace bfs = boost::filesystem;
@@ -201,6 +203,9 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 				bool bResult = pkNewmodule->load ( pszFileName );
 				if ( true == bResult )
 				{
+					// pass over important application data to this module
+					ModuleEntry* moduleEntry = pkNewmodule->accessEntry();
+					moduleEntry->setOpenSteerUTData( &g_openSteerUTData );
 					this->m_modules.push_back ( spNewLib );
 				}
 			}

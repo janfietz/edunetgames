@@ -588,7 +588,7 @@ void NetworkPlugin::CloseOpenConnections( void )
 
 		while(IsConnected())
 		{
-			EduNet::Application::sleep( 100 );
+			EduNet::sleep( 100 );
 		}
 		}
 	}

@@ -28,7 +28,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetModule/EduNetModuleManager.h"
+#include "EduNetApplication/EduNetModuleManager.h"
 
 namespace EduNet
 {

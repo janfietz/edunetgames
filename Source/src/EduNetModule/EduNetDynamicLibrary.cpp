@@ -27,9 +27,10 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetDynamicLibrary.h"
-#include "EduNetCommon/EduNetLog.h"
+#include "EduNetCore/EduNetLog.h"
 #include <string>
 #ifdef WIN32
+#include <windows.h>
 #else
 #include <dlfcn.h>
 #endif

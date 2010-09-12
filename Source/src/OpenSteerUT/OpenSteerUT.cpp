@@ -26,86 +26,70 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetBoidModule.h"
-#include "NetBoidPlugins.h"
-#include "OpenSteerUT/OpenSteerUT.h"
+
+#include "OpenSteerUT.h"
+
+OpenSteerUTData g_openSteerUTData;
+OpenSteerUTData* g_openSteerUTDataPtr = NULL;
+//-----------------------------------------------------------------------------
+// graphical annotation: master on/off switch
+bool OpenSteer::enableAnnotation = true;
 
 //-----------------------------------------------------------------------------
-BoidPluginFactory::BoidPluginFactory()
+namespace OpenSteer
 {
-
-}
-//-----------------------------------------------------------------------------
-BoidPluginFactory::~BoidPluginFactory()
-{
-
-}
-//-----------------------------------------------------------------------------
-void BoidPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
-{
-	kNames.push_back("NetBoidRenderOfflinePlugin");
-	kNames.push_back("NetBoidRenderPeerPlugin");
-	kNames.push_back("NetBoidMultiplePeerPlugin");
-	kNames.push_back("NetBoidServerPlugin");
-	kNames.push_back("NetBoidClientPlugin");
-
+	bool updatePhaseActive = false;
+	bool drawPhaseActive = false;
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
+GLUI* getRootGLUI()
 {
-	std::string kName(pszName);
-	if (0 == kName.compare("NetBoidRenderOfflinePlugin"))
+	assert( NULL != g_openSteerUTDataPtr );
+	return g_openSteerUTDataPtr->appGlui;
+}
+
+//-----------------------------------------------------------------------------
+// TODO: find a good place to call this
+void updateDataAndPhases( void )
+{
+	// note: in case this is a dll the data ptr is different to the data
+	if( g_openSteerUTDataPtr != &g_openSteerUTData )
 	{
-		return ET_NEW NetBoidRenderOfflinePlugin(false);
+		g_openSteerUTData = *g_openSteerUTDataPtr;
+		OpenSteer::updatePhaseActive = g_openSteerUTData.updatePhaseActive;
+		OpenSteer::drawPhaseActive = g_openSteerUTData.drawPhaseActive;
 	}
-	if (0 == kName.compare("NetBoidRenderPeerPlugin"))
-	{
-		return ET_NEW NetBoidRenderPeerPlugin(false);
-	}
-	if (0 == kName.compare("NetBoidMultiplePeerPlugin"))
-	{
-		return ET_NEW NetBoidMultiplePeerPlugin(false);
-	}
-	if (0 == kName.compare("NetBoidServerPlugin"))
-	{
-		return ET_NEW NetBoidRenderServerPlugin(false);
-	}
-	if (0 == kName.compare("NetBoidClientPlugin"))
-	{
-		return ET_NEW NetBoidRenderClientPlugin(false);
-	}
-	return NULL;
 }
 
 //-----------------------------------------------------------------------------
-namespace EduNet	{
-
-//-----------------------------------------------------------------------------
-const char* NetBoidModuleEntry::getName( void ) const
+namespace
 {
-	return "netboid";
 }
 
 //-----------------------------------------------------------------------------
-const char* NetBoidModuleEntry::getAbout( void ) const
+// accessors for GLUT's window dimensions
+float
+OpenSteer::drawGetWindowHeight ( void )
 {
-	return "netboid";
+	assert( NULL != g_openSteerUTDataPtr );
+	if ( g_openSteerUTDataPtr->viewPort.th > 0 )
+	{
+		return g_openSteerUTDataPtr->viewPort.th;
+	}
+	return glutGet ( GLUT_WINDOW_HEIGHT );
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidModuleEntry::setOpenSteerUTData( OpenSteerUTData* data ) const
+float
+OpenSteer::drawGetWindowWidth ( void )
 {
-	g_openSteerUTDataPtr = data;
+	assert( NULL != g_openSteerUTDataPtr );
+	if ( g_openSteerUTDataPtr->viewPort.tw > 0 )
+	{
+		return g_openSteerUTDataPtr->viewPort.tw;
+	}
+	return glutGet ( GLUT_WINDOW_WIDTH );
 }
 
-//-----------------------------------------------------------------------------
-EduNetPluginFactory* NetBoidModuleEntry::createPluginFactory( void ) const
-{
-	return ET_NEW BoidPluginFactory();
-}
 
-}
-
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetBoid, EduNet::NetBoidModuleEntry)

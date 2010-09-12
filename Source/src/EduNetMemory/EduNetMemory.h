@@ -28,8 +28,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCore/EduNetMacros.h"
 #include "EduNetCore/EduNetConfig.h"
+#include "EduNetCore/EduNetMacros.h"
 
 // select a certain memory manager
 #define ET_HAVE_MEMORYMANAGER_FLUID 0

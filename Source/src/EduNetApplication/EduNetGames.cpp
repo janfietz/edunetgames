@@ -45,17 +45,13 @@
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "OpenSteerUT/OpenSteerUT.h"
 
 
-typedef struct TViewPort
-{
-    int tx, ty, tw, th;
-} ViewPort;
 
 //-----------------------------------------------------------------------------
 namespace
 {
-ViewPort viewPort = { 0, 0, 0, 0 };
 int framePeriod = 100;//todo: test if this value should be 0
 
 const char* appVersionName = EDUNET_APPNAME;
@@ -85,11 +81,6 @@ void printPlugin ( OpenSteer::AbstractPlugin& pi )
 }
 } // anonymous namespace
 
-namespace OpenSteer
-{
-bool updatePhaseActive = false;
-bool drawPhaseActive = false;
-}
 
 //-----------------------------------------------------------------------------
 // keeps track of both "real time" and "simulation time"
@@ -99,9 +90,6 @@ OpenSteer::Clock& OpenSteer::OpenSteerDemo::clock = OpenSteer::Clock::processClo
 // phase: identifies current phase of the per-frame update cycle
 int OpenSteer::OpenSteerDemo::phase = OpenSteer::OpenSteerDemo::overheadPhase;
 
-//-----------------------------------------------------------------------------
-// graphical annotation: master on/off switch
-bool OpenSteer::enableAnnotation = true;
 
 //-----------------------------------------------------------------------------
 // XXX apparently MS VC6 cannot handle initialized static const members,
@@ -353,8 +341,8 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp ( void )
 void
 OpenSteer::OpenSteerDemo::pushPhase ( const int newPhase )
 {
-    updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
-    drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
+    g_openSteerUTData.updatePhaseActive = updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
+    g_openSteerUTData.drawPhaseActive = drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
 
     // update timer for current (old) phase: add in time since last switch
     updatePhaseTimers ();
@@ -378,8 +366,8 @@ OpenSteer::OpenSteerDemo::popPhase ( void )
 
     // restore old phase
     phase = phaseStack[--phaseStackIndex];
-    updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
-    drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
+    g_openSteerUTData.updatePhaseActive = updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
+    g_openSteerUTData.drawPhaseActive = drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
 }
 
 //-----------------------------------------------------------------------------
@@ -452,6 +440,7 @@ initGL ( void )
 void
 reshapeFunc ( int width, int height )
 {
+	ViewPort& viewPort = g_openSteerUTData.viewPort;
     GLUI_Master.get_viewport_area ( &viewPort.tx, &viewPort.ty, &viewPort.tw, &viewPort.th );
     glViewport ( viewPort.tx, viewPort.ty, viewPort.tw, viewPort.th );
 
@@ -1090,9 +1079,9 @@ void displayFunc ( void )
 void idleFunc ( void )
 {
 #ifdef ET_DEBUG
-    EduNet::Application::sleep ( 5 );
+    EduNet::sleep ( 5 );
 #else
-    EduNet::Application::sleep ( 1 );
+    EduNet::sleep ( 1 );
 #endif
 #if 0
     /* According to the GLUT specification, the current window is
@@ -1255,28 +1244,4 @@ OpenSteer::OpenSteerDemo::runGraphics ( void )
     glutTimerFunc ( framePeriod, timerFunc, 0 );
     glutMainLoop ();
 }
-
-//-----------------------------------------------------------------------------
-// accessors for GLUT's window dimensions
-float
-OpenSteer::drawGetWindowHeight ( void )
-{
-    if ( viewPort.th > 0 )
-    {
-        return viewPort.th;
-    }
-    return glutGet ( GLUT_WINDOW_HEIGHT );
-}
-
-//-----------------------------------------------------------------------------
-float
-OpenSteer::drawGetWindowWidth ( void )
-{
-    if ( viewPort.tw > 0 )
-    {
-        return viewPort.tw;
-    }
-    return glutGet ( GLUT_WINDOW_WIDTH );
-}
-
 

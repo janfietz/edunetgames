@@ -29,11 +29,25 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCore/EduNetMacros.h"
 #include "EduNetCore/EduNetConfig.h"
+#include "EduNetCore/EduNetMacros.h"
+#include "EduNetCore/EduNetCoreMacros.h"
+
+// note: include memory late so it is configurable via EduNetConfig
 #include "EduNetMemory/EduNetMemory.h"
-#include "EduNetCore/EduNetCoreDefines.h"
+
 #include "EduNetCore/EduNetCoreTypes.h"
+
+
+
+
+//-----------------------------------------------------------------------------
+namespace EduNet	{
+
+	void sleep( size_t uiMilliseconds );
+
+}
+
 
 #endif // __EDUNETCORE_H__
 

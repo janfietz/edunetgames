@@ -28,7 +28,7 @@
 
 #include "NetCtfVehicles.h"
 #include "NetCtfGameLogic.h"
-#include "EduNetCommon/EduNetLog.h"
+#include "EduNetCore/EduNetLog.h"
 
 using namespace OpenSteer;
 

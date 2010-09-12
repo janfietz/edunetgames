@@ -27,18 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "ModLectureModule.h"
-
-namespace EduNet
-{
-	void initializeStaticPlugins( )
-	{
-
-	}
-	void shutdownStaticPlugins( )
-	{
-
-	}
-}
+#include "OpenSteerUT/OpenSteerUT.h"
 
 //-----------------------------------------------------------------------------
 ModLecturePluginFactory::ModLecturePluginFactory()
@@ -77,6 +66,12 @@ const char* ModLectureModuleFactory::getName( void ) const
 const char* ModLectureModuleFactory::getAbout( void ) const
 {
 	return "Provides plugins from edunet lecture students";
+}
+
+//-----------------------------------------------------------------------------
+void ModLectureModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
+{
+	g_openSteerUTDataPtr = data;
 }
 
 //-----------------------------------------------------------------------------

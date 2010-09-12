@@ -27,7 +27,11 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetOptions.h"
-#include "EduNetLog.h"
+#include "EduNetCore/EduNetLog.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 // command line parsing
 #include "argtable2.h"

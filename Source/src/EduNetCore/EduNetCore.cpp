@@ -28,4 +28,22 @@
 
 #include "EduNetCore.h"
 
+#ifdef WIN32
+#include <windows.h>
+#else
+#endif
 
+namespace EduNet	{
+
+
+	//-----------------------------------------------------------------------------
+	void sleep( size_t uiMilliseconds )
+	{
+#ifdef WIN32
+		::Sleep( static_cast<DWORD>(uiMilliseconds) );
+#else
+		::usleep(1000 * uiMilliseconds);
+#endif
+	}
+
+}
