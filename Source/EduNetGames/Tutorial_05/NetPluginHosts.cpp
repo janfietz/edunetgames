@@ -67,9 +67,6 @@ namespace EduNet
 		//-----------------------------------------------------------------------------
 		virtual void update(const float currentTime, const float elapsedTime)
 		{
-			// temporary fix
-			OpenSteer::SimpleVehicle::selectedVehicle = NULL;
-			OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
 			BaseClass::update( currentTime, elapsedTime );
 		}
 

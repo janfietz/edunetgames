@@ -240,9 +240,9 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugin ( const float currentTime,
         pkPlayer->update ( currentTime, elapsedTime );
         AbstractEntity* pkControlledEntity = pkPlayer->getControlledEntity();
         AbstractEntity* pkNewControlledEntity = pkControlledEntity;
-        if ( SimpleVehicle::selectedVehicle != pkNewControlledEntity )
+        if ( SimpleVehicle::getSelectedVehicle() != pkNewControlledEntity )
         {
-            pkNewControlledEntity = SimpleVehicle::selectedVehicle;
+            pkNewControlledEntity = SimpleVehicle::getSelectedVehicle();
         }
         if ( pkNewControlledEntity != pkControlledEntity )
         {
@@ -276,7 +276,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugin ( const float currentTime,
     pushPhase ( drawPhase );
 
     // nearest mouse (to be highlighted)
-    SimpleVehicle::nearestMouseVehicle = OpenSteerDemo::vehicleNearestToMouse();
+    SimpleVehicle::setNearestMouseVehicle( OpenSteerDemo::vehicleNearestToMouse() );
 
     // invoke selected Plugin's Draw method
     EduNet::Application::AccessApplication().redrawSelectedPlugin ( currentTime, elapsedTime );

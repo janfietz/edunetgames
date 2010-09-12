@@ -160,7 +160,7 @@ namespace {
             for (int i = 0; i < lstCount; i++) all.push_back (new LowSpeedTurn);
 
             // initial selected vehicle
-            SimpleVehicle::selectedVehicle = *all.begin();
+            SimpleVehicle::setSelectedVehicle( *all.begin() );
 
             // initialize camera
             Camera::camera.mode = Camera::cmFixed;
@@ -193,7 +193,7 @@ namespace {
 				return;
 			}
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;

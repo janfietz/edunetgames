@@ -107,7 +107,7 @@ void NetPedestrianPlugin::open (void)
 	}
 
 	// initialize camera and selectedVehicle
-	initPluginCamera( *SimpleVehicle::selectedVehicle );
+	initPluginCamera( *SimpleVehicle::getSelectedVehicle() );
 }
 
 //-----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ void NetPedestrianPlugin::reset (void)
 	kVG.reset();
 
 	// reset camera position
-	CameraPlugin::position2dCamera( *SimpleVehicle::selectedVehicle );
+	CameraPlugin::position2dCamera( *SimpleVehicle::getSelectedVehicle() );
 
 	// make camera jump immediately to new position
 	Camera::camera.doNotSmoothNextMove ();
@@ -152,12 +152,12 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		return;
 	}
 	// selected Pedestrian (user can mouse click to select another)
-	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
+	AbstractVehicle* selected = SimpleVehicle::getSelectedVehicle();
 
 	// update grid center
-	if( NULL != SimpleVehicle::selectedVehicle ) 
+	if( NULL != SimpleVehicle::getSelectedVehicle() ) 
 	{
-		GridPlugin::setGridCenter( SimpleVehicle::selectedVehicle->position() );
+		GridPlugin::setGridCenter( SimpleVehicle::getSelectedVehicle()->position() );
 	}
 
 	// draw and annotate each Pedestrian
@@ -278,8 +278,8 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 		crowd.pop_back();
 
 		// if it is SimpleVehicle's selected vehicle, unselect it
-		if (pedestrian == SimpleVehicle::selectedVehicle)
-			SimpleVehicle::selectedVehicle = NULL;
+		if (pedestrian == SimpleVehicle::getSelectedVehicle())
+			SimpleVehicle::setSelectedVehicle( NULL );
 
 		// delete the Pedestrian
 		const AbstractEntityFactory* pkFactory = this->getEntityFactory();

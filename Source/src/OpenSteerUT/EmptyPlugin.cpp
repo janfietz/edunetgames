@@ -56,11 +56,11 @@ void EmptyPlugin::initGui( void* pkUserdata )
 void EmptyPlugin::open (void)
 {
 	m_kVehicle.reset();
-	SimpleVehicle::selectedVehicle = &m_kVehicle;
+	SimpleVehicle::setSelectedVehicle( &m_kVehicle );
 	m_kVehicles.push_back( &m_kVehicle );
 
 	// initialize camera
-	CameraPlugin::init2dCamera( *SimpleVehicle::selectedVehicle );
+	CameraPlugin::init2dCamera( *SimpleVehicle::getSelectedVehicle() );
 	Camera::camera.setPosition (
 		10,
 		CameraPlugin::camera2dElevation,
@@ -81,10 +81,10 @@ void EmptyPlugin::update (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
-	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
+	if( OpenSteer::SimpleVehicle::getSelectedVehicle() != NULL )
 	{
 		// update motion state plot
-		this->m_kMotionStateProfile.recordUpdate( OpenSteer::SimpleVehicle::selectedVehicle, currentTime, elapsedTime );
+		this->m_kMotionStateProfile.recordUpdate( OpenSteer::SimpleVehicle::getSelectedVehicle(), currentTime, elapsedTime );
 	}
 }
 
@@ -95,12 +95,12 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
-	if( NULL != SimpleVehicle::selectedVehicle )
+	if( NULL != SimpleVehicle::getSelectedVehicle() )
 	{
 		// update camera, tracking test vehicle
-		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle );
+		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::getSelectedVehicle() );
 		// draw "ground plane"
-		GridPlugin::gridUtility( SimpleVehicle::selectedVehicle->position() );
+		GridPlugin::gridUtility( SimpleVehicle::getSelectedVehicle()->position() );
 	}
 
 	AbstractVehicleGroup kVehicles( m_kVehicles );
@@ -161,7 +161,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 	if( 0 != this->m_bShowMotionStatePlot )
 	{
 		// draw motion state plot
-		if( NULL != SimpleVehicle::selectedVehicle )
+		if( NULL != SimpleVehicle::getSelectedVehicle() )
 		{
 			this->m_kMotionStateProfile.draw( currentTime );
 		}

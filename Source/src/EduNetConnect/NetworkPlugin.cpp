@@ -277,7 +277,7 @@ void NetworkPlugin::recordNetUpdate(
 //-----------------------------------------------------------------------------
 void NetworkPlugin::updateMotionStateProfile( const float currentTime, const float elapsedTime )
 {
-	if( OpenSteer::SimpleVehicle::selectedVehicle != NULL )
+	if( OpenSteer::SimpleVehicle::getSelectedVehicle() != NULL )
 	{
 		// find the selected vehicle by id
 		AbstractPlugin* pkHostedPlugin = this->getHostedPlugin();
@@ -292,7 +292,9 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 		}
 		else
 		{
-			if( true == OpenSteer::SimpleVehicle::selectedVehicle->isRemoteObject() )
+			AbstractVehicle* vehicle = OpenSteer::SimpleVehicle::getSelectedVehicle();
+			const bool bIsRemoteVehicle = vehicle->isRemoteObject();
+			if( true == bIsRemoteVehicle )
 			{
 				bTrySelectServerVehicle = true;
 			}
@@ -301,19 +303,19 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 		if( ( 0 != NetworkPlugin::ms_bShowMotionStatePlot ) || ( true == bTrySelectServerVehicle ) )
 		{
 			AbstractVehicleGroup kAV( pkHostedPlugin->allVehicles() );
-			NetworkId networkId = OpenSteer::SimpleVehicle::selectedVehicle->getNetworkId();
+			NetworkId networkId = OpenSteer::SimpleVehicle::getSelectedVehicle()->getNetworkId();
 			AVGroup::iterator kFound = kAV.findNetworkVehicle( networkId );
 			if( kFound != kAV.end() )
 			{
 				// TODO: move to own service function
 				AbstractVehicle* pkVehicle = *kFound;
-				if( pkVehicle != OpenSteer::SimpleVehicle::selectedVehicle )
+				if( pkVehicle != OpenSteer::SimpleVehicle::getSelectedVehicle() )
 				{
 					if( false == pkVehicle->isRemoteObject() )
 					{
 						// switch to the server object
 						// as this will not jitter
-						OpenSteer::SimpleVehicle::selectedVehicle = pkVehicle;
+						OpenSteer::SimpleVehicle::setSelectedVehicle( pkVehicle );
 					}
 				}
 
@@ -387,7 +389,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
 	{
 		// draw motion state plot
-		if( NULL != SimpleVehicle::selectedVehicle )
+		if( NULL != SimpleVehicle::getSelectedVehicle() )
 		{
 			NetworkPlugin::ms_kMotionStateProfile.draw( currentTime );
 		}

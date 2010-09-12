@@ -167,10 +167,10 @@ void Boid::sphericalWrapAround ( void )
         // wrap around (teleport)
         setPosition ( position().sphericalWrapAround ( Vec3::zero,
                       worldRadius ) );
-        if ( this == SimpleVehicle::selectedVehicle )
+        if ( this == SimpleVehicle::getSelectedVehicle() )
         {
             CameraPlugin::position3dCamera
-            ( *SimpleVehicle::selectedVehicle );
+            ( *SimpleVehicle::getSelectedVehicle() );
             Camera::camera.doNotSmoothNextMove ();
         }
     }

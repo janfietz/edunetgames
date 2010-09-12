@@ -90,7 +90,7 @@ void BoidsPlugin::open ( void )
     }
 
     // initialize camera
-    CameraPlugin::init3dCamera ( *SimpleVehicle::selectedVehicle );
+    CameraPlugin::init3dCamera ( *SimpleVehicle::getSelectedVehicle() );
     Camera::camera.mode = Camera::cmFixed;
     Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
     Camera::camera.fixedDistVOffset = 0;
@@ -218,7 +218,7 @@ void BoidsPlugin::reset ( void )
     for ( iterator i = flock.begin(); i != flock.end(); i++ ) ( **i ).reset();
 
     // reset camera position
-    CameraPlugin::position3dCamera ( *SimpleVehicle::selectedVehicle );
+    CameraPlugin::position3dCamera ( *SimpleVehicle::getSelectedVehicle() );
 
     // make camera jump immediately to new position
     Camera::camera.doNotSmoothNextMove ();
@@ -370,8 +370,8 @@ void BoidsPlugin::removeBoidFromFlock ( void )
         flock.pop_back();
 
         // if it is SimpleVehicle's selected vehicle, unselect it
-        if ( boid == SimpleVehicle::selectedVehicle )
-            SimpleVehicle::selectedVehicle = NULL;
+        if ( boid == SimpleVehicle::getSelectedVehicle() )
+            SimpleVehicle::setSelectedVehicle( NULL );
 
         // delete the Pedestrian
         const AbstractEntityFactory* pkFactory = this->getEntityFactory();

@@ -55,7 +55,7 @@ SimplePhysicsVehicle::~SimplePhysicsVehicle()
 //-----------------------------------------------------------------------------
 void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTime )
 {
-	if( ( SimpleVehicle::nearestMouseVehicle == this ) )
+	if( ( SimpleVehicle::getNearestMouseVehicle() == this ) )
 	{
 		// highlight vehicle nearest mouse
 		VehicleUtilities::highlightVehicleUtility( *this );
@@ -111,7 +111,7 @@ void NetPedestrian::annotationUtility( void ) const
 	sn << "#"
 		<< this->getEntityId()
 		<< std::endl;
-	if( this == SimpleVehicle::selectedVehicle )
+	if( this == SimpleVehicle::getSelectedVehicle() )
 	{
 		sn << std::setprecision(2) << std::setiosflags(std::ios::fixed);
 		sn << "--Worldspace--"
@@ -139,7 +139,7 @@ void NetPedestrian::annotationUtility( void ) const
 
 #if 0
 	// textual annotation for selected Pedestrian
-	if( SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn() )
+	if( SimpleVehicle::getSelectedVehicle() && OpenSteer::annotationIsOn() )
 	{
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
@@ -189,7 +189,7 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 
 	{
 		ET_PROFILE( updatePhysicsVehicle );
-		if( this == SimpleVehicle::selectedVehicle )
+		if( this == SimpleVehicle::getSelectedVehicle() )
 		{
 			if( false == this->isRemoteObject() )
 			{

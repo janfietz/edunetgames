@@ -99,7 +99,7 @@ VehicleUtilities::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
 void 
 VehicleUtilities::selectNextVehicle (void)
 {
-	if (SimpleVehicle::selectedVehicle != NULL)
+	if (SimpleVehicle::getSelectedVehicle() != NULL)
 	{
 		// get a container of all vehicles
 		const AVGroup& all = Plugin::allVehiclesOfSelectedPlugin ();
@@ -107,14 +107,14 @@ VehicleUtilities::selectNextVehicle (void)
 		const AVIterator last = all.end();
 
 		// find selected vehicle in container
-		AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
+		AVIterator s = std::find (first, last, SimpleVehicle::getSelectedVehicle());
 		if( s == last )
 		{
 			// if the search failed, use NULL
-			SimpleVehicle::selectedVehicle = NULL;
+			SimpleVehicle::setSelectedVehicle( NULL );
 			if( all.size() > 0 )
 			{
-				SimpleVehicle::selectedVehicle = all[0];
+				SimpleVehicle::setSelectedVehicle( all[0] );
 			}
 		}
 		else
@@ -126,7 +126,7 @@ VehicleUtilities::selectNextVehicle (void)
 				// if we are at the end of the container, select the first vehicle
 				s = first;
 			}
-			SimpleVehicle::selectedVehicle = (*s);
+			SimpleVehicle::setSelectedVehicle( (*s) );
 		}
 	}
 }
@@ -136,7 +136,7 @@ VehicleUtilities::selectNextVehicle (void)
 void 
 VehicleUtilities::selectVehicleNearestScreenPosition (int x, int y)
 {
-	SimpleVehicle::selectedVehicle = findVehicleNearestScreenPosition (x, y);
+	SimpleVehicle::setSelectedVehicle( findVehicleNearestScreenPosition (x, y) );
 }
 
 //-----------------------------------------------------------------------------

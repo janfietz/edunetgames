@@ -300,9 +300,9 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	}
 
 	// selected vehicle (user can mouse click to select another)
-	if( NULL != SimpleVehicle::selectedVehicle )
+	if( NULL != SimpleVehicle::getSelectedVehicle() )
 	{
-		AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
+		AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 		// draw "ground plane" centered between base and selected vehicle
 		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::camera.position();
 		const Vec3 goalDirection = goalOffset.normalized ();
@@ -370,9 +370,9 @@ void NetCtfPlugin::close (void)
 		all.pop_back();
 
 		// if it is SimpleVehicle's selected vehicle, unselect it
-		if (pkVehicle == SimpleVehicle::selectedVehicle)
+		if (pkVehicle == SimpleVehicle::getSelectedVehicle())
 		{
-			SimpleVehicle::selectedVehicle = NULL;
+			SimpleVehicle::setSelectedVehicle( NULL );
 		}
 		if( pkVehicle == this->m_pkSeeker )
 		{

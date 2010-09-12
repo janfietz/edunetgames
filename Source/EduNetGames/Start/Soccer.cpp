@@ -272,7 +272,7 @@ namespace {
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
             {
                 Player *pMicTest = new Player(TeamA, m_AllPlayers, m_Ball, true, i);
-                SimpleVehicle::selectedVehicle = pMicTest;
+                SimpleVehicle::setSelectedVehicle( pMicTest );
                 TeamA.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);
             }
@@ -281,7 +281,7 @@ namespace {
             for(unsigned int i=0; i < m_PlayerCountB ; i++)
             {
                 Player *pMicTest = new Player(TeamB, m_AllPlayers, m_Ball, false, i);
-                SimpleVehicle::selectedVehicle = pMicTest;
+                SimpleVehicle::setSelectedVehicle( pMicTest );
                 TeamB.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);
             }
@@ -357,7 +357,7 @@ namespace {
                 draw2dTextAt3dLocation ("start", Vec3::zero, gGreen, drawGetWindowWidth(), drawGetWindowHeight());
             }
             // update camera, tracking test vehicle
-            CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::selectedVehicle);
+            CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::getSelectedVehicle());
 
             // draw "ground plane"
             GridPlugin::gridUtility( Vec3(0,0,0) );

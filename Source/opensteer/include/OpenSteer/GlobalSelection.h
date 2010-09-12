@@ -1,3 +1,6 @@
+#ifndef OPENSTEER_GLOBALSELECTION_H
+#define OPENSTEER_GLOBALSELECTION_H
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -26,63 +29,34 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "ModLectureModule.h"
-#include "OpenSteerUT/OpenSteerUT.h"
+#include "OpenSteer/AbstractPlugin.h"
+#include "OpenSteer/AbstractVehicle.h"
 
 //-----------------------------------------------------------------------------
-ModLecturePluginFactory::ModLecturePluginFactory()
-{
+namespace OpenSteer {
 
-}
-//-----------------------------------------------------------------------------
-ModLecturePluginFactory::~ModLecturePluginFactory()
-{
+	class GlobalSelection
+	{
+	public:
+		GlobalSelection();
 
-}
-//-----------------------------------------------------------------------------
-void ModLecturePluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
-{
-	
-}
+		static void setCameraVehicleToTrack( const AbstractVehicle* vehicle );
+		static void setSelectedVehicle( AbstractVehicle* vehicle );
+		static void setNearestMouseVehicle( AbstractVehicle* vehicle );
 
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* ModLecturePluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
-{
-	std::string kName(pszName);
-	
-	return NULL;
-}
+		static const AbstractVehicle* getCameraVehicleToTrack( void );
+		static AbstractVehicle* getSelectedVehicle( void );
+		static AbstractVehicle* getNearestMouseVehicle( void );
 
-namespace EduNet	{
+		AbstractVehicle* selectedVehicle;
+		AbstractVehicle* nearestMouseVehicle;
+		const AbstractVehicle* cameraVehicleToTrack;
 
-//-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getName( void ) const
-{
-	return "ModLecture";
-}
+		static GlobalSelection* globalSelection;
+	};
+
+} //! namespace OpenSteer    
+
 
 //-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getAbout( void ) const
-{
-	return "Provides plugins from edunet lecture students";
-}
-
-//-----------------------------------------------------------------------------
-void ModLectureModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
-{
-	g_openSteerUTDataPtr = data;
-	OpenSteer::GlobalSelection::globalSelection = g_openSteerUTDataPtr->globalSelection;
-}
-
-//-----------------------------------------------------------------------------
-EduNetPluginFactory* ModLectureModuleFactory::createPluginFactory( void ) const
-{
-	return ET_NEW ModLecturePluginFactory();
-}
-
-
-}
-
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_ModLecture, EduNet::ModLectureModuleFactory)
-
+#endif //! OPENSTEER_PLUGINREGISTRY_H

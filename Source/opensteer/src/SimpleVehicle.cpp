@@ -61,23 +61,25 @@
 
 
 #include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteer/GlobalSelection.h"
 #include <algorithm>
 #include <iomanip>
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
 #include "OpenSteer/Draw.h"
 #endif //! NOT_OPENSTEERDEMO
 #include "OpenSteer/Camera.h"
+
+namespace OpenSteer	{
+
 //-----------------------------------------------------------------------------
 // currently selected vehicle.  Generally the one the camera follows and
 // for which additional information may be displayed.  Clicking the mouse
 // near a vehicle causes it to become the Selected Vehicle.
-OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::selectedVehicle = NULL;
-OpenSteer::AbstractVehicle* OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
-int OpenSteer::SimpleVehicle::ms_collect3DAnnotations = 0;
+int SimpleVehicle::ms_collect3DAnnotations = 0;
 
 //-----------------------------------------------------------------------------
 // constructor
-OpenSteer::SimpleVehicle::SimpleVehicle (void):
+SimpleVehicle::SimpleVehicle (void):
 _movesPlanar(true),
 m_bEnabled(true),
 m_pkCustomUpdated( NULL ),
@@ -88,7 +90,7 @@ m_pkProximityToken( NULL )
 
 	// note: do not set a global selected vehicle in case there is none
 	//       a vehicle is not nessecarily part of the current scene
-// 	if( NULL == SimpleVehicle::selectedVehicle )
+// 	if( NULL == SimpleVehicle::getSelectedVehicle() )
 // 	{
 // 		SimpleVehicle::selectedVehicle = this;
 // 	}
@@ -97,27 +99,50 @@ m_pkProximityToken( NULL )
 
 //-----------------------------------------------------------------------------
 // destructor
-OpenSteer::SimpleVehicle::~SimpleVehicle (void)
+SimpleVehicle::~SimpleVehicle (void)
 {
 	// cleanup the proximity token in case there is one
 	this->allocateProximityToken( NULL );
-	if( this == SimpleVehicle::selectedVehicle )
+	if( this == SimpleVehicle::getSelectedVehicle() )
 	{
-		SimpleVehicle::selectedVehicle = NULL;
+		SimpleVehicle::setSelectedVehicle( NULL );
 	}
-	if( this == SimpleVehicle::nearestMouseVehicle )
+	if( this == SimpleVehicle::getNearestMouseVehicle() )
 	{
-		SimpleVehicle::nearestMouseVehicle = NULL;
+		SimpleVehicle::setNearestMouseVehicle( NULL );
 	}
-	if( this == Camera::camera.vehicleToTrack )
+	if( this == Camera::getVehicleToTrack() )
 	{
-		Camera::camera.vehicleToTrack = NULL;
+		Camera::setVehicleToTrack( NULL );
 	}
-
 }
 
 //-----------------------------------------------------------------------------
-void OpenSteer::SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
+void SimpleVehicle::setSelectedVehicle( AbstractVehicle* vehicle )
+{
+	GlobalSelection::setSelectedVehicle( vehicle );
+}
+
+//-----------------------------------------------------------------------------
+void SimpleVehicle::setNearestMouseVehicle( AbstractVehicle* vehicle )
+{
+	GlobalSelection::setNearestMouseVehicle( vehicle );
+}
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* SimpleVehicle::getSelectedVehicle( void )
+{
+	return GlobalSelection::getSelectedVehicle();
+}
+
+//-----------------------------------------------------------------------------
+AbstractVehicle* SimpleVehicle::getNearestMouseVehicle( void )
+{
+	return GlobalSelection::getNearestMouseVehicle();
+}
+
+//-----------------------------------------------------------------------------
+void SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
 {
 	kStream << "#"
 		<< this->name()
@@ -131,20 +156,20 @@ void OpenSteer::SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStr
 }
 
 //-----------------------------------------------------------------------------
-void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime*/ ) 
+void SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime*/ ) 
 {
 //	if (&selected && &nearMouse && OpenSteer::annotationIsOn())
-//	if( SimpleVehicle::selectedVehicle == this )
-	bool bAnnotate = ( ( SimpleVehicle::nearestMouseVehicle == this ) && this->isAnnotated() );
+//	if( SimpleVehicle::getSelectedVehicle() == this )
+	bool bAnnotate = ( ( SimpleVehicle::getNearestMouseVehicle() == this ) && this->isAnnotated() );
 	if( false == bAnnotate )
 	{
 		// maybe this vehicle is close to the nearest mouse vehicle
 		AbstractVehicle* vehicle = this;
 		const float nearDistance = 6;
 		const Vec3& vp = vehicle->position();
-		if( NULL != SimpleVehicle::nearestMouseVehicle )
+		if( NULL != SimpleVehicle::getNearestMouseVehicle() )
 		{
-			const Vec3& np = SimpleVehicle::nearestMouseVehicle->position();
+			const Vec3& np = SimpleVehicle::getNearestMouseVehicle()->position();
 			if( (Vec3::distance (vp, np) < nearDistance) )
 			{
 				bAnnotate = true;
@@ -152,14 +177,14 @@ void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*
 		}
 		if( false == bAnnotate )
 		{
-			const Vec3& np = SimpleVehicle::selectedVehicle->position();
+			const Vec3& np = SimpleVehicle::getSelectedVehicle()->position();
 			if( (Vec3::distance (vp, np) < nearDistance) )
 			{
 				bAnnotate = true;
 			}
 		}
 	}
-	if( ( true == bAnnotate ) && ( OpenSteer::SimpleVehicle::ms_collect3DAnnotations != 0 ) )
+	if( ( true == bAnnotate ) && ( SimpleVehicle::ms_collect3DAnnotations != 0 ) )
 	{
 		std::ostringstream kStream;
 		kStream << std::setprecision(2) << std::setiosflags(std::ios::fixed);
@@ -193,7 +218,7 @@ void OpenSteer::SimpleVehicle::draw( const float /*currentTime*/, const float /*
 
 //-----------------------------------------------------------------------------
 // switch to new proximity database
-void OpenSteer::SimpleVehicle::allocateProximityToken( ProximityDatabase* pkProximityDatabase ) 
+void SimpleVehicle::allocateProximityToken( ProximityDatabase* pkProximityDatabase ) 
 {
 	// delete this vehicle's token in the old proximity database
 	OS_SAFE_DELETE( this->m_pkProximityToken );
@@ -220,7 +245,7 @@ void OpenSteer::SimpleVehicle::allocateProximityToken( ProximityDatabase* pkProx
 //
 // parameter names commented out to prevent compiler warning from "-W"
 OpenSteer::Vec3 
-OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
+SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
                                                   const float /* deltaTime */) const
 {
     const float maxAdjustedSpeed = 0.2f * maxSpeed ();
@@ -256,7 +281,7 @@ OpenSteer::SimpleVehicle::adjustRawSteeringForce (const Vec3& force,
 // maybe the guts of applySteeringForce should be split off into a subroutine
 // used by both applySteeringForce and applyBrakingForce?
 void 
-OpenSteer::SimpleVehicle::applyBrakingForce (const float rate, const float deltaTime)
+SimpleVehicle::applyBrakingForce (const float rate, const float deltaTime)
 {
     const float rawBraking = speed () * rate;
     const float clipBraking = ((rawBraking < maxForce ()) ?
@@ -269,7 +294,7 @@ OpenSteer::SimpleVehicle::applyBrakingForce (const float rate, const float delta
 //-----------------------------------------------------------------------------
 // determine a raw steering force
 OpenSteer::Vec3
-OpenSteer::SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/)
+SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/)
 {
 	return OpenSteer::Vec3::zero;
 }
@@ -278,7 +303,7 @@ OpenSteer::SimpleVehicle::determineCombinedSteering (const float /*elapsedTime*/
 // apply a given steering force to our momentum,
 // adjusting our orientation to maintain velocity-alignment.
 void 
-OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
+SimpleVehicle::applySteeringForce (const Vec3& force,
                                               const float elapsedTime)
 {
 
@@ -343,7 +368,7 @@ OpenSteer::SimpleVehicle::applySteeringForce (const Vec3& force,
 //
 // parameter names commented out to prevent compiler warning from "-W"
 void 
-OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newForward,
+SimpleVehicle::regenerateLocalSpace (const Vec3& newForward,
                                                 const float /* elapsedTime */)
 {
     // adjust orthonormal basis vectors to be aligned with new velocity
@@ -357,7 +382,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpace (const Vec3& newForward,
 
 // XXX experimental cwr 6-5-03
 void 
-OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newForward,
+SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newForward,
                                                           const float elapsedTime)
 {
     // the length of this global-upward-pointing vector controls the vehicle's
@@ -390,7 +415,7 @@ OpenSteer::SimpleVehicle::regenerateLocalSpaceForBanking (const Vec3& newForward
 //-----------------------------------------------------------------------------
 // measure path curvature (1/turning-radius), maintain smoothed version
 void 
-OpenSteer::SimpleVehicle::measurePathCurvature (const float elapsedTime)
+SimpleVehicle::measurePathCurvature (const float elapsedTime)
 {
     if (elapsedTime > 0)
     {
@@ -411,7 +436,7 @@ OpenSteer::SimpleVehicle::measurePathCurvature (const float elapsedTime)
 //-----------------------------------------------------------------------------
 // draw lines from vehicle's position showing its velocity and acceleration
 void 
-OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA, 
+SimpleVehicle::annotationVelocityAcceleration (float maxLengthA, 
                                                           float maxLengthV)
 {
     const float desat = 0.4f;
@@ -434,10 +459,11 @@ OpenSteer::SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
 //
 // XXX move to a vehicle utility mixin?
 OpenSteer::Vec3 
-OpenSteer::SimpleVehicle::predictFuturePosition (const float predictionTime) const
+SimpleVehicle::predictFuturePosition (const float predictionTime) const
 {
     return position() + (velocity() * predictionTime);
 }
 
+}
 
 //-----------------------------------------------------------------------------
