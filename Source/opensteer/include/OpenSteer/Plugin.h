@@ -79,7 +79,7 @@ namespace OpenSteer {
 		virtual void prepareOpen (void) {};
 
 		//! default reset method is to do a close then an open
-		void reset (void) {close (); open ();}
+		virtual void reset (void);
 
         //! default sort key (after the "built ins")
         float selectionOrderSortKey (void) const {return 1.0f;}

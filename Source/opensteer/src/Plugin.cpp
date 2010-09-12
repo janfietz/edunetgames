@@ -75,6 +75,20 @@ OpenSteer::Plugin::~Plugin()
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
+	// temporary fix
+	SimpleVehicle::selectedVehicle = NULL;
+	SimpleVehicle::nearestMouseVehicle = NULL;
+}
+
+//-----------------------------------------------------------------------------
+// default reset method is to do a close then an open
+void OpenSteer::Plugin::reset (void) 
+{
+	// temporary fix
+	SimpleVehicle::selectedVehicle = NULL;
+	SimpleVehicle::nearestMouseVehicle = NULL;
+	close (); 
+	open ();
 }
 
 //-----------------------------------------------------------------------------

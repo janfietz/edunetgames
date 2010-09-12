@@ -120,10 +120,19 @@ void PluginSelector::SelectServerPlugin( RakNet::RPC3 *rpcFromNetwork )
 	if (rpcFromNetwork==0)
 	{
 		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectServerPlugin", GetNetworkID(), rpcFromNetwork);
-	} else
+	} 
+	else
 	{
-		RakNet::RakString rs( this->m_pkPluginHost->getCurrentPluginName() );
-		this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), rs,  rpcFromNetwork);
+		const char* pszPluginName = this->m_pkPluginHost->getCurrentPluginName();
+		if( ( NULL != pszPluginName ) && ( 0 != pszPluginName[0] ) )
+		{
+			RakNet::RakString rs( this->m_pkPluginHost->getCurrentPluginName() );
+			this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), rs,  rpcFromNetwork);
+		}
+		else
+		{
+			// error
+		}
 	}
 }
 

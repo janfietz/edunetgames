@@ -55,13 +55,13 @@ PluginArray::~PluginArray()
 AbstractPlugin* PluginArray::getParentPlugin(void) const
 {
 	return this->getHostPlugin();
-};
+}
 
 //-----------------------------------------------------------------------------
 void PluginArray::setParentPlugin( AbstractPlugin* pkPlugin )
 {
 	this->setParentEntity( OpenSteer::CastToAbstractEntity( pkPlugin) );
-};
+}
 
 //-----------------------------------------------------------------------------
 void PluginArray::removeAllPlugins( void )
@@ -72,9 +72,8 @@ void PluginArray::removeAllPlugins( void )
 		this->removePlugin( pkPlugin );
 		pkPlugin = this->getPlugin( 0 );
 	}
-	bool bTest = true;
-	bTest = false;
 }
+
 //-----------------------------------------------------------------------------
 void PluginArray::addPlugin( AbstractPlugin* pkPlugin )
 {
@@ -468,30 +467,21 @@ private:
 
 };
 
-
-
-//PluginArray gTestPluginArray;
-
+//-----------------------------------------------------------------------------
 void PluginArray::TestPluginArray( void )
 {
+	PluginArray gTestPluginArray;
+
+	PluginArray* pkAdd[] =
 	{
-		PluginArray gTestPluginArray;
-
-		PluginArray* pkAdd[] =
-		{
-			ET_NEW PluginArray,
-			ET_NEW PluginArray,
-			ET_NEW PluginArray
-		};
-		gTestPluginArray.addPlugin( pkAdd[0] );
-		gTestPluginArray.addPlugin( pkAdd[1] );
-		gTestPluginArray.addPlugin( pkAdd[2] );
+		ET_NEW PluginArray,
+		ET_NEW PluginArray,
+		ET_NEW PluginArray
+	};
+	gTestPluginArray.addPlugin( pkAdd[0] );
+	gTestPluginArray.addPlugin( pkAdd[1] );
+	gTestPluginArray.addPlugin( pkAdd[2] );
 
 
-		gTestPluginArray.removePlugin( pkAdd[0] );
-
-		bool bTest = true;
-		bTest = false;
-	}
-
+	gTestPluginArray.removePlugin( pkAdd[0] );
 }
