@@ -65,7 +65,9 @@ namespace OpenSteer {
 		}
 		else
 		{
-			assert( NULL != GlobalSelection::globalSelection );
+			bool bTest = true;
+			bTest = false;
+//			assert( NULL != GlobalSelection::globalSelection );
 		}
 	}
 

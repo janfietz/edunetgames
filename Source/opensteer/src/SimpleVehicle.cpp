@@ -177,10 +177,13 @@ void SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime
 		}
 		if( false == bAnnotate )
 		{
-			const Vec3& np = SimpleVehicle::getSelectedVehicle()->position();
-			if( (Vec3::distance (vp, np) < nearDistance) )
+			if( NULL != SimpleVehicle::getSelectedVehicle() )
 			{
-				bAnnotate = true;
+				const Vec3& np = SimpleVehicle::getSelectedVehicle()->position();
+				if( (Vec3::distance (vp, np) < nearDistance) )
+				{
+					bAnnotate = true;
+				}
 			}
 		}
 	}
