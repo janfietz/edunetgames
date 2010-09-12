@@ -55,8 +55,6 @@
   #endif
 #endif
 
-// define a vector for stl string
-typedef std::vector<std::string> EtStrings;
 
 
 #endif // __EDUNETTYPES_H__

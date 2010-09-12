@@ -45,7 +45,7 @@ namespace EduNet	{
 
 		bool loadLib(const char* pszLibName);
 		bool unloadLib( void );
-		void* accessProcAddress(const char* pszProcName);
+		void* findSymbol(const char* pszProcName);
 
 	protected:
 

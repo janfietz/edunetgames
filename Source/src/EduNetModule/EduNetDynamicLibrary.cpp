@@ -105,7 +105,7 @@ bool DynamicLibrary::unloadLib ( void )
     return bResult;
 }
 //-----------------------------------------------------------------------------
-void*  DynamicLibrary::accessProcAddress ( const char* pszProcName )
+void*  DynamicLibrary::findSymbol ( const char* pszProcName )
 {
     ET_ASSERT ( NULL != this->m_pLibHandle );
     ET_ASSERT ( NULL != pszProcName );

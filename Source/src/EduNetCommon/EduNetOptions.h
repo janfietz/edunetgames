@@ -54,7 +54,7 @@ public:
     {
         return this->m_kPluginName.c_str();
     }
-    EtStrings& accessModuleNameList ( void )
+    enStringArray_t& accessModuleNameList ( void )
     {
         return this->m_kModuleNames;
     };
@@ -66,8 +66,8 @@ private:
     EduNetOptions();
     virtual ~EduNetOptions();
     bool m_bContinueProcess;
-    std::string m_kPluginName;
-    EtStrings m_kModuleNames;
+    enString_t m_kPluginName;
+    enStringArray_t m_kModuleNames;
 };
 
 //-----------------------------------------------------------------------------

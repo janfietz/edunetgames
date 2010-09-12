@@ -83,6 +83,12 @@ ModuleManager::ModuleManager()
 }
 
 //-----------------------------------------------------------------------------
+ModuleManager::~ModuleManager()
+{
+	this->unloadAll();
+}
+
+//-----------------------------------------------------------------------------
 void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType )
 {
 	if( ( NULL == pszFileName ) || ( 0 == pszFileName[0] ) )
@@ -99,12 +105,6 @@ void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName,
 		kModuleType = tempString.substr( underscorePos, dotPos - underscorePos );
 		::tolower( kModuleType );
 	}
-}
-
-//-----------------------------------------------------------------------------
-ModuleManager::~ModuleManager()
-{
-
 }
 
 //-----------------------------------------------------------------------------
@@ -213,7 +213,7 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 bool ModuleManager::appWantsToLoadModule (
 	const char* pszModuleName )
 {
-	const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
+	const enStringArray_t& kNames = EduNetOptions::accessOptions().accessModuleNameList();
 
 	// by default load all
 	if (true == kNames.empty())

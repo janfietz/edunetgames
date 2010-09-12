@@ -91,6 +91,9 @@ OpenSteer::AbstractPlugin* BoidPluginFactory::createPluginByNameInternal(
 }
 
 //-----------------------------------------------------------------------------
+namespace EduNet	{
+
+//-----------------------------------------------------------------------------
 const char* NetBoidModuleEntry::getName( void ) const
 {
 	return "netboid";
@@ -107,4 +110,7 @@ EduNetPluginFactory* NetBoidModuleEntry::createPluginFactory( void ) const
 {
 	return ET_NEW BoidPluginFactory();
 }
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetBoid, NetBoidModuleEntry)
+
+}
+
+ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetBoid, EduNet::NetBoidModuleEntry)

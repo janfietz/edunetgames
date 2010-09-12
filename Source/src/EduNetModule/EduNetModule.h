@@ -40,10 +40,12 @@
 //-----------------------------------------------------------------------------
 #if defined WIN32
 	#define ET_DLL_EXPORT __declspec(dllexport)
-	#define ET_DLL_IMPORT __declspec(dllimport)
+// we do not want to support static linking
+//	#define ET_DLL_IMPORT __declspec(dllimport)
 #else
 	#define ET_DLL_EXPORT
-	#define ET_DLL_IMPORT
+// we do not want to support static linking
+//	#define ET_DLL_IMPORT
 #endif
 
 #define ET_MODULE_STR(n) #n
@@ -53,26 +55,29 @@
 #define ET_STD_ENTRY_FUNC_STR ET_MODULE_STR(ET_STD_ENTRY_FUNC)
 
 //-----------------------------------------------------------------------------
+namespace EduNet	{
+	class ModuleEntry;
+}
+
+//-----------------------------------------------------------------------------
 #define ET_DECLARE_MODULE_ENTRYFUNC_S(fnc)\
-	class ModuleEntry* fnc( void )
+	EduNet::ModuleEntry* fnc( void )
 //-----------------------------------------------------------------------------
 #define ET_MODULE_ENTRYFUNC_EXPORT(fnc) \
 	extern "C" ET_DLL_EXPORT \
 	ET_DECLARE_MODULE_ENTRYFUNC_S(fnc)
-//-----------------------------------------------------------------------------
-#define ET_DECLARE_MODULE_ENTRYFUNC(fnc)\
-	ET_MODULE_ENTRYFUNC_EXPORT(ET_STD_ENTRY_FUNC)
+
 //-----------------------------------------------------------------------------
 #define ET_IMPLEMENT_MODULE_ENTRYFUNC(fnc, entryClass)\
 	ET_MODULE_ENTRYFUNC_EXPORT(ET_STD_ENTRY_FUNC){ \
 		static entryClass kEntry; \
 		return &kEntry; }
 
+typedef ET_DECLARE_MODULE_ENTRYFUNC_S(ModuleEntryFunc);
 
 namespace EduNet	{
 
-typedef ET_DECLARE_MODULE_ENTRYFUNC_S(ModuleEntryFunc);
-
+//-----------------------------------------------------------------------------
 class ModuleEntry
 {
 public:
@@ -87,6 +92,7 @@ class RawModule
 {
 public:
 	RawModule( void );
+	virtual ~RawModule( void );
 
 	bool load(const char* pszLibName);
 	ModuleEntry* accessEntry( void ) const
@@ -96,12 +102,13 @@ public:
 
 private:
 
-	ModuleEntryFunc* accessEntryFunction( void );
-	void queryEntry( void );
+	ModuleEntryFunc* queryEntryFunction( void );
+	bool queryEntry( void );
 
 	EduNet::DynamicLibraryPtr m_spLib;
 	ModuleEntry* m_pEntry;
 };
+
 typedef boost::shared_ptr<RawModule>  RawModulePtr;
 typedef std::vector<RawModulePtr> RawModules;
 

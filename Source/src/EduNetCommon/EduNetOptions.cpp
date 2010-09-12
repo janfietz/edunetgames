@@ -82,7 +82,7 @@ int setModulesList ( EduNetOptions& kOptions,
                      int ndefines
                    )
 {
-    EtStrings& kNames = kOptions.accessModuleNameList();
+    enStringArray_t& kNames = kOptions.accessModuleNameList();
     kNames.clear();
     for ( int i=0; i<ndefines; i++ )
     {
