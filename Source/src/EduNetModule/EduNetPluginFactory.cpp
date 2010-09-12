@@ -7,7 +7,7 @@ EduNetPluginFactory::EduNetPluginFactory(void)
 }
 
 //-----------------------------------------------------------------------------
-void EduNetPluginFactory::getPluginNames( EdutNetStringList& kNames ) const
+void EduNetPluginFactory::getPluginNames( enStringArray_t& kNames ) const
 {
 	this->fillStringArrayWithPluginName( kNames );
 }

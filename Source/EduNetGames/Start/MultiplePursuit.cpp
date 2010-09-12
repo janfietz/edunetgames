@@ -220,7 +220,7 @@ namespace {
             AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 
             // vehicle nearest mouse (to be highlighted)
-            AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
+            AbstractVehicle& nearMouse = *SimpleVehicle::getNearestMouseVehicle();
 
             // update camera
             CameraPlugin::updateCamera (currentTime, elapsedTime, selected);

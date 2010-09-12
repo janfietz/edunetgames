@@ -41,32 +41,32 @@ NetSoccerPluginFactory::~NetSoccerPluginFactory()
 
 }
 //-----------------------------------------------------------------------------
-void NetSoccerPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
+void NetSoccerPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 {
-	kNames.push_back("SoccerOffline");
-	kNames.push_back("SoccerPeer");
-	kNames.push_back("SoccerClient");
-	kNames.push_back("SoccerClientServer");
+	kNames.push_back("NetSoccerRenderOfflinePlugin");
+	kNames.push_back("RenderSoccerPeerPlugin");
+	kNames.push_back("RenderSoccerClientPlugin");
+	kNames.push_back("SoccerClientServerPlugin");
 }
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
 	const char* pszName ) const
 {
-	std::string kName(pszName);
-	if (0 == kName.compare("SoccerOffline"))
+	enString_t kName(pszName);
+	if (0 == kName.compare("NetSoccerRenderOfflinePlugin"))
 	{
 		return ET_NEW NetSoccerRenderOfflinePlugin(false);
 	}
-	if (0 == kName.compare("SoccerPeer"))
+	if (0 == kName.compare("RenderSoccerPeerPlugin"))
 	{
 		return ET_NEW RenderSoccerPeerPlugin(false);
 	}
-	if (0 == kName.compare("SoccerClient"))
+	if (0 == kName.compare("RenderSoccerClientPlugin"))
 	{
 		return ET_NEW RenderSoccerClientPlugin(false);
 	}
-	if (0 == kName.compare("SoccerClientServer"))
+	if (0 == kName.compare("SoccerClientServerPlugin"))
 	{
 		return ET_NEW SoccerClientServerPlugin(false);
 	}

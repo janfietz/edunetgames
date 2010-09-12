@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class NetPedestrianReplicaConnection : public RakNet::Connection_RM3 , public OpenSteer::TPluginAccessor
+class NetPedestrianReplicaConnection : public RakNet::Connection_RM3 , public OpenSteer::PluginAccessor_t
 {
 public:
 	NetPedestrianReplicaConnection(SystemAddress _systemAddress, RakNetGUID _guid,
