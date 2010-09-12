@@ -31,22 +31,30 @@
 #include "EduNetProfile/GraphPlot.h"
 #include "EduNetCommon/EduNetOptions.h"
 #include "OpenSteerUT/OpenSteerUT.h"
+#include "OpenSteer/GlobalSelection.h"
 
 
 using namespace EduNet;
 using namespace OpenSteer;
 
-bool InitializeGlobals( void )
-{
-	g_openSteerUTDataPtr = &g_openSteerUTData;
-	return true;
-}
-
-bool bGlobalsInitialized = InitializeGlobals();
-
 //-----------------------------------------------------------------------------
 namespace
 {
+
+	OpenSteer::GlobalSelection g_globalSelection;
+
+	bool InitializeGlobals( void )
+	{
+		OpenSteer::GlobalSelection::globalSelection = &g_globalSelection;
+		// note: set up data to pass to loaded modules
+		g_openSteerUTData.globalSelection = &g_globalSelection;
+		g_openSteerUTDataPtr = &g_openSteerUTData;
+		return true;
+	}
+
+	bool bGlobalsInitialized = InitializeGlobals();
+
+
 	int profReportMode = 0;
 
 
@@ -372,12 +380,12 @@ void Application::updateSelectedPlugin (const float currentTime,
 	}
 
 	// if no vehicle is selected, and some exist, select the first one
-	if( SimpleVehicle::selectedVehicle == NULL )
+	if( SimpleVehicle::getSelectedVehicle() == NULL )
 	{
 		const AVGroup& vehicles = OpenSteer::Plugin::selectedPlugin->allVehicles();
 		if( vehicles.size() > 0 )
 		{
-			SimpleVehicle::selectedVehicle = vehicles.front();
+			SimpleVehicle::setSelectedVehicle( vehicles.front() );
 		}
 	}
 

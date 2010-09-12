@@ -33,6 +33,7 @@
 #include "glui/glui_internal_control.h"
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteer/GlobalSelection.h"
 
 //-----------------------------------------------------------------------------
 typedef struct ViewPort_t
@@ -49,7 +50,8 @@ typedef struct OpenSteerUTData_t
 	OpenSteerUTData_t( void ):
 		appGlui(NULL),
 		updatePhaseActive(false),
-		drawPhaseActive(false)
+		drawPhaseActive(false),
+		globalSelection(NULL)
 	{
 	}
 
@@ -58,6 +60,7 @@ typedef struct OpenSteerUTData_t
 	bool updatePhaseActive;
 	bool drawPhaseActive;
 
+	OpenSteer::GlobalSelection* globalSelection;
 
 } OpenSteerUTData;
 

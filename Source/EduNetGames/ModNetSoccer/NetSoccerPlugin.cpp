@@ -379,9 +379,9 @@ void NetSoccerPlugin::addPlayer (OpenSteer::AbstractPlayer* pkPlayer)
 	if (NULL != pkFreeSoccer)
 	{
 		pkPlayer->play(pkFreeSoccer);
-		if( SimpleVehicle::selectedVehicle != pkFreeSoccer )
+		if( SimpleVehicle::getSelectedVehicle() != pkFreeSoccer )
 		{
-			SimpleVehicle::selectedVehicle = pkFreeSoccer;
+			SimpleVehicle::setSelectedVehicle( pkFreeSoccer );
 		}
 	}
 	BaseClass::addPlayer( pkPlayer );

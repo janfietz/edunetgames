@@ -188,7 +188,7 @@ namespace {
             pEnd = allMP.end();          // iterator pointing to last pursuer
 
             // initialize camera
-            SimpleVehicle::selectedVehicle = wanderer;
+            SimpleVehicle::setSelectedVehicle( wanderer );
             Camera::camera.mode = Camera::cmStraightDown;
             Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
             Camera::camera.fixedDistVOffset = CameraPlugin::camera2dElevation;
@@ -217,7 +217,7 @@ namespace {
 				return;
 			}
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;

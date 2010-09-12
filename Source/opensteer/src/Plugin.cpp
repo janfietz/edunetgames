@@ -75,18 +75,12 @@ OpenSteer::Plugin::~Plugin()
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
-	// temporary fix
-	SimpleVehicle::selectedVehicle = NULL;
-	SimpleVehicle::nearestMouseVehicle = NULL;
 }
 
 //-----------------------------------------------------------------------------
 // default reset method is to do a close then an open
 void OpenSteer::Plugin::reset (void) 
 {
-	// temporary fix
-	SimpleVehicle::selectedVehicle = NULL;
-	SimpleVehicle::nearestMouseVehicle = NULL;
 	close (); 
 	open ();
 }
@@ -312,7 +306,7 @@ OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 
 	// reset camera and selected vehicle
 	OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::selectedVehicle = NULL;
+	SimpleVehicle::setSelectedVehicle( NULL );
 
 	OpenSteer::Plugin::selectedPlugin = pkPlugin;
 	if( NULL != OpenSteer::Plugin::selectedPlugin )
@@ -378,7 +372,7 @@ OpenSteer::Plugin::resetSelectedPlugin (void)
 {
 	// reset camera and selected vehicle
 	OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::selectedVehicle = NULL;
+	SimpleVehicle::setSelectedVehicle( NULL );
 
 	if( NULL == OpenSteer::Plugin::selectedPlugin )
 	{

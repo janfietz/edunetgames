@@ -26,63 +26,10 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "ModLectureModule.h"
-#include "OpenSteerUT/OpenSteerUT.h"
+#include "OpenSteer/PluginRegistry.h"
 
 //-----------------------------------------------------------------------------
-ModLecturePluginFactory::ModLecturePluginFactory()
-{
-
-}
-//-----------------------------------------------------------------------------
-ModLecturePluginFactory::~ModLecturePluginFactory()
-{
-
-}
-//-----------------------------------------------------------------------------
-void ModLecturePluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
-{
-	
-}
-
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* ModLecturePluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
-{
-	std::string kName(pszName);
-	
-	return NULL;
-}
-
-namespace EduNet	{
-
-//-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getName( void ) const
-{
-	return "ModLecture";
-}
-
-//-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getAbout( void ) const
-{
-	return "Provides plugins from edunet lecture students";
-}
-
-//-----------------------------------------------------------------------------
-void ModLectureModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
-{
-	g_openSteerUTDataPtr = data;
-	OpenSteer::GlobalSelection::globalSelection = g_openSteerUTDataPtr->globalSelection;
-}
-
-//-----------------------------------------------------------------------------
-EduNetPluginFactory* ModLectureModuleFactory::createPluginFactory( void ) const
-{
-	return ET_NEW ModLecturePluginFactory();
-}
-
-
-}
-
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_ModLecture, EduNet::ModLectureModuleFactory)
+namespace OpenSteer {
+} //! namespace OpenSteer    
+    
 

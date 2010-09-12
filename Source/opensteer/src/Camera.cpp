@@ -42,32 +42,49 @@
 
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Draw.h"
+#include "OpenSteer/GlobalSelection.h"
+
+namespace OpenSteer	{
+
+
 
 //-----------------------------------------------------------------------------
 // camera automatically tracks selected vehicle
-OpenSteer::Camera OpenSteer::Camera::camera;
+Camera Camera::camera;
 
 //-----------------------------------------------------------------------------
 // constructor
-OpenSteer::Camera::Camera (void)
+Camera::Camera (void)
 {
     reset ();
 }
 
+
+void Camera::setVehicleToTrack( const AbstractVehicle* vehicle )
+{
+	GlobalSelection::setCameraVehicleToTrack( vehicle );
+}
+
+const AbstractVehicle* Camera::getVehicleToTrack( void )
+{
+	return GlobalSelection::getCameraVehicleToTrack();
+}
+
+
 //-----------------------------------------------------------------------------
 void 
-OpenSteer::Camera::updateCamera (const float currentTime,
+Camera::updateCamera (const float currentTime,
 										const float elapsedTime,
 										const AbstractVehicle& selected, const bool simulationPaused )
 {
-	OpenSteer::Camera::camera.vehicleToTrack = &selected;
-	OpenSteer::Camera::camera.update (currentTime, elapsedTime, simulationPaused );
+	Camera::setVehicleToTrack( &selected );
+	Camera::camera.update (currentTime, elapsedTime, simulationPaused );
 }
 
 //-----------------------------------------------------------------------------
 // reset all camera state to default values
 void 
-OpenSteer::Camera::reset (void)
+Camera::reset (void)
 {
     // reset camera's position and orientation
     resetLocalSpace ();
@@ -76,7 +93,7 @@ OpenSteer::Camera::reset (void)
     target = Vec3::zero;
 
     // vehicle being tracked
-    vehicleToTrack = NULL;
+    Camera::setVehicleToTrack( NULL );
 
     // aim at predicted position of vehicleToTrack, this far into thefuture
     aimLeadTime = 1;
@@ -116,13 +133,13 @@ OpenSteer::Camera::reset (void)
 //
 // parameter names commented out to prevent compiler warning from "-W"
 void 
-OpenSteer::Camera::update (const float /*currentTime*/,
+Camera::update (const float /*currentTime*/,
                         const float elapsedTime,
                         const bool simulationPaused)
 {
     // vehicle being tracked (just a reference with a more concise name)
-    const AbstractVehicle& v = *vehicleToTrack;
-    const bool noVehicle = vehicleToTrack == NULL;
+    const AbstractVehicle& v = *Camera::getVehicleToTrack();
+    const bool noVehicle = Camera::getVehicleToTrack() == NULL;
     
     // new position/target/up, set in switch below, defaults to current
     Vec3 newPosition = position();
@@ -211,7 +228,7 @@ OpenSteer::Camera::update (const float /*currentTime*/,
 // The flag smoothNextMove can be set (with doNotSmoothNextMove()) to
 // make next update (say at simulation initialization time).
 void 
-OpenSteer::Camera::smoothCameraMove (const Vec3& newPosition,
+Camera::smoothCameraMove (const Vec3& newPosition,
                                      const Vec3& newTarget,
                                      const Vec3& newUp,
                                      const float elapsedTime)
@@ -251,8 +268,8 @@ OpenSteer::Camera::smoothCameraMove (const Vec3& newPosition,
 // "dragTargetDistance"
 //
 // parameter names commented out to prevent compiler warning from "-W"
-OpenSteer::Vec3 
-OpenSteer::Camera::constDistHelper (const float elapsedTime )
+Vec3 
+Camera::constDistHelper (const float elapsedTime )
 {
 	if( elapsedTime == 0 )
 	{
@@ -295,7 +312,7 @@ OpenSteer::Camera::constDistHelper (const float elapsedTime )
 //-----------------------------------------------------------------------------
 // select next camera mode, used by OpenSteerDemo
 void 
-OpenSteer::Camera::selectNextMode (void)
+Camera::selectNextMode (void)
 {
     mode = successorMode (mode);
     if (mode >= cmEndMode) mode = successorMode (cmStartMode);
@@ -304,8 +321,8 @@ OpenSteer::Camera::selectNextMode (void)
 
 //-----------------------------------------------------------------------------
 // cycles through the various camera modes
-OpenSteer::Camera::cameraMode 
-OpenSteer::Camera::successorMode (const cameraMode cm) const
+Camera::cameraMode 
+Camera::successorMode (const cameraMode cm) const
 {
     return (cameraMode)(((int)cm) + 1);
 }
@@ -313,7 +330,7 @@ OpenSteer::Camera::successorMode (const cameraMode cm) const
 //-----------------------------------------------------------------------------
 // string naming current camera mode, used by OpenSteerDemo
 const char* 
-OpenSteer::Camera::modeName (void)
+Camera::modeName (void)
 {
     switch (mode)
     {
@@ -330,10 +347,10 @@ OpenSteer::Camera::modeName (void)
 // adjust the offest vector of the current camera mode based on a
 // "mouse adjustment vector" from OpenSteerDemo (xxx experiment 10-17-02)
 void 
-OpenSteer::Camera::mouseAdjustOffset (const Vec3& adjustment)
+Camera::mouseAdjustOffset (const Vec3& adjustment)
 {
     // vehicle being tracked (just a reference with a more concise name)
-    const AbstractVehicle& v = *vehicleToTrack;
+    const AbstractVehicle& v = *Camera::getVehicleToTrack();
 
     switch (mode)
     {
@@ -401,8 +418,8 @@ OpenSteer::Camera::mouseAdjustOffset (const Vec3& adjustment)
 
 
 //-----------------------------------------------------------------------------
-OpenSteer::Vec3 
-OpenSteer::Camera::mouseAdjust2 (const bool polar,
+Vec3 
+Camera::mouseAdjust2 (const bool polar,
                                  const Vec3& adjustment,
                                  const Vec3& offsetToAdjust)
 {
@@ -433,5 +450,5 @@ OpenSteer::Camera::mouseAdjust2 (const bool polar,
     return result;
 }
 
-
+}
 //-----------------------------------------------------------------------------

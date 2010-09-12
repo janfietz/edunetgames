@@ -881,7 +881,7 @@ namespace {
 				return;
 			}
             // selected vehicle (user can mouse click to select another)
-            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 
             // vehicle nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
@@ -889,7 +889,7 @@ namespace {
             // update camera
             CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
-			if( NULL != SimpleVehicle::selectedVehicle )
+			if( NULL != SimpleVehicle::getSelectedVehicle() )
 			{
 				// draw "ground plane" centered between base and selected vehicle
 				const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();

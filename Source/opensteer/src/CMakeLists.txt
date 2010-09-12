@@ -4,10 +4,12 @@ INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 )
 
 SET(OPENTSTEER_LIB_SRC
+ GlobalSelection.cpp
  Obstacle.cpp
  OldPathway.cpp
  Path.cpp
  Plugin.cpp
+ PluginRegistry.cpp
  PolylineSegmentedPath.cpp
  PolylineSegmentedPathwaySegmentRadii.cpp
  PolylineSegmentedPathwaySingleRadius.cpp
@@ -24,7 +26,7 @@ SET(OPENTSTEER_LIB_SRC
  Camera.cpp
  Pathway.cpp
  Entity.cpp
-SimplePlayer.cpp
+ SimplePlayer.cpp
 )
 
 SET(OPENTSTEER_LIB_HDRS
@@ -34,6 +36,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Clock.h
  ../include/OpenSteer/Color.h
  ../include/OpenSteer/Draw.h
+ ../include/OpenSteer/GlobalSelection.h
  ../include/OpenSteer/LocalSpace.h
  ../include/OpenSteer/lq.h
  ../include/OpenSteer/Obstacle.h
@@ -41,6 +44,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Path.h
  ../include/OpenSteer/Pathway.h
  ../include/OpenSteer/Plugin.h
+ ../include/OpenSteer/PluginRegistry.h
  ../include/OpenSteer/PolylineSegmentedPath.h
  ../include/OpenSteer/PolylineSegmentedPathwaySegmentRadii.h
  ../include/OpenSteer/PolylineSegmentedPathwaySingleRadius.h
@@ -60,7 +64,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Utilities.h
  ../include/OpenSteer/Vec3.h
  ../include/OpenSteer/Vec3Utilities.h
-../include/OpenSteer/SimplePlayer.h
+ ../include/OpenSteer/SimplePlayer.h
 )
 
 #set compiler options to link the lib into a shared lib

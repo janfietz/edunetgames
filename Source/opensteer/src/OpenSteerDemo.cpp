@@ -46,6 +46,7 @@
 #include "OpenSteer/Color.h"
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteer/GlobalSelection.h"
 
 #include <algorithm>
 #include <sstream>
@@ -97,6 +98,15 @@ const int OpenSteer::OpenSteerDemo::drawPhase = 2;
 // initialize OpenSteerDemo application
 
 namespace {
+	OpenSteer::GlobalSelection g_globalSelection;
+
+	bool InitializeGlobals( void )
+	{
+		OpenSteer::GlobalSelection::globalSelection = &g_globalSelection;
+		return true;
+	}
+
+	bool bGlobalsInitialized = InitializeGlobals();
 
     void printPlugIn (OpenSteer::AbstractPlugin& pi) {std::cout << " " << pi << std::endl;} // XXX
 
@@ -230,7 +240,7 @@ void
 OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 {
     OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::selectedVehicle = NULL;
+	SimpleVehicle::setSelectedVehicle( NULL );
     OpenSteer::Plugin::selectedPlugin->open ();
 }
 
@@ -250,10 +260,11 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
     doDelayedResetPlugInXXX ();
 
     // if no vehicle is selected, and some exist, select the first one
-    if (SimpleVehicle::selectedVehicle == NULL)
+    if (SimpleVehicle::getSelectedVehicle() == NULL)
     {
         const AVGroup& vehicles = allVehiclesOfSelectedPlugIn();
-        if (vehicles.size() > 0) SimpleVehicle::selectedVehicle = vehicles.front();
+        if (vehicles.size() > 0) 
+			SimpleVehicle::setSelectedVehicle( vehicles.front() );
     }
 
     // invoke selected Plugin's Update method
@@ -278,7 +289,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
     pushPhase (drawPhase);
 
 	// nearest mouse (to be highlighted)
-	SimpleVehicle::nearestMouseVehicle = OpenSteerDemo::vehicleNearestToMouse();
+	SimpleVehicle::setNearestMouseVehicle( OpenSteerDemo::vehicleNearestToMouse() );
 
     // invoke selected Plugin's Draw method
     OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
@@ -300,7 +311,7 @@ void
 OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 {
     OpenSteer::Plugin::selectedPlugin->close ();
-    SimpleVehicle::selectedVehicle = NULL;
+    SimpleVehicle::setSelectedVehicle( NULL );
 }
 
 
@@ -367,7 +378,7 @@ OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 {
-    if (SimpleVehicle::selectedVehicle != NULL)
+    if (SimpleVehicle::getSelectedVehicle() != NULL)
     {
         // get a container of all vehicles
         const AVGroup& all = allVehiclesOfSelectedPlugIn ();
@@ -375,16 +386,16 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
         const AVIterator last = all.end();
 
         // find selected vehicle in container
-        const AVIterator s = std::find (first, last, SimpleVehicle::selectedVehicle);
+        const AVIterator s = std::find (first, last, SimpleVehicle::getSelectedVehicle());
 
         // normally select the next vehicle in container
-        SimpleVehicle::selectedVehicle = *(s+1);
+        SimpleVehicle::setSelectedVehicle( *(s+1) );
 
         // if we are at the end of the container, select the first vehicle
-        if (s == last-1) SimpleVehicle::selectedVehicle = *first;
+        if (s == last-1) SimpleVehicle::setSelectedVehicle( *first );
 
         // if the search failed, use NULL
-        if (s == last) SimpleVehicle::selectedVehicle = NULL;
+        if (s == last) SimpleVehicle::setSelectedVehicle( NULL );
     }
 }
 
@@ -396,7 +407,7 @@ OpenSteer::OpenSteerDemo::selectNextVehicle (void)
 void 
 OpenSteer::OpenSteerDemo::selectVehicleNearestScreenPosition (int x, int y)
 {
-    SimpleVehicle::selectedVehicle = findVehicleNearestScreenPosition (x, y);
+    SimpleVehicle::setSelectedVehicle( findVehicleNearestScreenPosition (x, y) );
 }
 
 
@@ -521,7 +532,7 @@ OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
                                             float distance,
                                             float /*elevation*/)
 {
-    SimpleVehicle::selectedVehicle = &selected;
+    SimpleVehicle::setSelectedVehicle( &selected );
     if (&selected)
     {
         const Vec3 behind = selected.forward() * -distance;

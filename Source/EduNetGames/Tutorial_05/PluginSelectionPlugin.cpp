@@ -79,10 +79,7 @@ void PluginClientPlugin::InitializeRpcSystem( void )
 	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, true);	
 
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
-	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
-
-	
-	
+	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);	
 }
 //-----------------------------------------------------------------------------
 void PluginClientPlugin::CreateContent( void )
@@ -108,10 +105,6 @@ void PluginClientPlugin::SelectPluginByName(
 			pszPluginName);
 	if(NULL != pkNewPlugin)
 	{
-		// temporary fix
-		OpenSteer::SimpleVehicle::selectedVehicle = NULL;
-		OpenSteer::SimpleVehicle::nearestMouseVehicle = NULL;
-
 		OpenSteer::AbstractPluginPtr spCurrentPlugin( 
 			this->m_kGamePlugin.getPlugin(0) );
 		if(NULL != spCurrentPlugin)

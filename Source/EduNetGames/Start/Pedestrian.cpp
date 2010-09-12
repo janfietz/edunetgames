@@ -510,7 +510,7 @@ namespace {
 				return;
 			}
             // selected Pedestrian (user can mouse click to select another)
-            AbstractVehicle& selected = *SimpleVehicle::selectedVehicle;
+            AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 
             // Pedestrian nearest mouse (to be highlighted)
             AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
@@ -519,7 +519,7 @@ namespace {
             CameraPlugin::updateCamera (currentTime, elapsedTime, selected);
 
             // draw "ground plane"
-            if (SimpleVehicle::selectedVehicle) gridCenter = selected.position();
+            if (SimpleVehicle::getSelectedVehicle()) gridCenter = selected.position();
             GridPlugin::gridUtility( gridCenter );
 
             // draw and annotate each Pedestrian
@@ -535,7 +535,7 @@ namespace {
             serialNumberAnnotationUtility (selected, nearMouse);
 
             // textual annotation for selected Pedestrian
-            if (SimpleVehicle::selectedVehicle && OpenSteer::annotationIsOn())
+            if (SimpleVehicle::getSelectedVehicle() && OpenSteer::annotationIsOn())
             {
                 const Color color (0.8f, 0.8f, 1.0f);
                 const Vec3 textOffset (0, 0.25f, 0);
@@ -652,7 +652,7 @@ namespace {
             for (iterator i = crowd.begin(); i != crowd.end(); i++) (**i).reset ();
 
             // reset camera position
-            CameraPlugin::position2dCamera (*SimpleVehicle::selectedVehicle);
+            CameraPlugin::position2dCamera (*SimpleVehicle::getSelectedVehicle());
 
             // make camera jump immediately to new position
             Camera::camera.doNotSmoothNextMove ();
@@ -692,7 +692,7 @@ namespace {
             Pedestrian* pedestrian = new Pedestrian();
 			pedestrian->allocateProximityToken( pd );
             crowd.push_back (pedestrian);
-            if (population == 1) SimpleVehicle::selectedVehicle = pedestrian;
+            if (population == 1) SimpleVehicle::setSelectedVehicle( pedestrian );
         }
 
 
@@ -706,8 +706,8 @@ namespace {
                 population--;
 
                 // if it is OpenSteerDemo's selected vehicle, unselect it
-                if (pedestrian == SimpleVehicle::selectedVehicle)
-                    SimpleVehicle::selectedVehicle = NULL;
+                if (pedestrian == SimpleVehicle::getSelectedVehicle())
+                    SimpleVehicle::setSelectedVehicle( NULL );
 
                 // delete the Pedestrian
                 delete pedestrian;

@@ -150,13 +150,13 @@ void AbstractVehicleGroup::addVehicleToPlugin( AbstractVehicle* pkVehicle, Abstr
 	m_kVehicles.push_back( pkVehicle );
 	if( m_kVehicles.size() == 1 )
 	{
-		SimpleVehicle::selectedVehicle = pkVehicle;
+		SimpleVehicle::setSelectedVehicle( pkVehicle );
 	}
 	else
 	{
-		if( NULL == SimpleVehicle::selectedVehicle )
+		if( NULL == SimpleVehicle::getSelectedVehicle() )
 		{
-			SimpleVehicle::selectedVehicle = pkVehicle;
+			SimpleVehicle::setSelectedVehicle( pkVehicle );
 		}
 	}
 }
@@ -175,13 +175,13 @@ void AbstractVehicleGroup::addVehicle( AbstractVehicle* pkVehicle, ProximityData
 	m_kVehicles.push_back( pkVehicle );
  	if( m_kVehicles.size() == 1 )
 	{
- 		SimpleVehicle::selectedVehicle = pkVehicle;
+ 		SimpleVehicle::setSelectedVehicle( pkVehicle );
 	}
 	else
 	{
-		if( NULL == SimpleVehicle::selectedVehicle )
+		if( NULL == SimpleVehicle::getSelectedVehicle() )
 		{
-			SimpleVehicle::selectedVehicle = pkVehicle;
+			SimpleVehicle::setSelectedVehicle( pkVehicle );
 		}
 	}
 }
@@ -197,9 +197,9 @@ void AbstractVehicleGroup::removeVehicleFromPlugin( const AbstractVehicle* pkVeh
 		(*kIter)->setParentEntity( NULL );
 		m_kVehicles.erase( kIter );
  		// if it is SimpleVehicle's selected vehicle, unselect it
- 		if( pkVehicle == SimpleVehicle::selectedVehicle )
+ 		if( pkVehicle == SimpleVehicle::getSelectedVehicle() )
 		{
- 			SimpleVehicle::selectedVehicle = NULL;
+ 			SimpleVehicle::setSelectedVehicle( NULL );
 		}
 	}
 }

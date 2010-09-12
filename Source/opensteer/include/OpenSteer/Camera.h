@@ -68,7 +68,8 @@ namespace OpenSteer {
         Vec3 target;
 
         //! vehicle being tracked
-        const AbstractVehicle* vehicleToTrack;
+		static void setVehicleToTrack( const AbstractVehicle* vehicle );
+		static const AbstractVehicle* getVehicleToTrack( void );
 
         //! aim at predicted position of vehicleToTrack, this far into thefuture
         float aimLeadTime;

@@ -136,7 +136,7 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 											float /*elevation*/ )
 {
 	// note: the camera has no right to select a vehicle !
-	// SimpleVehicle::selectedVehicle = &selected;
+	// SimpleVehicle::setSelectedVehicle( &selected );
 	if (&selected)
 	{
 		Vec3 direction = selected.position() - Camera::camera.position();
@@ -228,7 +228,7 @@ void CameraPlugin::redraw( const float currentTime, const float elapsedTime )
 		return;
 	}
 	// selected Pedestrian (user can mouse click to select another)
-	AbstractVehicle* selected = SimpleVehicle::selectedVehicle;
+	AbstractVehicle* selected = SimpleVehicle::getSelectedVehicle();
 	// TODO: determine paused state
 	const bool simulationPaused = OpenSteer::Clock::processClock().getPausedState();
 	// update camera
