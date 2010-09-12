@@ -78,8 +78,17 @@ namespace OpenSteer
 
 	};
 
-	typedef PluginAccessorMixin<OpenSteer::Entity> TPluginAccessor;
+	typedef PluginAccessorMixin<OpenSteer::Entity> PluginAccessor_t;
 
+	// an pure virtual interface to support plugin selections
+	class VirtualPluginSelector
+	{
+	public:
+		virtual ~VirtualPluginSelector()	{};
+
+		virtual const char* getCurrentPluginName( void ) const ET_ABSTRACT;
+		virtual void selectPluginByName( const char* pszPluginName ) ET_ABSTRACT;
+	};
 
 }
 

@@ -3,16 +3,13 @@
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
-#include "EduNetPluginHost.h"
 #include "EduNetPluginSelector.h"
 
 #include "OpenSteerUT/PluginArray.h"
 
-#include "EduNetApplication/EduNetPluginLoadPlugin.h"
-
 //-----------------------------------------------------------------------------
 class PluginServerPlugin : public PeerPlugin<OpenSteer::PluginArray>,
-	public EduNet::PluginHost
+	public OpenSteer::VirtualPluginSelector
 {
 	ET_DECLARE_BASE(PeerPlugin<OpenSteer::PluginArray>);
 public:
@@ -35,7 +32,7 @@ public:
 	virtual void CreateContent( void );
 
 	const char* getCurrentPluginName( void ) const;
-	virtual void SelectPluginByName( const char* pszPluginName ){ };
+	virtual void selectPluginByName( const char* pszPluginName ){ };
 
 	void addPlugin( OpenSteer::AbstractPlugin* pkPlugin );
 
@@ -50,13 +47,13 @@ private:
 };
 
 //-----------------------------------------------------------------------------
-class PluginClientPlugin : public ClientPlugin<OpenSteer::PluginArray>,
-	public EduNet::PluginHost
+class ClientPluginSelectionPlugin : public ClientPlugin<OpenSteer::PluginArray>,
+	public OpenSteer::VirtualPluginSelector
 {
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::PluginArray>);
 public:
-	PluginClientPlugin(bool bAddToRegistry = true);
-	virtual ~PluginClientPlugin(){};
+	ClientPluginSelectionPlugin(bool bAddToRegistry = true);
+	virtual ~ClientPluginSelectionPlugin(){};
 
 	virtual const char* name (void) const;
 
@@ -70,17 +67,18 @@ public:
 	virtual void DeleteContent( void );
 
 	const char* getCurrentPluginName( void ) const;
-	void SelectPluginByName( const char* pszPluginName );
+	void selectPluginByName( const char* pszPluginName );
 
-private:
-
-	virtual void InitializeRpcSystem( void );
-
-	virtual OpenSteer::AbstractPlugin* CreatePluginByName(
+protected:
+	virtual OpenSteer::AbstractPlugin* createPluginByName(
 		const char* pszPluginName )
 	{
 		return NULL;
 	};
+
+private:
+
+	virtual void InitializeRpcSystem( void );
 
 	PluginSelectorReplicaManager m_kReplicaManager;
 	RakNet::RPC3 m_kRpc3Inst;	

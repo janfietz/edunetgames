@@ -39,7 +39,7 @@ public:
 protected:
 	~BoidPluginFactory();
 
-	virtual void fillStringArrayWithPluginName( EdutNetStringList& kNames ) const;
+	virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
 	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
 		const char* pszName ) const;
 };

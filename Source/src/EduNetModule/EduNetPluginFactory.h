@@ -33,17 +33,16 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include <boost/shared_ptr.hpp>
 
-typedef enStringArray_t EdutNetStringList;
 
 class EduNetPluginFactory
 {
 public:
 	EduNetPluginFactory(void);
 
-	void getPluginNames( EdutNetStringList& kNames ) const;
+	void getPluginNames( enStringArray_t& kNames ) const;
 	OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
 protected:
-	virtual void fillStringArrayWithPluginName( EdutNetStringList& kNames ) const{};
+	virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const{};
 	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
 		const char* pszName ) const { return NULL; }
 };

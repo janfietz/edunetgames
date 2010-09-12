@@ -40,7 +40,7 @@ ModLecturePluginFactory::~ModLecturePluginFactory()
 
 }
 //-----------------------------------------------------------------------------
-void ModLecturePluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
+void ModLecturePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 {
 	
 }

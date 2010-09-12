@@ -1,76 +1,109 @@
 #include "PluginSelectionPlugin.h"
-#include "EduNetApplication/EduNetPluginLoadPlugin.h"
-
-//-----------------------------------------------------------------------------
-class EduNetServerPluginLoadPlugin : public EduNet::PluginLoadPlugin
-{
-	ET_DECLARE_BASE(EduNet::PluginLoadPlugin)
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		EduNetPluginFactory* pkFactory,
-		const char* pszPluginName )
-	{
-		OpenSteer::AbstractPlugin* pkPlugin = 
-			BaseClass::createPluginFromFactoryByName(pkFactory, pszPluginName);
-		if (NULL != pkPlugin)
-		{
-			// create wrapper plugin to serve it to the client
-			PluginServerPlugin* pkSrvPlugin = ET_NEW PluginServerPlugin();
-			pkSrvPlugin->addPlugin( pkPlugin );
-			return pkSrvPlugin;
-		}
-		return NULL;
-	}
-};
+#include "EduNetApplication/EduNetModulePluginLoader.h"
 
 //-----------------------------------------------------------------------------
 namespace EduNet
 {
-	EduNetServerPluginLoadPlugin gLoadPlugin;
-	void initializeStaticPlugins( )
-	{
-		ModuleManager kModuleManager;
-		gLoadPlugin.loadModules( kModuleManager.getCurrentModulePath() );
-		gLoadPlugin.createPluginsFromModules();
 
-	}
-	void shutdownStaticPlugins( )
+	//-----------------------------------------------------------------------------
+	class ServerModulePluginLoader : public EduNet::ModulePluginLoader
 	{
-		gLoadPlugin.unloadModules();
-	}
-
-	class NetPluginClientHost : public PluginClientPlugin
-	{
-		ET_DECLARE_BASE(PluginClientPlugin)
-	private:
-		OpenSteer::AbstractPlugin* CreatePluginByName(
+		ET_DECLARE_BASE(EduNet::ModulePluginLoader)
+	protected:
+		virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
+			EduNetPluginFactory* pkFactory,
 			const char* pszPluginName )
 		{
-			RakNet::RakString kPluginName(pszPluginName);
-			if(kPluginName == "NetBoidRenderPeerPlugin")
+			OpenSteer::AbstractPlugin* pkPlugin = 
+				BaseClass::createPluginFromFactoryByName(pkFactory, pszPluginName);
+			if (NULL != pkPlugin)
 			{
-				return gLoadPlugin.createPluginByName(kPluginName.C_String());
-			}
-			if(kPluginName == "NetBoidMultiplePeerPlugin")
-			{
-				return gLoadPlugin.createPluginByName("NetBoidRenderPeerPlugin");
-			}
-			if(kPluginName == "NetBoidRenderServerPlugin")
-			{
-				return gLoadPlugin.createPluginByName("NetBoidClientPlugin");
+				// create wrapper plugin to serve it to the client
+				PluginServerPlugin* pkSrvPlugin = ET_NEW PluginServerPlugin();
+				pkSrvPlugin->addPlugin( pkPlugin );
+				return pkSrvPlugin;
 			}
 			return NULL;
 		}
+	};
+
+	ServerModulePluginLoader* gLoadPlugin = NULL;
+
+	//-----------------------------------------------------------------------------
+	class NetPluginClientHost : public ClientPluginSelectionPlugin
+	{
+		ET_DECLARE_BASE(ClientPluginSelectionPlugin)
 	public:
-		virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+		virtual float selectionOrderSortKey (void) const { 
+			// want to be selected
+			return 0.0001f ;
+		}
 
 		//-----------------------------------------------------------------------------
 		virtual void update(const float currentTime, const float elapsedTime)
 		{
 			BaseClass::update( currentTime, elapsedTime );
 		}
+	protected:
+		OpenSteer::AbstractPlugin* createPluginByName(
+			const char* pszPluginName )
+		{
+			printf("try to create plugin: %s ...\n", pszPluginName);
+			OpenSteer::AbstractPlugin* plugin = NULL;
+			enString_t kPluginName(pszPluginName);
+			if( kPluginName == "NetBoidRenderPeerPlugin" )
+			{
+				plugin = gLoadPlugin->createPluginByName( kPluginName.c_str() );
+			}
+			else if( kPluginName == "NetBoidMultiplePeerPlugin" )
+			{
+				plugin = gLoadPlugin->createPluginByName("NetBoidRenderPeerPlugin");
+			}
+			else if( kPluginName == "NetBoidRenderServerPlugin" )
+			{
+				plugin = gLoadPlugin->createPluginByName("NetBoidClientPlugin");
+			}
+			else if( kPluginName == "RenderSoccerPeerPlugin" )
+			{
+				plugin = gLoadPlugin->createPluginByName("RenderSoccerClientPlugin");
+			}
+			else
+			{
+				printf("plugin not supported\n");
+			}
+
+			printf("try to create plugin: %s -> result plugin: %s\n", 
+				pszPluginName, 
+				NULL != plugin ? plugin->pluginName() : "FAILED" );
+
+			return plugin;
+		}
+	private:
 
 	};
 
-	NetPluginClientHost gNetClientHost;
+	NetPluginClientHost* gNetClientHost = NULL;
+
+	//-----------------------------------------------------------------------------
+	void initializeStaticPlugins( )
+	{
+		gLoadPlugin = ET_NEW ServerModulePluginLoader();
+		ModuleManager kModuleManager;
+		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
+		gLoadPlugin->createPluginsFromModules();
+
+		gNetClientHost = ET_NEW NetPluginClientHost();
+	}
+
+	//-----------------------------------------------------------------------------
+	void shutdownStaticPlugins( )
+	{
+		ET_SAFE_DELETE( gNetClientHost );
+
+		gLoadPlugin->unloadModules();
+		ET_SAFE_DELETE(gLoadPlugin);
+	}
+
+
+
 }

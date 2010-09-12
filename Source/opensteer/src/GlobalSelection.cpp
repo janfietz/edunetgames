@@ -52,7 +52,7 @@ namespace OpenSteer {
 		}
 		else
 		{
-			assert( NULL != GlobalSelection::globalSelection );
+//			assert( NULL != GlobalSelection::globalSelection );
 		}
 	}
 

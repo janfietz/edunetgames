@@ -41,7 +41,7 @@ BoidPluginFactory::~BoidPluginFactory()
 
 }
 //-----------------------------------------------------------------------------
-void BoidPluginFactory::fillStringArrayWithPluginName( EdutNetStringList& kNames ) const
+void BoidPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 {
 	kNames.push_back("NetBoidRenderOfflinePlugin");
 	kNames.push_back("NetBoidRenderPeerPlugin");

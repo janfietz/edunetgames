@@ -1,5 +1,5 @@
-#ifndef __EDUNET_PLUGINLOADPLUGIN_H__
-#define __EDUNET_PLUGINLOADPLUGIN_H__
+#ifndef __EDUNET_MODULEPLUGINLOADER_H__
+#define __EDUNET_MODULEPLUGINLOADER_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -34,14 +34,14 @@ namespace EduNet
 {
 
 //-----------------------------------------------------------------------------
-class PluginLoadPlugin
+class ModulePluginLoader
 {
 public:
-	PluginLoadPlugin( void );
+	ModulePluginLoader( void );
 
-	virtual ~PluginLoadPlugin( void );
+	virtual ~ModulePluginLoader( void );
 
-	OS_IMPLEMENT_CLASSNAME( PluginLoadPlugin )
+	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
 		virtual const char* name() const { return this->getClassName(); };
 
 	void loadModules(const char* pszPath);
@@ -70,4 +70,4 @@ private:
 
 }
 
-#endif // __EDUNET_PLUGINLOADPLUGIN_H__
+#endif // __EDUNET_MODULEPLUGINLOADER_H__

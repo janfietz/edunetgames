@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-class AbstractEntityReplicaConnection : public RakNet::Connection_RM3 , public OpenSteer::TPluginAccessor
+class AbstractEntityReplicaConnection : public RakNet::Connection_RM3 , public OpenSteer::PluginAccessor_t
 {
 public:
 	AbstractEntityReplicaConnection(SystemAddress _systemAddress, RakNetGUID _guid,

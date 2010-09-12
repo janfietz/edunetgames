@@ -7,8 +7,8 @@ namespace EduNet
 	{
 	public:
 
-		virtual const char* getCurrentPluginName( void ) const = 0;
-		virtual void SelectPluginByName( const char* pszPluginName ) = 0;
+		virtual const char* getCurrentPluginName( void ) const ET_ABSTRACT;
+		virtual void selectPluginByName( const char* pszPluginName ) ET_ABSTRACT;
 	};
 };
 #endif // __EDUNETPLUGINHOST_H__

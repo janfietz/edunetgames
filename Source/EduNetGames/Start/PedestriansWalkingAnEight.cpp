@@ -463,7 +463,7 @@ public:
         AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
         
         // Pedestrian nearest mouse (to be highlighted)
-        AbstractVehicle& nearMouse = *SimpleVehicle::nearestMouseVehicle;
+        AbstractVehicle& nearMouse = *SimpleVehicle::getNearestMouseVehicle();
         
         // update camera
         CameraPlugin::updateCamera (currentTime, elapsedTime, selected);

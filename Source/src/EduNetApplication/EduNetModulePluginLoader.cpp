@@ -25,7 +25,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetPluginLoadPlugin.h"
+#include "EduNetModulePluginLoader.h"
 #include "EduNetCommon/EduNetOptions.h"
 #include "EduNetModule/EduNetPluginFactory.h"
 
@@ -33,33 +33,33 @@ namespace EduNet
 {
 
 //-----------------------------------------------------------------------------
-PluginLoadPlugin::PluginLoadPlugin( void )
+ModulePluginLoader::ModulePluginLoader( void )
 {
 
 }
 
 //-----------------------------------------------------------------------------
-PluginLoadPlugin::~PluginLoadPlugin( void )
+ModulePluginLoader::~ModulePluginLoader( void )
 {
 
 }
 
 //-----------------------------------------------------------------------------
-void PluginLoadPlugin::loadModules( const char* pszPath )
+void ModulePluginLoader::loadModules( const char* pszPath )
 {
 	// load modules in working directory
 	this->m_modules.loadModulesFromDirectory( pszPath );
 }
 
 //-----------------------------------------------------------------------------
-void PluginLoadPlugin::unloadModules( void )
+void ModulePluginLoader::unloadModules( void )
 {
 	this->m_plugins.removeAllPlugins();
 	this->m_modules.unloadAll();
 }
 
 //-----------------------------------------------------------------------------
-void PluginLoadPlugin::createPluginsFromModules ( void )
+void ModulePluginLoader::createPluginsFromModules ( void )
 {
 	const RawModules& kModules = this->m_modules.getModules();
 	RawModules::const_iterator kIter = kModules.begin();
@@ -73,7 +73,7 @@ void PluginLoadPlugin::createPluginsFromModules ( void )
 }
 
 //-----------------------------------------------------------------------------
-void PluginLoadPlugin::createPluginsFromModule (
+void ModulePluginLoader::createPluginsFromModule (
 	RawModule* pkModule )
 {
 	ModuleEntry* pkEntry = pkModule->accessEntry();
@@ -83,13 +83,13 @@ void PluginLoadPlugin::createPluginsFromModule (
 		EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
 		EduNetPluginFactoryPtr spFactory ( pkFactory );
 
-		EdutNetStringList kList;
+		enStringArray_t kList;
 		pkFactory->getPluginNames ( kList );
 
 		std::ostringstream message;
 		message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
-		EdutNetStringList::iterator kNameIter = kList.begin();
-		EdutNetStringList::iterator kNameIterEnd = kList.end();
+		enStringArray_t::iterator kNameIter = kList.begin();
+		enStringArray_t::iterator kNameIterEnd = kList.end();
 		while ( kNameIterEnd != kNameIter )
 		{
 			const char* pszPluginName = ( *kNameIter ).c_str();
@@ -109,7 +109,7 @@ void PluginLoadPlugin::createPluginsFromModule (
 }
 
 //-----------------------------------------------------------------------------
-bool PluginLoadPlugin::appWantsToLoadPlugin (
+bool ModulePluginLoader::appWantsToLoadPlugin (
 										const char* pszPluginName )
 {
 //	const enStringArray_t& kNames = EduNetOptions::accessOptions().accessModuleNameList();
@@ -139,14 +139,14 @@ bool PluginLoadPlugin::appWantsToLoadPlugin (
 }
 
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin*  PluginLoadPlugin::createPluginFromFactoryByName(
+OpenSteer::AbstractPlugin*  ModulePluginLoader::createPluginFromFactoryByName(
 	EduNetPluginFactory* pkFactory,
 	const char* pszPluginName )
 {
 	return pkFactory->createPluginByName( pszPluginName );
 }
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* PluginLoadPlugin::createPluginByName(
+OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName(
 	const char* pszPluginName )
 {
 	RawModule* pkModule = this->findModuleForPlugin( pszPluginName );
@@ -164,7 +164,7 @@ OpenSteer::AbstractPlugin* PluginLoadPlugin::createPluginByName(
 }
 
 //-----------------------------------------------------------------------------
-RawModule* PluginLoadPlugin::findModuleForPlugin(
+RawModule* ModulePluginLoader::findModuleForPlugin(
 	const char* pszPluginName )
 {
 	const RawModules& kModules = this->m_modules.getModules();
@@ -180,12 +180,12 @@ RawModule* PluginLoadPlugin::findModuleForPlugin(
 			EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
 			EduNetPluginFactoryPtr spFactory ( pkFactory );
 
-			EdutNetStringList kList;
+			enStringArray_t kList;
 			pkFactory->getPluginNames ( kList );
 
 			// check if plugin name is inside of this array
 			std::string kName(pszPluginName);
-			EdutNetStringList::const_iterator kNameIter = 
+			enStringArray_t::const_iterator kNameIter = 
 				std::find(kList.begin(), kList.end(), kName);
 
 			if( kNameIter != kList.end() )

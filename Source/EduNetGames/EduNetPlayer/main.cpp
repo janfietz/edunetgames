@@ -28,16 +28,16 @@
 
 #include "EduNetApplication/EduNetMain.h"
 
-#include "EduNetApplication/EduNetPluginLoadPlugin.h"
+#include "EduNetApplication/EduNetModulePluginLoader.h"
 #include "EduNetApplication/EduNetModuleManager.h"
 
 namespace EduNet
 {
-	PluginLoadPlugin* gLoadPlugin = NULL;
+	ModulePluginLoader* gLoadPlugin = NULL;
 	void initializeStaticPlugins( )
 	{
 		ModuleManager kModuleManager;
-		gLoadPlugin = ET_NEW PluginLoadPlugin();
+		gLoadPlugin = ET_NEW ModulePluginLoader();
 		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
 		gLoadPlugin->createPluginsFromModules();
 

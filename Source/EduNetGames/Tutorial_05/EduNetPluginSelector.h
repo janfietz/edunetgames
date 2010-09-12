@@ -31,7 +31,6 @@
 
 #include "EduNetCommon/EduNetCommon.h"
 #include "EduNetConnect/AbstractReplica.h"
-#include "EduNetPluginHost.h"
 
 
 //-----------------------------------------------------------------------------
@@ -89,11 +88,11 @@ public:
 		RakNet::RPC3 *rpcFromNetwork = 0);
 
 	void Initialize(RakNet::RPC3* rpc3Inst,
-		EduNet::PluginHost* pkPluginHost);
+		OpenSteer::VirtualPluginSelector* pluginSelector);
 
 private:
 	RakNet::RPC3* m_rpc3Inst;
-	EduNet::PluginHost* m_pkPluginHost;
+	OpenSteer::VirtualPluginSelector* m_pluginSelector;
 	
 };
 
@@ -102,11 +101,11 @@ class PluginSelectorClientConnection : public RakNet::Connection_RM3
 {
 public:
 	PluginSelectorClientConnection(RakNet::RPC3* rpc3Inst,
-		EduNet::PluginHost* pkPluginHost,
+		OpenSteer::VirtualPluginSelector* pluginSelector,
 		SystemAddress _systemAddress, RakNetGUID _guid) :
 		Connection_RM3(_systemAddress, _guid)
 	{
-		this->m_pkPluginHost = pkPluginHost;
+		this->m_pluginSelector = pluginSelector;
 		this->m_rpc3Inst = rpc3Inst;
 	};
 	virtual ~PluginSelectorClientConnection() {}
@@ -115,7 +114,7 @@ public:
 		RakNet::ReplicaManager3 *replicaManager3);
 private:
 	RakNet::RPC3* m_rpc3Inst;
-	EduNet::PluginHost* m_pkPluginHost;
+	OpenSteer::VirtualPluginSelector* m_pluginSelector;
 };
 
 //-----------------------------------------------------------------------------
@@ -145,7 +144,7 @@ class PluginSelectorReplicaManager : public RakNet::ReplicaManager3
 		{
 			return ET_NEW PluginSelectorClientConnection(
 						this->m_rpc3Inst,
-						this->m_pkPluginHost,
+						this->m_pluginSelector,
 						systemAddress,
 						rakNetGUID);
 		}
@@ -159,20 +158,20 @@ class PluginSelectorReplicaManager : public RakNet::ReplicaManager3
 	}
 public:
 	PluginSelectorReplicaManager( bool bIsClient = false):
-	  m_bIsClient(bIsClient), m_rpc3Inst(NULL), m_pkPluginHost(NULL){}
+	  m_bIsClient(bIsClient), m_rpc3Inst(NULL), m_pluginSelector(NULL){}
 
 	 void Initialize(RakNet::RPC3* rpc3Inst,
-		  EduNet::PluginHost* pkPluginHost,
+		  OpenSteer::VirtualPluginSelector* pluginSelector,
 		  bool bIsClient)
 	  {
-		  this->m_pkPluginHost = pkPluginHost;
+		  this->m_pluginSelector = pluginSelector;
 		  this->m_rpc3Inst = rpc3Inst;
 		  this->m_bIsClient = bIsClient;
 	  }
 private:
 	bool m_bIsClient;
 	RakNet::RPC3* m_rpc3Inst;
-	EduNet::PluginHost* m_pkPluginHost;
+	OpenSteer::VirtualPluginSelector* m_pluginSelector;
 };
 
 #endif // __EDUNETPLUGINSELECTOR_H__

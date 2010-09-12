@@ -40,7 +40,7 @@ RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(
 	if ( typeName == "PluginSelector" ){
 		printf("Create PluginSelector instance.");
 		PluginSelector* pkNewInstance = ET_NEW PluginSelector();
-		pkNewInstance->Initialize( this->m_rpc3Inst, this->m_pkPluginHost);
+		pkNewInstance->Initialize( this->m_rpc3Inst, this->m_pluginSelector);
 		return pkNewInstance;
 	}	
 	return 0;
@@ -48,7 +48,7 @@ RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(
 
 //-----------------------------------------------------------------------------
 void PluginSelector::Initialize(RakNet::RPC3* rpc3Inst,
-	EduNet::PluginHost* pkPluginHost)
+	OpenSteer::VirtualPluginSelector* pluginSelector)
 {
 	
 	this->m_rpc3Inst = rpc3Inst;
@@ -57,9 +57,8 @@ void PluginSelector::Initialize(RakNet::RPC3* rpc3Inst,
 	RPC3_REGISTER_FUNCTION(rpc3Inst, &PluginSelector::SelectServerPlugin);
 	RPC3_REGISTER_FUNCTION(rpc3Inst, &PluginSelector::SelectPlugin);
 
-	this->m_pkPluginHost = pkPluginHost;
-	
-};
+	this->m_pluginSelector = pluginSelector;	
+}
 
 //-----------------------------------------------------------------------------
 void PluginSelector::DeserializeConstructionRequestAccepted(
@@ -123,10 +122,10 @@ void PluginSelector::SelectServerPlugin( RakNet::RPC3 *rpcFromNetwork )
 	} 
 	else
 	{
-		const char* pszPluginName = this->m_pkPluginHost->getCurrentPluginName();
+		const char* pszPluginName = this->m_pluginSelector->getCurrentPluginName();
 		if( ( NULL != pszPluginName ) && ( 0 != pszPluginName[0] ) )
 		{
-			RakNet::RakString rs( this->m_pkPluginHost->getCurrentPluginName() );
+			RakNet::RakString rs( this->m_pluginSelector->getCurrentPluginName() );
 			this->m_rpc3Inst->CallCPP("&PluginSelector::SelectPlugin", GetNetworkID(), rs,  rpcFromNetwork);
 		}
 		else
@@ -143,5 +142,5 @@ void PluginSelector::SelectPlugin(
 {	
 	printf("\nRakNet::SelectPlugin %s called from remote\n",
 		kPluginName.C_String());
-	this->m_pkPluginHost->SelectPluginByName(kPluginName.C_String());
+	this->m_pluginSelector->selectPluginByName(kPluginName.C_String());
 }
