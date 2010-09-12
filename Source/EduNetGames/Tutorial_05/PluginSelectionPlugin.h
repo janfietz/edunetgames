@@ -1,11 +1,11 @@
-#ifndef __EMPTYRPCPLUGIN_H__
-#define __EMPTYRPCPLUGIN_H__
+#ifndef __PLUGINSELECTIONPLUGIN_H__
+#define __PLUGINSELECTIONPLUGIN_H__
 
 #include "EduNetConnect/ClientPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
-#include "EduNetPluginSelector.h"
 
 #include "OpenSteerUT/PluginArray.h"
+#include "PluginSelector.h"
 
 //-----------------------------------------------------------------------------
 class PluginServerPlugin : public PeerPlugin<OpenSteer::PluginArray>,
@@ -84,4 +84,4 @@ private:
 	RakNet::RPC3 m_kRpc3Inst;	
 	
 };
-#endif // __EMPTYRPCPLUGIN_H__
+#endif // __PLUGINSELECTIONPLUGIN_H__
