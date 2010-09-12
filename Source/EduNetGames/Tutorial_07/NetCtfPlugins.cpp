@@ -50,17 +50,6 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.uiPortPongCount = 10;
 }
 
-namespace EduNet
-{
-	void initializeStaticPlugins( )
-	{
-
-	}
-	void shutdownStaticPlugins( )
-	{
-
-	}
-}
 //-----------------------------------------------------------------------------
 // network plugins
 //-----------------------------------------------------------------------------
@@ -252,7 +241,6 @@ public:
 
 };
 
-OfflineCtfPlugin gCtfPlugin;
 
 //-----------------------------------------------------------------------------
 // render client plugin
@@ -289,7 +277,6 @@ public:
 
 };
 
-CtfRenderClientPlugin gCtfClientPlugin( true );
 
 //-----------------------------------------------------------------------------
 // render server plugin
@@ -326,7 +313,6 @@ public:
 
 };
 
-CtfRenderPeerPlugin gCtfPeerPlugin( true );
 
 //-----------------------------------------------------------------------------
 // client server plugin
@@ -379,6 +365,37 @@ void CtfClientServerPlugin::initGui( void* pkUserdata )
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-};
+}
 
-CtfClientServerPlugin gClientServerPlugin;
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+
+OfflineCtfPlugin* ctfPlugin = NULL;
+CtfRenderClientPlugin* ctfClientPlugin = NULL;
+CtfRenderPeerPlugin* ctfPeerPlugin = NULL;
+CtfClientServerPlugin* clientServerPlugin = NULL;
+
+//-----------------------------------------------------------------------------
+namespace EduNet
+{
+	void initializeDynamicPlugins( )
+	{
+		NetCtfPlugin::allocateEntityFactory();
+		ctfPlugin = ET_NEW OfflineCtfPlugin();
+		ctfClientPlugin = ET_NEW CtfRenderClientPlugin( true );
+		ctfPeerPlugin = ET_NEW CtfRenderPeerPlugin( true );
+		clientServerPlugin = ET_NEW CtfClientServerPlugin();
+	}
+
+	void shutdownDynamicPlugins( )
+	{
+		ET_SAFE_DELETE( ctfPlugin );
+		ET_SAFE_DELETE( ctfClientPlugin );
+		ET_SAFE_DELETE( ctfPeerPlugin );
+		ET_SAFE_DELETE( clientServerPlugin );
+		NetCtfPlugin::destroyEntityFactory();
+	}
+}

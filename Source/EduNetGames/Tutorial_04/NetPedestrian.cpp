@@ -71,9 +71,6 @@ PolylineSegmentedPathwaySingleRadius* getTestPath (void)
 			osVector3( -12.4111375809f, 0.0108559997752f, 3.5670940876f )
 		};
 
-
-
-
 		// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
 
 		gEndpoint0 = pathPoints[0];
@@ -299,7 +296,6 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	this->drawTrail( kColor, gWhite );
 	this->setAnnotationMode( eMode );
 }
-
 
 //-----------------------------------------------------------------------------
 // called when steerToFollowPath decides steering is required

@@ -38,6 +38,8 @@ namespace EduNet
 	{
 	public:
 		// AbstractReplica interface
+		AbstractReplica( void );
+
 		virtual RakNet::RakString GetName( void ) const ET_ABSTRACT;
 		virtual OpenSteer::EntityClassId getClassId( void ) const ET_ABSTRACT;
 
@@ -56,6 +58,10 @@ namespace EduNet
 		virtual void DeserializeConstructionRequestRejected(RakNet::BitStream *serializationBitstream, RakNet::Connection_RM3 *rejectingConnection);
 
 		void PrintOutput( RakNet::BitStream *bs );
+		bool HasBeenDeallocated( void ) const;
+
+	private:
+		bool m_bHasBeenDeallocated;
 
 	};
 

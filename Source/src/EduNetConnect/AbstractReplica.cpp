@@ -31,6 +31,13 @@
 using namespace EduNet;
 
 //-----------------------------------------------------------------------------
+AbstractReplica::AbstractReplica( void ):
+	m_bHasBeenDeallocated( false )
+{
+
+}
+
+//-----------------------------------------------------------------------------
 void AbstractReplica::WriteAllocationID( RakNet::BitStream *allocationIdBitstream ) const 
 {
 	allocationIdBitstream->Write( GetName() );
@@ -78,6 +85,9 @@ bool AbstractReplica::DeserializeDestruction(RakNet::BitStream *destructionBitst
 //-----------------------------------------------------------------------------
 void AbstractReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection) 
 {
+	this->m_bHasBeenDeallocated = true;
+	// TODO: we need reference counting here !
+	//       simply deleting the object will result in memory leaks or access violations
 	ET_DELETE this;
 }
 

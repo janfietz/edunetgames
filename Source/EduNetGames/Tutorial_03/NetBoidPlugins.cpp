@@ -36,19 +36,28 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.sessionPassword = "Tutorial3";
 	kSettings.uiPortPongCount = 10;
 }
+
+NetBoidRenderOfflinePlugin* netBoidRenderOfflinePlugin = NULL;
+NetBoidRenderPeerPlugin* netBoidPeerPlugin = NULL;
+NetBoidRenderClientPlugin* netBoidRenderClientPlugin = NULL;
+NetBoidClientServerPlugin* clientServerPlugin = NULL;
+
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
-	void initializeStaticPlugins( )
+	void initializeDynamicPlugins( )
 	{
-
+		netBoidRenderOfflinePlugin = ET_NEW NetBoidRenderOfflinePlugin( true );
+		netBoidPeerPlugin = ET_NEW NetBoidRenderPeerPlugin( true );
+		netBoidRenderClientPlugin = ET_NEW NetBoidRenderClientPlugin( true );
+		clientServerPlugin = ET_NEW NetBoidClientServerPlugin( true );
 	}
-	void shutdownStaticPlugins( )
+	void shutdownDynamicPlugins( )
 	{
-
+		ET_SAFE_DELETE( netBoidRenderOfflinePlugin );
+		ET_SAFE_DELETE( netBoidPeerPlugin );
+		ET_SAFE_DELETE( netBoidRenderClientPlugin );
+		ET_SAFE_DELETE( clientServerPlugin );
 	}
 }
 //-----------------------------------------------------------------------------
-NetBoidRenderOfflinePlugin gNetBoidRenderOfflinePlugin( true );
-NetBoidRenderPeerPlugin gNetBoidPeerPlugin( true );
-NetBoidRenderClientPlugin gNetBoidRenderClientPlugin( true );
-NetBoidClientServerPlugin gClientServerPlugin;

@@ -55,10 +55,11 @@ namespace OpenSteer{
 
 		static float worldRadius;
 
-                void setObstacles( ObstacleGroup* pkObstacles)
-                {
-                  this->m_pkObstacles = pkObstacles;
-                };
+		void setObstacles( ObstacleGroup* pkObstacles)
+		{
+			this->m_pkObstacles = pkObstacles;
+		};
+
 	private:
 		// group of all obstacles to be avoided by each Boid
 		//        static ObstacleGroup obstacles;

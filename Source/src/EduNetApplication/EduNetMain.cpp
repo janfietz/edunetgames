@@ -1,5 +1,4 @@
 #define EDUNET_SHOW_CONFIG 1
-#include "EduNetGames.h"
 #include "EduNetApplication.h"
 #include "EduNetCommon/EduNetOptions.h"
 
@@ -17,6 +16,7 @@ public:
 	{
 		etMemoryDebugBegin();
 	}
+
 	virtual ~etMemoryDebug( void )
 	{
 		etMemoryDebugEnd();
@@ -24,9 +24,44 @@ public:
 
 	void exitMain( void )
 	{
-		printf( "exit main." );
+		printf( "exit main.\n" );
 	}
 };
+
+
+//-----------------------------------------------------------------------------
+int __cdecl g_DebugAllocHook(
+	int      nAllocType,
+	void   * pvData,
+	size_t   nSize,
+	int      nBlockUse,
+	long     lRequest,
+	const unsigned char * szFileName,
+	int      nLine
+	)
+{
+	if( nSize == 8 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+	else if( nSize == 48 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+	else if( nSize == 408 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+	else if( nSize == 588 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+	return( TRUE );         // Allow the memory operation to proceed
+}
 
 // install memory debugging facilities
 etMemoryDebug g_MemoryDebug;
@@ -44,8 +79,11 @@ void etMemoryDebugBegin()
 	_CrtSetDbgFlag(tmpDbgFlag);
 	// uncomment this line to see a sample leak output in the output
 	// console at program exit
-	// int* piaLeak = new int[10];
-	//_CrtSetBreakAlloc(5207700);
+//	int* piaLeak = ET_NEW int[10];
+	// break on a specific memory allocation
+//	_CrtSetBreakAlloc(48);
+	_CrtSetAllocHook( g_DebugAllocHook );
+
 #endif
 #endif
 }
@@ -71,28 +109,14 @@ int EduNetMain (int argc, char **argv)
 	EduNet::Application::_SDMInit();
 	if( EXIT_SUCCESS == EduNetOptions::accessOptions().parseCommandLine( argc, argv ) )
 	{
-		if( true ==  EduNetOptions::accessOptions().continueProcess() )
+		if( true == EduNetOptions::accessOptions().continueProcess() )
 		{
-			//EduNet::Application* pApp = EduNet::Application::accessInstance();
-
-			// TODO: @JF @CP this is bad design
-			//       lets talk about this
-			EduNet::initializeStaticPlugins( );
-			// load modules from working dir
-			/*pApp->loadModules( "./" );
-			pApp->createPluginsFromModules();*/
-
-			// initialize graphics
-			OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
-
-			// initialize OpenSteerDemo application
-			OpenSteer::OpenSteerDemo::initialize ();
-
-			// run the main event processing loop
-			OpenSteer::OpenSteerDemo::runGraphics ();
-
+			EduNet::Application::Run( argc, argv );
 		}
-		iExitCode = EXIT_SUCCESS;
+		else
+		{
+			iExitCode = EXIT_SUCCESS;
+		}
 	}
 	EduNet::Application::_SDMShutdown();
 	g_MemoryDebug.exitMain();

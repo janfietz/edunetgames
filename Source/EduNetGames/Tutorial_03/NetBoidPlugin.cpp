@@ -17,6 +17,12 @@ NetPeerBoidPlugin::NetPeerBoidPlugin(bool bAddToRegistry):
 	this->m_kGamePlugin.setEntityFactory( this->m_pkBoidFactory );
 }
 
+NetPeerBoidPlugin::~NetPeerBoidPlugin()
+{
+	ET_SAFE_DELETE( this->m_pkBoidFactory );
+//	ET_SAFE_DELETE( this->m_pkConditionReplic );
+}
+
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::StartNetworkSession( void )
 {
@@ -29,9 +35,9 @@ void NetPeerBoidPlugin::CreateContent( void )
 {
 	BaseClass::CreateContent();
 
-	m_pkConditionReplic = 
+	this->m_pkConditionReplic = 
 		ET_NEW NetBoidConditionReplica(&this->m_kGamePlugin);
-	m_kReplicaManager.Reference(m_pkConditionReplic);
+	this->m_kReplicaManager.Reference(m_pkConditionReplic);
 }
 
 //-----------------------------------------------------------------------------
@@ -49,8 +55,10 @@ void NetPeerBoidPlugin::initGui( void* pkUserdata )
 //-----------------------------------------------------------------------------
 void NetPeerBoidPlugin::DeleteContent( void )
 {	
-	m_kReplicaManager.Dereference(m_pkConditionReplic);
-	//delete m_pkConditionReplic;	
+	this->m_kReplicaManager.Dereference(m_pkConditionReplic);
+	// TODO: ref counting needed for this object
+	// note: set to NULL
+	// this->m_pkConditionReplic = NULL;
 	BaseClass::DeleteContent();
 }
 
@@ -62,6 +70,11 @@ NetClientBoidPlugin::NetClientBoidPlugin(bool bAddToRegistry):
 	this->setGamePluginReplicaManager( &this->m_kReplicaManager );
 	this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );	
 	this->m_kGamePlugin.setEntityFactory( NULL  );
+}
+
+NetClientBoidPlugin::~NetClientBoidPlugin()
+{
+	//ET_SAFE_DELETE(this->m_pkConditionReplic);
 }
 
 //-----------------------------------------------------------------------------
@@ -76,16 +89,18 @@ void NetClientBoidPlugin::CreateContent( void )
 {
 	BaseClass::CreateContent();
 
-	m_pkConditionReplic = 
+	this->m_pkConditionReplic = 
 		ET_NEW NetBoidConditionReplica(&this->m_kGamePlugin);
-	m_kReplicaManager.Reference(m_pkConditionReplic);
+	this->m_kReplicaManager.Reference(this->m_pkConditionReplic);
 }
 
 //-----------------------------------------------------------------------------
 void NetClientBoidPlugin::DeleteContent( void )
 {	
-	m_kReplicaManager.Dereference(m_pkConditionReplic);
-	//delete m_pkConditionReplic;	
+	this->m_kReplicaManager.Dereference( this->m_pkConditionReplic );
+	// TODO: ref counting needed for this object
+	// note: set to NULL
+	this->m_pkConditionReplic = NULL;
 	BaseClass::DeleteContent();
 }
 

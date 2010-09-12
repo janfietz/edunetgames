@@ -930,6 +930,14 @@ namespace {
 
             // clear the group of all vehicles
             all.clear();
+
+			// delete all obstacles
+			for (size_t i = 0; i < CtfBase::allObstacles.size(); i++)
+			{
+				delete (CtfBase::allObstacles[i]);
+				CtfBase::allObstacles[i] = NULL;
+			}
+			CtfBase::allObstacles.clear();
         }
 
         void reset (void)

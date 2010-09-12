@@ -27,18 +27,30 @@
 //-----------------------------------------------------------------------------
 
 #include "ModLectureModule.h"
+#include "EduNetConnect/NetworkPlugin.h"
 #include "OpenSteerUT/OpenSteerUT.h"
+
+//-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT + 1000;
+	kSettings.uiServerStartPort = SERVER_PORT + 1000;
+	kSettings.sessionPassword = "Lecture00";
+	kSettings.uiPortPongCount = 10;
+}
 
 //-----------------------------------------------------------------------------
 ModLecturePluginFactory::ModLecturePluginFactory()
 {
 
 }
+
 //-----------------------------------------------------------------------------
 ModLecturePluginFactory::~ModLecturePluginFactory()
 {
 
 }
+
 //-----------------------------------------------------------------------------
 void ModLecturePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 {

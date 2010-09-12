@@ -40,7 +40,7 @@ class NetPeerBoidPlugin : public PeerPlugin<OpenSteer::BoidsPlugin>
 	ET_DECLARE_BASE(PeerPlugin<OpenSteer::BoidsPlugin>);
 public:
 	NetPeerBoidPlugin(bool bAddToRegistry = true);
-	virtual ~NetPeerBoidPlugin(){};
+	virtual ~NetPeerBoidPlugin();
 
 	OS_IMPLEMENT_CLASSNAME( NetPeerBoidPlugin )
 	virtual const char* name() const { return this->getClassName(); };
@@ -73,7 +73,7 @@ class NetClientBoidPlugin : public ClientPlugin<OpenSteer::BoidsPlugin>
 	ET_DECLARE_BASE(ClientPlugin<OpenSteer::BoidsPlugin>);
 public:
 	NetClientBoidPlugin(bool bAddToRegistry = true);
-	virtual ~NetClientBoidPlugin(){};
+	virtual ~NetClientBoidPlugin();
 
 	OS_IMPLEMENT_CLASSNAME( NetClientBoidPlugin )
 	virtual const char* name() const { return this->getClassName(); };

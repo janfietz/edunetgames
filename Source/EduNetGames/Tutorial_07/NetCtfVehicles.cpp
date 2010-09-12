@@ -330,9 +330,12 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 	// determine if obstacle avodiance is needed
 	const bool clearPath = clearPathToGoal();
 	adjustObstacleAvoidanceLookAhead(clearPath);
-	const Vec3 obstacleAvoidance =
-		steerToAvoidObstacles(gAvoidancePredictTime,
+	Vec3 obstacleAvoidance(Vec3::zero);
+	if( NULL != this->m_pkObstacles )
+	{
+		obstacleAvoidance = steerToAvoidObstacles(gAvoidancePredictTime,
 		*this->m_pkObstacles);
+	}
 
 	// saved for annotation
 	avoiding =(obstacleAvoidance != Vec3::zero);
@@ -553,9 +556,12 @@ osVector3 NetCtfEnemyVehicle::determineCombinedSteering (const float elapsedTime
 		// determine steering(pursuit, obstacle avoidance, or braking)
 		if(this->m_pkSeeker->state == running)
 		{
-			const Vec3 avoidance =
-				steerToAvoidObstacles(gAvoidancePredictTimeMin,
+			Vec3 avoidance(Vec3::zero);
+			if( NULL != this->m_pkObstacles )
+			{
+				avoidance = steerToAvoidObstacles(gAvoidancePredictTimeMin,
 				*this->m_pkObstacles);
+			}
 
 			// saved for annotation
 			avoiding =(avoidance == Vec3::zero);

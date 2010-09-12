@@ -29,17 +29,20 @@
 #include "EduNetApplication/EduNetMain.h"
 #include "EduNetApplication/EduNetApplication.h"
 
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
-	void initializeStaticPlugins( )
+	EmptyPlugin* emptyPlugin = NULL;
+	void initializeDynamicPlugins( )
 	{
-
+		emptyPlugin = ET_NEW EmptyPlugin();
 	}
-	void shutdownStaticPlugins( )
+	void shutdownDynamicPlugins( )
 	{
-
+		ET_SAFE_DELETE( emptyPlugin );
 	}
 }
+
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv)
 {
