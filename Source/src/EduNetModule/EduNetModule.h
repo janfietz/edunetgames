@@ -30,9 +30,8 @@
 
 
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCore/EduNetCore.h"
 #include "EduNetDynamicLibrary.h"
-#include "EduNetPluginFactory.h"
 #include <boost/shared_ptr.hpp>
 
 //-----------------------------------------------------------------------------
@@ -75,6 +74,10 @@ namespace EduNet	{
 
 typedef ET_DECLARE_MODULE_ENTRYFUNC_S(ModuleEntryFunc);
 
+typedef struct OpenSteerUTData_t OpenSteerUTData;
+
+class EduNetPluginFactory;
+
 namespace EduNet	{
 
 //-----------------------------------------------------------------------------
@@ -83,6 +86,8 @@ class ModuleEntry
 public:
 	virtual const char* getName( void ) const ET_ABSTRACT;
 	virtual const char* getAbout( void ) const ET_ABSTRACT;
+
+	virtual void setOpenSteerUTData( OpenSteerUTData* ) const ET_ABSTRACT;
 
 	virtual EduNetPluginFactory* createPluginFactory( void ) const ET_ABSTRACT;
 };

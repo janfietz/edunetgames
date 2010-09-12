@@ -30,9 +30,19 @@
 #include "EduNetApplication.h"
 #include "EduNetProfile/GraphPlot.h"
 #include "EduNetCommon/EduNetOptions.h"
+#include "OpenSteerUT/OpenSteerUT.h"
+
 
 using namespace EduNet;
 using namespace OpenSteer;
+
+bool InitializeGlobals( void )
+{
+	g_openSteerUTDataPtr = &g_openSteerUTData;
+	return true;
+}
+
+bool bGlobalsInitialized = InitializeGlobals();
 
 //-----------------------------------------------------------------------------
 namespace
@@ -43,7 +53,6 @@ namespace
 	int pluginSelection = 0;
 	int pluginIndex = 0;
 
-	GLUI* appGlui = NULL;
 	GLUI_Listbox* pluginList = NULL;
 	GLUI_Listbox* profileModesList = NULL;
 
@@ -54,11 +63,6 @@ namespace
 	float fSimulationFPS = 50.0f;
 }
 
-//-----------------------------------------------------------------------------
-GLUI* getRootGLUI()
-{
-	return appGlui;
-}
 
 //-----------------------------------------------------------------------------
 void setDefaultSettings()
@@ -225,7 +229,7 @@ void Application::_SDMShutdown( void )
 //-----------------------------------------------------------------------------
 void Application::addGuiElements( GLUI* glui )
 {
-	appGlui = glui;
+	g_openSteerUTData.appGlui = glui;
 
 	glui->add_statictext("Plugins");
 	pluginList = glui->add_listbox( "", &pluginSelection );
@@ -320,7 +324,7 @@ void Application::addGuiElements( GLUI* glui )
 //-----------------------------------------------------------------------------
 void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 {
-	if( appGlui != NULL )
+	if( g_openSteerUTData.appGlui != NULL )
 	{
 		AbstractPlugin* pi = Plugin::getPluginAt( pluginSelection );
 		if( pkPlugin != pi )
@@ -478,16 +482,6 @@ void Application::redrawSelectedPlugin (const float currentTime,
 		return;
 	}
 	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
-}
-
-//-----------------------------------------------------------------------------
-void Application::sleep( size_t uiMilliseconds )
-{
-#ifdef WIN32
-	::Sleep( static_cast<DWORD>(uiMilliseconds) );
-#else
-	::usleep(1000 * uiMilliseconds);
-#endif
 }
 
 //-----------------------------------------------------------------------------

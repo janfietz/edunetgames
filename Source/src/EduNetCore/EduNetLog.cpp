@@ -30,7 +30,7 @@
 #include <iostream>
 
 #ifdef _WIN32
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCore/EduNetCore.h"
 #include <windows.h>
 #endif
 

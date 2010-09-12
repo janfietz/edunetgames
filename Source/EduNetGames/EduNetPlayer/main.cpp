@@ -29,7 +29,7 @@
 #include "EduNetApplication/EduNetMain.h"
 
 #include "EduNetApplication/EduNetPluginLoadPlugin.h"
-#include "EduNetModule/EduNetModuleManager.h"
+#include "EduNetApplication/EduNetModuleManager.h"
 
 namespace EduNet
 {

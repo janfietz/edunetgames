@@ -28,18 +28,7 @@
 
 #include "NetSoccerModule.h"
 #include "NetSoccerPlugins.h"
-
-namespace EduNet
-{
-	void initializeStaticPlugins( )
-	{
-
-	}
-	void shutdownStaticPlugins( )
-	{
-
-	}
-}
+#include "OpenSteerUT/OpenSteerUT.h"
 
 //-----------------------------------------------------------------------------
 NetSoccerPluginFactory::NetSoccerPluginFactory()
@@ -97,6 +86,12 @@ const char* NetSoccerModuleFactory::getName( void ) const
 const char* NetSoccerModuleFactory::getAbout( void ) const
 {
 	return "Provides plugins fo a distributed soccer game";
+}
+
+//-----------------------------------------------------------------------------
+void NetSoccerModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
+{
+	g_openSteerUTDataPtr = data;
 }
 
 //-----------------------------------------------------------------------------

@@ -55,6 +55,8 @@ namespace EduNet	{
 		virtual const char* getName( void ) const;
 		virtual const char* getAbout( void ) const;
 
+		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
+
 		virtual EduNetPluginFactory* createPluginFactory( void ) const;
 	};
 

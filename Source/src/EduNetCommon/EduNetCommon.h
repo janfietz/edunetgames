@@ -48,7 +48,8 @@
 #  define EDUNET_INCLUDE_OPENSTEER 1
 #endif
 
-#include "EduNetCore/EduNetConfig.h"
+#include "EduNetCore/EduNetCore.h"
+#include "EduNetCore/EduNetLog.h"
 
 
 
@@ -62,9 +63,7 @@
 
 
 #include "EduNetTypes.h"
-#include "EduNetCore/EduNetCore.h"
 #include "EduNetMath.h"
-#include "EduNetLog.h"
 
 
 #if EDUNET_INCLUDE_OPENSTEER

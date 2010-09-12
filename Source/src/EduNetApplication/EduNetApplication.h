@@ -33,7 +33,6 @@
 #include "glui/glui_internal_control.h"
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/EduNetCommon.h"
-#include "EduNetCore/EduNetCore_Macros.h"
 
 namespace EduNet
 {
@@ -74,8 +73,6 @@ public:
 	static void _SDMCleanup(void);
 	static void _SDMShutdown(void);
 
-
-	static void sleep(size_t uiMilliseconds);
 	bool allowLocalPlayer(void)
 	{
 		return m_bAllowLocalPlayer;

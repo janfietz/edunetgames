@@ -30,7 +30,7 @@
 
 
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
+#include "EduNetCore/EduNetCore.h"
 #include <boost/shared_ptr.hpp>
 
 namespace EduNet	{
@@ -54,8 +54,6 @@ namespace EduNet	{
 	};
 
 	typedef boost::shared_ptr<DynamicLibrary> DynamicLibraryPtr;
-	typedef std::vector<DynamicLibraryPtr> EduNetDynamicLibraries;
-
 }
 
 #endif // EDUNETDYNAMICLIBRARY_H
