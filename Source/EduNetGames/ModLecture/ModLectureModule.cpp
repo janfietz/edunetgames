@@ -65,6 +65,8 @@ OpenSteer::AbstractPlugin* ModLecturePluginFactory::createPluginByNameInternal(
 	return NULL;
 }
 
+namespace EduNet	{
+
 //-----------------------------------------------------------------------------
 const char* ModLectureModuleFactory::getName( void ) const
 {
@@ -82,4 +84,9 @@ EduNetPluginFactory* ModLectureModuleFactory::createPluginFactory( void ) const
 {
 	return ET_NEW ModLecturePluginFactory();
 }
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_ModLecture, ModLectureModuleFactory)
+
+
+}
+
+ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_ModLecture, EduNet::ModLectureModuleFactory)
+

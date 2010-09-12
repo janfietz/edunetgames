@@ -99,8 +99,8 @@ void PluginLoadPlugin::createPluginsFromModule (
 bool PluginLoadPlugin::appWantsToLoadPlugin (
 										const char* pszPluginName )
 {
-//	const EtStrings& kNames = EduNetOptions::accessOptions().accessModuleNameList();
-	const EtStrings kNames;
+//	const enStringArray_t& kNames = EduNetOptions::accessOptions().accessModuleNameList();
+	const enStringArray_t kNames;
 
 	// by default load all
 	if (true == kNames.empty())

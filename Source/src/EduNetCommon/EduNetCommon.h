@@ -67,6 +67,8 @@
 #include "EduNetLog.h"
 
 
+#if EDUNET_INCLUDE_OPENSTEER
+
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 #include "OpenSteerUT/PluginArray.h"
@@ -83,6 +85,7 @@
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
 
+#endif // EDUNET_INCLUDE_OPENSTEER
 
 
 #include "EduNetGuiTypes.h"

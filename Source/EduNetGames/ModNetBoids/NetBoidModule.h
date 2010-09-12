@@ -44,15 +44,20 @@ protected:
 		const char* pszName ) const;
 };
 
-class NetBoidModuleEntry : public EduNetModuleEntry
+//-----------------------------------------------------------------------------
+namespace EduNet	{
+
+//-----------------------------------------------------------------------------
+class NetBoidModuleEntry : public EduNet::ModuleEntry
 {
-	ET_DECLARE_BASE( EduNetPluginFactory )
+	ET_DECLARE_BASE( EduNet::ModuleEntry )
 public:
 	virtual const char* getName( void ) const;
 	virtual const char* getAbout( void ) const;
 
 	virtual EduNetPluginFactory* createPluginFactory( void ) const;
 };
-ET_DECLARE_MODULE_ENTRYFUNC(ModuleEntry_NetBoid);
+
+}
 
 #endif //__NETBOID_MODULE_H__

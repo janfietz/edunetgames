@@ -85,6 +85,9 @@ OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
 }
 
 //-----------------------------------------------------------------------------
+namespace EduNet	{
+
+//-----------------------------------------------------------------------------
 const char* NetSoccerModuleFactory::getName( void ) const
 {
 	return "netsoccer";
@@ -101,4 +104,7 @@ EduNetPluginFactory* NetSoccerModuleFactory::createPluginFactory( void ) const
 {
 	return ET_NEW NetSoccerPluginFactory();
 }
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetSoccer, NetSoccerModuleFactory)
+
+}
+
+ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetSoccer, EduNet::NetSoccerModuleFactory)

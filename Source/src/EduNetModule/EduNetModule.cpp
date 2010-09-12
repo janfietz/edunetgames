@@ -35,39 +35,60 @@ RawModule::RawModule( void ):
 {
 
 }
+
+//-----------------------------------------------------------------------------
+RawModule::~RawModule( void )
+{
+	// TODO: latest point to unload modules again
+
+}
+
 //-----------------------------------------------------------------------------
 bool RawModule::load(const char* pszLibName)
 {
 	EduNet::DynamicLibraryPtr spNewLib( ET_NEW EduNet::DynamicLibrary() );
 	EduNet::DynamicLibrary* pkNewLib = spNewLib.get();
 	bool bLoaded = pkNewLib->loadLib( pszLibName ) ;
-	if(true == bLoaded)
+	if( true == bLoaded )
 	{
 		this->m_spLib = spNewLib;
-		this->queryEntry();
-			
+		if( true == this->queryEntry() )
+		{
+			// log success
+		}
+		else
+		{
+			// release lib again
+			this->m_spLib.reset();
+		}
 	}
 	return (NULL!= this->m_pEntry);	
 }
 
 //-----------------------------------------------------------------------------
-void RawModule::queryEntry( void )
+bool RawModule::queryEntry( void )
 {	
-	ModuleEntryFunc* pkEntryFunc = this->accessEntryFunction();
+	ModuleEntryFunc* pkEntryFunc = this->queryEntryFunction();
 	if (NULL != pkEntryFunc)
 	{
+		// call the entry function
 		this->m_pEntry = (*pkEntryFunc)();
 	}
+	return (NULL != this->m_pEntry);
 }
+
 //-----------------------------------------------------------------------------
-ModuleEntryFunc* RawModule::accessEntryFunction( void )
+ModuleEntryFunc* RawModule::queryEntryFunction( void )
 {
 	ModuleEntryFunc* pkEntryFunc(NULL);
-	EduNet::DynamicLibrary* pkNewLib = this->m_spLib.get();
-	void* pkFunc = pkNewLib->accessProcAddress( "etModuleQueryEntry" );
-	if (NULL != pkFunc)
+	EduNet::DynamicLibrary* pkLib = this->m_spLib.get();
+	if( NULL != pkLib )
 	{
-		pkEntryFunc = (ModuleEntryFunc*)pkFunc;
+		void* pkFunc = pkLib->findSymbol( "etModuleQueryEntry" );
+		if (NULL != pkFunc)
+		{
+			pkEntryFunc = (ModuleEntryFunc*)pkFunc;
+		}
 	}
 	return pkEntryFunc;
 }
