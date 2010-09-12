@@ -26,7 +26,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetPluginSelector.h"
+#include "PluginSelector.h"
 
 //-----------------------------------------------------------------------------
 RakNet::Replica3* PluginSelectorClientConnection::AllocReplica(

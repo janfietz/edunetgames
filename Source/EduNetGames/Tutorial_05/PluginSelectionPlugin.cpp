@@ -1,5 +1,6 @@
 #include "PluginSelectionPlugin.h"
 
+
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
@@ -8,6 +9,10 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.sessionPassword = "Tutorial5";
 	kSettings.uiPortPongCount = 10;
 }
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 void PluginServerPlugin::StartNetworkSession( void )
@@ -23,9 +28,8 @@ void PluginServerPlugin::InitializeRpcSystem( void )
 	this->m_kReplicaManager.Initialize(&this->m_kRpc3Inst, this, false);
 	this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
 	this->m_pNetInterface->AttachPlugin(&this->m_kRpc3Inst);
-
-
 }
+
 //-----------------------------------------------------------------------------
 void PluginServerPlugin::CreateContent ( void )
 {
@@ -58,6 +62,10 @@ void PluginServerPlugin::addPlugin( OpenSteer::AbstractPlugin* pkPlugin )
 {
 	this->m_kGamePlugin.addPlugin( pkPlugin );
 }
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 ClientPluginSelectionPlugin::ClientPluginSelectionPlugin(bool bAddToRegistry):
