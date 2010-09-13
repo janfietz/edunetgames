@@ -34,17 +34,79 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/GlobalData.h"
+#include "EduNetCore/EduNetProfile.h"
 
 
 using namespace EduNet;
 using namespace OpenSteer;
+
+class IProfileScope
+{
+public:
+	virtual void open() = 0;
+	virtual void close() = 0;
+};
+
+//-----------------------------------------------------------------------------
+#define EN_PROFILESCOPE(a) \
+class ProfileScope_##a : public IProfileScope \
+{ \
+public: \
+	Prof_Zone* zone;\
+	virtual void open(){ \
+	static Prof_Define(a);\
+	zone = &Prof_region_##a;\
+	Prof_Begin_Cache(a);  Prof_Begin_Code( *zone ); } \
+	virtual void close(){ Prof_Zone& Prof_region_##a = *zone; Prof_End } }; \
+	static ProfileScope_##a s_scope_##a; \
+	IProfileNodePtr spNode ( ET_NEW ProfileNode( &s_scope_##a ) ); \
+	return spNode;
+
+//-----------------------------------------------------------------------------
+class ProfileNode : public IProfileNode
+{
+public:
+
+	ProfileNode( IProfileScope* pkScope )
+	{
+		m_pkScope = pkScope;
+		m_pkScope->open();	
+	}
+	virtual ~ProfileNode()
+	{
+		m_pkScope->close();	
+	}
+
+private:
+	IProfileScope* m_pkScope;
+};
+	
+
+//-----------------------------------------------------------------------------
+class EduNetProfile : public IProfile
+{
+public:
+	virtual ~EduNetProfile(){}
+	IProfileNodePtr allocNode( const char* pszName )
+	{
+		enString_t kName(pszName);
+		if (kName == "a")
+		{
+			EN_PROFILESCOPE(a);			
+			
+		}
+		IProfileNodePtr spNode ( (IProfileNode*)NULL );
+		return spNode;
+	}
+};
 
 //-----------------------------------------------------------------------------
 namespace
 {
 	bool InitializeGlobals( void )
 	{
-		OpenSteerUTData::_SDMInitApp();
+		static EduNetProfile kProfile;
+		OpenSteerUTData::_SDMInitApp(&kProfile);
 		return true;
 	}
 

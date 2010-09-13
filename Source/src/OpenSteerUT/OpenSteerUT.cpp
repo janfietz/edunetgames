@@ -35,10 +35,10 @@
 OpenSteerUTData* OpenSteerUTData::g_openSteerUTDataPtr = NULL;
 
 //-----------------------------------------------------------------------------
-void OpenSteerUTData::_SDMInitApp( void )
+void OpenSteerUTData::_SDMInitApp( EduNet::IProfile* pkProfile )
 {
 	OpenSteer::GlobalSelection::_SDMInitApp( );
-	OpenSteer::GlobalData::_SDMInitApp( );
+	OpenSteer::GlobalData::_SDMInitApp( pkProfile );
 	// note: set up data to pass to loaded modules
 	static OpenSteerUTData g_openSteerUTData;
 	OpenSteerUTData::g_openSteerUTDataPtr = &g_openSteerUTData;

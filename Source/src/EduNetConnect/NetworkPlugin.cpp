@@ -5,6 +5,8 @@
 #include "EduNetConnect/ServerVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractPluginUtilities.h"
+#include "OpenSteer/GlobalData.h"
+#include "EduNetCore/EduNetProfile.h"
 
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
@@ -246,6 +248,8 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 		return;
 	}
 
+	EduNet::IProfile* pkProfile = OpenSteer::GlobalData::accessProfile();
+	EduNet::IProfileNodePtr spNode = pkProfile->allocNode( "a" );
 	ET_PROFILE(updateNetworkPlugin);
 
 	if( !IsConnected()&& DoAutoConnect() )

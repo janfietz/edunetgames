@@ -1,5 +1,6 @@
-#ifndef __OPENSTEERUT_H__
-#define	__OPENSTEERUT_H__
+#ifndef __EDUNETPROFILE_H__
+#define __EDUNETPROFILE_H__
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,70 +29,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "EduNetCore/EduNetCore.h"
 
 //-----------------------------------------------------------------------------
-#include "glui/glui_internal_control.h"
-#include "EduNetCommon/TUpdatePeriod.h"
-#include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteer/GlobalSelection.h"
-#include "OpenSteer/GlobalData.h"
+namespace EduNet	{
 
-//-----------------------------------------------------------------------------
-typedef struct ViewPort_t
+class IProfileNode
 {
-	ViewPort_t( void ) :tx(0),ty(0),tw(0),th(0)
-	{
-	}
-	int tx, ty, tw, th;
-} ViewPort;
+public:
+	virtual ~IProfileNode(){}
+
+};
+
+typedef boost::shared_ptr<IProfileNode> IProfileNodePtr;
 
 //-----------------------------------------------------------------------------
-typedef struct OpenSteerUTData_t OpenSteerUTData;
-
-namespace EduNet
+class IProfile
 {
-	class IProfile;
+public:
+	virtual ~IProfile(){}
+	virtual IProfileNodePtr allocNode( const char* pszName ) = 0;
+};
+
 }
 
-namespace OpenSteer
-{
-	class LocalPlayerController;
-}
 
-//-----------------------------------------------------------------------------
-typedef struct OpenSteerUTData_t
-{
-	OpenSteerUTData_t( void ):
-		appGlui(NULL),
-		updatePhaseActive(false),
-		drawPhaseActive(false),
-		globalSelection(NULL),
-		globalData(NULL),
-		localPlayerController(NULL)
-	{
-	}
+#endif // __EDUNETPROFILE_H__
 
-	GLUI* appGlui;
-	ViewPort viewPort;
-	bool updatePhaseActive;
-	bool drawPhaseActive;
-
-	OpenSteer::GlobalSelection* globalSelection;
-	OpenSteer::GlobalData* globalData;
-	OpenSteer::LocalPlayerController* localPlayerController;
-
-	static OpenSteerUTData* g_openSteerUTDataPtr;
-
-	static OpenSteer::LocalPlayerController* accessLocalPlayerController( void )
-	{
-		return g_openSteerUTDataPtr->localPlayerController;
-	}
-
-	static void _SDMInitApp( EduNet::IProfile* pkProfile );
-	static void _SDMInitDLL( OpenSteerUTData* pkData );
-
-} OpenSteerUTData;
-
-
-
-#endif // __OPENSTEERUT_H__

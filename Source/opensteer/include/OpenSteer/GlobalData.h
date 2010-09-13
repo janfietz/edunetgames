@@ -29,7 +29,10 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-
+namespace EduNet
+{
+	class IProfile;
+}
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 	class AbstractPlayer;
@@ -40,22 +43,24 @@ namespace OpenSteer {
 		GlobalData();
 		virtual ~GlobalData();
 
-		static void _SDMInitApp( void );
+		static void _SDMInitApp( EduNet::IProfile* pkProfile );
 		static void _SDMInitDLL( GlobalData* pkGlobaleData );
 		static GlobalData* getInstance( void );
 
 		static AbstractPlayer* accessSimpleLocalPlayer( void );
+		static EduNet::IProfile* accessProfile( void );
+
 	private:
 		void initializeLocalPlayer( void );
 		
 		// note: global member variable pointers
 		AbstractPlayer* m_pkSimpleLocalPlayer;
 		AbstractController* m_pkSimpleController;
-
+		EduNet::IProfile* m_pkProfile;
 
 
 		static void setInstance( GlobalData* pkGlobaleData );
-
+		
 		static GlobalData* ms_pkGlobalDataInstance;
 		static GlobalData ms_kGlobalDataInstance;
 	};
