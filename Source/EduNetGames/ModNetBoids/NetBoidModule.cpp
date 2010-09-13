@@ -97,8 +97,7 @@ const char* NetBoidModuleEntry::getAbout( void ) const
 //-----------------------------------------------------------------------------
 void NetBoidModuleEntry::setOpenSteerUTData( OpenSteerUTData* data ) const
 {
-	OpenSteerUTData::g_openSteerUTDataPtr = data;
-	OpenSteer::GlobalSelection::_SDMInitDLL( OpenSteerUTData::g_openSteerUTDataPtr->globalSelection );
+	OpenSteerUTData::_SDMInitDLL( data );
 }
 
 //-----------------------------------------------------------------------------
