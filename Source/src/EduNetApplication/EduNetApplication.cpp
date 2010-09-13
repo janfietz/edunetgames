@@ -41,14 +41,13 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 namespace
 {
-	OpenSteer::GlobalSelection g_globalSelection;
-
 	bool InitializeGlobals( void )
 	{
-		OpenSteer::GlobalSelection::globalSelection = &g_globalSelection;
+		OpenSteer::GlobalSelection::_SDMInitApp( );
 		// note: set up data to pass to loaded modules
-		g_openSteerUTData.globalSelection = &g_globalSelection;
-		g_openSteerUTDataPtr = &g_openSteerUTData;
+		static OpenSteerUTData g_openSteerUTData;
+		OpenSteerUTData::g_openSteerUTDataPtr = &g_openSteerUTData;
+		OpenSteerUTData::g_openSteerUTDataPtr->globalSelection = OpenSteer::GlobalSelection::getInstance();
 		return true;
 	}
 
@@ -208,7 +207,7 @@ void Application::_SDMCleanup( void )
 
 	EduNet::shutdownDynamicPlugins();
 
-	if( NULL != g_openSteerUTData.appGlui )
+	if( NULL != OpenSteerUTData::g_openSteerUTDataPtr->appGlui )
 	{
 //		GLUI_Master.close_all();
 //		g_openSteerUTData.appGlui->close_internal();
@@ -286,7 +285,7 @@ int Application::Run(int argc, char **argv)
 //-----------------------------------------------------------------------------
 void Application::addGuiElements( GLUI* glui )
 {
-	g_openSteerUTData.appGlui = glui;
+	OpenSteerUTData::g_openSteerUTDataPtr->appGlui = glui;
 
 	glui->add_statictext("Plugins");
 	pluginList = glui->add_listbox( "", &pluginSelection );
@@ -381,7 +380,7 @@ void Application::addGuiElements( GLUI* glui )
 //-----------------------------------------------------------------------------
 void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 {
-	if( g_openSteerUTData.appGlui != NULL )
+	if( OpenSteerUTData::g_openSteerUTDataPtr->appGlui != NULL )
 	{
 		AbstractPlugin* pi = Plugin::getPluginAt( pluginSelection );
 		if( pkPlugin != pi )

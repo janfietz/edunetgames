@@ -29,8 +29,7 @@
 
 #include "OpenSteerUT.h"
 
-OpenSteerUTData g_openSteerUTData;
-OpenSteerUTData* g_openSteerUTDataPtr = NULL;
+OpenSteerUTData* OpenSteerUTData::g_openSteerUTDataPtr = NULL;
 //-----------------------------------------------------------------------------
 // graphical annotation: master on/off switch
 bool OpenSteer::enableAnnotation = true;
@@ -45,22 +44,22 @@ namespace OpenSteer
 //-----------------------------------------------------------------------------
 GLUI* getRootGLUI()
 {
-	assert( NULL != g_openSteerUTDataPtr );
-	return g_openSteerUTDataPtr->appGlui;
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
+	return OpenSteerUTData::g_openSteerUTDataPtr->appGlui;
 }
 
 //-----------------------------------------------------------------------------
 // TODO: find a good place to call this
-void updateDataAndPhases( void )
-{
-	// note: in case this is a dll the data ptr is different to the data
-	if( g_openSteerUTDataPtr != &g_openSteerUTData )
-	{
-		g_openSteerUTData = *g_openSteerUTDataPtr;
-		OpenSteer::updatePhaseActive = g_openSteerUTData.updatePhaseActive;
-		OpenSteer::drawPhaseActive = g_openSteerUTData.drawPhaseActive;
-	}
-}
+// void updateDataAndPhases( void )
+// {
+// 	// note: in case this is a dll the data ptr is different to the data
+// 	if( g_openSteerUTDataPtr != &g_openSteerUTData )
+// 	{
+// 		g_openSteerUTData = *g_openSteerUTDataPtr;
+// 		OpenSteer::updatePhaseActive = g_openSteerUTData.updatePhaseActive;
+// 		OpenSteer::drawPhaseActive = g_openSteerUTData.drawPhaseActive;
+// 	}
+// }
 
 //-----------------------------------------------------------------------------
 namespace
@@ -72,10 +71,10 @@ namespace
 float
 OpenSteer::drawGetWindowHeight ( void )
 {
-	assert( NULL != g_openSteerUTDataPtr );
-	if ( g_openSteerUTDataPtr->viewPort.th > 0 )
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
+	if ( OpenSteerUTData::g_openSteerUTDataPtr->viewPort.th > 0 )
 	{
-		return g_openSteerUTDataPtr->viewPort.th;
+		return OpenSteerUTData::g_openSteerUTDataPtr->viewPort.th;
 	}
 	return glutGet ( GLUT_WINDOW_HEIGHT );
 }
@@ -84,10 +83,10 @@ OpenSteer::drawGetWindowHeight ( void )
 float
 OpenSteer::drawGetWindowWidth ( void )
 {
-	assert( NULL != g_openSteerUTDataPtr );
-	if ( g_openSteerUTDataPtr->viewPort.tw > 0 )
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
+	if ( OpenSteerUTData::g_openSteerUTDataPtr->viewPort.tw > 0 )
 	{
-		return g_openSteerUTDataPtr->viewPort.tw;
+		return OpenSteerUTData::g_openSteerUTDataPtr->viewPort.tw;
 	}
 	return glutGet ( GLUT_WINDOW_WIDTH );
 }

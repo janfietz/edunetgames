@@ -45,6 +45,9 @@ typedef struct ViewPort_t
 } ViewPort;
 
 //-----------------------------------------------------------------------------
+typedef struct OpenSteerUTData_t OpenSteerUTData;
+
+//-----------------------------------------------------------------------------
 typedef struct OpenSteerUTData_t
 {
 	OpenSteerUTData_t( void ):
@@ -62,10 +65,10 @@ typedef struct OpenSteerUTData_t
 
 	OpenSteer::GlobalSelection* globalSelection;
 
+	static OpenSteerUTData* g_openSteerUTDataPtr;
+
 } OpenSteerUTData;
 
-extern OpenSteerUTData g_openSteerUTData;
-extern OpenSteerUTData* g_openSteerUTDataPtr;
 
 
 #endif // __OPENSTEERUT_H__
