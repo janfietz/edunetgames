@@ -345,8 +345,8 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp ( void )
 void
 OpenSteer::OpenSteerDemo::pushPhase ( const int newPhase )
 {
-    g_openSteerUTData.updatePhaseActive = updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
-    g_openSteerUTData.drawPhaseActive = drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
 
     // update timer for current (old) phase: add in time since last switch
     updatePhaseTimers ();
@@ -370,8 +370,8 @@ OpenSteer::OpenSteerDemo::popPhase ( void )
 
     // restore old phase
     phase = phaseStack[--phaseStackIndex];
-    g_openSteerUTData.updatePhaseActive = updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
-    g_openSteerUTData.drawPhaseActive = drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
 }
 
 //-----------------------------------------------------------------------------
@@ -444,7 +444,7 @@ initGL ( void )
 void
 reshapeFunc ( int width, int height )
 {
-	ViewPort& viewPort = g_openSteerUTData.viewPort;
+	ViewPort& viewPort = OpenSteerUTData::g_openSteerUTDataPtr->viewPort;
     GLUI_Master.get_viewport_area ( &viewPort.tx, &viewPort.ty, &viewPort.tw, &viewPort.th );
     glViewport ( viewPort.tx, viewPort.ty, viewPort.tw, viewPort.th );
 

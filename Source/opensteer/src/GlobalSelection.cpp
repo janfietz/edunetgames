@@ -32,6 +32,31 @@
 namespace OpenSteer {
 
 	GlobalSelection* GlobalSelection::globalSelection = NULL;
+	GlobalSelection GlobalSelection::globalSelectionObject;
+
+	//-----------------------------------------------------------------------------
+	void GlobalSelection::_SDMInitApp( void )
+	{
+		GlobalSelection::setInstance( &GlobalSelection::globalSelectionObject );
+	}
+
+	//-----------------------------------------------------------------------------
+	void GlobalSelection::_SDMInitDLL( GlobalSelection* selection )
+	{
+		GlobalSelection::setInstance( selection );
+	}
+
+	//-----------------------------------------------------------------------------
+	void GlobalSelection::setInstance( GlobalSelection* selection )
+	{
+		GlobalSelection::globalSelection = selection;
+	}
+
+	//-----------------------------------------------------------------------------
+	GlobalSelection* GlobalSelection::getInstance( void )
+	{
+		return GlobalSelection::globalSelection;
+	}
 
 	//-----------------------------------------------------------------------------
 	GlobalSelection::GlobalSelection( void ):
@@ -39,9 +64,16 @@ namespace OpenSteer {
 		nearestMouseVehicle(NULL),
 		cameraVehicleToTrack(NULL)
 	{
-
 	}
 
+	//-----------------------------------------------------------------------------
+	GlobalSelection::~GlobalSelection()
+	{
+		if( this == GlobalSelection::globalSelection )
+		{
+			GlobalSelection::globalSelection = NULL;
+		}
+	}
 
 	//-----------------------------------------------------------------------------
 	void GlobalSelection::setCameraVehicleToTrack( const AbstractVehicle* vehicle )
@@ -52,7 +84,12 @@ namespace OpenSteer {
 		}
 		else
 		{
-//			assert( NULL != GlobalSelection::globalSelection );
+			if( NULL != vehicle )
+			{
+				bool bTest = true;
+				bTest = false;
+				assert( NULL != GlobalSelection::globalSelection );
+			}
 		}
 	}
 
@@ -65,9 +102,12 @@ namespace OpenSteer {
 		}
 		else
 		{
-			bool bTest = true;
-			bTest = false;
-//			assert( NULL != GlobalSelection::globalSelection );
+			if( NULL != vehicle )
+			{
+				bool bTest = true;
+				bTest = false;
+				assert( NULL != GlobalSelection::globalSelection );
+			}
 		}
 	}
 
@@ -80,7 +120,12 @@ namespace OpenSteer {
 		}
 		else
 		{
-			assert( NULL != GlobalSelection::globalSelection );
+			if( NULL != vehicle )
+			{
+				bool bTest = true;
+				bTest = false;
+				assert( NULL != GlobalSelection::globalSelection );
+			}
 		}
 	}
 

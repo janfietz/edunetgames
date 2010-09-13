@@ -102,7 +102,7 @@ namespace {
 
 	bool InitializeGlobals( void )
 	{
-		OpenSteer::GlobalSelection::globalSelection = &g_globalSelection;
+		OpenSteer::GlobalSelection::setInstance( &g_globalSelection );
 		return true;
 	}
 

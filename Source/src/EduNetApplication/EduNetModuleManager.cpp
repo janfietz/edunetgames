@@ -205,7 +205,7 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 				{
 					// pass over important application data to this module
 					ModuleEntry* moduleEntry = pkNewmodule->accessEntry();
-					moduleEntry->setOpenSteerUTData( &g_openSteerUTData );
+					moduleEntry->setOpenSteerUTData( OpenSteerUTData::g_openSteerUTDataPtr );
 					this->m_modules.push_back ( spNewLib );
 				}
 			}
