@@ -47,12 +47,12 @@ namespace OpenSteer
 
 		virtual void setOutputForce( const Vec3& kOutput )
 		{
-			LocalPlayerController::ms_kOutput = kOutput;
+			this->m_kOutput = kOutput;
 		}
 
 		virtual const Vec3& getOutputForce( void ) const
 		{
-			return LocalPlayerController::ms_kOutput;
+			return this->m_kOutput;
 		}
 
 		virtual void updateCustom( AbstractUpdated* pkParent, const osScalar currentTime, const osScalar elapsedTime );
@@ -61,7 +61,7 @@ namespace OpenSteer
 		static bool keyboardFuncUp( unsigned char key, int x, int y );
 	private:
 		static LocalPlayerController& accessController( void );
-		static Vec3 ms_kOutput;
+		Vec3 m_kOutput;
 	};
 }
 

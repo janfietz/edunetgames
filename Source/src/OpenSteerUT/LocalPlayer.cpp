@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "LocalPlayer.h"
+#include "OpenSteerUT.h"
 
 using namespace OpenSteer;
 
@@ -44,11 +45,12 @@ pkControlledEntity = NULL;
 
 #endif
 
-Vec3 LocalPlayerController::ms_kOutput(Vec3::zero);
-
 //-----------------------------------------------------------------------------
-LocalPlayerController::LocalPlayerController()
+LocalPlayerController::LocalPlayerController():m_kOutput(Vec3::zero)
 {
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
+	assert( NULL == OpenSteerUTData::g_openSteerUTDataPtr->localPlayerController );
+	OpenSteerUTData::g_openSteerUTDataPtr->localPlayerController = this;
 	this->configure();
 }
 
@@ -67,8 +69,9 @@ AbstractController* LocalPlayerController::accessLocalPlayerController( void )
 //-----------------------------------------------------------------------------
 LocalPlayerController& LocalPlayerController::accessController( void )
 {
-	static LocalPlayerController kLocalPlayerController;
-	return kLocalPlayerController;
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
+	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr->localPlayerController );
+	return *OpenSteerUTData::g_openSteerUTDataPtr->accessLocalPlayerController();
 }
 
 //-----------------------------------------------------------------------------

@@ -48,6 +48,14 @@ namespace
 		static OpenSteerUTData g_openSteerUTData;
 		OpenSteerUTData::g_openSteerUTDataPtr = &g_openSteerUTData;
 		OpenSteerUTData::g_openSteerUTDataPtr->globalSelection = OpenSteer::GlobalSelection::getInstance();
+		
+		static OpenSteer::LocalPlayerController g_localPlayerController;
+		OpenSteer::AbstractController* localPlayerController = OpenSteer::LocalPlayerController::accessLocalPlayerController();
+		if( NULL != localPlayerController )
+		{
+			bool bTest = true;
+			bTest = false;
+		}
 		return true;
 	}
 
