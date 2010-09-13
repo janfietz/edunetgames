@@ -55,7 +55,7 @@
 #  endif
 #endif
 
-
+#include <boost/shared_ptr.hpp>
 typedef std::string enString_t;
 typedef std::vector<enString_t> enStringArray_t;
 

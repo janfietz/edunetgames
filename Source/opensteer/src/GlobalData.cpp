@@ -38,9 +38,10 @@ namespace OpenSteer {
 	GlobalData GlobalData::ms_kGlobalDataInstance;
 
 	//-----------------------------------------------------------------------------
-	void GlobalData::_SDMInitApp( void )
+	void GlobalData::_SDMInitApp( EduNet::IProfile* pkProfile )
 	{
 		GlobalData::ms_kGlobalDataInstance.initializeLocalPlayer();
+		GlobalData::ms_kGlobalDataInstance.m_pkProfile = pkProfile;
 		GlobalData::setInstance( &GlobalData::ms_kGlobalDataInstance );
 	}
 
@@ -67,6 +68,12 @@ namespace OpenSteer {
 	AbstractPlayer* GlobalData::accessSimpleLocalPlayer( void )
 	{
 		return GlobalData::getInstance()->m_pkSimpleLocalPlayer;
+	}
+
+	//-----------------------------------------------------------------------------
+	EduNet::IProfile* GlobalData::accessProfile( void )
+	{
+		return GlobalData::getInstance()->m_pkProfile;
 	}
 
 	//-----------------------------------------------------------------------------
