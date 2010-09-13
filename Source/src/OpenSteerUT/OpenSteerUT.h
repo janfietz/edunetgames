@@ -47,6 +47,12 @@ typedef struct ViewPort_t
 //-----------------------------------------------------------------------------
 typedef struct OpenSteerUTData_t OpenSteerUTData;
 
+
+namespace OpenSteer
+{
+	class LocalPlayerController;
+}
+
 //-----------------------------------------------------------------------------
 typedef struct OpenSteerUTData_t
 {
@@ -54,7 +60,8 @@ typedef struct OpenSteerUTData_t
 		appGlui(NULL),
 		updatePhaseActive(false),
 		drawPhaseActive(false),
-		globalSelection(NULL)
+		globalSelection(NULL),
+		localPlayerController(NULL)
 	{
 	}
 
@@ -64,8 +71,14 @@ typedef struct OpenSteerUTData_t
 	bool drawPhaseActive;
 
 	OpenSteer::GlobalSelection* globalSelection;
+	OpenSteer::LocalPlayerController* localPlayerController;
 
 	static OpenSteerUTData* g_openSteerUTDataPtr;
+
+	static OpenSteer::LocalPlayerController* accessLocalPlayerController( void )
+	{
+		return g_openSteerUTDataPtr->localPlayerController;
+	}
 
 } OpenSteerUTData;
 
