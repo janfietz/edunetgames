@@ -1,5 +1,6 @@
-#ifndef __OPENSTEERUT_H__
-#define	__OPENSTEERUT_H__
+#ifndef OPENSTEER_GLOBALDATA_H
+#define OPENSTEER_GLOBALDATA_H
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -30,64 +31,37 @@
 
 
 //-----------------------------------------------------------------------------
-#include "glui/glui_internal_control.h"
-#include "EduNetCommon/TUpdatePeriod.h"
-#include "EduNetCommon/EduNetCommon.h"
-#include "OpenSteer/GlobalSelection.h"
-#include "OpenSteer/GlobalData.h"
+namespace OpenSteer {
+	class AbstractPlayer;
+	class AbstractController;
+	class GlobalData
+	{
+	public:
+		GlobalData();
+		virtual ~GlobalData();
+
+		static void _SDMInitApp( void );
+		static void _SDMInitDLL( GlobalData* pkGlobaleData );
+		static GlobalData* getInstance( void );
+
+		static AbstractPlayer* accessSimpleLocalPlayer( void );
+	private:
+		void initializeLocalPlayer( void );
+		
+		// note: global member variable pointers
+		AbstractPlayer* m_pkSimpleLocalPlayer;
+		AbstractController* m_pkSimpleController;
+
+
+
+		static void setInstance( GlobalData* pkGlobaleData );
+
+		static GlobalData* ms_pkGlobalDataInstance;
+		static GlobalData ms_kGlobalDataInstance;
+	};
+
+} //! namespace OpenSteer    
+
 
 //-----------------------------------------------------------------------------
-typedef struct ViewPort_t
-{
-	ViewPort_t( void ) :tx(0),ty(0),tw(0),th(0)
-	{
-	}
-	int tx, ty, tw, th;
-} ViewPort;
-
-//-----------------------------------------------------------------------------
-typedef struct OpenSteerUTData_t OpenSteerUTData;
-
-
-namespace OpenSteer
-{
-	class LocalPlayerController;
-}
-
-//-----------------------------------------------------------------------------
-typedef struct OpenSteerUTData_t
-{
-	OpenSteerUTData_t( void ):
-		appGlui(NULL),
-		updatePhaseActive(false),
-		drawPhaseActive(false),
-		globalSelection(NULL),
-		globalData(NULL),
-		localPlayerController(NULL)
-	{
-	}
-
-	GLUI* appGlui;
-	ViewPort viewPort;
-	bool updatePhaseActive;
-	bool drawPhaseActive;
-
-	OpenSteer::GlobalSelection* globalSelection;
-	OpenSteer::GlobalData* globalData;
-	OpenSteer::LocalPlayerController* localPlayerController;
-
-	static OpenSteerUTData* g_openSteerUTDataPtr;
-
-	static OpenSteer::LocalPlayerController* accessLocalPlayerController( void )
-	{
-		return g_openSteerUTDataPtr->localPlayerController;
-	}
-
-	static void _SDMInitApp( void );
-	static void _SDMInitDLL( OpenSteerUTData* pkData );
-
-} OpenSteerUTData;
-
-
-
-#endif // __OPENSTEERUT_H__
+#endif //! OPENSTEER_GLOBALDATA_H

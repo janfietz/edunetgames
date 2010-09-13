@@ -44,7 +44,6 @@ namespace OpenSteer {
 		static void _SDMInitApp( void );
 		static void _SDMInitDLL( GlobalSelection* selection );
 		static GlobalSelection* getInstance( void );
-		static void setInstance( GlobalSelection* selection );
 
 		static void setCameraVehicleToTrack( const AbstractVehicle* vehicle );
 		static void setSelectedVehicle( AbstractVehicle* vehicle );
@@ -54,10 +53,13 @@ namespace OpenSteer {
 		static AbstractVehicle* getSelectedVehicle( void );
 		static AbstractVehicle* getNearestMouseVehicle( void );
 
+	private:
+		static void setInstance( GlobalSelection* selection );
+
 		AbstractVehicle* selectedVehicle;
 		AbstractVehicle* nearestMouseVehicle;
 		const AbstractVehicle* cameraVehicleToTrack;
-	private:
+
 		static GlobalSelection* globalSelection;
 		static GlobalSelection globalSelectionObject;
 	};

@@ -83,8 +83,7 @@ const char* ModLectureModuleFactory::getAbout( void ) const
 //-----------------------------------------------------------------------------
 void ModLectureModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
 {
-	OpenSteerUTData::g_openSteerUTDataPtr = data;
-	OpenSteer::GlobalSelection::_SDMInitDLL( OpenSteerUTData::g_openSteerUTDataPtr->globalSelection );
+	OpenSteerUTData::_SDMInitDLL( data );
 }
 
 //-----------------------------------------------------------------------------

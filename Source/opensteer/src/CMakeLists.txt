@@ -4,6 +4,7 @@ INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 )
 
 SET(OPENTSTEER_LIB_SRC
+ GlobalData.cpp
  GlobalSelection.cpp
  Obstacle.cpp
  OldPathway.cpp
@@ -36,6 +37,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Clock.h
  ../include/OpenSteer/Color.h
  ../include/OpenSteer/Draw.h
+ ../include/OpenSteer/GlobalData.h
  ../include/OpenSteer/GlobalSelection.h
  ../include/OpenSteer/LocalSpace.h
  ../include/OpenSteer/lq.h

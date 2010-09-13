@@ -28,6 +28,7 @@
 
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteer/Utilities.h"
+#include "OpenSteer/GlobalData.h"
 #include <sstream>
 
 using namespace OpenSteer;
@@ -205,13 +206,7 @@ SimplePlayer::~SimplePlayer()
 //-----------------------------------------------------------------------------
 AbstractPlayer* SimplePlayer::accessLocalPlayer( void )
 {
-	static SimplePlayer kPlayer(true);
-	if( NULL == kPlayer.getController() )
-	{
-		static SimpleController kController;
-		kPlayer.setController( &kController );
-	}
-	return &kPlayer;
+	return GlobalData::accessSimpleLocalPlayer();
 }
 
 //-----------------------------------------------------------------------------

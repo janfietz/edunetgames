@@ -91,8 +91,7 @@ const char* NetSoccerModuleFactory::getAbout( void ) const
 //-----------------------------------------------------------------------------
 void NetSoccerModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
 {
-	OpenSteerUTData::g_openSteerUTDataPtr = data;
-	OpenSteer::GlobalSelection::_SDMInitDLL( OpenSteerUTData::g_openSteerUTDataPtr->globalSelection );
+	OpenSteerUTData::_SDMInitDLL( data );
 }
 
 //-----------------------------------------------------------------------------

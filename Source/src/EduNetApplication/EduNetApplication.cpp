@@ -33,6 +33,7 @@
 #include "EduNetCommon/EduNetOptions.h"
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/GlobalData.h"
 
 
 using namespace EduNet;
@@ -43,19 +44,7 @@ namespace
 {
 	bool InitializeGlobals( void )
 	{
-		OpenSteer::GlobalSelection::_SDMInitApp( );
-		// note: set up data to pass to loaded modules
-		static OpenSteerUTData g_openSteerUTData;
-		OpenSteerUTData::g_openSteerUTDataPtr = &g_openSteerUTData;
-		OpenSteerUTData::g_openSteerUTDataPtr->globalSelection = OpenSteer::GlobalSelection::getInstance();
-		
-		static OpenSteer::LocalPlayerController g_localPlayerController;
-		OpenSteer::AbstractController* localPlayerController = OpenSteer::LocalPlayerController::accessLocalPlayerController();
-		if( NULL != localPlayerController )
-		{
-			bool bTest = true;
-			bTest = false;
-		}
+		OpenSteerUTData::_SDMInitApp();
 		return true;
 	}
 

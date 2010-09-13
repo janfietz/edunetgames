@@ -29,7 +29,40 @@
 
 #include "OpenSteerUT.h"
 
+#include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/GlobalData.h"
+
 OpenSteerUTData* OpenSteerUTData::g_openSteerUTDataPtr = NULL;
+
+//-----------------------------------------------------------------------------
+void OpenSteerUTData::_SDMInitApp( void )
+{
+	OpenSteer::GlobalSelection::_SDMInitApp( );
+	OpenSteer::GlobalData::_SDMInitApp( );
+	// note: set up data to pass to loaded modules
+	static OpenSteerUTData g_openSteerUTData;
+	OpenSteerUTData::g_openSteerUTDataPtr = &g_openSteerUTData;
+	OpenSteerUTData::g_openSteerUTDataPtr->globalSelection = OpenSteer::GlobalSelection::getInstance();
+	OpenSteerUTData::g_openSteerUTDataPtr->globalData = OpenSteer::GlobalData::getInstance();
+
+	static OpenSteer::LocalPlayerController g_localPlayerController;
+	OpenSteer::AbstractController* localPlayerController = OpenSteer::LocalPlayerController::accessLocalPlayerController();
+	if( NULL != localPlayerController )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+void OpenSteerUTData::_SDMInitDLL( OpenSteerUTData* pkData )
+{
+	OpenSteerUTData::g_openSteerUTDataPtr = pkData;
+	OpenSteer::GlobalSelection::_SDMInitDLL( OpenSteerUTData::g_openSteerUTDataPtr->globalSelection );
+	OpenSteer::GlobalData::_SDMInitDLL( OpenSteerUTData::g_openSteerUTDataPtr->globalData );
+}
+
 //-----------------------------------------------------------------------------
 // graphical annotation: master on/off switch
 bool OpenSteer::enableAnnotation = true;

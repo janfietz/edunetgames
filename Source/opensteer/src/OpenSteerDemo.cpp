@@ -47,6 +47,7 @@
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/GlobalData.h"
 
 #include <algorithm>
 #include <sstream>
@@ -102,7 +103,8 @@ namespace {
 
 	bool InitializeGlobals( void )
 	{
-		OpenSteer::GlobalSelection::setInstance( &g_globalSelection );
+		OpenSteer::GlobalSelection::_SDMInitApp( );
+		OpenSteer::GlobalData::_SDMInitApp( );
 		return true;
 	}
 
