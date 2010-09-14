@@ -67,7 +67,7 @@ using namespace OpenSteer;
 namespace
 {
 #ifdef ET_DEBUG
-size_t uiInitialFlockSize = 10;
+size_t uiInitialFlockSize = 1;
 #else
 size_t uiInitialFlockSize = 50;
 #endif
