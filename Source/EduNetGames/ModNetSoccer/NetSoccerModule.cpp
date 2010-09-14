@@ -74,6 +74,13 @@ OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
 }
 
 //-----------------------------------------------------------------------------
+void OpenSteer::handleGlobalDataInstanceFailure( void )
+{
+	// in case this happens the whole thing will simply not work
+	assert( true == GlobalData::hasInstance() );
+}
+
+//-----------------------------------------------------------------------------
 namespace EduNet	{
 
 //-----------------------------------------------------------------------------

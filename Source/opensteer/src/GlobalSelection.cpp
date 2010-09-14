@@ -32,12 +32,15 @@
 namespace OpenSteer {
 
 	GlobalSelection* GlobalSelection::globalSelection = NULL;
-	GlobalSelection GlobalSelection::globalSelectionObject;
 
 	//-----------------------------------------------------------------------------
 	void GlobalSelection::_SDMInitApp( void )
 	{
-		GlobalSelection::setInstance( &GlobalSelection::globalSelectionObject );
+		if( NULL == GlobalSelection::globalSelection )
+		{
+			static GlobalSelection kGlobalSelection;
+			GlobalSelection::setInstance( &kGlobalSelection );
+		}
 	}
 
 	//-----------------------------------------------------------------------------

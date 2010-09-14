@@ -32,39 +32,49 @@
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteer/PluginRegistry.h"
 #include "OpenSteer/Camera.h"
+#include "OpenSteer/GlobalSelection.h"
 
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
+	static bool g_bIsDll = false;
+	static GlobalData* g_pkGlobalData = NULL;
 	GlobalData* GlobalData::ms_pkGlobalDataInstance = NULL;
-	GlobalData GlobalData::ms_kGlobalDataInstance;
 
-	bool g_bIsDll = false;
+	class GlobalDataConstructor
+	{
+	public:
+		GlobalDataConstructor()
+		{
+			g_pkGlobalData = new GlobalData();
+		};
+		virtual ~GlobalDataConstructor()
+		{
+			delete g_pkGlobalData;
+		};
+
+	};
 
 	//-----------------------------------------------------------------------------
 	void GlobalData::_SDMInitApp( EduNet::IProfile* pkProfile )
 	{
-// ok this is a memory leak I'll take care of later
-#if 1
-		GlobalData* pkGlobalData = new GlobalData();
-		pkGlobalData->initializeGlobalData();
-		pkGlobalData->m_pkProfile = pkProfile;
-		GlobalData::setInstance( pkGlobalData );
-#endif
-#if 0
-		// why is this not working correctly?
-		GlobalData::ms_kGlobalDataInstance.initializeGlobalData();
-		GlobalData::ms_kGlobalDataInstance.m_pkProfile = pkProfile;
-		GlobalData::setInstance( &GlobalData::ms_kGlobalDataInstance );
-#endif	
+		if( false == GlobalData::hasInstance() )
+		{
+			OpenSteer::GlobalSelection::_SDMInitApp( );
+
+			static GlobalDataConstructor kConstructor;
+			GlobalData* pkGlobalData = g_pkGlobalData;
+			pkGlobalData->initializeGlobalData();
+			pkGlobalData->m_pkProfile = pkProfile;
+			GlobalData::setInstance( pkGlobalData );
+		}
 	}
 
 	//-----------------------------------------------------------------------------
 	void GlobalData::_SDMInitDLL( GlobalData* pkGlobalData )
 	{
 		g_bIsDll = true;
-		GlobalData::ms_kGlobalDataInstance.m_bIsDll = true;
 		GlobalData::setInstance( pkGlobalData );
 	}
 
@@ -77,15 +87,15 @@ namespace OpenSteer {
 	//-----------------------------------------------------------------------------
 	GlobalData* GlobalData::getInstance( void )
 	{
-		if( ( NULL == GlobalData::ms_pkGlobalDataInstance ) && ( false == g_bIsDll ) )
-		{
-			// caution this function should never get called for a dll
-			// in case some data will not be accessable
-			// bad hack here !!!
-			GlobalData::_SDMInitApp( NULL );
-		}
+		handleGlobalDataInstanceFailure();
 		assert( NULL != GlobalData::ms_pkGlobalDataInstance );
 		return GlobalData::ms_pkGlobalDataInstance;
+	}
+
+	//-----------------------------------------------------------------------------
+	bool GlobalData::hasInstance( void)
+	{
+		return ( NULL != GlobalData::ms_pkGlobalDataInstance );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -103,9 +113,10 @@ namespace OpenSteer {
 	//-----------------------------------------------------------------------------
 	Camera* GlobalData::accessCamera( void )
 	{
-		//! on static camera instance that automatically tracks selected vehicle
-		GlobalData* pkLocalGlobalData = &GlobalData::ms_kGlobalDataInstance;
+		// pointer to debug validity
 		GlobalData* pkGlobalData = GlobalData::getInstance();
+
+		// one static camera instance that automatically tracks selected vehicle
 		return GlobalData::getInstance()->m_pkCamera;
 	}
 

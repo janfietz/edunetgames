@@ -99,16 +99,6 @@ const int OpenSteer::OpenSteerDemo::drawPhase = 2;
 // initialize OpenSteerDemo application
 
 namespace {
-	OpenSteer::GlobalSelection g_globalSelection;
-
-	bool InitializeGlobals( void )
-	{
-		OpenSteer::GlobalSelection::_SDMInitApp( );
-		OpenSteer::GlobalData::_SDMInitApp( NULL );
-		return true;
-	}
-
-	bool bGlobalsInitialized = InitializeGlobals();
 
     void printPlugIn (OpenSteer::AbstractPlugin& pi) {std::cout << " " << pi << std::endl;} // XXX
 

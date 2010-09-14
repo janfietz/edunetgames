@@ -83,6 +83,7 @@ private:
 };
 	
 
+// TODO: move to own lib
 //-----------------------------------------------------------------------------
 class EduNetProfile : public IProfile
 {
@@ -90,11 +91,39 @@ public:
 	virtual ~EduNetProfile(){}
 	IProfileNodePtr allocNode( const char* pszName )
 	{
+		// TODO: change to a node based profiler
 		enString_t kName(pszName);
-		if (kName == "a")
+		if (kName == "EulerVehicleUpdate")
 		{
-			EN_PROFILESCOPE(a);			
-			
+			EN_PROFILESCOPE(EulerVehicleUpdate);						
+		}
+		else if (kName == "determineCombinedSteeringForce")
+		{
+			EN_PROFILESCOPE(determineCombinedSteeringForce);						
+		}
+		else if (kName == "SteeringForceVehicleUpdate")
+		{
+			EN_PROFILESCOPE(SteeringForceVehicleUpdate);						
+		}
+		else if (kName == "updatePhysicsVehicle")
+		{
+			EN_PROFILESCOPE(updatePhysicsVehicle);						
+		}
+		else if (kName == "updateNetworkPlugin")
+		{
+			EN_PROFILESCOPE(updateNetworkPlugin);						
+		}
+		else if (kName == "ReceivePackets")
+		{
+			EN_PROFILESCOPE(ReceivePackets);						
+		}
+		else if (kName == "serializeNetworkVehicle")
+		{
+			EN_PROFILESCOPE(serializeNetworkVehicle);						
+		}
+		else if (kName == "deserializeNetworkVehicle")
+		{
+			EN_PROFILESCOPE(deserializeNetworkVehicle);						
 		}
 		IProfileNodePtr spNode ( (IProfileNode*)NULL );
 		return spNode;
@@ -103,17 +132,18 @@ public:
 
 bool g_bRunCalled = false;
 
+bool InitializeGlobals( void )
+{
+	static EduNetProfile kProfile;
+	OpenSteerUTData::_SDMInitApp(&kProfile);
+	return true;
+}
+
+bool bGlobalsInitialized = InitializeGlobals();
+
 //-----------------------------------------------------------------------------
 namespace
 {
-	bool InitializeGlobals( void )
-	{
-		static EduNetProfile kProfile;
-		OpenSteerUTData::_SDMInitApp(&kProfile);
-		return true;
-	}
-
-	bool bGlobalsInitialized = InitializeGlobals();
 
 	int profReportMode = 0;
 
@@ -128,6 +158,17 @@ namespace
 	GLUI_StaticText* cpuFPS = NULL;
 
 	float fSimulationFPS = 50.0f;
+}
+
+//-----------------------------------------------------------------------------
+void OpenSteer::handleGlobalDataInstanceFailure( void )
+{
+	if( ( false == GlobalData::hasInstance() ) )
+	{
+		// caution this function should never get called
+		// it actually means that you are working with global data
+		bGlobalsInitialized = InitializeGlobals();
+	}
 }
 
 //-----------------------------------------------------------------------------

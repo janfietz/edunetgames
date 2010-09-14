@@ -61,7 +61,6 @@ namespace OpenSteer {
 		const AbstractVehicle* cameraVehicleToTrack;
 
 		static GlobalSelection* globalSelection;
-		static GlobalSelection globalSelectionObject;
 	};
 
 } //! namespace OpenSteer    

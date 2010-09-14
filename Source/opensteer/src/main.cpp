@@ -38,14 +38,39 @@
 
 #include "OpenSteer/OpenSteerDemo.h"        // OpenSteerDemo application
 #include "OpenSteer/Draw.h"                 // OpenSteerDemo graphics
+#include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/GlobalData.h"
+
 
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
+namespace {
+	bool InitializeGlobals( void )
+	{
+		OpenSteer::GlobalData::_SDMInitApp( NULL );
+		return true;
+	}
 
+	bool bGlobalsInitialized = InitializeGlobals();
+
+} // anonymous namespace
+
+//-----------------------------------------------------------------------------
+void OpenSteer::handleGlobalDataInstanceFailure( void )
+{
+	if( ( false == GlobalData::hasInstance() ) )
+	{
+		// the open steer sample is heavily working
+		// with global data so initialization
+		// is very random
+		GlobalData::_SDMInitApp( NULL );
+	}
+}
+
+//-----------------------------------------------------------------------------
 int main (int argc, char **argv) 
 {
-//	testStateMachine();
     // initialize OpenSteerDemo application
     OpenSteer::OpenSteerDemo::initialize ();
 

@@ -49,7 +49,7 @@ namespace OpenSteer {
 		static void _SDMInitApp( EduNet::IProfile* pkProfile );
 		static void _SDMInitDLL( GlobalData* pkGlobalData );
 		static GlobalData* getInstance( void );
-
+		static bool hasInstance( void);
 		static AbstractPlayer* accessSimpleLocalPlayer( void );
 		static Camera* accessCamera( void );
 		
@@ -82,8 +82,9 @@ namespace OpenSteer {
 		static void setInstance( GlobalData* pkGlobalData );
 		
 		static GlobalData* ms_pkGlobalDataInstance;
-		static GlobalData ms_kGlobalDataInstance;
 	};
+
+	extern void handleGlobalDataInstanceFailure( void );
 
 } //! namespace OpenSteer    
 

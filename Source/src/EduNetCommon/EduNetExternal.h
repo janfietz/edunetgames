@@ -33,15 +33,6 @@
 #include "EduNetCore/EduNetConfig.h"
 
 //-----------------------------------------------------------------------------
-// profiling
-#if EDUNET_HAVE_PROFILE
-  #include "iprof/prof.h"
-#define ET_PROFILE(x) Prof(x)
-#else
-#define ET_PROFILE(x)
-#endif
-
-//-----------------------------------------------------------------------------
 // opensteer
 #if EDUNET_HAVE_OPENSTEER
 
@@ -59,6 +50,35 @@
 #include "OpenSteer/Proximity.h"
 #include "OpenSteer/PolylineSegmentedPathwaySingleRadius.h"
 #include "OpenSteer/SimplePlayer.h"
+
+
+
+//-----------------------------------------------------------------------------
+// profiling
+#if EDUNET_HAVE_PROFILE
+#include "iprof/prof.h"
+//#define ET_PROFILE(x) Prof(x)
+#else
+//#define ET_PROFILE(x)
+#endif
+
+
+#if EDUNET_HAVE_PROFILE
+
+#include "EduNetCore/EduNetProfile.h"
+#include "OpenSteer/GlobalData.h"
+
+#define ET_PROFILE(__name) \
+	EduNet::IProfileNodePtr spNode##__name ( (EduNet::IProfileNode*)NULL );\
+	{EduNet::IProfile* pkProfile = OpenSteer::GlobalData::accessProfile();\
+	if( NULL != pkProfile )\
+	{\
+		spNode##__name = pkProfile->allocNode( #__name );\
+	}}
+
+#else
+#define ET_PROFILE(__name)
+#endif
 
 
 
