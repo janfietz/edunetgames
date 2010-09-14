@@ -855,9 +855,9 @@ namespace {
 
             // initialize camera
             CameraPlugin::init2dCamera (*ctfSeeker);
-            Camera::camera.mode = Camera::cmFixedDistanceOffset;
-            Camera::camera.fixedTarget.set (15, 0, 0);
-            Camera::camera.fixedPosition.set (80, 60, 0);
+            Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+            Camera::accessInstance().fixedTarget.set (15, 0, 0);
+            Camera::accessInstance().fixedPosition.set (80, 60, 0);
 
             CtfBase::initializeObstacles ();
         }
@@ -892,9 +892,9 @@ namespace {
 			if( NULL != SimpleVehicle::getSelectedVehicle() )
 			{
 				// draw "ground plane" centered between base and selected vehicle
-				const Vec3 goalOffset = gHomeBaseCenter-Camera::camera.position();
+				const Vec3 goalOffset = gHomeBaseCenter-Camera::accessInstance().position();
 				const Vec3 goalDirection = goalOffset.normalized ();
-				const Vec3 cameraForward = Camera::camera.xxxls().forward();
+				const Vec3 cameraForward = Camera::accessInstance().xxxls().forward();
 				const float goalDot = cameraForward.dot (goalDirection);
 				const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
 				const Vec3 gridCenter = interpolate (blend,
@@ -953,7 +953,7 @@ namespace {
             CameraPlugin::position2dCamera (*ctfSeeker);
 
             // make camera jump immediately to new position
-            Camera::camera.doNotSmoothNextMove ();
+            Camera::accessInstance().doNotSmoothNextMove ();
         }
 
         void handleFunctionKeys (int keyNumber)

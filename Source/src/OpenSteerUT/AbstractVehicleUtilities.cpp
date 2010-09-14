@@ -87,7 +87,7 @@ VehicleUtilities::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
 {
 	if (&v)
 	{
-		const Vec3& cPosition = OpenSteer::Camera::camera.position();
+		const Vec3& cPosition = OpenSteer::Camera::accessInstance().position();
 		OpenSteer::draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
 			v.position(),                   // center
 			v.position() - cPosition,       // view axis
@@ -173,7 +173,7 @@ VehicleUtilities::findVehicleNearestScreenPosition( int x, int y )
 	{
 		// distance from this vehicle's center to the selection line:
 		const float d = distanceFromLine ((**i).position(),
-			OpenSteer::Camera::camera.position(),
+			OpenSteer::Camera::accessInstance().position(),
 			direction);
 
 		// if this vehicle-to-line distance is the smallest so far,

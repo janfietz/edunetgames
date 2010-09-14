@@ -110,11 +110,6 @@ namespace OpenSteer {
 			this->m_bWillSendData = true;
 		}
 
-		// int to enable gui customization
-		static int ms_bReplicationDataConfig[ESerializeDataType_Count];
-		static size_t ms_uiReplicationDataBytes[ESerializeDataType_Count];
-		static int ms_bShowClientNetworkTrail;
-		static int ms_bShowServerNetworkTrail;
 	private:
 		// the core object responsible to create smoth moves
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;

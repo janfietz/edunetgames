@@ -169,7 +169,6 @@ using namespace OpenSteer;
 		//---------------------------------------------------------------------
 		virtual void update( const osScalar /*currentTime*/, const osScalar elapsedTime );
 
-		static osScalar ms_SteeringForceFPS;
 	private:
 		Vec3 m_kForce;
 		CompressedVector m_cForce;

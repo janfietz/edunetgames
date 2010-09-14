@@ -96,7 +96,7 @@ namespace OpenSteer {
         SimpleVehicle();
 
         //! destructor
-        ~SimpleVehicle();
+        virtual ~SimpleVehicle();
 
 		OS_IMPLEMENT_CLASSNAME( SimpleVehicle )
 
@@ -298,8 +298,6 @@ namespace OpenSteer {
 		static AbstractVehicle* getNearestMouseVehicle( void );
 		static void setSelectedVehicle( AbstractVehicle* vehicle );
 		static void setNearestMouseVehicle( AbstractVehicle* vehicle );
-
-		static int ms_collect3DAnnotations;
 
 		// TODO: make private !
 		//! a pointer to this vehicles's interface object for the proximity database

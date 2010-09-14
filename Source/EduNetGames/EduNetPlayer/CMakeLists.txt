@@ -9,7 +9,7 @@ file (GLOB Tutorial_Hdrs "${EduNetPlayer_SOURCE_DIR}/*.h")
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(
-${EduNet_DEFAULT_LIBRARIES}
+${EduNet_PLAYER_LIBRARIES}
 )
 
 add_executable(${PROJECT_NAME}  ${Tutorial_Hdrs} ${Tutorial_Src})

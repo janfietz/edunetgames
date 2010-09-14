@@ -61,11 +61,11 @@ void EmptyPlugin::open (void)
 
 	// initialize camera
 	CameraPlugin::init2dCamera( *SimpleVehicle::getSelectedVehicle() );
-	Camera::camera.setPosition (
+	Camera::accessInstance().setPosition (
 		10,
 		CameraPlugin::camera2dElevation,
 		10);
-	Camera::camera.fixedPosition.set( 40, 40, 40 );
+	Camera::accessInstance().fixedPosition.set( 40, 40, 40 );
 }
 
 //-----------------------------------------------------------------------------

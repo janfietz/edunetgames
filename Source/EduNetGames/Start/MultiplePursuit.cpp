@@ -189,9 +189,9 @@ namespace {
 
             // initialize camera
             SimpleVehicle::setSelectedVehicle( wanderer );
-            Camera::camera.mode = Camera::cmStraightDown;
-            Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
-            Camera::camera.fixedDistVOffset = CameraPlugin::camera2dElevation;
+            Camera::accessInstance().mode = Camera::cmStraightDown;
+            Camera::accessInstance().fixedDistDistance = CameraPlugin::cameraTargetDistance;
+            Camera::accessInstance().fixedDistVOffset = CameraPlugin::camera2dElevation;
         }
 
         void update (const float currentTime, const float elapsedTime)
@@ -251,8 +251,8 @@ namespace {
             for (iterator i = pBegin; i != pEnd; i++) ((MpPursuer&)(**i)).reset ();
 
             // immediately jump to default camera position
-            Camera::camera.doNotSmoothNextMove ();
-            Camera::camera.resetLocalSpace ();
+            Camera::accessInstance().doNotSmoothNextMove ();
+            Camera::accessInstance().resetLocalSpace ();
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) allMP;}

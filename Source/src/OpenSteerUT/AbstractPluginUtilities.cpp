@@ -28,6 +28,7 @@
 
 #include "OpenSteerUT/AbstractPluginUtilities.h"
 #include "EduNetCommon/EduNetDraw.h"
+#include "OpenSteer/GlobalData.h"
 
 #define ET_CTRL_ID_VISIBLE 1
 #define ET_CTRL_ID_ENABLED 2
@@ -35,8 +36,6 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer
 {
-
-	int AbstractPluginGui::ms_bDebugNetStats = 1;
 
 	//-------------------------------------------------------------------------
 	void AbstractPluginGui::changePluginBoolValue( GLUI_Control* pkControl )
@@ -96,7 +95,7 @@ namespace OpenSteer
 		}
 
 		pkControl = 
-			glui->add_checkbox_to_panel( subPanel, "Network Statistics", &AbstractPluginGui::ms_bDebugNetStats );
+			glui->add_checkbox_to_panel( subPanel, "Network Statistics", &OpenSteer::GlobalData::getInstance()->m_bDebugNetStats );
 
 	}
 

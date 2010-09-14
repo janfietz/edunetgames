@@ -60,13 +60,13 @@ namespace	{
 	{
 		// camera setup
 		CameraPlugin::init2dCamera( kVehicle );
-		// Camera::camera.mode = Camera::cmFixedDistanceOffset;
-		Camera::camera.mode = Camera::cmStraightDown;
-		Camera::camera.fixedTarget.set( 15, 0, 0 );
-		Camera::camera.fixedPosition.set( 20, 20, 20 );
-		Camera::camera.lookdownDistance = 15;
+		// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+		Camera::accessInstance().mode = Camera::cmStraightDown;
+		Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
+		Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
+		Camera::accessInstance().lookdownDistance = 15;
 		// make camera jump immediately to new position
-		Camera::camera.doNotSmoothNextMove ();
+		Camera::accessInstance().doNotSmoothNextMove ();
 	}
 }
 
@@ -316,9 +316,9 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
 		// draw "ground plane" centered between base and selected vehicle
-		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::camera.position();
+		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::accessInstance().position();
 		const Vec3 goalDirection = goalOffset.normalized ();
-		const Vec3 cameraForward = Camera::camera.xxxls().forward();
+		const Vec3 cameraForward = Camera::accessInstance().xxxls().forward();
 		const float goalDot = cameraForward.dot (goalDirection);
 		const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
 		const Vec3 gridCenter = interpolate (blend,
@@ -448,7 +448,7 @@ void NetCtfPlugin::reset (void)
 		// reset camera position
 		CameraPlugin::position2dCamera( *this->m_pkSeeker );
 		// make camera jump immediately to new position
-		Camera::camera.doNotSmoothNextMove ();
+		Camera::accessInstance().doNotSmoothNextMove ();
 	}
 }
 

@@ -163,14 +163,14 @@ namespace {
             SimpleVehicle::setSelectedVehicle( *all.begin() );
 
             // initialize camera
-            Camera::camera.mode = Camera::cmFixed;
-            Camera::camera.fixedUp = lstPlusZ;
-            Camera::camera.fixedTarget = lstViewCenter;
-            Camera::camera.fixedPosition = lstViewCenter;
-            Camera::camera.fixedPosition.y += lstLookDownDistance;
-            Camera::camera.lookdownDistance = lstLookDownDistance;
-            Camera::camera.fixedDistVOffset = CameraPlugin::camera2dElevation;
-            Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
+            Camera::accessInstance().mode = Camera::cmFixed;
+            Camera::accessInstance().fixedUp = lstPlusZ;
+            Camera::accessInstance().fixedTarget = lstViewCenter;
+            Camera::accessInstance().fixedPosition = lstViewCenter;
+            Camera::accessInstance().fixedPosition.y += lstLookDownDistance;
+            Camera::accessInstance().lookdownDistance = lstLookDownDistance;
+            Camera::accessInstance().fixedDistVOffset = CameraPlugin::camera2dElevation;
+            Camera::accessInstance().fixedDistDistance = CameraPlugin::cameraTargetDistance;
         }
 
         void update (const float currentTime, const float elapsedTime)

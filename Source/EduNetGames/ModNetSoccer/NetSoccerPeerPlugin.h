@@ -34,6 +34,8 @@
 #include "EduNetConnect/AbstractEntityReplicaConnection.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 
+#include "OpenSteer/GlobalData.h"
+
 typedef PeerPlugin<NetSoccerPlugin> TSoccerPeerPlugin;
 
 using namespace OpenSteer;
@@ -47,10 +49,10 @@ public:
             m_kReplicaManager ( NULL ),
             m_pkNetBoidFactory ( NULL )
     {
-		SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Forward] = 0;
-		SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Orientation] = 1;
-		SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] = 1;
-		SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity] = 1;
+		GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Forward] = 0;
+		GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Orientation] = 1;
+		GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_AngularVelocity] = 1;
+		GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_LinearVelocity] = 1;
     }
 
     OS_IMPLEMENT_CLASSNAME ( SoccerPeerPlugin )

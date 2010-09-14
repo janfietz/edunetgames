@@ -96,9 +96,9 @@ void NetSoccerPlugin::open ( void )
 	{
 		// initialize camera
 		CameraPlugin::position2dCamera ( *m_Ball );
-		Camera::camera.mode =  Camera::cmFixed;
-		Camera::camera.fixedTarget.set ( 10,  CameraPlugin::camera2dElevation, 10 );
-		Camera::camera.fixedPosition.set ( 40, 40, 40 );
+		Camera::accessInstance().mode =  Camera::cmFixed;
+		Camera::accessInstance().fixedTarget.set ( 10,  CameraPlugin::camera2dElevation, 10 );
+		Camera::accessInstance().fixedPosition.set ( 40, 40, 40 );
 	}
    
     m_redScore = 0;
@@ -242,9 +242,12 @@ void NetSoccerPlugin::close ( void )
     m_kTeamB.clear ();
     m_AllPlayers.clear();
 
-	osAbstractVehicle* pkVehicle = this->m_Ball;
-	this->removeVehicle(pkVehicle);
-	ET_DELETE pkVehicle;
+	if( NULL != this->m_Ball )
+	{
+		osAbstractVehicle* pkVehicle = this->m_Ball;
+		this->removeVehicle(pkVehicle);
+		ET_SAFE_DELETE( this->m_Ball );
+	}
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::reset ( void )

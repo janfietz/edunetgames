@@ -287,9 +287,9 @@ namespace {
             }
             // initialize camera
                    CameraPlugin::init2dCamera ( *m_Ball );
-        Camera::camera.setPosition ( 10, CameraPlugin::camera2dElevation, 10 );
-        Camera::camera.fixedPosition.set ( 40, 40, 40 );
-        Camera::camera.mode = Camera::cmFixed;
+        Camera::accessInstance().setPosition ( 10, CameraPlugin::camera2dElevation, 10 );
+        Camera::accessInstance().fixedPosition.set ( 40, 40, 40 );
+        Camera::accessInstance().mode = Camera::cmFixed;
             m_redScore = 0;
             m_blueScore = 0;
         }

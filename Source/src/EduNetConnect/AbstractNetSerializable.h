@@ -31,6 +31,7 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetConnect/EduNetConnect.h"
+#include "OpenSteer/AbstractVehicle.h"
 
 //-----------------------------------------------------------------------------
 namespace RakNet
@@ -44,26 +45,6 @@ namespace RakNet
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	//-------------------------------------------------------------------------
-	enum ESerializeDataType
-	{
-		ESerializeDataType_Position,
-		ESerializeDataType_Forward,
-		ESerializeDataType_Side,
-		ESerializeDataType_Up,
-		ESerializeDataType_Force,
-		ESerializeDataType_Radius,
-		ESerializeDataType_Speed,
-		ESerializeDataType_Orientation,
-		ESerializeDataType_CompressedOrientation1,
-		ESerializeDataType_CompressedOrientation2,
-		ESerializeDataType_CompressedForce,
-		ESerializeDataType_AngularVelocity,
-		ESerializeDataType_LinearVelocity,
-		ESerializeDataType_UpdateTicks,
-		ESerializeDataType_ControllerAction,
-		ESerializeDataType_Count,
-	};
 
 	//-------------------------------------------------------------------------
 	class AbstractNetSerializable

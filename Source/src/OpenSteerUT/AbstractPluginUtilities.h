@@ -46,7 +46,6 @@ namespace OpenSteer
 		static void changePluginBoolValue( GLUI_Control* pkControl );
 		static GLUI_Panel* initRootPluginGui( osAbstractPlugin* pkPlugin );
 		static GLUI_Panel* initSubPluginGui( osAbstractPlugin* pkPlugin, void* pkUserdata );
-		static int ms_bDebugNetStats;
 	};
 
 

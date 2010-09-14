@@ -59,11 +59,6 @@ namespace OpenSteer {
         typedef void (* timestepCallBackFunction) (const float currentTime,
                                                    const float elapsedTime);
 
-		// TODO: make this one private		
-		//! currently selected plug-in (user can choose or cycle through them)
-		static AbstractPlugin* selectedPlugin;
-
-
         //! constructor
         Plugin( bool bAddToRegistry = true );
 
@@ -166,8 +161,9 @@ namespace OpenSteer {
 		static AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis );
 
 		//! 
-		static int getNumPlugins( void ) { return Plugin::itemsInRegistry; };
-		static AbstractPlugin* getPluginAt( size_t idx ) { return registry[idx]; };
+		static AbstractPlugin* getSelectedPlugin( void );
+		static int getNumPlugins( void );
+		static AbstractPlugin* getPluginAt( size_t idx );
 		static int getPluginIdx( const AbstractPlugin* pkPlugin );
 
 		//! utility function
@@ -191,19 +187,14 @@ namespace OpenSteer {
 		// reset the currently selected plug-in
 		static void resetSelectedPlugin( void );
 
-		static on_plugin_selected_func ms_on_plugin_selected_func;
 	protected:
 		AbstractEntityFactory* m_pkEntityFactory;
 		ObstacleGroup m_kAllObstacles;
 		AbstractPlayerGroup m_kAllPlayers;
 
     private:
-        //! This array stores a list of all Plugins.  It is manipulated by the
-        //! constructor and destructor, and used in findByName and applyToAll.
-        static const int totalSizeOfRegistry;
-        static int itemsInRegistry;
-        static AbstractPlugin* registry[];
-    };
+
+	};
 
 } //! namespace OpenSteer    
     

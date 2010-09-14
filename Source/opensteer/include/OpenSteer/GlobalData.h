@@ -28,7 +28,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-
+#include "OpenSteer/AbstractVehicle.h"
 namespace EduNet
 {
 	class IProfile;
@@ -37,6 +37,9 @@ namespace EduNet
 namespace OpenSteer {
 	class AbstractPlayer;
 	class AbstractController;
+	class PluginRegistry;
+	class Camera;
+
 	class GlobalData
 	{
 	public:
@@ -44,22 +47,39 @@ namespace OpenSteer {
 		virtual ~GlobalData();
 
 		static void _SDMInitApp( EduNet::IProfile* pkProfile );
-		static void _SDMInitDLL( GlobalData* pkGlobaleData );
+		static void _SDMInitDLL( GlobalData* pkGlobalData );
 		static GlobalData* getInstance( void );
 
 		static AbstractPlayer* accessSimpleLocalPlayer( void );
+		static Camera* accessCamera( void );
+		
 		static EduNet::IProfile* accessProfile( void );
 
+		static PluginRegistry* accessPluginRegistry( void );
+
+		int m_bReplicationDataConfig[ESerializeDataType_Count];
+		size_t m_uiReplicationDataBytes[ESerializeDataType_Count];
+		int m_bShowClientNetworkTrail;
+		int m_bShowServerNetworkTrail;
+		osScalar m_NetWriteFPS;
+		int m_collect3DAnnotations;
+		int m_bDebugNetStats;
+		int m_bShowMotionStatePlot;
+		osScalar m_SteeringForceFPS;
+
 	private:
-		void initializeLocalPlayer( void );
+		void initializeGlobalData( void );
 		
 		// note: global member variable pointers
 		AbstractPlayer* m_pkSimpleLocalPlayer;
 		AbstractController* m_pkSimpleController;
+		PluginRegistry* m_pkPluginRegistry;
+		Camera* m_pkCamera;
 		EduNet::IProfile* m_pkProfile;
+		bool m_bIsDll;
 
 
-		static void setInstance( GlobalData* pkGlobaleData );
+		static void setInstance( GlobalData* pkGlobalData );
 		
 		static GlobalData* ms_pkGlobalDataInstance;
 		static GlobalData ms_kGlobalDataInstance;

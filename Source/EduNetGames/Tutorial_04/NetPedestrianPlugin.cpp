@@ -54,13 +54,13 @@ namespace
 	{
 		// camera setup
 		CameraPlugin::init2dCamera( kVehicle );
-		// Camera::camera.mode = Camera::cmFixedDistanceOffset;
-		Camera::camera.mode = Camera::cmStraightDown;
-		Camera::camera.fixedTarget.set( 15, 0, 0 );
-		Camera::camera.fixedPosition.set( 20, 20, 20 );
-		Camera::camera.lookdownDistance = 15;
+		// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+		Camera::accessInstance().mode = Camera::cmStraightDown;
+		Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
+		Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
+		Camera::accessInstance().lookdownDistance = 15;
 		// make camera jump immediately to new position
-		Camera::camera.doNotSmoothNextMove ();
+		Camera::accessInstance().doNotSmoothNextMove ();
 
 	}
 
@@ -91,10 +91,10 @@ NetPedestrianPlugin::~NetPedestrianPlugin()
 void NetPedestrianPlugin::open (void)
 {
 	// camera setup
-	Camera::camera.mode = Camera::cmFixedDistanceOffset;
-	Camera::camera.fixedTarget.set (15, 0, 30);
-	Camera::camera.fixedPosition.set (15, 70, -70);
-	Camera::camera.lookdownDistance = 15;
+	Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+	Camera::accessInstance().fixedTarget.set (15, 0, 30);
+	Camera::accessInstance().fixedPosition.set (15, 70, -70);
+	Camera::accessInstance().lookdownDistance = 15;
 
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
@@ -129,7 +129,7 @@ void NetPedestrianPlugin::reset (void)
 	CameraPlugin::position2dCamera( *SimpleVehicle::getSelectedVehicle() );
 
 	// make camera jump immediately to new position
-	Camera::camera.doNotSmoothNextMove ();
+	Camera::accessInstance().doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------

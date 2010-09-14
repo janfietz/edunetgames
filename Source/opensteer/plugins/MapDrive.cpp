@@ -2156,7 +2156,7 @@ namespace {
                     lapsFinished++;
 
                     const Vec3 camOffsetBefore =
-                        Camera::camera.position() - position ();
+                        Camera::accessInstance().position() - position ();
 
                     // set position on other side of the map (set new X coordinate)
                     setPosition ((((px < 0) ? 1 : -1) *
@@ -2169,11 +2169,11 @@ namespace {
                     resetStuckCycleDetection ();
 
                     // new camera position and aimpoint to compensate for teleport
-                    Camera::camera.target = position ();
-                    Camera::camera.setPosition (position () + camOffsetBefore);
+                    Camera::accessInstance().target = position ();
+                    Camera::accessInstance().setPosition (position () + camOffsetBefore);
 
                     // make camera jump immediately to new position
-                    Camera::camera.doNotSmoothNextMove ();
+                    Camera::accessInstance().doNotSmoothNextMove ();
 
                     return true; 
                 }
@@ -2585,11 +2585,11 @@ namespace {
             initCamElev = 15;
             OpenSteerDemo::init2dCamera (*vehicle, initCamDist, initCamElev);
             // "look straight down at vehicle" camera mode parameters
-            Camera::camera.lookdownDistance = 50;
+            Camera::accessInstance().lookdownDistance = 50;
             // "static" camera mode parameters
-            Camera::camera.fixedPosition.set (145, 145, 145);
-            Camera::camera.fixedTarget.set (40, 0, 40);
-            Camera::camera.fixedUp = Vec3::up;
+            Camera::accessInstance().fixedPosition.set (145, 145, 145);
+            Camera::accessInstance().fixedTarget.set (40, 0, 40);
+            Camera::accessInstance().fixedUp = Vec3::up;
 
             // reset this plugin
             reset ();
@@ -2749,8 +2749,13 @@ namespace {
 
         void close (void)
         {
+			if( vehicle == NULL )
+			{
+				return;
+			}
             vehicles.clear ();
             delete (vehicle);
+			vehicle = NULL;
         }
 
         void reset (void)
@@ -2761,7 +2766,7 @@ namespace {
             vehicle->reset ();
 
             // make camera jump immediately to new position
-            Camera::camera.doNotSmoothNextMove ();
+            Camera::accessInstance().doNotSmoothNextMove ();
 
             // reset camera position
             OpenSteerDemo::position2dCamera (*vehicle, initCamDist, initCamElev);

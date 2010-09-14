@@ -163,7 +163,7 @@ namespace {
     class MpPlugIn : public Plugin
     {
     public:
-
+		MpPlugIn():wanderer(NULL){}
         const char* name (void) const {return "Multiple Pursuit";}
 
         float selectionOrderSortKey (void) const {return 0.04f;}
@@ -185,9 +185,9 @@ namespace {
 
             // initialize camera
             SimpleVehicle::setSelectedVehicle( wanderer );
-            Camera::camera.mode = Camera::cmStraightDown;
-            Camera::camera.fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
-            Camera::camera.fixedDistVOffset = OpenSteerDemo::camera2dElevation;
+            Camera::accessInstance().mode = Camera::cmStraightDown;
+            Camera::accessInstance().fixedDistDistance = OpenSteerDemo::cameraTargetDistance;
+            Camera::accessInstance().fixedDistVOffset = OpenSteerDemo::camera2dElevation;
         }
 
         void update (const float currentTime, const float elapsedTime)
@@ -227,9 +227,26 @@ namespace {
         void close (void)
         {
             // delete wanderer, all pursuers, and clear list
-            delete (wanderer);
-            for (iterator i = pBegin; i != pEnd; i++) delete ((MpPursuer*)*i);
-            allMP.clear();
+			if( wanderer )
+			{
+				delete (wanderer);
+				wanderer = NULL;
+
+ 				pBegin = allMP.begin();  // iterator pointing to first pursuer
+ 				pEnd = allMP.end();      // iterator pointing to last pursuer
+				if( pBegin != pEnd )
+				{
+					++pBegin;
+					for (iterator i = pBegin; i != pEnd; i++)
+					{
+						AbstractVehicle* v = *i;
+// TODO: fix strange crash here
+//						delete v;
+					}
+				}
+				
+				allMP.clear();
+			}
         }
 
         void reset (void)
@@ -239,8 +256,8 @@ namespace {
             for (iterator i = pBegin; i != pEnd; i++) ((MpPursuer&)(**i)).reset ();
 
             // immediately jump to default camera position
-            Camera::camera.doNotSmoothNextMove ();
-            Camera::camera.resetLocalSpace ();
+            Camera::accessInstance().doNotSmoothNextMove ();
+            Camera::accessInstance().resetLocalSpace ();
         }
 
         const AVGroup& allVehicles (void) const {return (const AVGroup&) allMP;}

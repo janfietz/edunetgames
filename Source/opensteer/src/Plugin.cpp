@@ -41,20 +41,8 @@
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Camera.h"
+#include "OpenSteer/PluginRegistry.h"
 
-
-//-----------------------------------------------------------------------------
-// Plugin registry
-//
-// XXX replace with STL utilities
-int OpenSteer::Plugin::itemsInRegistry = 0;
-const int OpenSteer::Plugin::totalSizeOfRegistry = 1000;
-OpenSteer::AbstractPlugin* OpenSteer::Plugin::registry [totalSizeOfRegistry];
-
-//-----------------------------------------------------------------------------
-// currently selected plug-in (user can choose or cycle through them)
-OpenSteer::AbstractPlugin* OpenSteer::Plugin::selectedPlugin = NULL;
-on_plugin_selected_func OpenSteer::Plugin::ms_on_plugin_selected_func = NULL;
 //-----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
@@ -71,7 +59,7 @@ OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
 // destructor
 OpenSteer::Plugin::~Plugin()
 {
-	if( this == OpenSteer::Plugin::selectedPlugin )
+	if( this == OpenSteer::Plugin::getSelectedPlugin() )
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
@@ -157,35 +145,20 @@ OpenSteer::Plugin::createSystemEntity( EntityClassId classId )
 OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::next (void) const
 {
-	return OpenSteer::Plugin::findNextPlugin( this );
+	return PluginRegistry::accessInstance()->findNextPlugin( this );
 }
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findNextPlugin( const AbstractPlugin* pkThis )
 {
-	for (int i = 0; i < itemsInRegistry; i++)
-	{
-		if (pkThis == registry[i])
-		{
-			const bool atEnd = (i == (itemsInRegistry - 1));
-			return registry [atEnd ? 0 : i + 1];
-		}
-	}
-	return NULL;
+	return PluginRegistry::accessInstance()->findNextPlugin( pkThis );
 }
 
 //-----------------------------------------------------------------------------
 int OpenSteer::Plugin::getPluginIdx( const AbstractPlugin* pkPlugin )
 {
-	for (int i = 0; i < itemsInRegistry; ++i)
-	{
-		if (pkPlugin == registry[i])
-		{
-			return i;
-		}
-	}
-	return -1;
+	return PluginRegistry::accessInstance()->getPluginIdx(pkPlugin);
 }
 
 //-----------------------------------------------------------------------------
@@ -194,20 +167,7 @@ int OpenSteer::Plugin::getPluginIdx( const AbstractPlugin* pkPlugin )
 OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findByName (const char* string)
 {
-    if ( string && string[0] )
-    {
-        for (int i = 0; i < itemsInRegistry; i++)
-        {
-            AbstractPlugin* pi = registry[i];
-			AbstractEntity* pe = dynamic_cast<AbstractEntity*>(pi);
-			if( pe != NULL )
-			{
-				const char* s = pe->name();
-				if (s && (strcmp (string, s) == 0)) return pi;
-			}
-        }
-    }
-    return NULL;
+	return PluginRegistry::accessInstance()->findByName(string);
 }
 
 //-----------------------------------------------------------------------------
@@ -215,10 +175,7 @@ OpenSteer::Plugin::findByName (const char* string)
 void
 OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 {
-    for (int i = 0; i < itemsInRegistry; i++)
-    {
-        f(*registry[i]);
-    }
+	PluginRegistry::accessInstance()->applyToAll(f);
 }
 
 //-----------------------------------------------------------------------------
@@ -228,26 +185,7 @@ OpenSteer::Plugin::applyToAll( plugInCallBackFunction f )
 void
 OpenSteer::Plugin::sortBySelectionOrder (void)
 {
-    // I know, I know, just what the world needs:
-    // another inline shell sort implementation...
-
-    // starting at each of the first n-1 elements of the array
-    for (int i = 0; i < itemsInRegistry-1; i++)
-    {
-        // scan over subsequent pairs, swapping if larger value is first
-        for (int j = i+1; j < itemsInRegistry; j++)
-        {
-            const float iKey = registry[i]->selectionOrderSortKey ();
-            const float jKey = registry[j]->selectionOrderSortKey ();
-
-            if (iKey > jKey)
-            {
-                AbstractPlugin* temporary = registry[i];
-                registry[i] = registry[j];
-                registry[j] = temporary;
-            }
-        }
-    }
+	PluginRegistry::accessInstance()->sortBySelectionOrder();
 }
 
 //-----------------------------------------------------------------------------
@@ -255,17 +193,7 @@ OpenSteer::Plugin::sortBySelectionOrder (void)
 OpenSteer::AbstractPlugin*
 OpenSteer::Plugin::findDefault (void)
 {
-    // return NULL if no PlugIns exist
-    if (itemsInRegistry == 0) return NULL;
-
-    // otherwise, return the first Plugin that requests initial selection
-    for (int i = 0; i < itemsInRegistry; i++)
-    {
-        if (registry[i]->requestInitialSelection ()) return registry[i];
-    }
-
-    // otherwise, return the "first" Plugin (in "selection order")
-    return registry[0];
+	return PluginRegistry::accessInstance()->findDefault();
 }
 
 //-----------------------------------------------------------------------------
@@ -274,8 +202,7 @@ OpenSteer::Plugin::findDefault (void)
 void
 OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 {
-    // save this instance in the registry
-    registry[itemsInRegistry++] = pkPlugin;
+	PluginRegistry::accessInstance()->addToRegistry(pkPlugin);
 }
 
 //-----------------------------------------------------------------------------
@@ -284,42 +211,14 @@ OpenSteer::Plugin::addToRegistry (AbstractPlugin* pkPlugin)
 const OpenSteer::AVGroup&
 OpenSteer::Plugin::allVehiclesOfSelectedPlugin (void)
 {
-	static OpenSteer::AVGroup kTrash;
-	if(OpenSteer::Plugin::selectedPlugin )
-		return OpenSteer::Plugin::selectedPlugin->allVehicles ();
-	else
-		return kTrash;
+	return PluginRegistry::accessInstance()->allVehiclesOfSelectedPlugin();
 }
 
 //-----------------------------------------------------------------------------
 void
 OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 {
-	if( pkPlugin == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	if( NULL != OpenSteer::Plugin::selectedPlugin )
-	{
-		OpenSteer::Plugin::selectedPlugin->close();
-	}
-
-	// reset camera and selected vehicle
-	OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::setSelectedVehicle( NULL );
-
-	OpenSteer::Plugin::selectedPlugin = pkPlugin;
-	if( NULL != OpenSteer::Plugin::selectedPlugin )
-	{
-		OpenSteer::Plugin::selectedPlugin->prepareOpen();
-		// note: call the application
-		//       might initialize the gui
-		if( NULL != Plugin::ms_on_plugin_selected_func )
-		{
-			Plugin::ms_on_plugin_selected_func( OpenSteer::Plugin::selectedPlugin );
-		}
-		OpenSteer::Plugin::selectedPlugin->open();
-	}
+	PluginRegistry::accessInstance()->selectPlugin(pkPlugin);
 }
 
 //-----------------------------------------------------------------------------
@@ -327,22 +226,14 @@ OpenSteer::Plugin::selectPlugin( AbstractPlugin* pkPlugin )
 void
 OpenSteer::Plugin::selectNextPlugin (void)
 {
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	Plugin::selectPlugin( OpenSteer::Plugin::selectedPlugin->next () );
+	PluginRegistry::accessInstance()->selectNextPlugin();
 }
 
 //-----------------------------------------------------------------------------
 // select the plug-in by index
 void OpenSteer::Plugin::selectPluginByIndex (size_t idx)
 {
-	AbstractPlugin* p = Plugin::getPluginAt( idx );
-	if( ( NULL != p ) && (p != OpenSteer::Plugin::selectedPlugin) )
-	{
-		Plugin::selectPlugin( p );
-	}
+	PluginRegistry::accessInstance()->selectPluginByIndex(idx);
 }
 
 //-----------------------------------------------------------------------------
@@ -350,11 +241,7 @@ void OpenSteer::Plugin::selectPluginByIndex (size_t idx)
 void
 OpenSteer::Plugin::functionKeyForPlugin (int keyNumber)
 {
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
+	PluginRegistry::accessInstance()->functionKeyForPlugin(keyNumber);
 }
 
 //-----------------------------------------------------------------------------
@@ -362,7 +249,7 @@ OpenSteer::Plugin::functionKeyForPlugin (int keyNumber)
 const char*
 OpenSteer::Plugin::nameOfSelectedPlugin (void)
 {
-	return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
+	return PluginRegistry::accessInstance()->nameOfSelectedPlugin();
 }
 
 //-----------------------------------------------------------------------------
@@ -370,15 +257,24 @@ OpenSteer::Plugin::nameOfSelectedPlugin (void)
 void
 OpenSteer::Plugin::resetSelectedPlugin (void)
 {
-	// reset camera and selected vehicle
-	OpenSteer::Camera::camera.reset ();
-	SimpleVehicle::setSelectedVehicle( NULL );
+	PluginRegistry::accessInstance()->resetSelectedPlugin();
+}
 
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
-	{
-		return;
-	}
-	OpenSteer::Plugin::selectedPlugin->reset ();
+//-----------------------------------------------------------------------------
+int OpenSteer::Plugin::getNumPlugins( void ) 
+{ 
+	return PluginRegistry::accessInstance()->getNumPlugins(); 
+}
+
+//-----------------------------------------------------------------------------
+OpenSteer::AbstractPlugin* OpenSteer::Plugin::getPluginAt( size_t idx ) 
+{ 
+	return PluginRegistry::accessInstance()->getPluginAt(idx); 
+}
+
+OpenSteer::AbstractPlugin* OpenSteer::Plugin::getSelectedPlugin( void )
+{
+	return PluginRegistry::accessInstance()->getSelectedPlugin();
 }
 
 //-----------------------------------------------------------------------------

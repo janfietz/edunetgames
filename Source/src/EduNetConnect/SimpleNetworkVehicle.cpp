@@ -3,52 +3,10 @@
 #include "EduNetConnect/NetworkPlugin.h"
 #include "EduNetConnect/NetworkEntity.h"
 
+#include "OpenSteer/GlobalData.h"
 
 
 using namespace OpenSteer;
-
-int SimpleNetworkVehicle::ms_bShowClientNetworkTrail = 0;
-int SimpleNetworkVehicle::ms_bShowServerNetworkTrail = 0;
-
-
-int SimpleNetworkVehicle::ms_bReplicationDataConfig[ESerializeDataType_Count] =
-{
-	1, // 	ESerializeDataType_Position,
-	1, // 	ESerializeDataType_Forward,
-	0, // 	ESerializeDataType_Side,
-	0, // 	ESerializeDataType_Up,
-	0, // 	ESerializeDataType_Force,
-	0, // 	ESerializeDataType_Radius,
-	0, // 	ESerializeDataType_Speed,
-	0, //   ESerializeDataType_Orientation
-	0, // 	ESerializeDataType_CompressedOrientation1,
-	0, // 	ESerializeDataType_CompressedOrientation2,
-	0, // 	ESerializeDataType_CompressedForce,
-	0, // 	ESerializeDataType_AngularVelocity,
-	0, // 	ESerializeDataType_LinearVelocity,
-	1, // 	ESerializeDataType_UpdateTicks,
-	0, // 	ESerializeDataType_ControllerAction,
-
-};
-
-size_t SimpleNetworkVehicle::ms_uiReplicationDataBytes[ESerializeDataType_Count] =
-{
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Position,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Forward,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Side,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Up,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_Force,
-	sizeof(osScalar) + 1, // 	ESerializeDataType_Radius,
-	sizeof(osScalar) + 1, // 	ESerializeDataType_Speed,
-	sizeof(btQuaternion) + 1, //   ESerializeDataType_Orientation
-	sizeof(OpenSteer::Vec3) + 2, // 	ESerializeDataType_CompressedOrientation1,
-	sizeof(char) * 3 + 2, // 	ESerializeDataType_CompressedOrientation2,
-	sizeof(CompressedVector) + 1, // 	ESerializeDataType_CompressedForce,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_AngularVelocity,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_LinearVelocity,
-	sizeof(OpenSteer::Vec3) + 1, // 	ESerializeDataType_UpdateTicks,
-	sizeof(float) + 1, // 	ESerializeDataType_ControllerAction,
-};
 
 //-----------------------------------------------------------------------------
 void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime )
@@ -56,7 +14,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 //	BaseClass::draw( currentTime, elapsedTime );
 	if( this->isRemoteObject() )
 	{
-		if( 1 == SimpleNetworkVehicle::ms_bShowClientNetworkTrail )
+		if( 1 == GlobalData::getInstance()->m_bShowClientNetworkTrail )
 		{
 			LocalSpaceDataCIterator kIter = this->m_kLocalSpaceData.begin();
 			LocalSpaceDataCIterator kEnd = this->m_kLocalSpaceData.end();
@@ -79,7 +37,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 	}
 	else
 	{
-		if( 1 == SimpleNetworkVehicle::ms_bShowServerNetworkTrail )
+		if( 1 == GlobalData::getInstance()->m_bShowServerNetworkTrail )
 		{
 
 			float fUpOffset = 0.1f;
@@ -155,6 +113,15 @@ void SimpleNetworkVehicle::draw( const float currentTime, const float elapsedTim
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
+	// this is a bad hack right now !!!
+	static bool bStaticInit = false;
+	if( false == bStaticInit )
+	{
+		bStaticInit = true;
+		GlobalData::getInstance()->m_uiReplicationDataBytes[ESerializeDataType_Orientation] = sizeof(btQuaternion) + 1;
+		GlobalData::getInstance()->m_uiReplicationDataBytes[ESerializeDataType_CompressedForce] = sizeof(CompressedVector) + 1;
+	}
+
 	// pass over important values to the proxy
 	SimpleProxyVehicle& kProxy = this->accessProxyVehicle();
 	kProxy.setIsRemoteObject( this->isRemoteObject() );
@@ -178,7 +145,7 @@ void SimpleNetworkVehicle::update (const float currentTime, const float elapsedT
 		if( this->m_kNetworkVehicleUpdate.serverVehicleUpdate().getServerVehicleMode() == EServerVehicleMode_ExtrapolateProxy){
 			this->m_kNetWriteUpdatePeriod.SetPeriodTime(5.0f, true); //Set update time to 5 seconds
 		}else{
-			this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( SimplePhysicsVehicle::ms_NetWriteFPS, true );
+			this->m_kNetWriteUpdatePeriod.SetPeriodFrequency( GlobalData::getInstance()->m_NetWriteFPS, true );
 		}
 
 		size_t uiTicks = this->m_kNetWriteUpdatePeriod.UpdateDeltaTime( elapsedTime );
@@ -254,8 +221,8 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 		// in case the steering force is replicated
 		// to create a consistent data set the steering force for the next update
 		// has to be computed
-		if( ( ms_bReplicationDataConfig[ESerializeDataType_Force] != 0 ) ||
-			( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
+		if( ( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Force] != 0 ) ||
+			( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
 			)
 		{
 			Vec3 kNextSteeringForce = this->getSteeringForceUpdate().determineCombinedSteering( this->getUpdateElapsedTime() );
@@ -275,7 +242,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 
 	for( size_t i = 0; i < ESerializeDataType_Count; ++i)
 	{
-		if( ms_bReplicationDataConfig[i] != 0 )
+		if( GlobalData::getInstance()->m_bReplicationDataConfig[i] != 0 )
 		{
 			kProxy.m_bSerializedDataTypes[i] = true;
 			++dataTypes;
@@ -283,7 +250,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 	}
 	kStream.WriteAlignedBytes(&dataTypes,sizeof(unsigned char));
 
-	if( ms_bReplicationDataConfig[ESerializeDataType_Position] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Position] != 0 )
 	{
 		dataType = ESerializeDataType_Position;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -296,7 +263,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.setPosition( this->position() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Forward] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Forward] != 0 )
 	{
 		dataType = ESerializeDataType_Forward;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -307,7 +274,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Side] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Side] != 0 )
 	{
 		dataType = ESerializeDataType_Side;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -318,7 +285,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Up] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Up] != 0 )
 	{
 		dataType = ESerializeDataType_Up;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -329,7 +296,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.regenerateLocalSpace( kProxy.forward(), 0 );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Force] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Force] != 0 )
 	{
 		dataType = ESerializeDataType_Force;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -341,7 +308,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			// nothing to do here se code above
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Radius] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Radius] != 0 )
 	{
 		dataType = ESerializeDataType_Radius;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -352,7 +319,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.setRadius( this->radius() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Speed] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Speed] != 0 )
 	{
 		dataType = ESerializeDataType_Speed;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -363,7 +330,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.setSpeed( this->speed() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_Orientation] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_Orientation] != 0 )
 	{
 		dataType = ESerializeDataType_Orientation;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -374,7 +341,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_CompressedOrientation1] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation1;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -389,7 +356,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_CompressedOrientation2] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedOrientation2;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -407,7 +374,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			AbstractVehicleMath::writeQuaternionToLocalSpace( kRotation, kProxy.accessLocalSpaceData() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_CompressedForce] != 0 )
 	{
 		dataType = ESerializeDataType_CompressedForce;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -418,7 +385,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			// nothing to do here ... see code above
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_AngularVelocity] != 0 )
 	{
 		dataType = ESerializeDataType_AngularVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -428,7 +395,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.setAngularVelocity( this->angularVelocity() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_LinearVelocity] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_LinearVelocity] != 0 )
 	{
 		dataType = ESerializeDataType_LinearVelocity;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -438,7 +405,7 @@ int SimpleNetworkVehicle::serialize( RakNet::SerializeParameters *serializeParam
 			kProxy.setLinearVelocity( this->linearVelocity() );
 		}
 	}
-	if( ms_bReplicationDataConfig[ESerializeDataType_UpdateTicks] != 0 )
+	if( GlobalData::getInstance()->m_bReplicationDataConfig[ESerializeDataType_UpdateTicks] != 0 )
 	{
 		dataType = ESerializeDataType_UpdateTicks;
 		kStream.WriteAlignedBytes(&dataType,sizeof(unsigned char));
@@ -609,12 +576,14 @@ void SimpleNetworkVehicle::deserialize( RakNet::DeserializeParameters *deseriali
 		kProxy.m_bHasNewData = true;
 	}
 }
+
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::serializeConstruction(
 	RakNet::BitStream *constructionBitstream)
 {
 
 }
+
 //-----------------------------------------------------------------------------
 bool SimpleNetworkVehicle::deserializeConstruction(
 	RakNet::BitStream *constructionBitstream )

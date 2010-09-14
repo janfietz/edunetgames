@@ -79,7 +79,6 @@ namespace OpenSteer
 		float getUpdateTickTime( void ) const;
 		float getUpdateCurrentTime( void ) const { return this->m_fUpdateCurrentTime; };
 		float getUpdateElapsedTime( void ) const { return this->m_fUpdateElapsedTime; };
-		static osScalar ms_NetWriteFPS;
 	protected:
 		OpenSteer::EulerVehicleUpdate m_kEulerUpdate;
 		OpenSteer::SteeringForceVehicleUpdate m_kSteeringForceUpdate;

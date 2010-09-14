@@ -68,6 +68,7 @@
 #include "OpenSteer/Draw.h"
 #endif //! NOT_OPENSTEERDEMO
 #include "OpenSteer/Camera.h"
+#include "OpenSteer/GlobalData.h"
 
 namespace OpenSteer	{
 
@@ -75,8 +76,7 @@ namespace OpenSteer	{
 // currently selected vehicle.  Generally the one the camera follows and
 // for which additional information may be displayed.  Clicking the mouse
 // near a vehicle causes it to become the Selected Vehicle.
-int SimpleVehicle::ms_collect3DAnnotations = 0;
-
+// GlobalData m_collect3DAnnotations
 //-----------------------------------------------------------------------------
 // constructor
 SimpleVehicle::SimpleVehicle (void):
@@ -187,7 +187,7 @@ void SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime
 			}
 		}
 	}
-	if( ( true == bAnnotate ) && ( SimpleVehicle::ms_collect3DAnnotations != 0 ) )
+	if( ( true == bAnnotate ) && ( GlobalData::getInstance()->m_collect3DAnnotations != 0 ) )
 	{
 		std::ostringstream kStream;
 		kStream << std::setprecision(2) << std::setiosflags(std::ios::fixed);

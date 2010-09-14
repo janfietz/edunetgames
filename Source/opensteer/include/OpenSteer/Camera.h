@@ -57,6 +57,8 @@ namespace OpenSteer {
     {
     public:
 
+		static Camera& accessInstance( void );
+
         //! constructor
         Camera ();
         virtual ~Camera() { /* Nothing to do? */ }
@@ -177,9 +179,6 @@ namespace OpenSteer {
 
         //! "offset POV" camera mode parameters
         Vec3 povOffset;
-
-		//! on static camera instance that automatically tracks selected vehicle
-		static Camera camera;
 
 		static void updateCamera ( const float currentTime,
 			const float elapsedTime,

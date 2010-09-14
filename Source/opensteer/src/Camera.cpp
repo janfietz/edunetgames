@@ -43,6 +43,7 @@
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/Draw.h"
 #include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/GlobalData.h"
 
 namespace OpenSteer	{
 
@@ -50,7 +51,11 @@ namespace OpenSteer	{
 
 //-----------------------------------------------------------------------------
 // camera automatically tracks selected vehicle
-Camera Camera::camera;
+Camera& Camera::accessInstance( void )
+{
+	return *GlobalData::getInstance()->accessCamera();
+}
+
 
 //-----------------------------------------------------------------------------
 // constructor
@@ -78,7 +83,7 @@ Camera::updateCamera (const float currentTime,
 										const AbstractVehicle& selected, const bool simulationPaused )
 {
 	Camera::setVehicleToTrack( &selected );
-	Camera::camera.update (currentTime, elapsedTime, simulationPaused );
+	Camera::accessInstance().update (currentTime, elapsedTime, simulationPaused );
 }
 
 //-----------------------------------------------------------------------------

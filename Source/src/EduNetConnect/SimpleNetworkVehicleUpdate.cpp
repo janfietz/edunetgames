@@ -29,6 +29,7 @@
 #include "EduNetConnect/SimpleNetworkVehicleUpdate.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
+#include "OpenSteer/GlobalData.h"
 
 using namespace OpenSteer;
 
@@ -47,9 +48,9 @@ void SimpleNetworkVehicleUpdate::collect3DTextAnnotation( std::ostringstream& kS
 		size_t uiPackageSize = 0;
 		for( size_t i = 0; i < ESerializeDataType_Count; ++i)
 		{
-			if( SimpleNetworkVehicle::ms_bReplicationDataConfig[i] != 0 )
+			if( GlobalData::getInstance()->m_bReplicationDataConfig[i] != 0 )
 			{
-				uiPackageSize += SimpleNetworkVehicle::ms_uiReplicationDataBytes[i];
+				uiPackageSize += GlobalData::getInstance()->m_uiReplicationDataBytes[i];
 			}
 		}
 		kStream << "Packagesize: "

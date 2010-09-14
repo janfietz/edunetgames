@@ -142,14 +142,14 @@ OpenSteer::OpenSteerDemo::initialize ( void )
         Plugin::applyToAll ( printPlugin );
 
         // identify default Plugin
-        if ( NULL == OpenSteer::Plugin::selectedPlugin )
+        if ( NULL == OpenSteer::Plugin::getSelectedPlugin() )
 		{
             errorExit ( "no default Plugin" );
 		}
 
         std::ostringstream message;
         message << std::endl << "Default plugin:" << std::endl;
-        message << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;
+        message << " " << *OpenSteer::Plugin::getSelectedPlugin() << std::endl;
         message << std::endl;
         EduNet::Log::printLine ( message );
     }
@@ -339,7 +339,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp ( void )
     EduNet::Log::printMessage ( "" );
 
     // allow Plugin to print mini help for the function keys it handles
-    OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
+    OpenSteer::Plugin::getSelectedPlugin()->printMiniHelpForFunctionKeys ();
 }
 
 void
@@ -562,7 +562,7 @@ mouseMotionFunc ( int x, int y )
         }
 
         // pass adjustment vector to camera's mouse adjustment routine
-        OpenSteer::Camera::camera.mouseAdjustOffset ( cameraAdjustment );
+        OpenSteer::Camera::accessInstance().mouseAdjustOffset ( cameraAdjustment );
     }
 }
 
@@ -611,17 +611,17 @@ drawDisplayPluginName ( void )
 void
 drawDisplayCameraModeName ( void )
 {
-    const OpenSteer::Vec3& camPosition = OpenSteer::Camera::camera.position();
+    const OpenSteer::Vec3& camPosition = OpenSteer::Camera::accessInstance().position();
     std::ostringstream message;
     message << std::setprecision ( 2 );
     message << std::setiosflags ( std::ios::fixed );
 
     message << "Camera: "
-    << OpenSteer::Camera::camera.modeName ()
+    << OpenSteer::Camera::accessInstance().modeName ()
     << " ( " << camPosition.x
     << ", " << camPosition.y
     << ", " << camPosition.z
-    << " ) fixedDistDistance( " << OpenSteer::Camera::camera.fixedDistDistance << " )" << std::ends;
+    << " ) fixedDistDistance( " << OpenSteer::Camera::accessInstance().fixedDistDistance << " )" << std::ends;
     const OpenSteer::Vec3 screenLocation ( 10, 10, 0 );
     OpenSteer::draw2dTextAt2dLocation ( message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight() );
 }
@@ -858,9 +858,9 @@ keyboardFunc ( unsigned char key, int x, int y )
 
         // camera mode cycle
     case 'c':
-        OpenSteer::Camera::camera.selectNextMode ();
+        OpenSteer::Camera::accessInstance().selectNextMode ();
         message << "select camera mode "
-        << '"' << OpenSteer::Camera::camera.modeName () << '"' << std::ends;
+        << '"' << OpenSteer::Camera::accessInstance().modeName () << '"' << std::ends;
         EduNet::Log::printMessage ( message );
         break;
 
@@ -922,7 +922,7 @@ keyboardFunc ( unsigned char key, int x, int y )
             int glutWindow = glutGetWindow();
             GLUI_Master.close_all();
             //glui->close();
-            //                                          OpenSteer::Plugin::selectedPlugin( NULL );
+            //                                          OpenSteer::Plugin::getSelectedPlugin()( NULL );
             //OpenSteer::OpenSteerDemo::exit (0);
         }
         else

@@ -283,9 +283,9 @@ namespace {
             }
             // initialize camera
             OpenSteerDemo::init2dCamera (*m_Ball);
-            Camera::camera.setPosition (10, OpenSteerDemo::camera2dElevation, 10);
-            Camera::camera.fixedPosition.set (40, 40, 40);
-            Camera::camera.mode = Camera::cmFixed;
+            Camera::accessInstance().setPosition (10, OpenSteerDemo::camera2dElevation, 10);
+            Camera::accessInstance().fixedPosition.set (40, 40, 40);
+            Camera::accessInstance().mode = Camera::cmFixed;
             m_redScore = 0;
             m_blueScore = 0;
         }
@@ -353,14 +353,18 @@ namespace {
 
         void close (void)
         {
+			if( TeamA.size() == 0 )
+			{
+				return;
+			}
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
                 delete TeamA[i];
             TeamA.clear ();
             for(unsigned int i=0; i < m_PlayerCountB ; i++)
                 delete TeamB[i];
             TeamB.clear ();
-                    m_AllPlayers.clear();
-        }
+            m_AllPlayers.clear();
+		}
 
         void reset (void)
         {

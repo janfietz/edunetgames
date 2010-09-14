@@ -30,7 +30,7 @@
 #include "EduNetCommon/EduNetExternal.h"
 #include "EduNetCommon/TCompressed.h"
 #include "EduNetCommon/EduNetMath.h"
-
+#include "OpenSteer/GlobalData.h"
 //-----------------------------------------------------------------------------
 using namespace OpenSteer;
 
@@ -184,8 +184,6 @@ void EulerVehicleUpdate::updateMotionState( const osScalar currentTime,
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 
-osScalar SteeringForceVehicleUpdate::ms_SteeringForceFPS = 30.0f;
-
 //-----------------------------------------------------------------------------
 SteeringForceVehicleUpdate::SteeringForceVehicleUpdate( AbstractVehicle* pkVehicle ):
 BaseClass( pkVehicle ),
@@ -261,7 +259,7 @@ void SteeringForceVehicleUpdate::update( const osScalar currentTime, const osSca
 {
 	// only in case a custom has been set ?
 	BaseClass::update( currentTime, elapsedTime );
-	this->m_kUpdatePeriod.SetPeriodFrequency( SteeringForceVehicleUpdate::ms_SteeringForceFPS, true );
+	this->m_kUpdatePeriod.SetPeriodFrequency( GlobalData::getInstance()->m_SteeringForceFPS, true );
 	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( elapsedTime );
 	if( uiTicks == 0 )
 	{

@@ -174,7 +174,6 @@ protected:
 	unsigned int m_uiStartPort;
 
 	int m_iWaitForPongPort;
-	static int ms_bShowMotionStatePlot;
 	SocketDescriptor m_kSocketDescriptor;
 
 	RakNetTime m_kPongEndTime;

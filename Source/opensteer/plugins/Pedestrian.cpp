@@ -479,9 +479,9 @@ namespace {
             // initialize camera and selectedVehicle
             Pedestrian& firstPedestrian = **crowd.begin();
             OpenSteerDemo::init3dCamera (firstPedestrian);
-            Camera::camera.mode = Camera::cmFixedDistanceOffset;
-            Camera::camera.fixedTarget.set (15, 0, 30);
-            Camera::camera.fixedPosition.set (15, 70, -70);
+            Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+            Camera::accessInstance().fixedTarget.set (15, 0, 30);
+            Camera::accessInstance().fixedPosition.set (15, 70, -70);
         }
 
         void update (const float currentTime, const float elapsedTime)
@@ -527,7 +527,7 @@ namespace {
                 const Color color (0.8f, 0.8f, 1.0f);
                 const Vec3 textOffset (0, 0.25f, 0);
                 const Vec3 textPosition = selected.position() + textOffset;
-                const Vec3 camPosition = Camera::camera.position();
+                const Vec3 camPosition = Camera::accessInstance().position();
                 const float camDistance = Vec3::distance (selected.position(),
                                                           camPosition);
                 const char* spacer = "      ";
@@ -642,7 +642,7 @@ namespace {
             OpenSteerDemo::position2dCamera (*SimpleVehicle::getSelectedVehicle());
 
             // make camera jump immediately to new position
-            Camera::camera.doNotSmoothNextMove ();
+            Camera::accessInstance().doNotSmoothNextMove ();
         }
 
         void handleFunctionKeys (int keyNumber)

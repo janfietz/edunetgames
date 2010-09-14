@@ -33,8 +33,6 @@
 
 using namespace OpenSteer;
 
-osScalar SimplePhysicsVehicle::ms_NetWriteFPS = 20.0f;
-
 //-----------------------------------------------------------------------------
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
@@ -144,7 +142,7 @@ void NetPedestrian::annotationUtility( void ) const
 		const Color color (0.8f, 0.8f, 1.0f);
 		const osVector3 textOffset (0, 0.25f, 0);
 		const osVector3 textPosition = selected->position() + textOffset;
-		const osVector3 camPosition = Camera::camera.position();
+		const osVector3 camPosition = Camera::accessInstance().position();
 		const float camDistance = osVector3::distance (selected->position(),
 			camPosition);
 		const char* spacer = "      ";

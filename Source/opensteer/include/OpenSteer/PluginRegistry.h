@@ -30,10 +30,100 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/AbstractPlugin.h"
+#include "OpenSteer/AbstractVehicle.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
+
+	typedef void (* plugInCallBackFunction) ( AbstractPlugin& clientObject );
+	typedef void (* voidCallBackFunction) (void);
+	typedef void (* timestepCallBackFunction) (const float currentTime,
+		const float elapsedTime);
+
+	class PluginRegistry
+	{
+	public:
+		PluginRegistry( void );
+		virtual ~PluginRegistry( void );
+
+		static PluginRegistry* accessInstance( void );
+
+		AbstractPlugin* getSelectedPlugin( void ) const;
+
+
+		//! search the class registry for a Plugin with the given name
+		AbstractPlugin* findByName (const char* string) const;
+
+		//! apply a given function to all Plugins in the class registry
+		void applyToAll (plugInCallBackFunction f);
+
+		//! sort Plugin registry by "selection order"
+		void sortBySelectionOrder (void);
+
+		//! returns pointer to default Plugin (currently, first in registry)
+		AbstractPlugin* findDefault (void) const;
+
+		//! save this instance in the class's registry of instances
+		void addToRegistry (AbstractPlugin*);
+		AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis ) const;
+
+		//! 
+		int getNumPlugins( void ) const { return m_itemsInRegistry; };
+		AbstractPlugin* getPluginAt( size_t idx ) const { return m_registry[idx]; };
+		int getPluginIdx( const AbstractPlugin* pkPlugin ) const;
+
+		//! utility function
+		const AVGroup& allVehiclesOfSelectedPlugin( void ) const;
+
+		// not public right now ... needs to forward gui update
+		// select the "next" plug-in, cycling through "plug-in selection order"
+		void selectNextPlugin (void);
+
+		void selectPlugin( AbstractPlugin* pkPlugin );
+
+		// select the plug-in by index
+		void selectPluginByIndex( size_t idx );
+
+		// handle function keys an a per-plug-in basis
+		void functionKeyForPlugin( int keyNumber ) const;
+
+		// return name of currently selected plug-in
+		const char* nameOfSelectedPlugin( void ) const;
+
+		// reset the currently selected plug-in
+		void resetSelectedPlugin( void );
+
+		void setOnPluginSelectedFunc( on_plugin_selected_func func )
+		{
+			this->m_on_plugin_selected_func = func;
+		}
+
+	private:
+
+		void setSelectedPlugin( AbstractPlugin* pkSelectedPlugin );
+
+		on_plugin_selected_func m_on_plugin_selected_func;
+		AbstractPlugin* m_pkSelectedPlugin;
+
+		enum	{
+			EPluginRegistry_Capacity = 1000
+		};
+		size_t m_itemsInRegistry;
+		AbstractPlugin* m_registry[EPluginRegistry_Capacity];
+
+	};
+
+	inline
+	void PluginRegistry::setSelectedPlugin( AbstractPlugin* pkPlugin )
+	{
+		this->m_pkSelectedPlugin = pkPlugin;
+	}
+	inline
+	AbstractPlugin* PluginRegistry::getSelectedPlugin( void ) const
+	{
+		return this->m_pkSelectedPlugin;
+	}
 
 } //! namespace OpenSteer    
     

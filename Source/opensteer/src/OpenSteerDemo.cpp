@@ -104,7 +104,7 @@ namespace {
 	bool InitializeGlobals( void )
 	{
 		OpenSteer::GlobalSelection::_SDMInitApp( );
-		OpenSteer::GlobalData::_SDMInitApp( );
+		OpenSteer::GlobalData::_SDMInitApp( NULL );
 		return true;
 	}
 
@@ -129,9 +129,9 @@ OpenSteer::OpenSteerDemo::initialize (void)
         std::cout << std::endl;                                    // xxx?
 
         // identify default Plugin
-        if (!OpenSteer::Plugin::selectedPlugin) errorExit ("no default Plugin");
+        if (!OpenSteer::Plugin::getSelectedPlugin()) errorExit ("no default Plugin");
         std::cout << std::endl << "Default plugin:" << std::endl;  // xxx?
-        std::cout << " " << *OpenSteer::Plugin::selectedPlugin << std::endl;          // xxx?
+        std::cout << " " << *OpenSteer::Plugin::getSelectedPlugin() << std::endl;          // xxx?
         std::cout << std::endl;                                    // xxx?
     }
 
@@ -195,7 +195,7 @@ void
 OpenSteer::OpenSteerDemo::selectDefaultPlugIn (void)
 {
     Plugin::sortBySelectionOrder ();
-    OpenSteer::Plugin::selectedPlugin = Plugin::findDefault ();
+    OpenSteer::Plugin::selectPlugin( Plugin::findDefault() );
 }
 
 
@@ -207,7 +207,7 @@ void
 OpenSteer::OpenSteerDemo::selectNextPlugIn (void)
 {
     closeSelectedPlugIn ();
-    OpenSteer::Plugin::selectedPlugin = OpenSteer::Plugin::selectedPlugin->next ();
+    OpenSteer::Plugin::selectPlugin( OpenSteer::Plugin::getSelectedPlugin()->next () );
     openSelectedPlugIn ();
 }
 
@@ -219,7 +219,7 @@ OpenSteer::OpenSteerDemo::selectNextPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 {
-    OpenSteer::Plugin::selectedPlugin->handleFunctionKeys (keyNumber);
+    OpenSteer::Plugin::getSelectedPlugin()->handleFunctionKeys (keyNumber);
 }
 
 
@@ -230,7 +230,7 @@ OpenSteer::OpenSteerDemo::functionKeyForPlugIn (int keyNumber)
 const char* 
 OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 {
-    return (OpenSteer::Plugin::selectedPlugin ? OpenSteer::Plugin::selectedPlugin->pluginName() : "no Plugin");
+    return (OpenSteer::Plugin::getSelectedPlugin() ? OpenSteer::Plugin::getSelectedPlugin()->pluginName() : "no Plugin");
 }
 
 
@@ -241,9 +241,9 @@ OpenSteer::OpenSteerDemo::nameOfSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::openSelectedPlugIn (void)
 {
-    OpenSteer::Camera::camera.reset ();
+    OpenSteer::Camera::accessInstance().reset ();
 	SimpleVehicle::setSelectedVehicle( NULL );
-    OpenSteer::Plugin::selectedPlugin->open ();
+    OpenSteer::Plugin::getSelectedPlugin()->open ();
 }
 
 
@@ -270,7 +270,7 @@ OpenSteer::OpenSteerDemo::updateSelectedPlugIn (const float currentTime,
     }
 
     // invoke selected Plugin's Update method
-	AbstractUpdated* pkUpdatedPlugin = dynamic_cast<AbstractUpdated*>(OpenSteer::Plugin::selectedPlugin);
+	AbstractUpdated* pkUpdatedPlugin = dynamic_cast<AbstractUpdated*>(OpenSteer::Plugin::getSelectedPlugin());
 	assert( NULL != pkUpdatedPlugin );
     pkUpdatedPlugin->update (currentTime, elapsedTime);
 
@@ -294,7 +294,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
 	SimpleVehicle::setNearestMouseVehicle( OpenSteerDemo::vehicleNearestToMouse() );
 
     // invoke selected Plugin's Draw method
-    OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
+    OpenSteer::Plugin::getSelectedPlugin()->redraw (currentTime, elapsedTime);
 
     // draw any annotation queued up during selected Plugin's Update method
     drawAllDeferredLines ();
@@ -312,7 +312,7 @@ OpenSteer::OpenSteerDemo::redrawSelectedPlugIn (const float currentTime,
 void 
 OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 {
-    OpenSteer::Plugin::selectedPlugin->close ();
+    OpenSteer::Plugin::getSelectedPlugin()->close ();
     SimpleVehicle::setSelectedVehicle( NULL );
 }
 
@@ -324,7 +324,7 @@ OpenSteer::OpenSteerDemo::closeSelectedPlugIn (void)
 void 
 OpenSteer::OpenSteerDemo::resetSelectedPlugIn (void)
 {
-    OpenSteer::Plugin::selectedPlugin->reset ();
+    OpenSteer::Plugin::getSelectedPlugin()->reset ();
 }
 
 
@@ -368,7 +368,7 @@ OpenSteer::OpenSteerDemo::doDelayedResetPlugInXXX (void)
 const OpenSteer::AVGroup& 
 OpenSteer::OpenSteerDemo::allVehiclesOfSelectedPlugIn (void)
 {
-    return OpenSteer::Plugin::selectedPlugin->allVehicles ();
+    return OpenSteer::Plugin::getSelectedPlugin()->allVehicles ();
 }
 
 
@@ -458,7 +458,7 @@ OpenSteer::OpenSteerDemo::findVehicleNearestScreenPosition (int x, int y)
     {
         // distance from this vehicle's center to the selection line:
         const float d = distanceFromLine ((**i).position(),
-                                          OpenSteer::Camera::camera.position(),
+                                          OpenSteer::Camera::accessInstance().position(),
                                           direction);
 
         // if this vehicle-to-line distance is the smallest so far,
@@ -499,9 +499,9 @@ OpenSteer::OpenSteerDemo::init3dCamera (AbstractVehicle& selected,
                                   float elevation)
 {
     position3dCamera (selected, distance, elevation);
-    OpenSteer::Camera::camera.fixedDistDistance = distance;
-    OpenSteer::Camera::camera.fixedDistVOffset = elevation;
-    OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
+    OpenSteer::Camera::accessInstance().fixedDistDistance = distance;
+    OpenSteer::Camera::accessInstance().fixedDistVOffset = elevation;
+    OpenSteer::Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
 }
 
 
@@ -517,9 +517,9 @@ OpenSteer::OpenSteerDemo::init2dCamera (AbstractVehicle& selected,
                                   float elevation)
 {
     position2dCamera (selected, distance, elevation);
-    OpenSteer::Camera::camera.fixedDistDistance = distance;
-    OpenSteer::Camera::camera.fixedDistVOffset = elevation;
-    OpenSteer::Camera::camera.mode = Camera::cmFixedDistanceOffset;
+    OpenSteer::Camera::accessInstance().fixedDistDistance = distance;
+    OpenSteer::Camera::accessInstance().fixedDistVOffset = elevation;
+    OpenSteer::Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
 }
 
 
@@ -538,8 +538,8 @@ OpenSteer::OpenSteerDemo::position3dCamera (AbstractVehicle& selected,
     if (&selected)
     {
         const Vec3 behind = selected.forward() * -distance;
-        OpenSteer::Camera::camera.setPosition (selected.position() + behind);
-        OpenSteer::Camera::camera.target = selected.position();
+        OpenSteer::Camera::accessInstance().setPosition (selected.position() + behind);
+        OpenSteer::Camera::accessInstance().target = selected.position();
     }
 }
 
@@ -559,9 +559,9 @@ OpenSteer::OpenSteerDemo::position2dCamera (AbstractVehicle& selected,
     position3dCamera (selected, distance, elevation);
 
     // then adjust for 3d:
-    Vec3 position3d = OpenSteer::Camera::camera.position();
+    Vec3 position3d = OpenSteer::Camera::accessInstance().position();
     position3d.y += elevation;
-    OpenSteer::Camera::camera.setPosition (position3d);
+    OpenSteer::Camera::accessInstance().setPosition (position3d);
 }
 
 
@@ -661,7 +661,7 @@ OpenSteer::OpenSteerDemo::drawCircleHighlightOnVehicle (const AbstractVehicle& v
 {
     if (&v)
     {
-        const Vec3& cPosition = OpenSteer::Camera::camera.position();
+        const Vec3& cPosition = OpenSteer::Camera::accessInstance().position();
         draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
                        v.position(),                   // center
                        v.position() - cPosition,       // view axis
@@ -721,7 +721,7 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp (void)
     printMessage ("");
 
     // allow Plugin to print mini help for the function keys it handles
-    OpenSteer::Plugin::selectedPlugin->printMiniHelpForFunctionKeys ();
+    OpenSteer::Plugin::getSelectedPlugin()->printMiniHelpForFunctionKeys ();
 }
 
 
@@ -984,7 +984,7 @@ namespace {
             }
 
             // pass adjustment vector to camera's mouse adjustment routine
-            OpenSteer::Camera::camera.mouseAdjustOffset (cameraAdjustment);
+            OpenSteer::Camera::accessInstance().mouseAdjustOffset (cameraAdjustment);
         }
     }
 
@@ -1036,7 +1036,7 @@ namespace {
     drawDisplayCameraModeName (void)
     {
         std::ostringstream message;
-        message << "Camera: " << OpenSteer::Camera::camera.modeName () << std::ends;
+        message << "Camera: " << OpenSteer::Camera::accessInstance().modeName () << std::ends;
         const OpenSteer::Vec3 screenLocation (10, 10, 0);
         OpenSteer::draw2dTextAt2dLocation (message, screenLocation, OpenSteer::gWhite, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight());
     }
@@ -1266,9 +1266,9 @@ namespace {
 
         // camera mode cycle
         case 'c':
-            OpenSteer::Camera::camera.selectNextMode ();
+            OpenSteer::Camera::accessInstance().selectNextMode ();
             message << "select camera mode "
-                    << '"' << OpenSteer::Camera::camera.modeName () << '"' << std::ends;
+                    << '"' << OpenSteer::Camera::accessInstance().modeName () << '"' << std::ends;
             OpenSteer::OpenSteerDemo::printMessage (message);
             break;
 

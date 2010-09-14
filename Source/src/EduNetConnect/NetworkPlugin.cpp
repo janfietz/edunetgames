@@ -15,7 +15,6 @@ using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicleMotionStatePlot NetworkPlugin::ms_kMotionStateProfile;
-int NetworkPlugin::ms_bShowMotionStatePlot = 0;
 
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
@@ -82,7 +81,7 @@ void NetworkPlugin::initGui( void* pkUserdata )
 	{
 		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );
 		GLUI_Panel* subPanel = profileRollout;
-		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &NetworkPlugin::ms_bShowMotionStatePlot);
+		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot);
 		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
 		NetworkVehicle::initGui( profileRollout, pkPluginEntity->isRemoteObject() );
 	}
@@ -271,7 +270,7 @@ void NetworkPlugin::update (const float currentTime, const float elapsedTime)
 void NetworkPlugin::recordNetUpdate(
 	osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime )
 {
-	if( 0 == NetworkPlugin::ms_bShowMotionStatePlot )
+	if( 0 == OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot )
 	{
 		return;
 	}
@@ -304,7 +303,7 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 			}
 		}
 
-		if( ( 0 != NetworkPlugin::ms_bShowMotionStatePlot ) || ( true == bTrySelectServerVehicle ) )
+		if( ( 0 != OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot ) || ( true == bTrySelectServerVehicle ) )
 		{
 			AbstractVehicleGroup kAV( pkHostedPlugin->allVehicles() );
 			NetworkId networkId = OpenSteer::SimpleVehicle::getSelectedVehicle()->getNetworkId();
@@ -323,7 +322,7 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 					}
 				}
 
-				if( ( 0 != NetworkPlugin::ms_bShowMotionStatePlot ) )
+				if( ( 0 != OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot ) )
 				{
 					// update motion state plot
 					NetworkPlugin::ms_kMotionStateProfile.recordUpdate( *kFound, currentTime, elapsedTime );
@@ -345,7 +344,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 
 	}
-	else if( 0 != AbstractPluginGui::ms_bDebugNetStats )
+	else if( 0 != OpenSteer::GlobalData::getInstance()->m_bDebugNetStats )
 	{
 		// display status
 		const bool bIsClient = this->isRemoteObject();
@@ -390,7 +389,7 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 
 	}
 
-	if( 0 != NetworkPlugin::ms_bShowMotionStatePlot )
+	if( 0 != OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot )
 	{
 		// draw motion state plot
 		if( NULL != SimpleVehicle::getSelectedVehicle() )

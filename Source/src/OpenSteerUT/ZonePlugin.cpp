@@ -38,14 +38,14 @@ void initPluginCamera( void )
 	osAbstractVehicle* vehicle = NULL;
 	osAbstractVehicle& kVehicle = *vehicle;
 	CameraPlugin::init2dCamera( kVehicle );
-	// Camera::camera.mode = Camera::cmFixedDistanceOffset;
-	Camera::camera.mode = Camera::cmStraightDown;
-	Camera::camera.fixedTarget.set( 15, 0, 0 );
-	Camera::camera.fixedPosition.set( 0, 20, 0 );
-	Camera::camera.lookdownDistance = 15;
+	// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+	Camera::accessInstance().mode = Camera::cmStraightDown;
+	Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
+	Camera::accessInstance().fixedPosition.set( 0, 20, 0 );
+	Camera::accessInstance().lookdownDistance = 15;
 	// make camera jump immediately to new position
-	Camera::camera.doNotSmoothNextMove ();
-	Camera::camera.update( 0, 0, false );
+	Camera::accessInstance().doNotSmoothNextMove ();
+	Camera::accessInstance().update( 0, 0, false );
 }
 
 //-----------------------------------------------------------------------------

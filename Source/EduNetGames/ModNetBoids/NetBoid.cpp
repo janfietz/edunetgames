@@ -171,7 +171,7 @@ void Boid::sphericalWrapAround ( void )
         {
             CameraPlugin::position3dCamera
             ( *SimpleVehicle::getSelectedVehicle() );
-            Camera::camera.doNotSmoothNextMove ();
+            Camera::accessInstance().doNotSmoothNextMove ();
         }
     }
 }

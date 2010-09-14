@@ -110,12 +110,12 @@ void NetBoidsPlugin::open ( void )
 
     // initialize camera
     CameraPlugin::init3dCamera ( *SimpleVehicle::getSelectedVehicle() );
-    Camera::camera.mode = Camera::cmFixed;
-    Camera::camera.fixedDistDistance = CameraPlugin::cameraTargetDistance;
-    Camera::camera.fixedDistVOffset = 0;
-    Camera::camera.lookdownDistance = 20;
-    Camera::camera.aimLeadTime = 0.5;
-    Camera::camera.povOffset.set ( 0, 0.5, -2 );
+    Camera::accessInstance().mode = Camera::cmFixed;
+    Camera::accessInstance().fixedDistDistance = CameraPlugin::cameraTargetDistance;
+    Camera::accessInstance().fixedDistVOffset = 0;
+    Camera::accessInstance().lookdownDistance = 20;
+    Camera::accessInstance().aimLeadTime = 0.5;
+    Camera::accessInstance().povOffset.set ( 0, 0.5, -2 );
 
     // set up obstacles
     initObstacles ();
@@ -241,7 +241,7 @@ void NetBoidsPlugin::reset ( void )
     CameraPlugin::position3dCamera ( *SimpleVehicle::getSelectedVehicle() );
 
     // make camera jump immediately to new position
-    Camera::camera.doNotSmoothNextMove ();
+    Camera::accessInstance().doNotSmoothNextMove ();
 }
 
 
@@ -573,7 +573,7 @@ void NetBoidsPlugin::drawObstacles ( void )
                        ( ( *o == &insideBigSphere ) ?
                          Color ( 0.2f, 0.2f, 0.4f ) :
                          Color ( 0.1f, 0.1f, 0.2f ) ),
-                       Camera::camera.position () );
+                       Camera::accessInstance().position () );
     }
 }
 

@@ -34,6 +34,7 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/GlobalData.h"
+#include "OpenSteer/PluginRegistry.h"
 #include "EduNetCore/EduNetProfile.h"
 
 
@@ -100,6 +101,8 @@ public:
 	}
 };
 
+bool g_bRunCalled = false;
+
 //-----------------------------------------------------------------------------
 namespace
 {
@@ -149,7 +152,7 @@ void gluiNextPlugin()
 //-----------------------------------------------------------------------------
 void gluiSelectPlugin()
 {
-	AbstractPlugin* currentPlugin = OpenSteer::Plugin::selectedPlugin;
+	AbstractPlugin* currentPlugin = OpenSteer::Plugin::getSelectedPlugin();
 	if( pluginSelection != pluginIndex )
 	{
 		Plugin::selectPluginByIndex( pluginSelection );
@@ -196,7 +199,7 @@ void gluiProfSelectParent()
 //-----------------------------------------------------------------------------
 Application& Application::AccessApplication( void )
 {
-	Plugin::ms_on_plugin_selected_func = onPluginSelectedCallback;
+	PluginRegistry::accessInstance()->setOnPluginSelectedFunc( onPluginSelectedCallback );
 	Application* application = Application::accessInstance();
 	if( NULL == application )
 	{
@@ -259,12 +262,15 @@ void Application::_SDMCleanup( void )
 		return;
 	}
 	bCleanedup = true;
-	if( NULL != OpenSteer::Plugin::selectedPlugin )
+	if( NULL != OpenSteer::Plugin::getSelectedPlugin() )
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 
-	EduNet::shutdownDynamicPlugins();
+	if( true == g_bRunCalled )
+	{
+		EduNet::shutdownDynamicPlugins();
+	}
 
 	if( NULL != OpenSteerUTData::g_openSteerUTDataPtr->appGlui )
 	{
@@ -313,6 +319,7 @@ void Application::_SDMShutdown( void )
 //-----------------------------------------------------------------------------
 int Application::Run(int argc, char **argv)
 {
+	g_bRunCalled = true;
 	// register dynamic plugins
 	EduNet::initializeDynamicPlugins( );
 
@@ -357,7 +364,7 @@ void Application::addGuiElements( GLUI* glui )
 		pluginList->add_item(i, s);
 	}
 
-	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteer::Plugin::selectedPlugin );
+	pluginIndex = pluginSelection = Plugin::getPluginIdx( OpenSteer::Plugin::getSelectedPlugin() );
 	pluginList->do_selection( pluginSelection );
 
 	glui->add_button("Next Plugin", 0,(GLUI_Update_CB)gluiNextPlugin);
@@ -417,23 +424,23 @@ void Application::addGuiElements( GLUI* glui )
 		// steering force update
 
 		GLUI_Spinner* steeringForceFPSSpinner =
-			glui->add_spinner_to_panel( subPanel, "Steering FPS", GLUI_SPINNER_FLOAT, &SteeringForceVehicleUpdate::ms_SteeringForceFPS);
+			glui->add_spinner_to_panel( subPanel, "Steering FPS", GLUI_SPINNER_FLOAT, &GlobalData::getInstance()->m_SteeringForceFPS);
 		steeringForceFPSSpinner->set_float_limits(5.0f, 60.0f);
 
 		GLUI_Spinner* vehicleReplicationFPSSpinner =
-			glui->add_spinner_to_panel( subPanel, "Vehicle Replication FPS", GLUI_SPINNER_FLOAT, &SimplePhysicsVehicle::ms_NetWriteFPS);
+			glui->add_spinner_to_panel( subPanel, "Vehicle Replication FPS", GLUI_SPINNER_FLOAT, &GlobalData::getInstance()->m_NetWriteFPS);
 		vehicleReplicationFPSSpinner->set_float_limits(0.1f, 30.0f);
 
 	}
 
 	glui->add_separator();
 	glui->add_checkbox("Enable Annotation", &this->m_bEnableAnnotation);
-	glui->add_checkbox("Vehicle Annotation", &OpenSteer::SimpleVehicle::ms_collect3DAnnotations);
+	glui->add_checkbox("Vehicle Annotation", &OpenSteer::GlobalData::getInstance()->m_collect3DAnnotations);
 
 	glui->add_separator();
 
 	// initially add the specific plugin panel
-	this->onPluginSelected( OpenSteer::Plugin::selectedPlugin );
+	this->onPluginSelected( OpenSteer::Plugin::getSelectedPlugin() );
 }
 
 //-----------------------------------------------------------------------------
@@ -481,7 +488,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 
 	// opensteer demo options update
 
-	if( ( NULL == OpenSteer::Plugin::selectedPlugin ) || ( elapsedTime <= 0.0f ) )
+	if( ( NULL == OpenSteer::Plugin::getSelectedPlugin() ) || ( elapsedTime <= 0.0f ) )
 	{
 		return;
 	}
@@ -489,7 +496,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 	// if no vehicle is selected, and some exist, select the first one
 	if( SimpleVehicle::getSelectedVehicle() == NULL )
 	{
-		const AVGroup& vehicles = OpenSteer::Plugin::selectedPlugin->allVehicles();
+		const AVGroup& vehicles = OpenSteer::Plugin::getSelectedPlugin()->allVehicles();
 		if( vehicles.size() > 0 )
 		{
 			SimpleVehicle::setSelectedVehicle( vehicles.front() );
@@ -555,7 +562,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 		this->m_kUpdateClock.update();
 		const osScalar preUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
 
-		osAbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(OpenSteer::Plugin::selectedPlugin);
+		osAbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(OpenSteer::Plugin::getSelectedPlugin());
 		assert( NULL != pkUpdatedPlugin );
 
 		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
@@ -592,11 +599,11 @@ void Application::updateSelectedPlugin (const float currentTime,
 void Application::redrawSelectedPlugin (const float currentTime,
 						   const float elapsedTime )
 {
-	if( NULL == OpenSteer::Plugin::selectedPlugin )
+	if( NULL == OpenSteer::Plugin::getSelectedPlugin() )
 	{
 		return;
 	}
-	OpenSteer::Plugin::selectedPlugin->redraw (currentTime, elapsedTime);
+	OpenSteer::Plugin::getSelectedPlugin()->redraw (currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
