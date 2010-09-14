@@ -91,8 +91,10 @@ void NetBoidReplicaFactory::destroyVehicle(
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
 		this->m_uidMap.Set( uiEntityId, NULL );
-		delete pReplicaObject;
+		ET_DELETE pReplicaObject;
 	}
+
+	
 	// do not call the base class in this case !!!
 	//	BaseClass::destroyVehicle( pkVehicle );
 }
