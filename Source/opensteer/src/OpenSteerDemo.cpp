@@ -103,8 +103,8 @@ namespace {
 
 	bool InitializeGlobals( void )
 	{
-		OpenSteer::GlobalSelection::_SDMInitApp( );
-		OpenSteer::GlobalData::_SDMInitApp( );
+		OpenSteer::GlobalSelection::_SDMInitApp();
+		OpenSteer::GlobalData::_SDMInitApp( NULL );
 		return true;
 	}
 
