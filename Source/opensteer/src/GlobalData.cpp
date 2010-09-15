@@ -33,6 +33,7 @@
 #include "OpenSteer/PluginRegistry.h"
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 
 //-----------------------------------------------------------------------------
@@ -127,11 +128,23 @@ namespace OpenSteer {
 	}
 
 	//-----------------------------------------------------------------------------
+	AbstractRenderer* GlobalData::accessRenderer( void )
+	{
+		return GlobalData::getInstance()->m_pkRenderer;
+	}
+	//-----------------------------------------------------------------------------
+	void GlobalData::setRenderer( AbstractRenderer* pkRenderer )
+	{
+		GlobalData::getInstance()->m_pkRenderer = pkRenderer;
+	}
+
+	//-----------------------------------------------------------------------------
 	GlobalData::GlobalData( void ):
 		m_pkSimpleLocalPlayer( NULL ),
 		m_pkSimpleController( NULL ),
 		m_pkPluginRegistry( NULL ),
 		m_pkCamera( NULL ),
+		m_pkRenderer( NULL ),
 		m_bShowClientNetworkTrail(0),
 		m_bShowServerNetworkTrail(0),
 		m_NetWriteFPS(20),

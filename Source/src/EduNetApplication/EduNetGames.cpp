@@ -46,6 +46,7 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetCommon/EduNetOptions.h"
 #include "OpenSteerUT/OpenSteerUT.h"
+#include "OpenSteer/Draw.h"
 
 
 
@@ -345,8 +346,8 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp ( void )
 void
 OpenSteer::OpenSteerDemo::pushPhase ( const int newPhase )
 {
-    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
-    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = OpenSteer::updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
+    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = OpenSteer::drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
 
     // update timer for current (old) phase: add in time since last switch
     updatePhaseTimers ();

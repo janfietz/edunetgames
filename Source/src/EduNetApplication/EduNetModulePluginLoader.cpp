@@ -99,8 +99,9 @@ void ModulePluginLoader::createPluginsFromModule (
 				this->m_plugins.addPlugin ( pkPlugin );
 				// little hack
 				OpenSteer::Plugin::addToRegistry ( pkPlugin );
+				message << "\"" << ( *kNameIter ).c_str() << "\"";
+				message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
 			}
-			message << '"' << ( *kNameIter ).c_str() << '"' << "\n";
 			++kNameIter;
 		}
 		message << std::ends;

@@ -21,13 +21,13 @@ SET(OPENTSTEER_LIB_SRC
  Vec3.cpp
  Vec3Utilities.cpp
  Color.cpp
- Draw.cpp
  lq.c
  Clock.cpp
  Camera.cpp
  Pathway.cpp
  Entity.cpp
  SimplePlayer.cpp
+ Renderer.cpp
 )
 
 SET(OPENTSTEER_LIB_HDRS
@@ -67,6 +67,8 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/Vec3.h
  ../include/OpenSteer/Vec3Utilities.h
  ../include/OpenSteer/SimplePlayer.h
+ ../include/OpenSteer/Renderer.h
+ ../include/OpenSteer/AbstractRenderer.h
 )
 
 #set compiler options to link the lib into a shared lib

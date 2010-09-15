@@ -65,7 +65,7 @@
 #include <algorithm>
 #include <iomanip>
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
-#include "OpenSteer/Draw.h"
+#include "OpenSteer/Renderer.h"
 #endif //! NOT_OPENSTEERDEMO
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/GlobalData.h"

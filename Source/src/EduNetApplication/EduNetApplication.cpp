@@ -36,6 +36,7 @@
 #include "OpenSteer/GlobalData.h"
 #include "OpenSteer/PluginRegistry.h"
 #include "EduNetCore/EduNetProfile.h"
+#include "OpenSteer/Draw.h"
 
 
 using namespace EduNet;
@@ -136,6 +137,9 @@ bool InitializeGlobals( void )
 {
 	static EduNetProfile kProfile;
 	OpenSteerUTData::_SDMInitApp(&kProfile);
+
+	static OpenSteer::OpenGLRenderer kRenderer;
+	OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
 	return true;
 }
 

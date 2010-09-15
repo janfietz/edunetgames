@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteerUT/AbstractVehicleUtilities.h"
-#include "OpenSteer/Draw.h"
+#include "OpenSteer/Renderer.h"
 
 using namespace OpenSteer;
 

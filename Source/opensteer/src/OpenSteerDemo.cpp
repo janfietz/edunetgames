@@ -1471,14 +1471,14 @@ OpenSteer::runGraphics (void)
 
 
 float 
-OpenSteer::drawGetWindowHeight (void) 
+OpenSteer::extern_drawGetWindowHeight (void) 
 {
     return glutGet (GLUT_WINDOW_HEIGHT);
 }
 
 
 float 
-OpenSteer::drawGetWindowWidth  (void) 
+OpenSteer::extern_drawGetWindowWidth  (void) 
 {
     return glutGet (GLUT_WINDOW_WIDTH);
 }

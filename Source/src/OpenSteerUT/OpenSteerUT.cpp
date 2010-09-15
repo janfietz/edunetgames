@@ -31,6 +31,7 @@
 
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/GlobalData.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 OpenSteerUTData* OpenSteerUTData::g_openSteerUTDataPtr = NULL;
 
@@ -101,7 +102,7 @@ namespace
 //-----------------------------------------------------------------------------
 // accessors for GLUT's window dimensions
 float
-OpenSteer::drawGetWindowHeight ( void )
+OpenSteer::extern_drawGetWindowHeight ( void )
 {
 	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
 	if ( OpenSteerUTData::g_openSteerUTDataPtr->viewPort.th > 0 )
@@ -113,7 +114,7 @@ OpenSteer::drawGetWindowHeight ( void )
 
 //-----------------------------------------------------------------------------
 float
-OpenSteer::drawGetWindowWidth ( void )
+OpenSteer::extern_drawGetWindowWidth ( void )
 {
 	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
 	if ( OpenSteerUTData::g_openSteerUTDataPtr->viewPort.tw > 0 )

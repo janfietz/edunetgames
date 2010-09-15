@@ -75,8 +75,8 @@ namespace OpenSteer{
 
 	class PolylineSegmentedPathwaySingleRadius;
 
-	float drawGetWindowHeight(void);
-	float drawGetWindowWidth(void);
+	float extern_drawGetWindowHeight(void);
+	float extern_drawGetWindowWidth(void);
 
 	//-------------------------------------------------------------------------
 	// OpenSteerUT types
