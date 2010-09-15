@@ -51,399 +51,360 @@
 #ifndef OPENSTEER_DRAW_H
 #define OPENSTEER_DRAW_H
 
-
-#include "OpenSteer/Vec3.h"
-#include "OpenSteer/Color.h"
-#include "OpenSteer/AbstractVehicle.h"
-#include "OpenSteer/Obstacle.h"
-
-typedef int GLint;
+#include "OpenSteer/AbstractRenderer.h"
 
 namespace OpenSteer {
 
-	extern float drawGetWindowHeight(void);
-	extern float drawGetWindowWidth(void);
+	//! hosting application must provide this bool. It's true when updating and not drawing,
+	//! false otherwise.
+	//! it has been externed as a first step in making the Draw library useful from
+	//! other applications besides OpenSteerDemo
+	
+
+
+	class OpenGLRenderer : public AbstractRenderer
+	{
+	public:
+		virtual ~OpenGLRenderer(){}
+		
+		virtual float drawGetWindowHeight(void);
+		virtual float drawGetWindowWidth(void);
+
+		virtual GLint begin2dDrawing (float w, float h);
+		virtual void end2dDrawing (GLint originalMatrixMode);
+
+		//-------------------------------------------------------------------------
+		//! warn when draw functions are called during OpenSteerDemo's update phase
+		//
+		//! XXX perhaps this should be made to "melt away" when not in debug mode?
+
+
+		//-------------------------------------------------------------------------
+		//! draw the three axes of a LocalSpace: three lines parallel to the
+		//! basis vectors of the space, centered at its origin, of lengths
+		//! given by the coordinates of "size".
+		virtual void drawAxes  (const AbstractLocalSpace& localSpace,
+						const Vec3& size,
+						const Color& color);
+
+
+		//-------------------------------------------------------------------------
+		//! draw the edges of a box with a given position, orientation, size
+		//! and color.  The box edges are aligned with the axes of the given
+		//! LocalSpace, and it is centered at the origin of that LocalSpace.
+		//! "size" is the main diagonal of the box.
+
+
+		virtual void drawBoxOutline  (const AbstractLocalSpace& localSpace,
+							  const Vec3& size,
+							  const Color& color);
+
+
+		//-------------------------------------------------------------------------
+		//! draw a (filled-in, polygon-based) square checkerboard grid on the XZ
+		//! (horizontal) plane.
+		//
+		//! ("size" is the length of a side of the overall checkerboard, "subsquares"
+		//! is the number of subsquares along each edge (for example a standard
+		//! checkboard has eight), "center" is the 3d position of the center of the
+		//! grid, color1 and color2 are used for alternating subsquares.)
+
+
+		virtual void drawXZCheckerboardGrid (const float size,
+									 const int subsquares,
+									 const Vec3& center,
+									 const Color& color1,
+									 const Color& color2);
+
+
+		//-------------------------------------------------------------------------
+		//! draw a square grid of lines on the XZ (horizontal) plane.
+		//
+		//! ("size" is the length of a side of the overall grid, "subsquares" is the
+		//! number of subsquares along each edge (for example a standard checkboard
+		//! has eight), "center" is the 3d position of the center of the grid, lines
+		//! are drawn in the specified "color".)
+		virtual void drawXZLineGrid (const float size,
+							 const int subsquares,
+							 const Vec3& center,
+							 const Color& color);
+
+		virtual void drawXYLineGrid (const float size,
+			const int subsquares,
+			const Vec3& center,
+			const Color& color);
+
+
+		//-------------------------------------------------------------------------
+		//! Circle/disk drawing utilities
+		virtual void drawCircleOrDisk (const float radius,
+							   const Vec3& axis,
+							   const Vec3& center,
+							   const Color& color,
+							   const int segments,
+							   const bool filled,
+							   const bool in3d);
+
+		virtual void drawXZCircleOrDisk (const float radius,
+								 const Vec3& center,
+								 const Color& color,
+								 const int segments,
+								 const bool filled);
+
+		virtual void draw3dCircleOrDisk (const float radius,
+								 const Vec3& center,
+								 const Vec3& axis,
+								 const Color& color,
+								 const int segments,
+								 const bool filled);
 
+		virtual void drawXZCircle (const float radius,
+								  const Vec3& center,
+								  const Color& color,
+								  const int segments);
 
-	GLint begin2dDrawing (float w, float h);
-	void end2dDrawing (GLint originalMatrixMode);
+		virtual void drawXZDisk (const float radius,
+								const Vec3& center,
+								const Color& color,
+								const int segments);
 
-    //-------------------------------------------------------------------------
-    //! warn when draw functions are called during OpenSteerDemo's update phase
-    //
-    //! XXX perhaps this should be made to "melt away" when not in debug mode?
+		virtual void draw3dCircle (const float radius,
+								  const Vec3& center,
+								  const Vec3& axis,
+								  const Color& color,
+								  const int segments);
 
-    void warnIfInUpdatePhase2( const char* name);
-
-    //! hosting application must provide this bool. It's true when updating and not drawing,
-    //! false otherwise.
-    //! it has been externed as a first step in making the Draw library useful from
-    //! other applications besides OpenSteerDemo
-    extern bool updatePhaseActive;
-
-    inline void warnIfInUpdatePhase (const char* name)
-    {
-        if (updatePhaseActive)
-        {
-            warnIfInUpdatePhase2 (name);
-        }
-    }
-
-    //-----------------------------------------------------------------------------
-    //! this is a typedef for a triangle draw routine which can be passed in
-    //! when using rendering API's of the user's choice.
-    typedef void (*drawTriangleRoutine) (const Vec3& a,
-                                         const Vec3& b,
-                                         const Vec3& c,
-                                         const Color& color);
-
-    //-------------------------------------------------------------------------
-    //! draw the three axes of a LocalSpace: three lines parallel to the
-    //! basis vectors of the space, centered at its origin, of lengths
-    //! given by the coordinates of "size".
-
-
-    void drawAxes  (const AbstractLocalSpace& localSpace,
-                    const Vec3& size,
-                    const Color& color);
-
-
-    //-------------------------------------------------------------------------
-    //! draw the edges of a box with a given position, orientation, size
-    //! and color.  The box edges are aligned with the axes of the given
-    //! LocalSpace, and it is centered at the origin of that LocalSpace.
-    //! "size" is the main diagonal of the box.
-
-
-    void drawBoxOutline  (const AbstractLocalSpace& localSpace,
-                          const Vec3& size,
-                          const Color& color);
-
-
-    //-------------------------------------------------------------------------
-    //! draw a (filled-in, polygon-based) square checkerboard grid on the XZ
-    //! (horizontal) plane.
-    //
-    //! ("size" is the length of a side of the overall checkerboard, "subsquares"
-    //! is the number of subsquares along each edge (for example a standard
-    //! checkboard has eight), "center" is the 3d position of the center of the
-    //! grid, color1 and color2 are used for alternating subsquares.)
-
-
-    void drawXZCheckerboardGrid (const float size,
-                                 const int subsquares,
-                                 const Vec3& center,
-                                 const Color& color1,
-                                 const Color& color2);
-
-
-    //-------------------------------------------------------------------------
-    //! draw a square grid of lines on the XZ (horizontal) plane.
-    //
-    //! ("size" is the length of a side of the overall grid, "subsquares" is the
-    //! number of subsquares along each edge (for example a standard checkboard
-    //! has eight), "center" is the 3d position of the center of the grid, lines
-    //! are drawn in the specified "color".)
-
-
-    void drawXZLineGrid (const float size,
-                         const int subsquares,
-                         const Vec3& center,
-                         const Color& color);
-
-	void drawXYLineGrid (const float size,
-		const int subsquares,
-		const Vec3& center,
-		const Color& color);
-
-
-    //-------------------------------------------------------------------------
-    //! Circle/disk drawing utilities
-
-
-    void drawCircleOrDisk (const float radius,
-                           const Vec3& axis,
-                           const Vec3& center,
-                           const Color& color,
-                           const int segments,
-                           const bool filled,
-                           const bool in3d);
-
-    void drawXZCircleOrDisk (const float radius,
-                             const Vec3& center,
-                             const Color& color,
-                             const int segments,
-                             const bool filled);
-
-    void draw3dCircleOrDisk (const float radius,
-                             const Vec3& center,
-                             const Vec3& axis,
-                             const Color& color,
-                             const int segments,
-                             const bool filled);
-
-    inline void drawXZCircle (const float radius,
-                              const Vec3& center,
-                              const Color& color,
-                              const int segments)
-    {
-        warnIfInUpdatePhase ("drawXZCircle");
-        drawXZCircleOrDisk (radius, center, color, segments, false);
-    }
-
-    inline void drawXZDisk (const float radius,
-                            const Vec3& center,
-                            const Color& color,
-                            const int segments)
-    {
-        warnIfInUpdatePhase ("drawXZDisk");
-        drawXZCircleOrDisk (radius, center, color, segments, true);
-    }
-
-    inline void draw3dCircle (const float radius,
-                              const Vec3& center,
-                              const Vec3& axis,
-                              const Color& color,
-                              const int segments)
-    {
-        warnIfInUpdatePhase ("draw3dCircle");
-        draw3dCircleOrDisk (radius, center, axis, color, segments, false);
-    }
-
-    inline void draw3dDisk (const float radius,
-                            const Vec3& center,
-                            const Vec3& axis,
-                            const Color& color,
-                            const int segments)
-    {
-        warnIfInUpdatePhase ("draw3dDisk");
-        draw3dCircleOrDisk (radius, center, axis, color, segments, true);
-    }
-
-
-    //! draw a circular arc on the XZ plane, from a start point, around a center,
-    //! for a given arc length, in a given number of segments and color.  The
-    //! sign of arcLength determines the direction in which the arc is drawn.
-
-    void drawXZArc (const Vec3& start,
-                    const Vec3& center,
-                    const float arcLength,
-                    const int segments,
-                    const Color& color);
-
+		virtual void draw3dDisk (const float radius,
+								const Vec3& center,
+								const Vec3& axis,
+								const Color& color,
+								const int segments);
 
-    //-------------------------------------------------------------------------
-    //! Sphere drawing utilities
 
+		//! draw a circular arc on the XZ plane, from a start point, around a center,
+		//! for a given arc length, in a given number of segments and color.  The
+		//! sign of arcLength determines the direction in which the arc is drawn.
 
-    //! draw a sphere (wireframe or opaque, with front/back/both culling)
-    void drawSphere (const Vec3 center,
-                     const float radius,
-                     const float maxEdgeLength,
-                     const bool filled,
-                     const Color& color,
-                     const bool drawFrontFacing = true,
-                     const bool drawBackFacing = true,
-                     const Vec3& viewpoint = Vec3::zero);
+		virtual void drawXZArc (const Vec3& start,
+						const Vec3& center,
+						const float arcLength,
+						const int segments,
+						const Color& color);
 
-    //! draw a SphereObstacle
-    void drawSphereObstacle (const SphereObstacle& so,
-                             const float maxEdgeLength,
-                             const bool filled,
-                             const Color& color,
-                             const Vec3& viewpoint);
 
+		//-------------------------------------------------------------------------
+		//! Sphere drawing utilities
 
-    //-------------------------------------------------------------------------
-    //! draw a reticle at the center of the window.  Currently it is small
-    //! crosshair with a gap at the center, drawn in white with black borders
-    //! width and height of screen are passed in
 
+		//! draw a sphere (wireframe or opaque, with front/back/both culling)
+		virtual void drawSphere (const Vec3 center,
+						 const float radius,
+						 const float maxEdgeLength,
+						 const bool filled,
+						 const Color& color,
+						 const bool drawFrontFacing = true,
+						 const bool drawBackFacing = true,
+						 const Vec3& viewpoint = Vec3::zero);
 
-    void drawReticle (float w, float h);
+		//! draw a SphereObstacle
+		virtual void drawSphereObstacle (const SphereObstacle& so,
+								 const float maxEdgeLength,
+								 const bool filled,
+								 const Color& color,
+								 const Vec3& viewpoint);
 
 
-    //-------------------------------------------------------------------------
-	void drawBasic2dCircularLocalSpace (const LocalSpaceData& vehicle,
-		const Color& color, float fRadius, bool bDrawCircle = true, float fUpOffset = 0.0f );
+		//-------------------------------------------------------------------------
+		//! draw a reticle at the center of the window.  Currently it is small
+		//! crosshair with a gap at the center, drawn in white with black borders
+		//! width and height of screen are passed in
 
 
-    void drawBasic2dCircularVehicle (const AbstractVehicle& bv,
-                                     const Color& color);
+		virtual void drawReticle (float w, float h);
 
-    void drawBasic3dSphericalVehicle (const AbstractVehicle& bv,
-                                      const Color& color);
 
-    void drawBasic3dSphericalVehicle (drawTriangleRoutine, const AbstractVehicle& bv,
-                                      const Color& color);
+		//-------------------------------------------------------------------------
+		virtual void drawBasic2dCircularLocalSpace (const LocalSpaceData& vehicle,
+			const Color& color, float fRadius, bool bDrawCircle = true, float fUpOffset = 0.0f );
 
-    //-------------------------------------------------------------------------
-    //! 2d text drawing requires w, h since retrieving viewport w and h differs
-    //! for every graphics API
 
-    void draw2dTextAt3dLocation (const char* text,
-                                 const Vec3& location,
-                                 const Color& color, float w, float h);
+		virtual void drawBasic2dCircularVehicle (const AbstractVehicle& bv,
+										 const Color& color);
 
-    void draw2dTextAt3dLocation (const std::ostringstream& text,
-                                 const Vec3& location,
-                                 const Color& color, float w, float h);
+		virtual void drawBasic3dSphericalVehicle (const AbstractVehicle& bv,
+										  const Color& color);
 
-    void draw2dTextAt2dLocation (const char* text,
-                                 const Vec3 location,
-                                 const Color& color, float w, float h);
+		virtual void drawBasic3dSphericalVehicle (drawTriangleRoutine, const AbstractVehicle& bv,
+										  const Color& color);
 
-    void draw2dTextAt2dLocation (const std::ostringstream& text,
-                                 const Vec3 location,
-                                 const Color& color, float w, float h);
+		//-------------------------------------------------------------------------
+		//! 2d text drawing requires w, h since retrieving viewport w and h differs
+		//! for every graphics API
 
-    //-------------------------------------------------------------------------
-    //! emit an OpenGL vertex based on a Vec3
+		virtual void draw2dTextAt3dLocation (const char* text,
+									 const Vec3& location,
+									 const Color& color, float w, float h);
 
+		virtual void draw2dTextAt3dLocation (const std::ostringstream& text,
+									 const Vec3& location,
+									 const Color& color, float w, float h);
 
-    void glVertexVec3 (const Vec3& v);
+		virtual void draw2dTextAt2dLocation (const char* text,
+									 const Vec3 location,
+									 const Color& color, float w, float h);
 
+		virtual void draw2dTextAt2dLocation (const std::ostringstream& text,
+									 const Vec3 location,
+									 const Color& color, float w, float h);
 
-    //-----------------------------------------------------------------------------
-    //! draw 3d "graphical annotation" lines, used for debugging
+		//-------------------------------------------------------------------------
+		//! emit an OpenGL vertex based on a Vec3
 
 
-    void drawLine (const Vec3& startPoint,
-                   const Vec3& endPoint,
-                   const Color& color);
+		virtual void glVertexVec3 (const Vec3& v);
 
 
-    //-----------------------------------------------------------------------------
-    //! draw 2d lines in screen space: x and y are the relevant coordinates
-    //! w and h are the dimensions of the viewport in pixels
-    void draw2dLine (const Vec3& startPoint,
-                    const Vec3& endPoint,
-                    const Color& color,
-                    float w, float h);
+		//-----------------------------------------------------------------------------
+		//! draw 3d "graphical annotation" lines, used for debugging
 
 
-    //-----------------------------------------------------------------------------
-    //! draw a line with alpha blending
+		virtual void drawLine (const Vec3& startPoint,
+					   const Vec3& endPoint,
+					   const Color& color);
 
-    void drawLineAlpha (const Vec3& startPoint,
-                        const Vec3& endPoint,
-                        const Color& color,
-                        const float alpha);
 
+		//-----------------------------------------------------------------------------
+		//! draw 2d lines in screen space: x and y are the relevant coordinates
+		//! w and h are the dimensions of the viewport in pixels
+		virtual void draw2dLine (const Vec3& startPoint,
+						const Vec3& endPoint,
+						const Color& color,
+						float w, float h);
 
-    //-------------------------------------------------------------------------
-    //! deferred drawing of lines, circles and (filled) disks
 
+		//-----------------------------------------------------------------------------
+		//! draw a line with alpha blending
 
-    void deferredDrawLine (const Vec3& startPoint,
-                           const Vec3& endPoint,
-                           const Color& color);
+		virtual void drawLineAlpha (const Vec3& startPoint,
+							const Vec3& endPoint,
+							const Color& color,
+							const float alpha);
 
-    void deferredDrawCircleOrDisk (const float radius,
-                                   const Vec3& axis,
-                                   const Vec3& center,
-                                   const Color& color,
-                                   const int segments,
-                                   const bool filled,
-                                   const bool in3d);
 
-    void drawAllDeferredLines (void);
-    void drawAllDeferredCirclesOrDisks (void);
+		//-------------------------------------------------------------------------
+		//! deferred drawing of lines, circles and (filled) disks
 
 
-    //-------------------------------------------------------------------------
-    //! Draw a single OpenGL triangle given three Vec3 vertices.
+		virtual void deferredDrawLine (const Vec3& startPoint,
+							   const Vec3& endPoint,
+							   const Color& color);
 
+		virtual void deferredDrawCircleOrDisk (const float radius,
+									   const Vec3& axis,
+									   const Vec3& center,
+									   const Color& color,
+									   const int segments,
+									   const bool filled,
+									   const bool in3d);
 
-    void drawTriangle (const Vec3& a,
-                       const Vec3& b,
-                       const Vec3& c,
-                       const Color& color);
+		virtual void drawAllDeferredLines (void);
+		virtual void drawAllDeferredCirclesOrDisks (void);
 
 
-    //-------------------------------------------------------------------------
-    //! Draw a single OpenGL quadrangle given four Vec3 vertices, and color.
+		//-------------------------------------------------------------------------
+		//! Draw a single OpenGL triangle given three Vec3 vertices.
 
 
-    void drawQuadrangle (const Vec3& a,
-                         const Vec3& b,
-                         const Vec3& c,
-                         const Vec3& d,
-                         const Color& color);
+		virtual void drawTriangle (const Vec3& a,
+						   const Vec3& b,
+						   const Vec3& c,
+						   const Color& color);
 
 
-    //-----------------------------------------------------------------------------
-    //! draws a "wide line segment": a rectangle of the given width and color
-    //! whose mid-line connects two given endpoints
+		//-------------------------------------------------------------------------
+		//! Draw a single OpenGL quadrangle given four Vec3 vertices, and color.
 
 
-    void drawXZWideLine (const Vec3& startPoint,
-                         const Vec3& endPoint,
-                         const Color& color,
-                         float width);
+		virtual void drawQuadrangle (const Vec3& a,
+							 const Vec3& b,
+							 const Vec3& c,
+							 const Vec3& d,
+							 const Color& color);
 
 
-    //-----------------------------------------------------------------------------
+		//-----------------------------------------------------------------------------
+		//! draws a "wide line segment": a rectangle of the given width and color
+		//! whose mid-line connects two given endpoints
 
 
-    void drawCameraLookAt (const Vec3& cameraPosition,
-                           const Vec3& pointToLookAt,
-                           const Vec3& up);
+		virtual void drawXZWideLine (const Vec3& startPoint,
+							 const Vec3& endPoint,
+							 const Color& color,
+							 float width);
 
 
-    //-----------------------------------------------------------------------------
-    //! check for errors during redraw, report any and then exit
+		//-----------------------------------------------------------------------------
 
 
-    void checkForDrawError (const char * locationDescription);
+		virtual void drawCameraLookAt (const Vec3& cameraPosition,
+							   const Vec3& pointToLookAt,
+							   const Vec3& up);
 
 
+		//-----------------------------------------------------------------------------
+		//! check for errors during redraw, report any and then exit
 
-    //-----------------------------------------------------------------------------
-    //! return a normalized direction vector pointing from the camera towards a
-    //! given point on the screen: the ray that would be traced for that pixel
 
+		virtual void checkForDrawError (const char * locationDescription);
 
-    Vec3 directionFromCameraToScreenPosition (int x, int y, int h);
 
-	/*
-	*  Prof_draw_gl -- display the current report via OpenGL
-	*
-	*  You must provide a callable text-printing function.
-	*  Put the opengl state into a 2d rendering mode.
-	*
-	*  Parameters:
-	*    <sx,sy>         --  location where top line is drawn
-	*    <width, height> --  total size of display (if too small, text will overprint)
-	*    line_spacing    --  how much to move sy by after each line; use a
-	*                        negative value if y decreases down the screen
-	*    precision       --  decimal places of precision for time data, 1..4 (try 2)
-	*    print_text      --  function to display a line of text starting at the
-	*                        given coordinate; best if 0,1..9 are fixed-width
-	*    text_width      --  a function that computes the pixel-width of
-	*                        a given string before printing. you can fake with a
-	*                        simple approximation of width('0')*strlen(str)
-	*
-	*  to avoid overprinting, you can make print_text truncate long strings
-	*/
-	void profileDraw(float sx, float sy,
-		float width, float height,
-		float line_spacing,
-		int precision, float sw, float sh);
 
-	/*
-	*  Parameters
-	*    <sx, sy>      --  origin of the graph--location of (0,0)
-	*    x_spacing     --  screenspace size of each history sample; e.g.
-	*                         2.0 pixels
-	*    y_spacing     --  screenspace size of one millisecond of time;
-	*                         for an app with max of 20ms in any one zone,
-	*                         8.0 would produce a 160-pixel tall display,
-	*                         assuming screenspace is in pixels
-	*/
-	void profileDrawGraph(float sx, float sy,
-		float x_spacing, float y_spacing, float sw, float sh);
+		//-----------------------------------------------------------------------------
+		//! return a normalized direction vector pointing from the camera towards a
+		//! given point on the screen: the ray that would be traced for that pixel
 
+
+		virtual Vec3 directionFromCameraToScreenPosition (int x, int y, int h);
+
+		/*
+		*  Prof_draw_gl -- display the current report via OpenGL
+		*
+		*  You must provide a callable text-printing function.
+		*  Put the opengl state into a 2d rendering mode.
+		*
+		*  Parameters:
+		*    <sx,sy>         --  location where top line is drawn
+		*    <width, height> --  total size of display (if too small, text will overprint)
+		*    line_spacing    --  how much to move sy by after each line; use a
+		*                        negative value if y decreases down the screen
+		*    precision       --  decimal places of precision for time data, 1..4 (try 2)
+		*    print_text      --  function to display a line of text starting at the
+		*                        given coordinate; best if 0,1..9 are fixed-width
+		*    text_width      --  a function that computes the pixel-width of
+		*                        a given string before printing. you can fake with a
+		*                        simple approximation of width('0')*strlen(str)
+		*
+		*  to avoid overprinting, you can make print_text truncate long strings
+		*/
+		virtual void profileDraw(float sx, float sy,
+			float width, float height,
+			float line_spacing,
+			int precision, float sw, float sh);
+
+		/*
+		*  Parameters
+		*    <sx, sy>      --  origin of the graph--location of (0,0)
+		*    x_spacing     --  screenspace size of each history sample; e.g.
+		*                         2.0 pixels
+		*    y_spacing     --  screenspace size of one millisecond of time;
+		*                         for an app with max of 20ms in any one zone,
+		*                         8.0 would produce a 160-pixel tall display,
+		*                         assuming screenspace is in pixels
+		*/
+		virtual void profileDrawGraph(float sx, float sy,
+			float x_spacing, float y_spacing, float sw, float sh);
+
+	};
 
 } //! namespace OpenSteer
 

@@ -12,6 +12,7 @@ LowSpeedTurn.cpp
 CaptureTheFlag.cpp
 Boids.cpp
 ../src/main.cpp
+../src/Draw.cpp
 ../src/OpenSteerDemo.cpp
 )
 

@@ -190,8 +190,8 @@ private:
 
 //-----------------------------------------------------------------------------
 // accessors for GLUT's window dimensions
-float drawGetWindowHeight ( void );
-float drawGetWindowWidth ( void );
+float extern_drawGetWindowHeight ( void );
+float extern_drawGetWindowWidth ( void );
 
 } // namespace OpenSteer
 

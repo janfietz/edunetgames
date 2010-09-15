@@ -49,6 +49,8 @@ namespace {
 	bool InitializeGlobals( void )
 	{
 		OpenSteer::GlobalData::_SDMInitApp( NULL );
+		static OpenSteer::OpenGLRenderer kRenderer;
+		OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
 		return true;
 	}
 
@@ -64,7 +66,7 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 		// the open steer sample is heavily working
 		// with global data so initialization
 		// is very random
-		GlobalData::_SDMInitApp( NULL );
+		InitializeGlobals();
 	}
 }
 

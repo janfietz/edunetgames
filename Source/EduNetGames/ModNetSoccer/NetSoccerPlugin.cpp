@@ -46,7 +46,7 @@
 #include <iomanip>
 #include <sstream>
 #include "OpenSteer/SimpleVehicle.h"
-#include "OpenSteer/Draw.h"
+#include "OpenSteer/Renderer.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"

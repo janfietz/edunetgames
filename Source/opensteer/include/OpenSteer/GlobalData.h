@@ -39,6 +39,7 @@ namespace OpenSteer {
 	class AbstractController;
 	class PluginRegistry;
 	class Camera;
+	class AbstractRenderer;
 
 	class GlobalData
 	{
@@ -56,6 +57,8 @@ namespace OpenSteer {
 		static EduNet::IProfile* accessProfile( void );
 
 		static PluginRegistry* accessPluginRegistry( void );
+		static AbstractRenderer* accessRenderer( void );
+		static void setRenderer( AbstractRenderer* pkRenderer );
 
 		int m_bReplicationDataConfig[ESerializeDataType_Count];
 		size_t m_uiReplicationDataBytes[ESerializeDataType_Count];
@@ -75,6 +78,7 @@ namespace OpenSteer {
 		AbstractController* m_pkSimpleController;
 		PluginRegistry* m_pkPluginRegistry;
 		Camera* m_pkCamera;
+		AbstractRenderer* m_pkRenderer;
 		EduNet::IProfile* m_pkProfile;
 		bool m_bIsDll;
 
