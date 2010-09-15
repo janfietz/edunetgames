@@ -46,7 +46,7 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderOfflinePlugin )
 
-	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
+	virtual float selectionOrderSortKey (void) const { return 5.0f ;}
 
 	virtual void initGui( void* pkUserdata )
 	{
@@ -124,7 +124,7 @@ public:
 
 	OS_IMPLEMENT_CLASSNAME( NetBoidRenderPeerPlugin )
 	
-	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
+	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 
 	virtual void initGui( void* pkUserdata )
 	{
