@@ -50,8 +50,8 @@ namespace OpenSteer
 		virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId ) const ET_ABSTRACT;
 		virtual OpenSteer::AbstractVehicle* createVehicle( void ) const ET_ABSTRACT;
 
-		virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const ET_ABSTRACT;
-		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const ET_ABSTRACT;
+		virtual bool destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const ET_ABSTRACT;
+		virtual bool destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const ET_ABSTRACT;
 	protected:
 	};
 
@@ -88,8 +88,8 @@ namespace OpenSteer
 		  virtual OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId ) const;
 		  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId ) const;
 		  virtual OpenSteer::AbstractVehicle* createVehicle( void ) const;
-		  virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
-		  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+		  virtual bool destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
+		  virtual bool destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 	protected:
 
 
@@ -142,8 +142,8 @@ namespace OpenSteer
 
 		virtual OpenSteer::AbstractVehicle* createVehicle( void ) const;
 
-		virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
-		virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+		virtual bool destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
+		virtual bool destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 	protected:
 	};
 

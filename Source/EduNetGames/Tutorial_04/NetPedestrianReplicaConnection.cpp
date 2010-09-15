@@ -81,7 +81,7 @@ OpenSteer::AbstractVehicle* NetPedestrianReplicaFactory::createVehicle( OpenStee
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+bool NetPedestrianReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
 {
 	const OpenSteer::InstanceTracker::Id uiEntityId = pkVehicle->getEntityId();	
 	if(true == this->m_uidMap.Has( uiEntityId ))
@@ -89,8 +89,10 @@ void NetPedestrianReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pk
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId);		
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
 		this->m_uidMap.Set( uiEntityId, NULL );
-		delete pReplicaObject;
+		ET_DELETE pReplicaObject;
+		return true;
 	}
+	return false;
 // do not call the base class in this case !!!
 //	BaseClass::destroyVehicle( pkVehicle );
 }

@@ -103,6 +103,7 @@ SimpleVehicle::~SimpleVehicle (void)
 {
 	// cleanup the proximity token in case there is one
 	this->allocateProximityToken( NULL );
+	this->setParentEntity( NULL );
 	if( this == SimpleVehicle::getSelectedVehicle() )
 	{
 		SimpleVehicle::setSelectedVehicle( NULL );

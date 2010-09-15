@@ -156,28 +156,37 @@ OpenSteer::AbstractVehicle* AbstractEntityReplicaFactory::createVehicle( OpenSte
 }
 
 //-----------------------------------------------------------------------------
-void AbstractEntityReplicaFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+bool AbstractEntityReplicaFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
 {
-	if( NULL == pkEntity )
+	if( true == ownsEntity(pkEntity) )
 	{
-		return;
-	}
-	const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();	
-	if(true == this->m_uidMap.Has( uiEntityId ))
-	{
+		const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();
 		RakNet::Replica3* pReplicaObject = this->m_uidMap.Get( uiEntityId );		
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
 		this->m_uidMap.Set( uiEntityId, NULL );
 		ET_DELETE pReplicaObject;
+		return true;
 	}
 	// do not call the base class in this case !!!
 	//	BaseClass::destroyEntity( pkVehicle );
+	return false;
 }
 
 //-----------------------------------------------------------------------------
-void AbstractEntityReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+bool AbstractEntityReplicaFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
 {
-	this->destroyEntity( pkVehicle );
+	return this->destroyEntity( pkVehicle );
+}
+
+//-----------------------------------------------------------------------------
+bool AbstractEntityReplicaFactory::ownsEntity( OpenSteer::AbstractEntity* pkEntity ) const
+{
+	if( NULL != pkEntity )
+	{
+		const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();	
+		return this->m_uidMap.Has( uiEntityId );	
+	}
+	return false;	
 }
 
 //-----------------------------------------------------------------------------

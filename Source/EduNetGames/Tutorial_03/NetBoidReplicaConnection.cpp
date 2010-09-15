@@ -82,7 +82,7 @@ OpenSteer::AbstractVehicle* NetBoidReplicaFactory::createVehicle(
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidReplicaFactory::destroyVehicle( 
+bool NetBoidReplicaFactory::destroyVehicle( 
 	OpenSteer::AbstractVehicle* pkVehicle ) const
 {
 	const OpenSteer::InstanceTracker::Id uiEntityId = pkVehicle->getEntityId();	
@@ -92,9 +92,10 @@ void NetBoidReplicaFactory::destroyVehicle(
 		this->m_pkReplicaManager->BroadcastDestruction( pReplicaObject, UNASSIGNED_SYSTEM_ADDRESS);
 		this->m_uidMap.Set( uiEntityId, NULL );
 		ET_DELETE pReplicaObject;
+		return true;
 	}
 
-	
+	return false;
 	// do not call the base class in this case !!!
 	//	BaseClass::destroyVehicle( pkVehicle );
 }

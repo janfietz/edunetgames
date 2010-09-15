@@ -137,6 +137,8 @@ private:
     void updateObstacles ( void );
     void drawObstacles ( void );
 
+	bool removeBoidFromFactory(AbstractVehicle* boid, const AbstractEntityFactory* pkFactory);
+
     class SO : public OpenSteer::SphereObstacle
     {
         void draw ( const bool filled, const OpenSteer::Color& color, const OpenSteer::Vec3& vp ) const

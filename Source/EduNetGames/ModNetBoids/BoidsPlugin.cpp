@@ -384,25 +384,36 @@ void NetBoidsPlugin::removeBoidFromFlock ( void )
     AbstractVehicleGroup kVG ( this->allVehicles() );
     if ( kVG.population() > 0 )
     {
-        // save pointer to last pedestrian, then remove it from the crowd
-        AbstractVehicle* boid = flock.back();
-        flock.pop_back();
-
-        // if it is SimpleVehicle's selected vehicle, unselect it
-        if ( boid == SimpleVehicle::getSelectedVehicle() )
-            SimpleVehicle::setSelectedVehicle( NULL );
-
-        // delete the Pedestrian
         const AbstractEntityFactory* pkFactory = this->getEntityFactory();
-        if ( NULL != pkFactory )
-        {
-            pkFactory->destroyVehicle ( boid );
-        }
-        this->removeVehicle( boid );
-        boid = NULL;
+
+		OpenSteer::Boid::groupType::iterator it = flock.begin();
+		OpenSteer::Boid::groupType::const_iterator itEnd = flock.end();
+		while(it != itEnd)
+		{
+			AbstractVehicle* boid = *it;
+			if (true == removeBoidFromFactory(boid, pkFactory) )
+			{
+				this->removeVehicle( boid );
+				return;
+			}
+			else
+			{
+				++it;
+			}			
+		}		
     }
 }
 
+//-----------------------------------------------------------------------------
+bool NetBoidsPlugin::removeBoidFromFactory(AbstractVehicle* boid,
+	const AbstractEntityFactory* pkFactory)
+{
+	if ( NULL != pkFactory )
+	{
+		return pkFactory->destroyVehicle ( boid );
+	}
+	return true;
+}
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetBoidsPlugin::createVehicle (
     EntityClassId classId ) const
