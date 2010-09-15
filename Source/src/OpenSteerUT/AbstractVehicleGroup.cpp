@@ -192,15 +192,7 @@ void AbstractVehicleGroup::removeVehicleFromPlugin( const AbstractVehicle* pkVeh
 	AVGroup::iterator kIter = this->findVehicle( pkVehicle );
 	if(kIter != m_kVehicles.end())
 	{
-		// release the proximity token in case allocated
-		(*kIter)->allocateProximityToken( NULL );
-		(*kIter)->setParentEntity( NULL );
-		m_kVehicles.erase( kIter );
- 		// if it is SimpleVehicle's selected vehicle, unselect it
- 		if( pkVehicle == SimpleVehicle::getSelectedVehicle() )
-		{
- 			SimpleVehicle::setSelectedVehicle( NULL );
-		}
+		m_kVehicles.erase( kIter ); 		
 	}
 }
 

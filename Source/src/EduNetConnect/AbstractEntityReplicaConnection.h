@@ -79,8 +79,10 @@ public:
 	  
 	  virtual OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId ) const;
 	  virtual OpenSteer::AbstractVehicle* createVehicle( OpenSteer::EntityClassId classId ) const;
-	  virtual void destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
-	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+	  virtual bool destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const;
+
+	  virtual bool ownsEntity( OpenSteer::AbstractEntity* pkEntity ) const;
+	  virtual bool destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 	  OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId,
 		  osAbstractPlugin* pkPlugin ) const;

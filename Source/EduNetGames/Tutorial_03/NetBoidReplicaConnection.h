@@ -72,7 +72,7 @@ public:
 
 	   virtual OpenSteer::AbstractVehicle* createVehicle( 
 		   OpenSteer::EntityClassId classId ) const;
-	  virtual void destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
+	  virtual bool destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const;
 
 private:
 

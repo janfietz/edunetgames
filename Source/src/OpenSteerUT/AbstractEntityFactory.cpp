@@ -70,15 +70,17 @@ OpenSteer::AbstractVehicle* EntityFactory::createVehicle(  ) const
 };
 
 //-----------------------------------------------------------------------------
-void EntityFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+bool EntityFactory::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
 {
 	ET_SAFE_DELETE( pkEntity );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-void EntityFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+bool EntityFactory::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
 {
 	ET_SAFE_DELETE( pkVehicle );
+	return true;
 }
 
 
@@ -160,13 +162,15 @@ OpenSteer::AbstractVehicle* EntityFactoryArray::createVehicle(  ) const
 };
 
 //-----------------------------------------------------------------------------
-void EntityFactoryArray::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
+bool EntityFactoryArray::destroyEntity( OpenSteer::AbstractEntity* pkEntity ) const
 {
 	ET_SAFE_DELETE( pkEntity );
+	return true;
 }
 
 //-----------------------------------------------------------------------------
-void EntityFactoryArray::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
+bool EntityFactoryArray::destroyVehicle( OpenSteer::AbstractVehicle* pkVehicle ) const
 {
 	ET_SAFE_DELETE( pkVehicle );
+	return true;
 }
