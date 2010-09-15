@@ -52,6 +52,8 @@ public:
 	
 	void handleFunctionKeys (int keyNumber);
 	virtual void initGui( void* pkUserdata );
+	virtual void open( void );
+	virtual void close( void );
 
 
 	virtual void StartNetworkSession( void );
@@ -62,7 +64,7 @@ private:
 	
 	class NetBoidReplicaFactory* m_pkBoidFactory;
 	class NetBoidConditionReplica* m_pkConditionReplic;	
-	NetBoidReplicaManager m_kReplicaManager;
+	NetBoidReplicaManager* m_pkReplicaManager;
 
 	
 };
@@ -79,6 +81,9 @@ public:
 	virtual const char* name() const { return this->getClassName(); };
 
 	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
+	virtual void open( void );
+	virtual void close( void );
+
 
 	virtual void StartNetworkSession( void );
 	virtual void CreateContent( void );
@@ -87,8 +92,7 @@ public:
 private:
 	
 	class NetBoidConditionReplica* m_pkConditionReplic;
-	NetBoidReplicaManager m_kReplicaManager;
-	
+	NetBoidReplicaManager* m_pkReplicaManager;
 
 };
 
