@@ -207,7 +207,7 @@ OpenSteer::OpenSteerDemo::exit ( int exitCode )
 void
 OpenSteer::OpenSteerDemo::selectDefaultPlugin ( void )
 {
-    const char* pszPluginName = EduNetOptions::accessOptions().getSelectedPlugin();
+    const char* pszPluginName = EduNet::Options::accessOptions().getSelectedPlugin();
     OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );
     if ( NULL == pkPlugin )
     {

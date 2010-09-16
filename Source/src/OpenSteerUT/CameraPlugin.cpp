@@ -86,14 +86,14 @@ void CameraPlugin::initGui( void* pkUserdata )
 //-----------------------------------------------------------------------------
 // set a certain initial camera state used by several plug-ins
 void 
-CameraPlugin::init3dCamera( AbstractVehicle& selected )
+CameraPlugin::init3dCamera( AbstractLocalSpace& selected )
 {
 	init3dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::init3dCamera (AbstractVehicle& selected,
+CameraPlugin::init3dCamera (AbstractLocalSpace& selected,
 										float distance,
 										float elevation)
 {
@@ -105,14 +105,14 @@ CameraPlugin::init3dCamera (AbstractVehicle& selected,
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::init2dCamera( AbstractVehicle& selected )
+CameraPlugin::init2dCamera( AbstractLocalSpace& selected )
 {
 	CameraPlugin::init2dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::init2dCamera( AbstractVehicle& selected,
+CameraPlugin::init2dCamera( AbstractLocalSpace& selected,
 										float distance,
 										float elevation )
 {
@@ -124,14 +124,14 @@ CameraPlugin::init2dCamera( AbstractVehicle& selected,
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::position3dCamera( AbstractVehicle& selected )
+CameraPlugin::position3dCamera( AbstractLocalSpace& selected )
 {
 	CameraPlugin::position3dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::position3dCamera( AbstractVehicle& selected,
+CameraPlugin::position3dCamera( AbstractLocalSpace& selected,
 											float distance,
 											float /*elevation*/ )
 {
@@ -171,7 +171,7 @@ CameraPlugin::position3dCamera( AbstractVehicle& selected,
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::position2dCamera( AbstractVehicle& selected )
+CameraPlugin::position2dCamera( AbstractLocalSpace& selected )
 {
 	float distance = cameraTargetDistance;
 	float elevation = camera2dElevation;
@@ -188,7 +188,7 @@ CameraPlugin::position2dCamera( AbstractVehicle& selected )
 
 //-----------------------------------------------------------------------------
 void 
-CameraPlugin::position2dCamera( AbstractVehicle& selected,
+CameraPlugin::position2dCamera( AbstractLocalSpace& selected,
 											float distance,
 											float elevation )
 {
@@ -211,7 +211,7 @@ CameraPlugin::position2dCamera( AbstractVehicle& selected,
 void 
 CameraPlugin::updateCamera (const float currentTime,
 										const float elapsedTime,
-										const AbstractVehicle& selected)
+										const AbstractLocalSpace& selected)
 {
 	OpenSteer::Camera::updateCamera( 
 		currentTime, elapsedTime, selected, OpenSteer::Clock::processClock().getPausedState () );
@@ -228,7 +228,11 @@ void CameraPlugin::redraw( const float currentTime, const float elapsedTime )
 		return;
 	}
 	// selected Pedestrian (user can mouse click to select another)
-	AbstractVehicle* selected = SimpleVehicle::getSelectedVehicle();
+	const AbstractLocalSpace* selected = SimpleVehicle::getSelectedVehicle();
+	if( NULL == selected )
+	{
+		selected = Camera::getLocalSpaceToTrack();
+	}
 	// TODO: determine paused state
 	const bool simulationPaused = OpenSteer::Clock::processClock().getPausedState();
 	// update camera

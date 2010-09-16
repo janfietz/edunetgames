@@ -32,15 +32,15 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-void initPluginCamera( void )
+void initPluginCamera( AbstractPlugin* pkPlugin )
 {
 	// camera setup
-	osAbstractVehicle* vehicle = NULL;
-	osAbstractVehicle& kVehicle = *vehicle;
-	CameraPlugin::init2dCamera( kVehicle );
+	osAbstractLocalSpace* localSpace = dynamic_cast<osAbstractLocalSpace*>(pkPlugin);
+	osAbstractLocalSpace& kLocalSpace = *localSpace;
+	CameraPlugin::init2dCamera( kLocalSpace );
 	// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
 	Camera::accessInstance().mode = Camera::cmStraightDown;
-	Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
+	Camera::accessInstance().fixedTarget.set( 0, 0, 0 );
 	Camera::accessInstance().fixedPosition.set( 0, 20, 0 );
 	Camera::accessInstance().lookdownDistance = 15;
 	// make camera jump immediately to new position
@@ -74,13 +74,14 @@ void ZonePlugin::zoneUtility( const Vec3& gridTarget )
 		const Color gray1(0.27f);
 		const Color gray2(0.30f);
 		// draw 50x50 checkerboard grid with 50 squares along each side
-		drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
+		drawXZCheckerboardGrid( this->m_kZoneExtent.x, this->m_kZoneExtent.z,
+			this->position(), gray1, gray2);
 	}
 	else
 	{
 		// alternate style
-		drawXYLineGrid (50, 50, gridCenter, gBlack);
-		drawXZLineGrid (50, 50, gridCenter, gBlack);
+		drawXZLineGrid (this->m_kZoneExtent.x, this->m_kZoneExtent.z, 
+			this->position(), gBlack);
 	}
 }
 
@@ -99,7 +100,7 @@ void ZonePlugin::open( void )
 	// the root zone
 	if( NULL == pkParentZone )
 	{
-		initPluginCamera();
+		initPluginCamera( this );
 	}
 
 	BaseClass::open();

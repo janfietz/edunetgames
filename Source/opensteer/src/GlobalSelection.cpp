@@ -65,7 +65,7 @@ namespace OpenSteer {
 	GlobalSelection::GlobalSelection( void ):
 		selectedVehicle(NULL),
 		nearestMouseVehicle(NULL),
-		cameraVehicleToTrack(NULL)
+		cameraLocalSpaceToTrack(NULL)
 	{
 	}
 
@@ -79,15 +79,15 @@ namespace OpenSteer {
 	}
 
 	//-----------------------------------------------------------------------------
-	void GlobalSelection::setCameraVehicleToTrack( const AbstractVehicle* vehicle )
+	void GlobalSelection::setCameraLocalSpaceToTrack( const AbstractLocalSpace* localSpace )
 	{
 		if( NULL != GlobalSelection::globalSelection )
 		{
-			GlobalSelection::globalSelection->cameraVehicleToTrack = vehicle;
+			GlobalSelection::globalSelection->cameraLocalSpaceToTrack = localSpace;
 		}
 		else
 		{
-			if( NULL != vehicle )
+			if( NULL != localSpace )
 			{
 				bool bTest = true;
 				bTest = false;
@@ -107,8 +107,6 @@ namespace OpenSteer {
 		{
 			if( NULL != vehicle )
 			{
-				bool bTest = true;
-				bTest = false;
 				assert( NULL != GlobalSelection::globalSelection );
 			}
 		}
@@ -133,11 +131,11 @@ namespace OpenSteer {
 	}
 
 	//-----------------------------------------------------------------------------
-	const AbstractVehicle* GlobalSelection::getCameraVehicleToTrack( void )
+	const AbstractLocalSpace* GlobalSelection::getCameraLocalSpaceToTrack( void )
 	{
 		if( NULL != GlobalSelection::globalSelection )
 		{
-			return GlobalSelection::globalSelection->cameraVehicleToTrack;
+			return GlobalSelection::globalSelection->cameraLocalSpaceToTrack;
 		}
 		return NULL;
 	}

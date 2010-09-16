@@ -198,7 +198,12 @@ namespace OpenSteer {
 		virtual const Vec3& linearVelocity (void) const OS_ABSTRACT;
 		virtual const Vec3& setLinearVelocity (const Vec3& p) OS_ABSTRACT;
 
-        //! use right-(or left-)handed coordinate space
+		// TODO: unify see linearVelocity above ...
+		//! velocity of local space
+		//        virtual const Vec3& velocity (void) const OS_ABSTRACT;
+		virtual Vec3 velocity (void) const OS_ABSTRACT;
+
+       //! use right-(or left-)handed coordinate space
         virtual bool rightHanded (void) const OS_ABSTRACT;
 
         //! reset transform to identity
@@ -236,7 +241,10 @@ namespace OpenSteer {
 
 		virtual void randomizeHeadingOnXZPlane (void) OS_ABSTRACT;
 
-    };
+		//! predict position of this vehicle at some time in the future
+		//! (assumes velocity remains constant)
+		virtual Vec3 predictFuturePosition (const float predictionTime) const OS_ABSTRACT;
+   };
 
     //-----------------------------------------------------------------------------
 	class AbstractUpdatedLocalSpace : public AbstractLocalSpace, public AbstractUpdated  {

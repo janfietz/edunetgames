@@ -1,6 +1,3 @@
-#ifndef __EDUNETOPTIONS_H__
-#define __EDUNETOPTIONS_H__
-
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,62 +26,14 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCore/EduNetCore.h"
+#include "EduNetApplication/EduNetMain.h"
+#include "EduNetApplication/EduNetApplication.h"
+//-----------------------------------------------------------------------------
+int main (int argc, char **argv)
+{
+	EduNet::Application::AccessApplication().setAllowLocalPlayer( true );
 
-namespace EduNet	{
-
-	//-----------------------------------------------------------------------------
-	class Options
-	{
-	public:
-
-		int parseCommandLine ( int argc, char **argv );
-
-		void setup ( void );
-
-		bool continueProcess ( void ) const;
-		void setContinueProcess ( bool bValue );
-
-		static const char* getAppName ( void );
-
-		void setSelectedPlugin ( const char* pluginName )
-		{
-			this->m_kPluginName.assign ( pluginName );
-		}
-		const char* getSelectedPlugin ( void )
-		{
-			return this->m_kPluginName.c_str();
-		}
-		enStringArray_t& accessModuleNameList ( void )
-		{
-			return this->m_kModuleNames;
-		};
-
-		static Options& accessOptions ( void );
-
-
-	private:
-		Options();
-		virtual ~Options();
-		bool m_bContinueProcess;
-		enString_t m_kPluginName;
-		enStringArray_t m_kModuleNames;
-	};
-
-	//-----------------------------------------------------------------------------
-	inline
-		bool Options::continueProcess ( void ) const
-	{
-		return this->m_bContinueProcess;
-	}
-
-	//-----------------------------------------------------------------------------
-	inline
-		void Options::setContinueProcess ( bool bValue )
-	{
-		this->m_bContinueProcess = bValue;
-	}
-
+	return ::EduNetMain( argc, argv );
 }
 
-#endif  // __EDUNETOPTIONS_H__
+

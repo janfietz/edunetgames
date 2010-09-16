@@ -91,9 +91,6 @@ namespace OpenSteer {
         virtual float radius (void) const OS_ABSTRACT;
         virtual float setRadius (float) OS_ABSTRACT;
 
-        //! velocity of vehicle
-//        virtual const Vec3& velocity (void) const OS_ABSTRACT;
-		virtual Vec3 velocity (void) const OS_ABSTRACT;
 
         //! speed of vehicle  (may be faster than taking magnitude of velocity)
         virtual float speed (void) const OS_ABSTRACT;
@@ -102,10 +99,6 @@ namespace OpenSteer {
         //! groups of (pointers to) abstract vehicles, and iterators over them
         typedef std::vector<AbstractVehicle*> group;
         typedef group::const_iterator iterator;    
-
-        //! predict position of this vehicle at some time in the future
-        //! (assumes velocity remains constant)
-        virtual Vec3 predictFuturePosition (const float predictionTime) const OS_ABSTRACT;
 
         //-----------------------------------------------------------------------
         //! XXX this vehicle-model-specific functionality functionality seems out

@@ -31,7 +31,7 @@
 
 // application name macro
 #ifndef EDUNET_APPNAME
-#define EDUNET_APPNAME EduNetOptions::getAppName()
+#define EDUNET_APPNAME EduNet::Options::getAppName()
 #endif
 
 // profiling

@@ -218,7 +218,7 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 bool ModuleManager::appWantsToLoadModule (
 	const char* pszModuleName )
 {
-	const enStringArray_t& kNames = EduNetOptions::accessOptions().accessModuleNameList();
+	const enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
 
 	// by default load all
 	if (true == kNames.empty())

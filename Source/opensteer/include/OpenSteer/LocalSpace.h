@@ -125,7 +125,14 @@ namespace OpenSteer {
 		virtual const Vec3& linearVelocity (void) const {return _linearVelocity;};
 		virtual const Vec3& setLinearVelocity (const Vec3& p) {_linearVelocity = p;return _linearVelocity;};
 
-        //-------------------------------------------------------------------------
+		virtual Vec3 velocity (void) const 
+		{
+			// note: the simple vehicle returns
+			// return forward() * _speed;
+			return this->linearVelocity();
+			/*forward() * _speed;*/ 
+		}
+       //-------------------------------------------------------------------------
         //! Global compile-time switch to control handedness/chirality: should
         //! LocalSpace use a left- or right-handed coordinate system?  This can be
         //! overloaded in derived types (e.g. vehicles) to change handedness.
@@ -306,6 +313,12 @@ namespace OpenSteer {
 			setSide (localRotateForwardToSide (forward()));
 		}
 
+		// predict position of this local space at some time in the future
+		// extension idea - predictFutureLocalSpace ?
+		Vec3 predictFuturePosition (const float predictionTime) const
+		{
+			return position() + (velocity() * predictionTime);
+		}
     };
 
 	//-------------------------------------------------------------------------

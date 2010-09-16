@@ -26,20 +26,18 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetBoidModule.h"
-#include "NetBoidPlugins.h"
+#include "LectureModule.h"
+#include "EduNetConnect/NetworkPlugin.h"
 #include "OpenSteerUT/OpenSteerUT.h"
 
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-	kSettings.uiClientStartPort = CLIENT_PORT + 100;
-	kSettings.uiServerStartPort = SERVER_PORT + 100;
-	kSettings.sessionPassword = "NetBoidTutorials";
+	kSettings.uiClientStartPort = CLIENT_PORT + 1000;
+	kSettings.uiServerStartPort = SERVER_PORT + 1000;
+	kSettings.sessionPassword = "Lecture00";
 	kSettings.uiPortPongCount = 10;
 }
-
-
 
 //-----------------------------------------------------------------------------
 void OpenSteer::handleGlobalDataInstanceFailure( void )
@@ -48,82 +46,61 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 	assert( true == GlobalData::hasInstance() );
 }
 
-//-----------------------------------------------------------------------------
 namespace EduNet	{
 
 	//-----------------------------------------------------------------------------
-	NetBoidPluginFactory::NetBoidPluginFactory()
+	LectureModulePluginFactory::LectureModulePluginFactory()
 	{
-
-	}
-	//-----------------------------------------------------------------------------
-	NetBoidPluginFactory::~NetBoidPluginFactory()
-	{
-
-	}
-	//-----------------------------------------------------------------------------
-	void NetBoidPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
-	{
-		kNames.push_back("NetBoidRenderOfflinePlugin");
-		kNames.push_back("NetBoidRenderPeerPlugin");
-		kNames.push_back("NetBoidMultiplePeerPlugin");
-		kNames.push_back("NetBoidServerPlugin");
-		kNames.push_back("NetBoidClientPlugin");
 
 	}
 
 	//-----------------------------------------------------------------------------
-	OpenSteer::AbstractPlugin* NetBoidPluginFactory::createPluginByNameInternal(
+	LectureModulePluginFactory::~LectureModulePluginFactory()
+	{
+
+	}
+
+	//-----------------------------------------------------------------------------
+	void LectureModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
+	{
+		// TODO: add supported plugin names to this array
+	}
+
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin* LectureModulePluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
 		std::string kName(pszName);
-		if (0 == kName.compare("NetBoidRenderOfflinePlugin"))
-		{
-			return ET_NEW NetBoidRenderOfflinePlugin(false);
-		}
-		if (0 == kName.compare("NetBoidRenderPeerPlugin"))
-		{
-			return ET_NEW NetBoidRenderPeerPlugin(false);
-		}
-		if (0 == kName.compare("NetBoidMultiplePeerPlugin"))
-		{
-			return ET_NEW NetBoidMultiplePeerPlugin(false);
-		}
-		if (0 == kName.compare("NetBoidServerPlugin"))
-		{
-			return ET_NEW NetBoidRenderServerPlugin(false);
-		}
-		if (0 == kName.compare("NetBoidClientPlugin"))
-		{
-			return ET_NEW NetBoidRenderClientPlugin(false);
-		}
+		// TODO: dynamically allocate specific plugins here
 		return NULL;
 	}
 
 	//-----------------------------------------------------------------------------
-	const char* NetBoidModule::getName( void ) const
+	const char* LectureModule::getName( void ) const
 	{
-		return "netboid";
+		return "ModLecture";
 	}
 
 	//-----------------------------------------------------------------------------
-	const char* NetBoidModule::getAbout( void ) const
+	const char* LectureModule::getAbout( void ) const
 	{
-		return "netboid";
+		return "Provides plugins from edunet lecture students";
 	}
 
 	//-----------------------------------------------------------------------------
-	void NetBoidModule::setOpenSteerUTData( OpenSteerUTData* data ) const
+	void LectureModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
 	//-----------------------------------------------------------------------------
-	PluginFactory* NetBoidModule::createPluginFactory( void ) const
+	PluginFactory* LectureModule::createPluginFactory( void ) const
 	{
-		return ET_NEW NetBoidPluginFactory();
+		return ET_NEW LectureModulePluginFactory();
 	}
+
 
 }
 
-ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::NetBoidModule)
+ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::LectureModule)
+

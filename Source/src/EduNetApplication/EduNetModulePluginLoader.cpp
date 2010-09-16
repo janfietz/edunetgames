@@ -32,172 +32,172 @@
 namespace EduNet
 {
 
-//-----------------------------------------------------------------------------
-ModulePluginLoader::ModulePluginLoader( void )
-{
-
-}
-
-//-----------------------------------------------------------------------------
-ModulePluginLoader::~ModulePluginLoader( void )
-{
-
-}
-
-//-----------------------------------------------------------------------------
-void ModulePluginLoader::loadModules( const char* pszPath )
-{
-	// load modules in working directory
-	this->m_modules.loadModulesFromDirectory( pszPath );
-}
-
-//-----------------------------------------------------------------------------
-void ModulePluginLoader::unloadModules( void )
-{
-	this->m_plugins.removeAllPlugins();
-	this->m_modules.unloadAll();
-}
-
-//-----------------------------------------------------------------------------
-void ModulePluginLoader::createPluginsFromModules ( void )
-{
-	const RawModules& kModules = this->m_modules.getModules();
-	RawModules::const_iterator kIter = kModules.begin();
-	RawModules::const_iterator kIterEnd = kModules.end();
-	while ( kIterEnd != kIter )
+	//-----------------------------------------------------------------------------
+	ModulePluginLoader::ModulePluginLoader( void )
 	{
-		RawModule* pkModule = ( *kIter ).get();
-		this->createPluginsFromModule ( pkModule );
-		++kIter;
+
 	}
-}
 
-//-----------------------------------------------------------------------------
-void ModulePluginLoader::createPluginsFromModule (
-	RawModule* pkModule )
-{
-	ModuleEntry* pkEntry = pkModule->accessEntry();
-	bool bWantsToLoadPlugin = this->appWantsToLoadPlugin( pkEntry->getName() );
-	if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
+	//-----------------------------------------------------------------------------
+	ModulePluginLoader::~ModulePluginLoader( void )
 	{
-		EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
-		EduNetPluginFactoryPtr spFactory ( pkFactory );
 
-		enStringArray_t kList;
-		pkFactory->getPluginNames ( kList );
+	}
 
-		std::ostringstream message;
-		message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
-		enStringArray_t::iterator kNameIter = kList.begin();
-		enStringArray_t::iterator kNameIterEnd = kList.end();
-		while ( kNameIterEnd != kNameIter )
+	//-----------------------------------------------------------------------------
+	void ModulePluginLoader::loadModules( const char* pszPath )
+	{
+		// load modules in working directory
+		this->m_modules.loadModulesFromDirectory( pszPath );
+	}
+
+	//-----------------------------------------------------------------------------
+	void ModulePluginLoader::unloadModules( void )
+	{
+		this->m_plugins.removeAllPlugins();
+		this->m_modules.unloadAll();
+	}
+
+	//-----------------------------------------------------------------------------
+	void ModulePluginLoader::createPluginsFromModules ( void )
+	{
+		const RawModules& kModules = this->m_modules.getModules();
+		RawModules::const_iterator kIter = kModules.begin();
+		RawModules::const_iterator kIterEnd = kModules.end();
+		while ( kIterEnd != kIter )
 		{
-			const char* pszPluginName = ( *kNameIter ).c_str();
-			AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
-			if ( NULL != pkPlugin )
-			{
-				this->m_plugins.addPlugin ( pkPlugin );
-				// little hack
-				OpenSteer::Plugin::addToRegistry ( pkPlugin );
-				message << "\"" << ( *kNameIter ).c_str() << "\"";
-				message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
-			}
-			++kNameIter;
+			RawModule* pkModule = ( *kIter ).get();
+			this->createPluginsFromModule ( pkModule );
+			++kIter;
 		}
-		message << std::ends;
-		EduNet::Log::printMessage ( message );
-	}
-}
-
-//-----------------------------------------------------------------------------
-bool ModulePluginLoader::appWantsToLoadPlugin (
-										const char* pszPluginName )
-{
-//	const enStringArray_t& kNames = EduNetOptions::accessOptions().accessModuleNameList();
-	const enStringArray_t kNames;
-
-	// by default load all
-	if (true == kNames.empty())
-	{
-		return true;
 	}
 
-	enString_t pluginName(pszPluginName);
-	::tolower( pluginName );
-	enStringArray_t::const_iterator iter = kNames.begin();
-	enStringArray_t::const_iterator iterEnd = kNames.end();
-	while( iter != iterEnd )
-	{
-		enString_t temp(*iter);
-		::tolower( temp );
-		if( pluginName.find( temp ) != enString_t::npos )
-		{
-			return true;
-		}
-		++iter;
-	}
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin*  ModulePluginLoader::createPluginFromFactoryByName(
-	EduNetPluginFactory* pkFactory,
-	const char* pszPluginName )
-{
-	return pkFactory->createPluginByName( pszPluginName );
-}
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName(
-	const char* pszPluginName )
-{
-	RawModule* pkModule = this->findModuleForPlugin( pszPluginName );
-	if (NULL != pkModule)
+	//-----------------------------------------------------------------------------
+	void ModulePluginLoader::createPluginsFromModule (
+		RawModule* pkModule )
 	{
 		ModuleEntry* pkEntry = pkModule->accessEntry();
-		if (NULL != pkEntry )
-		{
-			EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
-			EduNetPluginFactoryPtr spFactory ( pkFactory );
-			return this->createPluginFromFactoryByName( pkFactory, pszPluginName );
-		}
-	}
-	return NULL;
-}
-
-//-----------------------------------------------------------------------------
-RawModule* ModulePluginLoader::findModuleForPlugin(
-	const char* pszPluginName )
-{
-	const RawModules& kModules = this->m_modules.getModules();
-	RawModules::const_iterator kIter = kModules.begin();
-	RawModules::const_iterator kIterEnd = kModules.end();
-	while ( kIterEnd != kIter )
-	{
-		RawModule* pkModule = ( *kIter ).get();
-		ModuleEntry* pkEntry = pkModule->accessEntry();
-		bool bWantsToLoadPlugin = appWantsToLoadPlugin( pkEntry->getName() );
+		bool bWantsToLoadPlugin = this->appWantsToLoadPlugin( pkEntry->getName() );
 		if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
 		{
-			EduNetPluginFactory* pkFactory = pkEntry->createPluginFactory();
-			EduNetPluginFactoryPtr spFactory ( pkFactory );
+			PluginFactory* pkFactory = pkEntry->createPluginFactory();
+			PluginFactoryPtr spFactory ( pkFactory );
 
 			enStringArray_t kList;
 			pkFactory->getPluginNames ( kList );
 
-			// check if plugin name is inside of this array
-			std::string kName(pszPluginName);
-			enStringArray_t::const_iterator kNameIter = 
-				std::find(kList.begin(), kList.end(), kName);
-
-			if( kNameIter != kList.end() )
+			std::ostringstream message;
+			message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
+			enStringArray_t::iterator kNameIter = kList.begin();
+			enStringArray_t::iterator kNameIterEnd = kList.end();
+			while ( kNameIterEnd != kNameIter )
 			{
-				return pkModule;
+				const char* pszPluginName = ( *kNameIter ).c_str();
+				AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
+				if ( NULL != pkPlugin )
+				{
+					this->m_plugins.addPlugin ( pkPlugin );
+					// little hack
+					OpenSteer::Plugin::addToRegistry ( pkPlugin );
+					message << "\"" << ( *kNameIter ).c_str() << "\"";
+					message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
+				}
+				++kNameIter;
+			}
+			message << std::ends;
+			EduNet::Log::printMessage ( message );
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+	bool ModulePluginLoader::appWantsToLoadPlugin (
+		const char* pszPluginName )
+	{
+		//	const enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
+		const enStringArray_t kNames;
+
+		// by default load all
+		if (true == kNames.empty())
+		{
+			return true;
+		}
+
+		enString_t pluginName(pszPluginName);
+		::tolower( pluginName );
+		enStringArray_t::const_iterator iter = kNames.begin();
+		enStringArray_t::const_iterator iterEnd = kNames.end();
+		while( iter != iterEnd )
+		{
+			enString_t temp(*iter);
+			::tolower( temp );
+			if( pluginName.find( temp ) != enString_t::npos )
+			{
+				return true;
+			}
+			++iter;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin*  ModulePluginLoader::createPluginFromFactoryByName(
+		PluginFactory* pkFactory,
+		const char* pszPluginName )
+	{
+		return pkFactory->createPluginByName( pszPluginName );
+	}
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName(
+		const char* pszPluginName )
+	{
+		RawModule* pkModule = this->findModuleForPlugin( pszPluginName );
+		if (NULL != pkModule)
+		{
+			ModuleEntry* pkEntry = pkModule->accessEntry();
+			if (NULL != pkEntry )
+			{
+				PluginFactory* pkFactory = pkEntry->createPluginFactory();
+				PluginFactoryPtr spFactory ( pkFactory );
+				return this->createPluginFromFactoryByName( pkFactory, pszPluginName );
 			}
 		}
-		++kIter;
+		return NULL;
 	}
-	return NULL;
-}
+
+	//-----------------------------------------------------------------------------
+	RawModule* ModulePluginLoader::findModuleForPlugin(
+		const char* pszPluginName )
+	{
+		const RawModules& kModules = this->m_modules.getModules();
+		RawModules::const_iterator kIter = kModules.begin();
+		RawModules::const_iterator kIterEnd = kModules.end();
+		while ( kIterEnd != kIter )
+		{
+			RawModule* pkModule = ( *kIter ).get();
+			ModuleEntry* pkEntry = pkModule->accessEntry();
+			bool bWantsToLoadPlugin = appWantsToLoadPlugin( pkEntry->getName() );
+			if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
+			{
+				PluginFactory* pkFactory = pkEntry->createPluginFactory();
+				PluginFactoryPtr spFactory ( pkFactory );
+
+				enStringArray_t kList;
+				pkFactory->getPluginNames ( kList );
+
+				// check if plugin name is inside of this array
+				std::string kName(pszPluginName);
+				enStringArray_t::const_iterator kNameIter = 
+					std::find(kList.begin(), kList.end(), kName);
+
+				if( kNameIter != kList.end() )
+				{
+					return pkModule;
+				}
+			}
+			++kIter;
+		}
+		return NULL;
+	}
 
 
 }

@@ -26,6 +26,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetBoidPlugins.h"
+#include "OpenSteerUT/ZonePlugin.h"
+#include "EduNetConnect/NetworkPlugin.h"
 
+//-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT;
+	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.sessionPassword = "Tutorial2";
+	kSettings.uiPortPongCount = 10;
+}
+
+//-----------------------------------------------------------------------------
+namespace EduNet
+{
+	ZonePlugin* zonePlugin = NULL;
+	void initializeDynamicPlugins( )
+	{
+		const bool bAddToRegistry = true;
+		zonePlugin = ET_NEW ZonePlugin( bAddToRegistry );
+	}
+	void shutdownDynamicPlugins( )
+	{
+		ET_DELETE zonePlugin;
+	}
+}
 
