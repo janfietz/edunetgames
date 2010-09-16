@@ -31,47 +31,14 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 
 //-----------------------------------------------------------------------------
-NetSoccerPluginFactory::NetSoccerPluginFactory()
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-
-}
-//-----------------------------------------------------------------------------
-NetSoccerPluginFactory::~NetSoccerPluginFactory()
-{
-
-}
-//-----------------------------------------------------------------------------
-void NetSoccerPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
-{
-	kNames.push_back("NetSoccerRenderOfflinePlugin");
-	kNames.push_back("RenderSoccerPeerPlugin");
-	kNames.push_back("RenderSoccerClientPlugin");
-	kNames.push_back("SoccerClientServerPlugin");
+	kSettings.uiClientStartPort = CLIENT_PORT + 200;
+	kSettings.uiServerStartPort = SERVER_PORT + 200;
+	kSettings.sessionPassword = "NetSoccer";
+	kSettings.uiPortPongCount = 10;
 }
 
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
-{
-	enString_t kName(pszName);
-	if (0 == kName.compare("NetSoccerRenderOfflinePlugin"))
-	{
-		return ET_NEW NetSoccerRenderOfflinePlugin(false);
-	}
-	if (0 == kName.compare("RenderSoccerPeerPlugin"))
-	{
-		return ET_NEW RenderSoccerPeerPlugin(false);
-	}
-	if (0 == kName.compare("RenderSoccerClientPlugin"))
-	{
-		return ET_NEW RenderSoccerClientPlugin(false);
-	}
-	if (0 == kName.compare("SoccerClientServerPlugin"))
-	{
-		return ET_NEW SoccerClientServerPlugin(false);
-	}
-	return NULL;
-}
 
 //-----------------------------------------------------------------------------
 void OpenSteer::handleGlobalDataInstanceFailure( void )
@@ -83,30 +50,73 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-//-----------------------------------------------------------------------------
-const char* NetSoccerModuleFactory::getName( void ) const
-{
-	return "netsoccer";
+	//-----------------------------------------------------------------------------
+	NetSoccerPluginFactory::NetSoccerPluginFactory()
+	{
+
+	}
+	//-----------------------------------------------------------------------------
+	NetSoccerPluginFactory::~NetSoccerPluginFactory()
+	{
+
+	}
+	//-----------------------------------------------------------------------------
+	void NetSoccerPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
+	{
+		kNames.push_back("NetSoccerRenderOfflinePlugin");
+		kNames.push_back("RenderSoccerPeerPlugin");
+		kNames.push_back("RenderSoccerClientPlugin");
+		kNames.push_back("SoccerClientServerPlugin");
+	}
+
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
+		const char* pszName ) const
+	{
+		enString_t kName(pszName);
+		if (0 == kName.compare("NetSoccerRenderOfflinePlugin"))
+		{
+			return ET_NEW NetSoccerRenderOfflinePlugin(false);
+		}
+		if (0 == kName.compare("RenderSoccerPeerPlugin"))
+		{
+			return ET_NEW RenderSoccerPeerPlugin(false);
+		}
+		if (0 == kName.compare("RenderSoccerClientPlugin"))
+		{
+			return ET_NEW RenderSoccerClientPlugin(false);
+		}
+		if (0 == kName.compare("SoccerClientServerPlugin"))
+		{
+			return ET_NEW SoccerClientServerPlugin(false);
+		}
+		return NULL;
+	}
+
+	//-----------------------------------------------------------------------------
+	const char* NetSoccerModule::getName( void ) const
+	{
+		return "netsoccer";
+	}
+
+	//-----------------------------------------------------------------------------
+	const char* NetSoccerModule::getAbout( void ) const
+	{
+		return "Provides plugins fo a distributed soccer game";
+	}
+
+	//-----------------------------------------------------------------------------
+	void NetSoccerModule::setOpenSteerUTData( OpenSteerUTData* data ) const
+	{
+		OpenSteerUTData::_SDMInitDLL( data );
+	}
+
+	//-----------------------------------------------------------------------------
+	PluginFactory* NetSoccerModule::createPluginFactory( void ) const
+	{
+		return ET_NEW NetSoccerPluginFactory();
+	}
+
 }
 
-//-----------------------------------------------------------------------------
-const char* NetSoccerModuleFactory::getAbout( void ) const
-{
-	return "Provides plugins fo a distributed soccer game";
-}
-
-//-----------------------------------------------------------------------------
-void NetSoccerModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
-{
-	OpenSteerUTData::_SDMInitDLL( data );
-}
-
-//-----------------------------------------------------------------------------
-EduNetPluginFactory* NetSoccerModuleFactory::createPluginFactory( void ) const
-{
-	return ET_NEW NetSoccerPluginFactory();
-}
-
-}
-
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_NetSoccer, EduNet::NetSoccerModuleFactory)
+ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::NetSoccerModule)

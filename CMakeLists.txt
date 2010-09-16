@@ -217,8 +217,6 @@ EduNetProfile
 ${EDUNET_NEEDED_WIN_LIBRARY}
 ExtGLUI
 ExtLinearMath
-ExtIProf
-${Argtable_LIBRARY}
 ${Boost_LIBRARIES}
 )
 

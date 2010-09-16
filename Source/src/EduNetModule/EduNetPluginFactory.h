@@ -30,21 +30,24 @@
 
 
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include <boost/shared_ptr.hpp>
+#include "EduNetCore/EduNetCore.h"
+#include "OpenSteer/AbstractPlugin.h"
 
-
-class EduNetPluginFactory
+namespace EduNet
 {
-public:
-	EduNetPluginFactory(void);
+	class PluginFactory
+	{
+	public:
+		PluginFactory(void);
 
-	void getPluginNames( enStringArray_t& kNames ) const;
-	OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
-protected:
-	virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const{};
-	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
-		const char* pszName ) const { return NULL; }
-};
-typedef boost::shared_ptr<EduNetPluginFactory>  EduNetPluginFactoryPtr;
+		void getPluginNames( enStringArray_t& kNames ) const;
+		OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
+	protected:
+		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const{};
+		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+			const char* pszName ) const { return NULL; }
+	};
+	typedef boost::shared_ptr<PluginFactory>  PluginFactoryPtr;
+
+}
 #endif //EDUNET_PLUGIN_FACTORY_H

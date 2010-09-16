@@ -31,7 +31,6 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCore/EduNetCore.h"
-#include <boost/shared_ptr.hpp>
 
 namespace EduNet	{
 

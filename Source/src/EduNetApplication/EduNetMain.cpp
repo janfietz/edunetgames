@@ -107,9 +107,9 @@ int EduNetMain (int argc, char **argv)
 {
 	int iExitCode = EXIT_FAILURE;
 	EduNet::Application::_SDMInit();
-	if( EXIT_SUCCESS == EduNetOptions::accessOptions().parseCommandLine( argc, argv ) )
+	if( EXIT_SUCCESS == EduNet::Options::accessOptions().parseCommandLine( argc, argv ) )
 	{
-		if( true == EduNetOptions::accessOptions().continueProcess() )
+		if( true == EduNet::Options::accessOptions().continueProcess() )
 		{
 			EduNet::Application::Run( argc, argv );
 		}

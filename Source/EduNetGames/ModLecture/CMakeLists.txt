@@ -16,8 +16,6 @@ ${RakNet_LIBRARY}
 
 add_library(${PROJECT_NAME} SHARED  ${Tutorial_Hdrs} ${Tutorial_Src})
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES PREFIX "Module")
-
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )

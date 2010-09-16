@@ -32,7 +32,6 @@
 //-----------------------------------------------------------------------------
 #include "EduNetCore/EduNetCore.h"
 #include "EduNetDynamicLibrary.h"
-#include <boost/shared_ptr.hpp>
 
 //-----------------------------------------------------------------------------
 // DLL SUPPORT
@@ -67,7 +66,7 @@ namespace EduNet	{
 	ET_DECLARE_MODULE_ENTRYFUNC_S(fnc)
 
 //-----------------------------------------------------------------------------
-#define ET_IMPLEMENT_MODULE_ENTRYFUNC(fnc, entryClass)\
+#define ET_IMPLEMENT_MODULE_ENTRYFUNC(entryClass)\
 	ET_MODULE_ENTRYFUNC_EXPORT(ET_STD_ENTRY_FUNC){ \
 		static entryClass kEntry; \
 		return &kEntry; }
@@ -76,9 +75,10 @@ typedef ET_DECLARE_MODULE_ENTRYFUNC_S(ModuleEntryFunc);
 
 typedef struct OpenSteerUTData_t OpenSteerUTData;
 
-class EduNetPluginFactory;
 
 namespace EduNet	{
+
+class PluginFactory;
 
 //-----------------------------------------------------------------------------
 class ModuleEntry
@@ -89,7 +89,7 @@ public:
 
 	virtual void setOpenSteerUTData( OpenSteerUTData* ) const ET_ABSTRACT;
 
-	virtual EduNetPluginFactory* createPluginFactory( void ) const ET_ABSTRACT;
+	virtual PluginFactory* createPluginFactory( void ) const ET_ABSTRACT;
 };
 
 //-----------------------------------------------------------------------------

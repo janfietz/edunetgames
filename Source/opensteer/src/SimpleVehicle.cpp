@@ -112,9 +112,9 @@ SimpleVehicle::~SimpleVehicle (void)
 	{
 		SimpleVehicle::setNearestMouseVehicle( NULL );
 	}
-	if( this == Camera::getVehicleToTrack() )
+	if( this == Camera::getLocalSpaceToTrack() )
 	{
-		Camera::setVehicleToTrack( NULL );
+		Camera::setLocalSpaceToTrack( NULL );
 	}
 }
 
@@ -452,20 +452,6 @@ SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
 
     annotationLine (p, p + (velocity ()           * vScale), vColor);
     annotationLine (p, p + (_smoothedAcceleration * aScale), aColor);
-}
-
-//-----------------------------------------------------------------------------
-// predict position of this vehicle at some time in the future
-// (assumes velocity remains constant, hence path is a straight line)
-//
-// XXX Want to encapsulate this since eventually I want to investigate
-// XXX non-linear predictors.  Maybe predictFutureLocalSpace ?
-//
-// XXX move to a vehicle utility mixin?
-OpenSteer::Vec3 
-SimpleVehicle::predictFuturePosition (const float predictionTime) const
-{
-    return position() + (velocity() * predictionTime);
 }
 
 }

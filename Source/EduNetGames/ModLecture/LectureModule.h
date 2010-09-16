@@ -1,5 +1,5 @@
-#ifndef __MODLECUTRE_MODULE_H__
-#define __MODLECUTRE_MODULE_H__
+#ifndef __MODULE_LECTURE_H__
+#define __MODULE_LECTURE_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -31,24 +31,24 @@
 #include "EduNetModule/EduNetPluginFactory.h"
 #include "EduNetModule/EduNetModule.h"
 
-//-----------------------------------------------------------------------------
-class ModLecturePluginFactory : public EduNetPluginFactory
-{
-	ET_DECLARE_BASE( EduNetPluginFactory )
-public:
-	ModLecturePluginFactory();
-protected:
-	~ModLecturePluginFactory();
-
-	virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
-	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
-		const char* pszName ) const;
-};
-
 namespace EduNet	{
 
 	//-----------------------------------------------------------------------------
-	class ModLectureModuleFactory : public EduNet::ModuleEntry
+	class LectureModulePluginFactory : public PluginFactory
+	{
+		ET_DECLARE_BASE( PluginFactory )
+	public:
+		LectureModulePluginFactory();
+	protected:
+		~LectureModulePluginFactory();
+
+		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
+		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+			const char* pszName ) const;
+	};
+
+	//-----------------------------------------------------------------------------
+	class LectureModule : public ModuleEntry
 	{
 		ET_DECLARE_BASE( EduNet::ModuleEntry )
 	public:
@@ -57,9 +57,9 @@ namespace EduNet	{
 
 		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
 
-		virtual EduNetPluginFactory* createPluginFactory( void ) const;
+		virtual PluginFactory* createPluginFactory( void ) const;
 	};
 
 }
 
-#endif //__MODLECUTRE_MODULE_H__
+#endif //__MODULE_LECTURE_H__

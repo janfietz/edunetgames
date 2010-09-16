@@ -6,12 +6,12 @@ namespace EduNet
 {
 
 	//-----------------------------------------------------------------------------
-	class ServerModulePluginLoader : public EduNet::ModulePluginLoader
+	class ServerModulePluginLoader : public ModulePluginLoader
 	{
 		ET_DECLARE_BASE(EduNet::ModulePluginLoader)
 	protected:
 		virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-			EduNetPluginFactory* pkFactory,
+			PluginFactory* pkFactory,
 			const char* pszPluginName )
 		{
 			OpenSteer::AbstractPlugin* pkPlugin = 

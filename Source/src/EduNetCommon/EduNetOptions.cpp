@@ -39,190 +39,195 @@
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
-int setOptions ( EduNetOptions& kOptions,
-                 const char **defines, int ndefines
-               );
 
-
-//-----------------------------------------------------------------------------
-EduNetOptions::EduNetOptions() :m_bContinueProcess ( true )
+namespace EduNet
 {
-
-}
-
-//-----------------------------------------------------------------------------
-EduNetOptions::~EduNetOptions()
-{
-
-}
-
-//-----------------------------------------------------------------------------
-EduNetOptions& EduNetOptions::accessOptions ( void )
-{
-    static EduNetOptions kOptions;
-    return kOptions;
-}
+	int setOptions ( EduNet::Options& kOptions,
+		const char **defines, int ndefines
+		);
 
 
-//-----------------------------------------------------------------------------
-int setOptions ( EduNetOptions& kOptions,
-                 const char **defines, int ndefines
-               )
-{
-    int i;
+	//-----------------------------------------------------------------------------
+	Options::Options() :m_bContinueProcess ( true )
+	{
 
-    for ( i=0; i<ndefines; i++ )
-    {
-//              EduNet::Log::printLine( "selected plugin \"%s\"",defines[i] );
-        printf ( "selected plugin \"%s\"\n",defines[i] );
-        kOptions.setSelectedPlugin ( defines[i] );
-    }
+	}
 
-    return 0;
-}
-//-----------------------------------------------------------------------------
-int setModulesList ( EduNetOptions& kOptions,
-                     const char **modules,
-                     int ndefines
-                   )
-{
-    enStringArray_t& kNames = kOptions.accessModuleNameList();
-    kNames.clear();
-    for ( int i=0; i<ndefines; i++ )
-    {
-        printf ( "loadable modules \"%s\"\n",modules[i] );
-        kNames.push_back ( modules[i] );
-    }
+	//-----------------------------------------------------------------------------
+	Options::~Options()
+	{
 
-    return 0;
-}
-//-----------------------------------------------------------------------------
-int EduNetOptions::parseCommandLine ( int argc, char **argv )
-{
-    int exitcode=0;
+	}
+
+	//-----------------------------------------------------------------------------
+	Options& Options::accessOptions ( void )
+	{
+		static Options kOptions;
+		return kOptions;
+	}
+
+
+	//-----------------------------------------------------------------------------
+	int setOptions ( Options& kOptions,
+		const char **defines, int ndefines
+		)
+	{
+		int i;
+
+		for ( i=0; i<ndefines; i++ )
+		{
+			//              EduNet::Log::printLine( "selected plugin \"%s\"",defines[i] );
+			printf ( "selected plugin \"%s\"\n",defines[i] );
+			kOptions.setSelectedPlugin ( defines[i] );
+		}
+
+		return 0;
+	}
+	//-----------------------------------------------------------------------------
+	int setModulesList ( Options& kOptions,
+		const char **modules,
+		int ndefines
+		)
+	{
+		enStringArray_t& kNames = kOptions.accessModuleNameList();
+		kNames.clear();
+		for ( int i=0; i<ndefines; i++ )
+		{
+			printf ( "loadable modules \"%s\"\n",modules[i] );
+			kNames.push_back ( modules[i] );
+		}
+
+		return 0;
+	}
+	//-----------------------------------------------------------------------------
+	int Options::parseCommandLine ( int argc, char **argv )
+	{
+		int exitcode=0;
 #if __APPLE__ && __MACH__
-//      exitcode = EXIT_SUCCESS;
+		//      exitcode = EXIT_SUCCESS;
 #else
 #endif
-    struct arg_str  *modules = arg_strn ( "mM","Module","String",0,10,  "specify the modules to load." );
-    struct arg_str  *plugins = arg_strn ( "pP","Plugin","String",0,1, "plugin selection" );
-    struct arg_lit  *help    = arg_lit0 ( NULL,"help", "print this help and exit" );
-    struct arg_lit  *version = arg_lit0 ( NULL,"version", "print version information and exit" );
-    struct arg_end  *end     = arg_end ( 20 );
-    void* argtable[] = {modules, plugins,help,version,end};
-    const char* progname = EduNetOptions::getAppName();
-    int nerrors;
+		struct arg_str  *modules = arg_strn ( "mM","Module","String",0,10,  "specify the modules to load." );
+		struct arg_str  *plugins = arg_strn ( "pP","Plugin","String",0,1, "plugin selection" );
+		struct arg_lit  *help    = arg_lit0 ( NULL,"help", "print this help and exit" );
+		struct arg_lit  *version = arg_lit0 ( NULL,"version", "print version information and exit" );
+		struct arg_end  *end     = arg_end ( 20 );
+		void* argtable[] = {modules, plugins,help,version,end};
+		const char* progname = Options::getAppName();
+		int nerrors;
 
-    /* verify the argtable[] entries were allocated sucessfully */
-    if ( arg_nullcheck ( argtable ) != 0 )
-    {
-        /* NULL entries were detected, some allocations must have failed */
-        printf ( "%s: insufficient memory\n",progname );
-        exitcode = 1;
-        goto exit;
-    }
+		/* verify the argtable[] entries were allocated sucessfully */
+		if ( arg_nullcheck ( argtable ) != 0 )
+		{
+			/* NULL entries were detected, some allocations must have failed */
+			printf ( "%s: insufficient memory\n",progname );
+			exitcode = 1;
+			goto exit;
+		}
 
-    /* set any command line default values prior to parsing */
+		/* set any command line default values prior to parsing */
 
-    /* Parse the command line as defined by argtable[] */
-    nerrors = arg_parse ( argc,argv,argtable );
+		/* Parse the command line as defined by argtable[] */
+		nerrors = arg_parse ( argc,argv,argtable );
 
-    /* special case: '--help' takes precedence over error reporting */
-    if ( help->count > 0 )
-    {
-        printf ( "Usage: %s", progname );
-        arg_print_syntax ( stdout,argtable,"\n" );
-        printf ( "\n" );
-        printf ( "OpenSteer plugin demonstration\n" );
-        printf ( "\n" );
-        arg_print_glossary ( stdout,argtable,"  %-25s %s\n" );
-        exitcode = EXIT_SUCCESS;
-        this->setContinueProcess ( false );
-        goto exit;
-    }
+		/* special case: '--help' takes precedence over error reporting */
+		if ( help->count > 0 )
+		{
+			printf ( "Usage: %s", progname );
+			arg_print_syntax ( stdout,argtable,"\n" );
+			printf ( "\n" );
+			printf ( "OpenSteer plugin demonstration\n" );
+			printf ( "\n" );
+			arg_print_glossary ( stdout,argtable,"  %-25s %s\n" );
+			exitcode = EXIT_SUCCESS;
+			this->setContinueProcess ( false );
+			goto exit;
+		}
 
-    /* special case: '--version' takes precedence error reporting */
-    if ( version->count > 0 )
-    {
-        printf ( "'%s'\n",progname );
-        printf ( "Version 0.1\n" );
-        printf ( "example program to demonstrate different OpenSteer plugins.\n" );
-        printf ( "Copyright (c) 2009 Jan Fietz, Cyrus Preuss. All Rights Reserved.\n" );
-        exitcode = EXIT_SUCCESS;
-        this->setContinueProcess ( false );
-        goto exit;
-    }
+		/* special case: '--version' takes precedence error reporting */
+		if ( version->count > 0 )
+		{
+			printf ( "'%s'\n",progname );
+			printf ( "Version 0.1\n" );
+			printf ( "example program to demonstrate different OpenSteer plugins.\n" );
+			printf ( "Copyright (c) 2009 Jan Fietz, Cyrus Preuss. All Rights Reserved.\n" );
+			exitcode = EXIT_SUCCESS;
+			this->setContinueProcess ( false );
+			goto exit;
+		}
 
-    /* special case: uname with no command line options induces brief help */
-    if ( argc==1 )
-    {
-        printf ( "Try '%s --help' for more information.\n",progname );
-        exitcode = EXIT_SUCCESS;
-        goto exit;
-    }
+		/* special case: uname with no command line options induces brief help */
+		if ( argc==1 )
+		{
+			printf ( "Try '%s --help' for more information.\n",progname );
+			exitcode = EXIT_SUCCESS;
+			goto exit;
+		}
 
-    /* If the parser returned any errors then display them and exit */
-    if ( nerrors > 0 )
-    {
-        /* Display the error details contained in the arg_end struct.*/
-        arg_print_errors ( stdout,end,progname );
-        printf ( "Try '%s --help' for more information.\n",progname );
-        exitcode = EXIT_FAILURE;
-        goto exit;
-    }
+		/* If the parser returned any errors then display them and exit */
+		if ( nerrors > 0 )
+		{
+			/* Display the error details contained in the arg_end struct.*/
+			arg_print_errors ( stdout,end,progname );
+			printf ( "Try '%s --help' for more information.\n",progname );
+			exitcode = EXIT_FAILURE;
+			goto exit;
+		}
 
 
-    /* normal case: set selected options to options object */
-    exitcode = setOptions ( *this,
-                            plugins->sval, plugins->count );
-    exitcode = setModulesList ( *this,
-                            modules->sval, modules->count );
+		/* normal case: set selected options to options object */
+		exitcode = setOptions ( *this,
+			plugins->sval, plugins->count );
+		exitcode = setModulesList ( *this,
+			modules->sval, modules->count );
 
 exit:
-    /* deallocate each non-null entry in argtable[] */
-    arg_freetable ( argtable,sizeof ( argtable ) /sizeof ( argtable[0] ) );
+		/* deallocate each non-null entry in argtable[] */
+		arg_freetable ( argtable,sizeof ( argtable ) /sizeof ( argtable[0] ) );
 
-    return exitcode;
-}
+		return exitcode;
+	}
 
-//-----------------------------------------------------------------------------
-void EduNetOptions::setup ( void )
-{
+	//-----------------------------------------------------------------------------
+	void Options::setup ( void )
+	{
 
-}
+	}
 
-//-----------------------------------------------------------------------------
-const char* EduNetOptions::getAppName ( void )
-{
+	//-----------------------------------------------------------------------------
+	const char* Options::getAppName ( void )
+	{
 #ifdef _WIN32
-    static char pszFile[MAX_PATH + 1];
-    static bool bDone = false;
-    if ( false == bDone )
-    {
-        bDone = true;
-        char szAppPath[MAX_PATH + 1];
-        char pszDrive[MAX_PATH + 1];
-        char pszDir[MAX_PATH + 1];
-        char pszExtension[MAX_PATH + 1];
-        const DWORD nsize = sizeof ( szAppPath ) /sizeof ( char );
-        const DWORD n = ::GetModuleFileNameA ( NULL, szAppPath, nsize );
-        if ( n > 0 )
-        {
-            // extension includes the dot
-            ::_splitpath_s ( szAppPath,
-                             pszDrive, MAX_PATH,
-                             pszDir, MAX_PATH,
-                             pszFile, MAX_PATH,
-                             pszExtension, MAX_PATH );
-            return pszFile;
-        }
-        else
-        {
-            pszFile[0] = 0;
-        }
-    }
-    return pszFile;
+		static char pszFile[MAX_PATH + 1];
+		static bool bDone = false;
+		if ( false == bDone )
+		{
+			bDone = true;
+			char szAppPath[MAX_PATH + 1];
+			char pszDrive[MAX_PATH + 1];
+			char pszDir[MAX_PATH + 1];
+			char pszExtension[MAX_PATH + 1];
+			const DWORD nsize = sizeof ( szAppPath ) /sizeof ( char );
+			const DWORD n = ::GetModuleFileNameA ( NULL, szAppPath, nsize );
+			if ( n > 0 )
+			{
+				// extension includes the dot
+				::_splitpath_s ( szAppPath,
+					pszDrive, MAX_PATH,
+					pszDir, MAX_PATH,
+					pszFile, MAX_PATH,
+					pszExtension, MAX_PATH );
+				return pszFile;
+			}
+			else
+			{
+				pszFile[0] = 0;
+			}
+		}
+		return pszFile;
 #else
-    return "EduNetGamesApp";
+		return "EduNetGamesApp";
 #endif // _WIN32
+	}
+
 }

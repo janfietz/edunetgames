@@ -225,10 +225,6 @@ namespace OpenSteer {
         //! xxx experimental 9-6-02
         void applyBrakingForce (const float rate, const float deltaTime);
 
-        //! predict position of this vehicle at some time in the future
-        //! (assumes velocity remains constant)
-        Vec3 predictFuturePosition (const float predictionTime) const;
-
         //! get instantaneous curvature (since last update)
         float curvature (void) const {return _curvature;}
 

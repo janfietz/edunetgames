@@ -64,25 +64,25 @@ Camera::Camera (void)
     reset ();
 }
 
-
-void Camera::setVehicleToTrack( const AbstractVehicle* vehicle )
+//-----------------------------------------------------------------------------
+void Camera::setLocalSpaceToTrack( const AbstractLocalSpace* localSpace )
 {
-	GlobalSelection::setCameraVehicleToTrack( vehicle );
+	GlobalSelection::setCameraLocalSpaceToTrack( localSpace );
 }
 
-const AbstractVehicle* Camera::getVehicleToTrack( void )
+//-----------------------------------------------------------------------------
+const AbstractLocalSpace* Camera::getLocalSpaceToTrack( void )
 {
-	return GlobalSelection::getCameraVehicleToTrack();
+	return GlobalSelection::getCameraLocalSpaceToTrack();
 }
-
 
 //-----------------------------------------------------------------------------
 void 
 Camera::updateCamera (const float currentTime,
 										const float elapsedTime,
-										const AbstractVehicle& selected, const bool simulationPaused )
+										const AbstractLocalSpace& selected, const bool simulationPaused )
 {
-	Camera::setVehicleToTrack( &selected );
+	Camera::setLocalSpaceToTrack( &selected );
 	Camera::accessInstance().update (currentTime, elapsedTime, simulationPaused );
 }
 
@@ -98,7 +98,7 @@ Camera::reset (void)
     target = Vec3::zero;
 
     // vehicle being tracked
-    Camera::setVehicleToTrack( NULL );
+    Camera::setLocalSpaceToTrack( NULL );
 
     // aim at predicted position of vehicleToTrack, this far into thefuture
     aimLeadTime = 1;
@@ -143,8 +143,8 @@ Camera::update (const float /*currentTime*/,
                         const bool simulationPaused)
 {
     // vehicle being tracked (just a reference with a more concise name)
-    const AbstractVehicle& v = *Camera::getVehicleToTrack();
-    const bool noVehicle = Camera::getVehicleToTrack() == NULL;
+    const AbstractLocalSpace& v = *Camera::getLocalSpaceToTrack();
+    const bool noVehicle = Camera::getLocalSpaceToTrack() == NULL;
     
     // new position/target/up, set in switch below, defaults to current
     Vec3 newPosition = position();
@@ -355,7 +355,7 @@ void
 Camera::mouseAdjustOffset (const Vec3& adjustment)
 {
     // vehicle being tracked (just a reference with a more concise name)
-    const AbstractVehicle& v = *Camera::getVehicleToTrack();
+    const AbstractLocalSpace& v = *Camera::getLocalSpaceToTrack();
 
     switch (mode)
     {

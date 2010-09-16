@@ -45,7 +45,7 @@
 
 
 #include "OpenSteer/LocalSpace.h"
-#include "OpenSteer/AbstractVehicle.h"
+#include "OpenSteer/AbstractLocalSpace.h"
 
 
 //-----------------------------------------------------------------------------
@@ -70,8 +70,8 @@ namespace OpenSteer {
         Vec3 target;
 
         //! vehicle being tracked
-		static void setVehicleToTrack( const AbstractVehicle* vehicle );
-		static const AbstractVehicle* getVehicleToTrack( void );
+		static void setLocalSpaceToTrack( const AbstractLocalSpace* localSpace );
+		static const AbstractLocalSpace* getLocalSpaceToTrack( void );
 
         //! aim at predicted position of vehicleToTrack, this far into thefuture
         float aimLeadTime;
@@ -182,7 +182,7 @@ namespace OpenSteer {
 
 		static void updateCamera ( const float currentTime,
 			const float elapsedTime,
-			const AbstractVehicle& selected, const bool simulationPaused );
+			const AbstractLocalSpace& selected, const bool simulationPaused );
 
     };
 

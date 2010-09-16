@@ -26,6 +26,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "NetBoidPlugins.h"
+#include "OpenSteerUT/ZonePlugin.h"
+#include "EduNetConnect/NetworkPlugin.h"
 
 

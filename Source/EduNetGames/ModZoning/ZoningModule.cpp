@@ -26,45 +26,20 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "ModLectureModule.h"
+#include "ZoningModule.h"
 #include "EduNetConnect/NetworkPlugin.h"
 #include "OpenSteerUT/OpenSteerUT.h"
+#include "OpenSteerUT/ZonePlugin.h"
 
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-	kSettings.uiClientStartPort = CLIENT_PORT + 1000;
-	kSettings.uiServerStartPort = SERVER_PORT + 1000;
-	kSettings.sessionPassword = "Lecture00";
+	kSettings.uiClientStartPort = CLIENT_PORT + 300;
+	kSettings.uiServerStartPort = SERVER_PORT + 300;
+	kSettings.sessionPassword = "Zoning";
 	kSettings.uiPortPongCount = 10;
 }
 
-//-----------------------------------------------------------------------------
-ModLecturePluginFactory::ModLecturePluginFactory()
-{
-
-}
-
-//-----------------------------------------------------------------------------
-ModLecturePluginFactory::~ModLecturePluginFactory()
-{
-
-}
-
-//-----------------------------------------------------------------------------
-void ModLecturePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
-{
-	
-}
-
-//-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* ModLecturePluginFactory::createPluginByNameInternal(
-	const char* pszName ) const
-{
-	std::string kName(pszName);
-	
-	return NULL;
-}
 
 //-----------------------------------------------------------------------------
 void OpenSteer::handleGlobalDataInstanceFailure( void )
@@ -73,34 +48,65 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 	assert( true == GlobalData::hasInstance() );
 }
 
+//-----------------------------------------------------------------------------
 namespace EduNet	{
 
-//-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getName( void ) const
-{
-	return "ModLecture";
+	//-----------------------------------------------------------------------------
+	ZoningModulePluginFactory::ZoningModulePluginFactory()
+	{
+
+	}
+
+	//-----------------------------------------------------------------------------
+	ZoningModulePluginFactory::~ZoningModulePluginFactory()
+	{
+
+	}
+
+	//-----------------------------------------------------------------------------
+	void ZoningModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
+	{
+		kNames.push_back( "ZonePlugin" );
+	}
+
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin* ZoningModulePluginFactory::createPluginByNameInternal(
+		const char* pszName ) const
+	{
+		std::string kName(pszName);
+		if( kName == "ZonePlugin" )
+		{
+			return ET_NEW ZonePlugin( false );  
+		}
+		return NULL;
+	}
+
+	//-----------------------------------------------------------------------------
+	const char* ZoningModule::getName( void ) const
+	{
+		return "ModZones";
+	}
+
+	//-----------------------------------------------------------------------------
+	const char* ZoningModule::getAbout( void ) const
+	{
+		return "provides plugins to describe zoning concepts";
+	}
+
+	//-----------------------------------------------------------------------------
+	void ZoningModule::setOpenSteerUTData( OpenSteerUTData* data ) const
+	{
+		OpenSteerUTData::_SDMInitDLL( data );
+	}
+
+	//-----------------------------------------------------------------------------
+	PluginFactory* ZoningModule::createPluginFactory( void ) const
+	{
+		return ET_NEW ZoningModulePluginFactory();
+	}
+
+
 }
 
-//-----------------------------------------------------------------------------
-const char* ModLectureModuleFactory::getAbout( void ) const
-{
-	return "Provides plugins from edunet lecture students";
-}
-
-//-----------------------------------------------------------------------------
-void ModLectureModuleFactory::setOpenSteerUTData( OpenSteerUTData* data ) const
-{
-	OpenSteerUTData::_SDMInitDLL( data );
-}
-
-//-----------------------------------------------------------------------------
-EduNetPluginFactory* ModLectureModuleFactory::createPluginFactory( void ) const
-{
-	return ET_NEW ModLecturePluginFactory();
-}
-
-
-}
-
-ET_IMPLEMENT_MODULE_ENTRYFUNC(ModuleEntry_ModLecture, EduNet::ModLectureModuleFactory)
+ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::ZoningModule)
 

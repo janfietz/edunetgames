@@ -31,34 +31,35 @@
 #include "EduNetModule/EduNetPluginFactory.h"
 #include "EduNetModule/EduNetModule.h"
 
-class BoidPluginFactory : public EduNetPluginFactory
-{
-	ET_DECLARE_BASE( EduNetPluginFactory )
-public:
-	BoidPluginFactory();
-protected:
-	~BoidPluginFactory();
-
-	virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
-	virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
-		const char* pszName ) const;
-};
 
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-//-----------------------------------------------------------------------------
-class NetBoidModuleEntry : public EduNet::ModuleEntry
-{
-	ET_DECLARE_BASE( EduNet::ModuleEntry )
-public:
-	virtual const char* getName( void ) const;
-	virtual const char* getAbout( void ) const;
+	class NetBoidPluginFactory : public PluginFactory
+	{
+		ET_DECLARE_BASE( PluginFactory )
+	public:
+		NetBoidPluginFactory();
+	protected:
+		~NetBoidPluginFactory();
 
-	virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
+		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
+		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+			const char* pszName ) const;
+	};
 
-	virtual EduNetPluginFactory* createPluginFactory( void ) const;
-};
+	//-----------------------------------------------------------------------------
+	class NetBoidModule : public EduNet::ModuleEntry
+	{
+		ET_DECLARE_BASE( EduNet::ModuleEntry )
+	public:
+		virtual const char* getName( void ) const;
+		virtual const char* getAbout( void ) const;
+
+		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
+
+		virtual PluginFactory* createPluginFactory( void ) const;
+	};
 
 }
 

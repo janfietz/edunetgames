@@ -1,19 +1,24 @@
 #include "EduNetPluginFactory.h"
 
+namespace EduNet	{
+
+
 //-----------------------------------------------------------------------------
-EduNetPluginFactory::EduNetPluginFactory(void)
+PluginFactory::PluginFactory(void)
 {
 
 }
 
 //-----------------------------------------------------------------------------
-void EduNetPluginFactory::getPluginNames( enStringArray_t& kNames ) const
+void PluginFactory::getPluginNames( enStringArray_t& kNames ) const
 {
 	this->fillStringArrayWithPluginName( kNames );
 }
 //-----------------------------------------------------------------------------
-OpenSteer::AbstractPlugin* EduNetPluginFactory::createPluginByName( 
+OpenSteer::AbstractPlugin* PluginFactory::createPluginByName( 
 	const char* pszName )
 {
 	return this->createPluginByNameInternal( pszName );
+}
+
 }

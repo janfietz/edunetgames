@@ -56,7 +56,7 @@ public:
 
 protected:
 	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		EduNetPluginFactory* pkFactory,
+		PluginFactory* pkFactory,
 		const char* pszPluginName );
 
 private:

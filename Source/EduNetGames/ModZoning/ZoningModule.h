@@ -1,6 +1,5 @@
-#ifndef __EDUNETOPTIONS_H__
-#define __EDUNETOPTIONS_H__
-
+#ifndef __ZONING_MODULE_H__
+#define __ZONING_MODULE_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -29,62 +28,39 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetCore/EduNetCore.h"
+#include "EduNetModule/EduNetPluginFactory.h"
+#include "EduNetModule/EduNetModule.h"
+
 
 namespace EduNet	{
 
 	//-----------------------------------------------------------------------------
-	class Options
+	class ZoningModulePluginFactory : public PluginFactory
 	{
+		ET_DECLARE_BASE( PluginFactory )
 	public:
+		ZoningModulePluginFactory();
+	protected:
+		~ZoningModulePluginFactory();
 
-		int parseCommandLine ( int argc, char **argv );
-
-		void setup ( void );
-
-		bool continueProcess ( void ) const;
-		void setContinueProcess ( bool bValue );
-
-		static const char* getAppName ( void );
-
-		void setSelectedPlugin ( const char* pluginName )
-		{
-			this->m_kPluginName.assign ( pluginName );
-		}
-		const char* getSelectedPlugin ( void )
-		{
-			return this->m_kPluginName.c_str();
-		}
-		enStringArray_t& accessModuleNameList ( void )
-		{
-			return this->m_kModuleNames;
-		};
-
-		static Options& accessOptions ( void );
-
-
-	private:
-		Options();
-		virtual ~Options();
-		bool m_bContinueProcess;
-		enString_t m_kPluginName;
-		enStringArray_t m_kModuleNames;
+		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
+		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
+			const char* pszName ) const;
 	};
 
 	//-----------------------------------------------------------------------------
-	inline
-		bool Options::continueProcess ( void ) const
+	class ZoningModule : public EduNet::ModuleEntry
 	{
-		return this->m_bContinueProcess;
-	}
+		ET_DECLARE_BASE( EduNet::ModuleEntry )
+	public:
+		virtual const char* getName( void ) const;
+		virtual const char* getAbout( void ) const;
 
-	//-----------------------------------------------------------------------------
-	inline
-		void Options::setContinueProcess ( bool bValue )
-	{
-		this->m_bContinueProcess = bValue;
-	}
+		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
+
+		virtual PluginFactory* createPluginFactory( void ) const;
+	};
 
 }
 
-#endif  // __EDUNETOPTIONS_H__
+#endif //__ZONING_MODULE_H__
