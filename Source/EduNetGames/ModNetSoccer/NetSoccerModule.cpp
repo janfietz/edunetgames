@@ -50,17 +50,17 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	NetSoccerPluginFactory::NetSoccerPluginFactory()
 	{
 
 	}
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	NetSoccerPluginFactory::~NetSoccerPluginFactory()
 	{
 
 	}
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void NetSoccerPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		kNames.push_back("NetSoccerRenderOfflinePlugin");
@@ -69,7 +69,7 @@ namespace EduNet	{
 		kNames.push_back("SoccerClientServerPlugin");
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* NetSoccerPluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
@@ -93,25 +93,25 @@ namespace EduNet	{
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* NetSoccerModule::getName( void ) const
 	{
 		return "netsoccer";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* NetSoccerModule::getAbout( void ) const
 	{
 		return "Provides plugins fo a distributed soccer game";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void NetSoccerModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	PluginFactory* NetSoccerModule::createPluginFactory( void ) const
 	{
 		return ET_NEW NetSoccerPluginFactory();

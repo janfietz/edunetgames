@@ -115,7 +115,7 @@ namespace OpenSteer
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void TPhysicsMotionState::updateMotionState( 
 		const class btTransform& kWorldTransform1,
 		const osScalar currentTime,

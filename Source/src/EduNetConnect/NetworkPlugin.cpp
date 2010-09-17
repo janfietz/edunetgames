@@ -1,12 +1,11 @@
 #include "NetworkPlugin.h"
 
 #include "EduNetCommon/EduNetDraw.h"
-#include "EduNetApplication/EduNetApplication.h"
 #include "EduNetConnect/ServerVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractPluginUtilities.h"
 #include "OpenSteer/GlobalData.h"
-#include "EduNetCore/EduNetProfile.h"
+#include "EduNetProfile/EduNetProfile.h"
 
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s

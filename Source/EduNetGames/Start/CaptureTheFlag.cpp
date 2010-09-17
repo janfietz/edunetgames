@@ -56,12 +56,13 @@
 
 // 10-30-09 cp/jf: modified for educational purpose
 
-#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/GridPlugin.h"
 
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/Color.h"
+
+#include "EduNetApplication/EduNetGames.h"
 
 namespace {
 
@@ -657,7 +658,7 @@ namespace {
             if (currentTime > resetTime) 
             {
                 // xxx a royal hack (should do this internal to CTF):
-                OpenSteerDemo::queueDelayedResetPluginXXX ();
+                EduNet::GameDemo::queueDelayedResetPluginXXX ();
             }
         }
     }

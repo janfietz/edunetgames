@@ -33,7 +33,7 @@ namespace OpenSteer {
 
 	GlobalSelection* GlobalSelection::globalSelection = NULL;
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::_SDMInitApp( void )
 	{
 		if( NULL == GlobalSelection::globalSelection )
@@ -43,25 +43,25 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::_SDMInitDLL( GlobalSelection* selection )
 	{
 		GlobalSelection::setInstance( selection );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::setInstance( GlobalSelection* selection )
 	{
 		GlobalSelection::globalSelection = selection;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalSelection* GlobalSelection::getInstance( void )
 	{
 		return GlobalSelection::globalSelection;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalSelection::GlobalSelection( void ):
 		selectedVehicle(NULL),
 		nearestMouseVehicle(NULL),
@@ -69,7 +69,7 @@ namespace OpenSteer {
 	{
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalSelection::~GlobalSelection()
 	{
 		if( this == GlobalSelection::globalSelection )
@@ -78,7 +78,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::setCameraLocalSpaceToTrack( const AbstractLocalSpace* localSpace )
 	{
 		if( NULL != GlobalSelection::globalSelection )
@@ -99,7 +99,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::setSelectedVehicle( AbstractVehicle* vehicle )
 	{
 		if( NULL != GlobalSelection::globalSelection )
@@ -115,7 +115,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalSelection::setNearestMouseVehicle( AbstractVehicle* vehicle )
 	{
 		if( NULL != GlobalSelection::globalSelection )
@@ -133,7 +133,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const AbstractLocalSpace* GlobalSelection::getCameraLocalSpaceToTrack( void )
 	{
 		if( NULL != GlobalSelection::globalSelection )
@@ -143,7 +143,7 @@ namespace OpenSteer {
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	AbstractVehicle* GlobalSelection::getSelectedVehicle( void )
 	{
 		if( NULL != GlobalSelection::globalSelection )
@@ -153,7 +153,7 @@ namespace OpenSteer {
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	AbstractVehicle* GlobalSelection::getNearestMouseVehicle( void )
 	{
 		if( NULL != GlobalSelection::globalSelection )

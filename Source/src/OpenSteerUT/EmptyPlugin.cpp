@@ -30,7 +30,6 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetProfile/GraphPlot.h"
-#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/GridPlugin.h"
 

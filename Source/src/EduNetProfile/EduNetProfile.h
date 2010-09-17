@@ -34,22 +34,31 @@
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-class IProfileNode
-{
-public:
-	virtual ~IProfileNode(){}
+	//-------------------------------------------------------------------------
+	class IProfileScope
+	{
+	public:
+		virtual void open() = 0;
+		virtual void close() = 0;
+	};
 
-};
+	//-------------------------------------------------------------------------
+	class IProfileNode
+	{
+	public:
+		virtual ~IProfileNode(){}
 
-typedef boost::shared_ptr<IProfileNode> IProfileNodePtr;
+	};
 
-//-----------------------------------------------------------------------------
-class IProfile
-{
-public:
-	virtual ~IProfile(){}
-	virtual IProfileNodePtr allocNode( const char* pszName ) = 0;
-};
+	typedef boost::shared_ptr<IProfileNode> IProfileNodePtr;
+
+	//-------------------------------------------------------------------------
+	class IProfile
+	{
+	public:
+		virtual ~IProfile(){}
+		virtual IProfileNodePtr allocNode( const char* pszName ) = 0;
+	};
 
 }
 

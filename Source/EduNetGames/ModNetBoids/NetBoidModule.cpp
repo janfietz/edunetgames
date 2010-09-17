@@ -51,17 +51,17 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	NetBoidPluginFactory::NetBoidPluginFactory()
 	{
 
 	}
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	NetBoidPluginFactory::~NetBoidPluginFactory()
 	{
 
 	}
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void NetBoidPluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		kNames.push_back("NetBoidRenderOfflinePlugin");
@@ -72,7 +72,7 @@ namespace EduNet	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* NetBoidPluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
@@ -100,25 +100,25 @@ namespace EduNet	{
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* NetBoidModule::getName( void ) const
 	{
 		return "netboid";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* NetBoidModule::getAbout( void ) const
 	{
 		return "netboid";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void NetBoidModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	PluginFactory* NetBoidModule::createPluginFactory( void ) const
 	{
 		return ET_NEW NetBoidPluginFactory();

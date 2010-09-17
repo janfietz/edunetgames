@@ -65,7 +65,7 @@
 
 #if EDUNET_HAVE_PROFILE
 
-#include "EduNetCore/EduNetProfile.h"
+#include "EduNetProfile/EduNetProfile.h"
 #include "OpenSteer/GlobalData.h"
 
 #define ET_PROFILE(__name) \

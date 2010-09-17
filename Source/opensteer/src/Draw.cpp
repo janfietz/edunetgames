@@ -139,7 +139,7 @@ namespace {
         if (lastGlError == GL_NO_ERROR) return;
 
         // otherwise print vaguely descriptive error message, then exit
-        std::cerr << std::endl << "OpenSteerDemo: OpenGL error ";
+        std::cerr << std::endl << "exiting caused by an OpenGL error ";
         switch (lastGlError)
         {
         case GL_INVALID_ENUM:      std::cerr << "GL_INVALID_ENUM";      break;

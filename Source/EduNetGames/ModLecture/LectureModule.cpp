@@ -48,25 +48,25 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 
 namespace EduNet	{
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	LectureModulePluginFactory::LectureModulePluginFactory()
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	LectureModulePluginFactory::~LectureModulePluginFactory()
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void LectureModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		// TODO: add supported plugin names to this array
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* LectureModulePluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
@@ -75,25 +75,25 @@ namespace EduNet	{
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* LectureModule::getName( void ) const
 	{
 		return "ModLecture";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* LectureModule::getAbout( void ) const
 	{
 		return "Provides plugins from edunet lecture students";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void LectureModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	PluginFactory* LectureModule::createPluginFactory( void ) const
 	{
 		return ET_NEW LectureModulePluginFactory();

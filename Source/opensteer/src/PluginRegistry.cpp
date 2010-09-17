@@ -51,7 +51,7 @@ namespace OpenSteer {
 		return GlobalData::accessPluginRegistry();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin*
 	PluginRegistry::findNextPlugin( const AbstractPlugin* pkThis ) const
 	{
@@ -66,7 +66,7 @@ namespace OpenSteer {
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	int PluginRegistry::getPluginIdx( const AbstractPlugin* pkPlugin ) const
 	{
 		for (size_t i = 0; i < this->m_itemsInRegistry; ++i)
@@ -79,7 +79,7 @@ namespace OpenSteer {
 		return -1;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// search the class this->m_registry for a Plugin with the given name
 	// returns NULL if none is found
 	OpenSteer::AbstractPlugin*
@@ -101,7 +101,7 @@ namespace OpenSteer {
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// apply a given function to all Plugins in the this->m_registry
 	void
 	PluginRegistry::applyToAll( plugInCallBackFunction f )
@@ -112,7 +112,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// sort Plugin this->m_registry by "selection order"
 	//
 	// XXX replace with STL utilities
@@ -141,7 +141,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// returns pointer to default Plugin (currently, first in this->m_registry)
 	OpenSteer::AbstractPlugin*
 	PluginRegistry::findDefault (void) const
@@ -159,7 +159,7 @@ namespace OpenSteer {
 		return this->m_registry[0];
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// save this instance in the class's this->m_registry of instances
 	// (for use by contractors)
 	void
@@ -169,7 +169,7 @@ namespace OpenSteer {
 		this->m_registry[this->m_itemsInRegistry++] = pkPlugin;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// return a group (an STL vector of AbstractVehicle pointers) of all
 	// vehicles(/agents/characters) defined by the currently selected Plugin
 	const OpenSteer::AVGroup&
@@ -182,7 +182,7 @@ namespace OpenSteer {
 			return kTrash;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void
 	PluginRegistry::selectPlugin( AbstractPlugin* pkPlugin )
 	{
@@ -213,7 +213,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// select the "next" plug-in, cycling through "plug-in selection order"
 	void
 	PluginRegistry::selectNextPlugin (void)
@@ -225,7 +225,7 @@ namespace OpenSteer {
 		this->selectPlugin( this->getSelectedPlugin()->next () );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// select the plug-in by index
 	void PluginRegistry::selectPluginByIndex (size_t idx)
 	{
@@ -236,7 +236,7 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// handle function keys an a per-plug-in basis
 	void
 	PluginRegistry::functionKeyForPlugin( int keyNumber ) const
@@ -248,7 +248,7 @@ namespace OpenSteer {
 		this->getSelectedPlugin()->handleFunctionKeys (keyNumber);
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// return name of currently selected plug-in
 	const char*
 	PluginRegistry::nameOfSelectedPlugin (void) const
@@ -256,7 +256,7 @@ namespace OpenSteer {
 		return (this->getSelectedPlugin() ? this->getSelectedPlugin()->pluginName() : "no Plugin");
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// reset the currently selected plug-in
 	void
 	PluginRegistry::resetSelectedPlugin (void)

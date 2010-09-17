@@ -51,25 +51,25 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	ZoningModulePluginFactory::ZoningModulePluginFactory()
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	ZoningModulePluginFactory::~ZoningModulePluginFactory()
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ZoningModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		kNames.push_back( "ZonePlugin" );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* ZoningModulePluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
@@ -81,25 +81,25 @@ namespace EduNet	{
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* ZoningModule::getName( void ) const
 	{
 		return "ModZones";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	const char* ZoningModule::getAbout( void ) const
 	{
 		return "provides plugins to describe zoning concepts";
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ZoningModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	PluginFactory* ZoningModule::createPluginFactory( void ) const
 	{
 		return ET_NEW ZoningModulePluginFactory();

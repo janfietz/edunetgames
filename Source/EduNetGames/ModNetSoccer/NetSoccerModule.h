@@ -48,7 +48,7 @@ namespace EduNet	{
 			const char* pszName ) const;
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class NetSoccerModule : public EduNet::ModuleEntry
 	{
 		ET_DECLARE_BASE( EduNet::ModuleEntry )

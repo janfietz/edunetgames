@@ -40,7 +40,6 @@
 // 10-30-09 cp/jf: modified for educational purpose
 
 #include "NetSoccerPlugin.h"
-#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
 #include <iomanip>

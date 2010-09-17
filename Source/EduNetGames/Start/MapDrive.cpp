@@ -51,7 +51,6 @@
 
 // 10-30-09 cp/jf: modified for educational purpose
 
-#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
 #include <iomanip>
@@ -763,7 +762,7 @@ namespace {
 
             // keep track for reliability statistics
             collisionLastTime = false;
-            timeOfLastCollision = OpenSteerDemo::clock.getTotalSimulationTime ();
+            timeOfLastCollision = Clock::processClock().getTotalSimulationTime ();
 
             // keep track of average speed
             totalDistance = 0;
@@ -2660,7 +2659,7 @@ namespace {
 
                    << " mps\n\n";
             status << "collisions avoided for "
-                   << (int)(OpenSteerDemo::clock.getTotalSimulationTime () -
+                   << (int)(Clock::processClock().getTotalSimulationTime () -
                             vehicle->timeOfLastCollision)
                    << " seconds";
             if (vehicle->countOfCollisionFreeTimes > 0)

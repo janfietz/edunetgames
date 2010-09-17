@@ -5,7 +5,7 @@
 namespace EduNet
 {
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class ServerModulePluginLoader : public ModulePluginLoader
 	{
 		ET_DECLARE_BASE(EduNet::ModulePluginLoader)
@@ -29,7 +29,7 @@ namespace EduNet
 
 	ServerModulePluginLoader* gLoadPlugin = NULL;
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class NetPluginClientHost : public ClientPluginSelectionPlugin
 	{
 		ET_DECLARE_BASE(ClientPluginSelectionPlugin)
@@ -39,7 +39,7 @@ namespace EduNet
 			return 0.0001f ;
 		}
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		virtual void update(const float currentTime, const float elapsedTime)
 		{
 			BaseClass::update( currentTime, elapsedTime );
@@ -84,7 +84,7 @@ namespace EduNet
 
 	NetPluginClientHost* gNetClientHost = NULL;
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void initializeDynamicPlugins( )
 	{
 		gLoadPlugin = ET_NEW ServerModulePluginLoader();
@@ -95,7 +95,7 @@ namespace EduNet
 		gNetClientHost = ET_NEW NetPluginClientHost();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void shutdownDynamicPlugins( )
 	{
 		ET_SAFE_DELETE( gNetClientHost );

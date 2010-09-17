@@ -28,13 +28,13 @@
 //-----------------------------------------------------------------------------
 //
 //
-// OpenSteerDemo
+// GameDemo
 //
-// This class encapsulates the state of the OpenSteerDemo application and
+// This class encapsulates the state of the GameDemo application and
 // the services it provides to its plug-ins
 //
 // 10-04-04 bk:  put everything into the OpenSteer namespace
-// 11-14-02 cwr: recast App class as OpenSteerDemo
+// 11-14-02 cwr: recast App class as GameDemo
 // 06-26-02 cwr: App class created
 //
 //
@@ -49,141 +49,146 @@
 namespace OpenSteer
 {
 
-class Color;
-class Vec3;
+	class Color;
+	class Vec3;
+}
+
+namespace EduNet
+{
 
 
-class OpenSteerDemo
+
+class GameDemo
 {
 public:
-    // ------------------------------------------------------ component objects
+	// ------------------------------------------------------ component objects
 
-    // clock keeps track of both "real time" and "simulation time"
-    static Clock& clock;
+	// clock keeps track of both "real time" and "simulation time"
+	static Clock& clock;
 
-    // ------------------------------------------ addresses of selected objects
+	// ------------------------------------------ addresses of selected objects
 
-    // -------------------------------------------- initialize, update and exit
+	// -------------------------------------------- initialize, update and exit
 
-    // initialize OpenSteerDemo
-    //     XXX  if I switch from "totally static" to "singleton"
-    //     XXX  class structure this becomes the constructor
-    static void initialize ( void );
+	// initialize GameDemo
+	//     XXX  if I switch from "totally static" to "singleton"
+	//     XXX  class structure this becomes the constructor
+	static void initialize ( void );
 
-    // main update function: step simulation forward and redraw scene
-    static void updateSimulationAndRedraw ( void );
+	// main update function: step simulation forward and redraw scene
+	static void updateSimulationAndRedraw ( void );
 
-    // exit OpenSteerDemo with a given text message or error code
-    static void errorExit ( const char* message );
-    static void exit ( int exitCode );
+	// exit GameDemo with a given text message or error code
+	static void errorExit ( const char* message );
+	static void exit ( int exitCode );
 
-    // ------------------------------------------------------- Plugin interface
+	// ------------------------------------------------------- Plugin interface
 
-    // select the default Plugin
-    static void selectDefaultPlugin ( void );
-
-
-    // do a simulation update for the currently selected plug-in
-    static void updateSelectedPlugin ( const float currentTime,
-                                       const float elapsedTime );
-
-    // redraw graphics for the currently selected plug-in
-    static void redrawSelectedPlugin ( const float currentTime,
-                                       const float elapsedTime );
+	// select the default Plugin
+	static void selectDefaultPlugin ( void );
 
 
+	// do a simulation update for the currently selected plug-in
+	static void updateSelectedPlugin ( const float currentTime,
+		const float elapsedTime );
 
-    // ---------------------------------------------------- OpenSteerDemo phase
-
-    static bool phaseIsDraw ( void )
-    {
-        return phase == drawPhase;
-    }
-    static bool phaseIsUpdate ( void )
-    {
-        return phase == updatePhase;
-    }
-    static bool phaseIsOverhead ( void )
-    {
-        return phase == overheadPhase;
-    }
-
-    static float phaseTimerDraw ( void )
-    {
-        return phaseTimers[drawPhase];
-    }
-    static float phaseTimerUpdate ( void )
-    {
-        return phaseTimers[updatePhase];
-    }
-    // XXX get around shortcomings in current implementation, see note
-    // XXX in updateSimulationAndRedraw
-    //static float phaseTimerOverhead(void){return phaseTimers[overheadPhase];}
-    static float phaseTimerOverhead ( void )
-    {
-        return ( clock.getElapsedRealTime() -
-                 ( phaseTimerDraw() + phaseTimerUpdate() ) );
-    }
-
-    // ------------------------------------------------------ delayed reset XXX
-
-    // XXX to be reconsidered
-    static void queueDelayedResetPluginXXX ( void );
-    static void doDelayedResetPluginXXX ( void );
-
-    // ------------------------------------------------------ vehicle selection
-
-    // Find the AbstractVehicle whose screen position is nearest the
-    // current the mouse position.  Returns NULL if mouse is outside
-    // this window or if there are no AbstractVehicles.
-    static AbstractVehicle* vehicleNearestToMouse ( void );
-
-    // for storing most recent mouse state
-    static int mouseX;
-    static int mouseY;
-    static bool mouseInWindow;
-
-    // ------------------------------------------------ graphics and annotation
+	// redraw graphics for the currently selected plug-in
+	static void redrawSelectedPlugin ( const float currentTime,
+		const float elapsedTime );
 
 
-    //-----------------------------------------------------------------------------
-    // run graphics event loop
-    static void runGraphics ( void );
 
-    //-----------------------------------------------------------------------------
-    // do all initialization related to graphics
-    static void initializeGraphics ( int argc, char **argv );
+	// ---------------------------------------------------- GameDemo phase
 
-    // do all initialization related to graphics
-    static void initializeGraphics ( void );
+	static bool phaseIsDraw ( void )
+	{
+		return phase == drawPhase;
+	}
+	static bool phaseIsUpdate ( void )
+	{
+		return phase == updatePhase;
+	}
+	static bool phaseIsOverhead ( void )
+	{
+		return phase == overheadPhase;
+	}
 
-    // ----------------------------------------------------------- console text
-    // print list of known commands
-    static void keyboardMiniHelp ( void );
+	static float phaseTimerDraw ( void )
+	{
+		return phaseTimers[drawPhase];
+	}
+	static float phaseTimerUpdate ( void )
+	{
+		return phaseTimers[updatePhase];
+	}
+	// XXX get around shortcomings in current implementation, see note
+	// XXX in updateSimulationAndRedraw
+	//static float phaseTimerOverhead(void){return phaseTimers[overheadPhase];}
+	static float phaseTimerOverhead ( void )
+	{
+		return ( clock.getElapsedRealTime() -
+			( phaseTimerDraw() + phaseTimerUpdate() ) );
+	}
 
-    // ---------------------------------------------------------------- private
-    static void initPhaseTimers ( void );
+	// ------------------------------------------------------ delayed reset XXX
+
+	// XXX to be reconsidered
+	static void queueDelayedResetPluginXXX ( void );
+	static void doDelayedResetPluginXXX ( void );
+
+	// ------------------------------------------------------ vehicle selection
+
+	// Find the AbstractVehicle whose screen position is nearest the
+	// current the mouse position.  Returns NULL if mouse is outside
+	// this window or if there are no AbstractVehicles.
+	static AbstractVehicle* vehicleNearestToMouse ( void );
+
+	// for storing most recent mouse state
+	static int mouseX;
+	static int mouseY;
+	static bool mouseInWindow;
+
+	// ------------------------------------------------ graphics and annotation
+
+
+	//-----------------------------------------------------------------------------
+	// run graphics event loop
+	static void runGraphics ( void );
+
+	//-----------------------------------------------------------------------------
+	// do all initialization related to graphics
+	static void initializeGraphics ( int argc, char **argv );
+
+	// do all initialization related to graphics
+	static void initializeGraphics ( void );
+
+	// ----------------------------------------------------------- console text
+	// print list of known commands
+	static void keyboardMiniHelp ( void );
+
+	// ---------------------------------------------------------------- private
+	static void initPhaseTimers ( void );
 private:
-    static int phase;
-    static int phaseStack[];
-    static int phaseStackIndex;
-    static float phaseTimers[];
-    static float phaseTimerBase;
-    static const int phaseStackSize;
-    static void pushPhase ( const int newPhase );
-    static void popPhase ( void );
-    static void updatePhaseTimers ( void );
-	
+	static int phase;
+	static int phaseStack[];
+	static int phaseStackIndex;
+	static float phaseTimers[];
+	static float phaseTimerBase;
+	static const int phaseStackSize;
+	static void pushPhase ( const int newPhase );
+	static void popPhase ( void );
+	static void updatePhaseTimers ( void );
+
 	static void setGlutFunctions( void );
 
-    // XXX apparently MS VC6 cannot handle initialized static const members,
-    // XXX so they have to be initialized not-inline.
-    // static const int drawPhase = 2;
-    // static const int updatePhase = 1;
-    // static const int overheadPhase = 0;
-    static const int drawPhase;
-    static const int updatePhase;
-    static const int overheadPhase;
+	// XXX apparently MS VC6 cannot handle initialized static const members,
+	// XXX so they have to be initialized not-inline.
+	// static const int drawPhase = 2;
+	// static const int updatePhase = 1;
+	// static const int overheadPhase = 0;
+	static const int drawPhase;
+	static const int updatePhase;
+	static const int overheadPhase;
 };
 
 

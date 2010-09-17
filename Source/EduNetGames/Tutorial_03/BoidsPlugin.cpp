@@ -38,7 +38,6 @@
 
 // 10-30-09 cp/jf: modified for educational purpose
 
-#include "EduNetApplication/EduNetGames.h"
 #include "EduNetCommon/EduNetDraw.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
