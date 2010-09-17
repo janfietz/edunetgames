@@ -48,6 +48,7 @@
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/GlobalData.h"
+#include "OpenSteer/Draw.h"
 
 #include <algorithm>
 #include <sstream>
@@ -77,18 +78,9 @@ OpenSteer::Clock& OpenSteer::OpenSteerDemo::clock = OpenSteer::Clock::processClo
 
 int OpenSteer::OpenSteerDemo::phase = OpenSteer::OpenSteerDemo::overheadPhase;
 
-
-//-----------------------------------------------------------------------------
-// graphical annotation: master on/off switch
-
-
-bool OpenSteer::enableAnnotation = true;
-
-
 //-----------------------------------------------------------------------------
 // XXX apparently MS VC6 cannot handle initialized static const members,
 // XXX so they have to be initialized not-inline.
-
 
 const int OpenSteer::OpenSteerDemo::overheadPhase = 0;
 const int OpenSteer::OpenSteerDemo::updatePhase = 1;
@@ -723,17 +715,13 @@ int OpenSteer::OpenSteerDemo::phaseStackIndex = 0;
 const int OpenSteer::OpenSteerDemo::phaseStackSize = 5;
 int OpenSteer::OpenSteerDemo::phaseStack [OpenSteer::OpenSteerDemo::phaseStackSize];
 
-namespace OpenSteer {
-bool updatePhaseActive = false;
-bool drawPhaseActive = false;
-}
 
 //-----------------------------------------------------------------------------
 void 
 OpenSteer::OpenSteerDemo::pushPhase (const int newPhase)
 {
     updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
-    drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
+	GlobalData::setDrawPhaseActive( newPhase == OpenSteer::OpenSteerDemo::drawPhase );
 
     // update timer for current (old) phase: add in time since last switch
     updatePhaseTimers ();
@@ -759,7 +747,7 @@ OpenSteer::OpenSteerDemo::popPhase (void)
     // restore old phase
     phase = phaseStack[--phaseStackIndex];
     updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
-    drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
+	GlobalData::setDrawPhaseActive( phase == OpenSteer::OpenSteerDemo::drawPhase );
 }
 
 

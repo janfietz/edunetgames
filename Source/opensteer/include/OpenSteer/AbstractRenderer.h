@@ -41,7 +41,6 @@ namespace OpenSteer {
 
 	extern float extern_drawGetWindowHeight(void);
 	extern float extern_drawGetWindowWidth(void);
-	extern bool updatePhaseActive;
 
 	//-----------------------------------------------------------------------------
 	//! this is a typedef for a triangle draw routine which can be passed in

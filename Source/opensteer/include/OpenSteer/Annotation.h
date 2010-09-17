@@ -64,14 +64,14 @@ namespace OpenSteer {
 		EAnnotationMode_count
 	};
 
-    extern bool enableAnnotation;
-    extern bool drawPhaseActive;
 
     //! graphical annotation: master on/off switch
-    inline bool annotationIsOn (void) {return enableAnnotation;}
-    inline void setAnnotationOn (void) {enableAnnotation = true;}
-    inline void setAnnotationOff (void) {enableAnnotation = false;}
-    inline bool toggleAnnotationState (void) {return (enableAnnotation = !enableAnnotation);}
+    bool annotationIsOn (void);
+    void setAnnotationOn (void);
+    void setAnnotationOff (void);
+    bool toggleAnnotationState (void);
+
+	bool drawPhaseActive (void);
 
     template <class Super>
     class AnnotationMixin : public Super
@@ -221,7 +221,7 @@ namespace OpenSteer {
 
 		bool isAnnotated( void ) const
 		{
-			return ( ( this->m_eAnnotationMode == OpenSteer::EAnnotationMode_local ) || OpenSteer::enableAnnotation );
+			return ( ( this->m_eAnnotationMode == OpenSteer::EAnnotationMode_local ) || OpenSteer::annotationIsOn() );
 		}
 
 		virtual void collect3DTextAnnotation( std::ostringstream& kStream )
@@ -409,7 +409,7 @@ OpenSteer::AnnotationMixin<Super>::annotationLine (const Vec3& startPoint,
 {
 	if ( this->isAnnotated() )
     {
-        if (drawPhaseActive)
+        if (drawPhaseActive())
         {
             drawLine (startPoint, endPoint, color);
         }
@@ -446,7 +446,7 @@ OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (const float radius,
 {
 	if ( this->isAnnotated() )
     {
-        if (drawPhaseActive)
+        if (drawPhaseActive())
         {
             drawCircleOrDisk (radius, axis, center, color,
                               segments, filled, in3d);

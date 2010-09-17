@@ -854,10 +854,10 @@ namespace {
             }
 
             // initialize camera
-            CameraPlugin::init2dCamera (*ctfSeeker);
-            Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-            Camera::accessInstance().fixedTarget.set (15, 0, 0);
-            Camera::accessInstance().fixedPosition.set (80, 60, 0);
+			CameraPlugin::init2dCamera (*ctfSeeker);
+			Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+			Camera::accessInstance().fixedTarget.set (15, 0, 0);
+			Camera::accessInstance().fixedPosition.set (80, 60, 0);
 
             CtfBase::initializeObstacles ();
         }
@@ -950,7 +950,12 @@ namespace {
             for (int i = 0; i<ctfEnemyCount; i++) ctfEnemies[i]->reset ();
 
             // reset camera position
-            CameraPlugin::position2dCamera (*ctfSeeker);
+//            CameraPlugin::position2dCamera (*ctfSeeker);
+			// re initialize camera
+			CameraPlugin::init2dCamera (*ctfSeeker);
+			Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+			Camera::accessInstance().fixedTarget.set (15, 0, 0);
+			Camera::accessInstance().fixedPosition.set (80, 60, 0);
 
             // make camera jump immediately to new position
             Camera::accessInstance().doNotSmoothNextMove ();

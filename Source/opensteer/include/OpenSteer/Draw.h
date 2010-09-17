@@ -60,7 +60,7 @@ namespace OpenSteer {
 	//! it has been externed as a first step in making the Draw library useful from
 	//! other applications besides OpenSteerDemo
 	
-
+	extern bool updatePhaseActive;
 
 	class OpenGLRenderer : public AbstractRenderer
 	{

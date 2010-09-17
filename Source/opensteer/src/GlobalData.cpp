@@ -32,6 +32,7 @@
 #include "OpenSteer/SimplePlayer.h"
 #include "OpenSteer/PluginRegistry.h"
 #include "OpenSteer/Camera.h"
+#include "OpenSteer/Clock.h"
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/AbstractRenderer.h"
 
@@ -122,6 +123,14 @@ namespace OpenSteer {
 	}
 
 	//-----------------------------------------------------------------------------
+	Clock* GlobalData::accessClock( void )
+	{
+		// pointer to debug validity
+		GlobalData* pkGlobalData = GlobalData::getInstance();
+		return GlobalData::getInstance()->m_pkClock;
+	}
+
+	//-----------------------------------------------------------------------------
 	PluginRegistry* GlobalData::accessPluginRegistry( void )
 	{
 		return GlobalData::getInstance()->m_pkPluginRegistry;
@@ -132,6 +141,7 @@ namespace OpenSteer {
 	{
 		return GlobalData::getInstance()->m_pkRenderer;
 	}
+	
 	//-----------------------------------------------------------------------------
 	void GlobalData::setRenderer( AbstractRenderer* pkRenderer )
 	{
@@ -139,11 +149,37 @@ namespace OpenSteer {
 	}
 
 	//-----------------------------------------------------------------------------
+	bool GlobalData::getEnableAnnotation( void )
+	{
+		return GlobalData::getInstance()->m_bEnableAnnotation;
+	}
+
+	//-----------------------------------------------------------------------------
+	void GlobalData::setEnableAnnotation( bool bValue )
+	{
+		GlobalData::getInstance()->m_bEnableAnnotation = bValue;
+	}
+
+	//-----------------------------------------------------------------------------
+	bool GlobalData::getDrawPhaseActive( void )
+	{
+		return GlobalData::getInstance()->m_bDrawPhaseActive;
+	}
+
+	//-----------------------------------------------------------------------------
+	void GlobalData::setDrawPhaseActive( bool bValue )
+	{
+		GlobalData::getInstance()->m_bDrawPhaseActive = bValue;
+	}
+
+
+	//-----------------------------------------------------------------------------
 	GlobalData::GlobalData( void ):
 		m_pkSimpleLocalPlayer( NULL ),
 		m_pkSimpleController( NULL ),
 		m_pkPluginRegistry( NULL ),
 		m_pkCamera( NULL ),
+		m_pkClock( NULL ),
 		m_pkRenderer( NULL ),
 		m_bShowClientNetworkTrail(0),
 		m_bShowServerNetworkTrail(0),
@@ -151,6 +187,8 @@ namespace OpenSteer {
 		m_collect3DAnnotations(0),
 		m_bDebugNetStats(1),
 		m_bShowMotionStatePlot(0),
+		m_bEnableAnnotation(true),
+		m_bDrawPhaseActive(false),
 		m_SteeringForceFPS(30),
 		m_bIsDll(false)
 	{
@@ -197,6 +235,8 @@ namespace OpenSteer {
 		static Camera kCamera;
 		this->m_pkCamera = &kCamera;
 
+		static Clock kClock;
+		this->m_pkClock = &kClock;
 
 
 		static SimplePlayer kPlayer(true);

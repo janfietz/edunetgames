@@ -346,8 +346,8 @@ OpenSteer::OpenSteerDemo::keyboardMiniHelp ( void )
 void
 OpenSteer::OpenSteerDemo::pushPhase ( const int newPhase )
 {
-    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = OpenSteer::updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
-    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = OpenSteer::drawPhaseActive = newPhase == OpenSteer::OpenSteerDemo::drawPhase;
+    OpenSteer::updatePhaseActive = newPhase == OpenSteer::OpenSteerDemo::updatePhase;
+	GlobalData::setDrawPhaseActive( newPhase == OpenSteer::OpenSteerDemo::drawPhase );
 
     // update timer for current (old) phase: add in time since last switch
     updatePhaseTimers ();
@@ -371,8 +371,8 @@ OpenSteer::OpenSteerDemo::popPhase ( void )
 
     // restore old phase
     phase = phaseStack[--phaseStackIndex];
-    OpenSteerUTData::g_openSteerUTDataPtr->updatePhaseActive = updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
-    OpenSteerUTData::g_openSteerUTDataPtr->drawPhaseActive = drawPhaseActive = phase == OpenSteer::OpenSteerDemo::drawPhase;
+    OpenSteer::updatePhaseActive = phase == OpenSteer::OpenSteerDemo::updatePhase;
+	GlobalData::setDrawPhaseActive( phase == OpenSteer::OpenSteerDemo::drawPhase );
 }
 
 //-----------------------------------------------------------------------------

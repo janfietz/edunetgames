@@ -49,7 +49,7 @@
 
 
 #include "OpenSteer/Clock.h"
-
+#include "OpenSteer/GlobalData.h"
 
 //-----------------------------------------------------------------------------
 // XXX This is a bit ad hoc.  Need to revisit conditionalization on operating
@@ -67,17 +67,17 @@
 	#include <sys/time.h> 
 #endif
 
+namespace OpenSteer	{
 
 //-----------------------------------------------------------------------------
-OpenSteer::Clock& OpenSteer::Clock::processClock( void )
+Clock& Clock::processClock( void )
 {
-	static Clock processClock;
-	return processClock;
+	return *GlobalData::accessClock();
 }
 
 //-----------------------------------------------------------------------------
 // Constructor
-OpenSteer::Clock::Clock (void)
+Clock::Clock (void)
 {
     // default is "real time, variable frame rate" and not paused
     setFixedFrameRate (0);
@@ -135,7 +135,7 @@ OpenSteer::Clock::Clock (void)
 //     measure time elapsed between time updates ("frame rate")
 //     optionally: "wait" for next realtime frame boundary
 void 
-OpenSteer::Clock::update (void)
+Clock::update (void)
 {
     // keep track of average frame rate and average usage percentage
     updateSmoothedRegisters ();
@@ -195,7 +195,7 @@ OpenSteer::Clock::update (void)
 // (xxx there are probably a smarter ways to do this (using events or
 // thread waits (eg usleep)) but they are likely to be unportable. xxx)
 void 
-OpenSteer::Clock::frameRateSync (void)
+Clock::frameRateSync (void)
 {
     // when in real time fixed frame rate mode
     // (not animation mode and not variable frame rate mode)
@@ -219,7 +219,7 @@ OpenSteer::Clock::frameRateSync (void)
 // force simulation time ahead, ignoring passage of real time.
 // Used for OpenSteerDemo's "single step forward" and animation mode
 float 
-OpenSteer::Clock::advanceSimulationTimeOneFrame (void)
+Clock::advanceSimulationTimeOneFrame (void)
 {
     // decide on what frame time is (use fixed rate, average for variable rate)
     const float fps = (getVariableFrameRateMode () ?
@@ -235,7 +235,7 @@ OpenSteer::Clock::advanceSimulationTimeOneFrame (void)
 }
 
 void 
-OpenSteer::Clock::advanceSimulationTime (const float seconds)
+Clock::advanceSimulationTime (const float seconds)
 {
     if (seconds < 0) {
         /// @todo - throw? how to handle error conditions? Not by crashing an app!
@@ -267,7 +267,7 @@ namespace {
 } // anonymous namespace
 
 float 
-OpenSteer::Clock::realTimeSinceFirstClockUpdate (void)
+Clock::realTimeSinceFirstClockUpdate (void)
 #ifdef _WIN32
 {
     // get time from Windows
@@ -304,3 +304,4 @@ OpenSteer::Clock::realTimeSinceFirstClockUpdate (void)
 
 
 //-----------------------------------------------------------------------------
+}
