@@ -28,7 +28,7 @@
 
 #include "GraphPlot.h"
 #include "EduNetCommon/EduNetDraw.h"
-#include "OpenSteer/Draw.h"
+#include "OpenSteer/Renderer.h"
 
 using namespace Profile;
 

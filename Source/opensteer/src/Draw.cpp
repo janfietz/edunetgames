@@ -98,6 +98,9 @@
 
 namespace OpenSteer
 {
+
+	bool updatePhaseActive = false;
+
 	void glVertexVec3 (const OpenSteer::Vec3& v);
 
 

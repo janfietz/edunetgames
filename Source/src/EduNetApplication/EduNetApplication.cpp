@@ -612,12 +612,15 @@ void Application::updateSelectedPlugin (const float currentTime,
 
 		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
 		{
-			OpenSteer::enableAnnotation = false;
+			OpenSteer::setAnnotationOff();
 			while( uiTicks > 0 )
 			{
 				if( uiTicks == 1 )
 				{
-					OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
+					if( m_bEnableAnnotation == 1 )
+					{
+						OpenSteer::setAnnotationOn();
+					}
 				}
 				pkUpdatedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
 				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
@@ -626,7 +629,14 @@ void Application::updateSelectedPlugin (const float currentTime,
 		}
 		else
 		{
-			OpenSteer::enableAnnotation = ( m_bEnableAnnotation == 1 );
+			if( m_bEnableAnnotation == 1 )
+			{
+				OpenSteer::setAnnotationOn();
+			}
+			else
+			{
+				OpenSteer::setAnnotationOff();
+			}
 			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
 			pkUpdatedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
 		}

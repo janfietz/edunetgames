@@ -39,6 +39,7 @@ namespace OpenSteer {
 	class AbstractController;
 	class PluginRegistry;
 	class Camera;
+	class Clock;
 	class AbstractRenderer;
 
 	class GlobalData
@@ -51,14 +52,23 @@ namespace OpenSteer {
 		static void _SDMInitDLL( GlobalData* pkGlobalData );
 		static GlobalData* getInstance( void );
 		static bool hasInstance( void);
+
 		static AbstractPlayer* accessSimpleLocalPlayer( void );
 		static Camera* accessCamera( void );
+		static Clock* accessClock( void );
 		
 		static EduNet::IProfile* accessProfile( void );
 
 		static PluginRegistry* accessPluginRegistry( void );
 		static AbstractRenderer* accessRenderer( void );
 		static void setRenderer( AbstractRenderer* pkRenderer );
+
+		static bool getEnableAnnotation( void );
+		static void setEnableAnnotation( bool bValue );
+
+		static bool getDrawPhaseActive( void );
+		static void setDrawPhaseActive( bool bValue );
+
 
 		int m_bReplicationDataConfig[ESerializeDataType_Count];
 		size_t m_uiReplicationDataBytes[ESerializeDataType_Count];
@@ -69,6 +79,8 @@ namespace OpenSteer {
 		int m_bDebugNetStats;
 		int m_bShowMotionStatePlot;
 		osScalar m_SteeringForceFPS;
+		bool m_bEnableAnnotation;
+		bool m_bDrawPhaseActive;
 
 	private:
 		void initializeGlobalData( void );
@@ -78,6 +90,7 @@ namespace OpenSteer {
 		AbstractController* m_pkSimpleController;
 		PluginRegistry* m_pkPluginRegistry;
 		Camera* m_pkCamera;
+		Clock* m_pkClock;
 		AbstractRenderer* m_pkRenderer;
 		EduNet::IProfile* m_pkProfile;
 		bool m_bIsDll;

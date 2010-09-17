@@ -64,35 +64,11 @@ void OpenSteerUTData::_SDMInitDLL( OpenSteerUTData* pkData )
 }
 
 //-----------------------------------------------------------------------------
-// graphical annotation: master on/off switch
-bool OpenSteer::enableAnnotation = true;
-
-//-----------------------------------------------------------------------------
-namespace OpenSteer
-{
-	bool updatePhaseActive = false;
-	bool drawPhaseActive = false;
-}
-
-//-----------------------------------------------------------------------------
 GLUI* getRootGLUI()
 {
 	assert( NULL != OpenSteerUTData::g_openSteerUTDataPtr );
 	return OpenSteerUTData::g_openSteerUTDataPtr->appGlui;
 }
-
-//-----------------------------------------------------------------------------
-// TODO: find a good place to call this
-// void updateDataAndPhases( void )
-// {
-// 	// note: in case this is a dll the data ptr is different to the data
-// 	if( g_openSteerUTDataPtr != &g_openSteerUTData )
-// 	{
-// 		g_openSteerUTData = *g_openSteerUTDataPtr;
-// 		OpenSteer::updatePhaseActive = g_openSteerUTData.updatePhaseActive;
-// 		OpenSteer::drawPhaseActive = g_openSteerUTData.drawPhaseActive;
-// 	}
-// }
 
 //-----------------------------------------------------------------------------
 namespace

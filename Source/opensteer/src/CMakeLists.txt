@@ -4,6 +4,7 @@ INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 )
 
 SET(OPENTSTEER_LIB_SRC
+ Annotation.cpp
  GlobalData.cpp
  GlobalSelection.cpp
  Obstacle.cpp

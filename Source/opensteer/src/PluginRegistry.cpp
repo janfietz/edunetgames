@@ -261,14 +261,14 @@ namespace OpenSteer {
 	void
 	PluginRegistry::resetSelectedPlugin (void)
 	{
-		// reset camera and selected vehicle
-		OpenSteer::Camera::accessInstance().reset ();
-		SimpleVehicle::setSelectedVehicle( NULL );
-
 		if( NULL == this->getSelectedPlugin() )
 		{
 			return;
 		}
+		// reset camera and selected vehicle
+		OpenSteer::Camera::accessInstance().reset ();
+		SimpleVehicle::setSelectedVehicle( NULL );
+
 		this->getSelectedPlugin()->reset ();
 	}
 

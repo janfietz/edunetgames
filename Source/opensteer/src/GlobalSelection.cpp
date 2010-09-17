@@ -83,7 +83,10 @@ namespace OpenSteer {
 	{
 		if( NULL != GlobalSelection::globalSelection )
 		{
-			GlobalSelection::globalSelection->cameraLocalSpaceToTrack = localSpace;
+			if( localSpace != GlobalSelection::globalSelection->cameraLocalSpaceToTrack )
+			{
+				GlobalSelection::globalSelection->cameraLocalSpaceToTrack = localSpace;
+			}
 		}
 		else
 		{
