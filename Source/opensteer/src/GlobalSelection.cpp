@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/GlobalSelection.h"
+#include "OpenSteer/AbstractPlugin.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -85,6 +86,17 @@ namespace OpenSteer {
 		{
 			if( localSpace != GlobalSelection::globalSelection->cameraLocalSpaceToTrack )
 			{
+				// in case we are watching a plugin do not change anything right now
+				const AbstractLocalSpace* current = GlobalSelection::globalSelection->cameraLocalSpaceToTrack;
+				const AbstractPlugin* plugin = dynamic_cast<const AbstractPlugin*>(current);
+				if( NULL != plugin )
+				{
+					const AbstractVehicle* vehicle = dynamic_cast<const AbstractVehicle*>(localSpace);
+					if( NULL != vehicle )
+					{
+						return;
+					}
+				}
 				GlobalSelection::globalSelection->cameraLocalSpaceToTrack = localSpace;
 			}
 		}

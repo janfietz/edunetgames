@@ -26,10 +26,10 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
+#include "NetPedestrianPlugins.h"
 #include "NetPedestrianReplicaConnection.h"
-#include "NetPedestrianPlugin.h"
 
-#include "OpenSteerUT/PluginArray.h"
+
 #include "OpenSteerUT/GridPlugin.h"
 #include "OpenSteerUT/CameraPlugin.h"
 
@@ -39,256 +39,51 @@
 #include "EduNetCommon/EduNetDraw.h"
 
 //-----------------------------------------------------------------------------
-void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
-{
-	kSettings.uiClientStartPort = CLIENT_PORT;
-	kSettings.uiServerStartPort = SERVER_PORT;
-	kSettings.sessionPassword = "Tutorial4";
-	kSettings.uiPortPongCount = 10;
-}
-
-//-----------------------------------------------------------------------------
 // now the basic network plugins
 //-----------------------------------------------------------------------------
 
-typedef PeerPlugin<NetPedestrianPlugin> TPedestrianPeerPlugin;
-typedef ClientPlugin<NetPedestrianPlugin> TPedestrianClientPlugin;
-
-//-----------------------------------------------------------------------------
-class PedestrianPeerPlugin : public TPedestrianPeerPlugin
-{
-	ET_DECLARE_BASE(TPedestrianPeerPlugin)
-public:
-	PedestrianPeerPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{
-		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
-		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-
-		// attach vehicle factory
-		this->m_pkNetPedestrianFactory = ET_NEW NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
-		this->m_kGamePlugin.setEntityFactory( this->m_pkNetPedestrianFactory );
-	}
-	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
-		virtual const char* name() const { return this->getClassName(); };
-
-	//-------------------------------------------------------------------------
-	void StartNetworkSession( void )
-	{
-		BaseClass::StartNetworkSession();
-		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
-	}
-
-	//-------------------------------------------------------------------------
-	void CreateContent( void )
-	{
-		BaseClass::CreateContent();
-
-	}
-
-	//-------------------------------------------------------------------------
-	void handleFunctionKeys (int keyNumber)
-	{
-	}
-	
-	//-------------------------------------------------------------------------
-	virtual void initGui( void* pkUserdata ) 
-	{
-		BaseClass::initGui( pkUserdata );
-	};
-
-	//-------------------------------------------------------------------------
-	void DeleteContent( void )
-	{	
-		BaseClass::DeleteContent();
-	}
-
-
-private:
-	NetPedestrianReplicaFactory* m_pkNetPedestrianFactory;
-	NetPedestrianReplicaManager m_kReplicaManager;
-
-};
-
-//-----------------------------------------------------------------------------
-class PedestrianClientPlugin : public TPedestrianClientPlugin
-{
-	ET_DECLARE_BASE(TPedestrianClientPlugin)
-public:
-	PedestrianClientPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{
-		this->setGamePluginReplicaManager( &this->m_kReplicaManager );
-		this->m_kReplicaManager.setPlugin( &this->m_kGamePlugin );
-		this->m_kGamePlugin.setEntityFactory( NULL );
-	}
-
-	OS_IMPLEMENT_CLASSNAME( PedestrianClientPlugin )
-		virtual const char* name() const { return this->getClassName(); };
-
-	//-------------------------------------------------------------------------
-	void StartNetworkSession( void )
-	{
-		BaseClass::StartNetworkSession();
-		this->m_pNetInterface->AttachPlugin(&this->m_kReplicaManager);
-	}
-
-	//-------------------------------------------------------------------------
-	void CreateContent( void )
-	{
-		BaseClass::CreateContent();
-	}
-
-	//-------------------------------------------------------------------------
-	void DeleteContent( void )
-	{	
-		BaseClass::DeleteContent();
-	}
-private:
-
-	NetPedestrianReplicaFactory* m_pkBoidFactory;
-	NetPedestrianReplicaManager m_kReplicaManager;
-};
 
 //-----------------------------------------------------------------------------
 // offline client
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-class OfflinePedestrianPlugin : public OpenSteer::PluginArray
+void OfflinePedestrianPlugin::initGui(void* pkUserdata)
 {
-	ET_DECLARE_BASE(OpenSteer::PluginArray)
-public:
-	OfflinePedestrianPlugin( bool bAddToRegistry = true ):
-	BaseClass( bAddToRegistry )
-	{
-	}
-
-	OS_IMPLEMENT_CLASSNAME( OfflinePedestrianPlugin )
-
-	virtual void initGui(void* pkUserdata)
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW NetPedestrianPlugin( false ) );
-		BaseClass::initGui( pkUserdata );
-	}
-
-	virtual void open(void)
-	{
-		BaseClass::open();
-	}
-	virtual void close(void)
-	{
-		BaseClass::close();
-	}
-
-};
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+	this->addPlugin( ET_NEW NetPedestrianPlugin( false ) );
+	BaseClass::initGui( pkUserdata );
+}
 
 
 //-----------------------------------------------------------------------------
 // render client plugin
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-//class PedestrianRenderClientPlugin : public OpenSteer::PluginArrayPluginMixin<PedestrianClientPlugin>
-class PedestrianRenderClientPlugin : public OpenSteer::PluginArray
+void PedestrianRenderClientPlugin::initGui(void* pkUserdata)
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArray )
-public:
-	PedestrianRenderClientPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
-	{
-	};
-	virtual ~PedestrianRenderClientPlugin() {};
-
-	OS_IMPLEMENT_CLASSNAME( PedestrianRenderClientPlugin )
-
-	virtual void initGui(void* pkUserdata)
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
-		BaseClass::initGui( pkUserdata );
-	}
-
-	virtual void open(void)
-	{
-		BaseClass::open();
-	}
-	virtual void close(void)
-	{
-		BaseClass::close();
-	}
-
-
-};
-
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	BaseClass::initGui( pkUserdata );
+}
 
 //-----------------------------------------------------------------------------
 // render server plugin
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-class PedestrianRenderPeerPlugin : public OpenSteer::PluginArray
+void PedestrianRenderPeerPlugin::initGui(void* pkUserdata)
 {
-	ET_DECLARE_BASE( OpenSteer::PluginArray )
-public:
-	PedestrianRenderPeerPlugin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) 
-	{
-	};
-	virtual ~PedestrianRenderPeerPlugin() {};
-
-	OS_IMPLEMENT_CLASSNAME( PedestrianRenderPeerPlugin )
-
-	virtual void initGui(void* pkUserdata)
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
-		BaseClass::initGui( pkUserdata );
-	}
-
-	virtual void open(void)
-	{
-		BaseClass::open();
-	}
-	virtual void close(void)
-	{
-		BaseClass::close();
-	}
-
-};
-
+	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	BaseClass::initGui( pkUserdata );
+}
 
 //-----------------------------------------------------------------------------
 // client server plugin
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-class PedestrianClientServerPlugin : public OpenSteer::PluginArray
-{
-	ET_DECLARE_BASE(OpenSteer::PluginArray);
-public:
-
-	PedestrianClientServerPlugin(bool bAddToRegistry = true);
-	virtual ~PedestrianClientServerPlugin();
-
-	OS_IMPLEMENT_CLASSNAME( PedestrianClientServerPlugin );
-
-	//---------------------------------------------------------------------
-	// interface AbstractPlugin
-	virtual void initGui( void* pkUserdata );
-
-	virtual void open(void)
-	{
-		BaseClass::open();
-	}
-	virtual void close(void)
-	{
-		BaseClass::close();
-	}
-
-};
 
 //-----------------------------------------------------------------------------
 PedestrianClientServerPlugin::PedestrianClientServerPlugin( bool bAddToRegistry ):

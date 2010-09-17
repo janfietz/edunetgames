@@ -51,37 +51,28 @@ void initPluginCamera( AbstractPlugin* pkPlugin )
 //-----------------------------------------------------------------------------
 ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 	BaseClass(bAddToRegistry),
-	m_kZoneCenter( osVector3::zero ),
 	m_kZoneExtent( OS_SCALAR( 10.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 10.0 ) ),
-	m_iSolid(0)
+	m_iSolid(0),
+	m_zoneId(0)
 {
-
+	this->setPosition( osVector3::zero );
 }
 
 //-----------------------------------------------------------------------------
-void ZonePlugin::zoneUtility( const Vec3& gridTarget )
+void ZonePlugin::zoneUtility( void )
 {
-	// round off target to the nearest multiple of 2 (because the
-	// checkerboard grid with a pitch of 1 tiles with a period of 2)
-	// then lower the grid a bit to put it under 2d annotation lines
-	const Vec3 gridCenter ((round (gridTarget.x * 0.5f) * 2),
-		(round (gridTarget.y * 0.5f) * 2) - .05f,
-		(round (gridTarget.z * 0.5f) * 2));
-
 	if( 1 == this->m_iSolid )
 	{
 		// colors for checkerboard
 		const Color gray1(0.27f);
 		const Color gray2(0.30f);
-		// draw 50x50 checkerboard grid with 50 squares along each side
-		drawXZCheckerboardGrid( this->m_kZoneExtent.x, this->m_kZoneExtent.z,
-			this->position(), gray1, gray2);
+		// draw checkerboard grid
+		drawXZCheckerboardGrid( this->m_kZoneExtent.x, 1, this->position(), gray1, gray2);
 	}
 	else
 	{
 		// alternate style
-		drawXZLineGrid (this->m_kZoneExtent.x, this->m_kZoneExtent.z, 
-			this->position(), gBlack);
+		drawXZLineGrid (this->m_kZoneExtent.x, 1, this->position(), gBlack);
 	}
 }
 
@@ -114,12 +105,35 @@ void ZonePlugin::addSubZones( void )
 	// the root zone
 	if( NULL == pkParentZone )
 	{
-		this->addPlugin( ET_NEW ZonePlugin() );
-		this->addPlugin( ET_NEW ZonePlugin() );
-		this->addPlugin( ET_NEW ZonePlugin() );
-		this->addPlugin( ET_NEW ZonePlugin() );
+		osVector3 halfExtent = this->getZoneExtent();
+		halfExtent *= 0.25;
+		osVector3 startOffset = this->position();
+		startOffset -= halfExtent;
+		osVector3 offset = startOffset; 
+		for( size_t i = 0; i < 4; ++i )
+		{
+			if( i == 2 )
+			{
+				offset = startOffset;
+				offset.x += halfExtent.z * 2;
+			}
+			ZonePlugin* subZone = ET_NEW ZonePlugin();
+			subZone->m_zoneId = i;
+			subZone->setZoneCenter( this->getZoneCenter() + offset );
+			subZone->setZoneExtent( this->getZoneExtent() * 0.5f );
+			this->addPlugin( subZone );
+			this->onSubZoneAdded( subZone );
+
+			offset.z += halfExtent.z * 2;
+		}
 		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	}
+}
+
+//-----------------------------------------------------------------------------
+void ZonePlugin::reset(void)
+{
+	BaseClass::reset();
 }
 
 //-----------------------------------------------------------------------------
@@ -156,5 +170,21 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 		return;
 	}
 	// draw "zone area"
-	this->zoneUtility( this->m_kZoneCenter );
+	this->zoneUtility(  );
+
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the root zone
+	if( NULL == pkParentZone )
+	{
+	}
+	else
+	{
+		// textual annotation
+		std::ostringstream annote;
+		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
+		annote << "Zone: " << this->getZoneId() << std::endl << "pos(" << this->position() << ")" << std::ends;
+		draw2dTextAt3dLocation (annote, this->position(), gGreen, drawGetWindowWidth(), drawGetWindowHeight());
+	}
+
 }

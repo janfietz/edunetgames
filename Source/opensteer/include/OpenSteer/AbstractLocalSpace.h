@@ -75,6 +75,7 @@ namespace OpenSteer {
 		Vec3 _up;       //!  upward-pointing unit basis vector
 		Vec3 _forward;  //! forward-pointing unit basis vector
 		Vec3 _position; //! origin of local space
+		Vec3 _worldPosition; //! origin of local space
 // additions for demo purpose
 		Vec3 _angularVelocity; //! angular velocity of this object
 		Vec3 _linearVelocity;  //! linear velocity of this object
@@ -90,6 +91,7 @@ namespace OpenSteer {
 			this->_side = Vec3::side;
 			this->_up = Vec3::up;
 			this->_position.set (0, 0, 0);
+			this->_worldPosition.set (0, 0, 0);
 			this->_angularVelocity =
 				this->_linearVelocity = 
 				this->_steeringForce = 

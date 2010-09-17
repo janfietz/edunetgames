@@ -68,6 +68,11 @@ public:
 	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
 	virtual AbstractVehicle* cloneVehicle( void ) const;
 
+	virtual void setPath( OpenSteer::PolylineSegmentedPathwaySingleRadius* _path )
+	{
+		this->path = _path;
+	}
+
 	static bool gWanderSwitch;
 	static bool gUseDirectedPathFollowing;
 
@@ -89,7 +94,6 @@ private:
 
 };
 
-OpenSteer::PolylineSegmentedPathwaySingleRadius* getTestPath (void);
 
 typedef OpenSteer::VehicleClassIdMixin<NetPedestrian, ET_CID_NETPEDESTRIAN> TNetPedestrian;
 

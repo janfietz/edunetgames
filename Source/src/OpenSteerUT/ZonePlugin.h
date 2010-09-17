@@ -55,7 +55,7 @@ namespace OpenSteer
 		virtual AVGroup& allVehicles( void ) { return m_kVehicles; }
 
 		// optional methods (see comments in AbstractPlugin for explanation):
-		virtual void reset (void) { } // default is to reset by doing close-then-open
+		virtual void reset (void); // default is to reset by doing close-then-open
 		virtual float selectionOrderSortKey( void ) const {return 1000000;}
 		virtual bool requestInitialSelection( void ) const {return false;}
 		virtual void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
@@ -63,19 +63,30 @@ namespace OpenSteer
 
 		void setZoneCenter( const osVector3& kGridCenter )
 		{
-			this->m_kZoneCenter = kGridCenter;
+			this->setPosition( kGridCenter );
 		}
+		void setZoneExtent( const osVector3& kExtent )
+		{
+			this->m_kZoneExtent = kExtent;
+		}
+
+		const osVector3& getZoneExtent( void ) const { return this->m_kZoneExtent; }
+		const osVector3& getZoneCenter( void ) const { return this->position(); }
+
+		size_t getZoneId( void ) { return this->m_zoneId; }
+
+		virtual void onSubZoneAdded( ZonePlugin* pkSubZone ){};
 
 		int m_iSolid;
 	private:
-		void zoneUtility( const Vec3& gridTarget );
+		void zoneUtility( void );
 		void addSubZones( void );
 
 		osColor m_kBorderColor;
 		osColor m_kGridColor;
+		size_t m_zoneId;
 
 		AVGroup m_kVehicles;
-		osVector3 m_kZoneCenter;
 		osVector3 m_kZoneExtent;
 		ET_IMPLEMENT_CLASS_NO_COPY(ZonePlugin)
 
