@@ -33,13 +33,19 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include "NetPedestrianFactory.h"
 
+namespace OpenSteer {
+	class PolylineSegmentedPathwaySingleRadius;
+}
+
+extern osVector3 gEndpoint0;
+extern osVector3 gEndpoint1;
 
 //-----------------------------------------------------------------------------
 class NetPedestrianPlugin : public OpenSteer::Plugin
 {
 	ET_DECLARE_BASE(OpenSteer::Plugin);
 public:
-	NetPedestrianPlugin( bool bAddToRegistry = true );
+	NetPedestrianPlugin( bool bAddToRegistry = true, float pathScale = 1.0 );
 
 	virtual ~NetPedestrianPlugin();
 
@@ -86,8 +92,12 @@ public:
 	// implement to create a vehicle of the specified class
 	virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
 
+	static OpenSteer::PolylineSegmentedPathwaySingleRadius* createTestPath( float scale );
+
 private:
 	NetPedestrianFactory m_kOfflinePedestrianFactory;
+	OpenSteer::PolylineSegmentedPathwaySingleRadius* m_pkTestPath;
+
 
 
 
@@ -102,6 +112,7 @@ private:
 	int cyclePD;
 
 	float m_fLastRenderTime;
+	float m_fPathScale;
 };
 
 

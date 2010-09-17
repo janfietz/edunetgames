@@ -33,6 +33,7 @@
 #include "OpenSteerUT/PluginArray.h"
 #include "OpenSteerUT/GridPlugin.h"
 #include "OpenSteerUT/AbstractVehicleMath.h"
+#include "OpenSteerUT/ZonePlugin.h"
 #include "OpenSteer/SimplePlayer.h"
 
 #include "EduNetCommon/EduNetDraw.h"
@@ -42,6 +43,9 @@
 
 
 using namespace OpenSteer;
+
+osVector3 gEndpoint0;
+osVector3 gEndpoint1;
 
 namespace
 {
@@ -53,16 +57,72 @@ namespace
 	{
 		// camera setup
 		CameraPlugin::init2dCamera( kVehicle );
-		// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-		Camera::accessInstance().mode = Camera::cmStraightDown;
-		Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
-		Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
-		Camera::accessInstance().lookdownDistance = 15;
-		// make camera jump immediately to new position
-		Camera::accessInstance().doNotSmoothNextMove ();
-
+		if( Camera::getLocalSpaceToTrack() == &kVehicle )
+		{
+			// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+			Camera::accessInstance().mode = Camera::cmStraightDown;
+			Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
+			Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
+			Camera::accessInstance().lookdownDistance = 15;
+			// make camera jump immediately to new position
+			Camera::accessInstance().doNotSmoothNextMove ();
+		}
 	}
 
+}
+
+
+//-----------------------------------------------------------------------------
+/**
+* Creates a path of the form of an eight. Data provided by Nick Porcino.
+*/
+PolylineSegmentedPathwaySingleRadius* createPath (float scale = 1.0f)
+{
+	PolylineSegmentedPathwaySingleRadius* path = NULL;
+	const float pathRadius = 2.0 * scale;
+
+	const PolylineSegmentedPathwaySingleRadius::size_type pathPointCount = 16;
+	// const float size = 30;
+	osVector3 pathPoints[pathPointCount] = {
+		osVector3( -12.678730011f, 0.0144290002063f, 0.523285984993f ),
+		osVector3( -10.447640419f, 0.0149269998074f, -3.44138407707f ),
+		osVector3( -5.88988399506f, 0.0128290001303f, -4.1717581749f ),
+		osVector3( 0.941263973713f, 0.00330199999735f, 0.350513994694f ),
+		osVector3( 5.83484792709f, -0.00407700007781f, 6.56243610382f ),
+		osVector3( 11.0144147873f, -0.0111180003732f, 10.175157547f ),
+		osVector3( 15.9621419907f, -0.0129949999973f, 8.82364273071f ),
+		osVector3( 18.697883606f, -0.0102310003713f, 2.42084693909f ),
+		osVector3( 16.0552558899f, -0.00506500015035f, -3.57153511047f ),
+		osVector3( 10.5450153351f, 0.00284500000998f, -9.92683887482f ),
+		osVector3( 5.88374519348f, 0.00683500012383f, -8.51393127441f ),
+		osVector3( 3.17790007591f, 0.00419700006023f, -2.33129906654f ),
+		osVector3( 1.94371795654f, 0.00101799995173f, 2.78656601906f ),
+		osVector3( -1.04967498779f, 0.000867999973707f, 5.57114219666f ),
+		osVector3( -7.58111476898f, 0.00634300010279f, 6.13661909103f ),
+		osVector3( -12.4111375809f, 0.0108559997752f, 3.5670940876f )
+	};
+
+	for( size_t i = 0; i < pathPointCount; ++i )
+	{
+		pathPoints[i] *= scale;
+	}
+
+	// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+
+	gEndpoint0 = pathPoints[0];
+	gEndpoint1 = pathPoints[pathPointCount-1];
+
+	path = ET_NEW PolylineSegmentedPathwaySingleRadius (pathPointCount,
+		pathPoints,
+		pathRadius,
+		false);
+	return path;
+}
+
+//-----------------------------------------------------------------------------
+OpenSteer::PolylineSegmentedPathwaySingleRadius* NetPedestrianPlugin::createTestPath( float scale )
+{
+	return createPath( scale );
 }
 
 //-----------------------------------------------------------------------------
@@ -72,11 +132,14 @@ float NetPedestrianPlugin::selectionOrderSortKey (void) const
 }
 
 //-----------------------------------------------------------------------------
-NetPedestrianPlugin::NetPedestrianPlugin( bool bAddToRegistry ):
+NetPedestrianPlugin::NetPedestrianPlugin( bool bAddToRegistry, float pathScale ):
 BaseClass( bAddToRegistry ),
 pd(NULL),
-m_fLastRenderTime(0.0f)
+m_fLastRenderTime(0.0f),
+m_fPathScale( pathScale ),
+m_pkTestPath(NULL)
 {
+	this->m_pkTestPath = createPath( pathScale );
 	this->setEntityFactory( &this->m_kOfflinePedestrianFactory );
 }
 
@@ -84,6 +147,7 @@ m_fLastRenderTime(0.0f)
 NetPedestrianPlugin::~NetPedestrianPlugin() 
 {
 	this->close();
+	ET_SAFE_DELETE( this->m_pkTestPath );
 }
 
 //-----------------------------------------------------------------------------
@@ -208,12 +272,23 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::drawPathAndObstacles (void)
 {
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+
+	osVector3 offset(osVector3::zero);
+	// the parent zone
+	// we assume just one parent offset
+	if( NULL != pkParentZone )
+	{
+		offset = pkParentZone->position();
+	}
+
 	typedef PolylineSegmentedPathwaySingleRadius::size_type size_type;
 
 	// draw a line along each segment of path
-	const PolylineSegmentedPathwaySingleRadius& path = *getTestPath ();
+	const PolylineSegmentedPathwaySingleRadius& path = *this->m_pkTestPath;
 	for (size_type i = 1; i < path.pointCount(); ++i ) {
-		drawLine (path.point( i ), path.point( i-1) , gRed);
+		drawLine (path.point( i )+offset, path.point( i-1)+offset , gRed);
 	}
 }
 
@@ -262,6 +337,11 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId ) con
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN );
+	NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pkVehicle);
+	pkPedestrian->setPath( this->m_pkTestPath );
+	// note: now the path is valid reset the vehicle again
+	pkVehicle->setRadius( 0.5 * this->m_fPathScale );
+	pkVehicle->reset();
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.addVehicleToPlugin( pkVehicle, this );
 }

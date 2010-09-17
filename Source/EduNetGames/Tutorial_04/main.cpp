@@ -28,6 +28,17 @@
 
 #define EDUNET_LINK_NET 1
 #include "EduNetApplication/EduNetMain.h"
+#include "EduNetConnect/NetworkPlugin.h"
+
+//-----------------------------------------------------------------------------
+void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+{
+	kSettings.uiClientStartPort = CLIENT_PORT;
+	kSettings.uiServerStartPort = SERVER_PORT;
+	kSettings.sessionPassword = "Tutorial4";
+	kSettings.uiPortPongCount = 10;
+}
+
 
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv) 

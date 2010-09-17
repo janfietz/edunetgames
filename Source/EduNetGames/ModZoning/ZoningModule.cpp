@@ -31,6 +31,8 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteerUT/ZonePlugin.h"
 
+#include "EduNetGames/Tutorial_04/NetPedestrianPlugins.h"
+
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
@@ -51,6 +53,27 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
+	class MasterZonePlugin : public OpenSteer::ZonePlugin
+	{
+		ET_DECLARE_BASE( OpenSteer::ZonePlugin )
+	public:
+		MasterZonePlugin ( bool bAddToRegistry = false ):
+			BaseClass( bAddToRegistry )
+			{
+
+			}
+
+		virtual void onSubZoneAdded( ZonePlugin* pkSubZone )
+		{
+			if( 0 == pkSubZone->getZoneId() )
+			{
+				pkSubZone->addPlugin( ET_NEW NetPedestrianPlugin( false, 0.5 * 0.5 ) );
+			}
+		};
+
+
+	};
+
 	//-------------------------------------------------------------------------
 	ZoningModulePluginFactory::ZoningModulePluginFactory()
 	{
@@ -67,6 +90,7 @@ namespace EduNet	{
 	void ZoningModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		kNames.push_back( "ZonePlugin" );
+		kNames.push_back( "OfflinePedestrianPlugin" );
 	}
 
 	//-------------------------------------------------------------------------
@@ -76,7 +100,13 @@ namespace EduNet	{
 		std::string kName(pszName);
 		if( kName == "ZonePlugin" )
 		{
-			return ET_NEW ZonePlugin( false );  
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false );
+
+			return pkZone;  
+		}
+		if( kName == "OfflinePedestrianPlugin" )
+		{
+			return ET_NEW OfflinePedestrianPlugin( false );  
 		}
 		return NULL;
 	}

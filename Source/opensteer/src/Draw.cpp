@@ -48,6 +48,8 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/Draw.h"
+#include "OpenSteer/AbstractPlugin.h"
+
 
 #include <iomanip>
 #include <sstream>
@@ -605,9 +607,31 @@ void
 OpenSteer::OpenGLRenderer::drawBasic2dCircularVehicle (const AbstractVehicle& vehicle,
                                        const Color& color)
 {
-	this->drawBasic2dCircularLocalSpace(
-		vehicle.getLocalSpaceData(),
-		color, vehicle.radius() );
+	AbstractPlugin* parent = dynamic_cast<AbstractPlugin*>(vehicle.getParentEntity());
+	if(NULL != parent)
+	{
+		AbstractLocalSpace* parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parent);
+		Vec3 offset(parentPluginLocalSpace->position());
+		AbstractPlugin* parentPlugin = parent->getParentPlugin();
+		while( NULL != parentPlugin )
+		{
+			parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parentPlugin);
+			offset += parentPluginLocalSpace->position();
+			parentPlugin = parentPlugin->getParentPlugin();
+		}
+
+		LocalSpaceData localCopy = vehicle.getLocalSpaceData();
+		localCopy._position += offset;
+		this->drawBasic2dCircularLocalSpace(
+			localCopy,
+			color, vehicle.radius() );
+	}
+	else
+	{
+		this->drawBasic2dCircularLocalSpace(
+			vehicle.getLocalSpaceData(),
+			color, vehicle.radius() );
+	}
 }
 
 //-----------------------------------------------------------------------------

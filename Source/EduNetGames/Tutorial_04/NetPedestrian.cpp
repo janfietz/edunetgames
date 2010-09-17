@@ -27,62 +27,15 @@
 //-----------------------------------------------------------------------------
 
 #include "NetPedestrian.h"
+#include "NetPedestrianPlugin.h"
 
 using namespace OpenSteer;
 
 namespace
 {
-	//-------------------------------------------------------------------------
-	// creates a path for the Plugin
-	PolylineSegmentedPathwaySingleRadius* gTestPath = NULL;
 	ObstacleGroup gObstacles;
-	osVector3 gEndpoint0;
-	osVector3 gEndpoint1;
 }
 
-//-----------------------------------------------------------------------------
-/**
-* Creates a path of the form of an eight. Data provided by Nick Porcino.
-*/
-PolylineSegmentedPathwaySingleRadius* getTestPath (void)
-{
-	if (gTestPath == NULL)
-	{
-		const float pathRadius = 2;
-
-		const PolylineSegmentedPathwaySingleRadius::size_type pathPointCount = 16;
-		// const float size = 30;
-		const osVector3 pathPoints[pathPointCount] = {
-			osVector3( -12.678730011f, 0.0144290002063f, 0.523285984993f ),
-			osVector3( -10.447640419f, 0.0149269998074f, -3.44138407707f ),
-			osVector3( -5.88988399506f, 0.0128290001303f, -4.1717581749f ),
-			osVector3( 0.941263973713f, 0.00330199999735f, 0.350513994694f ),
-			osVector3( 5.83484792709f, -0.00407700007781f, 6.56243610382f ),
-			osVector3( 11.0144147873f, -0.0111180003732f, 10.175157547f ),
-			osVector3( 15.9621419907f, -0.0129949999973f, 8.82364273071f ),
-			osVector3( 18.697883606f, -0.0102310003713f, 2.42084693909f ),
-			osVector3( 16.0552558899f, -0.00506500015035f, -3.57153511047f ),
-			osVector3( 10.5450153351f, 0.00284500000998f, -9.92683887482f ),
-			osVector3( 5.88374519348f, 0.00683500012383f, -8.51393127441f ),
-			osVector3( 3.17790007591f, 0.00419700006023f, -2.33129906654f ),
-			osVector3( 1.94371795654f, 0.00101799995173f, 2.78656601906f ),
-			osVector3( -1.04967498779f, 0.000867999973707f, 5.57114219666f ),
-			osVector3( -7.58111476898f, 0.00634300010279f, 6.13661909103f ),
-			osVector3( -12.4111375809f, 0.0108559997752f, 3.5670940876f )
-		};
-
-		// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
-
-		gEndpoint0 = pathPoints[0];
-		gEndpoint1 = pathPoints[pathPointCount-1];
-
-		gTestPath = ET_NEW PolylineSegmentedPathwaySingleRadius (pathPointCount,
-			pathPoints,
-			pathRadius,
-			false);
-	}
-	return gTestPath;
-}
 
 bool NetPedestrian::gWanderSwitch = true;
 bool NetPedestrian::gUseDirectedPathFollowing = true;
@@ -92,8 +45,11 @@ bool NetPedestrian::gUseDirectedPathFollowing = true;
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // constructor
-NetPedestrian::NetPedestrian()
+NetPedestrian::NetPedestrian():
+path(NULL)
 {
+	// size of bounding sphere, for obstacle avoidance, etc.
+	setRadius (0.5); // width = 0.7, add 0.3 margin, take half
 	// reset Pedestrian state
 	reset ();
 
@@ -123,28 +79,38 @@ AbstractVehicle* NetPedestrian::cloneVehicle( void ) const
 // reset all instance state
 void NetPedestrian::reset (void)
 {
+	float currRadius = this->radius();
+
 	// reset the vehicle
+	// but keep the radius
 	SimpleVehicle::reset ();
+	
+	this->setRadius( currRadius );
 
 	// max speed and max steering force (maneuverability)
-	setMaxSpeed (2.0);
-	setMaxForce (8.0);
+// 	setMaxSpeed (2.0);
+// 	setMaxForce (8.0);
+	setMaxSpeed (4.0 * currRadius);
+	setMaxForce (16.0 * currRadius);
 
 	// initially stopped
 	setSpeed (0);
 
-	// size of bounding sphere, for obstacle avoidance, etc.
-	setRadius (0.5); // width = 0.7, add 0.3 margin, take half
+// 	// size of bounding sphere, for obstacle avoidance, etc.
+// 	setRadius (0.5); // width = 0.7, add 0.3 margin, take half
 
 	// set the path for this Pedestrian to follow
-	path = getTestPath ();
+//	path = getTestPath ();
 
-	// set initial position
-	// (random point on path + random horizontal offset)
-	const float d = path->length() * frandom01();
-	const float r = path->radius();
-	const osVector3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
-	setPosition( path->mapPathDistanceToPoint (d) + randomOffset );
+	if( path != NULL )
+	{
+		// set initial position
+		// (random point on path + random horizontal offset)
+		const float d = path->length() * frandom01();
+		const float r = path->radius();
+		const osVector3 randomOffset = randomVectorOnUnitRadiusXZDisk () * r;
+		setPosition( path->mapPathDistanceToPoint (d) + randomOffset );
+	}
 
 	// randomize 2D heading
 	randomizeHeadingOnXZPlane ();
