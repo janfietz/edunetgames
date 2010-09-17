@@ -48,12 +48,15 @@ NetCtfGameLogic::~NetCtfGameLogic()
 
 
 #if ET_ACTIVE_CTF_HACK
+
+#include "EduNetApplication/EduNetGames.h"
+
 const float resetDelay = 4;
 const float resetTime = lastRunningTime + resetDelay;
 if( currentTime > resetTime ) 
 {
 	// xxx a royal hack(should do this internal to CTF):
-	OpenSteerDemo::queueDelayedResetPluginXXX();
+	EduNet::GameDemo::queueDelayedResetPluginXXX();
 }
 #endif
 

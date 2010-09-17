@@ -264,7 +264,7 @@ namespace OpenSteer {
 		virtual void glVertexVec3 (const Vec3& v);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! draw 3d "graphical annotation" lines, used for debugging
 
 
@@ -273,7 +273,7 @@ namespace OpenSteer {
 					   const Color& color);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! draw 2d lines in screen space: x and y are the relevant coordinates
 		//! w and h are the dimensions of the viewport in pixels
 		virtual void draw2dLine (const Vec3& startPoint,
@@ -282,7 +282,7 @@ namespace OpenSteer {
 						float w, float h);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! draw a line with alpha blending
 
 		virtual void drawLineAlpha (const Vec3& startPoint,
@@ -332,7 +332,7 @@ namespace OpenSteer {
 							 const Color& color);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! draws a "wide line segment": a rectangle of the given width and color
 		//! whose mid-line connects two given endpoints
 
@@ -343,7 +343,7 @@ namespace OpenSteer {
 							 float width);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 
 
 		virtual void drawCameraLookAt (const Vec3& cameraPosition,
@@ -351,7 +351,7 @@ namespace OpenSteer {
 							   const Vec3& up);
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! check for errors during redraw, report any and then exit
 
 
@@ -359,7 +359,7 @@ namespace OpenSteer {
 
 
 
-		//-----------------------------------------------------------------------------
+		//-------------------------------------------------------------------------
 		//! return a normalized direction vector pointing from the camera towards a
 		//! given point on the screen: the ray that would be traced for that pixel
 

@@ -32,33 +32,33 @@
 namespace EduNet
 {
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	ModulePluginLoader::ModulePluginLoader( void )
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	ModulePluginLoader::~ModulePluginLoader( void )
 	{
 
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ModulePluginLoader::loadModules( const char* pszPath )
 	{
 		// load modules in working directory
 		this->m_modules.loadModulesFromDirectory( pszPath );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ModulePluginLoader::unloadModules( void )
 	{
 		this->m_plugins.removeAllPlugins();
 		this->m_modules.unloadAll();
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ModulePluginLoader::createPluginsFromModules ( void )
 	{
 		const RawModules& kModules = this->m_modules.getModules();
@@ -72,7 +72,7 @@ namespace EduNet
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void ModulePluginLoader::createPluginsFromModule (
 		RawModule* pkModule )
 	{
@@ -109,7 +109,7 @@ namespace EduNet
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	bool ModulePluginLoader::appWantsToLoadPlugin (
 		const char* pszPluginName )
 	{
@@ -139,14 +139,14 @@ namespace EduNet
 		return false;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin*  ModulePluginLoader::createPluginFromFactoryByName(
 		PluginFactory* pkFactory,
 		const char* pszPluginName )
 	{
 		return pkFactory->createPluginByName( pszPluginName );
 	}
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName(
 		const char* pszPluginName )
 	{
@@ -164,7 +164,7 @@ namespace EduNet
 		return NULL;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	RawModule* ModulePluginLoader::findModuleForPlugin(
 		const char* pszPluginName )
 	{

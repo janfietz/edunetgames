@@ -26,116 +26,30 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-
 #include "EduNetApplication.h"
 #include "EduNetGames.h"
-#include "EduNetProfile/GraphPlot.h"
+#include "EduNetProcessProfile.h"
+
+// #include "EduNetProfile/GraphPlot.h"
+// #include "EduNetProfile/EduNetProfile.h"
+
 #include "EduNetCommon/EduNetOptions.h"
+
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteer/GlobalSelection.h"
 #include "OpenSteer/GlobalData.h"
 #include "OpenSteer/PluginRegistry.h"
-#include "EduNetCore/EduNetProfile.h"
 #include "OpenSteer/Draw.h"
 
-
-using namespace EduNet;
 using namespace OpenSteer;
-
-class IProfileScope
-{
-public:
-	virtual void open() = 0;
-	virtual void close() = 0;
-};
-
-//-----------------------------------------------------------------------------
-#define EN_PROFILESCOPE(a) \
-class ProfileScope_##a : public IProfileScope \
-{ \
-public: \
-	Prof_Zone* zone;\
-	virtual void open(){ \
-	static Prof_Define(a);\
-	zone = &Prof_region_##a;\
-	Prof_Begin_Cache(a);  Prof_Begin_Code( *zone ); } \
-	virtual void close(){ Prof_Zone& Prof_region_##a = *zone; Prof_End } }; \
-	static ProfileScope_##a s_scope_##a; \
-	IProfileNodePtr spNode ( ET_NEW ProfileNode( &s_scope_##a ) ); \
-	return spNode;
-
-//-----------------------------------------------------------------------------
-class ProfileNode : public IProfileNode
-{
-public:
-
-	ProfileNode( IProfileScope* pkScope )
-	{
-		m_pkScope = pkScope;
-		m_pkScope->open();	
-	}
-	virtual ~ProfileNode()
-	{
-		m_pkScope->close();	
-	}
-
-private:
-	IProfileScope* m_pkScope;
-};
-	
-
-// TODO: move to own lib
-//-----------------------------------------------------------------------------
-class EduNetProfile : public IProfile
-{
-public:
-	virtual ~EduNetProfile(){}
-	IProfileNodePtr allocNode( const char* pszName )
-	{
-		// TODO: change to a node based profiler
-		enString_t kName(pszName);
-		if (kName == "EulerVehicleUpdate")
-		{
-			EN_PROFILESCOPE(EulerVehicleUpdate);						
-		}
-		else if (kName == "determineCombinedSteeringForce")
-		{
-			EN_PROFILESCOPE(determineCombinedSteeringForce);						
-		}
-		else if (kName == "SteeringForceVehicleUpdate")
-		{
-			EN_PROFILESCOPE(SteeringForceVehicleUpdate);						
-		}
-		else if (kName == "updatePhysicsVehicle")
-		{
-			EN_PROFILESCOPE(updatePhysicsVehicle);						
-		}
-		else if (kName == "updateNetworkPlugin")
-		{
-			EN_PROFILESCOPE(updateNetworkPlugin);						
-		}
-		else if (kName == "ReceivePackets")
-		{
-			EN_PROFILESCOPE(ReceivePackets);						
-		}
-		else if (kName == "serializeNetworkVehicle")
-		{
-			EN_PROFILESCOPE(serializeNetworkVehicle);						
-		}
-		else if (kName == "deserializeNetworkVehicle")
-		{
-			EN_PROFILESCOPE(deserializeNetworkVehicle);						
-		}
-		IProfileNodePtr spNode ( (IProfileNode*)NULL );
-		return spNode;
-	}
-};
+using namespace EduNet;
 
 bool g_bRunCalled = false;
 
+//-----------------------------------------------------------------------------
 bool InitializeGlobals( void )
 {
-	static EduNetProfile kProfile;
+	static EduNet::ProcessProfile kProfile;
 	OpenSteerUTData::_SDMInitApp(&kProfile);
 
 	static OpenSteer::OpenGLRenderer kRenderer;
@@ -148,7 +62,6 @@ bool bGlobalsInitialized = InitializeGlobals();
 //-----------------------------------------------------------------------------
 namespace
 {
-
 	int profReportMode = 0;
 
 	int pluginSelection = 0;
@@ -274,8 +187,6 @@ m_bAllowLocalPlayer(false)
 //-----------------------------------------------------------------------------
 Application::~Application( void )
 {
-	bool bTest = true;
-	bTest = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -378,13 +289,13 @@ int Application::Run(int argc, char **argv)
 	if( NULL != pkPlugin )
 	{
 		// initialize graphics
-		OpenSteer::OpenSteerDemo::initializeGraphics (argc, argv);
+		EduNet::GameDemo::initializeGraphics (argc, argv);
 
 		// initialize OpenSteerDemo application
-		OpenSteer::OpenSteerDemo::initialize ();
+		EduNet::GameDemo::initialize ();
 
 		// run the main event processing loop
-		OpenSteer::OpenSteerDemo::runGraphics ();
+		EduNet::GameDemo::runGraphics ();
 	}
 	else
 	{
@@ -578,6 +489,7 @@ void Application::updateSelectedPlugin (const float currentTime,
 		status << fSimulationFPS;
 		simulationFPS->set_text( status.str().c_str() );
 	}
+
 	{
 		if( this->m_fUpdateCPUTime > 0.0f )
 		{
@@ -707,6 +619,7 @@ void Application::initializeGraphics ( int argc, char **argv)
 {
 
 }
+
 //-----------------------------------------------------------------------------
 void Application::runGraphics ( void )
 {

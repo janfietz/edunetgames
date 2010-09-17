@@ -34,7 +34,6 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/NetworkPlugin.h"
 
-#include "EduNetApplication/EduNetGames.h"
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/GridPlugin.h"

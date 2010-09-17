@@ -58,7 +58,7 @@ namespace OpenSteer {
 
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::_SDMInitApp( EduNet::IProfile* pkProfile )
 	{
 		if( false == GlobalData::hasInstance() )
@@ -73,20 +73,20 @@ namespace OpenSteer {
 		}
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::_SDMInitDLL( GlobalData* pkGlobalData )
 	{
 		g_bIsDll = true;
 		GlobalData::setInstance( pkGlobalData );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::setInstance( GlobalData* pkGlobalData )
 	{
 		GlobalData::ms_pkGlobalDataInstance = pkGlobalData;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalData* GlobalData::getInstance( void )
 	{
 		handleGlobalDataInstanceFailure();
@@ -94,25 +94,25 @@ namespace OpenSteer {
 		return GlobalData::ms_pkGlobalDataInstance;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	bool GlobalData::hasInstance( void)
 	{
 		return ( NULL != GlobalData::ms_pkGlobalDataInstance );
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	AbstractPlayer* GlobalData::accessSimpleLocalPlayer( void )
 	{
 		return GlobalData::getInstance()->m_pkSimpleLocalPlayer;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	EduNet::IProfile* GlobalData::accessProfile( void )
 	{
 		return GlobalData::getInstance()->m_pkProfile;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	Camera* GlobalData::accessCamera( void )
 	{
 		// pointer to debug validity
@@ -122,7 +122,7 @@ namespace OpenSteer {
 		return GlobalData::getInstance()->m_pkCamera;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	Clock* GlobalData::accessClock( void )
 	{
 		// pointer to debug validity
@@ -130,50 +130,50 @@ namespace OpenSteer {
 		return GlobalData::getInstance()->m_pkClock;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	PluginRegistry* GlobalData::accessPluginRegistry( void )
 	{
 		return GlobalData::getInstance()->m_pkPluginRegistry;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	AbstractRenderer* GlobalData::accessRenderer( void )
 	{
 		return GlobalData::getInstance()->m_pkRenderer;
 	}
 	
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::setRenderer( AbstractRenderer* pkRenderer )
 	{
 		GlobalData::getInstance()->m_pkRenderer = pkRenderer;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	bool GlobalData::getEnableAnnotation( void )
 	{
 		return GlobalData::getInstance()->m_bEnableAnnotation;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::setEnableAnnotation( bool bValue )
 	{
 		GlobalData::getInstance()->m_bEnableAnnotation = bValue;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	bool GlobalData::getDrawPhaseActive( void )
 	{
 		return GlobalData::getInstance()->m_bDrawPhaseActive;
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	void GlobalData::setDrawPhaseActive( bool bValue )
 	{
 		GlobalData::getInstance()->m_bDrawPhaseActive = bValue;
 	}
 
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalData::GlobalData( void ):
 		m_pkSimpleLocalPlayer( NULL ),
 		m_pkSimpleController( NULL ),
@@ -218,7 +218,7 @@ namespace OpenSteer {
 		
 	}
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	GlobalData::~GlobalData()
 	{
 		if( this == GlobalData::ms_pkGlobalDataInstance )

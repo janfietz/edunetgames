@@ -33,7 +33,7 @@
 
 namespace EduNet	{
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class LectureModulePluginFactory : public PluginFactory
 	{
 		ET_DECLARE_BASE( PluginFactory )
@@ -47,7 +47,7 @@ namespace EduNet	{
 			const char* pszName ) const;
 	};
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	class LectureModule : public ModuleEntry
 	{
 		ET_DECLARE_BASE( EduNet::ModuleEntry )

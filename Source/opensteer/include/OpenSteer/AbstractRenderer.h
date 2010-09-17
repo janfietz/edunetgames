@@ -42,7 +42,7 @@ namespace OpenSteer {
 	extern float extern_drawGetWindowHeight(void);
 	extern float extern_drawGetWindowWidth(void);
 
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	//! this is a typedef for a triangle draw routine which can be passed in
 	//! when using rendering API's of the user's choice.
 	typedef void (*drawTriangleRoutine) (const Vec3& a,

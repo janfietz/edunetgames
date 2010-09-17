@@ -1,5 +1,5 @@
-#ifndef __ZONING_MODULE_H__
-#define __ZONING_MODULE_H__
+#ifndef __EDUNETPROCESSPROFILE_H__
+#define	__EDUNETPROCESSPROFILE_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,39 +28,21 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetModule/EduNetPluginFactory.h"
-#include "EduNetModule/EduNetModule.h"
+#include "EduNetProfile/EduNetProfile.h"
 
-
-namespace EduNet	{
-
+//-----------------------------------------------------------------------------
+namespace EduNet
+{
 	//-------------------------------------------------------------------------
-	class ZoningModulePluginFactory : public PluginFactory
+	//-----------------------------------------------------------------------------
+	class ProcessProfile : public IProfile
 	{
-		ET_DECLARE_BASE( PluginFactory )
 	public:
-		ZoningModulePluginFactory();
-	protected:
-		~ZoningModulePluginFactory();
-
-		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const;
-		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
-			const char* pszName ) const;
+		virtual ~ProcessProfile(){}
+		IProfileNodePtr allocNode( const char* pszName );
 	};
-
-	//-------------------------------------------------------------------------
-	class ZoningModule : public EduNet::ModuleEntry
-	{
-		ET_DECLARE_BASE( EduNet::ModuleEntry )
-	public:
-		virtual const char* getName( void ) const;
-		virtual const char* getAbout( void ) const;
-
-		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
-
-		virtual PluginFactory* createPluginFactory( void ) const;
-	};
+	
 
 }
 
-#endif //__ZONING_MODULE_H__
+#endif // __EDUNETPROCESSPROFILE_H__

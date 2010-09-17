@@ -60,7 +60,7 @@ public:
 //-----------------------------------------------------------------------------
 NetCtfEntityFactory::NetCtfEntityFactory()
 {
-	//-----------------------------------------------------------------------------
+	//-------------------------------------------------------------------------
 	// now 3 global vehicle factories
 	static NetCtfBaseEntityFactory gNetCtfBaseEntityFactory;
 	static NetCtfSeekerEntityFactory gNetCtfSeekerEntityFactory;
