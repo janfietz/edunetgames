@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/AbstractLocalSpace.h"
+#include "OpenSteer/Color.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -52,7 +53,8 @@ namespace OpenSteer {
 		bool insideXZ( const AbstractLocalSpace& localSpace ) const;
 		bool insideXZWithRadius( const AbstractLocalSpace& localSpace ) const;
 
-		void draw() const;
+		void draw( const OpenSteer::Color& color ) const;
+		void draw( void ) const;
 	private:
 		Vec3 m_min;
 		Vec3 m_max;

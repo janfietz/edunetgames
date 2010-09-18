@@ -30,7 +30,6 @@
 
 //-----------------------------------------------------------------------------
 #include "OpenSteerUT/PluginArray.h"
-#include "OpenSteerUT/CameraPlugin.h"
 
 #include "NetSoccerClientPlugin.h"
 #include "NetSoccerPeerPlugin.h"

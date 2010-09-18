@@ -28,4 +28,55 @@
 
 #include "NetBoidPlugins.h"
 
+#include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
+
+//-----------------------------------------------------------------------------
+void NetBoidRenderOfflinePlugin::prepare(void)
+{
+	if( this->getPluginCount() == 0 )
+	{
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidRenderPeerPlugin::prepare(void)
+{
+	if( this->getPluginCount() == 0 )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidMultiplePeerPlugin::prepare(void)
+{
+	if( this->getPluginCount() == 0 )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
+		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidRenderClientPlugin::prepare(void)
+{
+	if( this->getPluginCount() == 0 )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	}
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidRenderServerPlugin::prepare(void)
+{
+	if( this->getPluginCount() == 0 )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );		  
+	}
+}
 

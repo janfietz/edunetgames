@@ -52,6 +52,7 @@ namespace OpenSteer
 
 		//---------------------------------------------------------------------
 		// functionality PluginArray
+		size_t getPluginCount( void ) const { return this->size(); }
 		void addPlugin( AbstractPlugin* pkPlugin );
 		void removePlugin( AbstractPlugin* pkPlugin );
 		void removeAllPlugins( void );
@@ -163,6 +164,7 @@ namespace OpenSteer
 		{
 			return m_kPluginArray.getPlugin( uiIdx );
 		}
+		size_t getPluginCount( void ) const { return this->m_kPluginArray.getPluginCount(); }
 	protected:
 		PluginArray m_kPluginArray;
 	};

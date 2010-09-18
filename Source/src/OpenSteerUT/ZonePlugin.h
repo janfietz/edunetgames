@@ -29,7 +29,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
-
+#include "OpenSteer/AABBox.h"
 
 namespace OpenSteer
 {
@@ -69,16 +69,19 @@ namespace OpenSteer
 		void setBorderWidth( osScalar value )
 		{
 			this->m_fBorderWidth = value;
+			this->updateZoneAABBox();
 		}
 
 		void setZoneCenter( const osVector3& kGridCenter )
 		{
 			this->setPosition( kGridCenter );
+			this->updateZoneAABBox();
 		}
 
 		void setZoneExtent( const osVector3& kExtent )
 		{
 			this->m_kZoneExtent = kExtent;
+			this->updateZoneAABBox();
 		}
 
 		void setZoneColor( const osColor& kColor )
@@ -98,19 +101,34 @@ namespace OpenSteer
 		const osColor& getZoneColor( void ) const { return this->m_kZoneColor; }
 		const osColor& getBorderColor( void ) const { return this->m_kBorderColor; }
 
-		size_t getZoneId( void ) { return this->m_zoneId; }
+		size_t getZoneId( void ) const { return this->m_zoneId; }
+
+		bool isVehicleInside( const OpenSteer::AbstractVehicle& kVehicle ) const;
+
 		int m_iSolid;
 	private:
+
+		void updateZoneAABBox( void )
+		{
+			osVector3 kCheckZoneExtent = this->m_kZoneExtent;
+			kCheckZoneExtent.x += this->m_fBorderWidth;
+//			kCheckZoneExtent.y += this->m_fBorderWidth;
+			kCheckZoneExtent.z += this->m_fBorderWidth;
+			this->m_kZoneAABBox.initializeWithCenterAndExtent( this->position(), kCheckZoneExtent );
+		}
 		void zoneUtility( void );
 		void addSubZones( void );
 
 		osColor m_kBorderColor;
 		osColor m_kZoneColor;
-		osScalar m_fBorderWidth;
+		osScalar (m_fBorderWidth);
 		size_t m_zoneId;
 
 		AVGroup m_kVehicles;
 		osVector3 m_kZoneExtent;
+
+		OpenSteer::AABBox m_kZoneAABBox;
+
 		ET_IMPLEMENT_CLASS_NO_COPY(ZonePlugin)
 
 	};

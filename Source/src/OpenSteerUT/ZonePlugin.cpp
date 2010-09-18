@@ -51,26 +51,30 @@ void initPluginCamera( AbstractPlugin* pkPlugin )
 //-----------------------------------------------------------------------------
 ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 	BaseClass(bAddToRegistry),
-	m_kZoneExtent( OS_SCALAR( 10.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 10.0 ) ),
+	m_kZoneExtent( OS_SCALAR( 0.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 0.0 ) ),
 	m_iSolid(0),
-	m_zoneId(0)
+	m_zoneId(0),
+	m_fBorderWidth( OS_SCALAR( 0.0 ) )
 {
+	this->setPosition( osVector3::zero );
+	this->setZoneExtent( osVector3( OS_SCALAR( 5.0 ), OS_SCALAR( 0.0 ), OS_SCALAR( 5.0 ) ) );
 	this->setBorderWidth( 0.0f );
 	this->setZoneColor( Color::_gBlue );
-	this->setPosition( osVector3::zero );
 }
 
 //-----------------------------------------------------------------------------
 void ZonePlugin::zoneUtility( void )
 {
-	const osScalar drawExtent = this->m_kZoneExtent.x - 0.001f;
+	const osScalar drawExtent = this->m_kZoneExtent.x * OS_SCALAR( 2.0 ) - 0.001f;
 	if( 1 == this->m_iSolid )
 	{
 		// colors for checkerboard
-		//const 
-		Color gray(0.27f);
+		const Color gray(0.27f);
 		Color zoneGray( this->getZoneColor() );
-//		zoneGray = zoneGray * gray;
+		zoneGray.setR( zoneGray.r() * gray.r() );
+		zoneGray.setG( zoneGray.g() * gray.g() );
+		zoneGray.setB( zoneGray.b() * gray.b() );
+//		zoneGray.setR( zoneGray.r() * gray.r() );
 		// draw checkerboard grid
 		drawXZCheckerboardGrid( drawExtent, 10, this->position(), zoneGray, gray);
 	}
@@ -83,7 +87,8 @@ void ZonePlugin::zoneUtility( void )
 	const osScalar borderWidth = this->getBorderWidth();
 	if( borderWidth > 0 )
 	{
-		drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
+		this->m_kZoneAABBox.draw( this->m_kBorderColor );
+		//drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
 	}
 }
 
@@ -106,6 +111,12 @@ void ZonePlugin::open( void )
 	}
 
 	BaseClass::open();
+}
+
+//-----------------------------------------------------------------------------
+bool ZonePlugin::isVehicleInside( const OpenSteer::AbstractVehicle& kVehicle ) const
+{
+	return this->m_kZoneAABBox.insideXZWithRadius(kVehicle);
 }
 
 //-----------------------------------------------------------------------------
@@ -138,7 +149,7 @@ void ZonePlugin::addSubZones( void )
 			};
 
 			osVector3 halfExtent = this->getZoneExtent();
-			halfExtent *= 0.25;
+			halfExtent *= 0.5;
 			osVector3 startOffset = this->position();
 			startOffset -= halfExtent;
 			osVector3 offset = startOffset; 

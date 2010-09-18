@@ -141,7 +141,18 @@ namespace OpenSteer {
 		return tempBox.insideXZ( position );
 	}
 
-	void AABBox::draw() const 
+	void AABBox::draw( const OpenSteer::Color& color ) const 
+	{
+		Vec3 b,c;
+		b = Vec3( m_min.x, 0, m_max.z);
+		c = Vec3( m_max.x, 0, m_min.z);
+		drawLineAlpha(m_min, b, color, 1.0f);
+		drawLineAlpha(b, m_max, color, 1.0f);
+		drawLineAlpha(m_max, c, color, 1.0f);
+		drawLineAlpha(c,m_min, color, 1.0f);
+	}
+
+	void AABBox::draw( void ) const 
 	{
 		Vec3 b,c;
 		b = Vec3( m_min.x, 0, m_max.z);
@@ -152,7 +163,6 @@ namespace OpenSteer {
 		drawLineAlpha(m_max, c, color, 1.0f);
 		drawLineAlpha(c,m_min, color, 1.0f);
 	}
-
 
 } //! namespace OpenSteer    
 

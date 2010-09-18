@@ -40,6 +40,7 @@
 #include "EduNetConnect/NetworkPlugin.h"
 
 #include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/ZonePlugin.h"
 
 
 using namespace OpenSteer;
@@ -78,10 +79,10 @@ PolylineSegmentedPathwaySingleRadius* createPath (const osVector3& offset, float
 {
 	PolylineSegmentedPathwaySingleRadius* path = NULL;
 //	const float pathRadius = 2.0 * scale;
-	const float pathRadius = 1.0;
+//	const float pathRadius = 1.0;
+	const float pathRadius = 2.0 * scale;
 
 	const PolylineSegmentedPathwaySingleRadius::size_type pathPointCount = 16;
-	// const float size = 30;
 	osVector3 pathPoints[pathPointCount] = {
 		osVector3( -12.678730011f, 0.0144290002063f, 0.523285984993f ),
 		osVector3( -10.447640419f, 0.0149269998074f, -3.44138407707f ),
@@ -107,19 +108,15 @@ PolylineSegmentedPathwaySingleRadius* createPath (const osVector3& offset, float
 		pathPoints[i] += offset;
 	}
 
-	// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
-
-	osVector3 gEndpoint0;
-	osVector3 gEndpoint1;
-	gEndpoint0 = pathPoints[0];
-	gEndpoint1 = pathPoints[pathPointCount-1];
 
 	path = ET_NEW PolylineSegmentedPathwaySingleRadius (pathPointCount,
 		pathPoints,
 		pathRadius,
 		false);
-	path->setStartPoint( gEndpoint0 );
-	path->setEndPoint( gEndpoint1 );
+
+	// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
+	path->setStartPoint( pathPoints[0] );
+	path->setEndPoint( pathPoints[pathPointCount-1] );
 	return path;
 }
 
@@ -148,7 +145,8 @@ BaseClass( bAddToRegistry ),
 pd(NULL),
 m_fLastRenderTime(0.0f),
 m_fPathScale( pathScale ),
-m_pkPath(NULL)
+m_pkPath(NULL),
+pathColor( gRed )
 {
 	this->setEntityFactory( &this->m_kOfflinePedestrianFactory );
 }
@@ -260,37 +258,46 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 		this->drawPathAndObstacles ();
 	}
 
-	// display status in the upper left corner of the window
-	std::ostringstream status;
-	const float h = drawGetWindowHeight ();
-	osVector3 screenLocation (10, h - 50, 0);
-	Color kColor = gGray80;
-	if( false == this->isRemoteObject() )
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the parent zone
+	if( NULL != pkParentZone )
 	{
-		status << "[F1/F2] Crowd size: " << kVG.population();
-		status << "\n[F3] PD type: ";
-		switch (cyclePD)
-		{
-		case 0: status << "LQ bin lattice"; break;
-		case 1: status << "brute force";    break;
-		}
-		status << "\n[F4] ";
-		if (NetPedestrian::gUseDirectedPathFollowing)
-			status << "Directed path following.";
-		else
-			status << "Stay on the path.";
-		status << "\n[F5] Wander: ";
-		if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
-		status << std::endl;
+		// add some out put ?
 	}
 	else
 	{
-		status << "Client Crowd size: " << kVG.population();
-		screenLocation.y -= 60.0f;
-		kColor = gGray50;
+		// display status in the upper left corner of the window
+		std::ostringstream status;
+		const float h = drawGetWindowHeight ();
+		osVector3 screenLocation (10, h - 50, 0);
+		Color kColor = gGray80;
+		if( false == this->isRemoteObject() )
+		{
+			status << "[F1/F2] Crowd size: " << kVG.population();
+			status << "\n[F3] PD type: ";
+			switch (cyclePD)
+			{
+			case 0: status << "LQ bin lattice"; break;
+			case 1: status << "brute force";    break;
+			}
+			status << "\n[F4] ";
+			if (NetPedestrian::gUseDirectedPathFollowing)
+				status << "Directed path following.";
+			else
+				status << "Stay on the path.";
+			status << "\n[F5] Wander: ";
+			if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
+			status << std::endl;
+		}
+		else
+		{
+			status << "Client Crowd size: " << kVG.population();
+			screenLocation.y -= 60.0f;
+			kColor = gGray50;
+		}
+		draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
 	}
-	draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
-
 
 	this->m_fLastRenderTime = currentTime;
 }
@@ -304,8 +311,9 @@ void NetPedestrianPlugin::drawPathAndObstacles (void)
 
 	// draw a line along each segment of path
 	const PolylineSegmentedPathwaySingleRadius& path = *this->m_pkPath;
-	for (size_type i = 1; i < path.pointCount(); ++i ) {
-		drawLine (path.point( i )+offset, path.point( i-1)+offset , gRed);
+	for (size_type i = 1; i < path.pointCount(); ++i ) 
+	{
+		drawLine (path.point( i )+offset, path.point( i-1)+offset , pathColor);
 	}
 }
 

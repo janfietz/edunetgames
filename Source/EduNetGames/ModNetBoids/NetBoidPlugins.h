@@ -32,8 +32,6 @@
 #include "NetBoidClientPlugin.h"
 #include "BoidsPlugin.h"
 #include "OpenSteerUT/PluginArray.h"
-#include "OpenSteerUT/CameraPlugin.h"
-#include "OpenSteerUT/GridPlugin.h"
 
 //-----------------------------------------------------------------------------
 class NetBoidRenderOfflinePlugin :
@@ -56,11 +54,7 @@ public:
 		BaseClass::initGui( pkUserdata );
 	}
 
-	void prepare(void)
-	{
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	}
+	void prepare(void);
 
 	virtual void close(void)
 	{
@@ -95,10 +89,7 @@ public:
 		BaseClass::initGui( pkUserdata );
 	}
 
-	void prepare(void)
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	}
+	void prepare(void);
 
 	virtual void close(void)
 	{
@@ -135,12 +126,7 @@ public:
 		  BaseClass::initGui( pkUserdata );
 	  }
 
-	  void prepare(void)
-	  {
-		  this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-		  this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
-		  this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
-	  }
+	  void prepare(void);
 
 	  virtual void close(void)
 	  {
@@ -176,10 +162,7 @@ public:
 		BaseClass::initGui( pkUserdata );
 	}
 
-	void prepare(void)
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );		
-	}
+	void prepare(void);
 
 	virtual void close(void)
 	{		
@@ -216,11 +199,7 @@ public:
 		  BaseClass::initGui( pkUserdata );
 	  }
 
-	  void prepare(void)
-	  {
-		  this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-		  this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );		  
-	  }
+	  void prepare(void);
 
 	  virtual void close(void)
 	  {		

@@ -83,6 +83,7 @@ SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_bWillSendData( false ),
 	m_bHasBeenSerialized( false )
 {
+	memset( this->m_bIsZoneMember, 0, sizeof(bool) * MAX_ZONES );
 }
 #pragma warning(pop)
 

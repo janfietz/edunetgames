@@ -28,6 +28,7 @@
 
 #include "NetPedestrian.h"
 #include "NetPedestrianPlugin.h"
+#include "OpenSteerUT/ZonePlugin.h"
 
 using namespace OpenSteer;
 
@@ -37,7 +38,7 @@ namespace
 }
 
 
-bool NetPedestrian::gWanderSwitch = true;
+bool NetPedestrian::gWanderSwitch = false;
 bool NetPedestrian::gUseDirectedPathFollowing = true;
 
 #pragma warning(push)
@@ -244,8 +245,10 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	Vec3 kPosition = this->position();
 	bool bGotParentColor = false;
 	AbstractPlugin* parentPlugin = dynamic_cast<AbstractPlugin*>(this->getParentEntity());
+	ZonePlugin* zonePlugin = NULL;
 	if( NULL != parentPlugin )
 	{
+		zonePlugin = dynamic_cast<ZonePlugin*>(parentPlugin->getParentPlugin());
 		bGotParentColor = parentPlugin->queryVehicleColor( *this, kColor ) ;
 		if( true == bGotParentColor )
 		{
@@ -275,6 +278,33 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
 	this->drawTrail( kColor, gWhite );
 	this->setAnnotationMode( eMode );
+
+
+	if( NULL != zonePlugin )
+	{
+		// check for zone memberships
+		// textual annotation
+		std::ostringstream annote;
+		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
+		annote << "[";
+		for( size_t i = 0; i < 4; ++i )
+		{
+			if( true == this->getIsZoneMember(i) )
+			{
+				annote << i;
+			}
+			else
+			{
+				annote << " ";
+			}
+			if( i < 3 )
+			{
+				annote << "-";
+			}
+		}
+		annote << "]";
+		draw2dTextAt3dLocation (annote, this->position(), gWhite, drawGetWindowWidth(), drawGetWindowHeight());
+	}
 }
 
 //-----------------------------------------------------------------------------
