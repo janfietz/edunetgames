@@ -368,11 +368,20 @@ void PluginArray::addVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
 {
 	assert( true == false );
 }
+
 //-----------------------------------------------------------------------------
 void PluginArray::removeVehicle ( OpenSteer::AbstractVehicle* pkVehicle)
 {
 	assert( true == false );
 }
+
+//-----------------------------------------------------------------------------
+bool PluginArray::queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const
+{
+
+	return false;
+}
+
 //-----------------------------------------------------------------------------
 void PluginArray::addObstacle ( OpenSteer::AbstractObstacle* pkObstacle)
 {

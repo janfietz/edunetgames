@@ -53,6 +53,8 @@ namespace OpenSteer
 		virtual void close( void );
 		virtual const AVGroup& allVehicles( void ) const { return m_kVehicles; }
 		virtual AVGroup& allVehicles( void ) { return m_kVehicles; }
+		virtual bool queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, osColor& kColor ) const;
+
 
 		// optional methods (see comments in AbstractPlugin for explanation):
 		virtual void reset (void); // default is to reset by doing close-then-open
@@ -61,29 +63,50 @@ namespace OpenSteer
 		virtual void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
 		virtual void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
 
+		// extende interface
+		virtual void onSubZoneAdded( ZonePlugin* pkSubZone ){};
+
+		void setBorderWidth( osScalar value )
+		{
+			this->m_fBorderWidth = value;
+		}
+
 		void setZoneCenter( const osVector3& kGridCenter )
 		{
 			this->setPosition( kGridCenter );
 		}
+
 		void setZoneExtent( const osVector3& kExtent )
 		{
 			this->m_kZoneExtent = kExtent;
 		}
 
+		void setZoneColor( const osColor& kColor )
+		{
+			this->m_kZoneColor = kColor;
+			this->m_kBorderColor = kColor;
+			this->m_kBorderColor *= 0.5f;
+		}
+
+		osScalar getBorderWidth( void ) const
+		{
+			return this->m_fBorderWidth;
+		}
+
 		const osVector3& getZoneExtent( void ) const { return this->m_kZoneExtent; }
 		const osVector3& getZoneCenter( void ) const { return this->position(); }
+		const osColor& getZoneColor( void ) const { return this->m_kZoneColor; }
+		const osColor& getBorderColor( void ) const { return this->m_kBorderColor; }
 
 		size_t getZoneId( void ) { return this->m_zoneId; }
-
-		virtual void onSubZoneAdded( ZonePlugin* pkSubZone ){};
-
 		int m_iSolid;
 	private:
 		void zoneUtility( void );
 		void addSubZones( void );
 
 		osColor m_kBorderColor;
-		osColor m_kGridColor;
+		osColor m_kZoneColor;
+		osScalar m_fBorderWidth;
 		size_t m_zoneId;
 
 		AVGroup m_kVehicles;

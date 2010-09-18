@@ -48,6 +48,7 @@
 #include "OpenSteer/Renderer.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
+#include "OpenSteer/AABBox.h"
 
 
 namespace {
@@ -68,29 +69,6 @@ namespace {
     };
 
     //-----------------------------------------------------------------------------
-
-    // a box object for the field and the goals.
-    class AABBox{
-    public:
-        AABBox(Vec3 &min, Vec3& max): m_min(min), m_max(max){}
-        AABBox(Vec3 min, Vec3 max): m_min(min), m_max(max){}
-        bool	InsideX(const Vec3 p){if(p.x < m_min.x || p.x > m_max.x)	return false;return true;}
-        bool	InsideZ(const Vec3 p){if(p.z < m_min.z || p.z > m_max.z)	return false;return true;}
-        void	draw(){
-            Vec3 b,c;
-            b = Vec3(m_min.x, 0, m_max.z);
-            c = Vec3(m_max.x, 0, m_min.z);
-            Color color(1.0f,1.0f,0.0f);
-            drawLineAlpha(m_min, b, color, 1.0f);
-            drawLineAlpha(b, m_max, color, 1.0f);
-            drawLineAlpha(m_max, c, color, 1.0f);
-            drawLineAlpha(c,m_min, color, 1.0f);
-        }
-    private:
-        Vec3 m_min;
-        Vec3 m_max;
-    };
-
     // The ball object
     class Ball : public SimpleVehicle{
     public:
@@ -114,13 +92,13 @@ namespace {
             applyBrakingForce(1.5f, elapsedTime);
             applySteeringForce(velocity(), elapsedTime);
             // are we now outside the field?
-            if(!m_bbox->InsideX(position()))
+            if(!m_bbox->insideX(position()))
             {
                 Vec3 d = velocity();
                 regenerateOrthonormalBasis(Vec3(-d.x, d.y, d.z));
                 applySteeringForce(velocity(), elapsedTime);
             }
-            if(!m_bbox->InsideZ(position()))
+            if(!m_bbox->insideZ(position()))
             {
                 Vec3 d = velocity();
                 regenerateOrthonormalBasis(Vec3(d.x, d.y, -d.z));
@@ -306,12 +284,12 @@ namespace {
                 TeamB[i]->update (currentTime, elapsedTime);
             m_Ball->update(currentTime, elapsedTime);
 
-            if(m_TeamAGoal->InsideX(m_Ball->position()) && m_TeamAGoal->InsideZ(m_Ball->position()))
+            if(m_TeamAGoal->insideX(m_Ball->position()) && m_TeamAGoal->insideZ(m_Ball->position()))
             {
                 m_Ball->reset();	// Ball in blue teams goal, red scores
                 m_redScore++;
             }
-            if(m_TeamBGoal->InsideX(m_Ball->position()) && m_TeamBGoal->InsideZ(m_Ball->position()))
+            if(m_TeamBGoal->insideX(m_Ball->position()) && m_TeamBGoal->insideZ(m_Ball->position()))
             {
                 m_Ball->reset();	// Ball in red teams goal, blue scores
                     m_blueScore++;

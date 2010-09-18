@@ -1,5 +1,6 @@
-#ifndef __NETSOCCERBALL_H__
-#define __NETSOCCERBALL_H__
+#ifndef OPENSTEER_AABBOX_H
+#define OPENSTEER_AABBOX_H
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -28,40 +29,39 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-//-----------------------------------------------------------------------------
-#include "OpenSteer/AABBox.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "OpenSteerUT/AbstractVehicleUtilities.h"
-#include "OpenSteerUT/VehicleClassIds.h"
-#include "EduNetConnect/SimpleNetworkVehicle.h"
+#include "OpenSteer/AbstractLocalSpace.h"
 
 //-----------------------------------------------------------------------------
-class NetSoccerBall : public OpenSteer::SimpleNetworkVehicle
-{
-    ET_DECLARE_BASE ( OpenSteer::SimpleNetworkVehicle )
-public:
+namespace OpenSteer {
 
-    NetSoccerBall();    
-    virtual ~NetSoccerBall();
+	// an AABBox
+	class AABBox{
+	public:
+		AABBox( void ) {};
+		AABBox( const Vec3 &min, const Vec3& max );
 
-    // create a clone
-    virtual AbstractVehicle* cloneVehicle ( void ) const;
-    // reset state
-    virtual void reset ( void );
+		void initializeWithCenterAndExtent( const Vec3 &center, const Vec3& extent );
 
-	virtual osVector3 determineCombinedSteering( const float elapsedTime );
-    // draw this character/vehicle into the scene
-    virtual void draw ( const float currentTime, const float elapsedTime );
+		bool insideX( const Vec3& p ) const;
+		bool insideY( const Vec3& p ) const;
+		bool insideZ( const Vec3& p ) const;
 
-    void kick ( OpenSteer::Vec3 dir, const float elapsedTime );
+		bool inside( const Vec3& p ) const;
+		bool inside( const AbstractLocalSpace& localSpace ) const;
+		bool insideXZ( const Vec3& p ) const;
+		bool insideXZ( const AbstractLocalSpace& localSpace ) const;
+		bool insideXZWithRadius( const AbstractLocalSpace& localSpace ) const;
 
-	void setBox( OpenSteer::AABBox *bbox ){ this->m_bbox = bbox;}
-private:
-    ET_IMPLEMENT_CLASS_NO_COPY( NetSoccerBall )
+		void draw() const;
+	private:
+		Vec3 m_min;
+		Vec3 m_max;
+		Vec3 m_center;
+		Vec3 m_extent;
+	};
 
-	OpenSteer::AABBox *m_bbox;
-};
+} //! namespace OpenSteer    
 
-typedef OpenSteer::VehicleClassIdMixin<NetSoccerBall, ET_CID_NETSOCCER_BALL> TNetSoccerBall;
 
-#endif // __NETSOCCERBALL_H__
+//-----------------------------------------------------------------------------
+#endif //! OPENSTEER_AABBOX_H

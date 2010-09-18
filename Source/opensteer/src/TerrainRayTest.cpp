@@ -32,6 +32,7 @@
 // To include OpenSteer::maxXXX instead of using __max
 #include "OpenSteer/Utilities.h"
 
+#pragma warning(disable:4996)
 
 using namespace std;
 

@@ -99,9 +99,9 @@ namespace OpenSteer {
 
 
 	//----------------------------------------------------------------------------
-	typedef struct TClientSideInterpolation
+	typedef struct ClientSideInterpolation_t
 	{
-		TClientSideInterpolation():
+		ClientSideInterpolation_t():
 		m_fDistanceThreshHold(0.05f),
 		m_fPositionInterpolationFactor(0.5f)
 		{

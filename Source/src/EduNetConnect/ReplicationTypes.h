@@ -49,10 +49,10 @@ enum ENetworkSessionType
 
 
 //-----------------------------------------------------------------------------
-typedef struct TReplicationParams
+typedef struct ReplicationParams_t
 {
 public:
-	TReplicationParams():
+	ReplicationParams_t():
 	  fReplicationFrameRate( ET_DEFAULT_REPLICATION_FPS ),
 		  interval(ET_DEFAULT_REPLICATION_INTERVAL){}		
 	  RakNet::PRO sendParameter;
@@ -61,7 +61,7 @@ public:
 } ReplicationParams;
 
 //-----------------------------------------------------------------------------
-typedef struct TConnectSettings
+typedef struct ConnectSettings_t
 {
 public:
 	unsigned int uiServerStartPort;
@@ -72,9 +72,9 @@ public:
 
 
 //-----------------------------------------------------------------------------
-typedef struct TNetworkStats
+typedef struct NetworkStats_t
 {
-	TNetworkStats():
+	NetworkStats_t():
 m_uiBytesReceived(0),
 m_uiBytesSend(0)
 {
@@ -90,10 +90,10 @@ size_t m_uiBytesSend;
 } NetworkStats;
 
 //-----------------------------------------------------------------------------
-typedef struct TNetworkAddress
+typedef struct NetworkAddress_t
 {
 public:
-	TNetworkAddress():
+	NetworkAddress_t():
 	  addressString("127.0.0.1"),
 		  port(SERVER_PORT){}
 	  RakNet::RakString addressString;
@@ -101,10 +101,10 @@ public:
 }NetworkAddress;
 
 //-----------------------------------------------------------------------------
-typedef struct TNetworkSimulatorData
+typedef struct NetworkSimulatorData_t
 {
 public:
-	TNetworkSimulatorData():
+	NetworkSimulatorData_t():
 	  enabled(0),
 		  packetloss(0.0f),
 		  minExtraPing(0),

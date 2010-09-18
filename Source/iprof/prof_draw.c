@@ -16,7 +16,7 @@
 #include "prof.h"
 #include "prof_internal.h"
 
-#pragma warning(disable:4305; disable:4244)
+#pragma warning(disable:4305; disable:4244; disable:4996)
 
 /* use factor to compute a glow amount */
 static int get_colors(int id, float factor,
