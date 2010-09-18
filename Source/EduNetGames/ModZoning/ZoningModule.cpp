@@ -67,7 +67,6 @@ void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 	kSettings.uiPortPongCount = 10;
 }
 
-
 //-----------------------------------------------------------------------------
 void OpenSteer::handleGlobalDataInstanceFailure( void )
 {
@@ -83,18 +82,75 @@ namespace EduNet	{
 		ET_DECLARE_BASE( OpenSteer::ZonePlugin )
 	public:
 		MasterZonePlugin ( bool bAddToRegistry = false ):
-			BaseClass( bAddToRegistry )
-			{
+		BaseClass( bAddToRegistry )
+		{
 
+		}
+
+		void zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle )
+		{
+			vehicle->setIsZoneMember( zone->getZoneId(), zone->isVehicleInside( *vehicle ) );
+		}
+
+		//---------------------------------------------------------------------
+		virtual void update( const float currentTime, const float elapsedTime )
+		{
+			BaseClass::update( currentTime, elapsedTime );
+			
+			// now check and update zone memberships
+			size_t pluginCount = this->getPluginCount();
+
+			typedef std::vector<ZonePlugin*> ZonePluginArray_t;
+			ZonePluginArray_t subZones;
+			for( size_t i = 0; i < pluginCount; ++i )
+			{
+				ZonePlugin* pkSubZone = dynamic_cast<ZonePlugin*>(this->getPlugin(i));
+				if( NULL != pkSubZone )
+				{
+					subZones.push_back( pkSubZone );
+				}
 			}
+
+			ZonePluginArray_t::iterator iterStart = subZones.begin();
+			ZonePluginArray_t::const_iterator iterEnd = subZones.end();
+
+			ZonePluginArray_t::const_iterator iter0 = iterStart;
+			while( iter0 != iterEnd )
+			{
+				ZonePluginArray_t::iterator iter1 = iterStart;
+				while( iter1 != iterEnd )
+				{
+					AbstractPlugin* contentPlugin = (*iter1)->getPlugin(0);
+					osAVGroup vehicles = contentPlugin->allVehicles();
+					osAVIterator vehicleIter = vehicles.begin();
+					osAVIterator vehicleIterEnd = vehicles.end();
+					while( vehicleIter != vehicleIterEnd )
+					{
+						SimpleNetworkVehicle* networkVehicle = dynamic_cast<SimpleNetworkVehicle*>(*vehicleIter);
+						if( NULL != networkVehicle )
+						{
+							this->zoneCheck( *iter0, networkVehicle );
+						}
+						++vehicleIter;
+					}
+					++iter1;
+				}
+
+				++iter0;
+			}
+
+		}
 
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone )
 		{
 //			if( 0 == pkSubZone->getZoneId() )
 			{
-				pkSubZone->addPlugin( ET_NEW NetPedestrianPlugin( false, 0.5 * 0.5 ) );
+				NetPedestrianPlugin* pkContentPlugin = ET_NEW NetPedestrianPlugin( false, 0.5 * 0.5 );
+				pkContentPlugin->setPathColor( pkSubZone->getZoneColor() );
+				pkSubZone->addPlugin( pkContentPlugin );
 			}
 		};
+
 
 
 	};
@@ -159,8 +215,6 @@ namespace EduNet	{
 	{
 		return ET_NEW ZoningModulePluginFactory();
 	}
-
-
 }
 
 ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::ZoningModule)

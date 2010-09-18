@@ -110,6 +110,23 @@ namespace OpenSteer {
 			this->m_bWillSendData = true;
 		}
 
+		void setIsZoneMember( size_t zoneId, bool value )
+		{
+			if( zoneId < MAX_ZONES )
+			{
+				this->m_bIsZoneMember[zoneId] = value;
+			}
+		}
+
+		bool getIsZoneMember( size_t zoneId ) const
+		{
+			if( zoneId < MAX_ZONES )
+			{
+				return this->m_bIsZoneMember[zoneId];
+			}
+			return false;
+		}
+
 	private:
 		// the core object responsible to create smoth moves
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
@@ -120,8 +137,10 @@ namespace OpenSteer {
 		mutable bool m_bWillSendData;
 		mutable bool m_bHasBeenSerialized;
 		mutable bool m_bCollectsAnnotations;
-
-
+		enum {
+			MAX_ZONES = 16
+		};
+		bool m_bIsZoneMember[MAX_ZONES];
 	};
 
 

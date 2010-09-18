@@ -1,5 +1,4 @@
 #include "NetBoid.h"
-#include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteer/UnusedParameter.h"
 #include "BoidsPlugin.h"
 

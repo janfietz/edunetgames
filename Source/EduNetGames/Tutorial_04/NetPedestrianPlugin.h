@@ -96,6 +96,11 @@ public:
 		return this->m_pkPath;
 	}
 
+	void setPathColor( const osColor& color )
+	{
+		this->pathColor = color;
+	}
+
 	static OpenSteer::PolylineSegmentedPathwaySingleRadius* createTestPath( float scale );
 
 private:
@@ -103,7 +108,7 @@ private:
 	OpenSteer::PolylineSegmentedPathwaySingleRadius* m_pkPath;
 
 
-
+	osColor pathColor;
 
 	osAVGroup crowd;
 
