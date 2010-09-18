@@ -37,10 +37,6 @@ namespace
 	ObstacleGroup gObstacles;
 }
 
-
-bool NetPedestrian::gWanderSwitch = false;
-bool NetPedestrian::gUseDirectedPathFollowing = true;
-
 #pragma warning(push)
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 //-----------------------------------------------------------------------------
@@ -140,7 +136,8 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 	BaseClass::update( currentTime, elapsedTime );
 
 	// reverse direction when we reach an endpoint
-	if( NetPedestrian::gUseDirectedPathFollowing )
+	NetPedestrianPlugin* netPedestrianPlugin = dynamic_cast<NetPedestrianPlugin*>(this->getParentEntity());
+	if( netPedestrianPlugin->m_bUseDirectedPathFollowing )
 	{
 		const Color darkRed (0.7f, 0, 0);
 		float const pathRadius = path->radius();
@@ -195,6 +192,7 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 	}
 	else
 	{
+		NetPedestrianPlugin* netPedestrianPlugin = dynamic_cast<NetPedestrianPlugin*>(this->getParentEntity());
 		// otherwise consider avoiding collisions with others
 		osVector3 collisionAvoidance;
 		const float caLeadTime = 3;
@@ -218,13 +216,13 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 		else
 		{
 			// add in wander component (according to user switch)
-			if (gWanderSwitch)
+			if (netPedestrianPlugin->m_bWanderSwitch)
 				steeringForce += steerForWander (elapsedTime);
 
 			// do (interactively) selected type of path following
 			const float pfLeadTime = 3;
 			const osVector3 pathFollow =
-				(gUseDirectedPathFollowing ?
+				(netPedestrianPlugin->m_bUseDirectedPathFollowing ?
 				steerToFollowPath (pathDirection, pfLeadTime, *path) :
 			steerToStayOnPath (pfLeadTime, *path));
 

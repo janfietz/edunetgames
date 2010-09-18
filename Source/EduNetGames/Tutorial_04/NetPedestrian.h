@@ -73,9 +73,6 @@ public:
 		this->path = _path;
 	}
 
-	static bool gWanderSwitch;
-	static bool gUseDirectedPathFollowing;
-
 private:
 
 

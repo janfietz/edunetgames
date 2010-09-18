@@ -87,8 +87,8 @@ void ZonePlugin::zoneUtility( void )
 	const osScalar borderWidth = this->getBorderWidth();
 	if( borderWidth > 0 )
 	{
-		this->m_kZoneAABBox.draw( this->m_kBorderColor );
-		//drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
+		//this->m_kZoneAABBox.draw( this->m_kBorderColor );
+		drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
 	}
 }
 
@@ -235,9 +235,17 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 			return;
 		}
 		// textual annotation
+		AbstractPlugin* contentPlugin = this->getPlugin(0);
+		size_t population = 0;
+		if( NULL != contentPlugin )
+		{
+			osAVGroup vehicles = contentPlugin->allVehicles();
+			population = vehicles.size();
+		}
 		std::ostringstream annote;
 		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
-		annote << "Zone: " << this->getZoneId() << std::endl << "pos(" << this->position() << ")" << std::ends;
+		annote << "Zone: " << this->getZoneId() << std::endl << "pos(" << this->position() << ")" << std::endl;
+		annote << "Population: " << population << std::endl << std::ends;
 		draw2dTextAt3dLocation (annote, this->position(), gGreen, drawGetWindowWidth(), drawGetWindowHeight());
 	}
 
