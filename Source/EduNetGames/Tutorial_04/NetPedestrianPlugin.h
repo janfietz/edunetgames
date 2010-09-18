@@ -101,6 +101,8 @@ public:
 		this->pathColor = color;
 	}
 
+	int m_bWanderSwitch;
+	int m_bUseDirectedPathFollowing;
 	static OpenSteer::PolylineSegmentedPathwaySingleRadius* createTestPath( float scale );
 
 private:

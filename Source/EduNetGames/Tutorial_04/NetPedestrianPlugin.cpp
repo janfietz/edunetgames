@@ -146,7 +146,9 @@ pd(NULL),
 m_fLastRenderTime(0.0f),
 m_fPathScale( pathScale ),
 m_pkPath(NULL),
-pathColor( gRed )
+pathColor( gRed ),
+m_bWanderSwitch(0),
+m_bUseDirectedPathFollowing(0)
 {
 	this->setEntityFactory( &this->m_kOfflinePedestrianFactory );
 }
@@ -281,13 +283,14 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 			case 0: status << "LQ bin lattice"; break;
 			case 1: status << "brute force";    break;
 			}
-			status << "\n[F4] ";
-			if (NetPedestrian::gUseDirectedPathFollowing)
+			status << "\n";
+			if( this->m_bUseDirectedPathFollowing )
 				status << "Directed path following.";
 			else
 				status << "Stay on the path.";
-			status << "\n[F5] Wander: ";
-			if (NetPedestrian::gWanderSwitch) status << "yes"; else status << "no";
+			status << "\nWander: ";
+			if (this->m_bWanderSwitch)
+				status << "yes"; else status << "no";
 			status << std::endl;
 		}
 		else
@@ -325,8 +328,8 @@ void NetPedestrianPlugin::handleFunctionKeys (int keyNumber)
 	case 1:  addPedestrianToCrowd ();                               break;
 	case 2:  removePedestrianFromCrowd ();                          break;
 	case 3:  nextPD ();                                             break;
-	case 4: NetPedestrian::gUseDirectedPathFollowing = !NetPedestrian::gUseDirectedPathFollowing; break;
-	case 5: NetPedestrian::gWanderSwitch = !NetPedestrian::gWanderSwitch;                         break;
+// 	case 4: NetPedestrian::gUseDirectedPathFollowing = !NetPedestrian::gUseDirectedPathFollowing; break;
+// 	case 5: NetPedestrian::gWanderSwitch = !NetPedestrian::gWanderSwitch;                         break;
 	}
 }
 
@@ -341,8 +344,8 @@ void NetPedestrianPlugin::printMiniHelpForFunctionKeys (void) const
 	EduNet::Log::printMessage ("  F1     add a pedestrian to the crowd.");
 	EduNet::Log::printMessage ("  F2     remove a pedestrian from crowd.");
 	EduNet::Log::printMessage ("  F3     use next proximity database.");
-	EduNet::Log::printMessage ("  F4     toggle directed path follow.");
-	EduNet::Log::printMessage ("  F5     toggle wander component on/off.");
+// 	EduNet::Log::printMessage ("  F4     toggle directed path follow.");
+// 	EduNet::Log::printMessage ("  F5     toggle wander component on/off.");
 	EduNet::Log::printMessage ("");
 }
 
@@ -476,6 +479,8 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 		GLUI* glui = ::getRootGLUI();
 		GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
 
+		glui->add_checkbox_to_panel( pluginPanel, "Wander randomly", &this->m_bWanderSwitch);
+		glui->add_checkbox_to_panel( pluginPanel, "Use direct path following", &this->m_bUseDirectedPathFollowing);
 		GLUI_Control* pkControl;
 		pkControl = glui->add_button_to_panel( pluginPanel, "Add", -1, addPedestrian );
 		pkControl->set_ptr_val( this );

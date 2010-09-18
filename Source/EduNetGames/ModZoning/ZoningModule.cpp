@@ -145,7 +145,7 @@ namespace EduNet	{
 		{
 //			if( 0 == pkSubZone->getZoneId() )
 			{
-				NetPedestrianPlugin* pkContentPlugin = ET_NEW NetPedestrianPlugin( false, 0.5 * 0.5 );
+				NetPedestrianPlugin* pkContentPlugin = ET_NEW NetPedestrianPlugin( false, 0.225 );
 				pkContentPlugin->setPathColor( pkSubZone->getZoneColor() );
 				pkSubZone->addPlugin( pkContentPlugin );
 			}
