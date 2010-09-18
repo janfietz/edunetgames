@@ -61,7 +61,7 @@ namespace OpenSteer {
 
 	bool AABBox::insideY(const Vec3& p) const 
 	{
-		if(p.x < m_min.x || p.x > m_max.x)	
+		if(p.y < m_min.y || p.y > m_max.y)	
 			return false;
 		return true;
 	}
@@ -118,7 +118,7 @@ namespace OpenSteer {
 	bool AABBox::insideXZWithRadius( const AbstractLocalSpace& localSpace ) const
 	{
 		const Vec3 position = localSpace.position();
-		// decrease with radius
+		// increase with radius
 
 		Vec3 tempExtent(this->m_extent);
 
@@ -129,9 +129,9 @@ namespace OpenSteer {
 		{
 			radius = vehicle->radius();
 		}
-		tempExtent.x -= radius;
-		tempExtent.y -= radius;
-		tempExtent.z -= radius;
+		tempExtent.x += radius;
+		tempExtent.y += radius;
+		tempExtent.z += radius;
 		tempExtent.x = clamp( tempExtent.x, 0.0f, this->m_extent.x ); 
 		tempExtent.y = clamp( tempExtent.y, 0.0f, this->m_extent.y ); 
 		tempExtent.z = clamp( tempExtent.z, 0.0f, this->m_extent.z ); 
