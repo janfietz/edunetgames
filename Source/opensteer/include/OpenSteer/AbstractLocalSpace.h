@@ -69,7 +69,7 @@
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
-	typedef struct TLocalSpaceData
+	typedef struct LocalSpaceData_t
 	{
 		Vec3 _side;     //!    side-pointing unit basis vector
 		Vec3 _up;       //!  upward-pointing unit basis vector

@@ -34,10 +34,11 @@
 
 namespace OpenSteer
 {
+	typedef struct PhysicsMotionState_t PhysicsMotionState;
 
-	typedef struct TPhysicsMotionState
+	typedef struct PhysicsMotionState_t
 	{
-		TPhysicsMotionState():m_kForce(Vec3::zero),
+		PhysicsMotionState_t():m_kForce(Vec3::zero),
 			m_kLinearVelocity(Vec3::zero),
 			m_kLocalLinearVelocity(Vec3::zero),
 			m_kAngularVelocity(Vec3::zero),
@@ -88,8 +89,8 @@ namespace OpenSteer
 			const osScalar elapsedTime
 			);
 
-		void integrateMotionState( TPhysicsMotionState& kTarget, const osScalar elapsedTime ) const;
-		void integrateMotionState( TPhysicsMotionState& kTarget, const osScalar elapsedTime, size_t uiSteps ) const;
+		void integrateMotionState( PhysicsMotionState& kTarget, const osScalar elapsedTime ) const;
+		void integrateMotionState( PhysicsMotionState& kTarget, const osScalar elapsedTime, size_t uiSteps ) const;
 
 	} PhysicsMotionState;
 

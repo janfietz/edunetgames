@@ -89,9 +89,9 @@ void NetPedestrian::reset (void)
 
 	// max speed and max steering force (maneuverability)
 // 	setMaxSpeed (2.0);
-// 	setMaxForce (8.0);
-	setMaxSpeed (4.0 * currRadius);
-	setMaxForce (16.0 * currRadius);
+ 	setMaxForce (8.0);
+	setMaxSpeed (4.0f * currRadius);
+//	setMaxForce (16.0f * currRadius);
 
 	// initially stopped
 	setSpeed (0);
@@ -144,15 +144,15 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 		const Color darkRed (0.7f, 0, 0);
 		float const pathRadius = path->radius();
 
-		if (osVector3::distance (position(), gEndpoint0) < pathRadius )
+		if (osVector3::distance (position(), path->getStartPoint()) < pathRadius )
 		{
 			pathDirection = +1;
-			annotationXZCircle (pathRadius, gEndpoint0, darkRed, 20);
+			annotationXZCircle (pathRadius, path->getStartPoint(), darkRed, 20);
 		}
-		if (osVector3::distance (position(), gEndpoint1) < pathRadius )
+		if (osVector3::distance (position(), path->getEndPoint()) < pathRadius )
 		{
 			pathDirection = -1;
-			annotationXZCircle (pathRadius, gEndpoint1, darkRed, 20);
+			annotationXZCircle (pathRadius, path->getEndPoint(), darkRed, 20);
 		}
 	}
 }
@@ -242,18 +242,32 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 	BaseClass::draw( currentTime, elapsedTime );
 	Color kColor;
 	Vec3 kPosition = this->position();
-	Vec3 kTempPosition = kPosition;
-	if( true == this->isRemoteObject() )
+	bool bGotParentColor = false;
+	AbstractPlugin* parentPlugin = dynamic_cast<AbstractPlugin*>(this->getParentEntity());
+	if( NULL != parentPlugin )
 	{
-		kColor = gGreen;
-		kTempPosition.y += 0.05f;
+		bGotParentColor = parentPlugin->queryVehicleColor( *this, kColor ) ;
+		if( true == bGotParentColor )
+		{
+
+		}
+		else
+		{
+			if( true == this->isRemoteObject() )
+			{
+				kColor = gGreen;
+				Vec3 kTempPosition = kPosition;
+				kTempPosition.y += 0.05f;
+				this->setPosition( kTempPosition );
+			}
+			else
+			{
+				kColor = gRed;
+			}
+			kColor.setA( 0.5f );
+		}
 	}
-	else
-	{
-		kColor = gRed;
-	}
-	kColor.setA( 0.5f );
-	this->setPosition( kTempPosition );
+
 	OpenSteer::drawBasic2dCircularVehicle (*this, kColor);
 	this->setPosition( kPosition );
 	kColor.setA( 1.0f );

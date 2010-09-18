@@ -202,18 +202,11 @@ OpenSteer::Color::operator/=( float factor )
     return operator*=( 1.0f / factor );
 }
 
-
-
-
-
-
 OpenSteer::Color 
 OpenSteer::grayColor( float value )
 {
     return Color( value );
 }
-
-
 
 OpenSteer::Color 
 OpenSteer::operator+( Color const& lhs, Color const& rhs )
@@ -222,14 +215,12 @@ OpenSteer::operator+( Color const& lhs, Color const& rhs )
     return result += rhs;
 }
 
-
 OpenSteer::Color 
 OpenSteer::operator-( Color const& lhs, Color const& rhs )
 {
     Color result( lhs );
     return result -= rhs;    
 }
-
 
 OpenSteer::Color 
 OpenSteer::operator*( Color const& lhs, float rhs )
@@ -244,7 +235,6 @@ OpenSteer::operator*( float lhs, Color const& rhs )
 {
     return operator*( rhs, lhs );
 }
-
 
 OpenSteer::Color 
 OpenSteer::operator/( Color const& lhs, float rhs )

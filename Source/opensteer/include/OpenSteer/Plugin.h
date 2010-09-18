@@ -121,6 +121,7 @@ namespace OpenSteer {
 		virtual AbstractVehicle* createVehicle( EntityClassId ) const { return NULL; };
 		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
 		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+		virtual bool queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const;
 
 		virtual ObstacleGroup& allObstacles( void ) { return m_kAllObstacles; };
 		virtual const ObstacleGroup& allObstacles( void ) const { return m_kAllObstacles; };

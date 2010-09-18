@@ -57,7 +57,7 @@ namespace OpenSteer{
 
 	class AbstractPlugin;
 
-	typedef struct TLocalSpaceData LocalSpaceData;
+	typedef struct LocalSpaceData_t LocalSpaceData;
 
 
 	class Color;

@@ -55,24 +55,35 @@ ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 	m_iSolid(0),
 	m_zoneId(0)
 {
+	this->setBorderWidth( 0.0f );
+	this->setZoneColor( Color::_gBlue );
 	this->setPosition( osVector3::zero );
 }
 
 //-----------------------------------------------------------------------------
 void ZonePlugin::zoneUtility( void )
 {
+	const osScalar drawExtent = this->m_kZoneExtent.x - 0.001f;
 	if( 1 == this->m_iSolid )
 	{
 		// colors for checkerboard
-		const Color gray1(0.27f);
-		const Color gray2(0.30f);
+		//const 
+		Color gray(0.27f);
+		Color zoneGray( this->getZoneColor() );
+//		zoneGray = zoneGray * gray;
 		// draw checkerboard grid
-		drawXZCheckerboardGrid( this->m_kZoneExtent.x, 1, this->position(), gray1, gray2);
+		drawXZCheckerboardGrid( drawExtent, 10, this->position(), zoneGray, gray);
 	}
 	else
 	{
 		// alternate style
-		drawXZLineGrid (this->m_kZoneExtent.x, 1, this->position(), gBlack);
+		drawXZLineGrid( drawExtent, 1, this->position(), this->m_kZoneColor );
+	}
+
+	const osScalar borderWidth = this->getBorderWidth();
+	if( borderWidth > 0 )
+	{
+		drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
 	}
 }
 
@@ -98,6 +109,13 @@ void ZonePlugin::open( void )
 }
 
 //-----------------------------------------------------------------------------
+bool ZonePlugin::queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const 
+{ 
+	kColor = this->getZoneColor();
+	return true; 
+}
+
+//-----------------------------------------------------------------------------
 void ZonePlugin::addSubZones( void )
 {
 	AbstractPlugin* pkParent = this->getParentPlugin();
@@ -105,28 +123,46 @@ void ZonePlugin::addSubZones( void )
 	// the root zone
 	if( NULL == pkParentZone )
 	{
-		osVector3 halfExtent = this->getZoneExtent();
-		halfExtent *= 0.25;
-		osVector3 startOffset = this->position();
-		startOffset -= halfExtent;
-		osVector3 offset = startOffset; 
-		for( size_t i = 0; i < 4; ++i )
+		// any subzones present ?
+		if( this->size() == 0 )
 		{
-			if( i == 2 )
-			{
-				offset = startOffset;
-				offset.x += halfExtent.z * 2;
-			}
-			ZonePlugin* subZone = ET_NEW ZonePlugin();
-			subZone->m_zoneId = i;
-			subZone->setZoneCenter( this->getZoneCenter() + offset );
-			subZone->setZoneExtent( this->getZoneExtent() * 0.5f );
-			this->addPlugin( subZone );
-			this->onSubZoneAdded( subZone );
+			osScalar colorBase = 0.8;
+			osScalar colorWhite = 0.3;
 
-			offset.z += halfExtent.z * 2;
+			osColor kZoneColors[4] =
+			{
+				osColor( colorBase, colorWhite, colorWhite ),
+				osColor( colorBase, colorBase, colorWhite ),
+				osColor( colorWhite, colorBase, colorWhite ),
+				osColor( colorWhite, colorWhite, colorBase ),
+			};
+
+			osVector3 halfExtent = this->getZoneExtent();
+			halfExtent *= 0.25;
+			osVector3 startOffset = this->position();
+			startOffset -= halfExtent;
+			osVector3 offset = startOffset; 
+			for( size_t i = 0; i < 4; ++i )
+			{
+				if( i == 2 )
+				{
+					offset = startOffset;
+					offset.x += halfExtent.z * 2;
+				}
+				ZonePlugin* subZone = ET_NEW ZonePlugin();
+				subZone->m_zoneId = i;
+				subZone->setZoneCenter( this->getZoneCenter() + offset );
+				subZone->setZoneExtent( this->getZoneExtent() * 0.5f );
+				subZone->setZoneColor( kZoneColors[i] );
+				subZone->setBorderWidth( 1.0f );
+
+				this->addPlugin( subZone );
+				this->onSubZoneAdded( subZone );
+
+				offset.z += halfExtent.z * 2;
+			}
+			this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 		}
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	}
 }
 
@@ -160,26 +196,33 @@ void ZonePlugin::initGui( void* pkUserdata )
 //-----------------------------------------------------------------------------
 void ZonePlugin::redraw (const float currentTime, const float elapsedTime) 
 { 
-
-	// right now do not call the base class
-	// as we want to see the children ...
-//	BaseClass::redraw( currentTime, elapsedTime );
-	BaseClass::redrawChildren( currentTime, elapsedTime );
-	if( false == this->isVisible() )
-	{
-		return;
-	}
-	// draw "zone area"
-	this->zoneUtility(  );
-
 	AbstractPlugin* pkParent = this->getParentPlugin();
 	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
 	// the root zone
 	if( NULL == pkParentZone )
 	{
+		// right now do not call the base class
+		// as we want to see the children ...
+		BaseClass::redrawChildren( currentTime, elapsedTime );
+		if( false == this->isVisible() )
+		{
+			return;
+		}
+		// draw "zone area"
+		// this->zoneUtility(  );
 	}
 	else
 	{
+		// draw "zone area"
+		if( true == this->isVisible() )
+		{
+			this->zoneUtility(  );
+		}
+		BaseClass::redraw( currentTime, elapsedTime );
+		if( false == this->isVisible() )
+		{
+			return;
+		}
 		// textual annotation
 		std::ostringstream annote;
 		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);

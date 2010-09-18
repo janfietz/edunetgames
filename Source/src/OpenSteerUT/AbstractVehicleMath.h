@@ -102,7 +102,7 @@ namespace OpenSteer
 
 
 	//-------------------------------------------------------------------------
-	typedef struct TCompressedVector
+	typedef struct CompressedVector_t
 	{
 		char m_cValues[3];
 		unsigned short m_cUnitFactor;

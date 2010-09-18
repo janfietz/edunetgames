@@ -98,9 +98,9 @@ public:
     NetSoccerPlayer::Group m_AllPlayers;
 
     NetSoccerBall       *m_Ball;
-    NetSoccerGame::AABBox       *m_bbox;
-    NetSoccerGame::AABBox  *m_TeamAGoal;
-    NetSoccerGame::AABBox        *m_TeamBGoal;
+    OpenSteer::AABBox       *m_bbox;
+    OpenSteer::AABBox  *m_TeamAGoal;
+    OpenSteer::AABBox        *m_TeamBGoal;
     int junk;
     int         m_redScore;
     int         m_blueScore;

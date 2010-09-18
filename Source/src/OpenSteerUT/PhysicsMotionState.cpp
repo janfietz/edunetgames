@@ -38,7 +38,7 @@ namespace OpenSteer
 	using namespace OpenSteer;
 
 	//-------------------------------------------------------------------------
-	bool TPhysicsMotionState::readLocalSpaceData( const LocalSpaceData& kLocalSpaceData )
+	bool PhysicsMotionState::readLocalSpaceData( const LocalSpaceData& kLocalSpaceData )
 	{
 		if( writeLocalSpaceToTransform( kLocalSpaceData, this->m_kWorldTransform ) )
 		{
@@ -68,7 +68,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void TPhysicsMotionState::writeLocalSpaceData( AbstractLocalSpace& kLocalSpace )
+	void PhysicsMotionState::writeLocalSpaceData( AbstractLocalSpace& kLocalSpace )
 	{
 		writeTransformToLocalSpace( this->m_kWorldTransform, kLocalSpace );
 		kLocalSpace.setAngularVelocity( this->m_kAngularVelocity );
@@ -76,7 +76,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	bool TPhysicsMotionState::updateMotionState( AbstractVehicle* pkVehicle, const osScalar currentTime, 
+	bool PhysicsMotionState::updateMotionState( AbstractVehicle* pkVehicle, const osScalar currentTime, 
 		const osScalar elapsedTime
 		)
 	{
@@ -88,7 +88,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	bool TPhysicsMotionState::updateMotionState( const LocalSpaceData& kLocalSpaceData, const osScalar currentTime, 
+	bool PhysicsMotionState::updateMotionState( const LocalSpaceData& kLocalSpaceData, const osScalar currentTime, 
 		const osScalar elapsedTime
 		)
 	{
@@ -116,7 +116,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void TPhysicsMotionState::updateMotionState( 
+	void PhysicsMotionState::updateMotionState( 
 		const class btTransform& kWorldTransform1,
 		const osScalar currentTime,
 		const osScalar elapsedTime
@@ -170,7 +170,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void TPhysicsMotionState::integrateMotionState( TPhysicsMotionState& kTarget, const osScalar elapsedTime, size_t uiSteps ) const
+	void PhysicsMotionState::integrateMotionState( PhysicsMotionState& kTarget, const osScalar elapsedTime, size_t uiSteps ) const
 	{
 		PhysicsMotionState kLocalMotionState = (*this);
 		for( size_t ui = 0; ui < uiSteps; ++ui )
@@ -181,7 +181,7 @@ namespace OpenSteer
 	}
 
 	//-------------------------------------------------------------------------
-	void TPhysicsMotionState::integrateMotionState( TPhysicsMotionState& kTarget, const osScalar elapsedTime ) const
+	void PhysicsMotionState::integrateMotionState( PhysicsMotionState& kTarget, const osScalar elapsedTime ) const
 	{
 		if( elapsedTime <= 0 )
 		{

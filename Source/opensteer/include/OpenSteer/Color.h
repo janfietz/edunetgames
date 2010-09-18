@@ -95,7 +95,7 @@ namespace OpenSteer {
         float r_;
         float g_;
         float b_;
-		 float a_;	//! provided for API's which require four components       
+		float a_;	//! provided for API's which require four components       
 
 	public:
 		 static const Color _gBlack;

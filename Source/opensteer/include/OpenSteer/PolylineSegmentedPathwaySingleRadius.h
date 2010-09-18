@@ -163,10 +163,17 @@ namespace OpenSteer {
                                                                            Vec3& pointOnPath,
                                                                            Vec3& tangent,
                                                                            float& radius) const;
-         
-    private:
+         void setStartPoint( const Vec3& v ){ this->startPoint_ = v; }
+		 void setEndPoint( const Vec3& v ){ this->endPoint_ = v; }
+    
+		 const Vec3& getStartPoint( void ) const { return startPoint_; }
+		 const Vec3& getEndPoint( void ) const { return endPoint_; }
+	private:
         PolylineSegmentedPath path_;
         float radius_;
+		Vec3 startPoint_;
+		Vec3 endPoint_;
+
     }; //! class PolylineSegmentedPathwaySingleRadius
     
     

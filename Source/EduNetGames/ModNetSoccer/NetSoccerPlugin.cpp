@@ -48,6 +48,8 @@
 #include "OpenSteer/Renderer.h"
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
+#include "OpenSteer/AABBox.h"
+
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 
 #include "NetSoccerEntityFactory.h"
@@ -70,11 +72,11 @@ void NetSoccerPlugin::open ( void )
 
 
     // Make a field
-    m_bbox = ET_NEW NetSoccerGame::AABBox ( Vec3 ( -20,0,-10 ),  Vec3 ( 20,0,10 ) );
+    m_bbox = ET_NEW OpenSteer::AABBox ( Vec3 ( -20,0,-10 ),  Vec3 ( 20,0,10 ) );
     // Red goal
-    m_TeamAGoal = ET_NEW NetSoccerGame::AABBox ( Vec3 ( -21,0,-7 ),  Vec3 ( -19,0,7 ) );
+    m_TeamAGoal = ET_NEW OpenSteer::AABBox ( Vec3 ( -21,0,-7 ),  Vec3 ( -19,0,7 ) );
     // Blue Goal
-    m_TeamBGoal = ET_NEW NetSoccerGame::AABBox ( Vec3 ( 19,0,-7 ),  Vec3 ( 21,0,7 ) );
+    m_TeamBGoal = ET_NEW OpenSteer::AABBox ( Vec3 ( 19,0,-7 ),  Vec3 ( 21,0,7 ) );
     // Make a ball
 
 	AbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETSOCCER_BALL );
@@ -162,13 +164,13 @@ void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime 
 bool NetSoccerPlugin::checkForGoal( void )
 {
 	bool bGoal(false);
-	if ( m_TeamAGoal->InsideX ( m_Ball->position() ) && m_TeamAGoal->InsideZ ( m_Ball->position() ) )
+	if ( m_TeamAGoal->insideX ( m_Ball->position() ) && m_TeamAGoal->insideZ ( m_Ball->position() ) )
 	{
 		m_Ball->reset();        // Ball in blue teams goal, red scores
 		m_redScore++;
 		bGoal = true;
 	}
-	if ( m_TeamBGoal->InsideX ( m_Ball->position() ) && m_TeamBGoal->InsideZ ( m_Ball->position() ) )
+	if ( m_TeamBGoal->insideX ( m_Ball->position() ) && m_TeamBGoal->insideZ ( m_Ball->position() ) )
 	{
 		m_Ball->reset();        // Ball in red teams goal, blue scores
 		m_blueScore++;

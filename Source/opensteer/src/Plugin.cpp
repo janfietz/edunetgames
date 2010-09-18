@@ -292,6 +292,18 @@ void OpenSteer::Plugin::removeVehicle (
 }
 
 //-----------------------------------------------------------------------------
+bool OpenSteer::Plugin::queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const 
+{ 
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	if( NULL != pkParent )
+	{
+		return pkParent->queryVehicleColor( kVehicle, kColor );
+	}
+
+	return false; 
+}
+
+//-----------------------------------------------------------------------------
 void OpenSteer::Plugin::addObstacle (
 	OpenSteer::AbstractObstacle* pkObstacle)
 {

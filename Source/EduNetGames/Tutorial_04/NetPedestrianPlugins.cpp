@@ -49,9 +49,12 @@
 
 void OfflinePedestrianPlugin::initGui(void* pkUserdata)
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW NetPedestrianPlugin( false ) );
+	if( 0 == this->size() )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW NetPedestrianPlugin( false ) );
+	}
 	BaseClass::initGui( pkUserdata );
 }
 
@@ -62,9 +65,12 @@ void OfflinePedestrianPlugin::initGui(void* pkUserdata)
 
 void PedestrianRenderClientPlugin::initGui(void* pkUserdata)
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	if( 0 == this->size() )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	}
 	BaseClass::initGui( pkUserdata );
 }
 
@@ -74,9 +80,12 @@ void PedestrianRenderClientPlugin::initGui(void* pkUserdata)
 
 void PedestrianRenderPeerPlugin::initGui(void* pkUserdata)
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	if( 0 == this->size() )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	}
 	BaseClass::initGui( pkUserdata );
 }
 
@@ -100,10 +109,13 @@ PedestrianClientServerPlugin::~PedestrianClientServerPlugin()
 //-----------------------------------------------------------------------------
 void PedestrianClientServerPlugin::initGui( void* pkUserdata ) 
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
-	this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	if( 0 == this->size() )
+	{
+		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
+		this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
+		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+	}
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );

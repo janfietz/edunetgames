@@ -37,8 +37,6 @@ namespace OpenSteer {
 	class PolylineSegmentedPathwaySingleRadius;
 }
 
-extern osVector3 gEndpoint0;
-extern osVector3 gEndpoint1;
 
 //-----------------------------------------------------------------------------
 class NetPedestrianPlugin : public OpenSteer::Plugin
@@ -92,11 +90,17 @@ public:
 	// implement to create a vehicle of the specified class
 	virtual osAbstractVehicle* createVehicle( osEntityClassId ) const;
 
+	void setPath( OpenSteer::PolylineSegmentedPathwaySingleRadius* path );
+	OpenSteer::PolylineSegmentedPathwaySingleRadius* getPath( void ) const
+	{
+		return this->m_pkPath;
+	}
+
 	static OpenSteer::PolylineSegmentedPathwaySingleRadius* createTestPath( float scale );
 
 private:
 	NetPedestrianFactory m_kOfflinePedestrianFactory;
-	OpenSteer::PolylineSegmentedPathwaySingleRadius* m_pkTestPath;
+	OpenSteer::PolylineSegmentedPathwaySingleRadius* m_pkPath;
 
 
 

@@ -33,6 +33,31 @@
 
 #include "EduNetGames/Tutorial_04/NetPedestrianPlugins.h"
 
+#if 0
+AbstractPlugin* parent = dynamic_cast<AbstractPlugin*>(vehicle.getParentEntity());
+if(NULL != parent)
+{
+	AbstractLocalSpace* parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parent);
+	Vec3 offset(parentPluginLocalSpace->position());
+	AbstractPlugin* parentPlugin = parent->getParentPlugin();
+	while( NULL != parentPlugin )
+	{
+		parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parentPlugin);
+		offset += parentPluginLocalSpace->position();
+		parentPlugin = parentPlugin->getParentPlugin();
+	}
+
+	LocalSpaceData localCopy = vehicle.getLocalSpaceData();
+	localCopy._position += offset;
+	this->drawBasic2dCircularLocalSpace(
+		localCopy,
+		color, vehicle.radius() );
+}
+else
+{
+}
+#endif
+
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
@@ -65,7 +90,7 @@ namespace EduNet	{
 
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone )
 		{
-			if( 0 == pkSubZone->getZoneId() )
+//			if( 0 == pkSubZone->getZoneId() )
 			{
 				pkSubZone->addPlugin( ET_NEW NetPedestrianPlugin( false, 0.5 * 0.5 ) );
 			}

@@ -126,6 +126,7 @@ namespace OpenSteer {
 		virtual AVGroup& allVehicles (void) OS_ABSTRACT;
 		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle) OS_ABSTRACT;
 		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle) OS_ABSTRACT;
+		virtual bool queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const OS_ABSTRACT;
 
 		//! return an STL vector of AbstractObstacle pointers of
 		//! all obstacles defined by the Plugin

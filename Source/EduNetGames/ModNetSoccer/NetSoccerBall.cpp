@@ -60,13 +60,13 @@ osVector3 NetSoccerBall::determineCombinedSteering (const float elapsedTime)
 {
     applyBrakingForce ( 1.5f, elapsedTime );
     // are we now outside the field?
-    if ( !m_bbox->InsideX ( position() ) )
+    if ( !m_bbox->insideX ( position() ) )
     {
         Vec3 d = velocity();
         regenerateOrthonormalBasis ( Vec3 ( -d.x, d.y, d.z ) );
 		this->setLinearVelocity( this->forward() * d.length() );
     }
-    if ( !m_bbox->InsideZ ( position() ) )
+    if ( !m_bbox->insideZ ( position() ) )
     {
         Vec3 d = velocity();
         regenerateOrthonormalBasis ( Vec3 ( d.x, d.y, -d.z ) );

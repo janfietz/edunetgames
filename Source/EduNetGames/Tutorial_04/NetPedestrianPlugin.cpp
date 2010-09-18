@@ -44,8 +44,6 @@
 
 using namespace OpenSteer;
 
-osVector3 gEndpoint0;
-osVector3 gEndpoint1;
 
 namespace
 {
@@ -76,10 +74,11 @@ namespace
 /**
 * Creates a path of the form of an eight. Data provided by Nick Porcino.
 */
-PolylineSegmentedPathwaySingleRadius* createPath (float scale = 1.0f)
+PolylineSegmentedPathwaySingleRadius* createPath (const osVector3& offset, float scale = 1.0f)
 {
 	PolylineSegmentedPathwaySingleRadius* path = NULL;
-	const float pathRadius = 2.0 * scale;
+//	const float pathRadius = 2.0 * scale;
+	const float pathRadius = 1.0;
 
 	const PolylineSegmentedPathwaySingleRadius::size_type pathPointCount = 16;
 	// const float size = 30;
@@ -105,10 +104,13 @@ PolylineSegmentedPathwaySingleRadius* createPath (float scale = 1.0f)
 	for( size_t i = 0; i < pathPointCount; ++i )
 	{
 		pathPoints[i] *= scale;
+		pathPoints[i] += offset;
 	}
 
 	// ------------------------------------ xxxcwr11-1-04 fixing steerToAvoid
 
+	osVector3 gEndpoint0;
+	osVector3 gEndpoint1;
 	gEndpoint0 = pathPoints[0];
 	gEndpoint1 = pathPoints[pathPointCount-1];
 
@@ -116,13 +118,22 @@ PolylineSegmentedPathwaySingleRadius* createPath (float scale = 1.0f)
 		pathPoints,
 		pathRadius,
 		false);
+	path->setStartPoint( gEndpoint0 );
+	path->setEndPoint( gEndpoint1 );
 	return path;
 }
 
 //-----------------------------------------------------------------------------
 OpenSteer::PolylineSegmentedPathwaySingleRadius* NetPedestrianPlugin::createTestPath( float scale )
 {
-	return createPath( scale );
+	return createPath( osVector3::zero, scale );
+}
+
+//-----------------------------------------------------------------------------
+void NetPedestrianPlugin::setPath( OpenSteer::PolylineSegmentedPathwaySingleRadius* path )
+{
+	ET_SAFE_DELETE( this->m_pkPath );
+	this->m_pkPath = path;
 }
 
 //-----------------------------------------------------------------------------
@@ -137,9 +148,8 @@ BaseClass( bAddToRegistry ),
 pd(NULL),
 m_fLastRenderTime(0.0f),
 m_fPathScale( pathScale ),
-m_pkTestPath(NULL)
+m_pkPath(NULL)
 {
-	this->m_pkTestPath = createPath( pathScale );
 	this->setEntityFactory( &this->m_kOfflinePedestrianFactory );
 }
 
@@ -147,12 +157,27 @@ m_pkTestPath(NULL)
 NetPedestrianPlugin::~NetPedestrianPlugin() 
 {
 	this->close();
-	ET_SAFE_DELETE( this->m_pkTestPath );
+	ET_SAFE_DELETE( this->m_pkPath );
 }
 
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::open (void)
 {
+	osVector3 offset(osVector3::zero);
+
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the parent zone
+	// we assume just one parent offset
+	while( NULL != pkParentZone )
+	{
+		offset += pkParentZone->position();
+		pkParent = pkParentZone->getParentPlugin();
+		pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	}
+
+	this->setPath( createPath( offset, this->m_fPathScale ) );
+
 	// camera setup
 	Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
 	Camera::accessInstance().fixedTarget.set (15, 0, 30);
@@ -178,7 +203,8 @@ void NetPedestrianPlugin::close (void)
 {
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	// delete all Pedestrians
-	while (kVG.population() > 0) removePedestrianFromCrowd ();
+	while (kVG.population() > 0) 
+		removePedestrianFromCrowd ();
 }
 
 //-----------------------------------------------------------------------------
@@ -272,21 +298,12 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::drawPathAndObstacles (void)
 {
-	AbstractPlugin* pkParent = this->getParentPlugin();
-	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
-
 	osVector3 offset(osVector3::zero);
-	// the parent zone
-	// we assume just one parent offset
-	if( NULL != pkParentZone )
-	{
-		offset = pkParentZone->position();
-	}
 
 	typedef PolylineSegmentedPathwaySingleRadius::size_type size_type;
 
 	// draw a line along each segment of path
-	const PolylineSegmentedPathwaySingleRadius& path = *this->m_pkTestPath;
+	const PolylineSegmentedPathwaySingleRadius& path = *this->m_pkPath;
 	for (size_type i = 1; i < path.pointCount(); ++i ) {
 		drawLine (path.point( i )+offset, path.point( i-1)+offset , gRed);
 	}
@@ -338,7 +355,7 @@ void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN );
 	NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pkVehicle);
-	pkPedestrian->setPath( this->m_pkTestPath );
+	pkPedestrian->setPath( this->m_pkPath );
 	// note: now the path is valid reset the vehicle again
 	pkVehicle->setRadius( 0.5 * this->m_fPathScale );
 	pkVehicle->reset();
@@ -352,21 +369,28 @@ void NetPedestrianPlugin::removePedestrianFromCrowd (void)
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	if (kVG.population() > 0)
 	{
-		// save pointer to last pedestrian, then remove it from the crowd
-		AbstractVehicle* pedestrian = crowd.back();
-		crowd.pop_back();
-
-		// if it is SimpleVehicle's selected vehicle, unselect it
-		if (pedestrian == SimpleVehicle::getSelectedVehicle())
-			SimpleVehicle::setSelectedVehicle( NULL );
-
 		// delete the Pedestrian
 		const AbstractEntityFactory* pkFactory = this->getEntityFactory();
-		if( NULL != pkFactory )
+		AVGroup::iterator it = kVG.begin();
+		AVGroup::iterator itEnd = kVG.end();
+		while(it != itEnd)
 		{
-			pkFactory->destroyVehicle( pedestrian );
+			AbstractVehicle* pkVehicle = *it;
+			if( NULL != pkFactory )
+			{
+				if( true == pkFactory->destroyVehicle( pkVehicle ) )
+				{
+					kVG.removeVehicleFromPlugin ( pkVehicle );
+					return;
+				}
+			}
+			else
+			{
+				kVG.removeVehicleFromPlugin ( pkVehicle );
+				ET_SAFE_DELETE(pkVehicle);
+				return;
+			}
 		}
-		pedestrian = NULL;
 	}
 }
 
