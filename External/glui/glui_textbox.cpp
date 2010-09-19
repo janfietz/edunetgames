@@ -960,11 +960,11 @@ int    GLUI_TextBox::special_handler( int key,int modifiers )
     sel_start = sel_end = insertion_pt;
   
 
-  CLAMP( insertion_pt, 0, text.length()); /* Make sure insertion_pt 
+  CLAMP( insertion_pt, 0, static_cast<int>(text.length())); /* Make sure insertion_pt 
                            is in bounds */
-  CLAMP( sel_start, 0, text.length()); /* Make sure insertion_pt 
+  CLAMP( sel_start, 0, static_cast<int>(text.length())); /* Make sure insertion_pt 
                         is in bounds */
-  CLAMP( sel_end, 0, text.length()); /* Make sure insertion_pt 
+  CLAMP( sel_end, 0, static_cast<int>(text.length())); /* Make sure insertion_pt 
                           is in bounds */
 
   /******** Now redraw text ***********/
