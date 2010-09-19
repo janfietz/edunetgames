@@ -65,7 +65,7 @@ ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 //-----------------------------------------------------------------------------
 void ZonePlugin::zoneUtility( void )
 {
-	const osScalar drawExtent = this->m_kZoneExtent.x * OS_SCALAR( 2.0 ) - 0.001f;
+	const osScalar drawExtent = this->m_kZoneExtent.x * OS_SCALAR( 2.0 ) - 0.005f;
 	if( 1 == this->m_iSolid )
 	{
 		// colors for checkerboard
@@ -74,9 +74,13 @@ void ZonePlugin::zoneUtility( void )
 		zoneGray.setR( zoneGray.r() * gray.r() );
 		zoneGray.setG( zoneGray.g() * gray.g() );
 		zoneGray.setB( zoneGray.b() * gray.b() );
-//		zoneGray.setR( zoneGray.r() * gray.r() );
 		// draw checkerboard grid
 		drawXZCheckerboardGrid( drawExtent, 10, this->position(), zoneGray, gray);
+#if 0
+		AABBox kZoneAABBox;
+		kZoneAABBox.initializeWithCenterAndExtent( this->position(), this->m_kZoneExtent );
+		kZoneAABBox.draw( this->getZoneColor() );
+#endif
 	}
 	else
 	{
@@ -87,8 +91,7 @@ void ZonePlugin::zoneUtility( void )
 	const osScalar borderWidth = this->getBorderWidth();
 	if( borderWidth > 0 )
 	{
-		//this->m_kZoneAABBox.draw( this->m_kBorderColor );
-		drawXZLineGrid( drawExtent + borderWidth, 1, this->position(), this->m_kBorderColor );
+		drawXZLineGrid( drawExtent + borderWidth * OS_SCALAR( 2.0 ), 1, this->position(), this->m_kBorderColor );
 	}
 }
 

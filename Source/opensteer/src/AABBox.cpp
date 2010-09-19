@@ -117,28 +117,25 @@ namespace OpenSteer {
 
 	bool AABBox::insideXZWithRadius( const AbstractLocalSpace& localSpace ) const
 	{
-		const Vec3 position = localSpace.position();
-		// increase with radius
-
-		Vec3 tempExtent(this->m_extent);
-
+		const Vec3& position = localSpace.position();
 		osScalar radius = 0.0f;
-
 		const AbstractVehicle* vehicle = dynamic_cast<const AbstractVehicle*>(&localSpace);
 		if( NULL != vehicle )
 		{
 			radius = vehicle->radius();
 		}
-		tempExtent.x += radius;
-		tempExtent.y += radius;
-		tempExtent.z += radius;
-		tempExtent.x = clamp( tempExtent.x, 0.0f, this->m_extent.x ); 
-		tempExtent.y = clamp( tempExtent.y, 0.0f, this->m_extent.y ); 
-		tempExtent.z = clamp( tempExtent.z, 0.0f, this->m_extent.z ); 
-
-		AABBox tempBox;
-		tempBox.initializeWithCenterAndExtent( this->m_center, tempExtent );
-		return tempBox.insideXZ( position );
+		if( 0 != radius )
+		{
+			// increase with radius
+			Vec3 tempExtent( this->m_extent );
+ 			tempExtent.x += radius;
+			tempExtent.y += radius;
+			tempExtent.z += radius;
+			AABBox tempBox;
+			tempBox.initializeWithCenterAndExtent( this->m_center, tempExtent );
+			return tempBox.insideXZ( position );
+		}
+		return this->insideXZ( position );
 	}
 
 	void AABBox::draw( const OpenSteer::Color& color ) const 
