@@ -84,7 +84,7 @@ void PedestrianRenderPeerPlugin::initGui(void* pkUserdata)
 	{
 		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW PedestrianClientPlugin( false ) );
+		this->addPlugin( ET_NEW PedestrianPeerPlugin( false ) );
 	}
 	BaseClass::initGui( pkUserdata );
 }

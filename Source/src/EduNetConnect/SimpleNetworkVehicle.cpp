@@ -81,7 +81,8 @@ void SimpleProxyVehicle::update (const float currentTime, const float elapsedTim
 SimpleNetworkVehicle::SimpleNetworkVehicle():
 	m_kNetworkVehicleUpdate(this),
 	m_bWillSendData( false ),
-	m_bHasBeenSerialized( false )
+	m_bHasBeenSerialized( false ),
+	m_bSupportZoning( false )
 {
 	memset( this->m_bIsZoneMember, 0, sizeof(bool) * MAX_ZONES );
 }
@@ -592,4 +593,22 @@ bool SimpleNetworkVehicle::deserializeConstruction(
 	return true;
 }
 
+//-----------------------------------------------------------------------------
+void SimpleNetworkVehicle::setIsZoneMember( size_t zoneId, bool value )
+{
+	if( zoneId < MAX_ZONES )
+	{
+		this->m_bIsZoneMember[zoneId] = value;
+	}
+}
+
+//-----------------------------------------------------------------------------
+bool SimpleNetworkVehicle::getIsZoneMember( size_t zoneId ) const
+{
+	if( zoneId < MAX_ZONES )
+	{
+		return this->m_bIsZoneMember[zoneId];
+	}
+	return false;
+}
 

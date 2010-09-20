@@ -365,13 +365,18 @@ AbstractVehicle* NetPedestrianPlugin::createVehicle( EntityClassId classId ) con
 void NetPedestrianPlugin::addPedestrianToCrowd (void)
 {
 	osAbstractVehicle* pkVehicle = this->createVehicle( ET_CID_NETPEDESTRIAN );
-	NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pkVehicle);
-	pkPedestrian->setPath( this->m_pkPath );
-	// note: now the path is valid reset the vehicle again
-	pkVehicle->setRadius( 0.5 * this->m_fPathScale );
-	pkVehicle->reset();
-	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.addVehicleToPlugin( pkVehicle, this );
+	// note: the vehicle might be NULL here
+	//       a client for example will not create a vehicle
+	if( NULL != pkVehicle )
+	{
+		NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pkVehicle);
+		pkPedestrian->setPath( this->m_pkPath );
+		// note: now the path is valid reset the vehicle again
+		pkVehicle->setRadius( 0.5 * this->m_fPathScale );
+		pkVehicle->reset();
+		AbstractVehicleGroup kVG( this->allVehicles() );
+		kVG.addVehicleToPlugin( pkVehicle, this );
+	}
 }
 
 //-----------------------------------------------------------------------------
