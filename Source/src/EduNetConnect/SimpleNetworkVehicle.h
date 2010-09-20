@@ -110,22 +110,15 @@ namespace OpenSteer {
 			this->m_bWillSendData = true;
 		}
 
-		void setIsZoneMember( size_t zoneId, bool value )
-		{
-			if( zoneId < MAX_ZONES )
-			{
-				this->m_bIsZoneMember[zoneId] = value;
-			}
-		}
+		void setIsZoneMember( size_t zoneId, bool value );
 
-		bool getIsZoneMember( size_t zoneId ) const
-		{
-			if( zoneId < MAX_ZONES )
-			{
-				return this->m_bIsZoneMember[zoneId];
-			}
-			return false;
-		}
+		bool getIsZoneMember( size_t zoneId ) const;
+
+		void setSupportZoning( bool value )
+		{ this->m_bSupportZoning = value; };
+
+		bool getSupportZoning( ) const
+		{ return this->m_bSupportZoning; };
 
 	private:
 		// the core object responsible to create smoth moves
@@ -137,6 +130,7 @@ namespace OpenSteer {
 		mutable bool m_bWillSendData;
 		mutable bool m_bHasBeenSerialized;
 		mutable bool m_bCollectsAnnotations;
+		bool m_bSupportZoning;
 		enum {
 			MAX_ZONES = 16
 		};

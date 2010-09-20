@@ -81,15 +81,58 @@ namespace EduNet	{
 	{
 		ET_DECLARE_BASE( OpenSteer::ZonePlugin )
 	public:
-		MasterZonePlugin ( bool bAddToRegistry = false ):
-		BaseClass( bAddToRegistry )
+		MasterZonePlugin ( bool bAddToRegistry = false, size_t zoneId = 4 ):
+		BaseClass( bAddToRegistry ),
+		m_uiZoneId(zoneId)
 		{
+			this->m_bCreateContentZone[0] = false;
+			this->m_bCreateContentZone[1] = false;
+			this->m_bCreateContentZone[2] = false;
+			this->m_bCreateContentZone[3] = false;
+			if( zoneId < 4 )
+			{
+				this->m_bCreateContentZone[zoneId] = true;
+			}
+			else
+			{
+				if( zoneId < 5 )
+				{
+					this->m_bCreateContentZone[0] = true;
+					this->m_bCreateContentZone[1] = true;
+					this->m_bCreateContentZone[2] = true;
+					this->m_bCreateContentZone[3] = true;
+				}
+			}
+		}
 
+		const char* name() const
+		{
+			if( this->m_uiZoneId < 4 )
+			{
+				if(this->m_bCreateContentZone[0])
+					return "Zone-0";
+				if(this->m_bCreateContentZone[1])
+					return "Zone-1";
+				if(this->m_bCreateContentZone[2])
+					return "Zone-2";
+				if(this->m_bCreateContentZone[3])
+					return "Zone-3";
+			}
+			if( this->m_uiZoneId < 5 )
+			{
+				return "Zones";
+			}
+			else
+			{
+				return "EmptyZones";
+			}
 		}
 
 		void zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle )
 		{
+			// TODO:
 			vehicle->setIsZoneMember( zone->getZoneId(), zone->isVehicleInside( *vehicle ) );
+			// TODO:
 		}
 
 		//---------------------------------------------------------------------
@@ -121,17 +164,24 @@ namespace EduNet	{
 				while( iter1 != iterEnd )
 				{
 					AbstractPlugin* contentPlugin = (*iter1)->getPlugin(0);
-					osAVGroup vehicles = contentPlugin->allVehicles();
-					osAVIterator vehicleIter = vehicles.begin();
-					osAVIterator vehicleIterEnd = vehicles.end();
-					while( vehicleIter != vehicleIterEnd )
+					if( NULL == contentPlugin )
 					{
-						SimpleNetworkVehicle* networkVehicle = dynamic_cast<SimpleNetworkVehicle*>(*vehicleIter);
-						if( NULL != networkVehicle )
+
+					}
+					else
+					{
+						osAVGroup vehicles = contentPlugin->allVehicles();
+						osAVIterator vehicleIter = vehicles.begin();
+						osAVIterator vehicleIterEnd = vehicles.end();
+						while( vehicleIter != vehicleIterEnd )
 						{
-							this->zoneCheck( *iter0, networkVehicle );
+							SimpleNetworkVehicle* networkVehicle = dynamic_cast<SimpleNetworkVehicle*>(*vehicleIter);
+							if( NULL != networkVehicle )
+							{
+								this->zoneCheck( *iter0, networkVehicle );
+							}
+							++vehicleIter;
 						}
-						++vehicleIter;
 					}
 					++iter1;
 				}
@@ -143,7 +193,7 @@ namespace EduNet	{
 
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone )
 		{
-//			if( 0 == pkSubZone->getZoneId() )
+			if( true == this->m_bCreateContentZone[pkSubZone->getZoneId()] )
 			{
 				NetPedestrianPlugin* pkContentPlugin = ET_NEW NetPedestrianPlugin( false, 0.225 );
 				pkContentPlugin->setPathColor( pkSubZone->getZoneColor() );
@@ -152,7 +202,8 @@ namespace EduNet	{
 		};
 
 
-
+		bool m_bCreateContentZone[4];
+		size_t m_uiZoneId;
 	};
 
 	//-------------------------------------------------------------------------
@@ -171,7 +222,12 @@ namespace EduNet	{
 	void ZoningModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
 		kNames.push_back( "ZonePlugin" );
-		kNames.push_back( "OfflinePedestrianPlugin" );
+		kNames.push_back( "EmptyZonePlugin" );
+		kNames.push_back( "ZonePlugin0" );
+		kNames.push_back( "ZonePlugin1" );
+		kNames.push_back( "ZonePlugin2" );
+		kNames.push_back( "ZonePlugin3" );
+//		kNames.push_back( "OfflinePedestrianPlugin" );
 	}
 
 	//-------------------------------------------------------------------------
@@ -182,6 +238,36 @@ namespace EduNet	{
 		if( kName == "ZonePlugin" )
 		{
 			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false );
+
+			return pkZone;  
+		}
+		if( kName == "EmptyZonePlugin" )
+		{
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 5 );
+
+			return pkZone;  
+		}
+		if( kName == "ZonePlugin0" )
+		{
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 0 );
+
+			return pkZone;  
+		}
+		if( kName == "ZonePlugin1" )
+		{
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 1 );
+
+			return pkZone;  
+		}
+		if( kName == "ZonePlugin2" )
+		{
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 2 );
+
+			return pkZone;  
+		}
+		if( kName == "ZonePlugin3" )
+		{
+			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 3 );
 
 			return pkZone;  
 		}
