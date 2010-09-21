@@ -809,8 +809,18 @@ AbstractEntityReplica* NetworkPlugin::allocEntityReplica(
 	OpenSteer::EntityClassId classId,
 	bool bIsRemoteObject,  bool bClientReplica ) const
 {
-	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pPlugin, classId, bIsRemoteObject, bClientReplica  );
+	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( 
+		pPlugin, classId, bIsRemoteObject, bClientReplica  );
 	return pkNewReplica;
 }
-
+//-----------------------------------------------------------------------------
+AbstractEntityReplica* NetworkPlugin::createLocalEntityReplica( 
+	OpenSteer::AbstractPlugin* pPlugin, 
+	OpenSteer::EntityClassId classId, 
+	bool bIsRemoteObject, 
+	bool bClientReplica ) const
+{
+	return ET_NEW AbstractEntityReplica( 
+		pPlugin, classId, bIsRemoteObject, bClientReplica );
+}
 

@@ -145,8 +145,21 @@ AbstractEntityReplica* AbstractEntityReplicaFactory::createEntityReplica(
 	OpenSteer::EntityClassId classId, 
 	bool bIsRemoteObject,  bool bClientReplica) const
 {
-	return ET_NEW AbstractEntityReplica( 
-		pPlugin, classId, bIsRemoteObject, bClientReplica );	
+	OpenSteer::AbstractPlugin* pParentPlugin = pPlugin->getParentPlugin();
+	if(NULL == pParentPlugin)
+	{
+		pParentPlugin = pPlugin;
+	}
+
+	AbstractNetworkPlugin* pkNetworkPlugin = dynamic_cast<AbstractNetworkPlugin*>( pParentPlugin );	
+
+	AbstractEntityReplica* pkNewReplica(NULL);
+	if(NULL != pkNetworkPlugin)
+	{
+		pkNewReplica = pkNetworkPlugin->createLocalEntityReplica(
+			pPlugin, classId, bIsRemoteObject , bClientReplica);
+	}
+	return pkNewReplica;	
 }
 
 //-----------------------------------------------------------------------------
