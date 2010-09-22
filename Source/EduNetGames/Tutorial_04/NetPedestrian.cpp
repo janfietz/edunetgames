@@ -220,14 +220,17 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 				steeringForce += steerForWander (elapsedTime);
 
 			// do (interactively) selected type of path following
-			const float pfLeadTime = 3;
-			const osVector3 pathFollow =
-				(netPedestrianPlugin->m_bUseDirectedPathFollowing ?
-				steerToFollowPath (pathDirection, pfLeadTime, *path) :
-			steerToStayOnPath (pfLeadTime, *path));
+			if( NULL != path )
+			{
+				const float pfLeadTime = 3;
+				const osVector3 pathFollow =
+					(netPedestrianPlugin->m_bUseDirectedPathFollowing ?
+					steerToFollowPath (pathDirection, pfLeadTime, *path) :
+				steerToStayOnPath (pfLeadTime, *path));
 
-			// add in to steeringForce
-			steeringForce += pathFollow * 0.5;
+				// add in to steeringForce
+				steeringForce += pathFollow * 0.5;
+			}
 		}
 	}
 	// return steering constrained to global XZ "ground" plane
