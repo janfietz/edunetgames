@@ -61,7 +61,7 @@ namespace OpenSteer
 		virtual float selectionOrderSortKey( void ) const {return 1000000;}
 		virtual bool requestInitialSelection( void ) const {return false;}
 		virtual void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
-		virtual void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
+		virtual void printMiniHelpForFunctionKeys( void ) const { } // if fkeys are used
 
 		// extende interface
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone ){};
