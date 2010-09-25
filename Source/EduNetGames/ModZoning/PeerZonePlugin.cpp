@@ -239,14 +239,16 @@ void PeerZonePlugin::initializeReplication()
 //-----------------------------------------------------------------------------
 void PeerZonePlugin::shutdownReplication()
 {	
-	this->m_pNetInterface->DetachPlugin( this->m_pkReplicaManager );
-	this->setGamePluginReplicaManager( NULL );
-	ET_SAFE_DELETE(this->m_pkReplicaManager);
-	
-	// attach vehicle factory
-	this->m_kGamePlugin.setEntityFactory( NULL );
-	ET_SAFE_DELETE(this->m_pkNetPedestrianFactory);
-	
+	if (NULL != this->m_pNetInterface)
+	{
+		this->m_pNetInterface->DetachPlugin( this->m_pkReplicaManager );
+		this->setGamePluginReplicaManager( NULL );
+		ET_SAFE_DELETE(this->m_pkReplicaManager);
+
+		// attach vehicle factory
+		this->m_kGamePlugin.setEntityFactory( NULL );
+		ET_SAFE_DELETE(this->m_pkNetPedestrianFactory);
+	}
 }
 //-----------------------------------------------------------------------------
 const char* PeerZonePlugin::name() const
