@@ -101,12 +101,7 @@ namespace OpenSteer {
 	//----------------------------------------------------------------------------
 	typedef struct ClientSideInterpolation_t
 	{
-		ClientSideInterpolation_t():
-		m_fDistanceThreshHold(0.05f),
-		m_fPositionInterpolationFactor(0.5f)
-		{
-
-		}
+		ClientSideInterpolation_t();
 		float m_fDistanceThreshHold;
 		float m_fPositionInterpolationFactor;
 	} ClientSideInterpolation;
@@ -130,9 +125,6 @@ namespace OpenSteer {
 			};
 			return pszModes[eMode];
 		}
-
-		static ClientSideInterpolation ms_ClientSideInterpolation;
-
 	};
 
 	//----------------------------------------------------------------------------

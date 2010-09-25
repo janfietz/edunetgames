@@ -46,6 +46,7 @@ namespace OpenSteer
 	static const EntityClassId g_clasId_NetBoid( 5 + OS_CID_LASTRESERVED );
 	static const EntityClassId g_clasId_NetSoccerPlayer( 6 + OS_CID_LASTRESERVED );
 	static const EntityClassId g_clasId_NetSoccerBall( 7 + OS_CID_LASTRESERVED );
+	static const EntityClassId g_clasId_StudentVehicle( 8 + OS_CID_LASTRESERVED );
 }
 
 //-----------------------------------------------------------------------------
@@ -58,6 +59,7 @@ namespace OpenSteer
 #define ET_CID_NETBOID OpenSteer::g_clasId_NetBoid
 #define ET_CID_NETSOCCER_PLAYER OpenSteer::g_clasId_NetSoccerPlayer
 #define ET_CID_NETSOCCER_BALL OpenSteer::g_clasId_NetSoccerBall
+#define ET_CID_STUDENT_VEHICLE OpenSteer::g_clasId_StudentVehicle
 
 
 #endif // __VEHICLECLASSIDS_H__

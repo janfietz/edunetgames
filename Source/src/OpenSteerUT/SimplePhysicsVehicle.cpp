@@ -92,7 +92,7 @@ void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTim
 
 #if 0
 //-----------------------------------------------------------------------------
-void NetPedestrian::annotationUtility( void ) const
+void StudentVehicle::annotationUtility( void ) const
 {
 	osVector3 kLinearVelocity = this->m_kEulerUpdate.getMotionState().m_kLinearVelocity;
 	kLinearVelocity *= 3.6f;
