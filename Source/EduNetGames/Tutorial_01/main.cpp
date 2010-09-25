@@ -28,17 +28,21 @@
 
 #include "EduNetApplication/EduNetMain.h"
 #include "EduNetApplication/EduNetApplication.h"
+#include "OpenSteerUT/PlayerPlugin.h"
 
 //-----------------------------------------------------------------------------
 namespace EduNet
 {
 	EmptyPlugin* emptyPlugin = NULL;
+	PlayerPlugin* playerPlugin = NULL;
 	void initializeDynamicPlugins( )
 	{
 		emptyPlugin = ET_NEW EmptyPlugin();
+		playerPlugin = ET_NEW PlayerPlugin();
 	}
 	void shutdownDynamicPlugins( )
 	{
+		ET_SAFE_DELETE( playerPlugin );
 		ET_SAFE_DELETE( emptyPlugin );
 	}
 }
