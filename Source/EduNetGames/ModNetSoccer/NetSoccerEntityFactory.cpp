@@ -31,6 +31,7 @@
 #include "NetSoccerPlayer.h"
 
 #include "EduNetConnect/SerializablePlayer.h"
+#include "NetSoccerHumanPlayer.h"
 
 //-----------------------------------------------------------------------------
 class NetNetSoccerPlayerEntityFactory : public OpenSteer::TEntityFactory<TNetSoccerPlayer>
@@ -57,9 +58,11 @@ NetSoccerEntityFactory::NetSoccerEntityFactory()
 	static NetNetSoccerPlayerEntityFactory gNetNetSoccerPlayerEntityFactory;
 	static NetNetSoccerBallEntityFactory gNetNetSoccerBallEntityFactory;
 	static ClientSerializablePlayerFactory gClientSerializablePlayerFactory;
+	static NetSoccerHumanPlayerFactory gNetSoccerHumanPlayerFactory;
 	this->addEntityFactory( &gNetNetSoccerPlayerEntityFactory );
 	this->addEntityFactory( &gNetNetSoccerBallEntityFactory );
-	this->addEntityFactory( &gClientSerializablePlayerFactory );
+//	this->addEntityFactory( &gClientSerializablePlayerFactory );
+	this->addEntityFactory( &gNetSoccerHumanPlayerFactory );
 }
 //-----------------------------------------------------------------------------
 NetSoccerEntityFactory::~NetSoccerEntityFactory()

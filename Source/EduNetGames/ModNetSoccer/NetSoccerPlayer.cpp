@@ -36,6 +36,13 @@ NetSoccerPlayer::NetSoccerPlayer () :
 }
 
 //-----------------------------------------------------------------------------
+void NetSoccerPlayer::possessBy( OpenSteer::AbstractEntity* pkEntity )
+{
+	BaseClass::possessBy( pkEntity );
+
+}
+
+//-----------------------------------------------------------------------------
 // reset state
 void NetSoccerPlayer::reset (void)
 {
