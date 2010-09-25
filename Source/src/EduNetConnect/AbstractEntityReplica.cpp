@@ -79,24 +79,8 @@ AbstractEntityReplica::AbstractEntityReplica(
 	this->m_kClassName = this->accessEntity()->getClassName();
 
 	// remote objects have to be added to the client game plugin
-	if( true == bIsRemoteObject )
-	{
-		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
-		if( NULL != pkVehicle )
-		{
-			pkHostPlugin->addVehicle( pkVehicle );
-		}
-		OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
-		if( NULL != pkObstacle )
-		{
-			pkHostPlugin->addObstacle( pkObstacle );
-		}
-		OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
-		if( NULL != pkPlayer )
-		{
-			pkHostPlugin->addPlayer( pkPlayer );
-		}
-	}
+	// now done post serialize construction
+	// this->addEntityToHostPlugin();
 }
 
 //-----------------------------------------------------------------------------
@@ -183,9 +167,37 @@ bool AbstractEntityReplica::DeserializeConstruction(RakNet::BitStream *construct
 	RakNet::Connection_RM3 *sourceConnection)
 {
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
-	return kSerializer.deserializeConstruction( constructionBitstream );
+	bool bDeserialized = kSerializer.deserializeConstruction( constructionBitstream );
+	this->addEntityToHostPlugin();
+	return bDeserialized;
 }
 
+//-----------------------------------------------------------------------------
+void AbstractEntityReplica::addEntityToHostPlugin( void )
+{
+	assert( NULL != this->getEntity() );
+	assert( NULL != this->m_pkHostPlugin );
+
+	// remote objects have to be added to the client game plugin
+	if( true == this->getEntity()->isRemoteObject() )
+	{
+		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+		if( NULL != pkVehicle )
+		{
+			this->m_pkHostPlugin->addVehicle( pkVehicle );
+		}
+		OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
+		if( NULL != pkObstacle )
+		{
+			this->m_pkHostPlugin->addObstacle( pkObstacle );
+		}
+		OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
+		if( NULL != pkPlayer )
+		{
+			this->m_pkHostPlugin->addPlayer( pkPlayer );
+		}
+	}
+}
 
 //-----------------------------------------------------------------------------
 AbstractEntityCCReplica::AbstractEntityCCReplica()

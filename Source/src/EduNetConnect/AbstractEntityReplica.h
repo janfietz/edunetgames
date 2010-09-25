@@ -58,6 +58,8 @@ public:
 	virtual bool DeserializeConstruction(RakNet::BitStream *constructionBitstream,
 		RakNet::Connection_RM3 *sourceConnection);
 
+	void addEntityToHostPlugin( void );
+protected:
 private:
 	OpenSteer::AbstractPlugin* m_pkHostPlugin;
 	RakNet::RakString m_kClassName;
