@@ -144,12 +144,6 @@ RakNet::RM3SerializationResult AbstractEntityReplica::Serialize(RakNet::Serializ
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
 {
-// 	osAbstractPlayer* pkPlayer = OpenSteer::CastToAbstractPlayer( this->accessEntity() );
-// 	if( NULL != pkPlayer )
-// 	{
-// 		bool bTest = true;
-// 		bTest = false;
-// 	}
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	kSerializer.deserialize( deserializeParameters );
 }
@@ -168,8 +162,13 @@ bool AbstractEntityReplica::DeserializeConstruction(RakNet::BitStream *construct
 {
 	OpenSteer::NetworkEntitySerializer kSerializer( this->accessEntity() );
 	bool bDeserialized = kSerializer.deserializeConstruction( constructionBitstream );
-	this->addEntityToHostPlugin();
 	return bDeserialized;
+}
+//-----------------------------------------------------------------------------
+void AbstractEntityReplica::PostDeserializeConstruction( 
+	RakNet::Connection_RM3 *sourceConnection )
+{
+	this->addEntityToHostPlugin();
 }
 
 //-----------------------------------------------------------------------------
@@ -204,6 +203,7 @@ AbstractEntityCCReplica::AbstractEntityCCReplica()
 {
 
 }
+
 //-----------------------------------------------------------------------------
 AbstractEntityCCReplica::AbstractEntityCCReplica(
 	OpenSteer::AbstractPlugin* pPlugin,
