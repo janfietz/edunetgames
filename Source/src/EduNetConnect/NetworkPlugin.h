@@ -66,11 +66,6 @@ public:
 		OpenSteer::EntityClassId classId,
 		bool bIsRemoteObject,  bool bClientReplica ) const ET_ABSTRACT;
 
-	virtual AbstractEntityReplica* createLocalEntityReplica(
-		OpenSteer::AbstractPlugin* pPlugin,
-		OpenSteer::EntityClassId classId,
-		bool bIsRemoteObject,  bool bClientReplica ) const ET_ABSTRACT;
-
 };
 
 //-----------------------------------------------------------------------------
@@ -107,12 +102,6 @@ public:
 		OpenSteer::AbstractPlugin* pPlugin,
 		OpenSteer::EntityClassId classId,
 		bool bIsRemoteObject,  bool bClientReplica ) const;
-
-	virtual AbstractEntityReplica* createLocalEntityReplica(
-		OpenSteer::AbstractPlugin* pPlugin,
-		OpenSteer::EntityClassId classId,
-		bool bIsRemoteObject,  bool bClientReplica ) const;
-
 
 	virtual void StartNetworkSession( void ){};
 	virtual void StopNetworkSession( void );
@@ -227,6 +216,7 @@ private:
 
 	int m_bDrawNetworkPlot;
 	NetworkPlot m_kNetworkPlot;
+	bool m_bWaitForConnection;
 
 };
 

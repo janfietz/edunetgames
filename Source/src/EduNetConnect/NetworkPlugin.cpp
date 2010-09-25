@@ -24,7 +24,8 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_pkAddress( NULL ),
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1),
-		m_bDrawNetworkPlot(0)
+		m_bDrawNetworkPlot(0),
+		m_bWaitForConnection(false)
 {
 }
 
@@ -623,28 +624,46 @@ void NetworkPlugin::OnReceivedPacket( Packet* pPacket )
 	switch( pPacket->data[0] )
 	{
 	case ID_CONNECTION_ATTEMPT_FAILED:
-		printf("ID_CONNECTION_ATTEMPT_FAILED %s\n", pPacket->systemAddress.ToString());
+		{
+			printf("ID_CONNECTION_ATTEMPT_FAILED %s\n", pPacket->systemAddress.ToString());
+			m_bWaitForConnection = false;
+		}
 		break;
 	case ID_NO_FREE_INCOMING_CONNECTIONS:
-		printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
+		{
+			m_bWaitForConnection = false;
+			printf("ID_NO_FREE_INCOMING_CONNECTIONS\n");
+		}
 		break;
 	case ID_CONNECTION_REQUEST_ACCEPTED:
-		printf("ID_CONNECTION_REQUEST_ACCEPTED\n");
-		break;
+		{
+			m_bWaitForConnection = false;
+			printf("ID_CONNECTION_REQUEST_ACCEPTED\n");
+
+		}break;
 	case ID_NEW_INCOMING_CONNECTION:
 		printf("ID_NEW_INCOMING_CONNECTION from %s\n", pPacket->systemAddress.ToString());
 		break;
 	case ID_DISCONNECTION_NOTIFICATION:
-		printf("ID_DISCONNECTION_NOTIFICATION %s\n", pPacket->systemAddress.ToString());
-		break;
+		{
+			m_bWaitForConnection = false;
+			printf("ID_DISCONNECTION_NOTIFICATION %s\n", pPacket->systemAddress.ToString());
+
+		}break;
 	case ID_CONNECTION_LOST:
-		printf("ID_CONNECTION_LOST %s\n", pPacket->systemAddress.ToString());
-		break;
+		{
+			m_bWaitForConnection = false;
+			printf("ID_CONNECTION_LOST %s\n", pPacket->systemAddress.ToString());
+
+		}break;
 	case ID_INVALID_PASSWORD:
-		printf("ID_INVALID_PASSWORD (%s) %s\n",
-			this->m_ConnectionSettings.sessionPassword.C_String(),
-			pPacket->systemAddress.ToString() );
-		break;
+		{
+			m_bWaitForConnection = false;
+			printf("ID_INVALID_PASSWORD (%s) %s\n",
+				this->m_ConnectionSettings.sessionPassword.C_String(),
+				pPacket->systemAddress.ToString() );
+
+		}break;
 	case ID_MODIFIED_PACKET:
 		printf("ID_MODIFIED_PACKET %s\n", pPacket->systemAddress.ToString());
 		break;
@@ -679,6 +698,7 @@ void NetworkPlugin::ReceivedPongPacket( Packet* pPacket )
 
 			this->ConnectToAddress( kAddress );
 			this->m_iWaitForPongPort *= -1;
+			this->m_bWaitForConnection = true;
 		}
 	}
 }
@@ -723,6 +743,11 @@ void NetworkPlugin::Disconnect()
 //-----------------------------------------------------------------------------
 bool NetworkPlugin::PingForOtherPeers( const int iPort )
 {
+	if (true == m_bWaitForConnection)
+	{
+		return false;
+	}
+
 	if( false == this->WaitForPong() )
 	{
 		unsigned short usMyPort =
@@ -734,9 +759,7 @@ bool NetworkPlugin::PingForOtherPeers( const int iPort )
 				this->m_kPongEndTime = RakNet::GetTime() +  PONG_WAIT_TIMEOUT;
 			}
 		}
-
 		this->m_iWaitForPongPort = iPort;
-
 	}
 	return this->WaitForPong();
 }
@@ -809,18 +832,8 @@ AbstractEntityReplica* NetworkPlugin::allocEntityReplica(
 	OpenSteer::EntityClassId classId,
 	bool bIsRemoteObject,  bool bClientReplica ) const
 {
-	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( 
-		pPlugin, classId, bIsRemoteObject, bClientReplica  );
+	AbstractEntityReplica* pkNewReplica = ET_NEW AbstractEntityReplica( pPlugin, classId, bIsRemoteObject, bClientReplica  );
 	return pkNewReplica;
 }
-//-----------------------------------------------------------------------------
-AbstractEntityReplica* NetworkPlugin::createLocalEntityReplica( 
-	OpenSteer::AbstractPlugin* pPlugin, 
-	OpenSteer::EntityClassId classId, 
-	bool bIsRemoteObject, 
-	bool bClientReplica ) const
-{
-	return ET_NEW AbstractEntityReplica( 
-		pPlugin, classId, bIsRemoteObject, bClientReplica );
-}
+
 
