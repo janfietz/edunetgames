@@ -81,6 +81,8 @@ namespace OpenSteer {
 		osScalar m_SteeringForceFPS;
 		bool m_bEnableAnnotation;
 		bool m_bDrawPhaseActive;
+		float m_fNetInterpolationDistanceThreshHold;
+		float m_fNetPositionInterpolationFactor;
 
 	private:
 		void initializeGlobalData( void );
