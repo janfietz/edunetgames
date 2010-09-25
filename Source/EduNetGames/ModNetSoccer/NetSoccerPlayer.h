@@ -56,6 +56,8 @@ public:
     // draw this character/vehicle into the scene
     virtual void draw ( const float currentTime, const float elapsedTime );
 
+	virtual void possessBy( OpenSteer::AbstractEntity* pkEntity );
+
 	virtual int serialize( RakNet::SerializeParameters *serializeParameters ) const;
 	virtual void deserialize( RakNet::DeserializeParameters *deserializeParameters );
 	virtual void serializeConstruction(RakNet::BitStream *constructionBitstream);
