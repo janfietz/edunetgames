@@ -57,6 +57,8 @@ public:
 	virtual void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
 	virtual bool DeserializeConstruction(RakNet::BitStream *constructionBitstream,
 		RakNet::Connection_RM3 *sourceConnection);
+	virtual void PostDeserializeConstruction( 
+		RakNet::Connection_RM3 *sourceConnection );
 
 	void addEntityToHostPlugin( void );
 protected:
