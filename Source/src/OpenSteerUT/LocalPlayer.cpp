@@ -35,7 +35,7 @@ using namespace OpenSteer;
 AbstractPlayer* pkLocalPlayer = SimplePlayer::accessLocalPlayer();
 AbstractEntity* pkControlledEntity = NULL;
 {
-	NetPedestrian kVehicle;
+	StudentVehicle kVehicle;
 	pkLocalPlayer->play( &kVehicle );
 	pkControlledEntity = pkLocalPlayer->getControlledEntity();
 	pkControlledEntity = NULL;

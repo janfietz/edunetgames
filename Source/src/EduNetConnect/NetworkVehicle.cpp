@@ -34,7 +34,13 @@
 using namespace OpenSteer;
 
 //-------------------------------------------------------------------------
-ClientSideInterpolation NetworkVehicle::ms_ClientSideInterpolation;
+ClientSideInterpolation_t::ClientSideInterpolation_t():
+m_fDistanceThreshHold(0.05f),
+m_fPositionInterpolationFactor(0.5f)
+{
+	m_fDistanceThreshHold = OpenSteer::GlobalData().getInstance()->m_fNetInterpolationDistanceThreshHold;
+	m_fPositionInterpolationFactor = OpenSteer::GlobalData::getInstance()->m_fNetPositionInterpolationFactor;
+}
 
 //-------------------------------------------------------------------------
 void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
@@ -74,11 +80,12 @@ void NetworkVehicle::initGui( GLUI_Panel* parentPanel, bool bRemoteGui )
 		glui->add_checkbox_to_panel( replicationPanel, "Data Trail", &GlobalData::getInstance()->m_bShowClientNetworkTrail);
 		GLUI_Spinner* distanceThreshHoldSpinner =
 			glui->add_spinner_to_panel( replicationPanel, "Interpolation Threshhold", GLUI_SPINNER_FLOAT, 
-			&NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold);
+			&OpenSteer::GlobalData().getInstance()->m_fNetInterpolationDistanceThreshHold );
 		distanceThreshHoldSpinner->set_float_limits(0.01f, 5.0f);
 		GLUI_Spinner* interpolationFactorSpinner =
 			glui->add_spinner_to_panel( replicationPanel, "Position Interpolation Factor", GLUI_SPINNER_FLOAT, 
-			&NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor);
+			&OpenSteer::GlobalData::getInstance()->m_fNetPositionInterpolationFactor );
+
 		interpolationFactorSpinner->set_float_limits(0.25f, 1.0f);
 	}
 }

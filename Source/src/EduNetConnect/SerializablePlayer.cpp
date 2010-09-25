@@ -29,6 +29,21 @@
 #include "SerializablePlayer.h"
 
 using namespace OpenSteer;
+
+
+//-----------------------------------------------------------------------------
+ClientSerializablePlayer::ClientSerializablePlayer()
+{
+
+}
+
+//-----------------------------------------------------------------------------
+ClientSerializablePlayer::~ClientSerializablePlayer()
+{
+
+}
+
+
 //-----------------------------------------------------------------------------
 AbstractEntity* ClientSerializablePlayer::cloneEntity( void ) const
 {

@@ -101,6 +101,10 @@ using namespace OpenSteer;
 
 		  virtual bool isEnabled( void ) const { return this->m_bEnabled; };
 		  virtual void setEnabled( bool bEnabled ){ this->m_bEnabled = bEnabled; };
+
+// 		  virtual class AbstractServerVehicleUpdate& serverVehicleUpdate(void) = 0;
+// 		  virtual class AbstractClientVehicleUpdate& clientVehicleUpdate(void) = 0;
+
 	protected:
 		AbstractVehicle* m_pkVehicle;
 		AbstractUpdated* m_pkCustomUpdated;
@@ -108,6 +112,19 @@ using namespace OpenSteer;
 
 	};
 
+	//----------------------------------------------------------------------------
+	class AbstractServerVehicleUpdate : public AbstractVehicleUpdate
+	{
+	public:
+// 		virtual EServerVehicleMode getServerVehicleMode( void ) const = 0;
+// 		virtual void resetExtrapolationData ( const class SimpleNetworkVehicle& kVehicle) = 0;
+	};
+
+	//----------------------------------------------------------------------------
+	class AbstractClientVehicleUpdate : public AbstractVehicleUpdate
+	{
+	public:
+	};
 
 	enum EEulerUpdateMode
 	{

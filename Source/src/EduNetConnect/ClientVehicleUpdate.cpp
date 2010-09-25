@@ -228,17 +228,19 @@ class SimpleNetworkVehicle& kVehicle, const osScalar currentTime, const osScalar
 		{
 			// client side interpolation
 			// compute distance between server and client position
+			OpenSteer::ClientSideInterpolation kInterpolationParameters;
+			const float fGlobalDistanceThreshHold = kInterpolationParameters.m_fDistanceThreshHold;
+			const float fDistanceThreshhold = fGlobalDistanceThreshHold * fGlobalDistanceThreshHold;
+
 			Vec3 kDistance = kProxy.position() - kVehicle.position();
 			const float fDistanceSquared = kDistance.lengthSquared();
-			const float fDistanceThreshhold = NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold *
-				NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold;
 
 			// position interpolation
 			if( fDistanceSquared > fDistanceThreshhold )
 			{
-				const float fDistance = sqrtf( fDistanceSquared ) * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
+				const float fDistance = sqrtf( fDistanceSquared ) * kInterpolationParameters.m_fPositionInterpolationFactor;
 				fSpeed = fDistance / elapsedTime;
-				Vec3 kInterpolationOffset = kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
+				Vec3 kInterpolationOffset = kDistance * kInterpolationParameters.m_fPositionInterpolationFactor;
 				Vec3 kNewPosition = kVehicle.position() + kInterpolationOffset;
 				// preserve client updateTicks ?
 				const bool bPreserveUpdateTicks = true;
@@ -345,14 +347,17 @@ void ClientVehicleUpdate::updatePhysicsMotion(
 		LocalSpaceData& kCurrentLocalSpaceData = kVehicle.accessLocalSpaceData();
 		const size_t currentUpdateTicks = kCurrentLocalSpaceData._updateTicks;
 
+
+		OpenSteer::ClientSideInterpolation kInterpolationParameters;
+		const float fGlobalDistanceThreshHold = kInterpolationParameters.m_fDistanceThreshHold;
+		const float fDistanceThreshhold = fGlobalDistanceThreshHold * fGlobalDistanceThreshHold;
+
 		// client side interpolation
 		// compute distance between server and client position
 		Vec3 kDistance = kProxy.position() - kVehicle.position();
-		const float fDistanceThreshhold = NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold *
-			NetworkVehicle::ms_ClientSideInterpolation.m_fDistanceThreshHold;
 		if( kDistance.lengthSquared() > fDistanceThreshhold )
 		{
-			Vec3 kNewPosition = kVehicle.position() + kDistance * NetworkVehicle::ms_ClientSideInterpolation.m_fPositionInterpolationFactor;
+			Vec3 kNewPosition = kVehicle.position() + kDistance * kInterpolationParameters.m_fPositionInterpolationFactor;
 			// preserve client updateTicks ?
 			const bool bPreserveUpdateTicks = true;
 			kVehicle.setLocalSpaceData( kProxy.getLocalSpaceData(), bPreserveUpdateTicks );

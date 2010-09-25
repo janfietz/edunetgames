@@ -119,8 +119,9 @@ namespace OpenSteer {
 
 		bool getSupportZoning( ) const
 		{ return this->m_bSupportZoning; };
+	
+	protected:
 
-	private:
 		// the core object responsible to create smoth moves
 		SimpleNetworkVehicleUpdate m_kNetworkVehicleUpdate;
 		// in case of a client the data receiver
@@ -135,6 +136,7 @@ namespace OpenSteer {
 			MAX_ZONES = 16
 		};
 		bool m_bIsZoneMember[MAX_ZONES];
+	private:
 	};
 
 

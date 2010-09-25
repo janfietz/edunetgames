@@ -494,6 +494,13 @@ namespace
 			return;
 		}
 
+		OpenSteer::AbstractPlugin* pPlugin = 
+			OpenSteer::Plugin::getSelectedPlugin();
+		if (NULL != pPlugin)
+		{
+			pPlugin->handleFunctionKeys( key );
+		}
+
 		std::ostringstream message;
 
 		// ascii codes

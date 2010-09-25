@@ -83,8 +83,8 @@ class ClientSerializablePlayer : public SerializablePlayerMixin<OpenSteer::Simpl
 	ET_DECLARE_BASE( SerializablePlayerMixin<OpenSteer::SimplePlayer> )
 public:
 
-	ClientSerializablePlayer(){};
-	virtual ~ClientSerializablePlayer(){};
+	ClientSerializablePlayer();
+	virtual ~ClientSerializablePlayer();
 
 	OS_IMPLEMENT_CLASSNAME( ClientSerializablePlayer )
 
