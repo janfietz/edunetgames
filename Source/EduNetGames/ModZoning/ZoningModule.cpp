@@ -27,36 +27,9 @@
 //-----------------------------------------------------------------------------
 
 #include "ZoningModule.h"
+#include "PeerZonePlugin.h"
 #include "EduNetConnect/NetworkPlugin.h"
 #include "OpenSteerUT/OpenSteerUT.h"
-#include "OpenSteerUT/ZonePlugin.h"
-
-#include "EduNetGames/Tutorial_04/NetPedestrianPlugins.h"
-
-#if 0
-AbstractPlugin* parent = dynamic_cast<AbstractPlugin*>(vehicle.getParentEntity());
-if(NULL != parent)
-{
-	AbstractLocalSpace* parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parent);
-	Vec3 offset(parentPluginLocalSpace->position());
-	AbstractPlugin* parentPlugin = parent->getParentPlugin();
-	while( NULL != parentPlugin )
-	{
-		parentPluginLocalSpace = dynamic_cast<AbstractLocalSpace*>(parentPlugin);
-		offset += parentPluginLocalSpace->position();
-		parentPlugin = parentPlugin->getParentPlugin();
-	}
-
-	LocalSpaceData localCopy = vehicle.getLocalSpaceData();
-	localCopy._position += offset;
-	this->drawBasic2dCircularLocalSpace(
-		localCopy,
-		color, vehicle.radius() );
-}
-else
-{
-}
-#endif
 
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
@@ -77,134 +50,6 @@ void OpenSteer::handleGlobalDataInstanceFailure( void )
 //-----------------------------------------------------------------------------
 namespace EduNet	{
 
-	class MasterZonePlugin : public OpenSteer::ZonePlugin
-	{
-		ET_DECLARE_BASE( OpenSteer::ZonePlugin )
-	public:
-		MasterZonePlugin ( bool bAddToRegistry = false, size_t zoneId = 4 ):
-		BaseClass( bAddToRegistry ),
-		m_uiZoneId(zoneId)
-		{
-			this->m_bCreateContentZone[0] = false;
-			this->m_bCreateContentZone[1] = false;
-			this->m_bCreateContentZone[2] = false;
-			this->m_bCreateContentZone[3] = false;
-			if( zoneId < 4 )
-			{
-				this->m_bCreateContentZone[zoneId] = true;
-			}
-			else
-			{
-				if( zoneId < 5 )
-				{
-					this->m_bCreateContentZone[0] = true;
-					this->m_bCreateContentZone[1] = true;
-					this->m_bCreateContentZone[2] = true;
-					this->m_bCreateContentZone[3] = true;
-				}
-			}
-		}
-
-		const char* name() const
-		{
-			if( this->m_uiZoneId < 4 )
-			{
-				if(this->m_bCreateContentZone[0])
-					return "Zone-0";
-				if(this->m_bCreateContentZone[1])
-					return "Zone-1";
-				if(this->m_bCreateContentZone[2])
-					return "Zone-2";
-				if(this->m_bCreateContentZone[3])
-					return "Zone-3";
-			}
-			if( this->m_uiZoneId < 5 )
-			{
-				return "Zones";
-			}
-			else
-			{
-				return "EmptyZones";
-			}
-		}
-
-		void zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle )
-		{
-			// TODO:
-			vehicle->setIsZoneMember( zone->getZoneId(), zone->isVehicleInside( *vehicle ) );
-			// TODO:
-		}
-
-		//---------------------------------------------------------------------
-		virtual void update( const float currentTime, const float elapsedTime )
-		{
-			BaseClass::update( currentTime, elapsedTime );
-			
-			// now check and update zone memberships
-			size_t pluginCount = this->getPluginCount();
-
-			typedef std::vector<ZonePlugin*> ZonePluginArray_t;
-			ZonePluginArray_t subZones;
-			for( size_t i = 0; i < pluginCount; ++i )
-			{
-				ZonePlugin* pkSubZone = dynamic_cast<ZonePlugin*>(this->getPlugin(i));
-				if( NULL != pkSubZone )
-				{
-					subZones.push_back( pkSubZone );
-				}
-			}
-
-			ZonePluginArray_t::iterator iterStart = subZones.begin();
-			ZonePluginArray_t::const_iterator iterEnd = subZones.end();
-
-			ZonePluginArray_t::const_iterator iter0 = iterStart;
-			while( iter0 != iterEnd )
-			{
-				ZonePluginArray_t::iterator iter1 = iterStart;
-				while( iter1 != iterEnd )
-				{
-					AbstractPlugin* contentPlugin = (*iter1)->getPlugin(0);
-					if( NULL == contentPlugin )
-					{
-
-					}
-					else
-					{
-						osAVGroup vehicles = contentPlugin->allVehicles();
-						osAVIterator vehicleIter = vehicles.begin();
-						osAVIterator vehicleIterEnd = vehicles.end();
-						while( vehicleIter != vehicleIterEnd )
-						{
-							SimpleNetworkVehicle* networkVehicle = dynamic_cast<SimpleNetworkVehicle*>(*vehicleIter);
-							if( NULL != networkVehicle )
-							{
-								this->zoneCheck( *iter0, networkVehicle );
-							}
-							++vehicleIter;
-						}
-					}
-					++iter1;
-				}
-
-				++iter0;
-			}
-
-		}
-
-		virtual void onSubZoneAdded( ZonePlugin* pkSubZone )
-		{
-			if( true == this->m_bCreateContentZone[pkSubZone->getZoneId()] )
-			{
-				NetPedestrianPlugin* pkContentPlugin = ET_NEW NetPedestrianPlugin( false, 0.225 );
-				pkContentPlugin->setPathColor( pkSubZone->getZoneColor() );
-				pkSubZone->addPlugin( pkContentPlugin );
-			}
-		};
-
-
-		bool m_bCreateContentZone[4];
-		size_t m_uiZoneId;
-	};
 
 	//-------------------------------------------------------------------------
 	ZoningModulePluginFactory::ZoningModulePluginFactory()
@@ -227,6 +72,11 @@ namespace EduNet	{
 		kNames.push_back( "ZonePlugin1" );
 		kNames.push_back( "ZonePlugin2" );
 		kNames.push_back( "ZonePlugin3" );
+		kNames.push_back( "PeerZone0Master" );
+		kNames.push_back( "PeerZone1Master" );
+		kNames.push_back( "PeerZone2Master" );
+		kNames.push_back( "PeerZone3Master" );
+		kNames.push_back( "PeerZoneViewer" );
 //		kNames.push_back( "OfflinePedestrianPlugin" );
 	}
 
@@ -271,9 +121,40 @@ namespace EduNet	{
 
 			return pkZone;  
 		}
-		if( kName == "OfflinePedestrianPlugin" )
+		if( kName == "PeerZone0Master" )
 		{
-			return ET_NEW OfflinePedestrianPlugin( false );  
+			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
+			pkZone->setZoneId( 0 );
+
+			return pkZone;  
+		}
+		if( kName == "PeerZone1Master" )
+		{
+			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
+			pkZone->setZoneId( 1 );
+
+			return pkZone;  
+		}
+		if( kName == "PeerZone2Master" )
+		{
+			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
+			pkZone->setZoneId( 2 );
+
+			return pkZone;  
+		}
+		if( kName == "PeerZone3Master" )
+		{
+			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
+			pkZone->setZoneId( 3 );
+
+			return pkZone;  
+		}
+		if( kName == "PeerZoneViewer" )
+		{
+			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
+			pkZone->setZoneId( 5 );
+
+			return pkZone;  
 		}
 		return NULL;
 	}
