@@ -6,8 +6,6 @@ ${ET_RakNet_SOURCES}/DependentExtensions
 
 file (GLOB Module_Src "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB Module_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
-file (GLOB Ext_Src "${${PROJECT_NAME}_SOURCE_DIR}/../Tutorial_04/NetPed*.cpp")
-file (GLOB Ext_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/../Tutorial_04/*.h")
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
@@ -16,7 +14,7 @@ ${EduNet_MODULE_LIBRARIES}
 ${RakNet_LIBRARY}
 )
 
-add_library(${PROJECT_NAME} SHARED  ${Module_Hdrs} ${Module_Src} ${Ext_Hdrs} ${Ext_Src})
+add_library(${PROJECT_NAME} SHARED  ${Module_Hdrs} ${Module_Src})
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
