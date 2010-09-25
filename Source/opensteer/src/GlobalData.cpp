@@ -190,7 +190,9 @@ namespace OpenSteer {
 		m_bEnableAnnotation(true),
 		m_bDrawPhaseActive(false),
 		m_SteeringForceFPS(30),
-		m_bIsDll(false)
+		m_bIsDll(false),
+		m_fNetInterpolationDistanceThreshHold(0.05f),
+		m_fNetPositionInterpolationFactor(0.5f)
 	{
 		memset( this->m_bReplicationDataConfig, 0, sizeof(int) * ESerializeDataType_Count);
 		this->m_bReplicationDataConfig[ESerializeDataType_Position] = 1;
