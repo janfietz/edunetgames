@@ -36,7 +36,7 @@ using namespace OpenSteer;
 // entity player test
 #if 0
 {
-	NetPedestrian kVehicle;
+	StudentVehicle kVehicle;
 	{
 		SimplePlayer kPlayer0;
 		SimplePlayer kPlayer1;

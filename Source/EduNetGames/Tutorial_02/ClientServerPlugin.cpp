@@ -2,7 +2,8 @@
 
 
 //-----------------------------------------------------------------------------
-void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
+void EduNetConnect::queryConnectionsSettings( 
+	ConnectSettings& kSettings )
 {
 	kSettings.uiClientStartPort = CLIENT_PORT;
 	kSettings.uiServerStartPort = SERVER_PORT;
