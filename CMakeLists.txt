@@ -130,6 +130,21 @@ IF (NOT Argtable_FOUND)
 	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
 ENDIF (NOT Argtable_FOUND)
 
+OPTION(ET_USE_WXWIDGETS "Search for wxWidgets includes and libraries" OFF)
+IF (ET_USE_WXWIDGETS)
+	# Here you can define what libraries of wxWidgets you need for your
+	# application. You can figure out what libraries you need here;
+	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+ 
+	FIND_PACKAGE(wxWidgets COMPONENTS base core gl)
+	IF(wxWidgets_FOUND)
+	
+	ELSE(wxWidgets_FOUND)
+		# For convenience. When we cannot continue, inform the user
+		MESSAGE("wxWidgets not found!")
+	ENDIF(wxWidgets_FOUND)
+
+ENDIF (ET_USE_WXWIDGETS)
 
 IF (MINGW)
 MESSAGE ("GLUT NOT FOUND not found, trying to use MINGW glut32")
