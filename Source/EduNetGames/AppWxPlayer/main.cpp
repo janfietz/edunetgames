@@ -1,7 +1,5 @@
-#ifndef __EDUNET_MODULEPLUGINLOADER_H__
-#define __EDUNET_MODULEPLUGINLOADER_H__
 //-----------------------------------------------------------------------------
-// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// Copyright (c) Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -27,55 +25,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetModuleManager.h"
 
-namespace EduNet
+#include "EduNetPlayerWx.h"
+
+////-----------------------------------------------------------------------------
+int main (int argc, char **argv)
 {
-
-//-----------------------------------------------------------------------------
-class ModulePluginLoader
-{
-public:
-	ModulePluginLoader( void );
-
-	virtual ~ModulePluginLoader( void );
-
-	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
-		virtual const char* name() const { return this->getClassName(); };
-
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
-
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
-
-	virtual OpenSteer::AbstractPlugin* createPluginByName(
-		const char* pszPluginName );
-
-	OpenSteer::AbstractPlugin* createPluginByName(		
-		const char* pszPluginName,
-		const char* pszModuleName);
-
-	const ModuleManager& GetModuleManager() const { return m_modules; }
-
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		PluginFactory* pkFactory,
-		const char* pszPluginName );
-
-private:
-
-	RawModule* findModuleForPlugin( const char* pszPluginName );
-
-	RawModule* findModuleByName( const char* pszName );
-
-
-	ModuleManager m_modules;
-	OpenSteer::PluginArray m_plugins;
-};
-
+	EduNet::PlayerWx::run(argc, argv);
 }
 
-#endif // __EDUNET_MODULEPLUGINLOADER_H__
+
+

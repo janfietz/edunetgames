@@ -1,5 +1,5 @@
-#ifndef __EDUNET_MODULEPLUGINLOADER_H__
-#define __EDUNET_MODULEPLUGINLOADER_H__
+#ifndef __EDUNET_PLAYER_GlCanvas_H__
+#define __EDUNET_PLAYER_GlCanvas_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,55 +27,61 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetModuleManager.h"
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// for all others, include the necessary headers (this file is usually all you
+// need because it includes almost all "standard" wxWidgets headers)
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
+
+#include "wx/glcanvas.h"
+
+#include "OpenSteer/AbstractPlugin.h"
+#include "OpenSteer/Clock.h"
 
 namespace EduNet
 {
 
-//-----------------------------------------------------------------------------
-class ModulePluginLoader
-{
-public:
-	ModulePluginLoader( void );
+	class PlayerGlCanvas : public wxGLCanvas
+	{
+	public:
+		PlayerGlCanvas(wxWindow *parent,
+			wxWindowID id = wxID_ANY,
+			const wxPoint &pos=wxDefaultPosition,
+			const wxSize &size=wxDefaultSize,
+			long style=wxTAB_TRAVERSAL,
+			const wxString& name = wxGLCanvasName);
+		virtual ~PlayerGlCanvas();
+		
+		void resized(wxSizeEvent& evt);
+		void render(wxPaintEvent& evt);
+		void onTimer(wxTimerEvent& evt);		
 
-	virtual ~ModulePluginLoader( void );
+		void setPlugin(OpenSteer::AbstractPlugin* pPlugin);
 
-	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
-		virtual const char* name() const { return this->getClassName(); };
+		void initGL ( void );
 
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
+	private:
 
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
+		
+		wxGLContext*	m_context;
 
-	virtual OpenSteer::AbstractPlugin* createPluginByName(
-		const char* pszPluginName );
+		wxTimer m_Timer;
 
-	OpenSteer::AbstractPlugin* createPluginByName(		
-		const char* pszPluginName,
-		const char* pszModuleName);
+		int m_iTicks;
 
-	const ModuleManager& GetModuleManager() const { return m_modules; }
-
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		PluginFactory* pkFactory,
-		const char* pszPluginName );
-
-private:
-
-	RawModule* findModuleForPlugin( const char* pszPluginName );
-
-	RawModule* findModuleByName( const char* pszName );
-
-
-	ModuleManager m_modules;
-	OpenSteer::PluginArray m_plugins;
-};
+		OpenSteer::AbstractPlugin* m_pPlugin;
+		OpenSteer::Clock m_Clock;
+		DECLARE_EVENT_TABLE()
+		void updatePlugin(OpenSteer::AbstractPlugin* pkPlugin, float totalSimTime, float elapsedSimTime);
+	};
 
 }
 
-#endif // __EDUNET_MODULEPLUGINLOADER_H__
+
+#endif //__EDUNET_PLAYER_GlCanvas_H__

@@ -1,5 +1,5 @@
-#ifndef __EDUNET_MODULEPLUGINLOADER_H__
-#define __EDUNET_MODULEPLUGINLOADER_H__
+#ifndef __EDUNET_PLAYER_WX_EVENTS_H__
+#define __EDUNET_PLAYER_WX_EVENTS_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,55 +27,52 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetModuleManager.h"
+// For compilers that support precompilation, includes "wx/wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// for all others, include the necessary headers (this file is usually all you
+// need because it includes almost all "standard" wxWidgets headers)
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
 
 namespace EduNet
 {
+	class PluginCreateEvent : public wxNotifyEvent
+	{ 
+	public:
+		PluginCreateEvent(wxString moduleName = "", wxString pluginName="", wxEventType commandType = wxEVT_NULL, int id = 0):
+		  wxNotifyEvent(commandType, id), 
+			m_moduleName(moduleName),
+			m_pluginName(pluginName)
+		{}
+		PluginCreateEvent(const PluginCreateEvent& event): wxNotifyEvent(event),
+			m_moduleName(event.m_moduleName),
+			m_pluginName(event.m_pluginName)
+		{}
+		virtual wxEvent *Clone() const { return new PluginCreateEvent(*this); }
 
-//-----------------------------------------------------------------------------
-class ModulePluginLoader
-{
-public:
-	ModulePluginLoader( void );
+		const wxString& GetPluginName() const{ return m_pluginName; }
+		const wxString& GetModuleName() const{ return m_moduleName; }
 
-	virtual ~ModulePluginLoader( void );
+	private:
+		wxString m_moduleName;
+		wxString m_pluginName;
 
-	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
-		virtual const char* name() const { return this->getClassName(); };
+		DECLARE_DYNAMIC_CLASS(PluginCreateEvent); 
+	};
+	typedef void (wxEvtHandler::*PluginCreateEventFunction) (PluginCreateEvent&);
 
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
-
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
-
-	virtual OpenSteer::AbstractPlugin* createPluginByName(
-		const char* pszPluginName );
-
-	OpenSteer::AbstractPlugin* createPluginByName(		
-		const char* pszPluginName,
-		const char* pszModuleName);
-
-	const ModuleManager& GetModuleManager() const { return m_modules; }
-
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		PluginFactory* pkFactory,
-		const char* pszPluginName );
-
-private:
-
-	RawModule* findModuleForPlugin( const char* pszPluginName );
-
-	RawModule* findModuleByName( const char* pszName );
-
-
-	ModuleManager m_modules;
-	OpenSteer::PluginArray m_plugins;
-};
-
+	BEGIN_DECLARE_EVENT_TYPES() 
+		DECLARE_EVENT_TYPE(etEVT_COMMAND_PLUGIN_CREATE, 801)
+	END_DECLARE_EVENT_TYPES()
+	
+	#define EVT_PLUGIN_CREATED(id, fn) \
+		DECLARE_EVENT_TABLE_ENTRY( etEVT_COMMAND_PLUGIN_CREATE, id, -1, (wxObjectEventFunction) (wxEventFunction) (PluginCreateEventFunction) & fn, (wxObject *) NULL ),
 }
 
-#endif // __EDUNET_MODULEPLUGINLOADER_H__
+#endif //__EDUNET_PLAYER_WX_EVENTS_H__

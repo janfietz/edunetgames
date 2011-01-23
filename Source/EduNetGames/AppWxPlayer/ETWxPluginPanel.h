@@ -1,5 +1,5 @@
-#ifndef __EDUNET_MODULEPLUGINLOADER_H__
-#define __EDUNET_MODULEPLUGINLOADER_H__
+#ifndef __EDUNET_PLAYER_WXPLUGIN_PANEL_H__
+#define __EDUNET_PLAYER_WXPLUGIN_PANEL_H__
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,55 +27,54 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetModuleManager.h"
+// For compilers that support precompilation, includes "wx/wx.h".
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+// for all others, include the necessary headers (this file is usually all you
+// need because it includes almost all "standard" wxWidgets headers)
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
+
+#include "wx/sharedptr.h" 
+#include "wx/panel.h"
+#include "OpenSteer/AbstractPlugin.h"
 
 namespace EduNet
 {
+	// Define a new frame type: this is going to be our main frame
+	class PluginWxPanel : public wxPanel
+	{
+	public:
+		
+		PluginWxPanel();
+		PluginWxPanel( wxWindow *parent,
+			wxWindowID id=wxID_ANY, 
+			const wxPoint &pos=wxDefaultPosition,
+			const wxSize &size=wxDefaultSize,
+			long style=wxTAB_TRAVERSAL,
+			const wxString &name=wxPanelNameStr);
+		virtual ~PluginWxPanel(){};
 
-//-----------------------------------------------------------------------------
-class ModulePluginLoader
-{
-public:
-	ModulePluginLoader( void );
+		// event handlers (these functions should _not_ be virtual)		
+		
+		void OnActivate( bool bActive );
 
-	virtual ~ModulePluginLoader( void );
+		void ChangePlugin( OpenSteer::AbstractPlugin* plugin );
+	private:
 
-	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
-		virtual const char* name() const { return this->getClassName(); };
+		void initGlCanvas();
 
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
-
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
-
-	virtual OpenSteer::AbstractPlugin* createPluginByName(
-		const char* pszPluginName );
-
-	OpenSteer::AbstractPlugin* createPluginByName(		
-		const char* pszPluginName,
-		const char* pszModuleName);
-
-	const ModuleManager& GetModuleManager() const { return m_modules; }
-
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		PluginFactory* pkFactory,
-		const char* pszPluginName );
-
-private:
-
-	RawModule* findModuleForPlugin( const char* pszPluginName );
-
-	RawModule* findModuleByName( const char* pszName );
-
-
-	ModuleManager m_modules;
-	OpenSteer::PluginArray m_plugins;
-};
+		wxSharedPtr<OpenSteer::AbstractPlugin> m_spPlugin;
+		class PlayerGlCanvas* m_pGlCanvas;
+		// any class wishing to process wxWidgets events must use this macro
+		DECLARE_EVENT_TABLE()
+	};
 
 }
 
-#endif // __EDUNET_MODULEPLUGINLOADER_H__
+#endif //__EDUNET_PLAYER_WXPLUGIN_PANEL_H__

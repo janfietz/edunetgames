@@ -199,7 +199,7 @@ void fnExit0 (void)
 //-----------------------------------------------------------------------------
 void Application::_SDMInit( void )
 {
-	atexit (fnExit0);
+	//atexit (fnExit0);
 	Application* application = Application::accessInstance();
 	if( NULL == application )
 	{

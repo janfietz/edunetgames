@@ -135,10 +135,9 @@ IF (ET_USE_WXWIDGETS)
 	# Here you can define what libraries of wxWidgets you need for your
 	# application. You can figure out what libraries you need here;
 	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
- 
-	FIND_PACKAGE(wxWidgets COMPONENTS base core gl)
+	SET(wxWidgets_USE_DEBUG, TRUE)
+	FIND_PACKAGE(wxWidgets COMPONENTS base core gl aui)
 	IF(wxWidgets_FOUND)
-	
 	ELSE(wxWidgets_FOUND)
 		# For convenience. When we cannot continue, inform the user
 		MESSAGE("wxWidgets not found!")

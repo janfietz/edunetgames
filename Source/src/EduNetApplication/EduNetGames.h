@@ -161,6 +161,7 @@ public:
 
 	// do all initialization related to graphics
 	static void initializeGraphics ( void );
+	static void initGluiGraphics( int windowID );
 
 	// ----------------------------------------------------------- console text
 	// print list of known commands
@@ -180,7 +181,6 @@ private:
 	static void updatePhaseTimers ( void );
 
 	static void setGlutFunctions( void );
-
 	// XXX apparently MS VC6 cannot handle initialized static const members,
 	// XXX so they have to be initialized not-inline.
 	// static const int drawPhase = 2;
