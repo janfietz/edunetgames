@@ -195,6 +195,13 @@ void ZonePlugin::update( const float currentTime, const float elapsedTime )
 //-----------------------------------------------------------------------------
 void ZonePlugin::close( void ) 
 { 
+	AbstractPlugin* pkParent = this->getParentPlugin();
+	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
+	// the root zone
+	if( NULL == pkParentZone )
+	{
+		Camera::setLocalSpaceToTrack( NULL );
+	}
 	BaseClass::close();
 }
 

@@ -1139,16 +1139,16 @@ namespace EduNet	{
 		GLUI_Master.set_glutIdleFunc ( &idleFunc );
 		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
 		GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
-
+		
 		/****************************************/
 		/*         Here's the GLUI code         */
 		/****************************************/
-	
+
 		printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
-	
+
 		GLUI* glui = GLUI_Master.create_glui_subwindow ( windowID,
-					 GLUI_SUBWINDOW_RIGHT );
-	
+			GLUI_SUBWINDOW_RIGHT );
+
 		// sort plugins before adding them to the gui
 		Plugin::sortBySelectionOrder();
 		// add common gui elements
@@ -1161,11 +1161,39 @@ namespace EduNet	{
 		GLUI_Master.set_glutIdleFunc ( &idleFunc );
 		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
 		GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
-	*/
-	
-		glui->set_main_gfx_window ( windowID );   
-	}
+		*/
 
+		glui->set_main_gfx_window ( windowID ); 
+
+		  
+	}
+	//-----------------------------------------------------------------------------
+	void GameDemo::initGluiGraphics( int windowID )
+	{
+		/****************************************/
+		/*         Here's the GLUI code         */
+		/****************************************/
+
+		printf( "GLUI version: %3.2f\n", GLUI_Master.get_version() );
+
+		GLUI* glui = GLUI_Master.create_glui("GluiWindow", windowID );
+
+		// sort plugins before adding them to the gui
+		Plugin::sortBySelectionOrder();
+		// add common gui elements
+		EduNet::Application::AccessApplication().addGuiElements ( glui );
+
+		// GLUI setup
+		/*GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
+		GLUI_Master.set_glutKeyboardFunc ( &keyboardFunc );
+		GLUI_Master.set_glutSpecialFunc ( &keyboardSpecialFunc );
+		GLUI_Master.set_glutIdleFunc ( &idleFunc );
+		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
+		GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
+		*/
+
+		glui->set_main_gfx_window ( windowID ); 
+	}
 	//-----------------------------------------------------------------------------
 	void GameDemo::setGlutFunctions( void )
 	{

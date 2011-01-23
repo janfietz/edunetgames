@@ -149,8 +149,26 @@ namespace EduNet
 	//-------------------------------------------------------------------------
 	OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName(
 		const char* pszPluginName )
+	{		
+		return createPluginByName(pszPluginName, NULL);
+	}
+
+	//-----------------------------------------------------------------------------
+	OpenSteer::AbstractPlugin* ModulePluginLoader::createPluginByName( 
+		const char* pszPluginName,
+		const char* pszModuleName)
 	{
-		RawModule* pkModule = this->findModuleForPlugin( pszPluginName );
+		RawModule* pkModule;
+		if(pszModuleName != NULL)
+		{
+			pkModule = findModuleByName( pszModuleName );
+		}
+		else
+		{
+			pkModule = findModuleForPlugin( pszPluginName );
+		}
+
+			
 		if (NULL != pkModule)
 		{
 			ModuleEntry* pkEntry = pkModule->accessEntry();
@@ -163,7 +181,6 @@ namespace EduNet
 		}
 		return NULL;
 	}
-
 	//-------------------------------------------------------------------------
 	RawModule* ModulePluginLoader::findModuleForPlugin(
 		const char* pszPluginName )
@@ -198,6 +215,29 @@ namespace EduNet
 		}
 		return NULL;
 	}
-
+//-----------------------------------------------------------------------------
+	RawModule* ModulePluginLoader::findModuleByName( const char* pszName )
+	{
+		std::string kName(pszName);
+		const RawModules& kModules = this->m_modules.getModules();
+		RawModules::const_iterator kIter = kModules.begin();
+		RawModules::const_iterator kIterEnd = kModules.end();
+		while ( kIterEnd != kIter )
+		{
+			RawModule* pkModule = ( *kIter ).get();
+			ModuleEntry* pkEntry = pkModule->accessEntry();
+			bool bWantsToLoadPlugin = appWantsToLoadPlugin( pkEntry->getName() );
+			if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
+			{
+				
+				if (kName == pkEntry->getName() )
+				{
+					return pkModule;
+				}
+			}
+			++kIter;
+		}
+		return NULL;
+	}
 
 }

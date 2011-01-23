@@ -59,6 +59,8 @@ namespace EduNet	{
 				this->m_bCreateContentZone[3] = true;
 			}
 		}
+
+		//this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 	}
 
 	void MasterZonePlugin::setZoneId( size_t zoneId )
@@ -204,6 +206,12 @@ namespace EduNet	{
 	void MasterZonePlugin::removeVehicle( OpenSteer::AbstractVehicle* pkVehicle )
 	{
 		// TODO WHAT
+	}
+
+	void MasterZonePlugin::redraw( const float currentTime, const float elapsedTime )
+	{		
+		//CameraPlugin::update(currentTime, elapsedTime );			
+		BaseClass::redraw( currentTime, elapsedTime );
 	}
 }
 
