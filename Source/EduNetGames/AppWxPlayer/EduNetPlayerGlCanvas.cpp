@@ -37,10 +37,12 @@
 #define GL_TIMER_ID 242
 namespace EduNet
 {
-	BEGIN_EVENT_TABLE(EduNet::PlayerGlCanvas, wxGLCanvas)
-		EVT_TIMER(GL_TIMER_ID,  EduNet::PlayerGlCanvas::onTimer)
-		EVT_PAINT(EduNet::PlayerGlCanvas::render)
-		EVT_SIZE(EduNet::PlayerGlCanvas::resized)		
+	BEGIN_EVENT_TABLE(PlayerGlCanvas, wxGLCanvas)
+		EVT_TIMER(GL_TIMER_ID,  PlayerGlCanvas::onTimer)
+		EVT_PAINT(PlayerGlCanvas::render)
+		EVT_SIZE(PlayerGlCanvas::resized)
+		EVT_KEY_DOWN(PlayerGlCanvas::onKeyDown)
+		EVT_KEY_UP(PlayerGlCanvas::onKeyUp)
 	END_EVENT_TABLE()
 //-----------------------------------------------------------------------------
 PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
@@ -181,6 +183,18 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 		gluPerspective(45.0f, fRatio, 1, 1000);
 
 		
+	}
+
+	//-----------------------------------------------------------------------------
+	void PlayerGlCanvas::onKeyUp(wxKeyEvent& event)
+	{
+		event.Skip();
+	}
+
+	//-----------------------------------------------------------------------------
+	void PlayerGlCanvas::onKeyDown(wxKeyEvent& event)
+	{
+		event.Skip();
 	}
 }
 
