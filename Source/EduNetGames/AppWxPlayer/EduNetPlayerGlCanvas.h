@@ -60,7 +60,9 @@ namespace EduNet
 		
 		void resized(wxSizeEvent& evt);
 		void render(wxPaintEvent& evt);
-		void onTimer(wxTimerEvent& evt);		
+		void onTimer(wxTimerEvent& evt);
+		void onKeyDown(wxKeyEvent& event);
+		void onKeyUp(wxKeyEvent& event);
 
 		void setPlugin(OpenSteer::AbstractPlugin* pPlugin);
 
@@ -79,6 +81,7 @@ namespace EduNet
 		OpenSteer::Clock m_Clock;
 		DECLARE_EVENT_TABLE()
 		void updatePlugin(OpenSteer::AbstractPlugin* pkPlugin, float totalSimTime, float elapsedSimTime);
+		
 	};
 
 }

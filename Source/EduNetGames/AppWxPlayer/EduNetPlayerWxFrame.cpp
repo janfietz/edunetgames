@@ -89,6 +89,8 @@ namespace EduNet
 	//-----------------------------------------------------------------------------
 	PlayerWxFrame::~PlayerWxFrame()
 	{
+		m_pluginPanel->OnActivate(false);
+
 		m_mgr.UnInit();
 	}
 
