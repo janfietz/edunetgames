@@ -49,7 +49,8 @@ namespace OpenSteer {
 		{
 
 		}
-		virtual void draw( const float currentTime, const float elapsedTime );
+		virtual void draw( OpenSteer::AbstractRenderer* /*pRenderer*/, 
+			const float currentTime, const float elapsedTime );
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		bool m_bHasNewData;
@@ -75,7 +76,8 @@ namespace OpenSteer {
 
 
 		virtual void collect3DTextAnnotation( std::ostringstream& kStream );
-		virtual void draw( const float currentTime, const float elapsedTime );
+		virtual void draw( class AbstractRenderer*, 
+			const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		//---------------------------------------------------------------------------

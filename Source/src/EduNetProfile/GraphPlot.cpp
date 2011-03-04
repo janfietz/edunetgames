@@ -28,7 +28,7 @@
 
 #include "GraphPlot.h"
 #include "EduNetCommon/EduNetDraw.h"
-#include "OpenSteer/Renderer.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 using namespace Profile;
 
@@ -113,7 +113,7 @@ void GraphPlot::drawQuad(float x0, float y0, float x1, float y1)
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
+void GraphPlot::draw( OpenSteer::AbstractRenderer* pRenderer, const GraphLocation& kMasterGraphLocation, const GraphValues& kValues, 
 		  float sx, float sy, float width, float height ) const
 {
 	if( kValues.size() < 2 )
@@ -140,18 +140,19 @@ void GraphPlot::draw( const GraphLocation& kMasterGraphLocation, const GraphValu
 */
 	if( kInterval.x > 0 )
 	{
-		const float sw( OpenSteer::drawGetWindowWidth() ), 
-			sh( OpenSteer::drawGetWindowHeight() );
-		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation );
-		OpenSteer::end2dDrawing (originalMatrixMode);
+		const float sw( pRenderer->drawGetWindowWidth() ), 
+			sh( pRenderer->drawGetWindowHeight() );
+		const GLint originalMatrixMode = pRenderer->begin2dDrawing (sw, sh);
+		this->drawGraphFrame( pRenderer, kGraphLocation );
+		pRenderer->end2dDrawing (originalMatrixMode);
 
-		this->drawSingleGraph( kValues, kGraphLocation );
+		this->drawSingleGraph( pRenderer, kValues, kGraphLocation );
 	}
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::draw( const GraphValues& kValues, float sx, float sy, float width, float height ) const
+void GraphPlot::draw( OpenSteer::AbstractRenderer* pRenderer, 
+					 const GraphValues& kValues, float sx, float sy, float width, float height ) const
 {
 	if( kValues.size() < 2 )
 	{
@@ -176,18 +177,19 @@ void GraphPlot::draw( const GraphValues& kValues, float sx, float sy, float widt
 
 	if( kInterval.x > 0 )
 	{
-		const float sw( OpenSteer::drawGetWindowWidth() ), 
-			sh( OpenSteer::drawGetWindowHeight() );
-		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation );
-		OpenSteer::end2dDrawing (originalMatrixMode);
+		const float sw( pRenderer->drawGetWindowWidth() ), 
+			sh( pRenderer->drawGetWindowHeight() );
+		const GLint originalMatrixMode = pRenderer->begin2dDrawing (sw, sh);
+		this->drawGraphFrame( pRenderer, kGraphLocation );
+		pRenderer->end2dDrawing (originalMatrixMode);
 
-		this->drawSingleGraph( kValues, kGraphLocation );
+		this->drawSingleGraph( pRenderer, kValues, kGraphLocation );
 	}
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const
+void GraphPlot::draw( OpenSteer::AbstractRenderer* pRenderer, 
+					 const GraphValuesArray& kValues, float sx, float sy, float width, float height ) const
 {
 	if( kValues.size() == 0 )
 	{
@@ -223,25 +225,26 @@ void GraphPlot::draw( const GraphValuesArray& kValues, float sx, float sy, float
 
 //	if( kInterval.x > 0 )
 	{
-		const float sw( OpenSteer::drawGetWindowWidth() ), 
-			sh( OpenSteer::drawGetWindowHeight() );
+		const float sw( pRenderer->drawGetWindowWidth() ), 
+			sh( pRenderer->drawGetWindowHeight() );
 
 		kIter = kValues.begin();
 		while( kIter != kEnd )
 		{
 			const GraphValues& kGraphValues = *kIter;
-			this->drawSingleGraph( kGraphValues, kGraphLocation );
+			this->drawSingleGraph( pRenderer, kGraphValues, kGraphLocation );
 			kGraphLocation.fGraphIndex += 1.0f;
 			++kIter;
 		}
-		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
-		this->drawGraphFrame( kGraphLocation, kGraphLocation.m_bWireFrame );
-		OpenSteer::end2dDrawing (originalMatrixMode);
+		const GLint originalMatrixMode = pRenderer->begin2dDrawing (sw, sh);
+		this->drawGraphFrame( pRenderer, kGraphLocation, kGraphLocation.m_bWireFrame );
+		pRenderer->end2dDrawing (originalMatrixMode);
 	}
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const
+void GraphPlot::draw( OpenSteer::AbstractRenderer* pRenderer, 
+					 const TGraphPointerArray& kValues, float sx, float sy, float width, float height ) const
 {
 	if( kValues.size() == 0 )
 	{
@@ -276,7 +279,7 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 			kInterval = GraphValue::ms_Min;
 			kScale = GraphValue::ms_Min;
 
-			this->draw( *pkGraphValues, kGraphLocation.sx, kGraphLocation.sy, kGraphLocation.width, kGraphLocation.height );
+			this->draw( pRenderer, *pkGraphValues, kGraphLocation.sx, kGraphLocation.sy, kGraphLocation.width, kGraphLocation.height );
 
 			kGraphLocation.sy += fGraphOffSet;
 		}
@@ -285,23 +288,25 @@ void GraphPlot::draw( const TGraphPointerArray& kValues, float sx, float sy, flo
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle ) const
+void GraphPlot::drawGraphFrame( OpenSteer::AbstractRenderer* pRenderer, 
+							   float sx, float sy, float width, float height, bool bRectangle ) const
 {
-	const float sw( OpenSteer::drawGetWindowWidth() ), 
-		sh( OpenSteer::drawGetWindowHeight() );
-	const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
+	const float sw( pRenderer->drawGetWindowWidth() ), 
+		sh( pRenderer->drawGetWindowHeight() );
+	const GLint originalMatrixMode = pRenderer->begin2dDrawing (sw, sh);
 	GraphLocation kGraphLocation;
 	kGraphLocation.sx = sx;
 	kGraphLocation.sy = sy;
 	kGraphLocation.width = width;
 	kGraphLocation.height = height;
 	kGraphLocation.kMin.y = 0;
-	this->drawGraphFrame( kGraphLocation, bRectangle );
-	OpenSteer::end2dDrawing (originalMatrixMode);
+	this->drawGraphFrame( pRenderer, kGraphLocation, bRectangle );
+	pRenderer->end2dDrawing (originalMatrixMode);
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation, bool bRectangle ) const
+void GraphPlot::drawGraphFrame( OpenSteer::AbstractRenderer* pRenderer, 
+							   const GraphLocation& kGraphLocation, bool bRectangle ) const
 {
 	const GraphValue& kMin = kGraphLocation.kMin;
 	const GraphValue& kScale = kGraphLocation.kScale;
@@ -341,7 +346,8 @@ void GraphPlot::drawGraphFrame( const GraphLocation& kGraphLocation, bool bRecta
 }
 
 //-----------------------------------------------------------------------------
-void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const
+void GraphPlot::drawSingleGraph( OpenSteer::AbstractRenderer* pRenderer, 
+								const GraphValues& kValues, const GraphLocation& kGraphLocation ) const
 {
 	if( kValues.size() == 0 )
 	{
@@ -372,8 +378,8 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 		GraphPlot::setGraphColor( kValues.getId(), &kColor );
 	}
 
-	const float sw( OpenSteer::drawGetWindowWidth() ), 
-		sh( OpenSteer::drawGetWindowHeight() );
+	const float sw( pRenderer->drawGetWindowWidth() ), 
+		sh( pRenderer->drawGetWindowHeight() );
 	const char* pszName = kValues.getName();
 	if( NULL != pszName )
 	{
@@ -423,12 +429,12 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			0 );
 
 		screenLocation.y += 3;
-		OpenSteer::draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
+		pRenderer->draw2dTextAt2dLocation( sn, screenLocation, kColor, sw, sh);
 	}
 
 	if( kInterval.x > 0 )
 	{
-		const GLint originalMatrixMode = OpenSteer::begin2dDrawing (sw, sh);
+		const GLint originalMatrixMode = pRenderer->begin2dDrawing (sw, sh);
 		GraphPlot::setGraphColor( kValues );
 
 		switch( kValues.getGraphType() )
@@ -498,7 +504,7 @@ void GraphPlot::drawSingleGraph( const GraphValues& kValues, const GraphLocation
 			}
 			break;
 		}
-		OpenSteer::end2dDrawing (originalMatrixMode);
+		pRenderer->end2dDrawing (originalMatrixMode);
 	}
 
 }

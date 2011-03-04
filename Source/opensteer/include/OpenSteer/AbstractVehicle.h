@@ -41,8 +41,8 @@
 
 
 #include "OpenSteer/LocalSpace.h"
+#include "OpenSteer/AbstractRenderable.h"
 #include "OpenSteer/Proximity.h"
-
 
 //! STL vector containers
 #include <vector>
@@ -77,8 +77,9 @@ namespace OpenSteer {
 	class AbstractVehicle;
 	typedef OpenSteer::AbstractProximityDatabase<AbstractVehicle*> ProximityDatabase;
 	typedef OpenSteer::AbstractTokenForProximityDatabase<AbstractVehicle*> ProximityToken;
-	
-    class AbstractVehicle : public AbstractEntityUpdatedLocalSpace 
+	typedef AbstractRenderMixin<AbstractEntityUpdatedLocalSpace> AbstractRenderableEntityUpdatedLocalSpace;
+
+    class AbstractVehicle : public AbstractRenderableEntityUpdatedLocalSpace
     {
     public:
         virtual ~AbstractVehicle() { /* Nothing to do. */ }
@@ -116,8 +117,7 @@ namespace OpenSteer {
 
 		//! dp - added to support heterogeneous flocks
 //		virtual void update(const float currentTime, const float elapsedTime) OS_ABSTRACT;
-		//! CP ++
-		virtual void draw( const float currentTime, const float elapsedTime ) OS_ABSTRACT;
+		//! CP ++		
 		virtual void reset( void ) OS_ABSTRACT;
 		virtual void allocateProximityToken( ProximityDatabase* pd ) OS_ABSTRACT;
 

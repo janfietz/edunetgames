@@ -112,10 +112,6 @@ SimpleVehicle::~SimpleVehicle (void)
 	{
 		SimpleVehicle::setNearestMouseVehicle( NULL );
 	}
-	if( this == Camera::getLocalSpaceToTrack() )
-	{
-		Camera::setLocalSpaceToTrack( NULL );
-	}
 }
 
 //-----------------------------------------------------------------------------
@@ -157,7 +153,8 @@ void SimpleVehicle::collect3DTextAnnotation( std::ostringstream& kStream )
 }
 
 //-----------------------------------------------------------------------------
-void SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime*/ ) 
+void SimpleVehicle::draw( OpenSteer::AbstractRenderer* pRenderer,
+	const float /*currentTime*/, const float /*elapsedTime*/ )
 {
 //	if (&selected && &nearMouse && OpenSteer::annotationIsOn())
 //	if( SimpleVehicle::getSelectedVehicle() == this )
@@ -213,8 +210,10 @@ void SimpleVehicle::draw( const float /*currentTime*/, const float /*elapsedTime
 			textOffset.y += 1.0f;
 		}
 		const Vec3 textPos = this->position() + textOffset;
-		OpenSteer::draw2dTextAt3dLocation( 
-			kStream, textPos, textColor, OpenSteer::drawGetWindowWidth(), OpenSteer::drawGetWindowHeight() );
+		pRenderer->draw2dTextAt3dLocation( 
+			kStream, textPos, textColor, 
+			pRenderer->drawGetWindowWidth(), 
+			pRenderer->drawGetWindowHeight() );
 
 		kStream.flush();
 	}
@@ -440,8 +439,9 @@ SimpleVehicle::measurePathCurvature (const float elapsedTime)
 //-----------------------------------------------------------------------------
 // draw lines from vehicle's position showing its velocity and acceleration
 void 
-SimpleVehicle::annotationVelocityAcceleration (float maxLengthA, 
-                                                          float maxLengthV)
+SimpleVehicle::annotationVelocityAcceleration (OpenSteer::AbstractRenderer* pRenderer,
+											   float maxLengthA, 
+                                               float maxLengthV)
 {
     const float desat = 0.4f;
     const float aScale = maxLengthA / maxForce ();
@@ -450,8 +450,8 @@ SimpleVehicle::annotationVelocityAcceleration (float maxLengthA,
     const Color aColor (desat, desat, 1); // bluish
     const Color vColor (    1, desat, 1); // pinkish
 
-    annotationLine (p, p + (velocity ()           * vScale), vColor);
-    annotationLine (p, p + (_smoothedAcceleration * aScale), aColor);
+    annotationLine (pRenderer, p, p + (velocity ()           * vScale), vColor);
+    annotationLine (pRenderer, p, p + (_smoothedAcceleration * aScale), aColor);
 }
 
 }

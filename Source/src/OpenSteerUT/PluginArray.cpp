@@ -177,24 +177,28 @@ void PluginArray::update(const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
-void PluginArray::redraw(const float currentTime, const float elapsedTime)
+void PluginArray::redraw(OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime,
+	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
-	this->redrawChildren( currentTime, elapsedTime );
+	this->redrawChildren( pRenderer, currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
-void PluginArray::redrawChildren(const float currentTime, const float elapsedTime)
+void PluginArray::redrawChildren(OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime,
+	const float elapsedTime)
 {
 	TPluginArray::iterator kIter = this->begin();
 	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		pkPlugin->redraw( currentTime, elapsedTime );
+		pkPlugin->redraw( pRenderer, currentTime, elapsedTime );
 		++kIter;
 	}
 }

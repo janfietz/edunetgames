@@ -34,6 +34,9 @@
 #include "OpenSteer/AbstractPlugin.h"
 #include "OpenSteerUT/OpensteerUT.h"
 
+#include "OpenSteer/SimpleVehicle.h"
+#include "OpenSteer/Draw.h"
+
 #define GL_TIMER_ID 242
 namespace EduNet
 {
@@ -99,6 +102,8 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 			0,  0,  0,
 			0,0,1);
 
+		OpenSteer::OpenGLRenderer kRenderer;
+
 		if (m_pPlugin != NULL)
 		{
 			m_Clock.update ();
@@ -107,28 +112,30 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 				m_Clock.getElapsedSimulationTime () );
 
 			// nearest mouse (to be highlighted)
-			SimpleVehicle::setNearestMouseVehicle( GameDemo::vehicleNearestToMouse() );
+			//SimpleVehicle::setNearestMouseVehicle( GameDemo::vehicleNearestToMouse() );
 
-			m_pPlugin->redraw( m_Clock.getTotalSimulationTime (),
+			
+			kRenderer.SetPlugin( m_pPlugin );
+			m_pPlugin->redraw( &kRenderer, m_Clock.getTotalSimulationTime (),
 				m_Clock.getElapsedSimulationTime () );
 		}	
 
 		glFlush(); 
 		SwapBuffers();
 		// check for errors in drawing module, if so report and exit
-		OpenSteer::checkForDrawError ( "GameDemo::updateSimulationAndRedraw" );
+		kRenderer.checkForDrawError ( "GameDemo::updateSimulationAndRedraw" );
 	}
 
 	//-----------------------------------------------------------------------------
 	void PlayerGlCanvas::updatePlugin(OpenSteer::AbstractPlugin* pkPlugin, float totalSimTime, float elapsedSimTime)
 	{		
 		// if no vehicle is selected, and some exist, select the first one
-		if (SimpleVehicle::getSelectedVehicle() == NULL)
+		if ( OpenSteer::SimpleVehicle::getSelectedVehicle() == NULL)
 		{
-			const AVGroup& vehicles = m_pPlugin->allVehicles();
+			const OpenSteer::AVGroup& vehicles = m_pPlugin->allVehicles();
 			if (vehicles.size() > 0) 
 			{
-				SimpleVehicle::setSelectedVehicle( vehicles.front() );
+				OpenSteer::SimpleVehicle::setSelectedVehicle( vehicles.front() );
 			}
 		}
 

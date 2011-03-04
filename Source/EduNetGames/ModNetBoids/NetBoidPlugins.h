@@ -48,13 +48,7 @@ public:
 
 	virtual float selectionOrderSortKey (void) const { return 1.0f ;}
 
-	virtual void initGui( void* pkUserdata )
-	{
-		this->prepare();
-		BaseClass::initGui( pkUserdata );
-	}
-
-	void prepare(void);
+	virtual void prepareOpen(void);
 
 	virtual void close(void)
 	{
@@ -83,13 +77,7 @@ public:
 
 	virtual float selectionOrderSortKey (void) const { return 3.0f ;}
 
-	virtual void initGui( void* pkUserdata )
-	{
-		this->prepare();
-		BaseClass::initGui( pkUserdata );
-	}
-
-	void prepare(void);
+	virtual void prepareOpen(void);
 
 	virtual void close(void)
 	{
@@ -119,14 +107,8 @@ public:
 	  virtual float selectionOrderSortKey (void) const { return 4.0f ;}
 
 	  //---------------------------------------------------------------------
-	  // interface AbstractPlugin
-	  virtual void initGui( void* pkUserdata )
-	  {
-		  this->prepare();
-		  BaseClass::initGui( pkUserdata );
-	  }
-
-	  void prepare(void);
+	  // interface AbstractPlugin	  
+	 virtual void prepareOpen(void);
 
 	  virtual void close(void)
 	  {
@@ -156,13 +138,7 @@ public:
 
 		virtual float selectionOrderSortKey (void) const { return 2.0f ;}
 
-	virtual void initGui( void* pkUserdata )
-	{
-		this->prepare();
-		BaseClass::initGui( pkUserdata );
-	}
-
-	void prepare(void);
+	virtual void prepareOpen(void);
 
 	virtual void close(void)
 	{		
@@ -193,13 +169,8 @@ public:
 
 	  //---------------------------------------------------------------------
 	  // interface AbstractPlugin
-	  virtual void initGui( void* pkUserdata )
-	  {
-		  this->prepare();
-		  BaseClass::initGui( pkUserdata );
-	  }
-
-	  void prepare(void);
+	 
+	  virtual void prepareOpen(void);
 
 	  virtual void close(void)
 	  {		

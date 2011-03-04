@@ -34,17 +34,18 @@ using namespace OpenSteer;
 //-----------------------------------------------------------------------------
 // draws a gray disk on the XZ plane under a given vehicle
 void 
-VehicleUtilities::highlightVehicleUtility( const AbstractVehicle& vehicle )
+VehicleUtilities::highlightVehicleUtility( AbstractRenderer* pRenderer,
+	const AbstractVehicle& vehicle )
 {
 	if( &vehicle != NULL )
 	{
 		if( vehicle.movesPlanar() )
 		{
-			OpenSteer::drawXZDisk( vehicle.radius(), vehicle.position(), gGray60, 20 );
+			pRenderer->drawXZDisk( vehicle.radius(), vehicle.position(), gGray60, 20 );
 		}
 		else
 		{
-			VehicleUtilities::circleHighlightVehicleUtility( vehicle );
+			VehicleUtilities::circleHighlightVehicleUtility(pRenderer, vehicle );
 		}
 	}
 }
@@ -52,9 +53,10 @@ VehicleUtilities::highlightVehicleUtility( const AbstractVehicle& vehicle )
 //-----------------------------------------------------------------------------
 // draws a gray circle on the XZ plane under a given vehicle
 void 
-VehicleUtilities::circleHighlightVehicleUtility( const AbstractVehicle& vehicle )
+VehicleUtilities::circleHighlightVehicleUtility( AbstractRenderer* pRenderer,
+	const AbstractVehicle& vehicle )
 {
-	if (&vehicle != NULL) OpenSteer::drawXZCircle (vehicle.radius () * 1.1f,
+	if (&vehicle != NULL) pRenderer->drawXZCircle (vehicle.radius () * 1.1f,
 		vehicle.position(),
 		gGray60,
 		20);
@@ -65,14 +67,15 @@ VehicleUtilities::circleHighlightVehicleUtility( const AbstractVehicle& vehicle 
 // draw a box around a vehicle aligned with its local space
 // xxx not used as of 11-20-02
 void 
-VehicleUtilities::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
-													 const Color& color)
+VehicleUtilities::drawBoxHighlightOnVehicle (AbstractRenderer* pRenderer,
+	const AbstractVehicle& v,
+	const Color& color)
 {
 	if (&v)
 	{
 		const float diameter = v.radius() * 2;
 		const Vec3 size (diameter, diameter, diameter);
-		OpenSteer::drawBoxOutline (v, size, color);
+		pRenderer->drawBoxOutline (v, size, color);
 	}
 }
 
@@ -81,14 +84,16 @@ VehicleUtilities::drawBoxHighlightOnVehicle (const AbstractVehicle& v,
 // of a given vehicle.  The circle's radius is the vehicle's radius times
 // radiusMultiplier.
 void 
-VehicleUtilities::drawCircleHighlightOnVehicle (const AbstractVehicle& v,
-														const float radiusMultiplier,
-														const Color& color)
+VehicleUtilities::drawCircleHighlightOnVehicle (AbstractRenderer* pRenderer,
+	const AbstractVehicle& v,
+	const float radiusMultiplier,
+	const Color& color)
 {
 	if (&v)
 	{
-		const Vec3& cPosition = OpenSteer::Camera::accessInstance().position();
-		OpenSteer::draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
+		OpenSteer::Camera* pCamera = pRenderer->AccessCamera();
+		const Vec3& cPosition = pCamera->position();
+		pRenderer->draw3dCircle  (v.radius() * radiusMultiplier,  // adjusted radius
 			v.position(),                   // center
 			v.position() - cPosition,       // view axis
 			color,                          // drawing color
@@ -134,9 +139,10 @@ VehicleUtilities::selectNextVehicle (void)
 //-----------------------------------------------------------------------------
 // select vehicle nearest the given screen position (e.g.: of the mouse)
 void 
-VehicleUtilities::selectVehicleNearestScreenPosition (int x, int y)
+VehicleUtilities::selectVehicleNearestScreenPosition (OpenSteer::AbstractRenderer* pRenderer,
+	int x, int y)
 {
-	SimpleVehicle::setSelectedVehicle( findVehicleNearestScreenPosition (x, y) );
+	SimpleVehicle::setSelectedVehicle( findVehicleNearestScreenPosition (pRenderer, x, y) );
 }
 
 //-----------------------------------------------------------------------------
@@ -153,27 +159,35 @@ VehicleUtilities::selectVehicleNearestScreenPosition (int x, int y)
 // xxx or in "screen space"?  Also: I think this would be happy to select a
 // xxx vehicle BEHIND the camera location.
 OpenSteer::AbstractVehicle* 
-VehicleUtilities::findVehicleNearestScreenPosition( int x, int y )
+VehicleUtilities::findVehicleNearestScreenPosition( OpenSteer::AbstractRenderer* pRenderer,
+	int x, int y )
 {
 	// find the direction from the camera position to the given pixel
-	const Vec3 direction = directionFromCameraToScreenPosition ( 
-		x,y , static_cast<int>( OpenSteer::drawGetWindowHeight() ) );
+	const Vec3 direction = pRenderer->directionFromCameraToScreenPosition ( 
+		x,y , static_cast<int>( pRenderer->drawGetWindowHeight() ) );
+
+	AbstractPlugin* pPlugin = pRenderer->AccessPlugin();
+	if (NULL == pPlugin)
+	{
+		return NULL;
+	}
 
 	// iterate over all vehicles to find the one whose center is nearest the
 	// "eye-mouse" selection line
 	float minDistance = FLT_MAX;       // smallest distance found so far
 	AbstractVehicle* nearest = NULL;   // vehicle whose distance is smallest
-	const AVGroup& vehicles = Plugin::allVehiclesOfSelectedPlugin();
+	const AVGroup& vehicles = pPlugin->allVehicles();
 	if (&vehicles == NULL)
 	{
 		return NULL;
 	}
 
+	OpenSteer::Camera* pCamera = pRenderer->AccessCamera();
 	for (AVIterator i = vehicles.begin(); i != vehicles.end(); i++)
 	{
 		// distance from this vehicle's center to the selection line:
 		const float d = distanceFromLine ((**i).position(),
-			OpenSteer::Camera::accessInstance().position(),
+			pCamera->position(),
 			direction);
 
 		// if this vehicle-to-line distance is the smallest so far,

@@ -37,6 +37,7 @@
 namespace OpenSteer
 {
 	class Color;
+	class AbstractRenderer;
 }
 
 //-----------------------------------------------------------------------------
@@ -289,13 +290,13 @@ namespace Profile
 		GraphPlot( void );
 		virtual ~GraphPlot();
 
-		void draw( const TGraphPointerArray& kValues,
+		void draw( OpenSteer::AbstractRenderer* pRenderer, const TGraphPointerArray& kValues,
 			float sx, float sy, float width, float height ) const;
-		void draw( const GraphValuesArray& kValues,
+		void draw( OpenSteer::AbstractRenderer* pRenderer, const GraphValuesArray& kValues,
 			float sx, float sy, float width, float height ) const;
-		void draw( const GraphValues& kValues,
+		void draw( OpenSteer::AbstractRenderer* pRenderer, const GraphValues& kValues,
 			float sx, float sy, float width, float height ) const;
-		void drawGraphFrame( float sx, float sy, float width, float height, bool bRectangle = true ) const;
+		void drawGraphFrame( OpenSteer::AbstractRenderer* pRenderer, float sx, float sy, float width, float height, bool bRectangle = true ) const;
 	private:
 		typedef struct TGraphLocation : public GraphLayout
 		{
@@ -315,10 +316,10 @@ namespace Profile
 
 		} GraphLocation;
 		void computeGraphLocation( const GraphValues& kValues, GraphLocation& kGraphLocation ) const;
-		void draw( const GraphLocation& kMasterGraphLocation, const GraphValues& kValues,
+		void draw( OpenSteer::AbstractRenderer* pRenderer, const GraphLocation& kMasterGraphLocation, const GraphValues& kValues,
 			float sx, float sy, float width, float height ) const;
-		void drawSingleGraph( const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
-		void drawGraphFrame( const GraphLocation& kGraphLocation, bool bRectangle = true ) const;
+		void drawSingleGraph( OpenSteer::AbstractRenderer* pRenderer, const GraphValues& kValues, const GraphLocation& kGraphLocation ) const;
+		void drawGraphFrame( OpenSteer::AbstractRenderer* pRenderer, const GraphLocation& kGraphLocation, bool bRectangle = true ) const;
 
 		static void drawRectangle( float x0, float y0, float x1, float y1);
 		static void drawQuad( float x0, float y0, float x1, float y1);

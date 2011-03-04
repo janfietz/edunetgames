@@ -77,7 +77,7 @@ public:
     void close ( void );
     void reset ( void );
     void update ( const float currentTime, const float elapsedTime );
-    void redraw ( const float currentTime, const float elapsedTime );
+    virtual void redraw ( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime) OS_OVERRIDE;
 
     void nextPD ( void );
     void handleFunctionKeys ( int keyNumber );
@@ -135,37 +135,40 @@ private:
     void initObstacles ( void );
     // update Boid::obstacles list when constraint changes
     void updateObstacles ( void );
-    void drawObstacles ( void );
+	void drawObstacles ( OpenSteer::AbstractRenderer* pRenderer );
 
 	bool removeBoidFromFactory(AbstractVehicle* boid, const AbstractEntityFactory* pkFactory);
 
     class SO : public OpenSteer::SphereObstacle
     {
-        void draw ( const bool filled, const OpenSteer::Color& color, const OpenSteer::Vec3& vp ) const
+		void draw ( OpenSteer::AbstractRenderer* pRenderer, 
+			const bool filled, const OpenSteer::Color& color, const OpenSteer::Vec3& vp ) const
         {
-            drawSphereObstacle ( *this, 10.0f, filled, color, vp );
+            pRenderer->drawSphereObstacle( *this, 10.0f, filled, color, vp );
         }
     };
 
     class RO : public OpenSteer::RectangleObstacle
     {
-        void draw ( const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
+        void draw ( OpenSteer::AbstractRenderer* pRenderer, 
+			const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
         {
-            tempDrawRectangle ( *this, color );
+            tempDrawRectangle ( pRenderer, *this, color );
         }
     };
 
     class BO : public OpenSteer::BoxObstacle
     {
-        void draw ( const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
+        void draw ( OpenSteer::AbstractRenderer* pRenderer, 
+			const bool, const OpenSteer::Color& color, const OpenSteer::Vec3& ) const
         {
-            tempDrawBox ( *this, color );
+            tempDrawBox ( pRenderer,  *this, color );
         }
     };
 
 
-    static void tempDrawRectangle ( const OpenSteer::RectangleObstacle& rect, const OpenSteer::Color& color );
-    static void tempDrawBox ( const OpenSteer::BoxObstacle& box, const OpenSteer::Color& color );
+	static void tempDrawRectangle ( OpenSteer::AbstractRenderer* pRenderer, const OpenSteer::RectangleObstacle& rect, const OpenSteer::Color& color );
+    static void tempDrawBox ( OpenSteer::AbstractRenderer* pRenderer, const OpenSteer::BoxObstacle& box, const OpenSteer::Color& color );
 
     // flock: a group (STL vector) of pointers to all boids
     OpenSteer::Boid::groupType flock;
@@ -195,6 +198,7 @@ private:
     outsideSphere3, outsideSphere4, outsideSphere5, outsideSphere6;
 
 	class NetBoidFactory* m_boidFactory;
+	class CameraPlugin* m_pCameraPlugin;
 };
 }
 

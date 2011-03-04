@@ -34,11 +34,14 @@
 #include "EduNetCommon/TUpdatePeriod.h"
 #include "EduNetCommon/InstanceCount.h"
 
-#include "OpenSteer/Plugin.h"
+#include "OpenSteerUT/PluginArray.h"
 #include "OpenSteer/SimpleVehicle.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/SimplePhysicsVehicle.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
+
+#include "OpenSteerUT/CameraPlugin.h"
+#include "OpenSteerUT/GridPlugin.h"
 
 
 // anonymous namespace
@@ -87,9 +90,9 @@ namespace EduNet{
 		}
 
 		// draw this character/vehicle into the scene
-		virtual void draw (const float currentTime, const float elapsedTime)
+		virtual void draw (OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime)
 		{
-			drawBasic2dCircularVehicle (*this, gGray50);
+			pRenderer->drawBasic2dCircularVehicle (*this, gGray50);
 		}
 		EduNet::UpdatePeriodFloat m_kUpdatePeriod;
 		static OpenSteer::InstanceTracker ms_kInstanceCount;
@@ -98,9 +101,9 @@ namespace EduNet{
 	};
 
 
-	class EmptyPlugin : public Plugin
+	class EmptyPlugin : public PluginArray
 	{
-		ET_DECLARE_BASE(Plugin)
+		ET_DECLARE_BASE(PluginArray)
 	public:
 
 		// construction / destruction
@@ -118,11 +121,9 @@ namespace EduNet{
 
 		virtual void update (const float currentTime, const float elapsedTime);
 
-		virtual void redraw (const float currentTime, const float elapsedTime);
+		virtual void redraw (OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
 
-		virtual void close (void)
-		{
-		}
+		virtual void close (void);
 
 		virtual void reset (void)
 		{
@@ -141,6 +142,10 @@ namespace EduNet{
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;
+
+		OpenSteer::CameraPlugin* m_pCamera;
+		OpenSteer::GridPlugin* m_pGrid;
+
 		ET_IMPLEMENT_CLASS_NO_COPY( EmptyPlugin )
 	};
 }

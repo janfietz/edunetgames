@@ -45,6 +45,7 @@
 #include "OpenSteer/Color.h"
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 
 #ifdef WIN32
@@ -107,13 +108,16 @@ void NetBoidsPlugin::open ( void )
     }
 
     // initialize camera
-    CameraPlugin::init3dCamera ( *SimpleVehicle::getSelectedVehicle() );
-    Camera::accessInstance().mode = Camera::cmFixed;
-    Camera::accessInstance().fixedDistDistance = CameraPlugin::cameraTargetDistance;
-    Camera::accessInstance().fixedDistVOffset = 0;
-    Camera::accessInstance().lookdownDistance = 20;
-    Camera::accessInstance().aimLeadTime = 0.5;
-    Camera::accessInstance().povOffset.set ( 0, 0.5, -2 );
+	m_pCameraPlugin = ET_NEW CameraPlugin();
+
+    m_pCameraPlugin->init3dCamera ( *SimpleVehicle::getSelectedVehicle() );
+	Camera& kCam(m_pCameraPlugin->accessCamera());
+    kCam.mode = Camera::cmFixed;
+    kCam.fixedDistDistance = CameraPlugin::cameraTargetDistance;
+    kCam.fixedDistVOffset = 0;
+    kCam.lookdownDistance = 20;
+    kCam.aimLeadTime = 0.5;
+    kCam.povOffset.set ( 0, 0.5, -2 );
 
     // set up obstacles
     initObstacles ();
@@ -138,23 +142,27 @@ void NetBoidsPlugin::update ( const float currentTime, const float elapsedTime )
     Boid::maxNeighbors = Boid::totalNeighbors = 0;
     Boid::minNeighbors = std::numeric_limits<int>::max();
 #endif // NO_LQ_BIN_STATS
-
+	
+	m_pCameraPlugin->update( currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidsPlugin::redraw ( const float currentTime, const float elapsedTime )
+void NetBoidsPlugin::redraw ( AbstractRenderer* pRenderer,
+	const float currentTime, const float elapsedTime )
 {
+	m_pCameraPlugin->redraw(pRenderer, currentTime, elapsedTime);
+
     if ( false == this->isVisible() )
     {
         return;
     }
     // draw each boid in flock
     for ( Boid::groupType::iterator i = flock.begin(); i != flock.end(); i++ )
-        ( **i ).draw ( currentTime, elapsedTime );
+        ( **i ).draw ( pRenderer, currentTime, elapsedTime );
 
 
     std::ostringstream status;
-    const float h = drawGetWindowHeight ();
+    const float h = pRenderer->drawGetWindowHeight ();
     Vec3 screenLocation ( 10, h-50, 0 );
     AbstractVehicleGroup kVG ( this->allVehicles() );
     Color kColor = gGray80;
@@ -212,9 +220,13 @@ void NetBoidsPlugin::redraw ( const float currentTime, const float elapsedTime )
         kColor = gGray50;
     }
 
-    draw2dTextAt2dLocation ( status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight() );
+    pRenderer->draw2dTextAt2dLocation ( status, screenLocation, kColor, 
+		pRenderer->drawGetWindowWidth(), 
+		pRenderer->drawGetWindowHeight() );
 
-    drawObstacles ();
+    drawObstacles (pRenderer);
+
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -226,6 +238,8 @@ void NetBoidsPlugin::close ( void )
 
     // delete the proximity database
     ET_SAFE_DELETE ( pd );
+
+	ET_SAFE_DELETE(m_pCameraPlugin)
 }
 
 //-----------------------------------------------------------------------------
@@ -236,10 +250,10 @@ void NetBoidsPlugin::reset ( void )
         ( **i ).reset();
 
     // reset camera position
-    CameraPlugin::position3dCamera ( *SimpleVehicle::getSelectedVehicle() );
+	m_pCameraPlugin->position3dCamera ( *SimpleVehicle::getSelectedVehicle() );
 
     // make camera jump immediately to new position
-    Camera::accessInstance().doNotSmoothNextMove ();
+    m_pCameraPlugin->accessCamera().doNotSmoothNextMove ();
 }
 
 
@@ -572,22 +586,25 @@ void NetBoidsPlugin::updateObstacles ( void )
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidsPlugin::drawObstacles ( void )
+void NetBoidsPlugin::drawObstacles ( OpenSteer::AbstractRenderer* pRenderer )
 {
+	Camera* pCam(pRenderer->AccessCamera());
+	Vec3 kPos = pCam ? pCam->position() : Vec3::zero;
     for ( ObstacleIterator o = this->allObstacles().begin();
           o != this->allObstacles().end();
           o++ )
     {
-        ( **o ).draw ( false, // draw in wireframe
+        ( **o ).draw ( pRenderer, false, // draw in wireframe
                        ( ( *o == &insideBigSphere ) ?
                          Color ( 0.2f, 0.2f, 0.4f ) :
                          Color ( 0.1f, 0.1f, 0.2f ) ),
-                       Camera::accessInstance().position () );
+                       kPos );
     }
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidsPlugin::tempDrawRectangle ( const RectangleObstacle& rect, const Color& color )
+void NetBoidsPlugin::tempDrawRectangle ( OpenSteer::AbstractRenderer* pRenderer,
+										const RectangleObstacle& rect, const Color& color )
 {
     float w = rect.width / 2;
     float h = rect.height / 2;
@@ -597,14 +614,15 @@ void NetBoidsPlugin::tempDrawRectangle ( const RectangleObstacle& rect, const Co
     Vec3 v3 = rect.globalizePosition ( Vec3 ( -w, -h, 0 ) );
     Vec3 v4 = rect.globalizePosition ( Vec3 ( w, -h, 0 ) );
 
-    drawLine ( v1, v2, color );
-    drawLine ( v2, v3, color );
-    drawLine ( v3, v4, color );
-    drawLine ( v4, v1, color );
+    pRenderer->drawLine ( v1, v2, color );
+    pRenderer->drawLine ( v2, v3, color );
+    pRenderer->drawLine ( v3, v4, color );
+    pRenderer->drawLine ( v4, v1, color );
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidsPlugin::tempDrawBox ( const BoxObstacle& box, const Color& color )
+void NetBoidsPlugin::tempDrawBox ( OpenSteer::AbstractRenderer* pRenderer,
+								  const BoxObstacle& box, const Color& color )
 {
     const float w = box.width / 2;
     const float h = box.height / 2;
@@ -624,19 +642,19 @@ void NetBoidsPlugin::tempDrawBox ( const BoxObstacle& box, const Color& color )
     const Vec3 v7 = box.globalizePosition ( Vec3 ( -w, -h, -d ) );
     const Vec3 v8 = box.globalizePosition ( Vec3 ( w, -h, -d ) );
 
-    drawLine ( v1, v2, color );
-    drawLine ( v2, v3, color );
-    drawLine ( v3, v4, color );
-    drawLine ( v4, v1, color );
+    pRenderer->drawLine ( v1, v2, color );
+    pRenderer->drawLine ( v2, v3, color );
+    pRenderer->drawLine ( v3, v4, color );
+    pRenderer->drawLine ( v4, v1, color );
 
-    drawLine ( v5, v6, color );
-    drawLine ( v6, v7, color );
-    drawLine ( v7, v8, color );
-    drawLine ( v8, v5, color );
+    pRenderer->drawLine ( v5, v6, color );
+    pRenderer->drawLine ( v6, v7, color );
+    pRenderer->drawLine ( v7, v8, color );
+    pRenderer->drawLine ( v8, v5, color );
 
-    drawLine ( v1, v5, color );
-    drawLine ( v2, v6, color );
-    drawLine ( v3, v7, color );
-    drawLine ( v4, v8, color );
+    pRenderer->drawLine ( v1, v5, color );
+    pRenderer->drawLine ( v2, v6, color );
+    pRenderer->drawLine ( v3, v7, color );
+    pRenderer->drawLine ( v4, v8, color );
 }
 

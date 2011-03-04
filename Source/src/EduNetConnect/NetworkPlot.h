@@ -33,6 +33,10 @@
 #include "EduNetProfile/GraphPlot.h"
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 
+namespace OpenSteer
+{
+	class AbstractRenderer;
+}
 //-------------------------------------------------------------------------
 class NetworkPlot
 {
@@ -42,7 +46,7 @@ public:
 
 	void recordUpdate( RakNetStatistics& kStats,
 		const float currentTime, const float elapsedTime );
-	void draw( osAbstractPlugin* pkNetworkPlugin ) const;
+	void draw( OpenSteer::AbstractRenderer* pRenderer, osAbstractPlugin* pkNetworkPlugin ) const;
 
 	mutable Profile::GraphValuesArray m_kBandwith;
 	mutable Profile::GraphValuesArray m_kMessageQueues;

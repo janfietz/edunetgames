@@ -32,11 +32,18 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-osVector3 GridPlugin::ms_kGridCenter(osVector3::zero);
 int GridPlugin::ms_iSolid(1);
-//-----------------------------------------------------------------------------
-void GridPlugin::gridUtility( const Vec3& gridTarget )
+
+GridPlugin::GridPlugin (bool bAddToRegistry):BaseClass(bAddToRegistry),
+	m_kGridCenter(osVector3::zero)
 {
+
+};
+
+//-----------------------------------------------------------------------------
+void GridPlugin::gridUtility( AbstractRenderer* pRenderer )
+{
+	const Vec3& gridTarget(m_kGridCenter);
 	// round off target to the nearest multiple of 2 (because the
 	// checkerboard grid with a pitch of 1 tiles with a period of 2)
 	// then lower the grid a bit to put it under 2d annotation lines
@@ -52,13 +59,13 @@ void GridPlugin::gridUtility( const Vec3& gridTarget )
 		const Color gray1(0.27f);
 		const Color gray2(0.30f);
 		// draw 50x50 checkerboard grid with 50 squares along each side
-		drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
+		pRenderer->drawXZCheckerboardGrid (50, 50, gridCenter, gray1, gray2);
 	}
 	else
 	{
 		// alternate style
-		drawXYLineGrid (50, 50, gridCenter, gBlack);
-		drawXZLineGrid (50, 50, gridCenter, gBlack);
+		pRenderer->drawXYLineGrid (50, 50, gridCenter, gBlack);
+		pRenderer->drawXZLineGrid (50, 50, gridCenter, gBlack);
 	}
 }
 
@@ -71,12 +78,13 @@ void GridPlugin::initGui( void* pkUserdata )
 }
 
 //-----------------------------------------------------------------------------
-void GridPlugin::redraw (const float currentTime, const float elapsedTime) 
+void GridPlugin::redraw (AbstractRenderer* pRenderer,
+	const float currentTime, const float elapsedTime) 
 { 
 	if( false == this->isVisible() )
 	{
 		return;
 	}
 	// draw "ground plane"
-	GridPlugin::gridUtility( GridPlugin::ms_kGridCenter );
+	GridPlugin::gridUtility( pRenderer );
 }

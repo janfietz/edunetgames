@@ -53,13 +53,6 @@ void PlayerPlugin::open (void)
 	SimpleVehicle::setSelectedVehicle( &m_kVehicle );
 	m_kVehicles.push_back( &m_kVehicle );
 
-	// initialize camera
-	CameraPlugin::init2dCamera( *SimpleVehicle::getSelectedVehicle() );
-	Camera::accessInstance().setPosition (
-		10,
-		CameraPlugin::camera2dElevation,
-		10);
-	Camera::accessInstance().fixedPosition.set( 40, 40, 40 );
 }
 
 //-----------------------------------------------------------------------------
@@ -83,7 +76,9 @@ void PlayerPlugin::update (const float currentTime, const float elapsedTime)
 }
 
 //-----------------------------------------------------------------------------
-void PlayerPlugin::redraw (const float currentTime, const float elapsedTime)
+void PlayerPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime,
+	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
@@ -91,21 +86,17 @@ void PlayerPlugin::redraw (const float currentTime, const float elapsedTime)
 	}
 	if( NULL != SimpleVehicle::getSelectedVehicle() )
 	{
-		// update camera, tracking test vehicle
-		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::getSelectedVehicle() );
-		// draw "ground plane"
-		GridPlugin::gridUtility( SimpleVehicle::getSelectedVehicle()->position() );
 	}
 
 	AbstractVehicleGroup kVehicles( m_kVehicles );
-	kVehicles.redraw( currentTime, elapsedTime );
+	kVehicles.redraw( pRenderer, currentTime, elapsedTime );
 
 	if( 0 != this->m_bShowMotionStatePlot )
 	{
 		// draw motion state plot
 		if( NULL != SimpleVehicle::getSelectedVehicle() )
 		{
-			this->m_kMotionStateProfile.draw( currentTime );
+			this->m_kMotionStateProfile.draw( pRenderer, currentTime );
 		}
 	}
 

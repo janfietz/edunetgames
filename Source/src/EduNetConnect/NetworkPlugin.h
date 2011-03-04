@@ -89,7 +89,8 @@ public:
 	virtual void close(void);
 	virtual void reset (void);
 	void update (const float currentTime, const float elapsedTime);
-	void redraw (const float currentTime, const float elapsedTime);
+	virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, const float currentTime,
+		const float elapsedTime) OS_OVERRIDE;
 	virtual void handleFunctionKeys (int keyNumber);
 	virtual void printMiniHelpForFunctionKeys (void) const;
 
@@ -211,7 +212,8 @@ private:
 
 	void recordNetworkStatistics(const float currentTime,
 		const float elapsedTime);
-	void drawNetworkPlot(const float currentTime,
+	void drawNetworkPlot(OpenSteer::AbstractRenderer* pRenderer,
+		const float currentTime,
 		const float elapsedTime);
 
 	void addNetworkSimulatorGui( void* pkUserdata );

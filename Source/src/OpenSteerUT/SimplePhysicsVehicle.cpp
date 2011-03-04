@@ -51,14 +51,43 @@ SimplePhysicsVehicle::~SimplePhysicsVehicle()
 }
 
 //-----------------------------------------------------------------------------
-void SimplePhysicsVehicle::draw( const float currentTime, const float elapsedTime )
+void SimplePhysicsVehicle::draw( OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime, const float elapsedTime )
 {
 	if( ( SimpleVehicle::getNearestMouseVehicle() == this ) )
 	{
 		// highlight vehicle nearest mouse
-		VehicleUtilities::highlightVehicleUtility( *this );
+		VehicleUtilities::highlightVehicleUtility( pRenderer, *this );
 	}
-	BaseClass::draw( currentTime, elapsedTime );
+
+	osVector3 kControllerForce(osVector3::zero);
+	AbstractPlayer* pkPlayer = this->getPlayer();
+	if( NULL != pkPlayer )
+	{
+		const AbstractController* pkController = pkPlayer->getController();
+		if( NULL != pkController )
+		{
+			Vec3 kLocalSteeringForce = pkController->getOutputForce();
+			if( kLocalSteeringForce.length() > 0.1 )
+			{				
+				if( kLocalSteeringForce.x != 0.0f && this->maxForce() > 100 )
+				{
+					kLocalSteeringForce *= 0.1f;
+				}
+				OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
+				kControllerForce *= this->maxForce();
+
+				const Vec3 c1 = this->position();
+				const Vec3 c2 = this->position() + kControllerForce;
+				const Color color = gCyan;
+				this->annotationLine( pRenderer, c1, c2, color );
+			}
+		}
+	}
+	
+	this->annotationVelocityAcceleration (pRenderer, 5, 0);
+
+	BaseClass::draw( pRenderer, currentTime, elapsedTime );
 
 #if 0
 
@@ -221,12 +250,7 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 						kLocalSteeringForce *= 0.1f;
 					}
 					OpenSteer::localToWorldSpace( *this, kLocalSteeringForce, kControllerForce );
-					kControllerForce *= this->maxForce();
-
-					const Vec3 c1 = this->position();
-					const Vec3 c2 = this->position() + kControllerForce;
-					const Color color = gCyan;
-					this->annotationLine( c1, c2, color );
+					kControllerForce *= this->maxForce();					
 				}
 				else
 				{
@@ -276,7 +300,6 @@ void SimplePhysicsVehicle::update( const float currentTime, const float elapsedT
 		}
 
 		// annotation
-		this->annotationVelocityAcceleration (5, 0);
 		this->recordTrailVertex (currentTime, position());
 
 		if( NULL != this->m_pkProximityToken )

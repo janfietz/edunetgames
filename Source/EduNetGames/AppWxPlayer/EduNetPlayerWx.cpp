@@ -66,8 +66,8 @@ namespace EduNet
 		static EduNet::ProcessProfile kProfile;
 		OpenSteerUTData::_SDMInitApp(&kProfile);
 
-		static OpenSteer::OpenGLRenderer kRenderer;
-		OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
+		//static OpenSteer::OpenGLRenderer kRenderer;
+		//OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
 		return true;
 	}
 

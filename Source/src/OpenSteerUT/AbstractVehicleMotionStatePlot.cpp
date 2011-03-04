@@ -28,6 +28,7 @@
 
 #include "AbstractVehicleMotionStatePlot.h"
 #include "SimplePhysicsVehicle.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -198,7 +199,7 @@ namespace OpenSteer {
 	}
 
 	//-------------------------------------------------------------------------
-	void AbstractVehicleMotionStatePlot::draw( float currentTime ) const
+	void AbstractVehicleMotionStatePlot::draw( AbstractRenderer* pRenderer, float currentTime ) const
 	{
 		// draw only once
 		if( currentTime == this->m_currentTime )
@@ -215,7 +216,7 @@ namespace OpenSteer {
 		kGraphArray.push_back( &this->m_kLinearVelocity );
 		kGraphArray.push_back( &this->m_kAngularVelocity );
 		kGraphArray.push_back( &this->m_kSteeringForce );
-		kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
+		kPlot.draw( pRenderer, kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
 	}
 
 

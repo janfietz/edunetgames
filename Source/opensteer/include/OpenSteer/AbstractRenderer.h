@@ -392,7 +392,14 @@ namespace OpenSteer {
 	virtual void profileDrawGraph(float sx, float sy,
 		float x_spacing, float y_spacing, float sw, float sh) = 0;
 
+	virtual class Camera* AccessCamera() const OS_ABSTRACT;
+	virtual void SetCamera( class Camera* pCamera) OS_ABSTRACT;
+
+	virtual class AbstractPlugin* AccessPlugin() const OS_ABSTRACT;
+	virtual void SetPlugin( class AbstractPlugin* pPlugin) OS_ABSTRACT;
+
 	};
+	
 } //! namespace OpenSteer
 
 

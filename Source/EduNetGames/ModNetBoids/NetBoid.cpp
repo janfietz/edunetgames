@@ -58,10 +58,10 @@ void Boid::reset ( void )
 
 //-----------------------------------------------------------------------------
 // draw this boid into the scene
-void Boid::draw ( const float currentTime, const float elapsedTime )
+void Boid::draw ( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime )
 {
-    BaseClass::draw ( currentTime, elapsedTime );
-    drawBasic3dSphericalVehicle ( *this,
+    BaseClass::draw ( pRenderer, currentTime, elapsedTime );
+    pRenderer->drawBasic3dSphericalVehicle ( *this,
                                   ( this->isRemoteObject() ) ? gOrange : gGray70 );
     // drawTrail ();
 }
@@ -165,12 +165,12 @@ void Boid::sphericalWrapAround ( void )
         // wrap around (teleport)
         setPosition ( position().sphericalWrapAround ( Vec3::zero,
                       worldRadius ) );
-        if ( this == SimpleVehicle::getSelectedVehicle() )
+        /*if ( this == SimpleVehicle::getSelectedVehicle() )
         {
             CameraPlugin::position3dCamera
             ( *SimpleVehicle::getSelectedVehicle() );
             Camera::accessInstance().doNotSmoothNextMove ();
-        }
+        }*/
     }
 }
 
@@ -218,7 +218,7 @@ void Boid::regenerateLocalSpaceForTerrainFollowing ( const Vec3& newForward,
 // xxx perhaps this should be a call to a general purpose annotation for
 // xxx "local xxx axis aligned box in XZ plane" -- same code in in
 // xxx CaptureTheFlag.cpp
-void Boid::annotateAvoidObstacle ( const float minDistanceToCollision )
+void Boid::annotateAvoidObstacle ( AbstractRenderer* pRenderer, const float minDistanceToCollision )
 {
     const Vec3 boxSide = side() * radius();
     const Vec3 boxFront = forward() * minDistanceToCollision;
@@ -227,10 +227,10 @@ void Boid::annotateAvoidObstacle ( const float minDistanceToCollision )
     const Vec3 BR = position()            - boxSide;
     const Vec3 BL = position()            + boxSide;
     const Color white ( 1,1,1 );
-    annotationLine ( FR, FL, white );
-    annotationLine ( FL, BL, white );
-    annotationLine ( BL, BR, white );
-    annotationLine ( BR, FR, white );
+    annotationLine ( pRenderer, FR, FL, white );
+    annotationLine ( pRenderer, FL, BL, white );
+    annotationLine ( pRenderer, BL, BR, white );
+    annotationLine ( pRenderer, BR, FR, white );
 }
 //-----------------------------------------------------------------------------
 const ObstacleGroup& Boid::allObstacles ( void ) const

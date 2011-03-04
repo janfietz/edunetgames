@@ -68,7 +68,7 @@ namespace EduNet{
 
 		virtual void update (const float currentTime, const float elapsedTime);
 
-		virtual void redraw (const float currentTime, const float elapsedTime);
+		virtual void redraw (OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
 
 		virtual void close (void)
 		{

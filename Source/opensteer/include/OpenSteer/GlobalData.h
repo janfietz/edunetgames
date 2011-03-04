@@ -60,8 +60,9 @@ namespace OpenSteer {
 		static EduNet::IProfile* accessProfile( void );
 
 		static PluginRegistry* accessPluginRegistry( void );
-		static AbstractRenderer* accessRenderer( void );
-		static void setRenderer( AbstractRenderer* pkRenderer );
+		
+		/*static AbstractRenderer* accessRenderer( void );
+		static void setRenderer( AbstractRenderer* pkRenderer );*/
 
 		static bool getEnableAnnotation( void );
 		static void setEnableAnnotation( bool bValue );

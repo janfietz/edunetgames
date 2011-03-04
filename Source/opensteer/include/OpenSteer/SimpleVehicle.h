@@ -67,6 +67,7 @@
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/SteerLibrary.h"
 #include "OpenSteer/Annotation.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 
 namespace OpenSteer {
@@ -249,17 +250,19 @@ namespace OpenSteer {
 
 
         //! draw lines from vehicle's position showing its velocity and acceleration
-        void annotationVelocityAcceleration (float maxLengthA, float maxLengthV);
-        void annotationVelocityAcceleration (float maxLength)
-            {annotationVelocityAcceleration (maxLength, maxLength);}
-        void annotationVelocityAcceleration (void)
-            {annotationVelocityAcceleration (3, 3);}
+		void annotationVelocityAcceleration ( AbstractRenderer* /*pRenderer*/, 
+			float maxLengthA, float maxLengthV);
+        void annotationVelocityAcceleration (AbstractRenderer* pRenderer, float maxLength)
+            {annotationVelocityAcceleration (pRenderer, maxLength, maxLength);}
+        void annotationVelocityAcceleration (AbstractRenderer* pRenderer )
+		{annotationVelocityAcceleration (pRenderer, 3, 3);}
 
 
 		//! CP ++
 		virtual void collect3DTextAnnotation( std::ostringstream& kStream );
-
-		virtual void draw( const float /*currentTime*/, const float /*elapsedTime*/ );
+		
+		virtual void draw( class AbstractRenderer*, 
+			const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 
 		virtual void allocateProximityToken( ProximityDatabase* pkProximityDatabase );
 		virtual AbstractVehicle* cloneVehicle( void ) const { return NULL; };

@@ -46,6 +46,31 @@
 //
 //
 //-----------------------------------------------------------------------------
+// In Mac OS X these headers are located in a different directory.
+// Need to revisit conditionalization on operating system.
+
+#if __APPLE__ && __MACH__
+#include <OpenGL/gl.h>   // for Mac OS X
+#include <OpenGL/glu.h>   // for Mac OS X
+#ifndef HAVE_NO_GLUT
+#include <GLUT/glut.h>   // for Mac OS X
+#endif
+#else
+#ifdef _MSC_VER
+#include <windows.h>
+#endif
+#include <GL/gl.h>     // for Linux and Windows
+#include <GL/glu.h>     // for Linux and Windows
+#ifdef _MSC_VER
+#ifndef HAVE_NO_GLUT
+#include "GL/glut.h"   // for Windows
+#endif
+#else
+#ifndef HAVE_NO_GLUT
+#include <GL/glut.h>   // for Linux
+#endif
+#endif
+#endif
 
 #include "OpenSteer/Draw.h"
 #include "OpenSteer/AbstractPlugin.h"
@@ -1638,6 +1663,25 @@ namespace OpenSteer {
 #endif
 	}
 
+	Camera* OpenGLRenderer::AccessCamera() const 
+	{
+		return m_pCamera;
+	}
+
+	void OpenGLRenderer::SetCamera( Camera* pCamera ) 
+	{
+		m_pCamera = pCamera;
+	}
+
+	AbstractPlugin* OpenGLRenderer::AccessPlugin() const
+	{
+		return m_Plugin;
+	}
+
+	void OpenGLRenderer::SetPlugin( AbstractPlugin* m_Plugin )
+	{
+		m_Plugin = m_Plugin;
+	}
 } // namespace OpenSteer
 
 

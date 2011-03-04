@@ -32,50 +32,38 @@
 #include "OpenSteerUT/GridPlugin.h"
 
 //-----------------------------------------------------------------------------
-void NetBoidRenderOfflinePlugin::prepare(void)
+void NetBoidRenderOfflinePlugin::prepareOpen(void)
 {
-	if( this->getPluginCount() == 0 )
-	{
-		this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	}
+	
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidRenderPeerPlugin::prepare(void)
+void NetBoidRenderPeerPlugin::prepareOpen(void)
 {
-	if( this->getPluginCount() == 0 )
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	}
+	
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidMultiplePeerPlugin::prepare(void)
+void NetBoidMultiplePeerPlugin::prepareOpen(void)
 {
 	if( this->getPluginCount() == 0 )
 	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
 		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
 		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );
 	}
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidRenderClientPlugin::prepare(void)
+void NetBoidRenderClientPlugin::prepareOpen(void)
 {
-	if( this->getPluginCount() == 0 )
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	}
+	
 }
 
 //-----------------------------------------------------------------------------
-void NetBoidRenderServerPlugin::prepare(void)
+void NetBoidRenderServerPlugin::prepareOpen(void)
 {
 	if( this->getPluginCount() == 0 )
-	{
-		this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
+	{		
 		this->addPlugin( ET_NEW NetBoidPeerPlugin( false ) );		  
 	}
 }

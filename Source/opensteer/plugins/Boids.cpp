@@ -126,9 +126,9 @@ namespace {
 
 
         // draw this boid into the scene
-        void draw ( const float /*currentTime*/, const float /*elapsedTime*/ )
+		void draw ( AbstractRenderer* pRenderer, const float /*currentTime*/, const float /*elapsedTime*/ )
         {
-            drawBasic3dSphericalVehicle (*this, gGray70);
+            pRenderer->drawBasic3dSphericalVehicle (*this, gGray70);
             // drawTrail ();
         }
 
@@ -367,7 +367,7 @@ namespace {
             }
         }
 
-        void redraw (const float currentTime, const float elapsedTime)
+		void redraw (AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime)
         {
             // selected vehicle (user can mouse click to select another)
             AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
@@ -421,9 +421,9 @@ namespace {
             status << std::endl;
             const float h = drawGetWindowHeight ();
             const Vec3 screenLocation (10, h-50, 0);
-            draw2dTextAt2dLocation (status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
+            pRenderer->draw2dTextAt2dLocation (status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight());
 
-            drawObstacles ();
+            drawObstacles (pRenderer);
         }
 
         void close (void)
@@ -711,22 +711,25 @@ namespace {
         }
 
 
-        void drawObstacles (void)
+		void drawObstacles (AbstractRenderer* pRenderer)
         {
+			Camera* pCam(pRenderer->AccessCamera());
+			Vec3 kPos = pCam ? pCam->position() : Vec3::zero;
+
             for (ObstacleIterator o = Boid::obstacles.begin();
                  o != Boid::obstacles.end();
                  o++)
             {
-                (**o).draw (false, // draw in wireframe
+                (**o).draw (pRenderer, false, // draw in wireframe
                             ((*o == &insideBigSphere) ?
                              Color (0.2f, 0.2f, 0.4f) :
                              Color (0.1f, 0.1f, 0.2f)),
-                            Camera::accessInstance().position ());
+                          kPos);
             }
         }
 
 
-        static void tempDrawRectangle (const RectangleObstacle& rect, const Color& color)
+        static void tempDrawRectangle (AbstractRenderer* pRenderer, const RectangleObstacle& rect, const Color& color)
         {
             float w = rect.width / 2;
             float h = rect.height / 2;
@@ -736,14 +739,14 @@ namespace {
             Vec3 v3 = rect.globalizePosition (Vec3 (-w, -h, 0));
             Vec3 v4 = rect.globalizePosition (Vec3 ( w, -h, 0));
 
-            drawLine (v1, v2, color);
-            drawLine (v2, v3, color);
-            drawLine (v3, v4, color);
-            drawLine (v4, v1, color);
+            pRenderer->pRenderer->drawLine (v1, v2, color);
+            pRenderer->drawLine (v2, v3, color);
+            pRenderer->drawLine (v3, v4, color);
+            pRenderer->drawLine (v4, v1, color);
         }
 
 
-        static void tempDrawBox (const BoxObstacle& box, const Color& color)
+        static void tempDrawBox (AbstractRenderer* pRenderer, const BoxObstacle& box, const Color& color)
         {
             const float w = box.width / 2;
             const float h = box.height / 2;
@@ -763,20 +766,20 @@ namespace {
             const Vec3 v7 = box.globalizePosition (Vec3 (-w, -h, -d));
             const Vec3 v8 = box.globalizePosition (Vec3 ( w, -h, -d));
 
-            drawLine (v1, v2, color);
-            drawLine (v2, v3, color);
-            drawLine (v3, v4, color);
-            drawLine (v4, v1, color);
+            pRenderer->drawLine (v1, v2, color);
+            pRenderer->drawLine (v2, v3, color);
+            pRenderer->drawLine (v3, v4, color);
+            pRenderer->drawLine (v4, v1, color);
 
-            drawLine (v5, v6, color);
-            drawLine (v6, v7, color);
-            drawLine (v7, v8, color);
-            drawLine (v8, v5, color);
+            pRenderer->drawLine (v5, v6, color);
+            pRenderer->drawLine (v6, v7, color);
+            pRenderer->drawLine (v7, v8, color);
+            pRenderer->drawLine (v8, v5, color);
 
-            drawLine (v1, v5, color);
-            drawLine (v2, v6, color);
-            drawLine (v3, v7, color);
-            drawLine (v4, v8, color);
+            pRenderer->drawLine (v1, v5, color);
+            pRenderer->drawLine (v2, v6, color);
+            pRenderer->drawLine (v3, v7, color);
+            pRenderer->drawLine (v4, v8, color);
         }
     };
 

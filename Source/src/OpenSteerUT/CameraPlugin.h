@@ -38,8 +38,7 @@ namespace OpenSteer
 	{
 		ET_DECLARE_BASE(OpenSteer::Plugin)
 	public:
-		CameraPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry),
-			m_kGridCenter( osVector3::zero )
+		CameraPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry)
 		{};
 
 		OS_IMPLEMENT_CLASSNAME( CameraPlugin )
@@ -47,46 +46,46 @@ namespace OpenSteer
 		// OpenSteer::Plugin interface
 		virtual void initGui( void* pkUserdata );
 		// required methods:
-		const char* name (void) const {return this->getClassName();}
-		void open (void) { }
-		void update (const float currentTime, const float elapsedTime) { }
-		void redraw (const float currentTime, const float elapsedTime);
-		void close (void) { }
-		const AVGroup& allVehicles (void) const { return m_kVehicles; }
-		AVGroup& allVehicles (void) { return m_kVehicles; }
+		virtual const char* name (void) const {return this->getClassName();}
+		virtual void open (void);
+		virtual void update (const float currentTime, const float elapsedTime);
+		virtual void redraw ( AbstractRenderer* pRenderer,
+			const float currentTime, const float elapsedTime) OS_OVERRIDE;
+		virtual void close (void) { }
+
+		const AVGroup& allVehicles (void) const {return m_kVehicles;}
+		AVGroup& allVehicles (void) {return m_kVehicles;}
 
 		// optional methods (see comments in AbstractPlugin for explanation):
 		void reset (void) { } // default is to reset by doing close-then-open
 		float selectionOrderSortKey (void) const {return 1000000;}
 		bool requestInitialSelection (void) const {return false;}
-		void handleFunctionKeys (int keyNumber) { } // fkeys reserved for Plugins
-		void printMiniHelpForFunctionKeys (void) { } // if fkeys are used
-
+		
 		// ------------------------------------------------------- camera utilities
 		// set a certain initial camera state used by several plug-ins
-		static void init2dCamera (AbstractLocalSpace& selected);
-		static void init2dCamera (AbstractLocalSpace& selected,
+		void init2dCamera (AbstractLocalSpace& selected);
+		void init2dCamera (AbstractLocalSpace& selected,
 			float distance,
 			float elevation);
-		static void init3dCamera (AbstractLocalSpace& selected);
-		static void init3dCamera (AbstractLocalSpace& selected,
+		void init3dCamera (AbstractLocalSpace& selected);
+		void init3dCamera (AbstractLocalSpace& selected,
 			float distance,
 			float elevation);
 
 		// set initial position of camera based on a vehicle
-		static void position3dCamera (AbstractLocalSpace& selected);
-		static void position3dCamera (AbstractLocalSpace& selected,
+		void position3dCamera (AbstractLocalSpace& selected);
+		void position3dCamera (AbstractLocalSpace& selected,
 			float distance,
 			float elevation);
-		static void position2dCamera (AbstractLocalSpace& selected);
-		static void position2dCamera (AbstractLocalSpace& selected,
+		void position2dCamera (AbstractLocalSpace& selected);
+		void position2dCamera (AbstractLocalSpace& selected,
 			float distance,
 			float elevation);
 
 		// camera updating utility used by several (all?) plug-ins
-		static void updateCamera (const float currentTime,
-			const float elapsedTime,
-			const AbstractLocalSpace& selected);
+		void setCameraTarget ( const AbstractLocalSpace* selected );
+
+		Camera& accessCamera() const { return m_Camera; }
 
 		// some camera-related default constants
 		static const float camera2dElevation;
@@ -94,8 +93,10 @@ namespace OpenSteer
 		static const Vec3 cameraTargetOffset;
 
 	private:
-		AVGroup m_kVehicles;
-		osVector3 m_kGridCenter;
+			
+		mutable Camera m_Camera;
+		AVGroup m_kVehicles; // for allVehicles
+
 		ET_IMPLEMENT_CLASS_NO_COPY(CameraPlugin)
 
 	};

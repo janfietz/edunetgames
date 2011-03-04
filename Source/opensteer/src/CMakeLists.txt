@@ -39,6 +39,7 @@ SET(OPENTSTEER_LIB_HDRS
  ../include/OpenSteer/AbstractPlayer.h
  ../include/OpenSteer/AbstractPlugin.h
  ../include/OpenSteer/AbstractRenderer.h
+ ../include/OpenSteer/AbstractRenderable.h
  ../include/OpenSteer/AbstractState.h
  ../include/OpenSteer/AbstractUpdated.h
  ../include/OpenSteer/AbstractVehicle.h

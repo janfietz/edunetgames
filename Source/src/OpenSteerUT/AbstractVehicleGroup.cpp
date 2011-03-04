@@ -111,13 +111,15 @@ void AbstractVehicleGroup::update( const float currentTime, const float elapsedT
 }
 
 //-----------------------------------------------------------------------------
-void AbstractVehicleGroup::redraw (const float currentTime, const float elapsedTime)
+void AbstractVehicleGroup::redraw (AbstractRenderer* pRenderer,
+	const float currentTime, 
+	const float elapsedTime)
 {
 	AVIterator iter = m_kVehicles.begin();
 	AVIterator last = m_kVehicles.end();
 	while( iter != last )
 	{
-		(*iter)->draw( currentTime, elapsedTime );
+		(*iter)->draw( pRenderer, currentTime, elapsedTime );
 		++iter;
 	}
 }
