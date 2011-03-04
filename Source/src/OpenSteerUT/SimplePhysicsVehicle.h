@@ -73,7 +73,9 @@ namespace OpenSteer
 			return this->m_kSteeringForceUpdate;
 		}
 
-		virtual void draw( const float currentTime, const float elapsedTime );
+		virtual void draw( class AbstractRenderer*, 
+					const float currentTime, const float elapsedTime ) OS_OVERRIDE;
+
 		virtual void update (const float currentTime, const float elapsedTime);
 
 		float getUpdateTickTime( void ) const;

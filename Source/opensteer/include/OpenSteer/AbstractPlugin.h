@@ -71,12 +71,12 @@ FooPlugin gFooPlugin;
 */
 //-----------------------------------------------------------------------------
 
-#include <iostream>
+
 #include "OpenSteer/Entity.h"
 #include "OpenSteer/AbstractVehicle.h"
 #include "OpenSteer/AbstractPlayer.h"
 #include "OpenSteer/Obstacle.h"
-
+#include "OpenSteer/AbstractRenderer.h"
 
 
 //-----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ namespace OpenSteer {
         virtual void open (void) OS_ABSTRACT;
 // see AbstractUpdated
 //       virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
-        virtual void redraw (const float currentTime, const float elapsedTime) OS_ABSTRACT;
+		virtual void redraw ( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime) OS_ABSTRACT;
         virtual void close (void) OS_ABSTRACT;
         virtual void reset (void) OS_ABSTRACT;
 
@@ -163,15 +163,7 @@ namespace OpenSteer {
 		virtual AbstractEntity* createEntity( EntityClassId ) const OS_ABSTRACT;
 
 		//! implement to create a vehicle of the specified class
-		virtual AbstractVehicle* createVehicle( EntityClassId ) const OS_ABSTRACT;
-
-		//! format instance to characters for printing to stream
-		friend std::ostream& operator<< (std::ostream& os, AbstractPlugin& pi)
-		{
-			os << "<Plugin " << '"' << pi.pluginName() << '"' << ">";
-			return os;
-		}
-	
+		virtual AbstractVehicle* createVehicle( EntityClassId ) const OS_ABSTRACT;	
 	};
 
 } //! namespace OpenSteer    

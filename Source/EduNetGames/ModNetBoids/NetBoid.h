@@ -33,7 +33,7 @@ namespace OpenSteer{
 		OS_IMPLEMENT_CLASSNAME( Boid )
 
 		void reset (void);
-		virtual void draw( const float currentTime, const float elapsedTime );
+		virtual void draw( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 		virtual osVector3 determineCombinedSteering( const float elapsedTime );
 		void update (const float currentTime, const float elapsedTime);
 		Vec3 steerToFlock (void);
@@ -42,7 +42,7 @@ namespace OpenSteer{
 			const float elapsedTime );
 		void regenerateLocalSpaceForTerrainFollowing (const Vec3& newForward,
 			const float /* elapsedTime */);
-		void annotateAvoidObstacle (const float minDistanceToCollision);
+		void annotateAvoidObstacle (AbstractRenderer* pRenderer, const float minDistanceToCollision);
 
 		virtual AbstractVehicle* cloneVehicle( void ) const;
 

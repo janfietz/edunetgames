@@ -66,7 +66,7 @@ public:
 	void addVehicleToPlugin( AbstractVehicle* pkVehicle, AbstractPlugin* pkPlugin );
 	void removeVehicleFromPlugin( const AbstractVehicle* pkVehicle );
 
-	void redraw (const float currentTime, const float elapsedTime);
+	void redraw ( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
 	void reset( void );
 	void allocateProximityToken( ProximityDatabase* pd );
 

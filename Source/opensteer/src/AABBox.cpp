@@ -29,8 +29,6 @@
 #include "OpenSteer/AABBox.h"
 #include "OpenSteer/AbstractVehicle.h"
 
-#include "OpenSteer/Renderer.h"
-
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
@@ -138,27 +136,27 @@ namespace OpenSteer {
 		return this->insideXZ( position );
 	}
 
-	void AABBox::draw( const OpenSteer::Color& color ) const 
+	void AABBox::draw( OpenSteer::AbstractRenderer* pRenderer, const OpenSteer::Color& color ) const 
 	{
 		Vec3 b,c;
 		b = Vec3( m_min.x, 0, m_max.z);
 		c = Vec3( m_max.x, 0, m_min.z);
-		drawLineAlpha(m_min, b, color, 1.0f);
-		drawLineAlpha(b, m_max, color, 1.0f);
-		drawLineAlpha(m_max, c, color, 1.0f);
-		drawLineAlpha(c,m_min, color, 1.0f);
+		pRenderer->drawLineAlpha(m_min, b, color, 1.0f);
+		pRenderer->drawLineAlpha(b, m_max, color, 1.0f);
+		pRenderer->drawLineAlpha(m_max, c, color, 1.0f);
+		pRenderer->drawLineAlpha(c,m_min, color, 1.0f);
 	}
 
-	void AABBox::draw( void ) const 
+	void AABBox::draw( OpenSteer::AbstractRenderer* pRenderer ) const 
 	{
 		Vec3 b,c;
 		b = Vec3( m_min.x, 0, m_max.z);
 		c = Vec3( m_max.x, 0, m_min.z);
 		Color color(1.0f,1.0f,0.0f);
-		drawLineAlpha(m_min, b, color, 1.0f);
-		drawLineAlpha(b, m_max, color, 1.0f);
-		drawLineAlpha(m_max, c, color, 1.0f);
-		drawLineAlpha(c,m_min, color, 1.0f);
+		pRenderer->drawLineAlpha(m_min, b, color, 1.0f);
+		pRenderer->drawLineAlpha(b, m_max, color, 1.0f);
+		pRenderer->drawLineAlpha(m_max, c, color, 1.0f);
+		pRenderer->drawLineAlpha(c,m_min, color, 1.0f);
 	}
 
 } //! namespace OpenSteer    

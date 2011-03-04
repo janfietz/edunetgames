@@ -45,23 +45,21 @@
 
 
 #include "OpenSteer/LocalSpace.h"
-#include "OpenSteer/AbstractLocalSpace.h"
-
 
 //-----------------------------------------------------------------------------
 
-
 namespace OpenSteer {
-
-    class Camera : public LocalSpace
+	
+    class Camera : public RenderableLocalSpace
     {
     public:
-
-		static Camera& accessInstance( void );
 
         //! constructor
         Camera ();
         virtual ~Camera() { /* Nothing to do? */ }
+
+		virtual void draw( AbstractRenderer* /*pRenderer*/, 
+			const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 
         //! reset all camera state to default values
         void reset (void);
@@ -70,8 +68,8 @@ namespace OpenSteer {
         Vec3 target;
 
         //! vehicle being tracked
-		static void setLocalSpaceToTrack( const AbstractLocalSpace* localSpace );
-		static const AbstractLocalSpace* getLocalSpaceToTrack( void );
+		void setLocalSpaceToTrack( const AbstractLocalSpace* localSpace );
+		const AbstractLocalSpace* getLocalSpaceToTrack( void );
 
         //! aim at predicted position of vehicleToTrack, this far into thefuture
         float aimLeadTime;
@@ -180,9 +178,8 @@ namespace OpenSteer {
         //! "offset POV" camera mode parameters
         Vec3 povOffset;
 
-		static void updateCamera ( const float currentTime,
-			const float elapsedTime,
-			const AbstractLocalSpace& selected, const bool simulationPaused );
+		private:
+			const AbstractLocalSpace* m_plocalSpace;
 
     };
 

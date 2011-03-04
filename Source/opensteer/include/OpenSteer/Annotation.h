@@ -44,10 +44,7 @@
 
 #ifndef OPENSTEER_ANNOTATION_H
 #define OPENSTEER_ANNOTATION_H
-
-#ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
-#include "OpenSteer/Renderer.h"
-#endif //! NOT_OPENSTEERDEMO
+#include "OpenSteer/AbstractRenderer.h"
 #include "OpenSteer/Vec3.h"
 #include "OpenSteer/Color.h"
 #include <sstream>
@@ -96,8 +93,11 @@ namespace OpenSteer {
         void recordTrailVertex (const float currentTime, const Vec3& position);
 
         //! draw the trail as a dotted line, fading away with age
-        void drawTrail (void) {drawTrail (grayColor (0.7f), gWhite);}
-        void drawTrail (const Color& trailColor, const Color& tickColor);
+		void drawTrail ( AbstractRenderer* pRenderer) 
+		{
+			drawTrail (pRenderer, grayColor (0.7f), gWhite);
+		}
+		void drawTrail ( AbstractRenderer* pRenderer, const Color& trailColor, const Color& tickColor);
 
         //! set trail parameters: the amount of time it represents and the
         //! number of samples along its length.  re-allocates internal buffers.
@@ -119,49 +119,54 @@ namespace OpenSteer {
         //!       "segments" is the number of line segments used to draw the circle
 
         //! draw an opaque colored line segment between two locations in space
-        void annotationLine (const Vec3& startPoint,
-                             const Vec3& endPoint,
-                             const Color& color) const;
+		void annotationLine (AbstractRenderer* pRenderer,
+							const Vec3& startPoint,
+                            const Vec3& endPoint,
+                            const Color& color) const;
 
         //! draw a circle on the XZ plane
-        void annotationXZCircle (const float radius,
+        void annotationXZCircle (AbstractRenderer* pRenderer,
+			const float radius,
                                  const Vec3& center,
                                  const Color& color,
                                  const int segments) const
         {
-            annotationXZCircleOrDisk (radius, center, color, segments, false);
+            annotationXZCircleOrDisk (pRenderer,radius, center, color, segments, false);
         }
 
 
         //! draw a disk on the XZ plane
-        void annotationXZDisk (const float radius,
+        void annotationXZDisk (AbstractRenderer* pRenderer,
+			const float radius,
                                const Vec3& center,
                                const Color& color,
                                const int segments) const
         {
-            annotationXZCircleOrDisk (radius, center, color, segments, true);
+            annotationXZCircleOrDisk (pRenderer,radius, center, color, segments, true);
         }
 
 
         //! draw a circle perpendicular to the given axis
-        void annotation3dCircle (const float radius,
+        void annotation3dCircle (AbstractRenderer* pRenderer,
+			const float radius,
                                  const Vec3& center,
                                  const Vec3& axis,
                                  const Color& color,
                                  const int segments) const
         {
-            annotation3dCircleOrDisk (radius, center, axis, color, segments, false);
+            annotation3dCircleOrDisk (pRenderer,radius, center, axis, color, segments, false);
         }
 
 
         //! draw a disk perpendicular to the given axis
-        void annotation3dDisk (const float radius,
+        void annotation3dDisk (AbstractRenderer* pRenderer,
+			const float radius,
                                const Vec3& center,
                                const Vec3& axis,
                                const Color& color,
                                const int segments) const
         {
-            annotation3dCircleOrDisk (radius, center, axis, color, segments, true);
+            annotation3dCircleOrDisk (pRenderer,radius, center, axis, color, segments, true);
         }
 
         //
@@ -169,13 +174,14 @@ namespace OpenSteer {
         //-------------------------------------------------------------------------
         //! support for annotation circles
 
-        void annotationXZCircleOrDisk (const float radius,
+        void annotationXZCircleOrDisk (AbstractRenderer* pRenderer,
+			const float radius,
                                        const Vec3& center,
                                        const Color& color,
                                        const int segments,
                                        const bool filled) const
         {
-            annotationCircleOrDisk (radius,
+            annotationCircleOrDisk (pRenderer,radius,
                                     Vec3::zero,
                                     center,
                                     color,
@@ -185,14 +191,15 @@ namespace OpenSteer {
         }
 
 
-        void annotation3dCircleOrDisk (const float radius,
+        void annotation3dCircleOrDisk (AbstractRenderer* pRenderer,
+			const float radius,
                                        const Vec3& center,
                                        const Vec3& axis,
                                        const Color& color,
                                        const int segments,
                                        const bool filled) const
         {
-            annotationCircleOrDisk (radius,
+            annotationCircleOrDisk (pRenderer,radius,
                                     axis,
                                     center,
                                     color,
@@ -201,7 +208,8 @@ namespace OpenSteer {
                                     true); //! "in3d"
         }
 
-        void annotationCircleOrDisk (const float radius,
+        void annotationCircleOrDisk (AbstractRenderer* pRenderer,
+			const float radius,
                                      const Vec3& axis,
                                      const Vec3& center,
                                      const Color& color,
@@ -347,7 +355,8 @@ OpenSteer::AnnotationMixin<Super>::recordTrailVertex (const float currentTime,
 //! draw the trail as a dotted line, fading away with age
 template<class Super>
 void 
-OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
+OpenSteer::AnnotationMixin<Super>::drawTrail (AbstractRenderer* pRenderer, 
+											  const Color& trailColor,
                                               const Color& tickColor)
 {
     if ( this->isAnnotated() )
@@ -369,7 +378,7 @@ OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
                 if (j == 0)
                 {
                     //! draw segment from current position to first trail point
-                    drawLineAlpha (curPosition,
+                    pRenderer->drawLineAlpha (curPosition,
                                    trailVertices [index],
                                    color,
                                    1);
@@ -380,7 +389,7 @@ OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
                     const float minO = 0.05f; //! minimum opacity
                     const float fraction = (float) j / trailVertexCount;
                     const float opacity = (fraction * (1 - minO)) + minO;
-                    drawLineAlpha (trailVertices [index],
+                    pRenderer->drawLineAlpha (trailVertices [index],
                                    trailVertices [next],
                                    color,
                                    opacity);
@@ -403,7 +412,8 @@ OpenSteer::AnnotationMixin<Super>::drawTrail (const Color& trailColor,
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
 template<class Super>
 void 
-OpenSteer::AnnotationMixin<Super>::annotationLine (const Vec3& startPoint,
+OpenSteer::AnnotationMixin<Super>::annotationLine (AbstractRenderer* pRenderer,
+												   const Vec3& startPoint,
                                                    const Vec3& endPoint,
                                                    const Color& color) const
 {
@@ -411,11 +421,11 @@ OpenSteer::AnnotationMixin<Super>::annotationLine (const Vec3& startPoint,
     {
         if (drawPhaseActive())
         {
-            drawLine (startPoint, endPoint, color);
+           pRenderer->drawLine (startPoint, endPoint, color);
         }
         else
         {
-            deferredDrawLine (startPoint, endPoint, color);
+            pRenderer->deferredDrawLine (startPoint, endPoint, color);
         }
     }
 }
@@ -436,7 +446,8 @@ template<class Super> void OpenSteer::AnnotationMixin<Super>::annotationLine
 #ifndef NOT_OPENSTEERDEMO  //! only when building OpenSteerDemo
 template<class Super>
 void 
-OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (const float radius,
+OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (AbstractRenderer* pRenderer,
+															const float radius,
                                                            const Vec3& axis,
                                                            const Vec3& center,
                                                            const Color& color,
@@ -448,12 +459,12 @@ OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (const float radius,
     {
         if (drawPhaseActive())
         {
-            drawCircleOrDisk (radius, axis, center, color,
+            pRenderer->drawCircleOrDisk (radius, axis, center, color,
                               segments, filled, in3d);
         }
         else
         {
-            deferredDrawCircleOrDisk (radius, axis, center, color,
+            pRenderer->deferredDrawCircleOrDisk (radius, axis, center, color,
                                       segments, filled, in3d);
         }
     }

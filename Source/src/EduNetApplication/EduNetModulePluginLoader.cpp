@@ -93,7 +93,7 @@ namespace EduNet
 			while ( kNameIterEnd != kNameIter )
 			{
 				const char* pszPluginName = ( *kNameIter ).c_str();
-				AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
+				OpenSteer::AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
 				if ( NULL != pkPlugin )
 				{
 					this->m_plugins.addPlugin ( pkPlugin );

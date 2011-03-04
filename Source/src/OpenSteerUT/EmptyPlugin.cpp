@@ -30,8 +30,7 @@
 
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetProfile/GraphPlot.h"
-#include "OpenSteerUT/CameraPlugin.h"
-#include "OpenSteerUT/GridPlugin.h"
+
 
 #include <math.h>
 
@@ -58,13 +57,28 @@ void EmptyPlugin::open (void)
 	SimpleVehicle::setSelectedVehicle( &m_kVehicle );
 	m_kVehicles.push_back( &m_kVehicle );
 
+	m_pCamera = ET_NEW OpenSteer::CameraPlugin();
+	addPlugin( m_pCamera );
+	
+	m_pGrid = ET_NEW OpenSteer::GridPlugin();
+	addPlugin( m_pGrid );
+
 	// initialize camera
-	CameraPlugin::init2dCamera( *SimpleVehicle::getSelectedVehicle() );
-	Camera::accessInstance().setPosition (
+	m_pCamera->init2dCamera( m_kVehicle );
+	
+	Camera& cam = m_pCamera->accessCamera();
+	cam.setPosition (
 		10,
 		CameraPlugin::camera2dElevation,
 		10);
-	Camera::accessInstance().fixedPosition.set( 40, 40, 40 );
+	cam.fixedPosition.set( 40, 40, 40 );
+}
+//-----------------------------------------------------------------------------
+void EmptyPlugin::close (void)
+{
+	m_pCamera = NULL;
+	m_pGrid = NULL;
+	removeAllPlugins();	
 }
 
 //-----------------------------------------------------------------------------
@@ -80,30 +94,32 @@ void EmptyPlugin::update (const float currentTime, const float elapsedTime)
 	{
 		return;
 	}
-	if( OpenSteer::SimpleVehicle::getSelectedVehicle() != NULL )
+
+	AbstractVehicle* pVehicle = SimpleVehicle::getSelectedVehicle();
+	if( pVehicle != NULL )
 	{
 		// update motion state plot
-		this->m_kMotionStateProfile.recordUpdate( OpenSteer::SimpleVehicle::getSelectedVehicle(), currentTime, elapsedTime );
+		this->m_kMotionStateProfile.recordUpdate( pVehicle, currentTime, elapsedTime );
+
+		m_pCamera->setCameraTarget( pVehicle );
+		m_pGrid->setGridCenter( pVehicle->position() );
 	}
+
+	BaseClass::update( currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
-void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
+void EmptyPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime, const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
-	if( NULL != SimpleVehicle::getSelectedVehicle() )
-	{
-		// update camera, tracking test vehicle
-		CameraPlugin::updateCamera (currentTime, elapsedTime, *SimpleVehicle::getSelectedVehicle() );
-		// draw "ground plane"
-		GridPlugin::gridUtility( SimpleVehicle::getSelectedVehicle()->position() );
-	}
+	BaseClass::redraw(pRenderer, currentTime, elapsedTime);	
 
 	AbstractVehicleGroup kVehicles( m_kVehicles );
-	kVehicles.redraw( currentTime, elapsedTime );
+	kVehicles.redraw(pRenderer, currentTime, elapsedTime );
 
 	if( 0 != this->m_bShowSamplePlot )
 	{
@@ -122,7 +138,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 				fX += 0.10f;
 			}
 			Profile::GraphPlot kPlot;
-			kPlot.draw( kValues, 50, 175, 300, fGraphHeight );
+			kPlot.draw( pRenderer, kValues, 50, 175, 300, fGraphHeight );
 		}
 
 		// draw a test graph
@@ -154,7 +170,7 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 				}
 			}
 			Profile::GraphPlot kPlot;
-			kPlot.draw( kValuesArray, 50, 175 + fGraphHeight + 20, 300, fGraphHeight );
+			kPlot.draw( pRenderer, kValuesArray, 50, 175 + fGraphHeight + 20, 300, fGraphHeight );
 		}
 	}
 	if( 0 != this->m_bShowMotionStatePlot )
@@ -162,9 +178,9 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw motion state plot
 		if( NULL != SimpleVehicle::getSelectedVehicle() )
 		{
-			this->m_kMotionStateProfile.draw( currentTime );
+			this->m_kMotionStateProfile.draw( pRenderer, currentTime );
 		}
 	}
-
+	
 }
 

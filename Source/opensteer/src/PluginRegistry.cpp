@@ -195,8 +195,7 @@ namespace OpenSteer {
 			this->getSelectedPlugin()->close();
 		}
 
-		// reset camera and selected vehicle
-		OpenSteer::Camera::accessInstance().reset ();
+		// selected vehicle		
 		SimpleVehicle::setSelectedVehicle( NULL );
 
 		this->setSelectedPlugin( pkPlugin );
@@ -265,8 +264,7 @@ namespace OpenSteer {
 		{
 			return;
 		}
-		// reset camera and selected vehicle
-		OpenSteer::Camera::accessInstance().reset ();
+		// selected vehicle
 		SimpleVehicle::setSelectedVehicle( NULL );
 
 		this->getSelectedPlugin()->reset ();

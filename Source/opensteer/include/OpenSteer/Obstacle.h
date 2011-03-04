@@ -97,7 +97,7 @@ namespace OpenSteer {
 
         //! virtual function for drawing -- normally does nothing, can be
         //! specialized by derived types to provide graphics for obstacles
-        virtual void draw (const bool filled,
+        virtual void draw (AbstractRenderer* pRenderer, const bool filled,
                            const Color& color,
                            const Vec3& viewpoint)
             const
@@ -149,7 +149,7 @@ namespace OpenSteer {
                                                 PathIntersection& next);
 
         //! default do-nothing draw function (derived class can overload this)
-        void draw (const bool, const Color&, const Vec3&) const {}
+        virtual void draw ( AbstractRenderer* pRenderer, const bool, const Color&, const Vec3&) const {}
 
         seenFromState seenFrom (void) const {return _seenFrom;}
         void setSeenFrom (seenFromState s) {_seenFrom = s;}

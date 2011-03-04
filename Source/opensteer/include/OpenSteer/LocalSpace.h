@@ -63,7 +63,9 @@
 //-----------------------------------------------------------------------------
 
 #include "OpenSteer/AbstractLocalSpace.h"
+#include "OpenSteer/AbstractRenderable.h"
 #include "OpenSteer/Entity.h"
+
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -520,6 +522,8 @@ namespace OpenSteer {
 	//! Concrete LocalSpace class, and a global constant for the identity transform
 	typedef LocalSpaceMixin<AbstractLocalSpace> LocalSpace;
 	const LocalSpace gGlobalSpace;
+
+	typedef AbstractRenderMixin<LocalSpace> RenderableLocalSpace;
 
 	//-------------------------------------------------------------------------
 	//! Concrete EntityLocalSpace class, and a global constant for the identity transform

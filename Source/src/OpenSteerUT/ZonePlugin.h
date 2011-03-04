@@ -30,6 +30,7 @@
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
 #include "OpenSteer/AABBox.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 namespace OpenSteer
 {
@@ -49,7 +50,8 @@ namespace OpenSteer
 		virtual void prepareOpen (void);
 		virtual void open( void );
 		virtual void update( const float currentTime, const float elapsedTime );
-		virtual void redraw( const float currentTime, const float elapsedTime );
+		virtual void redraw( OpenSteer::AbstractRenderer* pRenderer,
+			const float currentTime, const float elapsedTime );
 		virtual void close( void );
 		virtual const AVGroup& allVehicles( void ) const { return m_kVehicles; }
 		virtual AVGroup& allVehicles( void ) { return m_kVehicles; }
@@ -116,7 +118,7 @@ namespace OpenSteer
 			kCheckZoneExtent.z += this->m_fBorderWidth;
 			this->m_kZoneAABBox.initializeWithCenterAndExtent( this->position(), kCheckZoneExtent );
 		}
-		void zoneUtility( void );
+		void zoneUtility( OpenSteer::AbstractRenderer* pRenderer );
 		void addSubZones( void );
 
 		osColor m_kBorderColor;
@@ -128,6 +130,7 @@ namespace OpenSteer
 		osVector3 m_kZoneExtent;
 
 		OpenSteer::AABBox m_kZoneAABBox;
+		OpenSteer::CameraPlugin* m_pCameraPlugin;
 
 		ET_IMPLEMENT_CLASS_NO_COPY(ZonePlugin)
 

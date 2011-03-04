@@ -75,11 +75,11 @@ const OpenSteer::Vec3 CameraPlugin::cameraTargetOffset( Vec3::up * CameraPlugin:
 //-----------------------------------------------------------------------------
 void CameraPlugin::initGui( void* pkUserdata )
 {
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	GLUI_Spinner* lookdownDistanceSpinner =
-		glui->add_spinner_to_panel( pluginPanel, "Look Down Distance", GLUI_SPINNER_FLOAT, &Camera::accessInstance().lookdownDistance);
-	lookdownDistanceSpinner->set_float_limits(0.1f, 50.0f);
+	//GLUI* glui = ::getRootGLUI();
+	//GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+	//GLUI_Spinner* lookdownDistanceSpinner =
+	//	glui->add_spinner_to_panel( pluginPanel, "Look Down Distance", GLUI_SPINNER_FLOAT, &m_Camera.lookdownDistance);
+	//lookdownDistanceSpinner->set_float_limits(0.1f, 50.0f);
 }
 
 
@@ -97,17 +97,17 @@ CameraPlugin::init3dCamera (AbstractLocalSpace& selected,
 										float distance,
 										float elevation)
 {
-	CameraPlugin::position3dCamera (selected, distance, elevation);
-	OpenSteer::Camera::accessInstance().fixedDistDistance = distance;
-	OpenSteer::Camera::accessInstance().fixedDistVOffset = elevation;
-	OpenSteer::Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+	position3dCamera (selected, distance, elevation);
+	m_Camera.fixedDistDistance = distance;
+	m_Camera.fixedDistVOffset = elevation;
+	m_Camera.mode = Camera::cmFixedDistanceOffset;
 }
 
 //-----------------------------------------------------------------------------
 void 
 CameraPlugin::init2dCamera( AbstractLocalSpace& selected )
 {
-	CameraPlugin::init2dCamera( selected, cameraTargetDistance, camera2dElevation );
+	init2dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -116,17 +116,17 @@ CameraPlugin::init2dCamera( AbstractLocalSpace& selected,
 										float distance,
 										float elevation )
 {
-	CameraPlugin::position2dCamera (selected, distance, elevation);
-	OpenSteer::Camera::accessInstance().fixedDistDistance = distance;
-	OpenSteer::Camera::accessInstance().fixedDistVOffset = elevation;
-	OpenSteer::Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+	position2dCamera (selected, distance, elevation);
+	m_Camera.fixedDistDistance = distance;
+	m_Camera.fixedDistVOffset = elevation;
+	m_Camera.mode = Camera::cmFixedDistanceOffset;
 }
 
 //-----------------------------------------------------------------------------
 void 
 CameraPlugin::position3dCamera( AbstractLocalSpace& selected )
 {
-	CameraPlugin::position3dCamera( selected, cameraTargetDistance, camera2dElevation );
+	position3dCamera( selected, cameraTargetDistance, camera2dElevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -135,38 +135,31 @@ CameraPlugin::position3dCamera( AbstractLocalSpace& selected,
 											float distance,
 											float /*elevation*/ )
 {
-	// note: the camera has no right to select a vehicle !
-	// SimpleVehicle::setSelectedVehicle( &selected );
 	if (&selected)
 	{
-		Vec3 direction = selected.position() - Camera::accessInstance().position();
+		Vec3 direction = selected.position() - m_Camera.position();
 		float fDirection = direction.length();
 		if( fDirection > 0 )
 		{
 			direction /= fDirection;
-			Camera::accessInstance().setForward( direction );
-			Camera::accessInstance().regenerateOrthonormalBasisUF( Camera::accessInstance().forward() );
+			m_Camera.setForward( direction );
+			m_Camera.regenerateOrthonormalBasisUF( m_Camera.forward() );
 		}
 
 		const Vec3 behind = selected.forward() * -distance;
-		OpenSteer::Camera::accessInstance().setPosition (selected.position() + behind);
-		OpenSteer::Camera::accessInstance().target = selected.position();
+		m_Camera.setPosition (selected.position() + behind);
+		m_Camera.target = selected.position();
 	}
 	else
 	{
 		Vec3 forward = -Vec3::up + Vec3::forward;
 		forward = forward.normalized();
 		const Vec3 behind = forward * -distance;
-		OpenSteer::Camera::accessInstance().setPosition( behind );
-		OpenSteer::Camera::accessInstance().target = Vec3::zero;
+		m_Camera.setPosition( behind );
+		m_Camera.target = Vec3::zero;
 	}
 
-	Camera::accessInstance().doNotSmoothNextMove ();
-
-	if (&selected)
-	{
-		CameraPlugin::updateCamera( 0, 0, selected );
-	}
+	m_Camera.doNotSmoothNextMove ();	
 }
 
 //-----------------------------------------------------------------------------
@@ -177,13 +170,13 @@ CameraPlugin::position2dCamera( AbstractLocalSpace& selected )
 	float elevation = camera2dElevation;
 	if( &selected )
 	{
-		Vec3 dir = selected.position() - OpenSteer::Camera::accessInstance().position();
+		Vec3 dir = selected.position() - m_Camera.position();
 		if( dir.length() > 0 )
 		{
 			distance = ::etMin( distance, dir.length() );
 		}
 	}
-	CameraPlugin::position2dCamera( selected, distance, elevation );
+	position2dCamera( selected, distance, elevation );
 }
 
 //-----------------------------------------------------------------------------
@@ -193,56 +186,40 @@ CameraPlugin::position2dCamera( AbstractLocalSpace& selected,
 											float elevation )
 {
 	// position the camera as if in 3d:
-	CameraPlugin::position3dCamera (selected, distance, elevation);
+	position3dCamera (selected, distance, elevation);
 
 	// then adjust for 3d:
-	Vec3 position3d = OpenSteer::Camera::accessInstance().position();
+	Vec3 position3d = m_Camera.position();
 	position3d.y += elevation;
-	OpenSteer::Camera::accessInstance().setPosition (position3d);
-	Camera::accessInstance().doNotSmoothNextMove ();
-	if (&selected)
-	{
-		CameraPlugin::updateCamera( 0, 0, selected );
-	}
+	m_Camera.setPosition (position3d);
+	m_Camera.doNotSmoothNextMove ();	
 }
 
 //-----------------------------------------------------------------------------
-// camera updating utility used by several plug-ins
-void 
-CameraPlugin::updateCamera (const float currentTime,
-										const float elapsedTime,
-										const AbstractLocalSpace& selected)
-{
-	OpenSteer::Camera::updateCamera( 
-		currentTime, elapsedTime, selected, OpenSteer::Clock::processClock().getPausedState () );
+void CameraPlugin::setCameraTarget ( const AbstractLocalSpace* selected )
+{	
+	m_Camera.setLocalSpaceToTrack( selected );
 }
 
-// note: the camera plugin does not have an update implementation
-//       the camera is updated within the redraw function
-
 //-----------------------------------------------------------------------------
-void CameraPlugin::redraw( const float currentTime, const float elapsedTime ) 
+void CameraPlugin::redraw( OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime, 
+	const float elapsedTime ) 
 { 
+	pRenderer->SetCamera( &m_Camera );
 	if( false == this->isVisible() )
 	{
 		return;
 	}
-	// selected Pedestrian (user can mouse click to select another)
-	const AbstractLocalSpace* selected = SimpleVehicle::getSelectedVehicle();
-	if( NULL == selected )
-	{
-		selected = Camera::getLocalSpaceToTrack();
-	}
-	// TODO: determine paused state
-	const bool simulationPaused = OpenSteer::Clock::processClock().getPausedState();
-	// update camera
-	if( NULL != selected )
-	{
-		Camera::updateCamera( currentTime, elapsedTime, *selected, simulationPaused );
-	}
-	else
-	{
-// 		OpenSteer::Camera::accessInstance().vehicleToTrack = NULL;
-// 		Camera::accessInstance().update( currentTime, elapsedTime, simulationPaused );
-	}
+	m_Camera.draw( pRenderer, currentTime, elapsedTime);
+}
+
+void OpenSteer::CameraPlugin::update( const float currentTime, const float elapsedTime )
+{		
+	m_Camera.update( currentTime, elapsedTime );
+}
+
+void OpenSteer::CameraPlugin::open( void )
+{
+	m_Camera.reset();
 }

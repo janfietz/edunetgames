@@ -44,20 +44,24 @@ namespace OpenSteer
 	{
 	public:
 		// draws a gray disk on the XZ plane under a given vehicle
-		static void highlightVehicleUtility (const AbstractVehicle& vehicle);
+		static void highlightVehicleUtility ( AbstractRenderer* pRenderer,
+			const AbstractVehicle& vehicle);
 
 		// draws a gray circle on the XZ plane under a given vehicle
-		static void circleHighlightVehicleUtility (const AbstractVehicle& vehicle);
+		static void circleHighlightVehicleUtility ( AbstractRenderer* pRenderer,
+			const AbstractVehicle& vehicle);
 
 		// draw a box around a vehicle aligned with its local space
 		// xxx not used as of 11-20-02
-		static void drawBoxHighlightOnVehicle (const AbstractVehicle& v,
+		static void drawBoxHighlightOnVehicle (AbstractRenderer* pRenderer,
+			const AbstractVehicle& v,
 			const Color& color);
 
 		// draws a colored circle (perpendicular to view axis) around the center
 		// of a given vehicle.  The circle's radius is the vehicle's radius times
 		// radiusMultiplier.
-		static void drawCircleHighlightOnVehicle (const AbstractVehicle& v,
+		static void drawCircleHighlightOnVehicle (AbstractRenderer* pRenderer,
+			const AbstractVehicle& v,
 			const float radiusMultiplier,
 			const Color& color);
 
@@ -65,7 +69,8 @@ namespace OpenSteer
 		static void selectNextVehicle (void);
 
 		// select vehicle nearest the given screen position (e.g.: of the mouse)
-		static void selectVehicleNearestScreenPosition (int x, int y);
+		static void selectVehicleNearestScreenPosition (OpenSteer::AbstractRenderer* pRenderer,
+			int x, int y);
 
 		// ---------------------------------------------------------- mouse support
 
@@ -73,7 +78,8 @@ namespace OpenSteer
 		// Find the AbstractVehicle whose screen position is nearest the
 		// given window coordinates, typically the mouse position.  Note
 		// this will return NULL if there are no AbstractVehicles.
-		static AbstractVehicle* findVehicleNearestScreenPosition (int x, int y);
+		static AbstractVehicle* findVehicleNearestScreenPosition (OpenSteer::AbstractRenderer* pRenderer,
+			int x, int y);
 	};
 
 	//-------------------------------------------------------------------------

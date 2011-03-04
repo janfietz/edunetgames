@@ -136,17 +136,17 @@ namespace OpenSteer {
 		return GlobalData::getInstance()->m_pkPluginRegistry;
 	}
 
-	//-------------------------------------------------------------------------
-	AbstractRenderer* GlobalData::accessRenderer( void )
-	{
-		return GlobalData::getInstance()->m_pkRenderer;
-	}
-	
-	//-------------------------------------------------------------------------
-	void GlobalData::setRenderer( AbstractRenderer* pkRenderer )
-	{
-		GlobalData::getInstance()->m_pkRenderer = pkRenderer;
-	}
+	////-------------------------------------------------------------------------
+	//AbstractRenderer* GlobalData::accessRenderer( void )
+	//{
+	//	return GlobalData::getInstance()->m_pkRenderer;
+	//}
+	//
+	////-------------------------------------------------------------------------
+	//void GlobalData::setRenderer( AbstractRenderer* pkRenderer )
+	//{
+	//	GlobalData::getInstance()->m_pkRenderer = pkRenderer;
+	//}
 
 	//-------------------------------------------------------------------------
 	bool GlobalData::getEnableAnnotation( void )

@@ -28,24 +28,28 @@
 
 #include "ZonePlugin.h"
 #include "EduNetCommon/EduNetDraw.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-void initPluginCamera( AbstractPlugin* pkPlugin )
+void initPluginCamera( AbstractPlugin* pkPlugin, OpenSteer::CameraPlugin* pCameraPlugin )
 {
 	// camera setup
 	osAbstractLocalSpace* localSpace = dynamic_cast<osAbstractLocalSpace*>(pkPlugin);
 	osAbstractLocalSpace& kLocalSpace = *localSpace;
-	CameraPlugin::init2dCamera( kLocalSpace );
-	// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-	Camera::accessInstance().mode = Camera::cmStraightDown;
-	Camera::accessInstance().fixedTarget.set( 0, 0, 0 );
-	Camera::accessInstance().fixedPosition.set( 0, 20, 0 );
-	Camera::accessInstance().lookdownDistance = 15;
+	pCameraPlugin->init2dCamera( kLocalSpace );
+
+	Camera& kCam = pCameraPlugin->accessCamera();
+
+	// kCam.mode = Camera::cmFixedDistanceOffset;
+	kCam.mode = Camera::cmStraightDown;
+	kCam.fixedTarget.set( 0, 0, 0 );
+	kCam.fixedPosition.set( 0, 20, 0 );
+	kCam.lookdownDistance = 15;
 	// make camera jump immediately to new position
-	Camera::accessInstance().doNotSmoothNextMove ();
-	Camera::accessInstance().update( 0, 0, false );
+	kCam.doNotSmoothNextMove ();
+	kCam.update( 0, 0, false );
 }
 
 //-----------------------------------------------------------------------------
@@ -63,7 +67,7 @@ ZonePlugin::ZonePlugin( bool bAddToRegistry ):
 }
 
 //-----------------------------------------------------------------------------
-void ZonePlugin::zoneUtility( void )
+	void ZonePlugin::zoneUtility( OpenSteer::AbstractRenderer* pRenderer )
 {
 	const osScalar drawExtent = this->m_kZoneExtent.x * OS_SCALAR( 2.0 ) - 0.005f;
 	if( 1 == this->m_iSolid )
@@ -75,7 +79,7 @@ void ZonePlugin::zoneUtility( void )
 		zoneGray.setG( zoneGray.g() * gray.g() );
 		zoneGray.setB( zoneGray.b() * gray.b() );
 		// draw checkerboard grid
-		drawXZCheckerboardGrid( drawExtent, 10, this->position(), zoneGray, gray);
+		pRenderer->drawXZCheckerboardGrid( drawExtent, 10, this->position(), zoneGray, gray);
 #if 0
 		AABBox kZoneAABBox;
 		kZoneAABBox.initializeWithCenterAndExtent( this->position(), this->m_kZoneExtent );
@@ -85,13 +89,13 @@ void ZonePlugin::zoneUtility( void )
 	else
 	{
 		// alternate style
-		drawXZLineGrid( drawExtent, 1, this->position(), this->m_kZoneColor );
+		pRenderer->drawXZLineGrid( drawExtent, 1, this->position(), this->m_kZoneColor );
 	}
 
 	const osScalar borderWidth = this->getBorderWidth();
 	if( borderWidth > 0 )
 	{
-		drawXZLineGrid( drawExtent + borderWidth * OS_SCALAR( 2.0 ), 1, this->position(), this->m_kBorderColor );
+		pRenderer->drawXZLineGrid( drawExtent + borderWidth * OS_SCALAR( 2.0 ), 1, this->position(), this->m_kBorderColor );
 	}
 }
 
@@ -110,7 +114,9 @@ void ZonePlugin::open( void )
 	// the root zone
 	if( NULL == pkParentZone )
 	{
-		initPluginCamera( this );
+		m_pCameraPlugin = ET_NEW OpenSteer::CameraPlugin();
+		addPlugin( m_pCameraPlugin );
+		initPluginCamera( this, m_pCameraPlugin );
 	}
 
 	BaseClass::open();
@@ -199,8 +205,9 @@ void ZonePlugin::close( void )
 	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
 	// the root zone
 	if( NULL == pkParentZone )
-	{
-		Camera::setLocalSpaceToTrack( NULL );
+	{		
+		m_pCameraPlugin->setCameraTarget( NULL );
+		m_pCameraPlugin = NULL;
 	}
 	BaseClass::close();
 }
@@ -215,7 +222,8 @@ void ZonePlugin::initGui( void* pkUserdata )
 }
 
 //-----------------------------------------------------------------------------
-void ZonePlugin::redraw (const float currentTime, const float elapsedTime) 
+void ZonePlugin::redraw (OpenSteer::AbstractRenderer* pRenderer,
+						 const float currentTime, const float elapsedTime) 
 { 
 	AbstractPlugin* pkParent = this->getParentPlugin();
 	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
@@ -224,7 +232,7 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 	{
 		// right now do not call the base class
 		// as we want to see the children ...
-		BaseClass::redrawChildren( currentTime, elapsedTime );
+		BaseClass::redrawChildren( pRenderer, currentTime, elapsedTime );
 		if( false == this->isVisible() )
 		{
 			return;
@@ -237,9 +245,9 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw "zone area"
 		if( true == this->isVisible() )
 		{
-			this->zoneUtility(  );
+			this->zoneUtility(  pRenderer );
 		}
-		BaseClass::redraw( currentTime, elapsedTime );
+		BaseClass::redraw( pRenderer, currentTime, elapsedTime );
 		if( false == this->isVisible() )
 		{
 			return;
@@ -256,7 +264,9 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
 		annote << "Zone: " << this->getZoneId() << std::endl << "pos(" << this->position() << ")" << std::endl;
 		annote << "Population: " << population << std::endl << std::ends;
-		draw2dTextAt3dLocation (annote, this->position(), gGreen, drawGetWindowWidth(), drawGetWindowHeight());
+		pRenderer->draw2dTextAt3dLocation (annote, this->position(), gGreen, 
+			pRenderer->drawGetWindowWidth(), 
+			pRenderer->drawGetWindowHeight() );
 	}
 
 }

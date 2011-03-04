@@ -72,7 +72,7 @@ namespace OpenSteer
 		virtual void prepareOpen (void);
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime);
-		virtual void redraw(const float currentTime, const float elapsedTime);
+		virtual void redraw( OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
 		virtual void close(void);
 		virtual void reset(void);
 		const char* name (void) const {return this->getClassName();}
@@ -124,7 +124,8 @@ namespace OpenSteer
 		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
 		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
 	protected:
-		void redrawChildren(const float currentTime, const float elapsedTime);
+		void redrawChildren(OpenSteer::AbstractRenderer* pRenderer, 
+			const float currentTime, const float elapsedTime);
 
 	private:
 		AbstractPlayerGroup m_kAllPlayers;
@@ -194,14 +195,15 @@ namespace OpenSteer
 			this->m_kPluginArray.update( currentTime, elapsedTime );
 			Super::update( currentTime, elapsedTime );
 		}
-		virtual void redraw(const float currentTime, const float elapsedTime)
+		virtual void redraw(AbstractRenderer* pRenderer, 
+			const float currentTime, const float elapsedTime)
 		{
 			if( false == this->isVisible() )
 			{
 				return;
 			}
-			this->m_kPluginArray.redraw( currentTime, elapsedTime );
-			Super::redraw( currentTime, elapsedTime );
+			this->m_kPluginArray.redraw( pRenderer, currentTime, elapsedTime );
+			Super::redraw( pRenderer, currentTime, elapsedTime );
 		}
 		virtual void close(void)
 		{

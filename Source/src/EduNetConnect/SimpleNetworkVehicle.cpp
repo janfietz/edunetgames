@@ -9,7 +9,7 @@
 using namespace OpenSteer;
 
 //-----------------------------------------------------------------------------
-void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime )
+void SimpleProxyVehicle::draw( OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime )
 {
 //	BaseClass::draw( currentTime, elapsedTime );
 	if( this->isRemoteObject() )
@@ -27,7 +27,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 			while( kIter != kEnd )
 			{
 				const LocalSpaceData& kLocalSpaceData = *kIter;
-				drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
+				pRenderer->drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
 				fUpOffset += 0.01f;
 				++kIter;
 				kColor.setA( kColor.a() + 0.05f );
@@ -43,7 +43,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 			float fUpOffset = 0.1f;
 			// show send data
 			Color kColor = gCyan;
-			drawBasic2dCircularLocalSpace( this->accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
+			pRenderer->drawBasic2dCircularLocalSpace( this->accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
 
 			kColor.setR( 0.0f );
 			kColor.setG( 0.4f );
@@ -55,7 +55,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 			while( kIter != kEnd )
 			{
 				const LocalSpaceData& kLocalSpaceData = *kIter;
-				drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
+				pRenderer->drawBasic2dCircularLocalSpace( kLocalSpaceData, kColor, this->radius() * 0.75f, false, fUpOffset );
 				fUpOffset += 0.01f;
 				++kIter;
 				kColor.setA( kColor.a() + 0.05f );
@@ -64,7 +64,7 @@ void SimpleProxyVehicle::draw( const float currentTime, const float elapsedTime 
 
 			// show send data
 			kColor = gDarkYellow;
-			drawBasic2dCircularLocalSpace( m_kextrapolatedLocalSpace.accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
+			pRenderer->drawBasic2dCircularLocalSpace( m_kextrapolatedLocalSpace.accessLocalSpaceData(), kColor, this->radius() * 0.75f, false, fUpOffset );
 		}
 	}
 }
@@ -102,13 +102,15 @@ void SimpleNetworkVehicle::collect3DTextAnnotation( std::ostringstream& kStream 
 }
 
 //-----------------------------------------------------------------------------
-void SimpleNetworkVehicle::draw( const float currentTime, const float elapsedTime )
+void SimpleNetworkVehicle::draw( AbstractRenderer* pRenderer, 
+	const float currentTime,
+	const float elapsedTime )
 {
 	this->m_bCollectsAnnotations = false;
-	BaseClass::draw( currentTime, elapsedTime );
+	BaseClass::draw( pRenderer, currentTime, elapsedTime );
 	if( true == this->m_bCollectsAnnotations )
 	{
-		this->accessProxyVehicle().draw( currentTime, elapsedTime );
+		this->accessProxyVehicle().draw( pRenderer, currentTime, elapsedTime );
 	}
 }
 

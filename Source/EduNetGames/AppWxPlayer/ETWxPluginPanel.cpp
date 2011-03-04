@@ -80,11 +80,11 @@ namespace EduNet
 		{			
 			OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
 			m_pGlCanvas->setPlugin( NULL );
-			if (pPlugin == OpenSteer::Plugin::getSelectedPlugin())
-			{
-				OpenSteer::Plugin::selectPlugin( NULL );
-			}
-			//pPlugin->close();			
+// 			if (pPlugin == OpenSteer::Plugin::getSelectedPlugin())
+// 			{
+// 				OpenSteer::Plugin::selectPlugin( NULL );
+// 			}
+			pPlugin->close();			
 		}
 
 		m_spPlugin = plugin;
@@ -96,9 +96,9 @@ namespace EduNet
 		}
 
 		OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
-		OpenSteer::Plugin::selectPlugin( pPlugin );
-		//pPlugin->prepareOpen();
-		//pPlugin->open();*/
+		//OpenSteer::Plugin::selectPlugin( pPlugin );
+		pPlugin->prepareOpen();
+		pPlugin->open();
 
 		m_pGlCanvas->setPlugin( pPlugin );
 
@@ -116,11 +116,11 @@ namespace EduNet
 			{			
 				OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
 				m_pGlCanvas->setPlugin( NULL );
-				if (pPlugin == OpenSteer::Plugin::getSelectedPlugin())
-				{
-					OpenSteer::Plugin::selectPlugin( NULL );
-				}
-				//pPlugin->close();			
+// 				if (pPlugin == OpenSteer::Plugin::getSelectedPlugin())
+// 				{
+// 					OpenSteer::Plugin::selectPlugin( NULL );
+// 				}
+				pPlugin->close();			
 			}
 		}
 	}

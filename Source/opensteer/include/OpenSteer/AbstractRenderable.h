@@ -1,10 +1,5 @@
-#if !defined( EDUNET_OPENSTEER_INCLUDED ) && ( EDUNET_INCLUDE_OPENSTEER == 1 )
-#undef __EDUNETCOMMON_H__
-#endif
-
-
-#ifndef __EDUNETCOMMON_H__
-#define __EDUNETCOMMON_H__
+#ifndef OPENSTEER_ABSTRACTRENDERABLE_H
+#define OPENSTEER_ABSTRACTRENDERABLE_H
 
 //-----------------------------------------------------------------------------
 // Copyright (c) 2009, Jan Fietz, Cyrus Preuss
@@ -34,62 +29,17 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#ifndef EDUNET_NO_OPENSTEER_INCLUDES
-#  define EDUNET_NO_OPENSTEER_INCLUDES 0
-#endif
+namespace OpenSteer {
 
-#ifdef EDUNET_INCLUDE_OPENSTEER
-#  undef EDUNET_INCLUDE_OPENSTEER
-#endif
-
-#if EDUNET_NO_OPENSTEER_INCLUDES
-#  define EDUNET_INCLUDE_OPENSTEER 0
-#else
-#  define EDUNET_INCLUDE_OPENSTEER 1
-#endif
-
-#include "EduNetCore/EduNetCore.h"
-#include "EduNetCore/EduNetLog.h"
+	template<class Super>
+	class AbstractRenderMixin : public Super
+	{
+	public:
+		virtual void draw( class AbstractRenderer*, 
+			const float currentTime, const float elapsedTime ) OS_ABSTRACT;
+	};
+} //! namespace OpenSteer
 
 
-
-#if EDUNET_INCLUDE_OPENSTEER
-#  ifndef EDUNET_OPENSTEER_INCLUDED
-#    define EDUNET_OPENSTEER_INCLUDED
-#  endif
-#  include "EduNetExternal.h"
-#endif
-
-
-
-#include "EduNetTypes.h"
-#include "EduNetMath.h"
-
-
-#if EDUNET_INCLUDE_OPENSTEER
-
-#include "OpenSteerUT/AbstractVehicleUtilities.h"
-#include "OpenSteerUT/OpenSteerUTTypes.h"
-#include "OpenSteerUT/PluginArray.h"
-#include "OpenSteerUT/AbstractPluginUtilities.h"
-#include "OpenSteerUT/AbstractVehicleUpdate.h"
-#include "OpenSteerUT/SimplePhysicsVehicle.h"
-
-#include "OpenSteerUT/LocalPlayer.h"
-#include "OpenSteerUT/AbstractEntityFactory.h"
-#include "OpenSteerUT/AbstractVehicleGroup.h"
-#include "OpenSteerUT/AbstractVehicleMath.h"
-
-#endif // EDUNET_INCLUDE_OPENSTEER
-
-
-#include "EduNetGuiTypes.h"
-
-
-
-#endif // __EDUNETCOMMON_H__
-
-// undef outside include guards
-#undef EDUNET_INCLUDE_OPENSTEER
-#undef EDUNET_NO_OPENSTEER_INCLUDES
-
+//-----------------------------------------------------------------------------
+#endif //! OPENSTEER_ABSTRACTRENDERABLE_H

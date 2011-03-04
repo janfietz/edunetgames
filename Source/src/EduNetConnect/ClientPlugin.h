@@ -18,7 +18,7 @@ public:
 
 	virtual const char* name (void) const {return "ClientPlugin";};
 
-	virtual void redraw (const float currentTime,
+	virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, const float currentTime,
 		const float elapsedTime);
 
 	virtual void CreateContent( void );
@@ -34,15 +34,15 @@ private:
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void ClientPlugin<PluginClass>::redraw (const float currentTime,
+void ClientPlugin<PluginClass>::redraw (OpenSteer::AbstractRenderer* pRenderer, const float currentTime,
 	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
-	this->m_kGamePlugin.redraw( currentTime, elapsedTime);
-	BaseClass::redraw( currentTime, elapsedTime );
+	this->m_kGamePlugin.redraw( pRenderer, currentTime, elapsedTime);
+	BaseClass::redraw( pRenderer, currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------

@@ -52,8 +52,8 @@ bool InitializeGlobals( void )
 	static EduNet::ProcessProfile kProfile;
 	OpenSteerUTData::_SDMInitApp(&kProfile);
 
-	static OpenSteer::OpenGLRenderer kRenderer;
-	OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
+	//static OpenSteer::OpenGLRenderer kRenderer;
+	//OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
 	return true;
 }
 
@@ -275,32 +275,32 @@ void Application::_SDMShutdown( void )
 //-----------------------------------------------------------------------------
 int Application::Run(int argc, char **argv)
 {
-	g_bRunCalled = true;
-	// register dynamic plugins
-	EduNet::initializeDynamicPlugins( );
+	//g_bRunCalled = true;
+	//// register dynamic plugins
+	//EduNet::initializeDynamicPlugins( );
 
-	// check if there is a default plugin
-	const char* pszPluginName = EduNet::Options::accessOptions().getSelectedPlugin();
-	OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );
-	if ( NULL == pkPlugin )
-	{
-		pkPlugin = Plugin::findDefault();
-	}
-	if( NULL != pkPlugin )
-	{
-		// initialize graphics
-		EduNet::GameDemo::initializeGraphics (argc, argv);
+	//// check if there is a default plugin
+	//const char* pszPluginName = EduNet::Options::accessOptions().getSelectedPlugin();
+	//OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );
+	//if ( NULL == pkPlugin )
+	//{
+	//	pkPlugin = Plugin::findDefault();
+	//}
+	//if( NULL != pkPlugin )
+	//{
+	//	// initialize graphics
+	//	EduNet::GameDemo::initializeGraphics (argc, argv);
 
-		// initialize OpenSteerDemo application
-		EduNet::GameDemo::initialize ();
+	//	// initialize OpenSteerDemo application
+	//	EduNet::GameDemo::initialize ();
 
-		// run the main event processing loop
-		EduNet::GameDemo::runGraphics ();
-	}
-	else
-	{
-		printf( "no plugin found - shutting down\n" );
-	}
+	//	// run the main event processing loop
+	//	EduNet::GameDemo::runGraphics ();
+	//}
+	//else
+	//{
+	//	printf( "no plugin found - shutting down\n" );
+	//}
 	return EXIT_SUCCESS;
 }
 
@@ -435,143 +435,132 @@ void Application::onPluginSelected( OpenSteer::AbstractPlugin* pkPlugin )
 		}
 	}
 }
-
-//-----------------------------------------------------------------------------
-void Application::updateSelectedPlugin (const float currentTime,
-						   const float elapsedTime )
-{
-	::gluiSelectPlugin();
-
-	// opensteer demo options update
-
-	if( ( NULL == OpenSteer::Plugin::getSelectedPlugin() ) || ( elapsedTime <= 0.0f ) )
-	{
-		return;
-	}
-
-	// if no vehicle is selected, and some exist, select the first one
-	if( SimpleVehicle::getSelectedVehicle() == NULL )
-	{
-		const AVGroup& vehicles = OpenSteer::Plugin::getSelectedPlugin()->allVehicles();
-		if( vehicles.size() > 0 )
-		{
-			SimpleVehicle::setSelectedVehicle( vehicles.front() );
-		}
-	}
-
-	osScalar fSimulationFPS = this->m_fSimulationFPS;
-
-	// in case the last CPU time was higher than the incoming delta time
-	// reduce the simulation rate
-	if( this->m_fUpdateCPUTime > elapsedTime )
-	{
-		fSimulationFPS *= ( elapsedTime / this->m_fUpdateCPUTime );
-	}
-
-	if( this->m_fUpdateCPUTime > 0.0f )
-	{
-		// in case the last CPU frame rate was lower than the
-		// target frame rate reduce the target frame rate
-		osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
-		if( fCPUFPS < fSimulationFPS )
-		{
-//			blendIntoAccumulator(this->m_kUpdatePeriod.GetPeriodTime(), fCPUFPS, fSimulationFPS);
-			fSimulationFPS = fCPUFPS * 0.9f;
-		}
-	}
-
-
-	{
-		std::ostringstream status;
-		status << std::setprecision (2);
-		status << std::setiosflags (std::ios::fixed);
-		status << "Sim FPS: ";
-		status << fSimulationFPS;
-		simulationFPS->set_text( status.str().c_str() );
-	}
-
-	{
-		if( this->m_fUpdateCPUTime > 0.0f )
-		{
-			std::ostringstream status;
-			status << std::setprecision (2);
-			status << std::setiosflags (std::ios::fixed);
-			osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
-			status << "CPU FPS: ";
-			status << fCPUFPS;
-			cpuFPS->set_text( status.str().c_str() );
-		}
-	}
-
-
-	// fixed timestep implementation
-	this->m_kUpdatePeriod.SetPeriodFrequency( fSimulationFPS );
-
-	float fCurrentAccumTime = this->m_kUpdatePeriod.GetAccumTime();
-
-	// take time factor into account
-	float fModifiedDeltaTime = elapsedTime * m_fTimeFactor;
-	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( fModifiedDeltaTime );
-
-	// only update in case at least one tick has been generated
-	if( uiTicks > 0 )
-	{
-		this->m_kUpdateClock.update();
-		const osScalar preUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
-
-		osAbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(OpenSteer::Plugin::getSelectedPlugin());
-		assert( NULL != pkUpdatedPlugin );
-
-		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
-		{
-			OpenSteer::setAnnotationOff();
-			while( uiTicks > 0 )
-			{
-				if( uiTicks == 1 )
-				{
-					if( m_bEnableAnnotation == 1 )
-					{
-						OpenSteer::setAnnotationOn();
-					}
-				}
-				pkUpdatedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
-				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
-				--uiTicks;
-			}
-		}
-		else
-		{
-			if( m_bEnableAnnotation == 1 )
-			{
-				OpenSteer::setAnnotationOn();
-			}
-			else
-			{
-				OpenSteer::setAnnotationOff();
-			}
-			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
-			pkUpdatedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
-		}
-
-		this->m_kUpdateClock.update();
-		const osScalar postUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
-		const osScalar fUpdateCPUTime = postUpdateElapsedTime - preUpdateElapsedTime;
-		this->m_fUpdateCPUTime += fUpdateCPUTime;
-		this->m_fUpdateCPUTime *= 0.5f;
-
-	}
-}
-
-//-----------------------------------------------------------------------------
-void Application::redrawSelectedPlugin (const float currentTime,
-						   const float elapsedTime )
-{
-	if( NULL == OpenSteer::Plugin::getSelectedPlugin() )
-	{
-		return;
-	}
-	OpenSteer::Plugin::getSelectedPlugin()->redraw (currentTime, elapsedTime);
-}
+//
+////-----------------------------------------------------------------------------
+//void Application::updateSelectedPlugin (const float currentTime,
+//						   const float elapsedTime )
+//{
+//	::gluiSelectPlugin();
+//
+//	// opensteer demo options update
+//
+//	if( ( NULL == OpenSteer::Plugin::getSelectedPlugin() ) || ( elapsedTime <= 0.0f ) )
+//	{
+//		return;
+//	}
+//
+//	// if no vehicle is selected, and some exist, select the first one
+//	if( SimpleVehicle::getSelectedVehicle() == NULL )
+//	{
+//		const AVGroup& vehicles = OpenSteer::Plugin::getSelectedPlugin()->allVehicles();
+//		if( vehicles.size() > 0 )
+//		{
+//			SimpleVehicle::setSelectedVehicle( vehicles.front() );
+//		}
+//	}
+//
+//	osScalar fSimulationFPS = this->m_fSimulationFPS;
+//
+//	// in case the last CPU time was higher than the incoming delta time
+//	// reduce the simulation rate
+//	if( this->m_fUpdateCPUTime > elapsedTime )
+//	{
+//		fSimulationFPS *= ( elapsedTime / this->m_fUpdateCPUTime );
+//	}
+//
+//	if( this->m_fUpdateCPUTime > 0.0f )
+//	{
+//		// in case the last CPU frame rate was lower than the
+//		// target frame rate reduce the target frame rate
+//		osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
+//		if( fCPUFPS < fSimulationFPS )
+//		{
+////			blendIntoAccumulator(this->m_kUpdatePeriod.GetPeriodTime(), fCPUFPS, fSimulationFPS);
+//			fSimulationFPS = fCPUFPS * 0.9f;
+//		}
+//	}
+//
+//
+//	{
+//		std::ostringstream status;
+//		status << std::setprecision (2);
+//		status << std::setiosflags (std::ios::fixed);
+//		status << "Sim FPS: ";
+//		status << fSimulationFPS;
+//		simulationFPS->set_text( status.str().c_str() );
+//	}
+//
+//	{
+//		if( this->m_fUpdateCPUTime > 0.0f )
+//		{
+//			std::ostringstream status;
+//			status << std::setprecision (2);
+//			status << std::setiosflags (std::ios::fixed);
+//			osScalar fCPUFPS = ( 1.0f / this->m_fUpdateCPUTime );
+//			status << "CPU FPS: ";
+//			status << fCPUFPS;
+//			cpuFPS->set_text( status.str().c_str() );
+//		}
+//	}
+//
+//
+//	// fixed timestep implementation
+//	this->m_kUpdatePeriod.SetPeriodFrequency( fSimulationFPS );
+//
+//	float fCurrentAccumTime = this->m_kUpdatePeriod.GetAccumTime();
+//
+//	// take time factor into account
+//	float fModifiedDeltaTime = elapsedTime * m_fTimeFactor;
+//	size_t uiTicks = this->m_kUpdatePeriod.UpdateDeltaTime( fModifiedDeltaTime );
+//
+//	// only update in case at least one tick has been generated
+//	if( uiTicks > 0 )
+//	{
+//		this->m_kUpdateClock.update();
+//		const osScalar preUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
+//
+//		osAbstractUpdated* pkUpdatedPlugin = dynamic_cast<osAbstractUpdated*>(OpenSteer::Plugin::getSelectedPlugin());
+//		assert( NULL != pkUpdatedPlugin );
+//
+//		if( true == ( this->m_bFixedSimulationFPS == 1 ) )
+//		{
+//			OpenSteer::setAnnotationOff();
+//			while( uiTicks > 0 )
+//			{
+//				if( uiTicks == 1 )
+//				{
+//					if( m_bEnableAnnotation == 1 )
+//					{
+//						OpenSteer::setAnnotationOn();
+//					}
+//				}
+//				pkUpdatedPlugin->update( fCurrentAccumTime, this->m_kUpdatePeriod.GetPeriodTime() );
+//				fCurrentAccumTime += this->m_kUpdatePeriod.GetPeriodTime();
+//				--uiTicks;
+//			}
+//		}
+//		else
+//		{
+//			if( m_bEnableAnnotation == 1 )
+//			{
+//				OpenSteer::setAnnotationOn();
+//			}
+//			else
+//			{
+//				OpenSteer::setAnnotationOff();
+//			}
+//			float fAccumDeltaTime = this->m_kUpdatePeriod.GetDeltaTime( uiTicks );
+//			pkUpdatedPlugin->update( fCurrentAccumTime + fAccumDeltaTime, fAccumDeltaTime );
+//		}
+//
+//		this->m_kUpdateClock.update();
+//		const osScalar postUpdateElapsedTime = m_kUpdateClock.getElapsedRealTime();
+//		const osScalar fUpdateCPUTime = postUpdateElapsedTime - preUpdateElapsedTime;
+//		this->m_fUpdateCPUTime += fUpdateCPUTime;
+//		this->m_fUpdateCPUTime *= 0.5f;
+//
+//	}
+//}
 
 //-----------------------------------------------------------------------------
 bool Application::isOpenSteerProfileVisible( void ) const
@@ -585,44 +574,31 @@ bool Application::isProfileVisible( void ) const
 	return ( ( 0 != this->m_bShowCPUProfile ) || ( 0 != this->m_bShowCPUProfileGraph ) );
 }
 
-//-----------------------------------------------------------------------------
-void Application::drawProfile (const float currentTime,
-				  const float elapsedTime)
-{
-#if EDUNET_HAVE_PROFILE
-	Prof_set_report_mode( static_cast<Prof_Report_Mode>(profReportMode) );
-	Prof_update( this->m_bUpdateCPUProfile );
-	const float tw = OpenSteer::drawGetWindowWidth();
-	const float th = OpenSteer::drawGetWindowHeight();
-	if( ( 0 != this->m_bShowCPUProfile ) )
-	{
-		OpenSteer::profileDraw( 10, 300, 550, 500, -16, 2, tw, th );
-	}
-	if( ( 0 != this->m_bShowCPUProfileGraph ) )
-	{
-		Profile::GraphPlot kPlot;
-		const float fYSpacing = 4.0f;
-		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, fYSpacing, tw, th );
-		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
-	}
-#endif
-}
+////-----------------------------------------------------------------------------
+//void Application::drawProfile (const float currentTime,
+//				  const float elapsedTime)
+//{
+//#if EDUNET_HAVE_PROFILE
+//	Prof_set_report_mode( static_cast<Prof_Report_Mode>(profReportMode) );
+//	Prof_update( this->m_bUpdateCPUProfile );
+//	const float tw = OpenSteer::drawGetWindowWidth();
+//	const float th = OpenSteer::drawGetWindowHeight();
+//	if( ( 0 != this->m_bShowCPUProfile ) )
+//	{
+//		OpenSteer::profileDraw( 10, 300, 550, 500, -16, 2, tw, th );
+//	}
+//	if( ( 0 != this->m_bShowCPUProfileGraph ) )
+//	{
+//		Profile::GraphPlot kPlot;
+//		const float fYSpacing = 4.0f;
+//		OpenSteer::profileDrawGraph( 10.0, 350.0, 4.0, fYSpacing, tw, th );
+//		kPlot.drawGraphFrame( 10.0, 350.0, 4.0 * 128, fYSpacing * 50, false );
+//	}
+//#endif
+//}
 
 //-----------------------------------------------------------------------------
 void Application::initialize ( void )
 {
 
 }
-
-//-----------------------------------------------------------------------------
-void Application::initializeGraphics ( int argc, char **argv)
-{
-
-}
-
-//-----------------------------------------------------------------------------
-void Application::runGraphics ( void )
-{
-
-}
-

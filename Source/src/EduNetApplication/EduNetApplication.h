@@ -47,12 +47,6 @@ public:
 
 	void addGuiElements(GLUI *glui);
 
-	// do a simulation update for the currently selected plug-in
-	void updateSelectedPlugin(const float currentTime, const float elapsedTime);
-
-	// redraw graphics for the currently selected plug-in
-	void redrawSelectedPlugin(const float currentTime, const float elapsedTime);
-
 	//! draw profiler output
 	void drawProfile(const float currentTime, const float elapsedTime);
 
@@ -63,9 +57,6 @@ public:
 
 	void initialize(void);
 
-
-	void initializeGraphics(int argc, char **argv);
-	void runGraphics(void);
 
 	static Application& AccessApplication(void);
 

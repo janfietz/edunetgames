@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 #include "NetworkPlot.h"
 #include "OpenSteer/Plugin.h"
+#include "OpenSteer/AbstractRenderer.h"
 
 //-----------------------------------------------------------------------------
 NetworkPlot::NetworkPlot()
@@ -61,7 +62,8 @@ void NetworkPlot::recordUpdate( RakNetStatistics& kStats,
 }
 							   
 //-----------------------------------------------------------------------------
-void NetworkPlot::draw( osAbstractPlugin* pkNetworkPlugin ) const
+void NetworkPlot::draw( OpenSteer::AbstractRenderer* pRenderer, 
+					   osAbstractPlugin* pkNetworkPlugin ) const
 {
 	osAbstractEntity* pkPluginEntity = dynamic_cast<osAbstractEntity*>(pkNetworkPlugin);
 	// draw bandwidth state plot
@@ -76,5 +78,5 @@ void NetworkPlot::draw( osAbstractPlugin* pkNetworkPlugin ) const
 	Profile::TGraphPointerArray kGraphArray;
 	kGraphArray.push_back( &this->m_kBandwith );
 	kGraphArray.m_bWireFrame = true;
-	kPlot.draw( kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
+	kPlot.draw(pRenderer, kGraphArray, 50, fGraphStart, fGraphWidth, fGraphHeight * kGraphArray.size() );
 }

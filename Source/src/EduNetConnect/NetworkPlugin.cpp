@@ -333,7 +333,9 @@ void NetworkPlugin::updateMotionStateProfile( const float currentTime, const flo
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
+void NetworkPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime,
+	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
@@ -379,13 +381,15 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		status << this->m_kStats.m_uiBytesSend;
 
 		status << std::endl;
-		const float h = OpenSteer::drawGetWindowHeight();
+		const float h = pRenderer->drawGetWindowHeight();
 		osVector3 screenLocation( 10, h, 0);
 		float fOffset = 100.0f;
 		fOffset += bIsClient ? 50.0f : 100.0f;
 		screenLocation.y -= fOffset;
-		OpenSteer::draw2dTextAt2dLocation(
-			status, screenLocation, kColorNetStats, drawGetWindowWidth(), drawGetWindowHeight() );
+		pRenderer->draw2dTextAt2dLocation(
+			status, screenLocation, kColorNetStats,
+			pRenderer->drawGetWindowWidth(), 
+			pRenderer->drawGetWindowHeight() );
 
 	}
 
@@ -394,13 +398,13 @@ void NetworkPlugin::redraw (const float currentTime, const float elapsedTime)
 		// draw motion state plot
 		if( NULL != SimpleVehicle::getSelectedVehicle() )
 		{
-			NetworkPlugin::ms_kMotionStateProfile.draw( currentTime );
+			NetworkPlugin::ms_kMotionStateProfile.draw( pRenderer, currentTime );
 		}
 	}
 
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
-		this->drawNetworkPlot(currentTime, elapsedTime);
+		this->drawNetworkPlot(pRenderer, currentTime, elapsedTime);
 	}
 }
 
@@ -820,10 +824,11 @@ void NetworkPlugin::gatherNetworkStatistics( RakNetStatistics& kStats )
 }
 
 //-----------------------------------------------------------------------------
-void NetworkPlugin::drawNetworkPlot(const float currentTime,
-					 const float elapsedTime)
+void NetworkPlugin::drawNetworkPlot(OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime,
+	const float elapsedTime)
 {
-	this->m_kNetworkPlot.draw( this );
+	this->m_kNetworkPlot.draw( pRenderer, this );
 }
 
 //-----------------------------------------------------------------------------

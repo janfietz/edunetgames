@@ -50,14 +50,6 @@ namespace OpenSteer	{
 
 
 //-----------------------------------------------------------------------------
-// camera automatically tracks selected vehicle
-Camera& Camera::accessInstance( void )
-{
-	return *GlobalData::getInstance()->accessCamera();
-}
-
-
-//-----------------------------------------------------------------------------
 // constructor
 Camera::Camera (void)
 {
@@ -67,23 +59,13 @@ Camera::Camera (void)
 //-----------------------------------------------------------------------------
 void Camera::setLocalSpaceToTrack( const AbstractLocalSpace* localSpace )
 {
-	GlobalSelection::setCameraLocalSpaceToTrack( localSpace );
+	m_plocalSpace = localSpace;
 }
 
 //-----------------------------------------------------------------------------
 const AbstractLocalSpace* Camera::getLocalSpaceToTrack( void )
 {
-	return GlobalSelection::getCameraLocalSpaceToTrack();
-}
-
-//-----------------------------------------------------------------------------
-void 
-Camera::updateCamera (const float currentTime,
-										const float elapsedTime,
-										const AbstractLocalSpace& selected, const bool simulationPaused )
-{
-	Camera::setLocalSpaceToTrack( &selected );
-	Camera::accessInstance().update (currentTime, elapsedTime, simulationPaused );
+	return m_plocalSpace;
 }
 
 //-----------------------------------------------------------------------------
@@ -98,7 +80,7 @@ Camera::reset (void)
     target = Vec3::zero;
 
     // vehicle being tracked
-    Camera::setLocalSpaceToTrack( NULL );
+    setLocalSpaceToTrack( NULL );
 
     // aim at predicted position of vehicleToTrack, this far into thefuture
     aimLeadTime = 1;
@@ -143,8 +125,8 @@ Camera::update (const float /*currentTime*/,
                         const bool simulationPaused)
 {
     // vehicle being tracked (just a reference with a more concise name)
-    const AbstractLocalSpace& v = *Camera::getLocalSpaceToTrack();
-    const bool noVehicle = Camera::getLocalSpaceToTrack() == NULL;
+    const AbstractLocalSpace& v = *getLocalSpaceToTrack();
+    const bool noVehicle = getLocalSpaceToTrack() == NULL;
     
     // new position/target/up, set in switch below, defaults to current
     Vec3 newPosition = position();
@@ -219,10 +201,7 @@ Camera::update (const float /*currentTime*/,
     }
 
     // blend from current position/target/up towards new values
-    smoothCameraMove (newPosition, newTarget, newUp, elapsedTime);
-
-    // set camera in draw module
-    drawCameraLookAt (position(), target, up());
+    smoothCameraMove (newPosition, newTarget, newUp, elapsedTime);    
 }
 
 
@@ -453,6 +432,14 @@ Camera::mouseAdjust2 (const bool polar,
         result += xxxls().forward() * adjustment.z;
 
     return result;
+}
+//////////////////////////////////////////////////////////////////////////
+void Camera::draw( AbstractRenderer* pRenderer,
+				  const float currentTime,
+				  const float elapsedTime ) 
+{
+	// set camera in draw module
+	pRenderer->drawCameraLookAt (position(), target, up());
 }
 
 }

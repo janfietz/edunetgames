@@ -38,8 +38,7 @@ namespace OpenSteer
 	{
 		ET_DECLARE_BASE(OpenSteer::Plugin)
 	public:
-		GridPlugin (bool bAddToRegistry = false):BaseClass(bAddToRegistry)
-		{};
+		GridPlugin (bool bAddToRegistry = false);
 
 		OS_IMPLEMENT_CLASSNAME( GridPlugin )
 		//----------------------------------------------------------------------------
@@ -49,7 +48,7 @@ namespace OpenSteer
 		const char* name( void ) const {return this->getClassName();}
 		void open( void ) { }
 		void update( const float currentTime, const float elapsedTime ) { }
-		void redraw( const float currentTime, const float elapsedTime );
+		virtual void redraw ( AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime) OS_OVERRIDE;
 		void close( void ) { }
 		const AVGroup& allVehicles( void ) const { return m_kVehicles; }
 		AVGroup& allVehicles( void ) { return m_kVehicles; }
@@ -61,17 +60,18 @@ namespace OpenSteer
 		void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
 		void printMiniHelpForFunctionKeys( void ) { } // if fkeys are used
 
-		static void setGridCenter( const osVector3& kGridCenter )
+		void setGridCenter( const osVector3& kGridCenter )
 		{
-			GridPlugin::ms_kGridCenter = kGridCenter;
+			m_kGridCenter = kGridCenter;
 		}
-
-		static void gridUtility( const Vec3& gridTarget );
+		
 		static int ms_iSolid;
 	private:
 
+		void gridUtility( AbstractRenderer* pRenderer );
+
 		AVGroup m_kVehicles;
-		static osVector3 ms_kGridCenter;
+		osVector3 m_kGridCenter;
 		ET_IMPLEMENT_CLASS_NO_COPY(GridPlugin)
 
 	};

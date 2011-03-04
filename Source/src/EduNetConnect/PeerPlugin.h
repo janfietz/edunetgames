@@ -19,8 +19,8 @@ public:
     {
         return "PeerPlugin";
     };
-    virtual void redraw ( const float currentTime,
-                          const float elapsedTime );
+	virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, const float currentTime,
+                          const float elapsedTime ) OS_OVERRIDE;
 
     virtual void CreateContent ( void );
     virtual void DeleteContent ( void );
@@ -42,15 +42,16 @@ private:
 
 //-----------------------------------------------------------------------------
 template < class PluginClass >
-void PeerPlugin<PluginClass>::redraw ( const float currentTime,
-                                       const float elapsedTime )
+void PeerPlugin<PluginClass>::redraw ( OpenSteer::AbstractRenderer* pRenderer, 
+	  const float currentTime,
+       const float elapsedTime )
 {
     if ( false == this->isVisible() )
     {
         return;
     }
-    this->m_kGamePlugin.redraw ( currentTime, elapsedTime );
-    BaseClass::redraw ( currentTime, elapsedTime );
+    this->m_kGamePlugin.redraw ( pRenderer, currentTime, elapsedTime );
+    BaseClass::redraw ( pRenderer, currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
