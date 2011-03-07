@@ -30,6 +30,8 @@
 
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
+#include "OpenSteerUT/GridPlugin.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 //-----------------------------------------------------------------------------
 class NetCtfPlugin : public OpenSteer::Plugin
@@ -50,7 +52,8 @@ public:
 
 	virtual void update (const float currentTime, const float elapsedTime);
 
-	virtual void redraw (const float currentTime, const float elapsedTime);
+	virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, 
+		const float currentTime, const float elapsedTime) OS_OVERRIDE;
 
 	virtual void close (void);
 
@@ -71,7 +74,7 @@ public:
 	virtual void removeVehicle ( osAbstractVehicle* pkVehicle);
 
 	//-------------------------------------------------------------------------
-	void drawObstacles( void );
+	void drawObstacles( OpenSteer::AbstractRenderer* pRenderer );
 	void addOneObstacle( void );
 	void removeOneObstacle( void );
 	void randomizeStartingPositionAndHeading( osAbstractVehicle* pkVehicle );
@@ -86,6 +89,13 @@ public:
 	static class NetCtfEntityFactory* m_sOfflineNetCtfEntityFactory;
 	static void allocateEntityFactory( void );
 	static void destroyEntityFactory( void );
+	
+private:
+
+	void initPluginCamera( osAbstractVehicle& kVehicle );
+
+	OpenSteer::GridPlugin* m_GridPlugin;
+	OpenSteer::CameraPlugin* m_CameraPlugin;
 
 
 };

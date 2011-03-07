@@ -84,9 +84,18 @@ osVector3 NetSoccerPlayer::determineCombinedSteering( const float elapsedTime )
 					float Z = m_Ball->position().z - position().z > 0 ? -1.0f : 1.0f;
 					osVector3 behindBall = m_Ball->position() + (b_ImTeamA ? osVector3(2.0f,0.0f,Z) : osVector3(-2.0f,0.0f,Z));
 					osVector3 behindBallForce = xxxsteerForSeek(behindBall);
-					annotationLine (position(), behindBall ,OpenSteer::Color(0.0f,1.0f,0.0f));
+
+					// copy vec for annotation drawing
+					m_behindBall = behindBall;
+					
 					osVector3 evadeTarget = xxxsteerForFlee(m_Ball->position());
 					kSteeringForce = behindBallForce*10.0f + evadeTarget;
+
+					m_bDrawAnnotation = true;
+				}
+				else
+				{
+					m_bDrawAnnotation = false;
 				}
 			}
 		}
@@ -121,19 +130,25 @@ void NetSoccerPlayer::update(const float currentTime, const float elapsedTime)
 
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene
-void NetSoccerPlayer::draw (const float currentTime, const float elapsedTime)
+void NetSoccerPlayer::draw (OpenSteer::AbstractRenderer* pRenderer, 
+							const float currentTime, const float elapsedTime)
 {
-	BaseClass::draw( currentTime, elapsedTime );
-    drawBasic2dCircularVehicle (*this, b_ImTeamA ? OpenSteer::Color(1.0f,0.0f,0.0f):OpenSteer::Color(0.0f,0.0f,1.0f));
+	BaseClass::draw( pRenderer,currentTime, elapsedTime );
+    pRenderer->drawBasic2dCircularVehicle (*this, b_ImTeamA ? OpenSteer::Color(1.0f,0.0f,0.0f):OpenSteer::Color(0.0f,0.0f,1.0f));
 	if(true == this->isPossessed() )
 	{
-		drawXZCircle (1.2f, this->position(), gOrange, 20);
+		pRenderer->drawXZCircle (1.2f, this->position(), gOrange, 20);
 		if (true == this->isKicking())
 		{
-			drawXZCircle (1.3f, this->position(), gMagenta, 20);
+			pRenderer->drawXZCircle (1.3f, this->position(), gMagenta, 20);
 		}
 	}
-    drawTrail();
+
+	if (m_bDrawAnnotation)
+	{
+		annotationLine (pRenderer, position(), m_behindBall ,OpenSteer::Color(0.0f,1.0f,0.0f));
+	}
+    drawTrail(pRenderer);
 }
 //-----------------------------------------------------------------------------
 bool  NetSoccerPlayer::isKicking( void ) const

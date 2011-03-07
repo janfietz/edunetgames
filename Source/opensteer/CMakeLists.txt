@@ -1,4 +1,5 @@
-SUBDIRS( src plugins )
+#SUBDIRS( src plugins )
+SUBDIRS( src )
 
 
 

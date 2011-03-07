@@ -51,7 +51,8 @@ public:
 
 	virtual osVector3 determineCombinedSteering( const float elapsedTime );
     // draw this character/vehicle into the scene
-    virtual void draw ( const float currentTime, const float elapsedTime );
+	virtual void draw( OpenSteer::AbstractRenderer*, 
+		const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 
     void kick ( OpenSteer::Vec3 dir, const float elapsedTime );
 

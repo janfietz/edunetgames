@@ -104,6 +104,7 @@ public:
 	virtual void initGui(void* pkUserdata);
 
 	virtual void open(void);
+	virtual void prepareOpen(void);
 	virtual void close(void);
 };
 
@@ -125,6 +126,7 @@ public:
 	virtual void initGui(void* pkUserdata);
 
 	virtual void open(void);
+	virtual void prepareOpen(void);
 	virtual void close(void);
 };
 
@@ -145,7 +147,7 @@ public:
 
 	virtual void open(void);
 	virtual void close(void);
-
+	virtual void prepareOpen(void);
 	//---------------------------------------------------------------------
 	// interface AbstractPlugin
 	virtual void initGui( void* pkUserdata );

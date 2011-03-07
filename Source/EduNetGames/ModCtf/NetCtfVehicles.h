@@ -64,10 +64,12 @@ public:
 
 	virtual void update( const float currentTime, const float elapsedTime );
 	// draw this character/vehicle into the scene
-	virtual void draw( const float currentTime, const float elapsedTime );
+	virtual void draw( OpenSteer::AbstractRenderer*, 
+		const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 
 	// annotate when actively avoiding obstacles
-	virtual void annotateAvoidObstacle( const float minDistanceToCollision );
+	virtual void annotateAvoidObstacle( OpenSteer::AbstractRenderer*, 
+		const float minDistanceToCollision );
 
 	void drawHomeBase( void );
 
@@ -113,7 +115,8 @@ public:
 
 	osVector3 steeringForSeeker( void );
 	void updateState( const float currentTime );
-	void draw( const float currentTime, const float elapsedTime );
+	virtual void draw( OpenSteer::AbstractRenderer*, 
+		const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 	osVector3 steerToEvadeAllDefenders( void );
 	osVector3 XXXsteerToEvadeAllDefenders( void );
 	void adjustObstacleAvoidanceLookAhead( const bool clearPath );
@@ -134,7 +137,7 @@ public:
 private:
 	osAVGroup m_kEnemies;
 
-	void drawHomeBase( void ) const;
+	void drawHomeBase( OpenSteer::AbstractRenderer* pRenderer ) const;
 
 	ET_IMPLEMENT_CLASS_NO_COPY( NetCtfSeekerVehicle )
 };

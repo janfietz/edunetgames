@@ -101,11 +101,13 @@ void NetCtfBaseVehicle::reset( void )
 
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene
-void NetCtfBaseVehicle::draw( const float currentTime, const float elapsedTime )
+void NetCtfBaseVehicle::draw( AbstractRenderer* pRenderer, 
+	const float currentTime,
+	const float elapsedTime )
 {
-	BaseClass::draw( currentTime, elapsedTime );
-	drawBasic2dCircularVehicle(*this, bodyColor);
-	drawTrail();
+	BaseClass::draw( pRenderer,currentTime, elapsedTime );
+	pRenderer->drawBasic2dCircularVehicle(*this, bodyColor);
+	drawTrail(pRenderer);
 }
 
 //-----------------------------------------------------------------------------
@@ -119,7 +121,8 @@ void  NetCtfBaseVehicle::update( const float currentTime, const float elapsedTim
 // xxx perhaps this should be a call to a general purpose annotation
 // xxx for "local xxx axis aligned box in XZ plane" -- same code in in
 // xxx Pedestrian.cpp
-void NetCtfBaseVehicle::annotateAvoidObstacle(const float minDistanceToCollision)
+void NetCtfBaseVehicle::annotateAvoidObstacle(OpenSteer::AbstractRenderer* pRenderer,
+	const float minDistanceToCollision)
 {
 	const Vec3 boxSide = side() * radius();
 	const Vec3 boxFront = forward() * minDistanceToCollision;
@@ -128,10 +131,10 @@ void NetCtfBaseVehicle::annotateAvoidObstacle(const float minDistanceToCollision
 	const Vec3 BR = position()            - boxSide;
 	const Vec3 BL = position()            + boxSide;
 	const Color white(1,1,1);
-	annotationLine(FR, FL, white);
-	annotationLine(FL, BL, white);
-	annotationLine(BL, BR, white);
-	annotationLine(BR, FR, white);
+	annotationLine(pRenderer, FR, FL, white);
+	annotationLine(pRenderer, FL, BL, white);
+	annotationLine(pRenderer, BL, BR, white);
+	annotationLine(pRenderer, BR, FR, white);
 }
 
 //-----------------------------------------------------------------------------
@@ -183,7 +186,7 @@ bool NetCtfSeekerVehicle::clearPathToGoal( void )
 		const float eForwardDistance = forward().dot(eOffset);
 
 		// xxx temp move this up before the conditionals
-		annotationXZCircle(e.radius(), eFuture, clearPathColor, 20); //xxx
+		annotationXZCircle(NULL, e.radius(), eFuture, clearPathColor, 20); //xxx
 
 		// consider as potential blocker if within the corridor
 		if(inCorridor)
@@ -212,7 +215,7 @@ bool NetCtfSeekerVehicle::clearPathToGoal( void )
 				if(! safeToTurnTowardsGoal)
 				{
 					// this enemy blocks the path to the goal, so return false
-					annotationLine(position(), e.position(), clearPathColor);
+					annotationLine(NULL, position(), e.position(), clearPathColor);
 					// return false;
 					xxxReturn = false;
 				}
@@ -239,10 +242,10 @@ void NetCtfSeekerVehicle::clearPathAnnotation(const float sideThreshold,
 	const Vec3 gun = localRotateForwardToSide(goalDirection);
 	const Vec3 gn = gun * sideThreshold;
 	const Vec3 hbc = NetCtfGameLogic::ms_kHomeBaseCenter;
-	annotationLine(pbb + gn,         hbc + gn,         clearPathColor);
-	annotationLine(pbb - gn,         hbc - gn,         clearPathColor);
-	annotationLine(hbc - gn,         hbc + gn,         clearPathColor);
-	annotationLine(pbb - behindSide, pbb + behindSide, clearPathColor);
+	annotationLine(NULL, pbb + gn,         hbc + gn,         clearPathColor);
+	annotationLine(NULL, pbb - gn,         hbc - gn,         clearPathColor);
+	annotationLine(NULL, hbc - gn,         hbc + gn,         clearPathColor);
+	annotationLine(NULL, pbb - behindSide, pbb + behindSide, clearPathColor);
 }
 
 //-----------------------------------------------------------------------------
@@ -272,7 +275,7 @@ Vec3 NetCtfSeekerVehicle::steerToEvadeAllDefenders( void )
 				const Vec3 future =
 					e.predictFuturePosition(timeEstimate);
 
-				annotationXZCircle(e.radius(), future, evadeColor, 20); // xxx
+				annotationXZCircle(NULL, e.radius(), future, evadeColor, 20); // xxx
 
 				const Vec3 offset = future - position();
 				const Vec3 lateral = offset.perpendicularComponent(forward());
@@ -305,7 +308,7 @@ Vec3 NetCtfSeekerVehicle::XXXsteerToEvadeAllDefenders( void )
 		const Vec3 eFuture = e.predictFuturePosition(timeEstimate);
 
 		// annotation
-		annotationXZCircle(e.radius(), eFuture, evadeColor, 20);
+		annotationXZCircle(NULL, e.radius(), eFuture, evadeColor, 20);
 
 		// steering to flee from eFuture(enemy's future position)
 		const Vec3 flee = xxxsteerForFlee(eFuture);
@@ -356,7 +359,7 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 			// xxx experiment 9-16-02
 			Vec3 s = limitMaxDeviationAngle(seek, 0.707f, forward());
 
-			annotationLine(position(), position() +(s * 0.2f), seekColor);
+			annotationLine(NULL, position(), position() +(s * 0.2f), seekColor);
 			return s;
 		}
 		else
@@ -369,7 +372,7 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 					seek + limitMaxDeviationAngle(evade, 0.5f, forward());
 
 				// annotation: show evasion steering force
-				annotationLine(position(),position()+(steer*0.2f),evadeColor);
+				annotationLine(NULL, position(),position()+(steer*0.2f),evadeColor);
 				return steer;
 			}
 			else
@@ -379,11 +382,11 @@ Vec3 NetCtfSeekerVehicle::steeringForSeeker( void )
 				const Vec3 steer = limitMaxDeviationAngle(seek + evade,
 					0.707f, forward());
 
-				annotationLine(position(),position()+seek, gRed);
-				annotationLine(position(),position()+evade, gGreen);
+				annotationLine(NULL, position(),position()+seek, gRed);
+				annotationLine(NULL, position(),position()+evade, gGreen);
 
 				// annotation: show evasion steering force
-				annotationLine(position(),position()+(steer*0.2f),evadeColor);
+				annotationLine(NULL, position(),position()+(steer*0.2f),evadeColor);
 				return steer;
 			}
 		}
@@ -458,10 +461,12 @@ const char* NetCtfSeekerVehicle::getSeekerStateString( void ) const
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime )
+void NetCtfSeekerVehicle::draw( OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime,
+	const float elapsedTime )
 {
 	// first call the draw method in the base class
-	BaseClass::draw( currentTime, elapsedTime );
+	BaseClass::draw( pRenderer, currentTime, elapsedTime );
 
 	// annote seeker with its state as text
 	const Vec3 textOrigin = position() + Vec3(0, 0.25, 0);
@@ -469,13 +474,15 @@ void NetCtfSeekerVehicle::draw( const float currentTime, const float elapsedTime
 	annote << this->getSeekerStateString() << std::endl;
 	annote << std::setprecision(2) << std::setiosflags(std::ios::fixed)
 		<< speed() << std::ends;
-	draw2dTextAt3dLocation( annote, textOrigin, gWhite, drawGetWindowWidth(), drawGetWindowHeight());
+	pRenderer->draw2dTextAt3dLocation( annote, textOrigin, gWhite, 
+		pRenderer->drawGetWindowWidth(), 
+		pRenderer->drawGetWindowHeight());
 
-	this->drawHomeBase();
+	this->drawHomeBase(pRenderer);
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfSeekerVehicle::drawHomeBase( void ) const
+void NetCtfSeekerVehicle::drawHomeBase( OpenSteer::AbstractRenderer* pRenderer ) const
 {
 	const Vec3 up (0, 0.01f, 0);
 	const Color atColor (0.3f, 0.3f, 0.5f);
@@ -483,8 +490,8 @@ void NetCtfSeekerVehicle::drawHomeBase( void ) const
 	// TODO move to seeker himself
 	const bool reached = this->state == NetCtfSeekerVehicle::atGoal;
 	const Color baseColor = (reached ? atColor : noColor);
-	drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius,    NetCtfGameLogic::ms_kHomeBaseCenter, baseColor, 40 );
-	drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius/15, NetCtfGameLogic::ms_kHomeBaseCenter + up, gBlack, 20 );
+	pRenderer->drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius,    NetCtfGameLogic::ms_kHomeBaseCenter, baseColor, 40 );
+	pRenderer->drawXZDisk( NetCtfGameLogic::ms_fHomeBaseRadius/15, NetCtfGameLogic::ms_kHomeBaseCenter + up, gBlack, 20 );
 }
 
 //-----------------------------------------------------------------------------
@@ -599,7 +606,7 @@ void NetCtfEnemyVehicle::update( const float currentTime, const float elapsedTim
 			if(this->m_pkSeeker->state == tagged)
 			{
 				const Color color(0.8f, 0.5f, 0.5f);
-				annotationXZDisk(sumOfRadii,
+				annotationXZDisk(NULL,sumOfRadii,
 					(position() + this->m_pkSeeker->position()) / 2,
 					color,
 					20);

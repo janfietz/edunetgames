@@ -61,6 +61,62 @@ namespace OpenSteer {
 		EAnnotationMode_count
 	};
 
+	class Annotation
+	{
+	public:
+		virtual void draw( AbstractRenderer* pRenderer, bool bDrawPhaseActive ) const {};
+	};
+
+	typedef std::vector<Annotation> AnnotationList;
+
+	//////////////////////////////////////////////////////////////////////////
+	class DiscAnnotation : public Annotation
+	{
+	public:
+		DiscAnnotation(const float radius,
+			const Vec3& axis,
+			const Vec3& center,
+			const Color& color,
+			const int segments,
+			const bool filled,
+			const bool in3d = false):
+		m_radius(radius),
+		m_axis(axis),
+		m_center(center),
+		m_color(color),
+		m_segments(segments),
+		m_filled(filled),
+		m_b3d(in3d){};
+
+		virtual void draw( AbstractRenderer* pRenderer, bool bDrawPhaseActive ) const OS_OVERRIDE;
+	protected:
+		float m_radius;
+		Vec3 m_axis;
+		Vec3 m_center;
+		Color m_color;
+		int m_segments;
+		bool m_filled;
+		bool m_b3d;
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+	class LineAnnotation : public Annotation
+	{
+	public:
+		LineAnnotation(const Vec3& startPoint,
+			const Vec3& endPoint,
+			const Color& color):
+		m_startPoint(startPoint),
+		m_endPoint(endPoint),
+		m_color(color){};
+
+		virtual void draw( AbstractRenderer* pRenderer, bool bDrawPhaseActive ) const OS_OVERRIDE;
+	private:
+		Vec3 m_startPoint;
+		Vec3 m_endPoint;
+		Color m_color;
+	};
+
 
     //! graphical annotation: master on/off switch
     bool annotationIsOn (void);
@@ -237,6 +293,9 @@ namespace OpenSteer {
 
 		}
 
+		void drawDeferredAnnotations( AbstractRenderer* pRenderer );
+		void clearDeferredAnnotations();
+
         //-------------------------------------------------------------------------
     private:
 
@@ -252,6 +311,8 @@ namespace OpenSteer {
         char* trailFlags;           //! array (ring) of flag bits for trail points
 
 		EAnnotationMode m_eAnnotationMode;
+
+		mutable AnnotationList m_deferedAnnotations;
 
 		
     };
@@ -400,6 +461,25 @@ OpenSteer::AnnotationMixin<Super>::drawTrail (AbstractRenderer* pRenderer,
     }
 }
 
+//////////////////////////////////////////////////////////////////////////
+template<class Super>
+void OpenSteer::AnnotationMixin<Super>::drawDeferredAnnotations( AbstractRenderer* pRenderer )
+{
+	AnnotationList::const_iterator iter = m_deferedAnnotations.begin();
+	const AnnotationList::const_iterator iterEnd = m_deferedAnnotations.end();
+	while (iter != iterEnd)
+	{
+		(*iter).draw( pRenderer, drawPhaseActive() );
+		++iter;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+template<class Super>
+void OpenSteer::AnnotationMixin<Super>::clearDeferredAnnotations( )
+{
+	m_deferedAnnotations.clear();	
+}
 
 //-----------------------------------------------------------------------------
 //! request (deferred) drawing of a line for graphical annotation
@@ -419,14 +499,18 @@ OpenSteer::AnnotationMixin<Super>::annotationLine (AbstractRenderer* pRenderer,
 {
 	if ( this->isAnnotated() )
     {
-        if (drawPhaseActive())
-        {
-           pRenderer->drawLine (startPoint, endPoint, color);
-        }
-        else
-        {
-            pRenderer->deferredDrawLine (startPoint, endPoint, color);
-        }
+		LineAnnotation kLine(startPoint, endPoint, color);
+
+		if (NULL != pRenderer)
+		{
+			kLine.draw( pRenderer , drawPhaseActive() );		
+		}
+		else
+		{
+			LineAnnotation kLine(startPoint, endPoint, color);
+			m_deferedAnnotations.push_back( kLine );
+		}
+        
     }
 }
 #else
@@ -457,16 +541,16 @@ OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk (AbstractRenderer* pRe
 {
 	if ( this->isAnnotated() )
     {
-        if (drawPhaseActive())
-        {
-            pRenderer->drawCircleOrDisk (radius, axis, center, color,
-                              segments, filled, in3d);
-        }
-        else
-        {
-            pRenderer->deferredDrawCircleOrDisk (radius, axis, center, color,
-                                      segments, filled, in3d);
-        }
+		DiscAnnotation circle(radius, axis, center, color, segments, filled, in3d);
+		if (NULL != pRenderer)
+		{
+			circle.draw( pRenderer, drawPhaseActive() );
+		}
+		else
+		{
+			
+			m_deferedAnnotations.push_back( circle );
+		}
     }
 }
 #else
@@ -475,6 +559,8 @@ void OpenSteer::AnnotationMixin<Super>::annotationCircleOrDisk
 (const float, const Vec3&, const Vec3&, const Vec3&, const int,
  const bool, const bool) const {}
 #endif //! NOT_OPENSTEERDEMO
+
+
 
 
 //-----------------------------------------------------------------------------

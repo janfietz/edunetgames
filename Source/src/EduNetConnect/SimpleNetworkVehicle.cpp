@@ -112,11 +112,15 @@ void SimpleNetworkVehicle::draw( AbstractRenderer* pRenderer,
 	{
 		this->accessProxyVehicle().draw( pRenderer, currentTime, elapsedTime );
 	}
+
+	drawDeferredAnnotations( pRenderer );
 }
 
 //-----------------------------------------------------------------------------
 void SimpleNetworkVehicle::update (const float currentTime, const float elapsedTime)
 {
+	clearDeferredAnnotations();
+
 	// this is a bad hack right now !!!
 	static bool bStaticInit = false;
 	if( false == bStaticInit )

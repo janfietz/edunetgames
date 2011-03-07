@@ -54,7 +54,8 @@ public:
 
 	virtual void update( const float currentTime, const float elapsedTime );
     // draw this character/vehicle into the scene
-    virtual void draw ( const float currentTime, const float elapsedTime );
+	virtual void draw( OpenSteer::AbstractRenderer*, 
+		const float currentTime, const float elapsedTime ) OS_OVERRIDE;
 
 	virtual void possessBy( OpenSteer::AbstractEntity* pkEntity );
 
@@ -81,6 +82,9 @@ public:
 private:
 
 	bool isKicking( void ) const;
+
+	bool m_bDrawAnnotation;
+	osVector3 m_behindBall;
 };
 typedef OpenSteer::VehicleClassIdMixin<NetSoccerPlayer, ET_CID_NETSOCCER_PLAYER> TNetSoccerPlayer;
 #endif // __NETSOCCERPLAYER_H__
