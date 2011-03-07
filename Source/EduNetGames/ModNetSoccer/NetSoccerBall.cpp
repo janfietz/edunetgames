@@ -85,12 +85,13 @@ void NetSoccerBall::kick ( Vec3 dir, const float elapsedTime )
 }
 //-----------------------------------------------------------------------------
 // draw this character/vehicle into the scene
-void NetSoccerBall::draw ( const float currentTime,
+void NetSoccerBall::draw ( OpenSteer::AbstractRenderer* pRenderer,
+						  const float currentTime,
                            const float elapsedTime )
 {
-	BaseClass::draw( currentTime, elapsedTime );
-    drawBasic2dCircularVehicle ( *this, Color ( 0.0f,1.0f,0.0f ) );
-    drawTrail ();
+	BaseClass::draw( pRenderer, currentTime, elapsedTime );
+    pRenderer->drawBasic2dCircularVehicle ( *this, Color ( 0.0f,1.0f,0.0f ) );
+    drawTrail (pRenderer);
 }
 //-----------------------------------------------------------------------------
 AbstractVehicle* NetSoccerBall::cloneVehicle ( void ) const

@@ -234,9 +234,7 @@ CtfRenderClientPlugin::~CtfRenderClientPlugin()
 //-----------------------------------------------------------------------------
 void CtfRenderClientPlugin::initGui(void* pkUserdata)
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW CtfClientPlugin( false ) );
+	
 	BaseClass::initGui( pkUserdata );
 }
 
@@ -252,6 +250,10 @@ void CtfRenderClientPlugin::close(void)
 	BaseClass::close();
 }
 
+void CtfRenderClientPlugin::prepareOpen( void )
+{
+	this->addPlugin( ET_NEW CtfClientPlugin( false ) );
+}
 //-----------------------------------------------------------------------------
 // render server plugin
 //-----------------------------------------------------------------------------
@@ -264,9 +266,7 @@ CtfRenderPeerPlugin::~CtfRenderPeerPlugin() {};
 //-----------------------------------------------------------------------------
 void CtfRenderPeerPlugin::initGui(void* pkUserdata)
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
+
 	BaseClass::initGui( pkUserdata );
 }
 
@@ -282,6 +282,10 @@ void CtfRenderPeerPlugin::close(void)
 	BaseClass::close();
 }
 
+void CtfRenderPeerPlugin::prepareOpen( void )
+{
+	this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
+}
 //-----------------------------------------------------------------------------
 // client server plugin
 //-----------------------------------------------------------------------------
@@ -313,13 +317,16 @@ void CtfClientServerPlugin::close(void)
 //-----------------------------------------------------------------------------
 void CtfClientServerPlugin::initGui( void* pkUserdata ) 
 {
-	this->addPlugin( ET_NEW OpenSteer::CameraPlugin() );
-	this->addPlugin( ET_NEW OpenSteer::GridPlugin() );
-	this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
-	this->addPlugin( ET_NEW CtfClientPlugin( false ) );
+	
 	BaseClass::initGui( pkUserdata );
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
+}
+//////////////////////////////////////////////////////////////////////////
+void CtfClientServerPlugin::prepareOpen( void )
+{
+	this->addPlugin( ET_NEW CtfPeerPlugin( false ) );
+	this->addPlugin( ET_NEW CtfClientPlugin( false ) );
 }
 
 //-----------------------------------------------------------------------------

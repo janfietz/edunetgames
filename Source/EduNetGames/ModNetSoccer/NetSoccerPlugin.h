@@ -32,6 +32,8 @@
 #include "EduNetCommon/EduNetCommon.h"
 #include "NetSoccerBall.h"
 #include "NetSoccerPlayer.h"
+
+#include "OpenSteerUT/CameraPlugin.h"
 //-----------------------------------------------------------------------------
 class NetSoccerPlugin : public OpenSteer::Plugin
 {
@@ -57,7 +59,7 @@ public:
 
     virtual void update ( const float currentTime, const float elapsedTime );
 
-    virtual void redraw ( const float currentTime, const float elapsedTime );
+    virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime) OS_OVERRIDE;
 
     virtual void close ( void );
 
@@ -84,9 +86,7 @@ public:
 	virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
 	virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
 
-    //-------------------------------------------------------------------------
-    void drawObstacles ( void );
-
+    
     // a group (STL vector) of all vehicles in the Plugin
     std::vector<osAbstractVehicle*> all;
     int resetCount;
@@ -111,6 +111,8 @@ private:
 
 	NetSoccerPlayer* findUncontrolledSoccer( NetSoccerPlayer::Group& kTeam );
 	bool checkForGoal( void );
+
+	OpenSteer::CameraPlugin* m_pCameraPlugin;
 };
 
 #endif // __NETSOCCERPLUGIN_H__

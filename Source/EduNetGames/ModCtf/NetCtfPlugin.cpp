@@ -54,19 +54,7 @@ namespace	{
 
 	const float gMinStartRadius = 30;
 	const float gMaxStartRadius = 40;
-
-	void initPluginCamera( osAbstractVehicle& kVehicle )
-	{
-		// camera setup
-		CameraPlugin::init2dCamera( kVehicle );
-		// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-		Camera::accessInstance().mode = Camera::cmStraightDown;
-		Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
-		Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
-		Camera::accessInstance().lookdownDistance = 15;
-		// make camera jump immediately to new position
-		Camera::accessInstance().doNotSmoothNextMove ();
-	}
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -206,6 +194,9 @@ void NetCtfPlugin::removeOneObstacle( void )
 //-----------------------------------------------------------------------------
 void NetCtfPlugin::open (void)
 {
+	m_CameraPlugin = ET_NEW OpenSteer::CameraPlugin();
+	m_GridPlugin = ET_NEW OpenSteer::GridPlugin();
+
 	if( this->isRemoteObject() )
 	{
 		// client side initialize
@@ -235,11 +226,27 @@ void NetCtfPlugin::open (void)
 
 	// initialize camera
 	// in case no seeker has been created
-	// this might happen on the client side
+	// this might happen on the client side	
 	if( NULL != this->m_pkSeeker )
 	{
 		initPluginCamera( *this->m_pkSeeker );
 	}
+	
+}
+
+void NetCtfPlugin::initPluginCamera( osAbstractVehicle& kVehicle )
+{
+	// camera setup
+	m_CameraPlugin->init2dCamera( kVehicle );
+
+	OpenSteer::Camera& kCam(m_CameraPlugin->accessCamera());
+	// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+	kCam.mode = Camera::cmStraightDown;
+	kCam.fixedTarget.set( 15, 0, 0 );
+	kCam.fixedPosition.set( 20, 20, 20 );
+	kCam.lookdownDistance = 15;
+	// make camera jump immediately to new position
+	kCam.doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------
@@ -300,40 +307,53 @@ void NetCtfPlugin::update (const float currentTime, const float elapsedTime)
 	{
 		this->reset();
 	}
+
+	// selected vehicle (user can mouse click to select another)
+	if( NULL != SimpleVehicle::getSelectedVehicle() )
+	{
+		OpenSteer::Camera& kCam(m_CameraPlugin->accessCamera());
+		AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
+		// draw "ground plane" centered between base and selected vehicle
+		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - kCam.position();
+		const Vec3 goalDirection = goalOffset.normalized ();
+		const Vec3 cameraForward = kCam.xxxls().forward();
+		const float goalDot = cameraForward.dot (goalDirection);
+		const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
+		const Vec3 gridCenter = interpolate (blend,
+			selected.position(),
+			NetCtfGameLogic::ms_kHomeBaseCenter);
+		m_GridPlugin->setGridCenter( gridCenter );
+
+		m_CameraPlugin->init2dCamera( selected );
+	}
+
+	m_GridPlugin->update( currentTime, elapsedTime );
+	m_CameraPlugin->update( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
+void NetCtfPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime, 
+	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
 
-	// selected vehicle (user can mouse click to select another)
-	if( NULL != SimpleVehicle::getSelectedVehicle() )
-	{
-		AbstractVehicle& selected = *SimpleVehicle::getSelectedVehicle();
-		// draw "ground plane" centered between base and selected vehicle
-		const Vec3 goalOffset = NetCtfGameLogic::ms_kHomeBaseCenter - Camera::accessInstance().position();
-		const Vec3 goalDirection = goalOffset.normalized ();
-		const Vec3 cameraForward = Camera::accessInstance().xxxls().forward();
-		const float goalDot = cameraForward.dot (goalDirection);
-		const float blend = remapIntervalClip (goalDot, 1, 0, 0.5, 0);
-		const Vec3 gridCenter = interpolate (blend,
-			selected.position(),
-			NetCtfGameLogic::ms_kHomeBaseCenter);
-		GridPlugin::setGridCenter( gridCenter );
-	}
+	m_CameraPlugin->redraw(pRenderer, currentTime, elapsedTime);
+
+	m_GridPlugin->redraw(pRenderer, currentTime, elapsedTime);
+	
 	// draw the seeker, obstacles and home base
-	drawObstacles ();
+	drawObstacles (pRenderer);
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.redraw( currentTime, elapsedTime );
+	kVG.redraw( pRenderer, currentTime, elapsedTime );
 
 	// display status in the upper left corner of the window
 	std::ostringstream status;
-	const float h = drawGetWindowHeight ();
+	const float h = pRenderer->drawGetWindowHeight ();
 	osVector3 screenLocation (10, h - 50, 0);
 	Color kColor = gGray80;
 	if( false == this->isRemoteObject() )
@@ -357,7 +377,7 @@ void NetCtfPlugin::redraw (const float currentTime, const float elapsedTime)
 		kColor = gGray50;
 	}
 
-	draw2dTextAt2dLocation( status, screenLocation, gGray80, drawGetWindowWidth(), drawGetWindowHeight() );
+	pRenderer->draw2dTextAt2dLocation( status, screenLocation, gGray80, pRenderer->drawGetWindowWidth(), pRenderer->drawGetWindowHeight() );	
 }
 
 //-----------------------------------------------------------------------------
@@ -421,6 +441,9 @@ void NetCtfPlugin::close (void)
 	}
 	this->allObstacles().clear();
 
+	ET_SAFE_DELETE(m_CameraPlugin);
+	ET_SAFE_DELETE(m_GridPlugin);
+
 }
 
 //-----------------------------------------------------------------------------
@@ -445,9 +468,10 @@ void NetCtfPlugin::reset (void)
 	if( false == this->isRemoteObject() )
 	{
 		// reset camera position
-		CameraPlugin::position2dCamera( *this->m_pkSeeker );
+		m_CameraPlugin->position2dCamera( *this->m_pkSeeker );
+		OpenSteer::Camera& kCam(m_CameraPlugin->accessCamera());
 		// make camera jump immediately to new position
-		Camera::accessInstance().doNotSmoothNextMove ();
+		kCam.doNotSmoothNextMove ();
 	}
 }
 
@@ -481,7 +505,7 @@ void NetCtfPlugin::printMiniHelpForFunctionKeys (void) const
 }
 
 //-----------------------------------------------------------------------------
-void NetCtfPlugin::drawObstacles (void)
+void NetCtfPlugin::drawObstacles (OpenSteer::AbstractRenderer* pRenderer)
 {
 	const Color color (0.8f, 0.6f, 0.4f);
 	ObstacleGroup::const_iterator kIter = this->allObstacles().begin();
@@ -489,7 +513,7 @@ void NetCtfPlugin::drawObstacles (void)
 	while( kIter != kEnd )
 	{
 		SphereObstacle* pkSphere = dynamic_cast<SphereObstacle*>(*kIter);
-		drawXZCircle( pkSphere->radius, pkSphere->center, color, 40 );
+		pRenderer->drawXZCircle( pkSphere->radius, pkSphere->center, color, 40 );
 		++kIter;
 	}
 }

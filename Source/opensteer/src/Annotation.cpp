@@ -59,4 +59,30 @@ namespace OpenSteer	{
 	}
 
 
+//////////////////////////////////////////////////////////////////////////
+	void DiscAnnotation::draw( AbstractRenderer* pRenderer, bool bDrawPhaseActive )const 
+	{
+		if (bDrawPhaseActive)
+		{
+			pRenderer->drawCircleOrDisk (m_radius, m_axis, m_center, m_color,
+				m_segments, m_filled, m_b3d);
+		}
+		else
+		{
+			pRenderer->deferredDrawCircleOrDisk (m_radius, m_axis, m_center, m_color,
+				m_segments, m_filled, m_b3d);
+		}
+	}
+//////////////////////////////////////////////////////////////////////////
+	void LineAnnotation::draw( AbstractRenderer* pRenderer, bool bDrawPhaseActive )const 
+	{
+		if (bDrawPhaseActive)
+		{
+			pRenderer->drawLine (m_startPoint, m_endPoint, m_color);
+		}
+		else
+		{
+			pRenderer->deferredDrawLine (m_startPoint, m_endPoint, m_color);
+		}
+	}
 }

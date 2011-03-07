@@ -92,13 +92,17 @@ void NetSoccerPlugin::open ( void )
     m_PlayerCountB = 8;
 	this->createTeam(this->m_PlayerCountB, m_kTeamB, false);
    
+	m_pCameraPlugin = ET_NEW OpenSteer::CameraPlugin();
+
 	if(NULL != this->m_Ball)
 	{
 		// initialize camera
-		CameraPlugin::position2dCamera ( *m_Ball );
-		Camera::accessInstance().mode =  Camera::cmFixed;
-		Camera::accessInstance().fixedTarget.set ( 10,  CameraPlugin::camera2dElevation, 10 );
-		Camera::accessInstance().fixedPosition.set ( 40, 40, 40 );
+		m_pCameraPlugin->position2dCamera ( *m_Ball );
+		Camera& kCam(m_pCameraPlugin->accessCamera() );
+
+		kCam.mode =  Camera::cmFixed;
+		kCam.fixedTarget.set ( 10,  CameraPlugin::camera2dElevation, 10 );
+		kCam.fixedPosition.set ( 40, 40, 40 );
 	}
    
     m_redScore = 0;
@@ -157,6 +161,7 @@ void NetSoccerPlugin::update ( const float currentTime, const float elapsedTime 
 		this->checkForGoal();
 	}
   
+	m_pCameraPlugin->update( currentTime, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
@@ -178,12 +183,16 @@ bool NetSoccerPlugin::checkForGoal( void )
 	return bGoal;
 }
 //-----------------------------------------------------------------------------
-void NetSoccerPlugin::redraw ( const float currentTime, const float elapsedTime )
+void NetSoccerPlugin::redraw ( OpenSteer::AbstractRenderer* pRenderer,
+							  const float currentTime, const float elapsedTime )
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
+
+	m_pCameraPlugin->redraw( pRenderer, currentTime, elapsedTime);
+
 	/*this->drawTeam( this->m_kTeamA );
 	this->drawTeam( this->m_kTeamB );
     
@@ -193,31 +202,32 @@ void NetSoccerPlugin::redraw ( const float currentTime, const float elapsedTime 
     }*/
 
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.redraw( currentTime, elapsedTime );
+	kVG.redraw( pRenderer, currentTime, elapsedTime );
 
-    m_bbox->draw();
-    m_TeamAGoal->draw();
-    m_TeamBGoal->draw();
+    m_bbox->draw(pRenderer);
+    m_TeamAGoal->draw(pRenderer);
+    m_TeamBGoal->draw(pRenderer);
+
+	const float fWidth(pRenderer->drawGetWindowWidth());
+	const float fHeight(pRenderer->drawGetWindowHeight());
     {
         std::ostringstream annote;
         annote << "Red: "<< m_redScore;
-        draw2dTextAt3dLocation ( annote,  Vec3 ( 23,0,0 ),
+        pRenderer->draw2dTextAt3dLocation ( annote,  Vec3 ( 23,0,0 ),
                                  Color ( 1.0f,0.7f,0.7f ),
-                                 drawGetWindowWidth(),
-                                 drawGetWindowHeight() );
+                                 fWidth,
+                                 fHeight );
     }
     {
         std::ostringstream annote;
         annote << "Blue: "<< m_blueScore;
-        draw2dTextAt3dLocation ( annote,
+        pRenderer->draw2dTextAt3dLocation ( annote,
                                  Vec3 ( -23,0,0 ),
                                  Color ( 0.7f,0.7f,1.0f ),
-                                 drawGetWindowWidth(),
-                                 drawGetWindowHeight() );
+                                 fWidth,
+                                 fHeight );
     }
-
-    // draw "ground plane"
-    // OpenSteerDemo::gridUtility (  Vec3 ( 0,0,0 ) );
+   
 }
 
 //-----------------------------------------------------------------------------
@@ -248,6 +258,8 @@ void NetSoccerPlugin::close ( void )
 		this->removeVehicle(pkVehicle);
 		ET_SAFE_DELETE( this->m_Ball );
 	}
+
+	ET_SAFE_DELETE(m_pCameraPlugin);
 }
 //-----------------------------------------------------------------------------
 void NetSoccerPlugin::reset ( void )
