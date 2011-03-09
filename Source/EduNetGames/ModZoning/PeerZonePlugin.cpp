@@ -110,7 +110,7 @@ namespace EduNet	{
 		}
 	}
 
-	void MasterZonePlugin::zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle )
+	void MasterZonePlugin::zoneCheck( const ZonePlugin* zone, OpenSteer::SimpleNetworkVehicle* vehicle )
 	{
 		// TODO:
 		vehicle->setIsZoneMember( zone->getZoneId(), zone->isVehicleInside( *vehicle ) );
@@ -157,7 +157,7 @@ namespace EduNet	{
 					osAVIterator vehicleIterEnd = vehicles.end();
 					while( vehicleIter != vehicleIterEnd )
 					{
-						SimpleNetworkVehicle* networkVehicle = dynamic_cast<SimpleNetworkVehicle*>(*vehicleIter);
+						OpenSteer::SimpleNetworkVehicle* networkVehicle = dynamic_cast<OpenSteer::SimpleNetworkVehicle*>(*vehicleIter);
 						if( NULL != networkVehicle )
 						{
 							this->zoneCheck( *iter0, networkVehicle );
@@ -175,7 +175,7 @@ namespace EduNet	{
 
 	void MasterZonePlugin::onSubZoneAdded( ZonePlugin* pkSubZone )
 	{
-		AbstractEntityFactory* pFactory(NULL);
+		OpenSteer::AbstractEntityFactory* pFactory(NULL);
 		if( true == this->m_bCreateContentZone[pkSubZone->getZoneId()] )
 		{
 			pFactory = this->getEntityFactory();			
@@ -187,12 +187,12 @@ namespace EduNet	{
 		pkSubZone->addPlugin( pkContentPlugin );
 	};
 
-	AbstractEntityFactory* MasterZonePlugin::getEntityFactory( void ) const
+	OpenSteer::AbstractEntityFactory* MasterZonePlugin::getEntityFactory( void ) const
 	{
 		return this->m_pEntityFactory;
 	}
 
-	void MasterZonePlugin::setEntityFactory( AbstractEntityFactory* pFactory )
+	void MasterZonePlugin::setEntityFactory( OpenSteer::AbstractEntityFactory* pFactory )
 	{
 		this->m_pEntityFactory = pFactory;
 	}
@@ -208,10 +208,10 @@ namespace EduNet	{
 		// TODO WHAT
 	}
 
-	void MasterZonePlugin::redraw( const float currentTime, const float elapsedTime )
-	{		
-		//CameraPlugin::update(currentTime, elapsedTime );			
-		BaseClass::redraw( currentTime, elapsedTime );
+	void MasterZonePlugin::redraw( OpenSteer::AbstractRenderer* pRenderer,
+		const float currentTime, const float elapsedTime )
+	{			
+		BaseClass::redraw(pRenderer, currentTime, elapsedTime );
 	}
 }
 

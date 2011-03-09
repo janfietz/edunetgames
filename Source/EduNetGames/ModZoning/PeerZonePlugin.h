@@ -48,11 +48,12 @@ namespace EduNet	{
 
 		const char* name() const;
 
-		void zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle );
+		void zoneCheck( const ZonePlugin* zone, OpenSteer::SimpleNetworkVehicle* vehicle );
 
 		//---------------------------------------------------------------------
 		virtual void update( const float currentTime, const float elapsedTime );
-		virtual void redraw( const float currentTime, const float elapsedTime );
+		virtual void redraw( OpenSteer::AbstractRenderer* pRenderer, 
+			const float currentTime, const float elapsedTime) OS_OVERRIDE;
 
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone );
 
@@ -65,9 +66,9 @@ namespace EduNet	{
 			return false;
 		}
 
-		virtual void setEntityFactory( AbstractEntityFactory* );
+		virtual void setEntityFactory( OpenSteer::AbstractEntityFactory* );
 
-		virtual AbstractEntityFactory* getEntityFactory( void ) const;
+		virtual OpenSteer::AbstractEntityFactory* getEntityFactory( void ) const;
 
 		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
 		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
@@ -77,7 +78,7 @@ namespace EduNet	{
 
 		size_t getZoneId( void ) const{ return this->m_uiZoneId; };
 		void setZoneId( size_t zoneId );
-		AbstractEntityFactory* m_pEntityFactory;
+		OpenSteer::AbstractEntityFactory* m_pEntityFactory;
 	};
 
 }

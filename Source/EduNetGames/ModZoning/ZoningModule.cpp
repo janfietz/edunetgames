@@ -87,37 +87,37 @@ namespace EduNet	{
 		std::string kName(pszName);
 		if( kName == "ZonePlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false );
 
 			return pkZone;  
 		}
 		if( kName == "EmptyZonePlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 5 );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 5 );
 
 			return pkZone;  
 		}
 		if( kName == "ZonePlugin0" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 0 );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 0 );
 
 			return pkZone;  
 		}
 		if( kName == "ZonePlugin1" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 1 );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 1 );
 
 			return pkZone;  
 		}
 		if( kName == "ZonePlugin2" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 2 );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 2 );
 
 			return pkZone;  
 		}
 		if( kName == "ZonePlugin3" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 3 );
+			OpenSteer::ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 3 );
 
 			return pkZone;  
 		}

@@ -52,22 +52,6 @@ namespace
 	// How many pedestrians to create when the plugin starts first?
 	int const gPedestrianStartCount = 1; // 100
 
-	void initPluginCamera( osAbstractVehicle& kVehicle )
-	{
-		// camera setup
-		CameraPlugin::init2dCamera( kVehicle );
-		if( Camera::getLocalSpaceToTrack() == &kVehicle )
-		{
-			// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-			Camera::accessInstance().mode = Camera::cmStraightDown;
-			Camera::accessInstance().fixedTarget.set( 15, 0, 0 );
-			Camera::accessInstance().fixedPosition.set( 20, 20, 20 );
-			Camera::accessInstance().lookdownDistance = 15;
-			// make camera jump immediately to new position
-			Camera::accessInstance().doNotSmoothNextMove ();
-		}
-	}
-
 }
 
 
@@ -166,6 +150,8 @@ void NetPedestrianPlugin::open (void)
 {
 	osVector3 offset(osVector3::zero);
 
+	m_pCameraPlugin = ET_NEW OpenSteer::CameraPlugin();
+
 	AbstractPlugin* pkParent = this->getParentPlugin();
 	ZonePlugin* pkParentZone = dynamic_cast<ZonePlugin*>(pkParent);
 	// the parent zone
@@ -180,10 +166,11 @@ void NetPedestrianPlugin::open (void)
 	this->setPath( createPath( offset, this->m_fPathScale ) );
 
 	// camera setup
-	Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
-	Camera::accessInstance().fixedTarget.set (15, 0, 30);
-	Camera::accessInstance().fixedPosition.set (15, 70, -70);
-	Camera::accessInstance().lookdownDistance = 15;
+	OpenSteer::Camera& kCam(m_pCameraPlugin->accessCamera());
+	kCam.mode = Camera::cmFixedDistanceOffset;
+	kCam.fixedTarget.set (15, 0, 30);
+	kCam.fixedPosition.set (15, 70, -70);
+	kCam.lookdownDistance = 15;
 
 	// make the database used to accelerate proximity queries
 	cyclePD = -1;
@@ -199,6 +186,23 @@ void NetPedestrianPlugin::open (void)
 	initPluginCamera( *SimpleVehicle::getSelectedVehicle() );
 }
 
+void NetPedestrianPlugin::initPluginCamera( osAbstractVehicle& kVehicle )
+{
+	// camera setup
+	m_pCameraPlugin->init2dCamera( kVehicle );
+	OpenSteer::Camera& kCam(m_pCameraPlugin->accessCamera());
+	if( kCam.getLocalSpaceToTrack() == &kVehicle )
+	{
+		// Camera::accessInstance().mode = Camera::cmFixedDistanceOffset;
+		kCam.mode = Camera::cmStraightDown;
+		kCam.fixedTarget.set( 15, 0, 0 );
+		kCam.fixedPosition.set( 20, 20, 20 );
+		kCam.lookdownDistance = 15;
+		// make camera jump immediately to new position
+		kCam.doNotSmoothNextMove ();
+	}
+}
+
 //-----------------------------------------------------------------------------
 void NetPedestrianPlugin::close (void)
 {
@@ -206,6 +210,8 @@ void NetPedestrianPlugin::close (void)
 	// delete all Pedestrians
 	while (kVG.population() > 0) 
 		removePedestrianFromCrowd ();
+
+	ET_SAFE_DELETE(m_pCameraPlugin);
 }
 
 //-----------------------------------------------------------------------------
@@ -214,12 +220,11 @@ void NetPedestrianPlugin::reset (void)
 	// reset each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.reset();
-
-	// reset camera position
-	CameraPlugin::position2dCamera( *SimpleVehicle::getSelectedVehicle() );
-
-	// make camera jump immediately to new position
-	Camera::accessInstance().doNotSmoothNextMove ();
+	
+	// make camera jump immediately to new position	
+	m_pCameraPlugin->position2dCamera( *SimpleVehicle::getSelectedVehicle() );
+	OpenSteer::Camera& kCam(m_pCameraPlugin->accessCamera());
+	kCam.doNotSmoothNextMove ();
 }
 
 //-----------------------------------------------------------------------------
@@ -229,36 +234,34 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 	{
 		return;
 	}
+	m_pCameraPlugin->update( currentTime, elapsedTime);
+
 	// update each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
 	kVG.update( currentTime, elapsedTime );
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTime)
+void NetPedestrianPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer,
+	const float currentTime, 
+	const float elapsedTime)
 {
 	if( false == this->isVisible() )
 	{
 		return;
 	}
-	// selected Pedestrian (user can mouse click to select another)
-	AbstractVehicle* selected = SimpleVehicle::getSelectedVehicle();
 
-	// update grid center
-	if( NULL != SimpleVehicle::getSelectedVehicle() ) 
-	{
-		GridPlugin::setGridCenter( SimpleVehicle::getSelectedVehicle()->position() );
-	}
-
+	m_pCameraPlugin->redraw( pRenderer, currentTime, elapsedTime);
+	
 	// draw and annotate each Pedestrian
 	AbstractVehicleGroup kVG( this->allVehicles() );
-	kVG.redraw( currentTime, elapsedTime );
+	kVG.redraw( pRenderer, currentTime, elapsedTime );
 
 	// draw the path they follow and obstacles they avoid
 	// but only once
 	if( this->m_fLastRenderTime != currentTime )
 	{
-		this->drawPathAndObstacles ();
+		this->drawPathAndObstacles (pRenderer);
 	}
 
 	AbstractPlugin* pkParent = this->getParentPlugin();
@@ -272,7 +275,7 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 	{
 		// display status in the upper left corner of the window
 		std::ostringstream status;
-		const float h = drawGetWindowHeight ();
+		const float h = pRenderer->drawGetWindowHeight ();
 		osVector3 screenLocation (10, h - 50, 0);
 		Color kColor = gGray80;
 		if( false == this->isRemoteObject() )
@@ -300,14 +303,16 @@ void NetPedestrianPlugin::redraw (const float currentTime, const float elapsedTi
 			screenLocation.y -= 60.0f;
 			kColor = gGray50;
 		}
-		draw2dTextAt2dLocation (status, screenLocation, kColor, drawGetWindowWidth(), drawGetWindowHeight());
+		pRenderer->draw2dTextAt2dLocation (status, screenLocation, kColor, 
+			pRenderer->drawGetWindowWidth(), 
+			pRenderer->drawGetWindowHeight());
 	}
 
 	this->m_fLastRenderTime = currentTime;
 }
 
 //-----------------------------------------------------------------------------
-void NetPedestrianPlugin::drawPathAndObstacles (void)
+void NetPedestrianPlugin::drawPathAndObstacles (OpenSteer::AbstractRenderer* pRenderer)
 {
 	if( this->m_bRenderPath == false )
 	{
@@ -321,7 +326,7 @@ void NetPedestrianPlugin::drawPathAndObstacles (void)
 	const PolylineSegmentedPathwaySingleRadius& path = *this->m_pkPath;
 	for (size_type i = 1; i < path.pointCount(); ++i ) 
 	{
-		drawLine (path.point( i )+offset, path.point( i-1)+offset , pathColor);
+		pRenderer->drawLine (path.point( i )+offset, path.point( i-1)+offset , pathColor);
 	}
 }
 

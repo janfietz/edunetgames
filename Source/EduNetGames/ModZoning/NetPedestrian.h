@@ -59,7 +59,7 @@ public:
 	virtual void reset( void );
 	virtual void update( const float currentTime, const float elapsedTime);
 	virtual osVector3 determineCombinedSteering( const float elapsedTime );
-	virtual void draw( const float currentTime, const float elapsedTime );
+	virtual void draw( OpenSteer::AbstractRenderer*,const float currentTime, const float elapsedTime );
 
 	virtual void annotatePathFollowing( const osVector3& future,
 		const osVector3& onPath,

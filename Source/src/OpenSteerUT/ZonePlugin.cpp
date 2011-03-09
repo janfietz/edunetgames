@@ -206,7 +206,7 @@ void ZonePlugin::close( void )
 	// the root zone
 	if( NULL == pkParentZone )
 	{		
-		m_pCameraPlugin->setCameraTarget( NULL );
+		//m_pCameraPlugin->setCameraTarget( NULL );
 		m_pCameraPlugin = NULL;
 	}
 	BaseClass::close();
