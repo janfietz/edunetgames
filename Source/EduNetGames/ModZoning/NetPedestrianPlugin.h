@@ -32,6 +32,7 @@
 //-----------------------------------------------------------------------------
 #include "EduNetCommon/EduNetCommon.h"
 #include "NetPedestrianFactory.h"
+#include "OpenSteerUT/CameraPlugin.h"
 
 namespace OpenSteer {
 	class PolylineSegmentedPathwaySingleRadius;
@@ -56,7 +57,8 @@ public:
 
 	virtual void open (void);
 	virtual void update (const float currentTime, const float elapsedTime);
-	virtual void redraw (const float currentTime, const float elapsedTime);
+	virtual void redraw ( OpenSteer::AbstractRenderer* pRenderer, 
+		const float currentTime, const float elapsedTime) OS_OVERRIDE;
 
 	virtual void close (void);
 
@@ -77,7 +79,7 @@ public:
 	// implement to initialize additional gui functionality
 	virtual void initGui( void* pkUserdata );
 
-	void drawPathAndObstacles (void);
+	void drawPathAndObstacles (OpenSteer::AbstractRenderer* pRenderer);
 
 	void addPedestrianToCrowd(void);
 	void removePedestrianFromCrowd (void);
@@ -111,6 +113,8 @@ public:
 
 private:
 
+	void initPluginCamera( osAbstractVehicle& kVehicle );
+
 	NetPedestrianFactory m_kOfflinePedestrianFactory;
 	OpenSteer::PolylineSegmentedPathwaySingleRadius* m_pkPath;
 
@@ -130,6 +134,8 @@ private:
 	float m_fLastRenderTime;
 	float m_fPathScale;
 	bool m_bRenderPath;
+
+	OpenSteer::CameraPlugin* m_pCameraPlugin;
 };
 
 

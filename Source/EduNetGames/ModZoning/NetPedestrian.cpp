@@ -145,12 +145,12 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 		if (osVector3::distance (position(), path->getStartPoint()) < pathRadius )
 		{
 			pathDirection = +1;
-			annotationXZCircle (pathRadius, path->getStartPoint(), darkRed, 20);
+			annotationXZCircle (NULL, pathRadius, path->getStartPoint(), darkRed, 20);
 		}
 		if (osVector3::distance (position(), path->getEndPoint()) < pathRadius )
 		{
 			pathDirection = -1;
-			annotationXZCircle (pathRadius, path->getEndPoint(), darkRed, 20);
+			annotationXZCircle (NULL, pathRadius, path->getEndPoint(), darkRed, 20);
 		}
 	}
 }
@@ -243,9 +243,10 @@ osVector3 NetPedestrian::determineCombinedSteering (const float elapsedTime)
 
 //-----------------------------------------------------------------------------
 // draw this pedestrian into scene
-void NetPedestrian::draw( const float currentTime, const float elapsedTime )
+void NetPedestrian::draw( OpenSteer::AbstractRenderer* pRenderer, 
+	const float currentTime, const float elapsedTime )
 {
-	BaseClass::draw( currentTime, elapsedTime );
+	BaseClass::draw( pRenderer, currentTime, elapsedTime );
 	Color kColor;
 	Vec3 kPosition = this->position();
 	bool bGotParentColor = false;
@@ -276,12 +277,12 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 		}
 	}
 
-	OpenSteer::drawBasic2dCircularVehicle (*this, kColor);
+	pRenderer->drawBasic2dCircularVehicle (*this, kColor);
 	this->setPosition( kPosition );
 	kColor.setA( 1.0f );
 	OpenSteer::EAnnotationMode eMode = this->getAnnotationMode();
 	this->setAnnotationMode( OpenSteer::EAnnotationMode_local );
-	this->drawTrail( kColor, gWhite );
+	this->drawTrail( pRenderer, kColor, gWhite );
 	this->setAnnotationMode( eMode );
 
 
@@ -308,7 +309,8 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 			}
 		}
 		annote << "]";
-		draw2dTextAt3dLocation (annote, this->position(), gWhite, drawGetWindowWidth(), drawGetWindowHeight());
+		pRenderer->draw2dTextAt3dLocation (annote, this->position(), gWhite, 
+			pRenderer->drawGetWindowWidth(), pRenderer->drawGetWindowHeight());
 	}
 }
 
@@ -325,18 +327,18 @@ void NetPedestrian::annotatePathFollowing (const osVector3& future,
 	const Color yellowOrange (1.0f, 0.75f, 0.0f);
 
 	// draw line from our position to our predicted future position
-	annotationLine (position(), future, yellow);
+	annotationLine (NULL, position(), future, yellow);
 
 	// draw line from our position to our steering target on the path
-	annotationLine (position(), target, yellowOrange);
+	annotationLine (NULL, position(), target, yellowOrange);
 
 	// draw a two-toned line between the future test point and its
 	// projection onto the path, the change from dark to light color
 	// indicates the boundary of the tube.
 	const osVector3 boundaryOffset = (onPath - future).normalized() * outside;
 	const osVector3 onPathBoundary = future + boundaryOffset;
-	annotationLine (onPath, onPathBoundary, darkOrange);
-	annotationLine (onPathBoundary, future, lightOrange);
+	annotationLine (NULL, onPath, onPathBoundary, darkOrange);
+	annotationLine (NULL, onPathBoundary, future, lightOrange);
 }
 
 //-----------------------------------------------------------------------------
@@ -345,15 +347,15 @@ void NetPedestrian::annotatePathFollowing (const osVector3& future,
 void NetPedestrian::annotateAvoidCloseNeighbor (const AbstractVehicle& other,
 								 const float /*additionalDistance*/)
 {
-	// draw the word "Ouch!" above colliding vehicles
-	const float headOn = forward().dot(other.forward()) < 0;
-	const Color green (0.4f, 0.8f, 0.1f);
-	const Color red (1, 0.1f, 0);
-	const Color color = headOn ? red : green;
-	const char* string = headOn ? "OUCH!" : "pardon me";
-	const osVector3 location = position() + osVector3 (0, 0.5f, 0);
-	if (OpenSteer::annotationIsOn())
-		draw2dTextAt3dLocation (string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
+	//// draw the word "Ouch!" above colliding vehicles
+	//const float headOn = forward().dot(other.forward()) < 0;
+	//const Color green (0.4f, 0.8f, 0.1f);
+	//const Color red (1, 0.1f, 0);
+	//const Color color = headOn ? red : green;
+	//const char* string = headOn ? "OUCH!" : "pardon me";
+	//const osVector3 location = position() + osVector3 (0, 0.5f, 0);
+	//if (OpenSteer::annotationIsOn())
+	//	draw2dTextAt3dLocation (string, location, color, drawGetWindowWidth(), drawGetWindowHeight());
 }
 
 //-----------------------------------------------------------------------------
@@ -365,11 +367,11 @@ void NetPedestrian::annotateAvoidNeighbor (const AbstractVehicle& threat,
 {
 	const Color green (0.15f, 0.6f, 0.0f);
 
-	annotationLine( position(), ourFuture, green );
-	annotationLine( threat.position(), threatFuture, green );
-	annotationLine( ourFuture, threatFuture, gRed );
-	annotationXZCircle( radius(), ourFuture,    green, 12 );
-	annotationXZCircle( radius(), threatFuture, green, 12 );
+	annotationLine( NULL, position(), ourFuture, green );
+	annotationLine( NULL, threat.position(), threatFuture, green );
+	annotationLine( NULL, ourFuture, threatFuture, gRed );
+	annotationXZCircle( NULL, radius(), ourFuture,    green, 12 );
+	annotationXZCircle( NULL, radius(), threatFuture, green, 12 );
 }
 
 //-----------------------------------------------------------------------------
@@ -385,10 +387,10 @@ void NetPedestrian::annotateAvoidObstacle( const float minDistanceToCollision )
 	const osVector3 BR = position()            - boxSide;
 	const osVector3 BL = position()            + boxSide;
 	const Color white( 1,1,1 );
-	annotationLine( FR, FL, white );
-	annotationLine( FL, BL, white );
-	annotationLine( BL, BR, white );
-	annotationLine( BR, FR, white );
+	annotationLine( NULL, FR, FL, white );
+	annotationLine( NULL, FL, BL, white );
+	annotationLine( NULL, BL, BR, white );
+	annotationLine( NULL, BR, FR, white );
 }
 
 //-----------------------------------------------------------------------------
