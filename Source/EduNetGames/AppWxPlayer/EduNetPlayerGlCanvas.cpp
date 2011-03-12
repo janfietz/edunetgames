@@ -57,12 +57,11 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 	wxGLCanvas(parent, id, 0, pos, size,style ),
 		m_Timer(this, GL_TIMER_ID),
 		m_iTicks(0),
-		m_pPlugin(NULL)
+		m_pPlugin(NULL),
+		m_context(NULL)
 	{
-		m_context = new wxGLContext(this);		
-
 		this->m_Timer.Start(1);
-		initGL();
+		
 	}
 	PlayerGlCanvas::~PlayerGlCanvas()
 	{
@@ -90,8 +89,9 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 			return;
 		}
 
-		wxGLCanvas::SetCurrent(*this->m_context);
-		wxPaintDC(this);
+		
+		wxGLContext* pContext = this->accessContext();
+		wxPaintDC dc(this);
 
 		glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -186,7 +186,7 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 		glMatrixMode(GL_PROJECTION);	
 		glLoadIdentity();
 
-		float fRatio = 1.0f * viewPort.tw/viewPort.th;
+		float fRatio = (float)viewPort.tw/(float)viewPort.th;
 		gluPerspective(45.0f, fRatio, 1, 1000);
 
 		
@@ -202,6 +202,17 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 	void PlayerGlCanvas::onKeyDown(wxKeyEvent& event)
 	{
 		event.Skip();
+	}
+
+	wxGLContext* PlayerGlCanvas::accessContext()
+	{
+		if (NULL == m_context)
+		{
+			m_context = new wxGLContext(this);
+			m_context->SetCurrent(*this);
+			initGL();
+		}
+		return m_context;
 	}
 }
 

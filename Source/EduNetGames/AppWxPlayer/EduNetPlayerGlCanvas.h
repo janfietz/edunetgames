@@ -70,6 +70,7 @@ namespace EduNet
 
 	private:
 
+		wxGLContext* accessContext();
 		
 		wxGLContext*	m_context;
 
