@@ -35,17 +35,24 @@
 #include "OpenSteerUT/EmptyPlugin.h"
 namespace EduNet
 {
+	enum
+	{
+		PANE_MODULETREE = 1,
+		VIEW_MODULETREE,
+	};
+
 	BEGIN_EVENT_TABLE(PlayerWxFrame, wxFrame)
 		EVT_MENU(wxID_EXIT,  PlayerWxFrame::OnQuit)
 		EVT_MENU(wxID_ABOUT, PlayerWxFrame::OnAbout)
 		EVT_ACTIVATE(PlayerWxFrame::OnActivate)
 		EVT_PLUGIN_CREATED(ModuleTreeCtrl_Ctrl, PlayerWxFrame::OnCreatePlugin)
+		EVT_MENU(VIEW_MODULETREE,PlayerWxFrame::OnCreateModuleTree)
 	END_EVENT_TABLE()
 
 
 	// frame constructor
 	PlayerWxFrame::PlayerWxFrame(const wxString& title, ModulePluginLoader* pModuleManager)
-	: wxFrame(NULL, wxID_ANY, title, wxPoint(50,50), wxSize(450,450)),
+	: wxFrame(NULL, wxID_ANY, title, wxPoint(50,50), wxSize(800,700)),
 		m_pModuleManager(pModuleManager)
 	{
 
@@ -64,10 +71,15 @@ namespace EduNet
 
 		fileMenu->Append(wxID_EXIT, "E&xit\tAlt-X", "Quit this program");
 
+		wxMenu *viewMenu = new wxMenu;
+		viewMenu->Append(VIEW_MODULETREE, wxT("&Show Modules"), wxT("Show the module tree"));
+		
+
 		// now append the freshly created menu to the menu bar...
 		wxMenuBar *menuBar = new wxMenuBar();
-		menuBar->Append(fileMenu, "&File");
-		menuBar->Append(helpMenu, "&Help");
+		menuBar->Append(fileMenu, wxT("&File") );
+		menuBar->Append(viewMenu, wxT("&View") );
+		menuBar->Append(helpMenu, wxT("&Help") );
 
 		// ... and attach this menu bar to the frame
 		SetMenuBar(menuBar);
@@ -137,12 +149,18 @@ namespace EduNet
 	//-----------------------------------------------------------------------------
 	void PlayerWxFrame::CreateModuleTree( )
 	{
-		ModuleTreeCtrl* moduleTree = new ModuleTreeCtrl( m_pModuleManager, this );
+		ModuleTreeCtrl* moduleTree = new ModuleTreeCtrl( m_pModuleManager, this, wxPoint(0,0), wxSize(250,300) );
 		m_mgr.AddPane(moduleTree, wxAuiPaneInfo().
 			Name(wxT("ModuleTree")).Caption(wxT("Module Tree")).
 			Left().Layer(1).Position(1).
 			CloseButton(true).MaximizeButton(true));
 		m_mgr.Update();
 	}
-	
+
+	//-----------------------------------------------------------------------------
+	void PlayerWxFrame::OnCreateModuleTree( wxCommandEvent& WXUNUSED(event ) )
+	{			
+		CreateModuleTree();		
+	}
+
 }
