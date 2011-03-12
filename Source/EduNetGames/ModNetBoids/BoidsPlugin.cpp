@@ -301,19 +301,19 @@ void NetBoidsPlugin::handleFunctionKeys ( int keyNumber )
 {
     switch ( keyNumber )
     {
-    case 1:
+    case 49: //1
         addBoidToFlock ();
         break;
-    case 2:
+    case 50:
         removeBoidFromFlock ();
         break;
-    case 3:
+    case 51:
         nextPD ();
         break;
-    case 4:
+    case 52:
         nextBoundaryCondition ();
         break;
-    case 5:
+    case 53:
         printLQbinStats ();
         break;
     }

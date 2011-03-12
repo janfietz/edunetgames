@@ -82,7 +82,8 @@ namespace EduNet
 		OpenSteer::Clock m_Clock;
 		DECLARE_EVENT_TABLE()
 		void updatePlugin(OpenSteer::AbstractPlugin* pkPlugin, float totalSimTime, float elapsedSimTime);
-		
+		void onCharInput( wxKeyEvent& event );
+
 	};
 
 }

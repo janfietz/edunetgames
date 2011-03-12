@@ -46,6 +46,7 @@ namespace EduNet
 		EVT_SIZE(PlayerGlCanvas::resized)
 		EVT_KEY_DOWN(PlayerGlCanvas::onKeyDown)
 		EVT_KEY_UP(PlayerGlCanvas::onKeyUp)
+		EVT_CHAR(PlayerGlCanvas::onCharInput)
 	END_EVENT_TABLE()
 //-----------------------------------------------------------------------------
 PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
@@ -213,6 +214,15 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 			initGL();
 		}
 		return m_context;
+	}
+
+	void PlayerGlCanvas::onCharInput( wxKeyEvent& event )
+	{
+		if (m_pPlugin != NULL)
+		{
+			m_pPlugin->handleFunctionKeys( event.GetKeyCode() );
+		}
+		event.Skip();
 	}
 }
 
