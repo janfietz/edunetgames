@@ -106,7 +106,7 @@ void etMemoryDebugEnd()
 int EduNetMain (int argc, char **argv)
 {
 	int iExitCode = EXIT_FAILURE;
-	EduNet::Application::_SDMInit();
+	/*EduNet::Application::_SDMInit();
 	if( EXIT_SUCCESS == EduNet::Options::accessOptions().parseCommandLine( argc, argv ) )
 	{
 		if( true == EduNet::Options::accessOptions().continueProcess() )
@@ -119,7 +119,7 @@ int EduNetMain (int argc, char **argv)
 		}
 	}
 	EduNet::Application::_SDMShutdown();
-	g_MemoryDebug.exitMain();
+	g_MemoryDebug.exitMain();*/
 	return iExitCode;
 }
 

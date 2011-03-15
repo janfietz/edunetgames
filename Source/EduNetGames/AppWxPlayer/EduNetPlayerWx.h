@@ -51,6 +51,9 @@ namespace EduNet
 	public:
 		virtual bool OnInit();
 		virtual int OnExit();
+		virtual void OnInitCmdLine (wxCmdLineParser &parser);
+		virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+
 
 		static void run(int argc, char **argv);
 

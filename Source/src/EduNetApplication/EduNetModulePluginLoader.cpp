@@ -113,9 +113,8 @@ namespace EduNet
 	bool ModulePluginLoader::appWantsToLoadPlugin (
 		const char* pszPluginName )
 	{
-		//	const enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
-		const enStringArray_t kNames;
-
+		const enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
+		
 		// by default load all
 		if (true == kNames.empty())
 		{

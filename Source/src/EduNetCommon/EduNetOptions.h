@@ -38,18 +38,12 @@ namespace EduNet	{
 	{
 	public:
 
-		int parseCommandLine ( int argc, char **argv );
-
-		void setup ( void );
-
 		bool continueProcess ( void ) const;
 		void setContinueProcess ( bool bValue );
 
-		static const char* getAppName ( void );
-
 		void setSelectedPlugin ( const char* pluginName )
 		{
-			this->m_kPluginName.assign ( pluginName );
+			this->m_kPluginName.assign(pluginName) ;
 		}
 		const char* getSelectedPlugin ( void )
 		{

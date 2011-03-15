@@ -63,6 +63,7 @@ namespace EduNet
 		void OnActivate(wxActivateEvent& event);
 		void OnCreatePlugin( PluginCreateEvent& event);
 
+		
 		void CreateModuleTree();
 
 	private:
@@ -75,6 +76,7 @@ namespace EduNet
 		// any class wishing to process wxWidgets events must use this macro
 		DECLARE_EVENT_TABLE()
 		void OnCreateModuleTree( wxCommandEvent& event );
+		void CreatePlugin( const wxString &pluginName, const wxString &moduleName );
 	};
 
 }

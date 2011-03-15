@@ -1,8 +1,14 @@
+IF( NOT wxWidgets_FOUND)
+	return()
+ENDIF(NOT wxWidgets_FOUND)
+
 project(EduNetCommon)
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
  ${ET_RakNet_SOURCES}/DependentExtensions}
  )
+ 
+ include( ${wxWidgets_USE_FILE} )
 
 file (GLOB EduNetCommon_LIB_SRC "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB EduNetCommon_LIB_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")

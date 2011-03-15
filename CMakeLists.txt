@@ -125,10 +125,6 @@ ENDIF( NOT Boost_FOUND )
 FIND_PACKAGE(RakNet)
 set(ET_RakNet_SOURCES ${ET_THIRD_PARTY_DIR}/raknet CACHE PATH "Path to raknet sources" )
 
-FIND_PACKAGE(Argtable)
-IF (NOT Argtable_FOUND)
-	MESSAGE("Argtable NOT FOUND use ${Argtable_INCLUDES} instead")
-ENDIF (NOT Argtable_FOUND)
 
 OPTION(ET_USE_WXWIDGETS "Search for wxWidgets includes and libraries" OFF)
 IF (ET_USE_WXWIDGETS)
@@ -158,7 +154,6 @@ ${EDUNET_GAMES_SOURCE_DIR}/External
 ${GLUT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIR}
 ${RakNet_INCLUDES}
-${Argtable_INCLUDES}
  )
 
 IF (WIN32)
@@ -194,7 +189,6 @@ EduNetProfile
 ${EDUNET_NEEDED_WIN_LIBRARY}
 ExtGLUI
 ExtLinearMath
-${Argtable_LIBRARY}
 ${Boost_LIBRARIES}
 )
 

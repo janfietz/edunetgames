@@ -4,6 +4,8 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
  ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
  ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty/RakNet-3.705/DependentExtensions
  )
+ 
+include( ${wxWidgets_USE_FILE} )
 
 file (GLOB EduNetApplication_LIB_SRC "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB EduNetApplication_LIB_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
@@ -19,7 +21,6 @@ EduNetModule
 ExtIProf
 EduNetProfile
 ExtGLUI
-${Argtable_LIBRARY}
 )
 
 #set compiler options to link the lib into a shared lib
