@@ -41,9 +41,25 @@
 #include "OpenSteer/Draw.h"
 
 #include "wx/dir.h"
+#include "wx/cmdline.h"
 
 namespace EduNet
 {
+
+	static const wxCmdLineEntryDesc cmdLineDesc[] =
+	{
+		{ wxCMD_LINE_SWITCH, "h", "help", "show this help message",
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+		{ wxCMD_LINE_SWITCH, "v", "version", "show version information",
+		wxCMD_LINE_VAL_NONE },
+
+		{ wxCMD_LINE_OPTION, "m", "module", "specify the module to load" },
+		{ wxCMD_LINE_OPTION, "p", "plugin", "preselect a plugin" },
+
+		// ... your other command line options here...
+
+		{ wxCMD_LINE_NONE }
+	};
 	
 	ModulePluginLoader* gLoadPlugin = NULL;
 	void initializeDynamicPlugins( )
@@ -108,8 +124,7 @@ namespace EduNet
 		//}		
 
 		// create the main application window
-		EduNet::PlayerWxFrame *frame = new EduNet::PlayerWxFrame("EduNet Plugin Player", pModuleManager);
-		frame->CreateModuleTree();
+		EduNet::PlayerWxFrame *frame = new EduNet::PlayerWxFrame("EduNet Plugin Player", pModuleManager);		
 		frame->Show(true);
 		return true;
 	}
@@ -128,26 +143,51 @@ namespace EduNet
 	{
 		int iExitCode = EXIT_FAILURE;
 		EduNet::Application::_SDMInit();
-		if( EXIT_SUCCESS == EduNet::Options::accessOptions().parseCommandLine( argc, argv ) )
+	
+		if(true == wxEntryStart(argc, argv) )
 		{
-			if( true == EduNet::Options::accessOptions().continueProcess() )
-			{
-				if(true == wxEntryStart(argc, argv) )
-				{
-					wxApp* pApp = static_cast<wxApp*>(wxApp::GetInstance());
-					pApp->CallOnInit();
-					pApp->OnRun();
-					pApp->OnExit();
-				}
-				wxEntryCleanup();
-			}
-			else
-			{
-				iExitCode = EXIT_SUCCESS;
-			}
+			wxApp* pApp = static_cast<wxApp*>(wxApp::GetInstance());
+			pApp->CallOnInit();
+			pApp->OnRun();
+			pApp->OnExit();
 		}
+		wxEntryCleanup();
+	
 		EduNet::Application::_SDMShutdown();
 
 	}
+
+	bool PlayerWx::OnCmdLineParsed( wxCmdLineParser& parser )
+	{
+		wxString value;
+		// everything is ok; proceed
+		if (parser.Found(wxT("m"), &value))
+		{
+			enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
+			wxPrintf("Try to load module: %s \n", value);
+			kNames.push_back( (const char*)value.ToAscii() );
+
+		}				
+		if (parser.Found(wxT("p"), &value))
+		{
+			wxPrintf("Preselect plugin: %s \n", value);
+			EduNet::Options::accessOptions().setSelectedPlugin(value);			
+		}
+		if ( parser.Found(wxT("v")) )
+		{
+			//const char* progname = Options::getAppName();
+			wxPrintf("Preselect plugin: %s \n", EduNet::Options::accessOptions().getSelectedPlugin());
+			//wxPrintf ( "'%s'\n",progname );
+			wxPrintf ( "Version 0.1\n" );
+			wxPrintf ( "example program to demonstrate different OpenSteer plugins.\n" );
+			wxPrintf ( "Copyright (c) 2011 Jan Fietz, Cyrus Preuss. All Rights Reserved.\n" );
+		}
+		return true;
+	}
+	void PlayerWx::OnInitCmdLine( wxCmdLineParser &parser )
+	{
+		parser.SetDesc( cmdLineDesc );		
+	}
 }
 IMPLEMENT_APP_NO_MAIN(EduNet::PlayerWx)
+

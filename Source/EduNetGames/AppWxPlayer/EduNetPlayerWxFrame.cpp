@@ -29,6 +29,7 @@
 #include "EduNetPlayerWxFrame.h"
 #include "EtWxPluginPanel.h"
 #include "EduNetWxModuleTree.h"
+#include "EduNetCommon/EduNetOptions.h"
 
 #include "EduNetApplication/EduNetModulePluginLoader.h"
 
@@ -96,6 +97,19 @@ namespace EduNet
 #endif // wxUSE_STATUSBAR
 
 		m_mgr.Update();
+
+		wxString kPreselectedPlugin(EduNet::Options::accessOptions().getSelectedPlugin() );
+		wxString module;
+		if(kPreselectedPlugin.IsEmpty() == false )
+		{
+			CreatePlugin(kPreselectedPlugin, module);
+		}
+
+		
+		if (m_pluginPanel == NULL)
+		{
+			CreateModuleTree();
+		}
 	}
 
 	//-----------------------------------------------------------------------------
@@ -142,18 +156,41 @@ namespace EduNet
 		
 		const wxString& moduleName = event.GetModuleName();
 		const wxString& pluginName = event.GetPluginName();
-		OpenSteer::AbstractPlugin* plugin = m_pModuleManager->createPluginByName( pluginName.c_str(), moduleName.c_str() );
+		CreatePlugin(pluginName, moduleName);
+
+	}
+
+	void PlayerWxFrame::CreatePlugin( const wxString &pluginName, const wxString &moduleName )
+	{
+		OpenSteer::AbstractPlugin* plugin;
+		if( moduleName.empty() )
+		{
+			plugin = m_pModuleManager->createPluginByName( pluginName.c_str() );
+		}
+		else
+		{
+			plugin = m_pModuleManager->createPluginByName( pluginName.c_str(), moduleName.c_str() );
+		}		
 		m_pluginPanel->ChangePlugin(plugin);
 	}
 
 	//-----------------------------------------------------------------------------
 	void PlayerWxFrame::CreateModuleTree( )
 	{
-		ModuleTreeCtrl* moduleTree = new ModuleTreeCtrl( m_pModuleManager, this, wxPoint(0,0), wxSize(250,300) );
-		m_mgr.AddPane(moduleTree, wxAuiPaneInfo().
-			Name(wxT("ModuleTree")).Caption(wxT("Module Tree")).
-			Left().Layer(1).Position(1).
-			CloseButton(true).MaximizeButton(true));
+		wxAuiPaneInfo& auiInfo = m_mgr.GetPane(wxT("ModuleTree"));
+		if (auiInfo.IsOk() == true)
+		{
+			auiInfo.Show(true);
+		}
+		else
+		{
+			ModuleTreeCtrl* moduleTree = new ModuleTreeCtrl( m_pModuleManager, this, wxPoint(0,0), wxSize(250,300) );
+			m_mgr.AddPane(moduleTree, wxAuiPaneInfo().
+				Name(wxT("ModuleTree")).Caption(wxT("Module Tree")).
+				Left().Layer(1).Position(1).
+				CloseButton(true).MaximizeButton(true));
+		}
+		
 		m_mgr.Update();
 	}
 
