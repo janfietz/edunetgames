@@ -26,26 +26,27 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "EduNetOptions.h"
+#include "EduNetWxFactory.h"
+
+
 namespace EduNet
-{
-	//-------------------------------------------------------------------------
-	Options::Options() :m_bContinueProcess ( true ),
-		m_kPluginName("")
+{	
+	//-----------------------------------------------------------------------------
+	wxPanel* WxFactory::createPanel(wxWindow* parent, wxWindowID id,
+		const wxPoint& pos, const wxSize& size,
+		long style, const wxString& name)
 	{
-
+		return new wxPanel(parent, id, pos, size, style, name);
 	}
 
-	//-------------------------------------------------------------------------
-	Options::~Options()
+	//-----------------------------------------------------------------------------
+	wxStaticBoxSizer* WxFactory::createStaticBoxSizer(int orient, wxWindow *parent, const wxString& label)
 	{
-
+		return new wxStaticBoxSizer(orient, parent, label);
 	}
 
-	//-------------------------------------------------------------------------
-	Options& Options::accessOptions ( void )
+	wxBoxSizer* WxFactory::createBoxSizer( int orient )
 	{
-		static Options kOptions;
-		return kOptions;
+		return new wxBoxSizer( orient );
 	}
 }

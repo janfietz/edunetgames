@@ -43,6 +43,12 @@
 #include "OpenSteer/Camera.h"
 #include "OpenSteer/PluginRegistry.h"
 
+#include "OpenSteerUT/AbstractWxGuiFactory.h"
+
+#include "wx/wx.h"
+#include "wx/statbox.h"
+#include "wx/panel.h"
+#include "wx/app.h"
 //-----------------------------------------------------------------------------
 // constructor
 OpenSteer::Plugin::Plugin( bool bAddToRegistry ):
@@ -348,5 +354,22 @@ void OpenSteer::Plugin::removePlayer (
 	{
 		pkPlayer->setParentEntity( NULL );
 		this->m_kAllPlayers.erase( kIter );
+	}
+}
+//-----------------------------------------------------------------------------
+wxWindow* OpenSteer::Plugin::prepareGui( wxWindow* parent, EduNet::AbstractWxGuiFactory* pGui )
+{
+	wxPanel* panel = pGui->createPanel(parent);
+	wxSizer* sizer = pGui->createStaticBoxSizer(wxVERTICAL,panel, this->pluginName() );
+	panel->SetSizer(sizer);
+
+	return panel;
+}
+//-----------------------------------------------------------------------------
+void OpenSteer::Plugin::setWxAppInstance( wxAppConsole* pInstance )
+{
+	if (wxTheApp != pInstance)
+	{
+		wxApp::SetInstance( pInstance );
 	}
 }

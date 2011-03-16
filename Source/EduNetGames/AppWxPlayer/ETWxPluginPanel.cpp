@@ -28,14 +28,17 @@
 
 #include "ETWxPluginPanel.h"
 #include "EduNetPlayerGlCanvas.h"
+#include "EduNetWxFactory.h"
 #include "OpenSteerUT/EmptyPlugin.h"
+
+
 namespace EduNet
 {	
 	BEGIN_EVENT_TABLE(PluginWxPanel, wxPanel)
 		
 	END_EVENT_TABLE()
 
-	PluginWxPanel::PluginWxPanel()
+	PluginWxPanel::PluginWxPanel():m_pPluginGuiRoot(NULL)
 	{
 		this->initGlCanvas();
 	}
@@ -47,24 +50,28 @@ namespace EduNet
 	const wxPoint &pos/*=wxDefaultPosition*/,
 	const wxSize &size/*=wxDefaultSize*/,
 	long style/*=wxTAB_TRAVERSAL*/, 
-	const wxString &name/*=wxPanelNameStr*/ ):wxPanel( parent, id, pos,size,style,name)
+	const wxString &name/*=wxPanelNameStr*/ ):wxPanel( parent, id, pos,size,style,name),
+	m_pPluginGuiRoot(NULL)
 	{
 		this->initGlCanvas();
 
-		ChangePlugin(NULL);
+
+
+		//ChangePlugin(NULL);
 	}
 
 	void PluginWxPanel::initGlCanvas()
 	{
-
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+
+		m_splitter = new wxSplitterWindow(this, wxID_ANY);
+		m_splitter->SetSashGravity(0.8);
+		m_splitter->SetMinimumPaneSize(100);
+
 		
-
-		m_pGlCanvas = new PlayerGlCanvas(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,wxFULL_REPAINT_ON_RESIZE);
-
-		m_pGlCanvas->initGL();
-
-		sizer->Add(m_pGlCanvas, 1, wxEXPAND | wxALL, 5);
+		m_pGlCanvas = new PlayerGlCanvas(m_splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize,wxFULL_REPAINT_ON_RESIZE);
+		
+		sizer->Add(m_splitter, 1, wxEXPAND | wxALL, 5);
 		SetSizer(sizer);
 		GetSizer()->SetSizeHints(this);
 	}
@@ -84,7 +91,7 @@ namespace EduNet
 // 			{
 // 				OpenSteer::Plugin::selectPlugin( NULL );
 // 			}
-			pPlugin->close();			
+			pPlugin->close();
 		}
 
 		m_spPlugin = plugin;
@@ -95,10 +102,32 @@ namespace EduNet
 			m_spPlugin = wxSharedPtr<OpenSteer::AbstractPlugin>(new EmptyPlugin());
 		}
 
+		if (m_pPluginGuiRoot != NULL)
+		{
+			m_splitter->Unsplit(m_pPluginGuiRoot);
+			m_pPluginGuiRoot->Destroy();
+		}
+
+		m_pPluginGuiRoot = new wxPanel(m_splitter,wxID_ANY);
+		wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
+		m_pPluginGuiRoot->SetSizer(panelSizer);
+
 		OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
-		//OpenSteer::Plugin::selectPlugin( pPlugin );
+		//if module comes from a dll it does not have the global app instance
+		// so we have to set it
+		plugin->setWxAppInstance(wxTheApp);
 		pPlugin->prepareOpen();
+
+		EduNet::WxFactory guiFactory;
+		wxWindow* subWindow = pPlugin->prepareGui(m_pPluginGuiRoot, &guiFactory);
+		if( subWindow != NULL)
+		{
+			panelSizer->Add(subWindow, 1, wxEXPAND);
+		}
+
 		pPlugin->open();
+
+		m_splitter->SplitVertically(m_pGlCanvas, m_pPluginGuiRoot);
 
 		m_pGlCanvas->setPlugin( pPlugin );
 

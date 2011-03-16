@@ -126,20 +126,17 @@ FIND_PACKAGE(RakNet)
 set(ET_RakNet_SOURCES ${ET_THIRD_PARTY_DIR}/raknet CACHE PATH "Path to raknet sources" )
 
 
-OPTION(ET_USE_WXWIDGETS "Search for wxWidgets includes and libraries" OFF)
-IF (ET_USE_WXWIDGETS)
-	# Here you can define what libraries of wxWidgets you need for your
-	# application. You can figure out what libraries you need here;
-	# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
-	SET(wxWidgets_USE_DEBUG, TRUE)
-	FIND_PACKAGE(wxWidgets COMPONENTS base core gl aui)
-	IF(wxWidgets_FOUND)
-	ELSE(wxWidgets_FOUND)
-		# For convenience. When we cannot continue, inform the user
-		MESSAGE("wxWidgets not found!")
-	ENDIF(wxWidgets_FOUND)
+# Here you can define what libraries of wxWidgets you need for your
+# application. You can figure out what libraries you need here;
+# http://www.wxwidgets.org/manuals/2.8/wx_librarieslist.html
+SET(wxWidgets_USE_DEBUG, TRUE)
+FIND_PACKAGE(wxWidgets COMPONENTS base core gl aui)
+IF(wxWidgets_FOUND)
+ELSE(wxWidgets_FOUND)
+	# For convenience. When we cannot continue, inform the user
+	MESSAGE("wxWidgets not found!")
+ENDIF(wxWidgets_FOUND)
 
-ENDIF (ET_USE_WXWIDGETS)
 
 IF (MINGW)
 MESSAGE ("GLUT NOT FOUND not found, trying to use MINGW glut32")
@@ -226,6 +223,7 @@ ${EDUNET_NEEDED_WIN_LIBRARY}
 ExtGLUI
 ExtLinearMath
 ${Boost_LIBRARIES}
+${wxWidgets_LIBRARIES}
 )
 
 add_subdirectory(Source)

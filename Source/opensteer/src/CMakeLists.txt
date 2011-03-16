@@ -2,6 +2,8 @@ project(ExtOpensteer)
 
 INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include
 )
+# wxWidgets include (this will do all the magic to configure everything)
+include( ${wxWidgets_USE_FILE} )
 
 SET(OPENTSTEER_LIB_SRC
  AABBox.cpp
