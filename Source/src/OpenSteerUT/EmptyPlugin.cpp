@@ -31,9 +31,13 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetProfile/GraphPlot.h"
 
+#include "OpenSteerUT/AbstractWxGuiFactory.h"
 
 #include <math.h>
 
+#include "wx/wx.h"
+#include "wx/statbox.h"
+#include "wx/panel.h"
 
 OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
 
@@ -48,8 +52,16 @@ void EmptyPlugin::initGui( void* pkUserdata )
 	glui->add_checkbox_to_panel( pluginPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
 	glui->add_checkbox_to_panel( pluginPanel, "Show SamplePlot", &this->m_bShowSamplePlot);
 }
+//-----------------------------------------------------------------------------
+wxWindow* EmptyPlugin::prepareGui( wxWindow* parent, EduNet::AbstractWxGuiFactory* pGui )
+{
+	wxPanel* panel = pGui->createPanel(parent);
+	wxSizer* sizer = pGui->createStaticBoxSizer(wxVERTICAL,panel, this->pluginName() );
+	panel->SetSizer(sizer);
 
-
+	wxWindow* window = BaseClass::prepareGui(panel, pGui);
+	return panel;
+}
 //-----------------------------------------------------------------------------
 void EmptyPlugin::open (void)
 {
@@ -183,4 +195,5 @@ void EmptyPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer,
 	}
 	
 }
+
 

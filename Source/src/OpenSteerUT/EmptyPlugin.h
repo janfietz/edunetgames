@@ -117,6 +117,7 @@ namespace EduNet{
 
 		virtual float selectionOrderSortKey (void) const {return 1.0f;}
 
+		virtual class wxWindow* prepareGui (class wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE;
 		virtual void open (void);
 
 		virtual void update (const float currentTime, const float elapsedTime);

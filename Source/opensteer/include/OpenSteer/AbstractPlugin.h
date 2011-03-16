@@ -78,6 +78,12 @@ FooPlugin gFooPlugin;
 #include "OpenSteer/Obstacle.h"
 #include "OpenSteer/AbstractRenderer.h"
 
+class wxWindow;
+class wxAppConsole;
+namespace EduNet
+{
+ class AbstractWxGuiFactory;
+}
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -91,8 +97,10 @@ namespace OpenSteer {
         
         virtual ~AbstractPlugin() { /* Nothing to do. */ }
         
-        //! generic Plugin actions: prepareOpen open, update, redraw, close and reset
+        //! generic Plugin actions: prepareOpen, prepareGui open, update, redraw, close and reset
+		virtual void setWxAppInstance(wxAppConsole* pInstance) OS_ABSTRACT;
 		virtual void prepareOpen (void) OS_ABSTRACT;
+		virtual  wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory ) OS_ABSTRACT; // prepare gui elements
         virtual void open (void) OS_ABSTRACT;
 // see AbstractUpdated
 //       virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;
@@ -151,9 +159,6 @@ namespace OpenSteer {
 		//! set a parent Plugin
 		virtual void setParentPlugin( AbstractPlugin* ) OS_ABSTRACT;
 
-		//! implement to initialize additional gui functionality
-		virtual void initGui( void* /*pkUserdata*/ ) OS_ABSTRACT;
-
 		//! set an external vehicle factory
 		virtual void setEntityFactory( AbstractEntityFactory* ) OS_ABSTRACT;
 
@@ -164,6 +169,8 @@ namespace OpenSteer {
 
 		//! implement to create a vehicle of the specified class
 		virtual AbstractVehicle* createVehicle( EntityClassId ) const OS_ABSTRACT;	
+
+		virtual void initGui( void* pkUserdata ) OS_ABSTRACT;
 	};
 
 } //! namespace OpenSteer    

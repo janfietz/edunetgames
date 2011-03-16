@@ -42,6 +42,7 @@
 
 #include "wx/sharedptr.h" 
 #include "wx/panel.h"
+#include <wx/splitter.h>
 #include "OpenSteer/AbstractPlugin.h"
 
 namespace EduNet
@@ -71,6 +72,8 @@ namespace EduNet
 
 		wxSharedPtr<OpenSteer::AbstractPlugin> m_spPlugin;
 		class PlayerGlCanvas* m_pGlCanvas;
+		wxPanel* m_pPluginGuiRoot;
+		wxSplitterWindow*  m_splitter;
 		// any class wishing to process wxWidgets events must use this macro
 		DECLARE_EVENT_TABLE()
 	};

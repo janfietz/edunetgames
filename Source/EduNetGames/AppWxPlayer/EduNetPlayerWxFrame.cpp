@@ -54,7 +54,8 @@ namespace EduNet
 	// frame constructor
 	PlayerWxFrame::PlayerWxFrame(const wxString& title, ModulePluginLoader* pModuleManager)
 	: wxFrame(NULL, wxID_ANY, title, wxPoint(50,50), wxSize(800,700)),
-		m_pModuleManager(pModuleManager)
+		m_pModuleManager(pModuleManager),
+		m_pluginPanel(NULL)
 	{
 
 		m_mgr.SetManagedWindow(this);
@@ -99,14 +100,15 @@ namespace EduNet
 		m_mgr.Update();
 
 		wxString kPreselectedPlugin(EduNet::Options::accessOptions().getSelectedPlugin() );
-		wxString module;
+		bool bPreselectedPluginCreated(false);
 		if(kPreselectedPlugin.IsEmpty() == false )
 		{
-			CreatePlugin(kPreselectedPlugin, module);
+			wxString module;
+			bPreselectedPluginCreated = CreatePlugin(kPreselectedPlugin, module);
 		}
 
 		
-		if (m_pluginPanel == NULL)
+		if (bPreselectedPluginCreated == false)
 		{
 			CreateModuleTree();
 		}
@@ -160,7 +162,7 @@ namespace EduNet
 
 	}
 
-	void PlayerWxFrame::CreatePlugin( const wxString &pluginName, const wxString &moduleName )
+	bool PlayerWxFrame::CreatePlugin( const wxString &pluginName, const wxString &moduleName )
 	{
 		OpenSteer::AbstractPlugin* plugin;
 		if( moduleName.empty() )
@@ -172,6 +174,16 @@ namespace EduNet
 			plugin = m_pModuleManager->createPluginByName( pluginName.c_str(), moduleName.c_str() );
 		}		
 		m_pluginPanel->ChangePlugin(plugin);
+#if wxUSE_STATUSBAR
+		if (NULL != plugin)
+		{
+			wxString txt;
+			txt.Printf("Created plugin:%s", plugin->pluginName() );
+			SetStatusText( txt );
+		}
+		
+#endif // wxUSE_STATUSBAR
+		return plugin != NULL;
 	}
 
 	//-----------------------------------------------------------------------------

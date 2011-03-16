@@ -69,7 +69,9 @@ namespace OpenSteer
 		{
 			return this->name();
 		}
+		virtual void setWxAppInstance(wxAppConsole* pInstance) OS_OVERRIDE;
 		virtual void prepareOpen (void);
+		virtual  wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE;
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime);
 		virtual void redraw( OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
@@ -89,9 +91,6 @@ namespace OpenSteer
 		virtual AbstractPlugin* getParentPlugin(void) const;
 		//! set a parent Plugin
 		virtual void setParentPlugin( AbstractPlugin* pkPlugin );
-
-		// implement to initialize additional gui functionality
-		virtual void initGui( void* pkUserdata );
 
 		// implement to create an entity of the specified class
 		virtual AbstractEntity* createEntity( EntityClassId classId ) const
@@ -123,6 +122,8 @@ namespace OpenSteer
 		virtual const AbstractPlayerGroup& allPlayers( void ) const { return m_kAllPlayers; };
 		virtual void addPlayer (OpenSteer::AbstractPlayer* pkPlayer);
 		virtual void removePlayer (OpenSteer::AbstractPlayer* pkPlayer);
+
+		virtual void initGui( void* pkUserdata ){};
 	protected:
 		void redrawChildren(OpenSteer::AbstractRenderer* pRenderer, 
 			const float currentTime, const float elapsedTime);
@@ -140,7 +141,7 @@ namespace OpenSteer
 	{
 		ET_DECLARE_BASE( Super )
 	public:
-		PluginArrayMixin(bool bAddToRegistry = true):Super( bAddToRegistry ),m_kPluginArray( false ) {};
+		PluginArrayMixin(bool bAddToRegistry = false):Super( bAddToRegistry ),m_kPluginArray( false ) {};
 		virtual ~PluginArrayMixin() {};
 
 		//---------------------------------------------------------------------
@@ -179,6 +180,12 @@ namespace OpenSteer
 		PluginArrayPluginMixin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) {};
 		virtual ~PluginArrayPluginMixin() {};
 
+		virtual wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE
+		{
+			wxWindow* window = Super::prepareGui(parent, pFactory);
+			this->m_kPluginArray.prepareGui(  window, pFactory );
+			return window;
+		}
 		virtual void open(void)
 		{
 			this->m_kPluginArray.open(  );
@@ -216,13 +223,6 @@ namespace OpenSteer
 			this->m_kPluginArray.reset(  );
 			Super::reset();
 		}
-
-		virtual void initGui( void* pkUserdata )
-		{
-			this->m_kPluginArray.initGui( pkUserdata );
-			Super::initGui( pkUserdata );
-		}
-
 	private:
 	};
 

@@ -31,8 +31,11 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractPluginUtilities.h"
+#include "OpenSteerUT/AbstractWxGuiFactory.h"
 
-
+#include "wx/app.h"
+#include "wx/panel.h"
+#include "wx/sizer.h"
 using namespace OpenSteer;
 
 
@@ -434,23 +437,25 @@ AbstractPlugin* PluginArray::next(void) const
 
 // implement to initialize additional gui functionality
 //-----------------------------------------------------------------------------
-void PluginArray::initGui( void* pkUserdata )
+ wxWindow* PluginArray::prepareGui( wxWindow* parent, EduNet::AbstractWxGuiFactory* pGui )
 {
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>(pkUserdata);
+	wxPanel* panel = pGui->createPanel( parent );
+	wxBoxSizer* sizer = pGui->createBoxSizer( wxVERTICAL );
+	panel->SetSizer(sizer);
 
 	TPluginArray::iterator kIter = this->begin();
 	TPluginArray::iterator kEnd = this->end();
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		GLUI_Panel* subPluginPanel = AbstractPluginGui::initSubPluginGui( pkPlugin, pkUserdata );
-		if( NULL != subPluginPanel )
+		wxWindow* subWindow = pkPlugin->prepareGui(panel, pGui);
+		if (subWindow != NULL)
 		{
-
+			sizer->Add(subWindow, 1, wxEXPAND );
 		}
 		++kIter;
 	}
+	return panel;
 }
 
 //-----------------------------------------------------------------------------
@@ -497,4 +502,12 @@ void PluginArray::TestPluginArray( void )
 
 
 	gTestPluginArray.removePlugin( pkAdd[0] );
+}
+
+void PluginArray::setWxAppInstance( wxAppConsole* pInstance )
+{
+	if (wxTheApp != pInstance)
+	{
+		wxApp::SetInstance( pInstance );
+	}
 }
