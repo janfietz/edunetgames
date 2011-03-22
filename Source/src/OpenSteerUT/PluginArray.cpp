@@ -31,7 +31,6 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractPluginUtilities.h"
-#include "OpenSteerUT/AbstractWxGuiFactory.h"
 
 #include "wx/app.h"
 #include "wx/panel.h"
