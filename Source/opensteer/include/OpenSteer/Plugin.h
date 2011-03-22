@@ -45,7 +45,6 @@
 
 #include "OpenSteer/AbstractPlugin.h"
 
-class wxWindow;
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
 
@@ -71,11 +70,10 @@ namespace OpenSteer {
 		{
 			return this->name();
 		}
-		virtual void setWxAppInstance(wxAppConsole* pInstance) OS_OVERRIDE;
 
 		virtual void prepareOpen (void) {};
 
-		virtual wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE;
+		virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
 
 		//! default reset method is to do a close then an open
 		virtual void reset (void);

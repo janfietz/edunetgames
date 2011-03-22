@@ -115,6 +115,33 @@ void NetworkPlugin::initGui( void* pkUserdata )
 }
 
 //-----------------------------------------------------------------------------
+wxWindow* NetworkPlugin::prepareGui( wxWindow* parent )
+{
+	 wxWindow* parentWindow = BaseClass::prepareGui( parent );
+
+	 wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
+	 parentWindow->GetSizer()->Add( sizer );
+
+	wxCheckBox* cbMotionState = new wxCheckBox( parentWindow, id_MotionState, "Motion state");
+	cbMotionState->Bind( wxEVT_COMMAND_CHECKBOX_CLICKED, &NetworkPlugin::onSettingChanged, this );
+	sizer->Add(cbMotionState);
+
+	wxCheckBox* cbPlotNetwork = new wxCheckBox( parentWindow, id_PlotNetwork, "Plot network");
+	cbPlotNetwork->Bind( wxEVT_COMMAND_CHECKBOX_CLICKED , &NetworkPlugin::onSettingChanged, this );
+	sizer->Add(cbPlotNetwork);
+
+	 //wxButton* boidAddButton = new wxButton(window,id_AddBoid, "+");
+	 //boidAddButton->Bind( wxEVT_COMMAND_BUTTON_CLICKED, &NetBoidsPlugin::onAddBoid, this );
+	 //buttonSizer->Add(boidAddButton);
+
+	 return parentWindow;
+}
+//-----------------------------------------------------------------------------
+void NetworkPlugin::onSettingChanged(wxCommandEvent& event)
+{
+
+}
+//-----------------------------------------------------------------------------
 void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
 {
 	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;

@@ -46,7 +46,7 @@
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/CameraPlugin.h"
-
+#include "OpenSteerUT/AbstractWxGuiFactory.h"
 
 #ifdef WIN32
 // Windows defines these as macros :(
@@ -61,6 +61,8 @@
 
 #include "NetBoidGameLogic.h"
 #include "NetBoidEntityFactory.h"
+
+#include "wx/spinctrl.h"
 
 // Include names declared in the OpenSteer namespace into the
 // namespaces to search to find names.
@@ -319,33 +321,6 @@ void NetBoidsPlugin::handleFunctionKeys ( int keyNumber )
     }
 }
 
-//-----------------------------------------------------------------------------
-void addBoid ( GLUI_Control* pkControl )
-{
-    NetBoidsPlugin* pkPlugin = ( NetBoidsPlugin* ) pkControl->ptr_val;
-    pkPlugin->addBoidToFlock();
-}
-
-//-----------------------------------------------------------------------------
-void removeBoid ( GLUI_Control* pkControl )
-{
-    NetBoidsPlugin* pkPlugin = ( NetBoidsPlugin* ) pkControl->ptr_val;
-    pkPlugin->removeBoidFromFlock();
-}
-
-
-//-----------------------------------------------------------------------------
-void NetBoidsPlugin::initGui ( void* pkUserdata )
-{
-    GLUI* glui = ::getRootGLUI();
-    GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*> ( pkUserdata );
-
-    GLUI_Control* pkControl;
-    pkControl = glui->add_button_to_panel ( pluginPanel, "Add", -1, addBoid );
-    pkControl->set_ptr_val ( this );
-    pkControl = glui->add_button_to_panel ( pluginPanel, "Remove", -1, removeBoid );
-    pkControl->set_ptr_val ( this );
-}
 //-----------------------------------------------------------------------------
 void NetBoidsPlugin::printLQbinStats ( void )
 {
@@ -658,3 +633,43 @@ void NetBoidsPlugin::tempDrawBox ( OpenSteer::AbstractRenderer* pRenderer,
     pRenderer->drawLine ( v4, v8, color );
 }
 
+//-----------------------------------------------------------------------------
+wxWindow* NetBoidsPlugin::prepareGui( wxWindow* parent )
+{
+
+	wxWindow* window = BaseClass::prepareGui( parent );
+
+	wxBoxSizer* buttonSizer = new wxBoxSizer( wxHORIZONTAL );
+	window->GetSizer()->Add( buttonSizer );
+
+	wxStaticText* label = new wxStaticText(window, wxID_STATIC, "Boids");
+	buttonSizer->Add(label);
+
+	wxSpinCtrl* spinCtrl = new wxSpinCtrl(window, id_AddBoid, wxT("Boids"),
+		wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1000, uiInitialFlockSize);
+	spinCtrl->Bind( wxEVT_COMMAND_SPINCTRL_UPDATED, &NetBoidsPlugin::onChangeBoidPopulation, this );
+	buttonSizer->Add( spinCtrl );
+
+	return window;
+}
+
+//-----------------------------------------------------------------------------
+void NetBoidsPlugin::onChangeBoidPopulation( wxSpinEvent& event )
+{
+	AbstractVehicleGroup kVG ( this->allVehicles() );
+	while(event.GetPosition() != kVG.population() )
+	{
+		int pos = event.GetPosition() - kVG.population();
+
+		if ( pos > 0)
+		{
+			addBoidToFlock();
+		}
+		else if (pos < 0)
+		{
+			removeBoidFromFlock();
+		}
+	}
+	
+	
+}

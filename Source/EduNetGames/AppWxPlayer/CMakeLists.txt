@@ -30,7 +30,6 @@ LINK_DIRECTORIES(
 
  LINK_LIBRARIES(
 ${EduNet_PLAYER_LIBRARIES}
-${wxWidgets_LIBRARIES}
 )
 
 add_executable(${PROJECT_NAME}  ${Tutorial_Hdrs} ${Tutorial_Src} ${Renderer_Src} )

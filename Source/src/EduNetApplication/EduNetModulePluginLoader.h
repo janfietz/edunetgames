@@ -46,10 +46,7 @@ public:
 
 	void loadModules(const char* pszPath);
 	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
-
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
+	
 
 	virtual OpenSteer::AbstractPlugin* createPluginByName(
 		const char* pszPluginName );
@@ -58,7 +55,7 @@ public:
 		const char* pszPluginName,
 		const char* pszModuleName);
 
-	const ModuleManager& GetModuleManager() const { return m_modules; }
+	const ModuleManager& GetModuleManager(){return m_modules;}
 
 protected:
 	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
@@ -66,6 +63,10 @@ protected:
 		const char* pszPluginName );
 
 private:
+
+	void createPluginsFromModules ( void );
+	void createPluginsFromModule ( RawModule* pkModule );
+	bool appWantsToLoadPlugin(const char* pszPluginName);
 
 	RawModule* findModuleForPlugin( const char* pszPluginName );
 

@@ -41,7 +41,7 @@ namespace EduNet
 	//-------------------------------------------------------------------------
 	ModulePluginLoader::~ModulePluginLoader( void )
 	{
-
+		unloadModules();
 	}
 
 	//-------------------------------------------------------------------------
@@ -97,8 +97,6 @@ namespace EduNet
 				if ( NULL != pkPlugin )
 				{
 					this->m_plugins.addPlugin ( pkPlugin );
-					// little hack
-					OpenSteer::Plugin::addToRegistry ( pkPlugin );
 					message << "\"" << ( *kNameIter ).c_str() << "\"";
 					message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
 				}

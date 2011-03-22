@@ -7,6 +7,9 @@ ${ET_RakNet_SOURCES}/DependentExtensions
 file (GLOB Module_Src "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB Module_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
 
+# wxWidgets include (this will do all the magic to configure everything)
+include( ${wxWidgets_USE_FILE} )
+
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(

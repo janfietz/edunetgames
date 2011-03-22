@@ -61,19 +61,19 @@ namespace EduNet
 		{ wxCMD_LINE_NONE }
 	};
 	
-	ModulePluginLoader* gLoadPlugin = NULL;
+	//ModulePluginLoader* gLoadPlugin = NULL;
 	void initializeDynamicPlugins( )
 	{
-		ModuleManager kModuleManager;
-		gLoadPlugin = ET_NEW ModulePluginLoader();
-		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
-		gLoadPlugin->createPluginsFromModules();
+// 		ModuleManager kModuleManager;
+// 		gLoadPlugin = ET_NEW ModulePluginLoader();
+// 		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
+// 		gLoadPlugin->createPluginsFromModules();
 	}
 
 	void shutdownDynamicPlugins( )
 	{
-		gLoadPlugin->unloadModules();
-		ET_SAFE_DELETE( gLoadPlugin ); 
+// 		gLoadPlugin->unloadModules();
+// 		ET_SAFE_DELETE( gLoadPlugin ); 
 	}
 
 	//-----------------------------------------------------------------------------
@@ -134,6 +134,8 @@ namespace EduNet
 		/*EduNet::shutdownDynamicPlugins();
 
 		EduNet::Application::_SDMShutdown();*/
+		
+		m_spModuleManager = NULL;
 
 		return wxApp::OnExit();
 	}

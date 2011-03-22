@@ -34,6 +34,17 @@
 #include "NetBoid.h"
 
 
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
+
+
 // Include names declared in the OpenSteer namespace into the
 // namespaces to search to find names.
 //using namespace OpenSteer;
@@ -60,6 +71,12 @@ class NetBoidsPlugin : public OpenSteer::Plugin
 {
     ET_DECLARE_BASE ( OpenSteer::Plugin );
 public:
+	enum GuiIds
+	{
+		id_AddBoid = 1,
+		id_RemoveBoid,
+	};
+
     NetBoidsPlugin ( bool bAddToRegistry = false );
     virtual ~NetBoidsPlugin();
 
@@ -73,6 +90,7 @@ public:
         return 0.03f;
     }
 
+	virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
     void open ( void );
     void close ( void );
     void reset ( void );
@@ -113,7 +131,6 @@ public:
     void SetCurrentBoundaryCondition ( const EBoidConstraintType  eType,
                                        bool bLocalChange = true );
 
-    void initGui ( void* pkUserdata );
     void addBoidToFlock ( void );
     void removeBoidFromFlock ( void );
     virtual void addVehicle( osAbstractVehicle* pkVehicle );
@@ -126,6 +143,8 @@ public:
     {
       return this->flock;
     }
+
+	void onChangeBoidPopulation( wxSpinEvent& event );
 
 private:
 

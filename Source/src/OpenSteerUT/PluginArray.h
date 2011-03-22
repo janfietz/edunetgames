@@ -69,9 +69,8 @@ namespace OpenSteer
 		{
 			return this->name();
 		}
-		virtual void setWxAppInstance(wxAppConsole* pInstance) OS_OVERRIDE;
 		virtual void prepareOpen (void);
-		virtual  wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE;
+		virtual  wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
 		virtual void open(void);
 		virtual void update(const float currentTime, const float elapsedTime);
 		virtual void redraw( OpenSteer::AbstractRenderer* pRenderer, const float currentTime, const float elapsedTime);
@@ -180,10 +179,10 @@ namespace OpenSteer
 		PluginArrayPluginMixin( bool bAddToRegistry = true ):BaseClass( bAddToRegistry ) {};
 		virtual ~PluginArrayPluginMixin() {};
 
-		virtual wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory) OS_OVERRIDE
+		virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE
 		{
-			wxWindow* window = Super::prepareGui(parent, pFactory);
-			this->m_kPluginArray.prepareGui(  window, pFactory );
+			wxWindow* window = Super::prepareGui(parent );
+			this->m_kPluginArray.prepareGui( window  );
 			return window;
 		}
 		virtual void open(void)

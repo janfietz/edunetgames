@@ -39,6 +39,16 @@
 #include "OpenSteer/Plugin.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
+#include "wx/wxprec.h"
+
+#ifdef __BORLANDC__
+#pragma hdrstop
+#endif
+
+#ifndef WX_PRECOMP
+#include "wx/wx.h"
+#endif
+
 namespace EduNetConnect
 {
 	extern void queryConnectionsSettings( ConnectSettings& kSettings );
@@ -79,12 +89,28 @@ class NetworkPlugin :
 {
 	ET_DECLARE_BASE( OpenSteer::Plugin );
 public:
+
+	enum GuiIds
+	{
+		id_MotionState = 1,
+		id_PlotNetwork,
+		id_AutoConnect,
+		id_NetAddress,
+		id_NetPort,
+		id_NetConnect,
+		id_SimEnable,
+		id_SimPacketLoss,
+		id_SimDelay,
+		id_SimVar,
+	};
+
 	NetworkPlugin( bool bAddToRegistry = true );
 	virtual ~NetworkPlugin(void);
 
 	//----------------------------------------------------------------------------
 	// OpenSteer::Plugin interface
 	virtual void initGui( void* pkUserdata );
+	virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
 	virtual void open(void);
 	virtual void close(void);
 	virtual void reset (void);
@@ -158,6 +184,7 @@ public:
 	static void recordNetUpdate(
 		osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 
+	void onSettingChanged(wxCommandEvent& event);
 
 protected:
 	bool PingForOtherPeers( const int iPort );
@@ -252,6 +279,8 @@ public:
 
 	};
 
+	virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
+
 	virtual void reset (void);
 	virtual void update (const float currentTime, const float elapsedTime);
 	virtual void handleFunctionKeys (int keyNumber);
@@ -302,7 +331,15 @@ protected:
 	OpenSteer::AbstractEntityFactory* m_pkGamePluginEntityFactory;
 };
 
-
+//-----------------------------------------------------------------------------
+template < class PluginClass >
+wxWindow* TNetworkPlugin< PluginClass >::prepareGui ( wxWindow* parent )
+{
+	wxWindow* parentWindow = BaseClass::prepareGui( parent );
+	wxWindow* gameWindow = m_kGamePlugin.prepareGui(parentWindow);
+	parentWindow->GetSizer()->Add(gameWindow);
+	return parentWindow;
+}
 //-----------------------------------------------------------------------------
 template < class PluginClass >
 void TNetworkPlugin< PluginClass >::reset()
