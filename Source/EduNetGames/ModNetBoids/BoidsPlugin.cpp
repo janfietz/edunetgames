@@ -46,7 +46,6 @@
 #include "OpenSteer/UnusedParameter.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/CameraPlugin.h"
-#include "OpenSteerUT/AbstractWxGuiFactory.h"
 
 #ifdef WIN32
 // Windows defines these as macros :(

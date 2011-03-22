@@ -31,8 +31,6 @@
 #include "EduNetCommon/EduNetDraw.h"
 #include "EduNetProfile/GraphPlot.h"
 
-#include "OpenSteerUT/AbstractWxGuiFactory.h"
-
 #include <math.h>
 
 #include "wx/wx.h"
