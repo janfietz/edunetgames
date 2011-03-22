@@ -28,15 +28,11 @@
 
 #include "ETWxPluginPanel.h"
 #include "EduNetPlayerGlCanvas.h"
-#include "EduNetWxFactory.h"
 #include "OpenSteerUT/EmptyPlugin.h"
 
 
 namespace EduNet
 {	
-	BEGIN_EVENT_TABLE(PluginWxPanel, wxPanel)
-		
-	END_EVENT_TABLE()
 
 	PluginWxPanel::PluginWxPanel():m_pPluginGuiRoot(NULL)
 	{
@@ -87,10 +83,6 @@ namespace EduNet
 		{			
 			OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
 			m_pGlCanvas->setPlugin( NULL );
-// 			if (pPlugin == OpenSteer::Plugin::getSelectedPlugin())
-// 			{
-// 				OpenSteer::Plugin::selectPlugin( NULL );
-// 			}
 			pPlugin->close();
 		}
 
@@ -108,21 +100,21 @@ namespace EduNet
 			m_pPluginGuiRoot->Destroy();
 		}
 
-		m_pPluginGuiRoot = new wxPanel(m_splitter,wxID_ANY);
+		m_pPluginGuiRoot = new wxPanel(m_splitter,wxID_ANY,wxDefaultPosition,wxDefaultSize, 0, "PluginGuiPanel");
+		
 		wxBoxSizer* panelSizer = new wxBoxSizer(wxVERTICAL);
 		m_pPluginGuiRoot->SetSizer(panelSizer);
 
 		OpenSteer::AbstractPlugin* pPlugin = m_spPlugin.get();
-		//if module comes from a dll it does not have the global app instance
-		// so we have to set it
-		plugin->setWxAppInstance(wxTheApp);
+
 		pPlugin->prepareOpen();
 
-		EduNet::WxFactory guiFactory;
-		wxWindow* subWindow = pPlugin->prepareGui(m_pPluginGuiRoot, &guiFactory);
+		wxWindow* subWindow = pPlugin->prepareGui(m_pPluginGuiRoot );
 		if( subWindow != NULL)
 		{
+			subWindow->SetExtraStyle(wxWS_EX_BLOCK_EVENTS);
 			panelSizer->Add(subWindow, 1, wxEXPAND);
+			subWindow->Layout();
 		}
 
 		pPlugin->open();

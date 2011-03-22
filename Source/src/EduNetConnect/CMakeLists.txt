@@ -8,6 +8,8 @@ INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
 file (GLOB EduNetConnect_LIB_SRC "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB EduNetConnect_LIB_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
 
+include( ${wxWidgets_USE_FILE} )
+
 #set compiler options to link the lib into a shared lib
 IF (NOT WIN32)
    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")

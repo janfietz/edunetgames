@@ -27,6 +27,7 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetPlayerWxFrame.h"
+#include "EduNetPlayerWxEvents.h"
 #include "EtWxPluginPanel.h"
 #include "EduNetWxModuleTree.h"
 #include "EduNetCommon/EduNetOptions.h"
@@ -99,6 +100,8 @@ namespace EduNet
 
 		m_mgr.Update();
 
+		Bind( wxEVT_COMMAND_BUTTON_CLICKED, &PlayerWxFrame::OnButtonClicked, this);
+
 		wxString kPreselectedPlugin(EduNet::Options::accessOptions().getSelectedPlugin() );
 		bool bPreselectedPluginCreated(false);
 		if(kPreselectedPlugin.IsEmpty() == false )
@@ -112,6 +115,8 @@ namespace EduNet
 		{
 			CreateModuleTree();
 		}
+
+		
 	}
 
 	//-----------------------------------------------------------------------------
@@ -212,4 +217,8 @@ namespace EduNet
 		CreateModuleTree();		
 	}
 
+	void PlayerWxFrame::OnButtonClicked( wxCommandEvent& event )
+	{
+
+	}
 }

@@ -7,7 +7,12 @@ ${ET_RakNet_SOURCES}/DependentExtensions
 file (GLOB Tutorial_Src "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
 file (GLOB Tutorial_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
 
-LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
+# wxWidgets include (this will do all the magic to configure everything)
+include( ${wxWidgets_USE_FILE} )
+
+LINK_DIRECTORIES( 
+#${LINK_DIRECTORIES} 
+${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(
 ${EduNet_MODULE_LIBRARIES}

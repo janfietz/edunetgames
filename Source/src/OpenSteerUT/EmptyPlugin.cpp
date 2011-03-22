@@ -53,14 +53,14 @@ void EmptyPlugin::initGui( void* pkUserdata )
 	glui->add_checkbox_to_panel( pluginPanel, "Show SamplePlot", &this->m_bShowSamplePlot);
 }
 //-----------------------------------------------------------------------------
-wxWindow* EmptyPlugin::prepareGui( wxWindow* parent, EduNet::AbstractWxGuiFactory* pGui )
+wxWindow* EmptyPlugin::prepareGui( wxWindow* parent )
 {
-	wxPanel* panel = pGui->createPanel(parent);
-	wxSizer* sizer = pGui->createStaticBoxSizer(wxVERTICAL,panel, this->pluginName() );
-	panel->SetSizer(sizer);
+	wxWindow* window = new wxWindow(parent, wxID_ANY);
+	wxSizer* sizer = new wxStaticBoxSizer( wxVERTICAL, window, this->pluginName() );
+	window->SetSizer(sizer);
 
-	wxWindow* window = BaseClass::prepareGui(panel, pGui);
-	return panel;
+	wxWindow* subwindow = BaseClass::prepareGui( window );
+	return window;
 }
 //-----------------------------------------------------------------------------
 void EmptyPlugin::open (void)

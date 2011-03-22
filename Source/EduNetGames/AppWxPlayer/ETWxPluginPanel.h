@@ -74,8 +74,6 @@ namespace EduNet
 		class PlayerGlCanvas* m_pGlCanvas;
 		wxPanel* m_pPluginGuiRoot;
 		wxSplitterWindow*  m_splitter;
-		// any class wishing to process wxWidgets events must use this macro
-		DECLARE_EVENT_TABLE()
 	};
 
 }

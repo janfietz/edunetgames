@@ -40,6 +40,8 @@
 #include "wx/wx.h"
 #endif
 
+#include "wx/event.h"
+
 namespace EduNet
 {
 	class PluginCreateEvent : public wxNotifyEvent
@@ -68,7 +70,7 @@ namespace EduNet
 	typedef void (wxEvtHandler::*PluginCreateEventFunction) (PluginCreateEvent&);
 
 	BEGIN_DECLARE_EVENT_TYPES() 
-		DECLARE_EVENT_TYPE(etEVT_COMMAND_PLUGIN_CREATE, 801)
+		DECLARE_EVENT_TYPE(etEVT_COMMAND_PLUGIN_CREATE, PluginCreateEvent)
 	END_DECLARE_EVENT_TYPES()
 	
 	#define EVT_PLUGIN_CREATED(id, fn) \

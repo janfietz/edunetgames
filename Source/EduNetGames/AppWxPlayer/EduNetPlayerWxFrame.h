@@ -63,6 +63,7 @@ namespace EduNet
 		void OnActivate(wxActivateEvent& event);
 		void OnCreatePlugin( PluginCreateEvent& event);
 
+		void OnButtonClicked( wxCommandEvent& event );
 		
 		void CreateModuleTree();
 

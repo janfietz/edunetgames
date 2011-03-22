@@ -437,10 +437,10 @@ AbstractPlugin* PluginArray::next(void) const
 
 // implement to initialize additional gui functionality
 //-----------------------------------------------------------------------------
- wxWindow* PluginArray::prepareGui( wxWindow* parent, EduNet::AbstractWxGuiFactory* pGui )
+ wxWindow* PluginArray::prepareGui( wxWindow* parent )
 {
-	wxPanel* panel = pGui->createPanel( parent );
-	wxBoxSizer* sizer = pGui->createBoxSizer( wxVERTICAL );
+	wxWindow* panel = new wxWindow( parent, wxID_ANY );
+	wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
 	panel->SetSizer(sizer);
 
 	TPluginArray::iterator kIter = this->begin();
@@ -448,7 +448,7 @@ AbstractPlugin* PluginArray::next(void) const
 	while( kIter != kEnd  )
 	{
 		AbstractPlugin* pkPlugin = (*kIter).get();
-		wxWindow* subWindow = pkPlugin->prepareGui(panel, pGui);
+		wxWindow* subWindow = pkPlugin->prepareGui( panel );
 		if (subWindow != NULL)
 		{
 			sizer->Add(subWindow, 1, wxEXPAND );
@@ -502,12 +502,4 @@ void PluginArray::TestPluginArray( void )
 
 
 	gTestPluginArray.removePlugin( pkAdd[0] );
-}
-
-void PluginArray::setWxAppInstance( wxAppConsole* pInstance )
-{
-	if (wxTheApp != pInstance)
-	{
-		wxApp::SetInstance( pInstance );
-	}
 }

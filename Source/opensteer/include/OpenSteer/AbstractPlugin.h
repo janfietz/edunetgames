@@ -80,10 +80,6 @@ FooPlugin gFooPlugin;
 
 class wxWindow;
 class wxAppConsole;
-namespace EduNet
-{
- class AbstractWxGuiFactory;
-}
 
 //-----------------------------------------------------------------------------
 namespace OpenSteer {
@@ -98,9 +94,8 @@ namespace OpenSteer {
         virtual ~AbstractPlugin() { /* Nothing to do. */ }
         
         //! generic Plugin actions: prepareOpen, prepareGui open, update, redraw, close and reset
-		virtual void setWxAppInstance(wxAppConsole* pInstance) OS_ABSTRACT;
 		virtual void prepareOpen (void) OS_ABSTRACT;
-		virtual  wxWindow* prepareGui ( wxWindow* parent, EduNet::AbstractWxGuiFactory* pFactory ) OS_ABSTRACT; // prepare gui elements
+		virtual  wxWindow* prepareGui ( wxWindow* parent ) OS_ABSTRACT; // prepare gui elements
         virtual void open (void) OS_ABSTRACT;
 // see AbstractUpdated
 //       virtual void update (const float currentTime, const float elapsedTime) OS_ABSTRACT;

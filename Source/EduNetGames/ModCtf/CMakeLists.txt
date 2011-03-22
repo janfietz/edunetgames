@@ -9,6 +9,9 @@ file (GLOB Module_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
 #file (GLOB Ext_Src "${${PROJECT_NAME}_SOURCE_DIR}/../Tutorial_04/NetPed*.cpp")
 #file (GLOB Ext_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/../Tutorial_04/*.h")
 
+# wxWidgets include (this will do all the magic to configure everything)
+include( ${wxWidgets_USE_FILE} )
+
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(

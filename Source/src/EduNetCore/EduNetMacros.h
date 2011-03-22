@@ -41,6 +41,8 @@
 //-----------------------------------------------------------------------------
 #define ET_ABSTRACT = 0
 
+#define ET_OVERRIDE override
+
 #define ET_DECLARE_BASE( classname ) typedef classname BaseClass;
 
 //-----------------------------------------------------------------------------
