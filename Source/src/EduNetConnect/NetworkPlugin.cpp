@@ -12,9 +12,77 @@ static const int SERVER_PONG_COUNT = 32;
 
 using namespace OpenSteer;
 
+#include "EduNetConnectGui.h"
 //-----------------------------------------------------------------------------
 OpenSteer::AbstractVehicleMotionStatePlot NetworkPlugin::ms_kMotionStateProfile;
 
+class NetworkPluginPanel : public NetworkPluginGui
+{
+public: 
+	NetworkPluginPanel( NetworkPlugin* netPlugin, wxWindow* parent, wxWindowID id = wxID_ANY,
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style = wxTAB_TRAVERSAL): NetworkPluginGui( parent, id, pos, size, style),
+		m_plugin(netPlugin)
+	{
+
+	};
+
+
+	//Handlers
+	virtual void OnCheckedMotionPlot( wxCommandEvent& event );
+	virtual void OnCheckedNetworkPlot( wxCommandEvent& event );
+	virtual void OnAddressChanged( wxCommandEvent& event );
+	virtual void OnAutoConnectChecked( wxCommandEvent& event );
+	virtual void OnSimEnabledChecked( wxCommandEvent& event );
+	virtual void OnPacketLossChanged( wxScrollEvent& event );
+	virtual void OnSimDelayChanged( wxSpinEvent& event );
+	virtual void OnSimVarianceChanged( wxSpinEvent& event );
+protected:
+	virtual ~NetworkPluginPanel(){};
+
+	NetworkPlugin* m_plugin;
+};
+
+void NetworkPluginPanel::OnCheckedMotionPlot( wxCommandEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnCheckedNetworkPlot( wxCommandEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnAddressChanged( wxCommandEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnAutoConnectChecked( wxCommandEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnSimEnabledChecked( wxCommandEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnPacketLossChanged( wxScrollEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnSimDelayChanged( wxSpinEvent& event )
+{
+	event.Skip();
+}
+
+void NetworkPluginPanel::OnSimVarianceChanged( wxSpinEvent& event )
+{
+	event.Skip();
+}
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 	BaseClass( bAddToRegistry ),
@@ -119,28 +187,12 @@ wxWindow* NetworkPlugin::prepareGui( wxWindow* parent )
 {
 	 wxWindow* parentWindow = BaseClass::prepareGui( parent );
 
-	 wxBoxSizer* sizer = new wxBoxSizer( wxVERTICAL );
-	 parentWindow->GetSizer()->Add( sizer );
-
-	wxCheckBox* cbMotionState = new wxCheckBox( parentWindow, id_MotionState, "Motion state");
-	cbMotionState->Bind( wxEVT_COMMAND_CHECKBOX_CLICKED, &NetworkPlugin::onSettingChanged, this );
-	sizer->Add(cbMotionState);
-
-	wxCheckBox* cbPlotNetwork = new wxCheckBox( parentWindow, id_PlotNetwork, "Plot network");
-	cbPlotNetwork->Bind( wxEVT_COMMAND_CHECKBOX_CLICKED , &NetworkPlugin::onSettingChanged, this );
-	sizer->Add(cbPlotNetwork);
-
-	 //wxButton* boidAddButton = new wxButton(window,id_AddBoid, "+");
-	 //boidAddButton->Bind( wxEVT_COMMAND_BUTTON_CLICKED, &NetBoidsPlugin::onAddBoid, this );
-	 //buttonSizer->Add(boidAddButton);
+	 wxWindow* myPanel = new NetworkPluginPanel( this, parent );
+	 parentWindow->GetSizer()->Add(myPanel);
 
 	 return parentWindow;
 }
-//-----------------------------------------------------------------------------
-void NetworkPlugin::onSettingChanged(wxCommandEvent& event)
-{
 
-}
 //-----------------------------------------------------------------------------
 void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
 {

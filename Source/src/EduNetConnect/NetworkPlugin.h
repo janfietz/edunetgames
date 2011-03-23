@@ -184,8 +184,6 @@ public:
 	static void recordNetUpdate(
 		osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 
-	void onSettingChanged(wxCommandEvent& event);
-
 protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
