@@ -84,7 +84,7 @@ void GLUI_FileBrowser::dir_list_callback(GLUI_Control *glui_object) {
         chdir(selected+1);
 #endif
 #ifdef _WIN32
-        SetCurrentDirectory(selected+1);
+        SetCurrentDirectoryA(selected+1);
 #endif
         me->fbreaddir(".");
       }
@@ -106,12 +106,12 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
 
 #ifdef _WIN32
 
-  WIN32_FIND_DATA FN;
+  WIN32_FIND_DATAA FN;
   HANDLE hFind;
   //char search_arg[MAX_PATH], new_file_path[MAX_PATH];
   //sprintf(search_arg, "%s\\*.*", path_name);
   
-  hFind = FindFirstFile("*.*", &FN);
+  hFind = FindFirstFileA("*.*", &FN);
   if (list) {
     list->delete_all();
     if (hFind != INVALID_HANDLE_VALUE) {
@@ -125,7 +125,7 @@ void GLUI_FileBrowser::fbreaddir(const char *d) {
         }
         list->add_item(i,item.c_str());
         i++;
-      } while (FindNextFile(hFind, &FN) != 0);
+      } while (FindNextFileA(hFind, &FN) != 0);
       
       if (GetLastError() == ERROR_NO_MORE_FILES)
         FindClose(hFind);

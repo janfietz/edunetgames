@@ -119,4 +119,9 @@ namespace EduNet	{
 
 }
 
+#include <mgf/memory/MemoryTracker.h>
+
+// install debug memory tracking facility
+mgf::MemoryDebug memoryDebug(true);
+
 ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::NetSoccerModule)

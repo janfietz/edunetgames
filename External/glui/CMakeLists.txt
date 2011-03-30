@@ -83,6 +83,7 @@ quaternion.h
 viewmodel.cpp
 viewmodel.h
 )
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/external/libraries" )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )

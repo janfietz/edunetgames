@@ -75,7 +75,7 @@
 #define ET_GET_FUNC( x, y, prefix )       EF_FORCEINLINE x get##y() const { return this->m_##y; };
 #define ET_GET_SET_FUNC( x, y, prefix )   ET_GET_FUNC( x, y, prefix ) ET_SET_FUNC( x, y, prefix )
 
-#ifndef linux
+#if defined(_MSC_VER)
 #ifdef _DEBUG
 #define ET_DEBUG 1
 #endif

@@ -64,6 +64,7 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 		this->m_Timer.Start(1);
 		
 	}
+
 	PlayerGlCanvas::~PlayerGlCanvas()
 	{
 		delete this->m_context;
@@ -76,13 +77,14 @@ PlayerGlCanvas::PlayerGlCanvas(wxWindow *parent,
 		this->Refresh();
 		this->Update();
 	}
-//-----------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------
 	void PlayerGlCanvas::resized(wxSizeEvent& evt)
 	{
 		initGL();
 		Refresh();
 	}
-//-----------------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------------
 	void PlayerGlCanvas::render(wxPaintEvent& evt)
 	{
 		if(false == IsShown())

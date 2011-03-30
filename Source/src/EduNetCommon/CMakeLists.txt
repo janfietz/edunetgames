@@ -28,6 +28,12 @@ ${OpenSteerUT_LIB_Hdrs}
 ${ET_RakNet_SOURCES}/DependentExtensions/RPC3/RPC3.cpp
 )
 
+source_group( source FILES ${EduNetCommon_LIB_SRC} ${EduNetCommon_LIB_Hdrs} )
+source_group( OpenSteerUT FILES ${OpenSteerUT_LIB_SRC} ${OpenSteerUT_LIB_Hdrs} )
+
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/libraries" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 

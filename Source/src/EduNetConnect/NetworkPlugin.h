@@ -27,6 +27,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include <mgf/wx/WxWidgets.h>
 
 #define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
 #include "EduNetConnect/EduNetConnect.h"
@@ -39,15 +40,6 @@
 #include "OpenSteer/Plugin.h"
 #include "OpenSteerUT/AbstractVehicleMotionStatePlot.h"
 
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
 
 namespace EduNetConnect
 {

@@ -27,23 +27,12 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include <mgf/wx/WxWidgets.h>
 
 #include "OpenSteerUT/OpenSteerUTTypes.h"
 #include "OpenSteer/Plugin.h"
 
 #include "NetBoid.h"
-
-
-#include "wx/wxprec.h"
-
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
-
-#ifndef WX_PRECOMP
-#include "wx/wx.h"
-#endif
-
 
 // Include names declared in the OpenSteer namespace into the
 // namespaces to search to find names.
