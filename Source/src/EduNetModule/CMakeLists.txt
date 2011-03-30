@@ -15,6 +15,11 @@ ENDIF (NOT WIN32)
 
 add_library(${PROJECT_NAME} STATIC
 	${EduNetModule_LIB_Hdrs} ${EduNetModule_LIB_SRC})
+
+source_group( source FILES ${EduNetModule_LIB_SRC} ${EduNetModule_LIB_Hdrs} )
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/libraries" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 	

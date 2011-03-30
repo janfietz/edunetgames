@@ -63,7 +63,7 @@ bool DynamicLibrary::loadLib ( const char* pszLibName )
     }
 
 #ifdef WIN32
-    this->m_pLibHandle = ::LoadLibrary ( pszLibName );
+    this->m_pLibHandle = ::LoadLibraryA ( pszLibName );
 #else
     std::string kName ( "./" );
     kName += pszLibName;

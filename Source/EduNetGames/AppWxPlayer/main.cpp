@@ -27,8 +27,12 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetPlayerWx.h"
+#include <mgf/memory/MemoryTracker.h>
 
-////-----------------------------------------------------------------------------
+// install debug memory tracking facility
+mgf::MemoryDebug memoryDebug;
+
+//-----------------------------------------------------------------------------
 int main (int argc, char **argv)
 {
 	EduNet::PlayerWx::run(argc, argv);

@@ -16,6 +16,10 @@ ${EduNetCore_LIB_SRC}
 ${EduNetCore_LIB_Hdrs}
 )
 
+source_group( source FILES ${EduNetCore_LIB_SRC} ${EduNetCore_LIB_Hdrs} )
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/libraries" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 

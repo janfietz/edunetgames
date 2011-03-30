@@ -18,6 +18,7 @@ ${RakNet_LIBRARY}
 )
 
 add_library(${PROJECT_NAME} SHARED  ${Module_Hdrs} ${Module_Src})
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/modules" )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
