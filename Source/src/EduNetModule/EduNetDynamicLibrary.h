@@ -50,6 +50,7 @@ namespace EduNet	{
 
 	private:
 		void* m_pLibHandle;
+		std::string m_libName; // just for debugging
 	};
 
 	typedef boost::shared_ptr<DynamicLibrary> DynamicLibraryPtr;

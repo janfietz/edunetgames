@@ -62,6 +62,8 @@ bool DynamicLibrary::loadLib ( const char* pszLibName )
         return false;
     }
 
+	m_libName.assign(pszLibName);
+
 #ifdef WIN32
     this->m_pLibHandle = ::LoadLibraryA ( pszLibName );
 #else
