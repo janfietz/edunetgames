@@ -214,7 +214,6 @@ ExtOpensteer
 ${GLUT_glut_LIBRARY} 
 ${OPENGL_gl_LIBRARY} 
 ${OPENGL_glu_LIBRARY}
-mgfMemory
 EduNetMemory
 EduNetCore
 EduNetCommon
@@ -236,7 +235,6 @@ ExtOpensteer
 ${GLUT_glut_LIBRARY} 
 ${OPENGL_gl_LIBRARY} 
 ${OPENGL_glu_LIBRARY}
-mgfMemory
 EduNetMemory
 EduNetCore
 EduNetCommon

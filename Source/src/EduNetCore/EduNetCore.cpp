@@ -25,13 +25,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#include "stdafx.h"
 
 #include "EduNetCore.h"
 
-#ifdef WIN32
-#include <windows.h>
-#else
-#endif
+#include <mgf/core/os/Windows.h>
 
 namespace EduNet	{
 
