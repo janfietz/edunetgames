@@ -1,0 +1,21 @@
+# use glob syntax.
+syntax: glob
+*.suo
+*.user
+*.ncb
+*.exe
+*.ilk
+*.pdb
+*.DS_Store
+*.pbxuser
+*.perspectivev3
+FindRaknet.cmake~
+
+
+# switch to regexp syntax.
+syntax: regexp
+^Temp/.*
+^buildlinux/.*
+^buildwin32/.*
+build_osx
+build_eclipse
