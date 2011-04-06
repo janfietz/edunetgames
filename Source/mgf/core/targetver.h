@@ -4,5 +4,8 @@
 
 // If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
-
-#include <SDKDDKVer.h>
+#ifdef _MSC_VER
+#if (_MSC_VER >= 1600)
+#  include <SDKDDKVer.h>
+#endif
+#endif
