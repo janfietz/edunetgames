@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 Set( MGF_EXTERNAL_LIBRARIES
 ${wxWidgets_LIBRARIES}
+${GLUT_glut_LIBRARY}
 )
 
 add_subdirectory( application )
