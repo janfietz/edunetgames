@@ -94,11 +94,15 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* LectureModule::createPluginFactory( void ) const
+	PluginFactory* LectureModule::createPluginFactory( void )
 	{
 		return ET_NEW LectureModulePluginFactory();
 	}
 
+	void LectureModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE(pFactory);
+	}
 
 }
 

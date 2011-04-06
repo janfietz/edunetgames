@@ -40,7 +40,7 @@ RawModule::RawModule( void ):
 RawModule::~RawModule( void )
 {
 	// TODO: latest point to unload modules again
-
+	this->m_pEntry = NULL;
 }
 
 //-----------------------------------------------------------------------------
@@ -64,6 +64,22 @@ bool RawModule::load(const char* pszLibName)
 	}
 	return (NULL!= this->m_pEntry);	
 }
+
+//-----------------------------------------------------------------------------
+bool RawModule::unload()
+{
+	bool bReturn(false);
+	this->m_pEntry = NULL;
+	EduNet::DynamicLibrary* pkNewLib = this->m_spLib.get();
+	if (NULL != pkNewLib)
+	{
+		bReturn = pkNewLib->unloadLib();
+	}
+	//this->m_spLib.reset();
+	
+	return bReturn;
+}
+
 
 //-----------------------------------------------------------------------------
 bool RawModule::queryEntry( void )

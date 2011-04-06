@@ -119,11 +119,16 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* NetBoidModule::createPluginFactory( void ) const
+	PluginFactory* NetBoidModule::createPluginFactory( void )
 	{
 		return ET_NEW NetBoidPluginFactory();
 	}
 
+	//-----------------------------------------------------------------------------
+	void NetBoidModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE(pFactory);
+	}
 }
 
 #include <mgf/memory/MemoryTracker.h>

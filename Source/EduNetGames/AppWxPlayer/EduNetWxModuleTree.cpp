@@ -120,20 +120,19 @@ END_EVENT_TABLE()
 		const RawModules::const_iterator modIterEnd = kModule.end();
 		while (modIter != modIterEnd)
 		{
-			RawModule* const module = (*modIter).get();
+			const RawModule* module = modIter->get();
 			addModuleItem( module, rootId );
 			++modIter;
 		}
 	}
 	//-----------------------------------------------------------------------------
-	void ModuleTreeCtrl::addModuleItem(RawModule* const module,
+	void ModuleTreeCtrl::addModuleItem(const RawModule* const module,
 		const wxTreeItemId& idParent)
 	{
 		ModuleEntry* pkEntry = module->accessEntry();
 		if ( NULL != pkEntry )
 		{
-			PluginFactory* pkFactory = pkEntry->createPluginFactory();
-			PluginFactoryPtr spFactory ( pkFactory );
+			PluginFactory* pkFactory = pkEntry->createPluginFactory();			
 
 			enStringArray_t kList;
 			pkFactory->getPluginNames ( kList );
@@ -159,6 +158,8 @@ END_EVENT_TABLE()
 					moduleItem);
 				++kNameIter;
 			}
+
+			pkEntry->destroyPluginFactory(pkFactory);
 		}		
 	}
 	//-----------------------------------------------------------------------------

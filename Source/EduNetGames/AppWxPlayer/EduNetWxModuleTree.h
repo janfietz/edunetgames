@@ -110,7 +110,7 @@ namespace EduNet
 		};
 
 		void addItems();
-		void addModuleItem(class RawModule* const module, const wxTreeItemId& idParent);
+		void addModuleItem(const class RawModule* const module, const wxTreeItemId& idParent);
 		void createImageList(int size = 16);
 
 		ModulePluginLoader* m_moduleManager;

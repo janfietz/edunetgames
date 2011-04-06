@@ -122,7 +122,8 @@ namespace EduNet	{
 
 		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
 
-		virtual PluginFactory* createPluginFactory( void ) const;
+		virtual PluginFactory* createPluginFactory( void );
+		virtual void destroyPluginFactory(  PluginFactory* pFactory );
 	};
 
 	//-------------------------------------------------------------------------
@@ -144,9 +145,14 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* CtfModule::createPluginFactory( void ) const
+	PluginFactory* CtfModule::createPluginFactory( void )
 	{
 		return ET_NEW CtfModulePluginFactory();
+	}
+
+	void CtfModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE(pFactory);
 	}
 }
 

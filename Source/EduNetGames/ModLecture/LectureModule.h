@@ -57,7 +57,8 @@ namespace EduNet	{
 
 		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
 
-		virtual PluginFactory* createPluginFactory( void ) const;
+		virtual PluginFactory* createPluginFactory( void );
+		virtual void destroyPluginFactory(  PluginFactory* pFactory ) ;
 	};
 
 }

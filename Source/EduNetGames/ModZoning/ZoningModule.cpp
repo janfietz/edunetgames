@@ -178,9 +178,15 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* ZoningModule::createPluginFactory( void ) const
+	PluginFactory* ZoningModule::createPluginFactory( void )
 	{
 		return ET_NEW ZoningModulePluginFactory();
+	}
+
+	//-----------------------------------------------------------------------------
+	void ZoningModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE(pFactory);
 	}
 }
 
