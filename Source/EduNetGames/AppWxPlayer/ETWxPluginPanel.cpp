@@ -53,7 +53,7 @@ namespace EduNet
 
 
 
-		//ChangePlugin(NULL);
+		ChangePlugin(NULL);
 	}
 
 	void PluginWxPanel::initGlCanvas()

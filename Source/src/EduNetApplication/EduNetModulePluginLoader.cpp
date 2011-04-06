@@ -175,6 +175,7 @@ namespace EduNet
 				PluginFactory* pkFactory = pkEntry->createPluginFactory();
 				OpenSteer::AbstractPlugin* pkPlugin = this->createPluginFromFactoryByName( pkFactory, pszPluginName );
 				pkEntry->destroyPluginFactory( pkFactory );
+				return pkPlugin;
 			}
 		}
 		return NULL;
