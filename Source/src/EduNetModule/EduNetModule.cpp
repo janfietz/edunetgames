@@ -75,7 +75,7 @@ bool RawModule::unload()
 	{
 		bReturn = pkNewLib->unloadLib();
 	}
-	//this->m_spLib.reset();
+	this->m_spLib.reset();
 	
 	return bReturn;
 }
