@@ -134,7 +134,9 @@ namespace EduNet
 		/*EduNet::shutdownDynamicPlugins();
 
 		EduNet::Application::_SDMShutdown();*/
-		
+		ModulePluginLoader* pModuleManager = m_spModuleManager.get();
+		pModuleManager->unloadModules();
+
 		m_spModuleManager = NULL;
 
 		return wxApp::OnExit();

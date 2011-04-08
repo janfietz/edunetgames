@@ -52,12 +52,16 @@ namespace EduNet	{
 	{
 		ET_DECLARE_BASE( EduNet::ModuleEntry )
 	public:
+		LectureModule();
+		virtual ~LectureModule();
+
 		virtual const char* getName( void ) const;
 		virtual const char* getAbout( void ) const;
 
 		virtual void setOpenSteerUTData( OpenSteerUTData* ) const;
 
-		virtual PluginFactory* createPluginFactory( void ) const;
+		virtual PluginFactory* createPluginFactory( void );
+		virtual void destroyPluginFactory(  PluginFactory* pFactory ) ;
 	};
 
 }

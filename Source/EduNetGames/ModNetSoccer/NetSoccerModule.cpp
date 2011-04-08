@@ -112,16 +112,20 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* NetSoccerModule::createPluginFactory( void ) const
+	PluginFactory* NetSoccerModule::createPluginFactory( void )
 	{
 		return ET_NEW NetSoccerPluginFactory();
 	}
 
+	void NetSoccerModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE( pFactory);
+	}
 }
 
-#include <mgf/memory/MemoryTracker.h>
-
-// install debug memory tracking facility
-mgf::MemoryDebug memoryDebug(true);
+//#include <mgf/memory/MemoryTracker.h>
+//
+//// install debug memory tracking facility
+//mgf::MemoryDebug memoryDebug(true);
 
 ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::NetSoccerModule)

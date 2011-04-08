@@ -39,10 +39,13 @@ namespace EduNet
 	{
 	public:
 		PluginFactory(void);
+		virtual ~PluginFactory();
 
 		void getPluginNames( enStringArray_t& kNames ) const;
 		OpenSteer::AbstractPlugin* createPluginByName( const char* pszName );
 	protected:
+		
+
 		virtual void fillStringArrayWithPluginName( enStringArray_t& kNames ) const{};
 		virtual OpenSteer::AbstractPlugin* createPluginByNameInternal(
 			const char* pszName ) const { return NULL; }
