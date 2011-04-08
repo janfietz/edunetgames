@@ -178,16 +178,22 @@ namespace EduNet	{
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* ZoningModule::createPluginFactory( void ) const
+	PluginFactory* ZoningModule::createPluginFactory( void )
 	{
 		return ET_NEW ZoningModulePluginFactory();
 	}
+
+	//-----------------------------------------------------------------------------
+	void ZoningModule::destroyPluginFactory( PluginFactory* pFactory )
+	{
+		ET_SAFE_DELETE(pFactory);
+	}
 }
 
-#include <mgf/memory/MemoryTracker.h>
-
-// install debug memory tracking facility
-mgf::MemoryDebug memoryDebug(true);
+//#include <mgf/memory/MemoryTracker.h>
+//
+//// install debug memory tracking facility
+//mgf::MemoryDebug memoryDebug(true);
 
 ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::ZoningModule)
 

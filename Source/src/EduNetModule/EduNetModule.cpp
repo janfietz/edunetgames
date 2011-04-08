@@ -31,7 +31,8 @@ namespace EduNet	{
 
 //-----------------------------------------------------------------------------
 RawModule::RawModule( void ):
-	m_pEntry(NULL)
+	m_pEntry(NULL),
+	m_pLib(NULL)
 {
 
 }
@@ -40,30 +41,51 @@ RawModule::RawModule( void ):
 RawModule::~RawModule( void )
 {
 	// TODO: latest point to unload modules again
-
+	unload();
 }
 
 //-----------------------------------------------------------------------------
 bool RawModule::load(const char* pszLibName)
 {
-	EduNet::DynamicLibraryPtr spNewLib( ET_NEW EduNet::DynamicLibrary() );
-	EduNet::DynamicLibrary* pkNewLib = spNewLib.get();
+	//EduNet::DynamicLibraryPtr spNewLib( ET_NEW EduNet::DynamicLibrary() );
+	EduNet::DynamicLibrary* pkNewLib = ET_NEW EduNet::DynamicLibrary();
 	bool bLoaded = pkNewLib->loadLib( pszLibName ) ;
 	if( true == bLoaded )
 	{
-		this->m_spLib = spNewLib;
+		this->m_pLib = pkNewLib;
 		if( true == this->queryEntry() )
 		{
-			// log success
+			// log success			
 		}
 		else
 		{
 			// release lib again
-			this->m_spLib.reset();
+			unload();
 		}
+	}else
+	{
+		ET_SAFE_DELETE(pkNewLib);
 	}
+
 	return (NULL!= this->m_pEntry);	
 }
+
+//-----------------------------------------------------------------------------
+bool RawModule::unload()
+{
+	bool bReturn(false);
+	this->m_pEntry = NULL;
+	EduNet::DynamicLibrary* pkNewLib = this->m_pLib;
+	if (NULL != pkNewLib)
+	{
+		bReturn = pkNewLib->unloadLib();
+	}
+
+	ET_SAFE_DELETE(m_pLib);
+	
+	return bReturn;
+}
+
 
 //-----------------------------------------------------------------------------
 bool RawModule::queryEntry( void )
@@ -79,9 +101,9 @@ bool RawModule::queryEntry( void )
 
 //-----------------------------------------------------------------------------
 ModuleEntryFunc* RawModule::queryEntryFunction( void )
-{
+{	
 	ModuleEntryFunc* pkEntryFunc(NULL);
-	EduNet::DynamicLibrary* pkLib = this->m_spLib.get();
+	EduNet::DynamicLibrary* pkLib = this->m_pLib;
 	if( NULL != pkLib )
 	{
 		void* pkFunc = pkLib->findSymbol( "etModuleQueryEntry" );

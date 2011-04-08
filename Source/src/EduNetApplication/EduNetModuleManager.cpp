@@ -79,6 +79,8 @@ ModuleManager::ModuleManager()
 			}
 		}
 
+		this->m_modules.reserve(256);
+
 		// determine the module type
 		this->queryModuleRuntimeTypeFromFileName( this->m_pszCurrentModuleFileName, this->m_moduleRuntimeType );
 	}
@@ -181,6 +183,10 @@ void ModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 		}
 		(*this) << fc << " " << dc << "\n";
 	} //for
+
+	RawModulePtr spNewModule(ET_NEW RawModule());
+	this->m_modules.push_back ( spNewModule );
+
 }
 
 //-----------------------------------------------------------------------------
@@ -197,16 +203,26 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 			bool bWantsToLoadModule = this->appWantsToLoadModule( pszFileName );
 			if( ( true == bWantsToLoadModule ) )
 			{
-				RawModulePtr spNewLib(ET_NEW RawModule() );
-				RawModule* pkNewmodule = spNewLib.get();
+				
+				/*{
+					RawModulePtr spNewLib(ET_NEW RawModule() );
+					RawModule* pkNewmodule = spNewLib.get();
+					bool bResult = pkNewmodule->load ( pszFileName );
+					if ( true == bResult )
+					{
+						pkNewmodule->unload();
+					}
+				}*/
 
+				RawModulePtr spNewModule(ET_NEW RawModule());
+				RawModule* pkNewmodule = spNewModule.get();
 				bool bResult = pkNewmodule->load ( pszFileName );
 				if ( true == bResult )
 				{
 					// pass over important application data to this module
 					ModuleEntry* moduleEntry = pkNewmodule->accessEntry();
 					moduleEntry->setOpenSteerUTData( OpenSteerUTData::g_openSteerUTDataPtr );
-					this->m_modules.push_back ( spNewLib );
+					this->m_modules.push_back ( spNewModule );
 				}
 			}
 		}
@@ -246,6 +262,16 @@ bool ModuleManager::appWantsToLoadModule (
 //-----------------------------------------------------------------------------
 void ModuleManager::unloadAll( void )
 {
+	RawModules::const_iterator iter = this->m_modules.begin();
+	RawModules::const_iterator iterEnd =  this->m_modules.end();
+	while( iter != iterEnd  )
+	{
+		RawModule* pModule = iter->get();
+		pModule->unload();
+
+		++iter;
+	}
+
 	this->m_modules.clear();
 }
 

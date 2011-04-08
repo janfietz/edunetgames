@@ -89,7 +89,8 @@ public:
 
 	virtual void setOpenSteerUTData( OpenSteerUTData* ) const ET_ABSTRACT;
 
-	virtual PluginFactory* createPluginFactory( void ) const ET_ABSTRACT;
+	virtual PluginFactory* createPluginFactory( void ) ET_ABSTRACT;
+	virtual void destroyPluginFactory(  PluginFactory* pFactory ) ET_ABSTRACT;
 };
 
 //-----------------------------------------------------------------------------
@@ -100,6 +101,8 @@ public:
 	virtual ~RawModule( void );
 
 	bool load(const char* pszLibName);
+	bool unload();
+
 	ModuleEntry* accessEntry( void ) const
 	{
 		return this->m_pEntry;
@@ -110,7 +113,7 @@ private:
 	ModuleEntryFunc* queryEntryFunction( void );
 	bool queryEntry( void );
 
-	EduNet::DynamicLibraryPtr m_spLib;
+	EduNet::DynamicLibrary* m_pLib;
 	ModuleEntry* m_pEntry;
 };
 

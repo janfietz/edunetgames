@@ -65,12 +65,12 @@ protected:
 private:
 
 	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
+	void createPluginsFromModule (const RawModule* pkModule );
 	bool appWantsToLoadPlugin(const char* pszPluginName);
 
-	RawModule* findModuleForPlugin( const char* pszPluginName );
+	const RawModule* findModuleForPlugin( const char* pszPluginName );
 
-	RawModule* findModuleByName( const char* pszName );
+	const RawModule* findModuleByName( const char* pszName );
 
 
 	ModuleManager m_modules;
