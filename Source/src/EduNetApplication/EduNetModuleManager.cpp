@@ -183,6 +183,10 @@ void ModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 		}
 		(*this) << fc << " " << dc << "\n";
 	} //for
+
+	RawModulePtr spNewModule(ET_NEW RawModule());
+	this->m_modules.push_back ( spNewModule );
+
 }
 
 //-----------------------------------------------------------------------------

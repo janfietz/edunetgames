@@ -113,7 +113,7 @@ private:
 	ModuleEntryFunc* queryEntryFunction( void );
 	bool queryEntry( void );
 
-	EduNet::DynamicLibraryPtr m_spLib;
+	EduNet::DynamicLibrary* m_pLib;
 	ModuleEntry* m_pEntry;
 };
 
