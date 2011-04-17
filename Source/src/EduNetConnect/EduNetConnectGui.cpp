@@ -28,25 +28,41 @@ NetworkPluginGui::NetworkPluginGui( wxWindow* parent, wxWindowID id, const wxPoi
 	wxStaticBoxSizer* sbSizer2;
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Connection") ), wxVERTICAL );
 	
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxHORIZONTAL );
+	wxGridBagSizer* gbSizer1;
+	gbSizer1 = new wxGridBagSizer( 0, 0 );
+	gbSizer1->SetFlexibleDirection( wxBOTH );
+	gbSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText1 = new wxStaticText( this, wxID_ANY, wxT("Address:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1 = new wxStaticText( this, wxID_ANY, wxT("Address:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText1->Wrap( -1 );
-	bSizer3->Add( m_staticText1, 0, wxBOTTOM|wxLEFT|wxTOP, 10 );
+	gbSizer1->Add( m_staticText1, wxGBPosition( 0, 1 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 10 );
 	
-	m_AddressTxtCtrl = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_AddressTxtCtrl = new wxTextCtrl( this, etNet_Address, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	m_AddressTxtCtrl->SetMinSize( wxSize( 200,-1 ) );
 	
-	bSizer3->Add( m_AddressTxtCtrl, 0, wxALL, 5 );
+	gbSizer1->Add( m_AddressTxtCtrl, wxGBPosition( 0, 2 ), wxGBSpan( 1, 1 ), wxALL, 5 );
 	
-	m_button1 = new wxButton( this, wxID_ANY, wxT("Connect"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer3->Add( m_button1, 0, wxALL, 5 );
+	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Port:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText11->Wrap( -1 );
+	gbSizer1->Add( m_staticText11, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 10 );
 	
-	sbSizer2->Add( bSizer3, 1, wxEXPAND, 5 );
+	m_PortTxtCtrl = new wxTextCtrl( this, etNet_Port, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	m_PortTxtCtrl->SetMinSize( wxSize( 100,-1 ) );
+	
+	gbSizer1->Add( m_PortTxtCtrl, wxGBPosition( 1, 2 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	
+	sbSizer2->Add( gbSizer1, 1, 0, 5 );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_AutoConnectCheckBox = new wxCheckBox( this, wxID_ANY, wxT("Autoconnect"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer2->Add( m_AutoConnectCheckBox, 0, wxALL, 5 );
+	bSizer11->Add( m_AutoConnectCheckBox, 0, wxALL, 10 );
+	
+	m_button1 = new wxButton( this, wxID_ANY, wxT("Connect"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer11->Add( m_button1, 0, wxALL, 5 );
+	
+	sbSizer2->Add( bSizer11, 1, 0, 5 );
 	
 	bSizer2->Add( sbSizer2, 1, wxEXPAND, 5 );
 	
@@ -109,6 +125,7 @@ NetworkPluginGui::NetworkPluginGui( wxWindow* parent, wxWindowID id, const wxPoi
 	m_checkBox1->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnCheckedMotionPlot ), NULL, this );
 	m_checkBox2->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnCheckedNetworkPlot ), NULL, this );
 	m_AddressTxtCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NetworkPluginGui::OnAddressChanged ), NULL, this );
+	m_PortTxtCtrl->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NetworkPluginGui::OnAddressChanged ), NULL, this );
 	m_AutoConnectCheckBox->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnAutoConnectChecked ), NULL, this );
 	m_checkBox4->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnSimEnabledChecked ), NULL, this );
 	m_PacketLossSlider->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( NetworkPluginGui::OnPacketLossChanged ), NULL, this );
@@ -122,10 +139,96 @@ NetworkPluginGui::~NetworkPluginGui()
 	m_checkBox1->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnCheckedMotionPlot ), NULL, this );
 	m_checkBox2->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnCheckedNetworkPlot ), NULL, this );
 	m_AddressTxtCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NetworkPluginGui::OnAddressChanged ), NULL, this );
+	m_PortTxtCtrl->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( NetworkPluginGui::OnAddressChanged ), NULL, this );
 	m_AutoConnectCheckBox->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnAutoConnectChecked ), NULL, this );
 	m_checkBox4->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NetworkPluginGui::OnSimEnabledChecked ), NULL, this );
 	m_PacketLossSlider->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( NetworkPluginGui::OnPacketLossChanged ), NULL, this );
 	m_DelayControl->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NetworkPluginGui::OnSimDelayChanged ), NULL, this );
 	m_DelayVariance->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NetworkPluginGui::OnSimVarianceChanged ), NULL, this );
+	
+}
+
+ReplicationSettings::ReplicationSettings( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxStaticBoxSizer* sbSizer4;
+	sbSizer4 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Replication Settings") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("Rate  0.1Hz"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7->Wrap( -1 );
+	bSizer6->Add( m_staticText7, 0, wxALL, 10 );
+	
+	m_replicationRate = new wxSlider( this, wxID_ANY, 50, 1, 1000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer6->Add( m_replicationRate, 0, wxALL, 5 );
+	
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("100Hz"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	bSizer6->Add( m_staticText8, 0, wxALL, 10 );
+	
+	sbSizer4->Add( bSizer6, 1, wxALIGN_LEFT|wxALIGN_TOP|wxSHAPED, 5 );
+	
+	wxBoxSizer* bSizer8;
+	bSizer8 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Default Reliability"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer8->Add( m_staticText9, 0, wxALL, 10 );
+	
+	wxString m_ReplicationReliabilityChoices[] = { wxT("Unreliable"), wxT("Unreliable Sequenced"), wxT("Reliable"), wxT("Reliable Ordered"), wxT("Reliable Sequenced") };
+	int m_ReplicationReliabilityNChoices = sizeof( m_ReplicationReliabilityChoices ) / sizeof( wxString );
+	m_ReplicationReliability = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ReplicationReliabilityNChoices, m_ReplicationReliabilityChoices, 0 );
+	m_ReplicationReliability->SetSelection( 0 );
+	bSizer8->Add( m_ReplicationReliability, 0, wxALL, 5 );
+	
+	sbSizer4->Add( bSizer8, 1, wxALIGN_LEFT|wxALIGN_TOP|wxSHAPED, 5 );
+	
+	wxBoxSizer* bSizer81;
+	bSizer81 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText91 = new wxStaticText( this, wxID_ANY, wxT("Default Priority"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText91->Wrap( -1 );
+	bSizer81->Add( m_staticText91, 0, wxALL, 10 );
+	
+	wxString m_ReplicationPriorityChoices[] = { wxT("Low"), wxT("Medium"), wxT("High") };
+	int m_ReplicationPriorityNChoices = sizeof( m_ReplicationPriorityChoices ) / sizeof( wxString );
+	m_ReplicationPriority = new wxChoice( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_ReplicationPriorityNChoices, m_ReplicationPriorityChoices, 0 );
+	m_ReplicationPriority->SetSelection( 0 );
+	bSizer81->Add( m_ReplicationPriority, 0, wxALL, 5 );
+	
+	sbSizer4->Add( bSizer81, 1, wxEXPAND, 5 );
+	
+	this->SetSizer( sbSizer4 );
+	this->Layout();
+	
+	// Connect Events
+	m_replicationRate->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_ReplicationReliability->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ReplicationSettings::OnReliabilityChanged ), NULL, this );
+	m_ReplicationPriority->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ReplicationSettings::OnPriorityChanged ), NULL, this );
+}
+
+ReplicationSettings::~ReplicationSettings()
+{
+	// Disconnect Events
+	m_replicationRate->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_replicationRate->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( ReplicationSettings::OnReplicationRateChanged ), NULL, this );
+	m_ReplicationReliability->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ReplicationSettings::OnReliabilityChanged ), NULL, this );
+	m_ReplicationPriority->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ReplicationSettings::OnPriorityChanged ), NULL, this );
 	
 }

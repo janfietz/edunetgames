@@ -80,12 +80,6 @@ IF(COMMAND cmake_policy)
 ENDIF(COMMAND cmake_policy)
 
 set(ET_USE_MMGR_FLUID "FALSE" CACHE BOOL "Use the fluid memory manager?")
-set(ET_USE_THIRDPARTYDIR "TRUE" CACHE BOOL "Search libs and include in thirdparty folder?")
-set(ET_THIRD_PARTY_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty  CACHE PATH "Path to thirdparty includes and libs" )
-IF (ET_USE_THIRDPARTYDIR)
-	SET(CMAKE_INCLUDE_PATH ${ET_THIRD_PARTY_DIR}/include)
-	SET(CMAKE_LIBRARY_PATH ${ET_THIRD_PARTY_DIR}/lib)
-ENDIF (ET_USE_THIRDPARTYDIR)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
@@ -123,9 +117,6 @@ ENDIF(NOT GLUT_FOUND)
 
 # -----------------------------------------------------------------------------
 # BOOST
-IF ( ET_USE_THIRDPARTYDIR )
-	SET( BOOST_ROOT ${ET_THIRD_PARTY_DIR} )
-ENDIF( ET_USE_THIRDPARTYDIR )
 FIND_PACKAGE( Boost2 COMPONENTS system filesystem )
 IF( NOT Boost_FOUND )
 	MESSAGE( "Boost NOT FOUND use ${BOOST_INCLUDEDIR} instead" )
