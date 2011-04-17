@@ -29,7 +29,11 @@
 //-----------------------------------------------------------------------------
 #include <mgf/wx/WxWidgets.h>
 
-#include <wx/event.h>
+#ifdef WXDLLIMPEXP_CORE
+#define __PREV_WXDLLIMPEXP_CORE
+#undef WXDLLIMPEXP_CORE
+#define WXDLLIMPEXP_CORE
+#endif
 
 namespace EduNet
 {
@@ -58,6 +62,7 @@ namespace EduNet
 	};
 	typedef void (wxEvtHandler::*PluginCreateEventFunction) (PluginCreateEvent&);
 
+	// TODO: @JF do not use deprecated code see event.h
 	BEGIN_DECLARE_EVENT_TYPES() 
 		DECLARE_EVENT_TYPE(etEVT_COMMAND_PLUGIN_CREATE, PluginCreateEvent)
 	END_DECLARE_EVENT_TYPES()
@@ -65,5 +70,12 @@ namespace EduNet
 	#define EVT_PLUGIN_CREATED(id, fn) \
 		DECLARE_EVENT_TABLE_ENTRY( etEVT_COMMAND_PLUGIN_CREATE, id, -1, (wxObjectEventFunction) (wxEventFunction) (PluginCreateEventFunction) & fn, (wxObject *) NULL ),
 }
+
+
+#ifdef __PREV_WXDLLIMPEXP_CORE
+#undef WXDLLIMPEXP_CORE
+#define WXDLLIMPEXP_CORE __PREV_WXDLLIMPEXP_CORE
+#endif
+
 
 #endif //__EDUNET_PLAYER_WX_EVENTS_H__

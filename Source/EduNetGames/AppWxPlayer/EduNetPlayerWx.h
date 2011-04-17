@@ -28,6 +28,7 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 #include <mgf/wx/WxWidgets.h>
+#include "EduNetCommon/EduNetCommon.h"
 
 #include <wx/sharedptr.h> 
 
@@ -37,6 +38,7 @@ namespace EduNet
 	// Define a new application type, each program should derive a class from wxApp
 	class PlayerWx : public wxApp
 	{
+		ET_DECLARE_BASE(wxApp)
 	public:
 		virtual bool OnInit();
 		virtual int OnExit();

@@ -38,14 +38,12 @@
 
 #include "EduNetApplication/EduNetApplication.h"
 #include "EduNetApplication/EduNetProcessProfile.h"
-#include "OpenSteer/Draw.h"
 
-#include "wx/dir.h"
-#include "wx/cmdline.h"
+#include <wx/cmdline.h>
 
+//-----------------------------------------------------------------------------
 namespace EduNet
 {
-
 	static const wxCmdLineEntryDesc cmdLineDesc[] =
 	{
 		{ wxCMD_LINE_SWITCH, "h", "help", "show this help message",
@@ -61,29 +59,11 @@ namespace EduNet
 		{ wxCMD_LINE_NONE }
 	};
 	
-	//ModulePluginLoader* gLoadPlugin = NULL;
-	void initializeDynamicPlugins( )
-	{
-// 		ModuleManager kModuleManager;
-// 		gLoadPlugin = ET_NEW ModulePluginLoader();
-// 		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
-// 		gLoadPlugin->createPluginsFromModules();
-	}
-
-	void shutdownDynamicPlugins( )
-	{
-// 		gLoadPlugin->unloadModules();
-// 		ET_SAFE_DELETE( gLoadPlugin ); 
-	}
-
 	//-----------------------------------------------------------------------------
 	bool InitializeGlobals( void )
 	{
 		static EduNet::ProcessProfile kProfile;
-		OpenSteerUTData::_SDMInitApp(&kProfile);
-
-		//static OpenSteer::OpenGLRenderer kRenderer;
-		//OpenSteer::GlobalData::getInstance()->setRenderer( &kRenderer );
+		OpenSteerUTData::_SDMInitApp( &kProfile );
 		return true;
 	}
 
@@ -92,73 +72,47 @@ namespace EduNet
 	//-----------------------------------------------------------------------------
 	bool PlayerWx::OnInit()
 	{
-		if ( !wxApp::OnInit() )
+		if ( !BaseClass::OnInit() )
 			return false;
 
-		m_spModuleManager = new ModulePluginLoader();
+		m_spModuleManager = ET_NEW ModulePluginLoader();
 		ModulePluginLoader* pModuleManager = m_spModuleManager.get();
-		wxDir dir(wxGetCwd());
-		if (dir.IsOpened() == true)
-		{
-			pModuleManager->loadModules( dir.GetName().c_str() );
-		}		
+		pModuleManager->loadModules( pModuleManager->getModuleManager().getCurrentModulePath() );
 		
-		//// register dynamic plugins
-		//EduNet::initializeDynamicPlugins( );
-		//
-		//// check if there is a default plugin
-		//const char* pszPluginName = EduNet::Options::accessOptions().getSelectedPlugin();
-		//OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );
-		//if ( NULL == pkPlugin )
-		//{
-		//	pkPlugin = Plugin::findDefault();
-		//}
-
-		//if( NULL != pkPlugin )
-		//{
-		//	Plugin::selectPlugin(pkPlugin);
-		//}
-		//else
-		//{
-		//	printf( "no plugin found - shutting down\n" );
-		//}		
-
 		// create the main application window
-		EduNet::PlayerWxFrame *frame = new EduNet::PlayerWxFrame("EduNet Plugin Player", pModuleManager);		
+		PlayerWxFrame *frame = ET_NEW PlayerWxFrame("EduNet Plugin Player", pModuleManager);		
 		frame->Show(true);
 		return true;
 	}
 
 	int PlayerWx::OnExit()
 	{
-		/*EduNet::shutdownDynamicPlugins();
-
-		EduNet::Application::_SDMShutdown();*/
 		ModulePluginLoader* pModuleManager = m_spModuleManager.get();
 		pModuleManager->unloadModules();
-
 		m_spModuleManager = NULL;
 
-		return wxApp::OnExit();
+		return BaseClass::OnExit();
 	}
 
-//-----------------------------------------------------------------------------
-	void PlayerWx::run(int argc, char **argv)
+	//-----------------------------------------------------------------------------
+	void PlayerWx::run( int argc, char **argv )
 	{
 		int iExitCode = EXIT_FAILURE;
-		EduNet::Application::_SDMInit();
+		Application::_SDMInit();
 	
-		if(true == wxEntryStart(argc, argv) )
+		if( true == wxEntryStart(argc, argv) )
 		{
-			wxApp* pApp = static_cast<wxApp*>(wxApp::GetInstance());
-			pApp->CallOnInit();
-			pApp->OnRun();
-			pApp->OnExit();
+			int errorCodeOnRun(0);
+			wxApp* pApp = dynamic_cast<wxApp*>(wxApp::GetInstance());
+			if( pApp->CallOnInit() )
+			{
+				errorCodeOnRun = pApp->OnRun();
+			}
+			const int errorCodeOnExit( pApp->OnExit() );
 		}
 		wxEntryCleanup();
 	
-		EduNet::Application::_SDMShutdown();
-
+		Application::_SDMShutdown();
 	}
 
 	bool PlayerWx::OnCmdLineParsed( wxCmdLineParser& parser )
@@ -167,7 +121,7 @@ namespace EduNet
 		// everything is ok; proceed
 		if (parser.Found(wxT("m"), &value))
 		{
-			enStringArray_t& kNames = EduNet::Options::accessOptions().accessModuleNameList();
+			enStringArray_t& kNames = Options::accessOptions().accessModuleNameList();
 			wxPrintf("Try to load module: %s \n", value);
 			kNames.push_back( (const char*)value.ToAscii() );
 
@@ -175,12 +129,12 @@ namespace EduNet
 		if (parser.Found(wxT("p"), &value))
 		{
 			wxPrintf("Preselect plugin: %s \n", value);
-			EduNet::Options::accessOptions().setSelectedPlugin(value);			
+			Options::accessOptions().setSelectedPlugin(value);			
 		}
 		if ( parser.Found(wxT("v")) )
 		{
 			//const char* progname = Options::getAppName();
-			wxPrintf("Preselect plugin: %s \n", EduNet::Options::accessOptions().getSelectedPlugin());
+			wxPrintf("Preselect plugin: %s \n", Options::accessOptions().getSelectedPlugin());
 			//wxPrintf ( "'%s'\n",progname );
 			wxPrintf ( "Version 0.1\n" );
 			wxPrintf ( "example program to demonstrate different OpenSteer plugins.\n" );
@@ -188,10 +142,12 @@ namespace EduNet
 		}
 		return true;
 	}
+
 	void PlayerWx::OnInitCmdLine( wxCmdLineParser &parser )
 	{
 		parser.SetDesc( cmdLineDesc );		
 	}
 }
+
 IMPLEMENT_APP_NO_MAIN(EduNet::PlayerWx)
 

@@ -77,34 +77,37 @@ namespace EduNet
 		const RawModule* pkModule )
 	{
 		ModuleEntry* pkEntry = pkModule->accessEntry();
-		bool bWantsToLoadPlugin = this->appWantsToLoadPlugin( pkEntry->getName() );
-		if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
+		if ( NULL != pkEntry )
 		{
-			PluginFactory* pkFactory = pkEntry->createPluginFactory();
-			//PluginFactoryPtr spFactory ( pkFactory );
-
-			enStringArray_t kList;
-			pkFactory->getPluginNames ( kList );
-
-			std::ostringstream message;
-			message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
-			enStringArray_t::iterator kNameIter = kList.begin();
-			enStringArray_t::iterator kNameIterEnd = kList.end();
-			while ( kNameIterEnd != kNameIter )
+			const bool bWantsToLoadPlugin( this->appWantsToLoadPlugin( pkEntry->getName() ) );
+			if( true == bWantsToLoadPlugin )
 			{
-				const char* pszPluginName = ( *kNameIter ).c_str();
-				OpenSteer::AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
-				if ( NULL != pkPlugin )
+				PluginFactory* pkFactory = pkEntry->createPluginFactory();
+				//PluginFactoryPtr spFactory ( pkFactory );
+
+				enStringArray_t kList;
+				pkFactory->getPluginNames ( kList );
+
+				std::ostringstream message;
+				message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
+				enStringArray_t::iterator kNameIter = kList.begin();
+				enStringArray_t::iterator kNameIterEnd = kList.end();
+				while ( kNameIterEnd != kNameIter )
 				{
-					this->m_plugins.addPlugin ( pkPlugin );
-					message << "\"" << ( *kNameIter ).c_str() << "\"";
-					message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
+					const char* pszPluginName = ( *kNameIter ).c_str();
+					OpenSteer::AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
+					if ( NULL != pkPlugin )
+					{
+						this->m_plugins.addPlugin ( pkPlugin );
+						message << "\"" << ( *kNameIter ).c_str() << "\"";
+						message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
+					}
+					++kNameIter;
 				}
-				++kNameIter;
+				message << std::ends;
+				EduNet::Log::printMessage ( message );
+				pkEntry->destroyPluginFactory(pkFactory);
 			}
-			message << std::ends;
-			EduNet::Log::printMessage ( message );
-			pkEntry->destroyPluginFactory(pkFactory);
 		}
 	}
 

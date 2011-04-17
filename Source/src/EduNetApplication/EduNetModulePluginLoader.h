@@ -44,8 +44,9 @@ public:
 	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
 		virtual const char* name() const { return this->getClassName(); };
 
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
+	void loadModules( const char* pszPath );
+	void unloadModules( void );
+	void createPluginsFromModules ( void );
 	
 
 	virtual OpenSteer::AbstractPlugin* createPluginByName(
@@ -55,7 +56,7 @@ public:
 		const char* pszPluginName,
 		const char* pszModuleName);
 
-	const ModuleManager& GetModuleManager(){return m_modules;}
+	const ModuleManager& getModuleManager(){return m_modules;}
 
 protected:
 	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
@@ -64,7 +65,6 @@ protected:
 
 private:
 
-	void createPluginsFromModules ( void );
 	void createPluginsFromModule (const RawModule* pkModule );
 	bool appWantsToLoadPlugin(const char* pszPluginName);
 
