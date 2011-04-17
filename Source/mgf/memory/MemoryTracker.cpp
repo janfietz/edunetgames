@@ -103,6 +103,11 @@ namespace mgf
 			bool bTest = true;
 			bTest = false;
 		}
+		else if( nSize == 1024 )
+		{
+			bool bTest = true;
+			bTest = false;
+		}
 		return( TRUE );         // Allow the memory operation to proceed
 	}
 

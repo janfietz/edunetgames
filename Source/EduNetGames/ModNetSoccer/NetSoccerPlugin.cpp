@@ -61,7 +61,12 @@ NetSoccerEntityFactory gOfflineNetSoccerEntityFactory;
 
 //-----------------------------------------------------------------------------
 NetSoccerPlugin::NetSoccerPlugin ( bool bAddToRegistry ) :
-	BaseClass ( bAddToRegistry ), m_Ball(NULL)
+	BaseClass ( bAddToRegistry ), 
+	m_Ball(NULL), 
+	m_bbox( NULL ), 
+	m_TeamAGoal(NULL), 
+	m_TeamBGoal(NULL),
+	m_pCameraPlugin(NULL)
 {
 	this->setEntityFactory( &gOfflineNetSoccerEntityFactory );
 }

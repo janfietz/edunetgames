@@ -223,11 +223,6 @@ void Application::_SDMCleanup( void )
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 
-	if( true == g_bRunCalled )
-	{
-		EduNet::shutdownDynamicPlugins();
-	}
-
 	if( NULL != OpenSteerUTData::g_openSteerUTDataPtr->appGlui )
 	{
 //		GLUI_Master.close_all();

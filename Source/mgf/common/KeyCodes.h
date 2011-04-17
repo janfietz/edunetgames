@@ -31,12 +31,6 @@
 
 namespace mgf
 {
-	/*
-	=================================================================================
-	Copyright (C) 2002-2010 Carsten Fuchs Software.
-	For support and more information about Cafu, visit us at <http://www.cafu.de>.
-	=================================================================================
-	*/
 	enum EType
     {
         KEY_TYPE_KEYDOWN,

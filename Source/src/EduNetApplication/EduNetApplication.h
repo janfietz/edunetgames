@@ -36,10 +36,7 @@
 
 namespace EduNet
 {
-	
-	extern void initializeDynamicPlugins( );
-	extern void shutdownDynamicPlugins( );
-	
+		
 //-----------------------------------------------------------------------------
 class Application
 {

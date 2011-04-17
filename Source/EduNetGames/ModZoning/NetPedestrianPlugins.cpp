@@ -147,7 +147,6 @@ namespace EduNet
 		ET_SAFE_DELETE( clientServerPlugin );
 		ET_SAFE_DELETE( pedestrianClientPlugin );
 		ET_SAFE_DELETE( pedestrianPeerPlugin );
-
 	}
 }
 

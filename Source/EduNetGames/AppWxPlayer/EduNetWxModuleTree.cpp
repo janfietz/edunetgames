@@ -113,7 +113,7 @@ END_EVENT_TABLE()
 			image, image,
 			new RootItemData(wxT("Root item")));
 
-		const ModuleManager& moduleManager = m_moduleManager->GetModuleManager(); 
+		const ModuleManager& moduleManager = m_moduleManager->getModuleManager(); 
 		const RawModules& kModule = moduleManager.getModules();
 
 		RawModules::const_iterator modIter = kModule.begin();

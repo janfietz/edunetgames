@@ -19,5 +19,6 @@
 #endif
 #pragma warning( pop )
 
+#pragma warning( disable : 4251 ) // xxx needs to have dll-interface to be used by clients of class 'xxx'
 
 #endif //  __MGF_WXWIDGETS_H__

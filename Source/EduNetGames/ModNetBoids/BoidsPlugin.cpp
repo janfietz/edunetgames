@@ -79,7 +79,7 @@ size_t uiInitialFlockSize = 50;
 //-----------------------------------------------------------------------------
 NetBoidsPlugin::NetBoidsPlugin ( bool bAddToRegistry ) :
         BaseClass ( bAddToRegistry ),
-		pd(NULL)
+		pd(NULL),m_pCameraPlugin(NULL)
 {	
 	this->m_boidFactory = ET_NEW NetBoidFactory();	
 	this->setEntityFactory(m_boidFactory);
