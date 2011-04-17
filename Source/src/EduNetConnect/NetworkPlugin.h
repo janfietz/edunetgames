@@ -31,7 +31,7 @@
 
 #define EDUNET_NO_OPENSTEER_INCLUDES 0 // include opensteer
 #include "EduNetConnect/EduNetConnect.h"
-#include "EduNetConnect/ReplicaManagerGui.h"
+#include "EduNetConnect/ReplicationTypes.h"
 
 #include "EduNetConnect/NetworkPlot.h"
 #include "EduNetConnect/SimpleNetworkVehicle.h"
@@ -101,7 +101,6 @@ public:
 
 	//----------------------------------------------------------------------------
 	// OpenSteer::Plugin interface
-	virtual void initGui( void* pkUserdata );
 	virtual wxWindow* prepareGui ( wxWindow* parent ) OS_OVERRIDE;
 	virtual void open(void);
 	virtual void close(void);
@@ -176,23 +175,20 @@ public:
 	static void recordNetUpdate(
 		osAbstractVehicle* pkVehicle, const float currentTime, const float elapsedTime );
 
+	void DrawNetworkPlot(bool val) { m_bDrawNetworkPlot = val; }
+	void AutoConnect(bool val) { m_bAutoConnect = val; }
+
 protected:
 	bool PingForOtherPeers( const int iPort );
 	void AttachNetworkIdManager( void );
 
 	void gatherNetworkStatistics( RakNetStatistics& kStats );
 
-	void addReplicaManagerGui( void* pkUserdata );
-
 	virtual void OnReceivedPacket( Packet* pPacket );
 	virtual OpenSteer::AbstractPlugin* getHostedPlugin( void ) const;
         virtual unsigned short getMaxIncomingConnections( void ) const;
 
-	void setGamePluginReplicaManager( RakNet::ReplicaManager3* pkReplicaManager )
-	{
-		this->m_pkGamePluginReplicaManager = pkReplicaManager;
-		this->m_kReplicaManagerGui.setReplicaManager( pkReplicaManager );
-	}
+	void setGamePluginReplicaManager( RakNet::ReplicaManager3* pkReplicaManager );
 
 	static OpenSteer::AbstractVehicleMotionStatePlot ms_kMotionStateProfile;
 
@@ -210,7 +206,8 @@ protected:
 	NetworkStats m_kStats;
 
 	// settings
-	int m_bAutoConnect;
+	bool m_bAutoConnect;
+	
 private:
 
 	void CreateNetworkInterface( void );
@@ -233,18 +230,18 @@ private:
 		const float currentTime,
 		const float elapsedTime);
 
-	void addNetworkSimulatorGui( void* pkUserdata );
         void acceptConnections( void );
 
 	void setIncommingPassword( void );
 
 	RakNet::ReplicaManager3* m_pkGamePluginReplicaManager;
-	ReplicaManagerGui m_kReplicaManagerGui;
+	class EduNetConnectGuiReplicationSettings* m_pReplicaManagerGui;
 
 	NetworkAddress* m_pkAddress;
 	NetworkSimulatorData m_kSimulatorData;
 
-	int m_bDrawNetworkPlot;
+	bool m_bDrawNetworkPlot;
+	
 	NetworkPlot m_kNetworkPlot;
 	bool m_bWaitForConnection;
 

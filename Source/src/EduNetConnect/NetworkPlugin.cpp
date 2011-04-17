@@ -1,11 +1,11 @@
 #include "NetworkPlugin.h"
 
-#include "EduNetCommon/EduNetDraw.h"
 #include "EduNetConnect/ServerVehicleUpdate.h"
 #include "OpenSteerUT/AbstractVehicleGroup.h"
 #include "OpenSteerUT/AbstractPluginUtilities.h"
 #include "OpenSteer/GlobalData.h"
 #include "EduNetProfile/EduNetProfile.h"
+#include "EduNetConnectGuiReplicationSettings.h"
 
 static const int SERVER_PONG_COUNT = 32;
 #define PONG_WAIT_TIMEOUT 1000 // 5s
@@ -19,12 +19,18 @@ OpenSteer::AbstractVehicleMotionStatePlot NetworkPlugin::ms_kMotionStateProfile;
 class NetworkPluginPanel : public NetworkPluginGui
 {
 public: 
+	
 	NetworkPluginPanel( NetworkPlugin* netPlugin, wxWindow* parent, wxWindowID id = wxID_ANY,
 		const wxPoint& pos = wxDefaultPosition,
 		const wxSize& size = wxDefaultSize,
 		long style = wxTAB_TRAVERSAL): NetworkPluginGui( parent, id, pos, size, style),
 		m_plugin(netPlugin)
 	{
+		NetworkAddress& kAddress = m_plugin->accessCurrentAddress();
+		*m_PortTxtCtrl << kAddress.port;
+		*m_AddressTxtCtrl << kAddress.addressString.C_String();
+
+		m_AutoConnectCheckBox->SetValue( m_plugin->DoAutoConnect() );
 
 	};
 
@@ -46,42 +52,79 @@ protected:
 
 void NetworkPluginPanel::OnCheckedMotionPlot( wxCommandEvent& event )
 {
-	event.Skip();
+	OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot = event.IsChecked();
 }
 
 void NetworkPluginPanel::OnCheckedNetworkPlot( wxCommandEvent& event )
 {
-	event.Skip();
+	m_plugin->DrawNetworkPlot(event.IsChecked());
 }
 
 void NetworkPluginPanel::OnAddressChanged( wxCommandEvent& event )
 {
-	event.Skip();
+	NetworkAddress& kAddress = m_plugin->accessCurrentAddress();
+	if (event.GetId() == etNet_Address)
+	{
+		wxString adressStr = event.GetString();
+		if (adressStr.IsEmpty() == false)
+		{
+			kAddress.addressString = adressStr.ToAscii();
+		}
+
+	}
+	else if (event.GetId() == etNet_Port)
+	{
+		wxString portStr = event.GetString();
+		unsigned long ulPort;
+		if( portStr.ToCULong(&ulPort ) == true )
+		{
+			if( ulPort < USHRT_MAX )
+			{
+				kAddress.port = static_cast<unsigned short>(ulPort);
+			}
+		}
+	}
 }
 
 void NetworkPluginPanel::OnAutoConnectChecked( wxCommandEvent& event )
 {
-	event.Skip();
+	m_plugin->AutoConnect(event.IsChecked());
 }
 
 void NetworkPluginPanel::OnSimEnabledChecked( wxCommandEvent& event )
 {
-	event.Skip();
+	NetworkSimulatorData& simData = m_plugin->GetNetworkSimulatorSettings();
+	simData.enabled = event.IsChecked();
+
+	m_plugin->UpdateNetworkSimulatorSettings();
 }
 
 void NetworkPluginPanel::OnPacketLossChanged( wxScrollEvent& event )
 {
-	event.Skip();
+	NetworkSimulatorData& simData = m_plugin->GetNetworkSimulatorSettings();
+
+	int pos = event.GetPosition();
+	simData.packetloss = static_cast<float>(pos) / 100.0f;
+
+	m_plugin->UpdateNetworkSimulatorSettings();
 }
 
 void NetworkPluginPanel::OnSimDelayChanged( wxSpinEvent& event )
 {
-	event.Skip();
+	NetworkSimulatorData& simData = m_plugin->GetNetworkSimulatorSettings();
+
+	int pos = event.GetPosition();
+	simData.minExtraPing = pos;
+
+	m_plugin->UpdateNetworkSimulatorSettings();
 }
 
 void NetworkPluginPanel::OnSimVarianceChanged( wxSpinEvent& event )
 {
-	event.Skip();
+	NetworkSimulatorData& simData = m_plugin->GetNetworkSimulatorSettings();
+
+	int pos = event.GetPosition();
+	simData.extraPingVariance = pos;
 }
 //-----------------------------------------------------------------------------
 NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
@@ -93,7 +136,8 @@ NetworkPlugin::NetworkPlugin(bool bAddToRegistry):
 		m_eNetworkSessionType( ENetworkSessionType_Undefined ),
 		m_bAutoConnect(1),
 		m_bDrawNetworkPlot(0),
-		m_bWaitForConnection(false)
+		m_bWaitForConnection(false),
+		m_pReplicaManagerGui(NULL)
 {
 }
 
@@ -104,160 +148,21 @@ NetworkPlugin::~NetworkPlugin(void)
 }
 
 //-----------------------------------------------------------------------------
-void setPort(GLUI_Control* pkControl )
-{
-	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
-
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
-	kAddress.port = pkTextBox->get_int_val();
-}
-//-----------------------------------------------------------------------------
-void setAddress(GLUI_Control* pkControl )
-{
-	GLUI_EditText* pkTextBox = (GLUI_EditText*)pkControl;
-
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	NetworkAddress& kAddress = pkPlugin->accessCurrentAddress();
-	kAddress.addressString = pkTextBox->get_text();
-}
-//-----------------------------------------------------------------------------
-void connectToAddress(GLUI_Control* pkControl )
-{
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	const NetworkAddress& kAddress = pkPlugin->getCurrentAddress();
-	pkPlugin->ConnectToAddress( kAddress );
-}
-//-----------------------------------------------------------------------------
-void NetworkPlugin::initGui( void* pkUserdata )
-{
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-
-
-	OpenSteer::AbstractPlugin* pkPlugin = this->getHostedPlugin();
-	AbstractEntity* pkPluginEntity = dynamic_cast<AbstractEntity*>( pkPlugin );
-	assert( NULL != pkPluginEntity );
-	if( NULL != pkPlugin )
-	{
-		GLUI_Rollout* pluginRollout = glui->add_rollout_to_panel( pluginPanel, pkPlugin ? pkPlugin->pluginName() : "Plugin", false );
-		GLUI_Panel* subPluginPanel = pluginRollout;
-		pkPlugin->initGui( subPluginPanel );
-	}
-
-	// general network plugin gui
-	{
-		GLUI_Rollout* profileRollout = glui->add_rollout_to_panel( pluginPanel, "Network Profile", true );
-		GLUI_Panel* subPanel = profileRollout;
-		glui->add_checkbox_to_panel( subPanel, "Show Motionstate", &OpenSteer::GlobalData::getInstance()->m_bShowMotionStatePlot);
-		glui->add_checkbox_to_panel( subPanel, "Plot Network", &this->m_bDrawNetworkPlot);
-		NetworkVehicle::initGui( profileRollout, pkPluginEntity->isRemoteObject() );
-	}
-
-	glui->add_checkbox_to_panel( pluginPanel, "AutoConnect", &this->m_bAutoConnect);
-
-	if( true == this->addConnectBox() )
-	{
-		const NetworkAddress& kAddress = this->getCurrentAddress();
-
-		GLUI_EditText* pkTextControl;
-		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Address", GLUI_EDITTEXT_TEXT,
-			NULL, -1, setAddress );
-		pkTextControl->set_text( kAddress.addressString.C_String() );
-		pkTextControl->set_ptr_val( this );
-
-		pkTextControl = glui->add_edittext_to_panel( pluginPanel, "Port", GLUI_EDITTEXT_INT,
-			NULL, -1, setPort );
-		pkTextControl->set_int_val( kAddress.port );
-		pkTextControl->set_int_limits(0, (unsigned short)-1 );
-		pkTextControl->set_ptr_val( this );
-
-		GLUI_Control* pkControl;
-		pkControl = glui->add_button_to_panel( pluginPanel, "Connect", -1 , connectToAddress );
-		pkControl->set_ptr_val( this );
-	}
-
-	this->addNetworkSimulatorGui( pluginPanel );
-
-	this->addReplicaManagerGui( pluginPanel );
-}
-
-//-----------------------------------------------------------------------------
 wxWindow* NetworkPlugin::prepareGui( wxWindow* parent )
 {
 	 wxWindow* parentWindow = BaseClass::prepareGui( parent );
 
-	 wxWindow* myPanel = new NetworkPluginPanel( this, parent );
+	 wxWindow* myPanel = new NetworkPluginPanel( this, parentWindow );
 	 parentWindow->GetSizer()->Add(myPanel);
 
+	 if (m_pReplicaManagerGui == NULL)
+	 {
+		 m_pReplicaManagerGui = new EduNetConnectGuiReplicationSettings( parentWindow );
+		 parentWindow->GetSizer()->Add(m_pReplicaManagerGui);
+	 }
 	 return parentWindow;
 }
 
-//-----------------------------------------------------------------------------
-void changeNetworkSimulatorSettings(GLUI_Control* pkControl )
-{
-	NetworkPlugin* pkPlugin = (NetworkPlugin*)pkControl->ptr_val;
-	if(NULL == pkPlugin)
-	{
-		return;
-	}
-
-	NetworkSimulatorData& kData = pkPlugin->GetNetworkSimulatorSettings();
-	switch( pkControl->get_id() )
-	{
-	case 1:
-		{
-			GLUI_Checkbox* pkCheckBox = (GLUI_Checkbox*)pkControl;
-			kData.enabled = pkCheckBox->get_int_val();
-		}break;
-	case 2:
-		{
-			kData.packetloss = pkControl->get_float_val();
-		}break;
-	case 3:
-		{
-			kData.minExtraPing = pkControl->get_int_val();
-		}break;
-	case 4:
-		{
-			kData.extraPingVariance = pkControl->get_int_val();
-		}break; break;
-	}
-
-	pkPlugin->UpdateNetworkSimulatorSettings();
-
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::addNetworkSimulatorGui( void* pkUserdata )
-{
-	GLUI* glui = ::getRootGLUI();
-	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-	GLUI_Panel* simulatorPanel = glui->add_rollout_to_panel( pluginPanel, "Network Simulator", false );
-
-	GLUI_Checkbox* pkControl =
-		glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", NULL, 1, changeNetworkSimulatorSettings );
-	pkControl->set_ptr_val( this );
-
-	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(simulatorPanel, "Packetloss",
-		GLUI_SPINNER_FLOAT, NULL, 2, changeNetworkSimulatorSettings);
-	repSpinner->set_float_limits(0.0f, 1.0f);
-	repSpinner->set_ptr_val( this );
-
-	GLUI_EditText* pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
-		"MinPing", GLUI_EDITTEXT_INT, NULL, 3, changeNetworkSimulatorSettings );
-	pkTextControl->set_int_limits(0, (unsigned short)-1 );
-	pkTextControl->set_int_val( m_kSimulatorData.minExtraPing );
-	pkTextControl->set_ptr_val( this );
-
-	pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
-		"PingVariance", GLUI_EDITTEXT_INT, NULL, 4, changeNetworkSimulatorSettings );
-	pkTextControl->set_int_limits(0, (unsigned short)-1 );
-	pkTextControl->set_int_val( m_kSimulatorData.extraPingVariance );
-	pkTextControl->set_ptr_val( this );
-
-}
 
 //-----------------------------------------------------------------------------
 void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
@@ -280,13 +185,7 @@ void NetworkPlugin::UpdateNetworkSimulatorSettings( void )
 //-----------------------------------------------------------------------------
 void NetworkPlugin::incrementReplicationInterval( int additionalTime )
 {
-	this->m_kReplicaManagerGui.incrementReplicationInterval( additionalTime );
-}
-
-//-----------------------------------------------------------------------------
-void NetworkPlugin::addReplicaManagerGui( void* pkUserdata  )
-{
-	this->m_kReplicaManagerGui.initGui( pkUserdata );
+	//TODO: forward to replicamanager
 }
 
 //-----------------------------------------------------------------------------
@@ -490,18 +389,18 @@ void NetworkPlugin::redraw (OpenSteer::AbstractRenderer* pRenderer,
 //-----------------------------------------------------------------------------
 void NetworkPlugin::handleFunctionKeys (int keyNumber)
 {
-	// TODO: client server difference ?
-	switch (keyNumber)
-	{
-	case GLUT_KEY_UP:
-		incrementReplicationInterval(5);
-		break; //GLUT_KEY_UP
-	case GLUT_KEY_DOWN:
-		incrementReplicationInterval(-5);
-		break; //GLUT_KEY_DOWN
-	default:
-		BaseClass::handleFunctionKeys(keyNumber);
-	}
+	//// TODO: client server difference ?
+	//switch (keyNumber)
+	//{
+	//case GLUT_KEY_UP:
+	//	incrementReplicationInterval(5);
+	//	break; //GLUT_KEY_UP
+	//case GLUT_KEY_DOWN:
+	//	incrementReplicationInterval(-5);
+	//	break; //GLUT_KEY_DOWN
+	//default:
+	//	BaseClass::handleFunctionKeys(keyNumber);
+	//}
 }
 
 //-----------------------------------------------------------------------------
@@ -930,3 +829,13 @@ AbstractEntityReplica* NetworkPlugin::createLocalEntityReplica(
 		pPlugin, classId, bIsRemoteObject, bClientReplica );
 }
 
+//-----------------------------------------------------------------------------
+void NetworkPlugin::setGamePluginReplicaManager( 
+	RakNet::ReplicaManager3* pkReplicaManager )
+{
+	m_pkGamePluginReplicaManager = pkReplicaManager;
+	if (m_pReplicaManagerGui != NULL)
+	{
+		m_pReplicaManagerGui->useReplicaManager( pkReplicaManager );
+	}
+}
