@@ -1,7 +1,7 @@
 #ifndef __NETSOCCERENTITY_FACTORY_H__
 #define __NETSOCCERENTITY_FACTORY_H__
 //-----------------------------------------------------------------------------
-// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// Copyright (c) 2011, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
@@ -14,7 +14,7 @@
 //   and/or other materials provided with the distribution.
 // * Neither the name of EduNetGames nor the names of its contributors
 //   may be used to endorse or promote produ//-----------------------------------------------------------------------------
-// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// Copyright (c) 2011, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
