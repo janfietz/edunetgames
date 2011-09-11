@@ -31,7 +31,7 @@
 
 // CameraPlugin code:
 //-----------------------------------------------------------------------------
-// Copyright (c) 2009, Jan Fietz, Cyrus Preuss
+// Copyright (c) 2011, Jan Fietz, Cyrus Preuss
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without modification, 
