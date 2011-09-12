@@ -33,9 +33,6 @@
 #include <windows.h>
 #endif
 
-// command line parsing
-#include "argtable2.h"
-
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
