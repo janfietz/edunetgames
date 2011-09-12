@@ -279,6 +279,19 @@ int Application::Run(int argc, char **argv)
 	// register dynamic plugins
 	EduNet::initializeDynamicPlugins( );
 
+	if (EduNet::Options::accessOptions().ListModules())
+	{
+		printf("Available plugins\n");
+		int pluginCount = OpenSteer::Plugin::getNumPlugins( );
+		while(--pluginCount > 0)
+		{
+			AbstractPlugin* p = OpenSteer::Plugin::getPluginAt( pluginCount );
+			printf("-%s\n", p->pluginName() );
+		}
+		
+		return EXIT_SUCCESS;
+	}
+
 	// check if there is a default plugin
 	const char* pszPluginName = EduNet::Options::accessOptions().getSelectedPlugin();
 	OpenSteer::AbstractPlugin* pkPlugin = Plugin::findByName ( pszPluginName );

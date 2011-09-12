@@ -40,6 +40,9 @@ namespace EduNet	{
 
 		int parseCommandLine ( int argc, char **argv );
 
+		void printVersion();
+		
+
 		void setup ( void );
 
 		bool continueProcess ( void ) const;
@@ -62,6 +65,7 @@ namespace EduNet	{
 
 		static Options& accessOptions ( void );
 
+		bool ListModules() const { return m_bListModules; }
 
 	private:
 		Options();
@@ -69,6 +73,8 @@ namespace EduNet	{
 		bool m_bContinueProcess;
 		enString_t m_kPluginName;
 		enStringArray_t m_kModuleNames;
+		bool m_bListModules;
+		
 	};
 
 	//-------------------------------------------------------------------------

@@ -39,9 +39,17 @@
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/errors.hpp>
+
+using namespace boost;
 
 namespace EduNet
 {
+	
+
 	int setOptions ( EduNet::Options& kOptions,
 		const char **defines, int ndefines
 		);
@@ -66,126 +74,71 @@ namespace EduNet
 		return kOptions;
 	}
 
-
-	//-------------------------------------------------------------------------
-	int setOptions ( Options& kOptions,
-		const char **defines, int ndefines
-		)
-	{
-		int i;
-
-		for ( i=0; i<ndefines; i++ )
-		{
-			//              EduNet::Log::printLine( "selected plugin \"%s\"",defines[i] );
-			printf ( "selected plugin \"%s\"\n",defines[i] );
-			kOptions.setSelectedPlugin ( defines[i] );
-		}
-
-		return 0;
-	}
-	//-------------------------------------------------------------------------
-	int setModulesList ( Options& kOptions,
-		const char **modules,
-		int ndefines
-		)
-	{
-		enStringArray_t& kNames = kOptions.accessModuleNameList();
-		kNames.clear();
-		for ( int i=0; i<ndefines; i++ )
-		{
-			printf ( "loadable modules \"%s\"\n",modules[i] );
-			kNames.push_back ( modules[i] );
-		}
-
-		return 0;
-	}
 	//-------------------------------------------------------------------------
 	int Options::parseCommandLine ( int argc, char **argv )
 	{
 		int exitcode=0;
-#if __APPLE__ && __MACH__
-		//      exitcode = EXIT_SUCCESS;
-#else
-#endif
-		struct arg_str  *modules = arg_strn ( "mM","Module","String",0,10,  "specify the modules to load." );
-		struct arg_str  *plugins = arg_strn ( "pP","Plugin","String",0,1, "plugin selection" );
-		struct arg_lit  *help    = arg_lit0 ( NULL,"help", "print this help and exit" );
-		struct arg_lit  *version = arg_lit0 ( NULL,"version", "print version information and exit" );
-		struct arg_end  *end     = arg_end ( 20 );
-		void* argtable[] = {modules, plugins,help,version,end};
-		const char* progname = Options::getAppName();
-		int nerrors;
-
-		/* verify the argtable[] entries were allocated sucessfully */
-		if ( arg_nullcheck ( argtable ) != 0 )
+		program_options::options_description desc("Allowed options");
+		desc.add_options()
+			("help,h", "print this help and exit")
+			("version,V", "print version information and exit")
+			("list,L", "available modules and plugins")
+			("modules,M", program_options::value< enStringArray_t >(), "specify one ore more modules to load")
+			("plugin,P", program_options::value< enString_t  >(), "preselct a plugin by name from load modules")
+			;
+		program_options::variables_map vm;
+		try
 		{
-			/* NULL entries were detected, some allocations must have failed */
-			printf ( "%s: insufficient memory\n",progname );
-			exitcode = 1;
-			goto exit;
+	
+			program_options::store(program_options::command_line_parser(argc, argv).
+				options(desc).run(), vm);
+			program_options::notify(vm);
+		}
+		catch (program_options::unknown_option unk)
+		{			
+			std::cout << unk.what() << "\n";
+			std::cout << desc << "\n";
+			return EXIT_FAILURE;
+		}
+		catch (...)
+		{
+			std::cout << desc << "\n";
+			return EXIT_FAILURE;
 		}
 
-		/* set any command line default values prior to parsing */
+		if (vm.count("help")) {
+			std::cout << desc << "\n";
+			return EXIT_FAILURE;
+		}
 
-		/* Parse the command line as defined by argtable[] */
-		nerrors = arg_parse ( argc,argv,argtable );
-
-		/* special case: '--help' takes precedence over error reporting */
-		if ( help->count > 0 )
+		if (vm.count("version")) 
 		{
-			printf ( "Usage: %s", progname );
-			arg_print_syntax ( stdout,argtable,"\n" );
-			printf ( "\n" );
-			printf ( "OpenSteer plugin demonstration\n" );
-			printf ( "\n" );
-			arg_print_glossary ( stdout,argtable,"  %-25s %s\n" );
-			exitcode = EXIT_SUCCESS;
+			printVersion();		
 			this->setContinueProcess ( false );
-			goto exit;
+			return EXIT_FAILURE;
 		}
 
-		/* special case: '--version' takes precedence error reporting */
-		if ( version->count > 0 )
+		m_bListModules = vm.count("list") > 0;
+
+		if (vm.count("modules")) 
 		{
-			printf ( "'%s'\n",progname );
-			printf ( "Version 0.1\n" );
-			printf ( "example program to demonstrate different OpenSteer plugins.\n" );
-			printf ( "Copyright (c) 2009 Jan Fietz, Cyrus Preuss. All Rights Reserved.\n" );
-			exitcode = EXIT_SUCCESS;
-			this->setContinueProcess ( false );
-			goto exit;
+			m_kModuleNames = vm["modules"].as< enStringArray_t >();			
 		}
 
-		/* special case: uname with no command line options induces brief help */
-		if ( argc==1 )
+		if (vm.count("plugin")) 
 		{
-			printf ( "Try '%s --help' for more information.\n",progname );
-			exitcode = EXIT_SUCCESS;
-			goto exit;
-		}
+			m_kPluginName = vm["plugin"].as< enString_t >();			
+		}		
 
-		/* If the parser returned any errors then display them and exit */
-		if ( nerrors > 0 )
-		{
-			/* Display the error details contained in the arg_end struct.*/
-			arg_print_errors ( stdout,end,progname );
-			printf ( "Try '%s --help' for more information.\n",progname );
-			exitcode = EXIT_FAILURE;
-			goto exit;
-		}
+		return EXIT_SUCCESS;
+	}
 
-
-		/* normal case: set selected options to options object */
-		exitcode = setOptions ( *this,
-			plugins->sval, plugins->count );
-		exitcode = setModulesList ( *this,
-			modules->sval, modules->count );
-
-exit:
-		/* deallocate each non-null entry in argtable[] */
-		arg_freetable ( argtable,sizeof ( argtable ) /sizeof ( argtable[0] ) );
-
-		return exitcode;
+	void Options::printVersion()
+	{
+		printf ( "'%s'\n", getAppName() );
+		printf ( "Version 0.5\n" );
+		printf ( "example program to demonstrate different OpenSteer plugins.\n" );
+		printf ( "Copyright (c) 2011 Jan Fietz, Cyrus Preuss. All Rights Reserved.\n" );		
 	}
 
 	//-------------------------------------------------------------------------
