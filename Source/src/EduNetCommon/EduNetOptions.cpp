@@ -36,8 +36,6 @@
 // To include EXIT_SUCCESS
 #include <cstdlib>
 
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/errors.hpp>
 
@@ -71,61 +69,58 @@ namespace EduNet
 		return kOptions;
 	}
 
+	void Options::addDefaultOptions()
+	{
+		program_options::options_description defaultOptions("Default options");
+		defaultOptions.add_options()
+			("help,h", "print this help and exit")
+			("version,V", "print version information and exit")			
+			;	
+
+		m_desc.add(defaultOptions);
+	}
+	
 	//-------------------------------------------------------------------------
 	int Options::parseCommandLine ( int argc, char **argv )
 	{
-		int exitcode=0;
-		program_options::options_description desc("Allowed options");
-		desc.add_options()
-			("help,h", "print this help and exit")
-			("version,V", "print version information and exit")
-			("list,L", "available modules and plugins")
-			("modules,M", program_options::value< enStringArray_t >(), "specify one ore more modules to load")
-			("plugin,P", program_options::value< enString_t  >(), "preselct a plugin by name from load modules")
-			;
-		program_options::variables_map vm;
+		int exitcode=0;		
 		try
 		{
 	
 			program_options::store(program_options::command_line_parser(argc, argv).
-				options(desc).run(), vm);
-			program_options::notify(vm);
+				options(m_desc).run(), m_vm);
+			program_options::notify(m_vm);
 		}
 		catch (program_options::unknown_option unk)
 		{			
 			std::cout << unk.what() << "\n";
-			std::cout << desc << "\n";
+			std::cout << m_desc << "\n";
 			return EXIT_FAILURE;
 		}
 		catch (...)
 		{
-			std::cout << desc << "\n";
+			std::cout << m_desc << "\n";
 			return EXIT_FAILURE;
 		}
 
-		if (vm.count("help")) {
-			std::cout << desc << "\n";
+		if (m_vm.count("help")) {
+			std::cout << m_desc << "\n";
 			return EXIT_FAILURE;
 		}
 
-		if (vm.count("version")) 
+		if (m_vm.count("version")) 
 		{
 			printVersion();		
 			this->setContinueProcess ( false );
 			return EXIT_FAILURE;
 		}
 
-		m_bListModules = vm.count("list") > 0;
+		m_bListModules = m_vm.count("list") > 0;
 
-		if (vm.count("modules")) 
+		if (m_vm.count("module")) 
 		{
-			m_kModuleNames = vm["modules"].as< enStringArray_t >();			
-		}
-
-		if (vm.count("plugin")) 
-		{
-			m_kPluginName = vm["plugin"].as< enString_t >();			
-		}		
+			m_kModuleNames = m_vm["module"].as< enStringArray_t >();			
+		}	
 
 		return EXIT_SUCCESS;
 	}

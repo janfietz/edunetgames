@@ -28,6 +28,7 @@
 #include "EduNetModulePluginLoader.h"
 #include "EduNetCommon/EduNetOptions.h"
 #include "EduNetModule/EduNetPluginFactory.h"
+#include <boost/foreach.hpp>
 
 namespace EduNet
 {
@@ -70,6 +71,22 @@ namespace EduNet
 			this->createPluginsFromModule ( pkModule );
 			++kIter;
 		}
+	}
+
+	void ModulePluginLoader::queryAvailablePlugins ( enStringArray_t& names)
+	{
+		const RawModules& kModules = this->m_modules.getModules();
+		BOOST_FOREACH(RawModulePtr rawModule, kModules)
+		{			
+			ModuleEntry* pkEntry = rawModule->accessEntry();			
+			if ( NULL != pkEntry )
+			{
+				PluginFactory* pkFactory = pkEntry->createPluginFactory();
+				PluginFactoryPtr spFactory ( pkFactory );
+				enStringArray_t kList;
+				pkFactory->getPluginNames ( names );
+			}
+		}		
 	}
 
 	//-------------------------------------------------------------------------
