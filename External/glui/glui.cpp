@@ -1481,6 +1481,20 @@ void   GLUI_Master_Object::close_all( void )
   }  
 }
 
+void   GLUI_Master_Object::closenow_all( void ) 
+{
+	GLUI *glui;
+
+	glui = (GLUI*) GLUI_Master.gluis.first_child();
+	while( glui ) {
+
+		GLUI *gluiNext = (GLUI*) glui->next();
+		glui->closenow();  /** Set flag to close **/
+
+		glui = gluiNext;
+	}  
+}
+
 
 /************************************* GLUI_Main::close_internal() **********/
 
@@ -1508,6 +1522,28 @@ void   GLUI_Main::close_internal( void )
   delete this;
 }
 
+void   GLUI_Main::closenow_internal( void ) 
+{
+	glutDestroyWindow(glutGetWindow()); /** Close this window **/
+
+	this->unlink();
+
+	if ( GLUI_Master.active_control_glui == this ) {
+		GLUI_Master.active_control      = NULL;
+		GLUI_Master.active_control_glui = NULL;
+	}	
+
+	delete this->main_panel;
+
+	delete this;
+}
+
+/************************************************** GLUI::close() **********/
+
+void   GLUI::closenow( void ) 
+{
+	closenow_internal();
+}
 
 /************************************************** GLUI::close() **********/
 

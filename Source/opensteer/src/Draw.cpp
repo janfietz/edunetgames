@@ -1112,6 +1112,11 @@ namespace {
             lines.clear ();
         }
 
+		static void clear (void)
+		{
+			lines.clear();
+		}
+
         typedef std::vector<DeferredLine> DeferredLines;
 
     private:
@@ -1146,7 +1151,6 @@ OpenSteer::OpenGLRenderer::drawAllDeferredLines (void)
 {
     DeferredLine::drawAll ();
 }
-
 
 //-----------------------------------------------------------------------------
 namespace {
@@ -1199,6 +1203,12 @@ namespace {
             circles.clear ();
         }
 
+		static void clear() 
+		{
+			circles.clear();
+		}
+
+
         typedef std::vector<DeferredCircle> DeferredCircles;
 
     private:
@@ -1240,6 +1250,11 @@ OpenSteer::OpenGLRenderer::drawAllDeferredCirclesOrDisks (void)
     DeferredCircle::drawAll ();
 }
 
+void OpenSteer::OpenGLRenderer::clearAllDeferredObjects (void)
+{
+	DeferredLine::clear();
+	DeferredCircle::clear();
+}
 
 bool _setTextColor = true;
 

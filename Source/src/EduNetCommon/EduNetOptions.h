@@ -65,6 +65,7 @@ namespace EduNet	{
 		};
 
 		static Options& accessOptions ( void );
+		static void destroyOptions ( void );
 
 		bool ListModules() const { return m_bListModules; }
 
@@ -90,6 +91,8 @@ namespace EduNet	{
 		
 		boost::program_options::variables_map m_vm;
 		boost::program_options::options_description m_desc;
+
+		static Options* m_pOptions;
 		
 	};
 

@@ -42,7 +42,10 @@ GLUI_Panel::GLUI_Panel( GLUI_Node *parent, const char *name, int type )
 
   parent->add_control( this );
 }
-
+GLUI_Panel::~GLUI_Panel( )
+{
+	
+}
 /****************************** GLUI_Panel::draw() **********/
 
 void    GLUI_Panel::draw( int x, int y )

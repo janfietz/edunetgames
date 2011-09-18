@@ -127,27 +127,35 @@ void onPluginSelectedCallback( OpenSteer::AbstractPlugin* plugin )
 //-----------------------------------------------------------------------------
 void gluiProfMoveCursorNext()
 {
+#if EDUNET_HAVE_PROFILE
 	Prof_move_cursor(1);
+#endif// EDUNET_HAVE_PROFILE
 }
 
 //-----------------------------------------------------------------------------
 void gluiProfMoveCursorPrevious()
 {
+#if EDUNET_HAVE_PROFILE
 	Prof_move_cursor(-1);
+#endif// EDUNET_HAVE_PROFILE
 }
 
 //-----------------------------------------------------------------------------
 void gluiProfSelect()
 {
+#if EDUNET_HAVE_PROFILE
 	profReportMode = Prof_CALL_GRAPH;
 	profileModesList->do_selection( profReportMode );
 	Prof_select();
+#endif// EDUNET_HAVE_PROFILE
 }
 
 //-----------------------------------------------------------------------------
 void gluiProfSelectParent()
 {
+#if EDUNET_HAVE_PROFILE
 	Prof_select_parent();
+#endif// EDUNET_HAVE_PROFILE
 }
 
 //-----------------------------------------------------------------------------
@@ -223,6 +231,8 @@ void Application::_SDMCleanup( void )
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
 
+	OpenSteer::GlobalData::getInstance()->accessRenderer()->clearAllDeferredObjects();
+	Options::destroyOptions();
 	if( true == g_bRunCalled )
 	{
 		EduNet::shutdownDynamicPlugins();

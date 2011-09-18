@@ -344,7 +344,7 @@ class GLUIAPI GLUI_Node
 
 public:
     GLUI_Node();
-    virtual ~GLUI_Node() {}
+    virtual ~GLUI_Node();
 
     GLUI_Node *first_sibling();
     GLUI_Node *last_sibling();
@@ -544,6 +544,7 @@ public:
     void           get_viewport_area( int *x, int *y, int *w, int *h );
     void           auto_set_viewport();
     void           close_all();
+	void           closenow_all();
     void           sync_live_all();
 
     void           reshape();
@@ -745,6 +746,7 @@ public:
     void         pack_controls();
     
     void         close_internal();
+	void         closenow_internal();
     void         check_subwindow_position();
     void         set_ortho_projection();
     void         set_viewport();
@@ -992,7 +994,7 @@ public:
     GLUI_Button( GLUI_Node *parent, const char *name, 
                  int id=-1, GLUI_CB cb=GLUI_CB() );
     GLUI_Button( void ) { common_init(); };
-
+	virtual ~GLUI_Button(){}
 protected:
     void common_init(void) {
         glui_format_str(name, "Button: %p", this );
@@ -1047,7 +1049,7 @@ public:
     GLUI_Checkbox(GLUI_Node *parent, const char *name, int *value_ptr=NULL,
                   int id=-1, GLUI_CB callback=GLUI_CB());
     GLUI_Checkbox( void ) { common_init(); }
-
+	virtual ~GLUI_Checkbox(){};
 protected:
     void common_init(void) {
         glui_format_str( name, "Checkbox: %p", this );
@@ -1084,7 +1086,7 @@ public:
 */
     GLUI_Column( GLUI_Node *parent, int draw_bar = true );
     GLUI_Column( void ) { common_init(); }
-
+	virtual ~GLUI_Column(){};
 protected:
     void common_init() {
         w            = 0;
@@ -1120,6 +1122,7 @@ public:
     GLUI_Panel( GLUI_Node *parent, const char *name, 
                 int type=GLUI_PANEL_EMBOSSED );
     GLUI_Panel() { common_init(); }
+	virtual ~GLUI_Panel();
 
     void draw( int x, int y );
     void set_name( const char *text );
@@ -1231,7 +1234,7 @@ public:
     GLUI_Rollout( GLUI_Node *parent, const char *name, int open=true, 
                   int type=GLUI_PANEL_EMBOSSED );
     GLUI_Rollout( void ) { common_init(); }
-    
+    virtual ~GLUI_Rollout(){}
     
     bool        currently_inside, initially_inside;
     GLUI_Button  button;
@@ -1551,6 +1554,7 @@ public:
     void            sync_live( void );
 
     void            close( void );
+	void            closenow( void );
 
     void            show( void );
     void            hide( void );
@@ -2333,6 +2337,7 @@ protected:
 class GLUIAPI GLUI_Listbox_Item : public GLUI_Node 
 {
 public:
+	virtual ~GLUI_Listbox_Item(){};
     GLUI_String text;
     int         id;
 };
@@ -2342,6 +2347,7 @@ class GLUIAPI GLUI_Listbox : public GLUI_Control
 public:
     GLUI_String       curr_text;
     GLUI_Listbox_Item items_list;
+	
     int               depressed;
 
     int  orig_value;
@@ -2377,6 +2383,7 @@ public:
                   const char *name, int *live_var=NULL,
                   int id=-1, GLUI_CB callback=GLUI_CB() );
     GLUI_Listbox( void ) { common_init(); }
+	virtual ~GLUI_Listbox();
 
 protected:
     /** Change w and return true if we need to be widened to fit the current item. */
@@ -2394,8 +2401,6 @@ protected:
         depressed      = false;
         glut_menu_id   = -1;
     }
-
-    ~GLUI_Listbox();
 };
 
 /************************************************************/

@@ -58,7 +58,6 @@ int    GLUI_Listbox::mouse_down_handler( int local_x, int local_y )
   return false;
 }
 
-
 /****************************** GLUI_Listbox::mouse_up_handler() **********/
 
 int    GLUI_Listbox::mouse_up_handler( int local_x, int local_y, bool inside )
@@ -373,14 +372,14 @@ int    GLUI_Listbox::do_selection( int item_num )
 
 GLUI_Listbox::~GLUI_Listbox()
 {
-  GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
+  //GLUI_Listbox_Item *item = (GLUI_Listbox_Item *) items_list.first_child();
 
-  while (item) 
-  {
-    GLUI_Listbox_Item *tmp = item;
-    item = (GLUI_Listbox_Item *) item->next();
-    delete tmp;
-  }
+  //while (item) 
+  //{
+  //  GLUI_Listbox_Item *tmp = item;
+  //  item = (GLUI_Listbox_Item *) item->next();
+  //  delete tmp;
+  //}
 }
 
 /****************************** GLUI_Listbox::special_handler() **********/

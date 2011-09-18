@@ -42,9 +42,8 @@
 using namespace boost;
 
 namespace EduNet
-{
-	
-
+{	
+	Options* Options::m_pOptions = NULL;
 	int setOptions ( EduNet::Options& kOptions,
 		const char **defines, int ndefines
 		);
@@ -64,9 +63,17 @@ namespace EduNet
 
 	//-------------------------------------------------------------------------
 	Options& Options::accessOptions ( void )
+	{		
+		if (m_pOptions == NULL)
+		{
+			m_pOptions = new Options();
+		}
+		return *m_pOptions;
+	}
+	
+	void Options::destroyOptions ( void )
 	{
-		static Options kOptions;
-		return kOptions;
+		ET_SAFE_DELETE(m_pOptions);
 	}
 
 	void Options::addDefaultOptions()
