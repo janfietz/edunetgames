@@ -46,6 +46,22 @@ GLUI_Node::GLUI_Node()
 {
 }
 
+GLUI_Node::~GLUI_Node()
+{
+	GLUI_Node* pNode = first_child();
+	while (pNode)
+	{
+		GLUI_Node* pNextNode = pNode->next();
+		delete pNode;
+		pNode = pNextNode;
+	}
+	
+	child_head = NULL;
+	child_tail = NULL;
+	next_sibling = NULL;
+	prev_sibling = NULL;
+	parent_node = NULL;
+}
 /********************************************* GLUI_Node::first() *******/
 /* Returns first sibling in 'this' node's sibling list                  */
 

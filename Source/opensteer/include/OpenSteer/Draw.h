@@ -310,6 +310,8 @@ namespace OpenSteer {
 		virtual void drawAllDeferredLines (void);
 		virtual void drawAllDeferredCirclesOrDisks (void);
 
+		virtual void clearAllDeferredObjects (void);
+
 
 		//-------------------------------------------------------------------------
 		//! Draw a single OpenGL triangle given three Vec3 vertices.

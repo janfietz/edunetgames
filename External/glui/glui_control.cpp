@@ -1133,14 +1133,14 @@ bool GLUI_Control::needs_idle() const
 
 GLUI_Control::~GLUI_Control()
 {
-  GLUI_Control *item = (GLUI_Control*) this->first_child();
+  /*GLUI_Control *item = (GLUI_Control*) this->first_child();
 
   while (item) 
   {
     GLUI_Control *tmp = item;
     item = (GLUI_Control*) item->next();
     delete tmp;
-  }
+  }*/
 }
 
 /********* GLUI_Control::hide_internal() ********/

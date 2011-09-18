@@ -45,6 +45,11 @@ int __cdecl g_DebugAllocHook(
 		bool bTest = true;
 		bTest = false;
 	}
+	else if( nSize == 32 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
 	else if( nSize == 48 )
 	{
 		bool bTest = true;
@@ -56,6 +61,11 @@ int __cdecl g_DebugAllocHook(
 		bTest = false;
 	}
 	else if( nSize == 588 )
+	{
+		bool bTest = true;
+		bTest = false;
+	}
+	else if( nSize == 120 )
 	{
 		bool bTest = true;
 		bTest = false;

@@ -33,6 +33,7 @@
 #include "EduNetCommon/EduNetOptions.h"
 #include <boost/foreach.hpp>
 #include "OpenSteerUT/OpenSteerUTTypes.h"
+#include "EduNetCommon/EduNetDraw.h"
 
 using namespace boost;
 namespace EduNet
@@ -87,6 +88,9 @@ namespace EduNet
 	
 		void HostPlugin::close( void )
 		{
+			GLUI_Master.closenow_all();		
+			OpenSteer::Camera::accessInstance().reset();
+
 			removeAllPlugins();
 			m_PluginLoader->unloadModules();			
 		}

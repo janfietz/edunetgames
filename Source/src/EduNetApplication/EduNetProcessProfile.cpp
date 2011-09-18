@@ -33,7 +33,7 @@
 
 using namespace EduNet;
 
-
+#if EDUNET_HAVE_PROFILE
 //-----------------------------------------------------------------------------
 #define EN_PROFILESCOPE(a) \
 class ProfileScope_##a : public IProfileScope \
@@ -48,6 +48,9 @@ public: \
 	static ProfileScope_##a s_scope_##a; \
 	IProfileNodePtr spNode ( ET_NEW ProfileNode( &s_scope_##a ) ); \
 	return spNode;
+#else
+	#define EN_PROFILESCOPE(a) ;
+#endif
 
 //-----------------------------------------------------------------------------
 class ProfileNode : public IProfileNode
@@ -74,6 +77,7 @@ namespace EduNet	{
 	//-------------------------------------------------------------------------
 	IProfileNodePtr ProcessProfile::allocNode( const char* pszName )
 	{
+#if EDUNET_HAVE_PROFILE
 		// TODO: change to a node based profiler
 		enString_t kName(pszName);
 		if ( strcmp( pszName, "EulerVehicleUpdate" ) )
@@ -108,6 +112,7 @@ namespace EduNet	{
 		{
 			EN_PROFILESCOPE(deserializeNetworkVehicle);						
 		}
+#endif// EDUNET_HAVE_PROFILE
 		IProfileNodePtr spNode ( (IProfileNode*)NULL );
 		return spNode;
 	}
