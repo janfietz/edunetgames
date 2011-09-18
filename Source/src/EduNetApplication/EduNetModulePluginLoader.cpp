@@ -93,6 +93,7 @@ namespace EduNet
 	void ModulePluginLoader::createPluginsFromModule (
 		RawModule* pkModule )
 	{
+		EduNet::Options& options = EduNet::Options::accessOptions();
 		ModuleEntry* pkEntry = pkModule->accessEntry();
 		bool bWantsToLoadPlugin = this->appWantsToLoadPlugin( pkEntry->getName() );
 		if ( (NULL != pkEntry)  && (true == bWantsToLoadPlugin) )
@@ -103,8 +104,6 @@ namespace EduNet
 			enStringArray_t kList;
 			pkFactory->getPluginNames ( kList );
 
-			std::ostringstream message;
-			message << "Plugins in loaded Module \"" << pkEntry->getName() << "\"\n";
 			enStringArray_t::iterator kNameIter = kList.begin();
 			enStringArray_t::iterator kNameIterEnd = kList.end();
 			while ( kNameIterEnd != kNameIter )
@@ -113,16 +112,14 @@ namespace EduNet
 				AbstractPlugin* pkPlugin = createPluginFromFactoryByName(pkFactory, pszPluginName );
 				if ( NULL != pkPlugin )
 				{
+					options.addAvailablePluginName(pkPlugin->pluginName(), pszPluginName);
+
 					this->m_plugins.addPlugin ( pkPlugin );
 					// little hack
-					OpenSteer::Plugin::addToRegistry ( pkPlugin );
-					message << "\"" << ( *kNameIter ).c_str() << "\"";
-					message << " brief: \"" << pkPlugin->pluginName() << "\"\n";
+					OpenSteer::Plugin::addToRegistry ( pkPlugin );					
 				}
 				++kNameIter;
-			}
-			message << std::ends;
-			EduNet::Log::printMessage ( message );
+			}			
 		}
 	}
 
