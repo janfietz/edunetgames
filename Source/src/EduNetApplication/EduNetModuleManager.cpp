@@ -32,6 +32,10 @@
 
 #include <boost/filesystem/operations.hpp>
 
+#if BOOST_VERSION >= 104700
+#define native_file_string string 
+#endif
+
 namespace bfs = boost::filesystem;
 
 // note: set to 1 to debug loadModulesFromDirectory
@@ -160,24 +164,30 @@ void ModuleManager::loadModulesFromDirectory(const char* pszDirectory)
 	bfs::directory_iterator iter(p), end_iter;
 	for (; iter != end_iter; ++iter)
 	{
+#if BOOST_VERSION >= 104700
+		std::string fileName = iter->path().string();
+#else
+		std::string fileName = iter->filename();
+#endif
+
 		try
 		{
 			if (bfs::is_directory(*iter))
 			{
 				++dc;
-				(*this) << iter->filename().c_str() << "[Directory]\n";
+				(*this) << fileName.c_str() << "[Directory]\n";
 			} 
 			else
 			{
 				++fc;
-				const char* pszModuleFileName = iter->filename().c_str();
-				this->addModuleFromFile( iter->filename().c_str() );
-				(*this) << iter->filename().c_str() << "\n";
+				const char* pszModuleFileName = fileName.c_str();
+				this->addModuleFromFile( fileName.c_str() );
+				(*this) << fileName.c_str() << "\n";
 			}
 		} 
 		catch (const std::exception & ex)
 		{
-			(*this) << iter->filename().c_str() << ": " << ex.what() << "\n";
+			(*this) << fileName.c_str() << ": " << ex.what() << "\n";
 		}
 		(*this) << fc << " " << dc << "\n";
 	} //for
