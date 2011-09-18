@@ -36,10 +36,17 @@ namespace EduNet
 	Player::HostPlugin* gHost= NULL;
 	void initializeDynamicPlugins( )
 	{
+		
 		EduNet::Options& etOptions = EduNet::Options::accessOptions();
-		if (etOptions.Variables().count("usehost") && !(EduNet::Options::accessOptions().ListModules()) )
+		if (etOptions.Variables().count("module")) 
+		{
+			etOptions.accessModuleNameList() = etOptions.Variables()["module"].as< enStringArray_t >();				
+		}
+
+		if (etOptions.Variables().count("create") && !(EduNet::Options::accessOptions().ListModules()) )
 		{
 			gHost = ET_NEW Player::HostPlugin(true);
+			etOptions.setSelectedPlugin(gHost->name());
 		}
 		else
 		{
@@ -73,8 +80,7 @@ int main (int argc, char **argv)
 	playerOptions.add_options()
 		("list,L", "available modules and plugins")
 		("module,M", program_options::value< enStringArray_t >(), "specify one or more modules to load")
-		("plugin,P", program_options::value< enStringArray_t  >(), "specify one or more modules which are created on startup")
-		("usehost,U", "open all plugins in parallel")
+		("create,C", program_options::value< enStringArray_t  >(), "specify one or more modules which are created on startup")
 		;	
 
 	etOptions.descriptions().add(playerOptions);

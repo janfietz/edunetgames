@@ -54,9 +54,9 @@ namespace EduNet
 			const program_options::variables_map& variables = etOptions.Variables();
 
 			enStringArray_t pluginNames;
-			if (variables.count("plugin")) 
+			if (variables.count("create")) 
 			{
-				pluginNames = variables["plugin"].as< enStringArray_t >();			
+				pluginNames = variables["create"].as< enStringArray_t >();			
 			}
 			
 			if( pluginNames.empty() )

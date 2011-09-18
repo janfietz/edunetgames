@@ -279,16 +279,35 @@ int Application::Run(int argc, char **argv)
 	// register dynamic plugins
 	EduNet::initializeDynamicPlugins( );
 
-	if (EduNet::Options::accessOptions().ListModules())
+	EduNet::Options& options = EduNet::Options::accessOptions();
+	if (options.ListModules())
 	{
-		printf("Available plugins\n");
-		int pluginCount = OpenSteer::Plugin::getNumPlugins( );
-		while(--pluginCount > 0)
-		{
-			AbstractPlugin* p = OpenSteer::Plugin::getPluginAt( pluginCount );
-			printf("-%s\n", p->pluginName() );
-		}
+		std::ostringstream message;
+		message << "Available plugins:\n";
 		
+		const enStringArray_t& names = options.AvailablePluginNames();
+		const enStringArray_t& createStrings = options.AvailablePluginCreateNames();
+		if (names.empty())
+		{
+			int idx = OpenSteer::Plugin::getNumPlugins();
+			while (--idx > 0)
+			{
+				OpenSteer::AbstractPlugin* pPlugin = OpenSteer::Plugin::getPluginAt(idx);
+				message << "\"" << pPlugin->pluginName() << "\"";
+			}
+		}
+		else
+		{
+			size_t count = names.size();
+			for(size_t i(0) ; i < count; ++i)
+			{			
+				message << "\"" << names[i].c_str() << "\"";
+				message << " create with: \"" << createStrings[i].c_str() << "\"\n";
+			}
+		}
+		message << std::ends;
+		EduNet::Log::printMessage ( message );
+
 		return EXIT_SUCCESS;
 	}
 

@@ -74,7 +74,8 @@ namespace EduNet
 		program_options::options_description defaultOptions("Default options");
 		defaultOptions.add_options()
 			("help,h", "print this help and exit")
-			("version,V", "print version information and exit")			
+			("version,V", "print version information and exit")
+			("plugin,P", program_options::value< enString_t  >(), "set default plugin")
 			;	
 
 		m_desc.add(defaultOptions);
@@ -115,12 +116,13 @@ namespace EduNet
 			return EXIT_FAILURE;
 		}
 
-		m_bListModules = m_vm.count("list") > 0;
+		m_bListModules = m_vm.count("list") > 0;		
 
-		if (m_vm.count("module")) 
+		// little hack here to keep old preselect possebility
+		if (m_vm.count("plugin") &&  (m_vm.count("create")==0) ) 
 		{
-			m_kModuleNames = m_vm["module"].as< enStringArray_t >();			
-		}	
+			 m_kPluginName = m_vm["plugin"].as< enString_t >();			 
+		}
 
 		return EXIT_SUCCESS;
 	}
@@ -173,6 +175,12 @@ namespace EduNet
 #else
 		return "EduNetGamesApp";
 #endif // _WIN32
+	}
+
+	void Options::addAvailablePluginName( const enString_t& name, const enString_t& createStr )
+	{
+		m_kAvailablePluginNames.push_back(name);
+		m_kAvailablePluginCreateNames.push_back(createStr);
 	}
 
 }

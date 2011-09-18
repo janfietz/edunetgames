@@ -73,6 +73,9 @@ namespace EduNet	{
 		void addDefaultOptions();
 		boost::program_options::options_description& descriptions(){ return m_desc; }
 		
+		void addAvailablePluginName(const enString_t& name, const enString_t& createStr );
+		const enStringArray_t& AvailablePluginNames() const { return m_kAvailablePluginNames; }
+		const enStringArray_t& AvailablePluginCreateNames() const { return m_kAvailablePluginCreateNames; }		
 		
 	private:
 		Options();
@@ -82,6 +85,9 @@ namespace EduNet	{
 		enStringArray_t m_kModuleNames;
 		bool m_bListModules;
 
+		enStringArray_t m_kAvailablePluginNames;		
+		enStringArray_t m_kAvailablePluginCreateNames;
+		
 		boost::program_options::variables_map m_vm;
 		boost::program_options::options_description m_desc;
 		
