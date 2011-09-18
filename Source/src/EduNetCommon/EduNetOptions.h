@@ -30,15 +30,16 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetCore/EduNetCore.h"
-
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/options_description.hpp>
 namespace EduNet	{
 
 	//-------------------------------------------------------------------------
 	class Options
 	{
 	public:
-
-		int parseCommandLine ( int argc, char **argv );
+		
+		int parseCommandLine ( int argc, char **argv);
 
 		void printVersion();
 		
@@ -67,6 +68,12 @@ namespace EduNet	{
 
 		bool ListModules() const { return m_bListModules; }
 
+		const boost::program_options::variables_map& Variables() const { return m_vm; }
+
+		void addDefaultOptions();
+		boost::program_options::options_description& descriptions(){ return m_desc; }
+		
+		
 	private:
 		Options();
 		virtual ~Options();
@@ -74,6 +81,9 @@ namespace EduNet	{
 		enString_t m_kPluginName;
 		enStringArray_t m_kModuleNames;
 		bool m_bListModules;
+
+		boost::program_options::variables_map m_vm;
+		boost::program_options::options_description m_desc;
 		
 	};
 

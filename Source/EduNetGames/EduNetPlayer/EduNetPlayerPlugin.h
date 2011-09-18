@@ -1,5 +1,7 @@
-#ifndef __EDUNET_MODULEPLUGINLOADER_H__
-#define __EDUNET_MODULEPLUGINLOADER_H__
+#pragma  once
+#ifndef EduNetPlayerPlugin_h__
+#define EduNetPlayerPlugin_h__
+
 //-----------------------------------------------------------------------------
 // Copyright (c) 2011, Jan Fietz, Cyrus Preuss
 // All rights reserved.
@@ -27,48 +29,42 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
-#include "EduNetCommon/EduNetCommon.h"
-#include "EduNetApplication/EduNetModuleManager.h"
+
+#include "OpenSteer\Plugin.h"
+#include "OpenSteerUT\PluginArray.h"
+#include "EduNetApplication\EduNetModulePluginLoader.h"
+
 
 namespace EduNet
 {
+	namespace Player
+	{
+		//-------------------------------------------------------------------------
+		class HostPlugin : public OpenSteer::PluginArray
+		{
+			ET_DECLARE_BASE( OpenSteer::PluginArray )
+		public:
+			HostPlugin ( bool bAddToRegistry = false );
+		
+			OS_IMPLEMENT_CLASSNAME( HostPlugin )
+			//----------------------------------------------------------------------------
+			// OpenSteer::Plugin interface
+			
+			// required methods:
+			const char* name( void ) const { return this->getClassName(); }
+			virtual void prepareOpen (void);			
+			virtual void close( void );			
+			
+		private:
+			OpenSteer::AbstractPlugin* createChildPluginByName( const enString_t& pluginName );
+			void addChildPlugin( OpenSteer::AbstractPlugin* pPlugin );
 
-//-----------------------------------------------------------------------------
-class ModulePluginLoader
-{
-public:
-	ModulePluginLoader( void );
+			boost::shared_ptr<ModulePluginLoader> m_PluginLoader;			
+			ET_IMPLEMENT_CLASS_NO_COPY(HostPlugin)	
+				
 
-	virtual ~ModulePluginLoader( void );
-
-	OS_IMPLEMENT_CLASSNAME( ModulePluginLoader )
-		virtual const char* name() const { return this->getClassName(); };
-
-	void loadModules(const char* pszPath);
-	void unloadModules(void);
-	bool appWantsToLoadPlugin(const char* pszPluginName);
-
-	void createPluginsFromModules ( void );
-	void createPluginsFromModule ( RawModule* pkModule );
-	void queryAvailablePlugins ( enStringArray_t& names);
-
-	virtual OpenSteer::AbstractPlugin* createPluginByName(
-		const char* pszPluginName );
-
-protected:
-	virtual OpenSteer::AbstractPlugin* createPluginFromFactoryByName(
-		PluginFactory* pkFactory,
-		const char* pszPluginName );
-
-private:
-
-	RawModule* findModuleForPlugin(
-		const char* pszPluginName );
-
-	ModuleManager m_modules;
-	OpenSteer::PluginArray m_plugins;
-};
-
+		};
+	}
 }
 
-#endif // __EDUNET_MODULEPLUGINLOADER_H__
+#endif // EduNetPlayerPlugin_h__

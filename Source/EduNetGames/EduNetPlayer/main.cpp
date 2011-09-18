@@ -27,31 +27,57 @@
 //-----------------------------------------------------------------------------
 
 #include "EduNetApplication/EduNetMain.h"
-
-#include "EduNetApplication/EduNetModulePluginLoader.h"
-#include "EduNetApplication/EduNetModuleManager.h"
+#include "EduNetPlayerPlugin.h"
+#include "EduNetCommon/EduNetOptions.h"
 
 namespace EduNet
-{
+{	
 	ModulePluginLoader* gLoadPlugin = NULL;
+	Player::HostPlugin* gHost= NULL;
 	void initializeDynamicPlugins( )
 	{
-		ModuleManager kModuleManager;
-		gLoadPlugin = ET_NEW ModulePluginLoader();
-		gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
-		gLoadPlugin->createPluginsFromModules();
+		EduNet::Options& etOptions = EduNet::Options::accessOptions();
+		if (etOptions.Variables().count("usehost") && !(EduNet::Options::accessOptions().ListModules()) )
+		{
+			gHost = ET_NEW Player::HostPlugin(true);
+		}
+		else
+		{
+			ModuleManager kModuleManager;
+			gLoadPlugin = ET_NEW ModulePluginLoader();
+			gLoadPlugin->loadModules( kModuleManager.getCurrentModulePath() );
+			gLoadPlugin->createPluginsFromModules();
+		}		
 	}
 
 	void shutdownDynamicPlugins( )
-	{
-		gLoadPlugin->unloadModules();
-		ET_SAFE_DELETE( gLoadPlugin ); 
+	{	
+		if (gLoadPlugin != NULL)
+		{
+			gLoadPlugin->unloadModules();
+		}
+
+		ET_SAFE_DELETE( gLoadPlugin );		 
+		ET_SAFE_DELETE( gHost ); 
 	}
 }
-
+using namespace boost;
 //-----------------------------------------------------------------------------
 int main (int argc, char **argv)
 {
+	EduNet::Options& etOptions = EduNet::Options::accessOptions();	
+	etOptions.addDefaultOptions();
+
+	program_options::options_description playerOptions("EduNetPlayer options");
+
+	playerOptions.add_options()
+		("list,L", "available modules and plugins")
+		("module,M", program_options::value< enStringArray_t >(), "specify one or more modules to load")
+		("plugin,P", program_options::value< enStringArray_t  >(), "specify one or more modules which are created on startup")
+		("usehost,U", "open all plugins in parallel")
+		;	
+
+	etOptions.descriptions().add(playerOptions);
 	return ::EduNetMain( argc, argv );
 }
 
