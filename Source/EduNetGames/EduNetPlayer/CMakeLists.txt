@@ -15,6 +15,8 @@ ${EduNet_PLAYER_LIBRARIES}
 
 add_executable(${PROJECT_NAME}  ${Tutorial_Hdrs} ${Tutorial_Src} ${Renderer_Src})
 
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/applications" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )

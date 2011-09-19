@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 
 PROJECT(EDUNET_GAMES)
 SET(EDUNET_GAMES 0.05)
@@ -21,17 +24,19 @@ macro(ADD_SUBDIRECTORIES prefix header )
     add_subdirectory(${subdir})
   endforeach(subdir ${ARGN})
 endmacro(ADD_SUBDIRECTORIES prefix header)
-######################################################################
 
+# -----------------------------------------------------------------------------
 IF (NOT CMAKE_BUILD_TYPE)
 # SET(CMAKE_BUILD_TYPE "Debug")
  SET(CMAKE_BUILD_TYPE "Release")
 ENDIF (NOT CMAKE_BUILD_TYPE)
 
+# -----------------------------------------------------------------------------
 IF (WIN32)
 	OPTION(ET_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES "Create MSVC projectfiles that can be distributed" OFF)
 ENDIF (WIN32)
 
+# -----------------------------------------------------------------------------
 IF (ET_CREATE_DISTRIBUTABLE_MSVC_PROJECTFILES)
 	SET(EDUNET_COMMON_OUTPUT_DIRECTORY ${EDUNET_GAMES_SOURCE_DIR}/bin)
 	SET(EDUNET_COMMON_LIB_OUTPUT_DIRECTORY ${EDUNET_GAMES_SOURCE_DIR}/lib)
@@ -44,27 +49,28 @@ ENDIF()
 
 SET (LIBRARY_OUTPUT_PATH ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} CACHE PATH "Single output directory for building all libraries.")
 
+# -----------------------------------------------------------------------------
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_MINSIZEREL ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 
+# -----------------------------------------------------------------------------
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 
+# -----------------------------------------------------------------------------
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${EDUNET_COMMON_OUTPUT_DIRECTORY} )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${EDUNET_COMMON_OUTPUT_DIRECTORY})
 
-
-
-
+# -----------------------------------------------------------------------------
 # string (REPLACE "/D_WINDOWS" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 remove_definitions(-D_WINDOWS )
 
@@ -90,6 +96,7 @@ ENDIF (WIN32)
 
 # This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
 # This should be the case.
+
 FIND_PACKAGE(OpenGL)
 IF (NOT OPENGL_FOUND)
 MESSAGE("OPENGL NOT FOUND")
@@ -99,6 +106,9 @@ ENDIF (NOT OPENGL_FOUND)
 
 
 FIND_PACKAGE(GLU)
+
+# -----------------------------------------------------------------------------
+# GLUT
 FIND_PACKAGE(GLUT)
 IF (NOT GLUT_FOUND)
 	MESSAGE("GLUT NOT FOUND")
@@ -108,6 +118,10 @@ IF (NOT GLUT_FOUND)
 		SET(GLUT_glut_LIBRARY ${EDUNET_GAMES_SOURCE_DIR}/bin/win32/lib/glut32.lib)
 	ENDIF (MSVC)
 ENDIF(NOT GLUT_FOUND)
+
+#### RakNet
+FIND_PACKAGE(RakNet)
+set(ET_RakNet_SOURCES ${ET_THIRD_PARTY_DIR}/raknet CACHE PATH "Path to raknet sources" )
 
 #### BOOST
 set(Boost_ADDITIONAL_VERSIONS "1.47" "1.47.0")
@@ -122,25 +136,23 @@ ENDIF( ET_USE_THIRDPARTYDIR )
 
 FIND_PACKAGE( Boost COMPONENTS system filesystem program_options )
 
-#### RakNet
-FIND_PACKAGE(RakNet)
-set(ET_RakNet_SOURCES ${ET_THIRD_PARTY_DIR}/raknet CACHE PATH "Path to raknet sources" )
 
+# -----------------------------------------------------------------------------
 IF (MINGW)
 MESSAGE ("GLUT NOT FOUND not found, trying to use MINGW glut32")
 SET(GLUT_glut_LIBRARY glut32)
 ENDIF (MINGW)
 
-
-
+# -----------------------------------------------------------------------------
 INCLUDE_DIRECTORIES(${EDUNET_GAMES_SOURCE_DIR}/Source
 ${EDUNET_GAMES_SOURCE_DIR}/Source/src
 ${EDUNET_GAMES_SOURCE_DIR}/External
 ${GLUT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIR}
-${RakNet_INCLUDES}
+${RakNet_INCLUDES}/raknet
  )
 
+# -----------------------------------------------------------------------------
 IF (WIN32)
   SET(EDUNET_NEEDED_WIN_LIBRARY ws2_32.lib)
 ELSE (WIN32)
@@ -148,7 +160,8 @@ ELSE (WIN32)
   INCLUDE_DIRECTORIES(/usr/include /usr/local/include )
 ENDIF (WIN32)
 
-#collect needed shared libs and copy them to output directories
+# -----------------------------------------------------------------------------
+# collect needed shared libs and copy them to output directories
 IF (WIN32)
   FILE (GLOB ET_SHARED_THIRDPARTY_LIBS "${ET_THIRD_PARTY_DIR}/lib/*.dll")
   #OPENGL STUFF
@@ -157,8 +170,8 @@ ELSE (WIN32)
 
 ENDIF (WIN32)
 
-
-
+# -----------------------------------------------------------------------------
+# collect all needed default libraries
 Set( EduNet_DEFAULT_LIBRARIES
 ExtOpensteer
 ${GLUT_glut_LIBRARY} 
@@ -177,6 +190,8 @@ ExtLinearMath
 ${Boost_LIBRARIES}
 )
 
+# -----------------------------------------------------------------------------
+# collect all needed executable libraries
 Set( EduNet_PLAYER_LIBRARIES
 ExtOpensteer
 ${GLUT_glut_LIBRARY} 
@@ -195,6 +210,8 @@ ${Boost_LIBRARIES}
 )
 
 
+# -----------------------------------------------------------------------------
+# collect all needed module libraries
 Set( EduNet_MODULE_LIBRARIES
 ExtOpensteer
 ${GLUT_glut_LIBRARY} 
@@ -212,9 +229,11 @@ ExtLinearMath
 ${Boost_LIBRARIES}
 )
 
+# -----------------------------------------------------------------------------
 add_subdirectory(Source)
 add_subdirectory(External)
 
+# -----------------------------------------------------------------------------
 IF (WIN32)
 	#copy needed dlls to debug and release kind of hack now
 	INSTALL(FILES ${ET_SHARED_THIRDPARTY_LIBS} DESTINATION ${EDUNET_COMMON_OUTPUT_DIRECTORY})

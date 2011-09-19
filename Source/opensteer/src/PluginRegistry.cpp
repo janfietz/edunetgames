@@ -165,6 +165,18 @@ namespace OpenSteer {
 	void
 	PluginRegistry::addToRegistry (AbstractPlugin* pkPlugin)
 	{
+		// just for debugging
+		const char* pluginName( pkPlugin->pluginName() );
+
+		// prevent adding plugins twice
+		for (size_t i = 0; i < this->m_itemsInRegistry; ++i)
+		{
+			if (pkPlugin == this->m_registry[i])
+			{
+				return;
+			}
+		}
+
 		// save this instance in the this->m_registry
 		this->m_registry[this->m_itemsInRegistry++] = pkPlugin;
 	}
@@ -186,13 +198,14 @@ namespace OpenSteer {
 	void
 	PluginRegistry::selectPlugin( AbstractPlugin* pkPlugin )
 	{
-		if( pkPlugin == this->getSelectedPlugin() )
+		AbstractPlugin* selectedPlugin( this->getSelectedPlugin() );
+		if( pkPlugin == selectedPlugin )
 		{
 			return;
 		}
-		if( NULL != this->getSelectedPlugin() )
+		if( selectedPlugin != NULL )
 		{
-			this->getSelectedPlugin()->close();
+			selectedPlugin->close();
 		}
 
 		// reset camera and selected vehicle

@@ -30,7 +30,7 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 #include "OpenSteerUT/ZonePlugin.h"
 
-#include "NetPedestrianPlugins.h"
+#include "EduNetGames/Pedestrians/NetPedestrianPlugins.h"
 
 
 //-----------------------------------------------------------------------------

@@ -1,6 +1,11 @@
+cmake_minimum_required(VERSION 2.8)
+
+# -----------------------------------------------------------------------------
 project(EduNetCore)
 
-INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/src
+INCLUDE_DIRECTORIES( 
+${EDUNET_GAMES_SOURCE_DIR}/Source/src
+${EDUNET_GAMES_SOURCE_DIR}/Source
  )
 
 file (GLOB EduNetCore_LIB_SRC "${${PROJECT_NAME}_SOURCE_DIR}/*.cpp")
@@ -15,6 +20,10 @@ add_library(${PROJECT_NAME} STATIC
 ${EduNetCore_LIB_SRC}
 ${EduNetCore_LIB_Hdrs}
 )
+
+source_group( source FILES ${EduNetCore_LIB_SRC} ${EduNetCore_LIB_Hdrs} )
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/libraries" )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )

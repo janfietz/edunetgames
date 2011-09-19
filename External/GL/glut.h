@@ -53,10 +53,10 @@ typedef unsigned short int wchar_t;
 #pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
 
 #ifdef _WIN64
-#pragma message("Note: including lib: glut64.lib\n")
+//#pragma message("Note: including lib: glut64.lib\n")
 #pragma comment (lib, "glut64.lib")    /* link with Win32 GLUT lib */
 #else
-#pragma message("Note: including lib: glut32.lib\n")
+//#pragma message("Note: including lib: glut32.lib\n")
 #pragma comment (lib, "glut32.lib")    /* link with Win32 GLUT lib */
 #endif
 
