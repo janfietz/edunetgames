@@ -7,5 +7,5 @@
 #add_subdirectory(MemoryTest)
 #add_subdirectory(Tutorial_03)
 add_subdirectory(EduNetPlayer)
-add_subdirectory(ModZoningJf)
+add_subdirectory(ModZoning)
 add_subdirectory(ModNetSoccer)
