@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(EDUNET_GAMES)
 SET(EDUNET_GAMES 0.05)
+ADD_DEFINITIONS( -DBOOST_ALL_DYN_LINK )
 ######################################################################
 # return a list of directories that we should add_subdirectory()
 macro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
@@ -109,10 +110,17 @@ IF (NOT GLUT_FOUND)
 ENDIF(NOT GLUT_FOUND)
 
 #### BOOST
+set(Boost_ADDITIONAL_VERSIONS "1.47" "1.47.0")
+
+set(Boost_USE_STATIC_LIBS        OFF)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+
 IF ( ET_USE_THIRDPARTYDIR )
 	SET( BOOST_ROOT ${ET_THIRD_PARTY_DIR} )
 ENDIF( ET_USE_THIRDPARTYDIR )
-FIND_PACKAGE( Boost COMPONENTS system filesystem)
+
+FIND_PACKAGE( Boost COMPONENTS system filesystem program_options )
 
 #### RakNet
 FIND_PACKAGE(RakNet)
