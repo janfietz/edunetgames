@@ -29,6 +29,7 @@
   3. This notice may not be removed or altered from any source distribution. 
 
 *****************************************************************************/
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 
 
@@ -499,7 +500,7 @@ GLUI_Master_Object::~GLUI_Master_Object()
 
 GLUI *GLUI_Master_Object::create_glui( const char *name, long flags,int x,int y )
 {
-  GLUI *new_glui = new GLUI;
+  GLUI *new_glui = GLUI_NEW GLUI;
   new_glui->init( name, flags, x, y, -1 );
   new_glui->link_this_to_parent_last( &this->gluis );
   return new_glui;
@@ -511,7 +512,7 @@ GLUI *GLUI_Master_Object::create_glui( const char *name, long flags,int x,int y 
 GLUI *GLUI_Master_Object::create_glui_subwindow( int parent_window, 
 						   long flags )
 {
-  GLUI *new_glui = new GLUI;
+  GLUI *new_glui = GLUI_NEW GLUI;
   GLUI_String new_name;
   glui_format_str( new_name, "subwin_%p", this );
 
@@ -1139,7 +1140,7 @@ GLUI_Main::GLUI_Main( void )
   bkgd_color_f[2] = b / 255.0f;
 
   /*** Create the main panel ***/
-  main_panel              = new GLUI_Panel;
+  main_panel              = GLUI_NEW GLUI_Panel;
   main_panel->set_int_val( GLUI_PANEL_NONE );
   main_panel->glui        = (GLUI*) this;
   main_panel->name        = "\0";
@@ -1524,8 +1525,22 @@ void   GLUI_Main::close_internal( void )
 
 void   GLUI_Main::closenow_internal( void ) 
 {
-	glutDestroyWindow(glutGetWindow()); /** Close this window **/
-
+#if 0
+	//@ jf this does not work as you might expect it
+	try
+	{
+		int wnd(glutGetWindow());
+		if(wnd > 0)
+		{
+			glutDestroyWindow(wnd); /** Close this window **/
+		}
+	}
+	catch (...)
+	{
+		
+	}
+#endif	
+	// memory cleanup ...
 	this->unlink();
 
 	if ( GLUI_Master.active_control_glui == this ) {
@@ -1887,7 +1902,7 @@ void     GLUI_Master_Object::add_cb_to_glut_window(int window_id,
   if ( NOT window ) {
     /***  Allocate new window structure  ***/
     
-    window                 = new GLUI_Glut_Window;
+    window                 = GLUI_NEW GLUI_Glut_Window;
     window->glut_window_id = window_id;
     window->link_this_to_parent_last( (GLUI_Node*) &this->glut_windows );
   }

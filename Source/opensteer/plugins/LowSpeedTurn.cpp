@@ -151,7 +151,7 @@ namespace {
             // create a given number of agents with stepped inital parameters,
             // store pointers to them in an array.
             LowSpeedTurn::resetStarts ();
-            for (int i = 0; i < lstCount; i++) all.push_back (new LowSpeedTurn);
+            for (int i = 0; i < lstCount; i++) all.push_back (OS_NEW LowSpeedTurn);
 
             // initial selected vehicle
             SimpleVehicle::setSelectedVehicle( *all.begin() );

@@ -45,8 +45,13 @@
 //-----------------------------------------------------------------------------
 // memory
 //-----------------------------------------------------------------------------
-
+#ifdef _DEBUG
+#include <crtdbg.h>
+#define OS_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__ )
+#else
 #define OS_NEW new
+#endif
+
 #define OS_DELETE delete
 
 #define OS_MALLOC malloc

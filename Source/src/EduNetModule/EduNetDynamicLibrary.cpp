@@ -46,7 +46,11 @@ DynamicLibrary::DynamicLibrary ( void ) :
 //-----------------------------------------------------------------------------
 DynamicLibrary::~DynamicLibrary ( void )
 {
+// let us keep this to the OS until all memory leaks are found
+#ifdef _DEBUG
+#else
     this->unloadLib();
+#endif
 }
 //-----------------------------------------------------------------------------
 bool DynamicLibrary::loadLib ( const char* pszLibName )

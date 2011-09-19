@@ -100,7 +100,7 @@ namespace {
 
         void open (void)
         {
-            gOneTurning = new OneTurning;
+            gOneTurning = OS_NEW OneTurning;
             SimpleVehicle::setSelectedVehicle( gOneTurning );
             theVehicle.push_back (gOneTurning);
 

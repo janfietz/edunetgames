@@ -159,6 +159,7 @@ NetPedestrianPlugin::~NetPedestrianPlugin()
 {
 	this->close();
 	ET_SAFE_DELETE( this->m_pkPath );
+	ET_SAFE_DELETE( pd );
 }
 
 //-----------------------------------------------------------------------------

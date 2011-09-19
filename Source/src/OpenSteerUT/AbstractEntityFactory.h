@@ -167,10 +167,11 @@ namespace OpenSteer
 
 		virtual OpenSteer::AbstractEntity* accessMasterEntity( OpenSteer::EntityClassId classId ) const
 		{
-			static VehicleClass kMasterVehicle;
-			this->m_pkMasterEntity = &kMasterVehicle;
+			this->m_pkMasterEntity = &m_kMasterVehicle;
 			return BaseClass::accessMasterEntity( classId );
 		}
+	private:
+		mutable VehicleClass m_kMasterVehicle;
 
 	};
 

@@ -29,6 +29,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "GL/glui.h"
 #include "glui_internal.h"
 #include <sys/types.h>
@@ -58,7 +59,7 @@ GLUI_FileBrowser::GLUI_FileBrowser( GLUI_Node *parent,
   callback   = cb;
 
   parent->add_control( this );
-  list = new GLUI_List(this, true, 1);
+  list = GLUI_NEW GLUI_List(this, true, 1);
   list->set_object_callback( GLUI_FileBrowser::dir_list_callback, this );
   list->set_click_type(GLUI_DOUBLE_CLICK);
   this->fbreaddir(this->current_dir.c_str());

@@ -173,7 +173,7 @@ namespace {
         void open (void)
         {
             // create the wanderer, saving a pointer to it
-            wanderer = new MpWanderer;
+            wanderer = OS_NEW MpWanderer;
             allMP.push_back (wanderer);
 
             // create the specified number of pursuers, save pointers to them

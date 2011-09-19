@@ -51,6 +51,24 @@
 //-----------------------------------------------------------------------------
 namespace
 {
+	bool isGluiShutdown(false);
+	void shutdownInternal( int exitCode = 0 );
+	void shutdownGlui( void );
+
+	class GLUIShutdown
+	{
+	public:
+		GLUIShutdown( void )
+		{
+		}
+
+		virtual ~GLUIShutdown( void )
+		{
+			shutdownGlui();
+		}
+	};
+
+	GLUIShutdown gluiShutdown;
 
 	int framePeriod = 100;//todo: test if this value should be 0
 
@@ -582,27 +600,7 @@ namespace
 			// exit application with normal status
 		case esc:
 		{
-	#if 0
-	// to be investigated
-			EduNet::Log::printMessage ( "exit." );
-			GLUI* glui = ::getRootGLUI();
-			if ( NULL != glui )
-			{
-				int glutWindow = glutGetWindow();
-				GLUI_Master.close_all();
-				//glui->close();
-				//                                          OpenSteer::Plugin::getSelectedPlugin()( NULL );
-				//EduNet::GameDemo::exit (0);
-			}
-			else
-			{
-				glutDestroyWindow ( windowID );
-				EduNet::GameDemo::exit ( 0 );
-			}
-	#endif
-			EduNet::Application::_SDMCleanup();
-			EduNet::Application::_SDMShutdown();
-			EduNet::GameDemo::exit ( 0 );
+			shutdownInternal();
 		}
 		break;
 	//                      glutDestroyWindow (windowID);
@@ -769,14 +767,49 @@ namespace
 		displayFunc();
 	}
 
+
+	void shutdownGlui( void )
+	{
+		if( false == isGluiShutdown )
+		{
+			isGluiShutdown = true;
+			// to be investigated
+			GLUI* glui = ::getRootGLUI();
+			if ( NULL != glui )
+			{
+	//			GLUI_Master.close_all();
+				GLUI_Master.closenow_all();
+			}
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	void destroyPlugin ( OpenSteer::AbstractPlugin& pi )
+	{
+		pi.close();
+	}
+
+	void shutdownInternal( int exitCode )
+	{
+		EduNet::Log::printMessage ( "exit." );
+		// note a valid cleanup at this point has to be implemented
+		OpenSteer::Plugin::selectPlugin ( NULL );
+		OpenSteer::Plugin::applyToAll ( destroyPlugin );
+
+		shutdownGlui();
+
+		EduNet::Application::_SDMCleanup();
+		EduNet::Application::_SDMShutdown();
+		::exit ( exitCode );
+	}
+
 	//-----------------------------------------------------------------------------
 	// console exit callback
 	//-----------------------------------------------------------------------------
 	void consoleExit ( int i )
 	{
 		EduNet::Log::printMessage ( "console exit ..." );
-		EduNet::Application::_SDMCleanup();
-		EduNet::Application::_SDMShutdown();
+		shutdownInternal();
 	}
 
 	//-----------------------------------------------------------------------------
@@ -786,10 +819,7 @@ namespace
 	{
 		EduNet::Log::printMessage ( "window exit ..." );
 		// note a valid cleanup at this point has to be implemented
-
-		EduNet::Application::_SDMCleanup();
-		EduNet::Application::_SDMShutdown();
-		::exit ( i );
+		shutdownInternal( i );
 	}
 
 } // annonymous namespace
@@ -892,22 +922,17 @@ namespace EduNet	{
 	void GameDemo::errorExit ( const char* message )
 	{
 		EduNet::Log::printMessage ( message );
-		EduNet::Application::_SDMCleanup();
-		EduNet::Application::_SDMShutdown();
 #ifdef _MSC_VER
 		MessageBox ( 0, message, "GameDemo Unfortunate Event", MB_ICONERROR );
 #endif
-		exit ( -1 );
+		shutdownInternal( -1 );
 	}
 
 	//-----------------------------------------------------------------------------
 	void
 		GameDemo::exit ( int exitCode )
 	{
-		OpenSteer::Plugin::selectPlugin ( NULL );
-		EduNet::Application::_SDMCleanup();
-		EduNet::Application::_SDMShutdown();
-		::exit ( exitCode );
+		shutdownInternal( exitCode );
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1133,11 +1158,12 @@ namespace EduNet	{
 		// register our display function, make it the idle handler too
 		setGlutFunctions();
 	
+		// GLUI setup
 		GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
 		GLUI_Master.set_glutKeyboardFunc ( &keyboardFunc );
 		GLUI_Master.set_glutSpecialFunc ( NULL );
-		GLUI_Master.set_glutIdleFunc ( &idleFunc );
-		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
+// 		GLUI_Master.set_glutIdleFunc ( &idleFunc );
+// 		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
 		GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
 
 		/****************************************/
@@ -1153,15 +1179,6 @@ namespace EduNet	{
 		Plugin::sortBySelectionOrder();
 		// add common gui elements
 		EduNet::Application::AccessApplication().addGuiElements ( glui );
-
-		// GLUI setup
-		/*GLUI_Master.set_glutReshapeFunc ( &reshapeFunc );
-		GLUI_Master.set_glutKeyboardFunc ( &keyboardFunc );
-		GLUI_Master.set_glutSpecialFunc ( &keyboardSpecialFunc );
-		GLUI_Master.set_glutIdleFunc ( &idleFunc );
-		GLUI_Master.set_glutDisplayFunc ( &displayFunc );
-		GLUI_Master.set_glutMouseFunc ( &mouseButtonFunc );
-	*/
 	
 		glui->set_main_gfx_window ( windowID );   
 	}

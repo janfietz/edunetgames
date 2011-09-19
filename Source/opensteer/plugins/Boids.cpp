@@ -468,12 +468,12 @@ namespace {
                     const float diameter = Boid::worldRadius * 1.1f * 2;
                     const Vec3 dimensions (diameter, diameter, diameter);
                     typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
-                    pd = new LQPDAV (center, dimensions, divisions);
+                    pd = OS_NEW LQPDAV (center, dimensions, divisions);
                     break;
                 }
             case 1:
                 {
-                    pd = new BruteForceProximityDatabase<AbstractVehicle*> ();
+                    pd = OS_NEW BruteForceProximityDatabase<AbstractVehicle*> ();
                     break;
                 }
             }
@@ -533,7 +533,7 @@ namespace {
         void addBoidToFlock (void)
         {
             population++;
-            Boid* boid = new Boid();
+            Boid* boid = OS_NEW Boid();
 			boid->allocateProximityToken( pd );
             flock.push_back (boid);
             if (population == 1) SimpleVehicle::setSelectedVehicle( boid );

@@ -63,6 +63,7 @@ OpenSteer::Plugin::~Plugin()
 	{
 		OpenSteer::Plugin::selectPlugin( NULL );
 	}
+	PluginRegistry::accessInstance()->removeFromRegistry( this );
 }
 
 //-----------------------------------------------------------------------------

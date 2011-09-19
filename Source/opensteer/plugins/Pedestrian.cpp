@@ -443,7 +443,7 @@ namespace {
             gEndpoint0 = pathPoints[0];
             gEndpoint1 = pathPoints[pathPointCount-1];
 
-            gTestPath = new PolylineSegmentedPathwaySingleRadius (pathPointCount,
+            gTestPath = OS_NEW PolylineSegmentedPathwaySingleRadius (pathPointCount,
                                                                   pathPoints,
                                                                   pathRadius,
                                                                   false);
@@ -676,7 +676,7 @@ namespace {
         void addPedestrianToCrowd (void)
         {
             population++;
-            Pedestrian* pedestrian = new Pedestrian();
+            Pedestrian* pedestrian = OS_NEW Pedestrian();
 			pedestrian->allocateProximityToken( pd );
             crowd.push_back (pedestrian);
             if (population == 1) 
@@ -723,12 +723,12 @@ namespace {
                     const float diameter = 80.0f; //XXX need better way to get this
                     const Vec3 dimensions (diameter, diameter, diameter);
                     typedef LQProximityDatabase<AbstractVehicle*> LQPDAV;
-                    pd = new LQPDAV (center, dimensions, divisions);
+                    pd = OS_NEW LQPDAV (center, dimensions, divisions);
                     break;
                 }
             case 1:
                 {
-                    pd = new BruteForceProximityDatabase<AbstractVehicle*> ();
+                    pd = OS_NEW BruteForceProximityDatabase<AbstractVehicle*> ();
                     break;
                 }
             }

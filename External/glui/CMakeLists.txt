@@ -62,6 +62,7 @@ glui_internal.h
 glui_internal_control.h
 glui_list.cpp
 glui_listbox.cpp
+glui_memory.h
 glui_mouse_iaction.cpp
 glui_node.cpp
 glui_panel.cpp

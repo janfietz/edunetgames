@@ -28,6 +28,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 #include <cmath>
 #include <sys/timeb.h>
@@ -68,7 +69,7 @@ void GLUI_List::common_construct(
   GLUI_Node *list_panel = parent;
 
   if (scroll) {
-    GLUI_Panel *p = new GLUI_Panel(parent,"",GLUI_PANEL_NONE);
+    GLUI_Panel *p = GLUI_NEW GLUI_Panel(parent,"",GLUI_PANEL_NONE);
     p->x_off = 1;
     list_panel = p;
   }
@@ -82,9 +83,9 @@ void GLUI_List::common_construct(
   list_panel->add_control( this );
   if (scroll) 
   {
-    new GLUI_Column(list_panel, false);
+    GLUI_NEW GLUI_Column(list_panel, false);
     scrollbar = 
-      new GLUI_Scrollbar(list_panel,
+      GLUI_NEW GLUI_Scrollbar(list_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
                          GLUI_SCROLL_INT);
@@ -412,7 +413,7 @@ void   GLUI_List::update_size( void )
 
 int  GLUI_List::add_item( int id, const char *new_text )
 {
-  GLUI_List_Item *new_node = new GLUI_List_Item;
+  GLUI_List_Item *new_node = GLUI_NEW GLUI_List_Item;
   GLUI_List_Item *head;
 
   new_node->text = new_text;

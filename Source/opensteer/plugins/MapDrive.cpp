@@ -588,7 +588,7 @@ namespace {
         {
             initialize (_pointCount, _points, _radii[0], _cyclic);
 
-            radii = new float [pointCount];
+            radii = OS_NEW float [pointCount];
 
             // loop over all points
             for (int i = 0; i < pointCount; i++)
@@ -2124,19 +2124,19 @@ namespace {
             const Vec3 pathPoints[pathPointCount] = {a, b, c, d, e, f, g, h, i};
             const float k = 10.0f;
             const float pathRadii[pathPointCount] = {k, k, k, k, k, k, k, k, k};
-            return new GCRoute (pathPointCount, pathPoints, pathRadii, false);
+            return OS_NEW GCRoute (pathPointCount, pathPoints, pathRadii, false);
         }
 
 
         TerrainMap* makeMap (void)
         {
     #ifdef OLDTERRAINMAP
-            return new TerrainMap (Vec3::zero,
+            return OS_NEW TerrainMap (Vec3::zero,
                                    worldSize,
                                    worldSize,
                                    (int)worldSize + 1);
     #else
-            return new TerrainMap (worldSize, worldSize, 1);
+            return OS_NEW TerrainMap (worldSize, worldSize, 1);
     #endif
         }
 
@@ -2570,7 +2570,7 @@ namespace {
         void open (void)
         {
             // make new MapDriver
-            vehicle = new MapDriver ();
+            vehicle = OS_NEW MapDriver ();
             vehicles.push_back (vehicle);
             SimpleVehicle::setSelectedVehicle( vehicle );
 
