@@ -32,7 +32,7 @@
 #include "EduNetConnect/NetworkPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 #include "EduNetConnect/AbstractEntityReplicaConnection.h"
-#include "NetPedestrianFactory.h"
+#include "EduNetGames/Pedestrians/NetPedestrianFactory.h"
 
 namespace OpenSteer	{
 	class SimpleNetworkVehicle;

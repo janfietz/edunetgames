@@ -32,57 +32,11 @@ SET(OPENTSTEER_LIB_SRC
  Renderer.cpp
 )
 
-SET(OPENTSTEER_LIB_HDRS
- ../include/OpenSteer/AABBox.h
- ../include/OpenSteer/AbstractEntity.h
- ../include/OpenSteer/AbstractLocalSpace.h
- ../include/OpenSteer/AbstractPlayer.h
- ../include/OpenSteer/AbstractPlugin.h
- ../include/OpenSteer/AbstractRenderer.h
- ../include/OpenSteer/AbstractState.h
- ../include/OpenSteer/AbstractUpdated.h
- ../include/OpenSteer/AbstractVehicle.h
- ../include/OpenSteer/Annotation.h
- ../include/OpenSteer/Camera.h
- ../include/OpenSteer/Clock.h
- ../include/OpenSteer/Color.h
- ../include/OpenSteer/Draw.h
- ../include/OpenSteer/Entity.h
- ../include/OpenSteer/GlobalData.h
- ../include/OpenSteer/GlobalSelection.h
- ../include/OpenSteer/InstanceTracker.h
- ../include/OpenSteer/LocalSpace.h
- ../include/OpenSteer/lq.h
- ../include/OpenSteer/Obstacle.h
- ../include/OpenSteer/OldPathway.h
- ../include/OpenSteer/OpenSteerMacros.h
- ../include/OpenSteer/OpenSteerTypes.h
- ../include/OpenSteer/Path.h
- ../include/OpenSteer/Pathway.h
- ../include/OpenSteer/Plugin.h
- ../include/OpenSteer/PluginRegistry.h
- ../include/OpenSteer/PolylineSegmentedPath.h
- ../include/OpenSteer/PolylineSegmentedPathwaySegmentRadii.h
- ../include/OpenSteer/PolylineSegmentedPathwaySingleRadius.h
- ../include/OpenSteer/Proximity.h
- ../include/OpenSteer/QueryPathAlike.h
- ../include/OpenSteer/QueryPathAlikeBaseDataExtractionPolicies.h
- ../include/OpenSteer/QueryPathAlikeMappings.h
- ../include/OpenSteer/QueryPathAlikeUtilities.h
- ../include/OpenSteer/Renderer.h
- ../include/OpenSteer/SegmentedPath.h
- ../include/OpenSteer/SegmentedPathAlikeUtilities.h
- ../include/OpenSteer/SegmentedPathway.h
- ../include/OpenSteer/SharedPointer.h
- ../include/OpenSteer/SimplePlayer.h
- ../include/OpenSteer/SimpleVehicle.h
- ../include/OpenSteer/StandardTypes.h
- ../include/OpenSteer/SteerLibrary.h
- ../include/OpenSteer/UnusedParameter.h
- ../include/OpenSteer/Utilities.h
- ../include/OpenSteer/Vec3.h
- ../include/OpenSteer/Vec3Utilities.h
- )
+#SET(OPENTSTEER_LIB_HDRS
+# ../include/OpenSteer/*.h
+# )
+file (GLOB OPENTSTEER_LIB_HDRS "${${PROJECT_NAME}_SOURCE_DIR}/../include/OpenSteer/*.h")
+
 
 #set compiler options to link the lib into a shared lib
 IF (NOT WIN32)
@@ -91,6 +45,11 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)
 
 add_library(${PROJECT_NAME} STATIC ${OPENTSTEER_LIB_HDRS} ${OPENTSTEER_LIB_SRC})
+
+source_group( source FILES ${OPENTSTEER_LIB_HDRS} ${OPENTSTEER_LIB_SRC} )
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/external/libraries" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
 

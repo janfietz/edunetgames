@@ -26,16 +26,16 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "ZoningModule.h"
-#include "PeerZonePlugin.h"
+#include "PedestrianModule.h"
 #include "EduNetConnect/NetworkPlugin.h"
 #include "OpenSteerUT/OpenSteerUT.h"
+#include "EduNetGames/Pedestrians/NetPedestrianPlugins.h"
 
 //-----------------------------------------------------------------------------
 void EduNetConnect::queryConnectionsSettings( ConnectSettings& kSettings )
 {
-	kSettings.uiClientStartPort = CLIENT_PORT + 300;
-	kSettings.uiServerStartPort = SERVER_PORT + 300;
+	kSettings.uiClientStartPort = CLIENT_PORT + 303;
+	kSettings.uiServerStartPort = SERVER_PORT + 303;
 	kSettings.sessionPassword = "Zoning";
 	kSettings.uiPortPongCount = 10;
 }
@@ -52,136 +52,78 @@ namespace EduNet	{
 
 
 	//-------------------------------------------------------------------------
-	ZoningModulePluginFactory::ZoningModulePluginFactory()
+	PedestrianModulePluginFactory::PedestrianModulePluginFactory()
 	{
 
 	}
 
 	//-------------------------------------------------------------------------
-	ZoningModulePluginFactory::~ZoningModulePluginFactory()
+	PedestrianModulePluginFactory::~PedestrianModulePluginFactory()
 	{
 
 	}
 
 	//-------------------------------------------------------------------------
-	void ZoningModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
+	void PedestrianModulePluginFactory::fillStringArrayWithPluginName( enStringArray_t& kNames ) const
 	{
-		kNames.push_back( "ZonePlugin" );
-		kNames.push_back( "EmptyZonePlugin" );
-		kNames.push_back( "ZonePlugin0" );
-		kNames.push_back( "ZonePlugin1" );
-		kNames.push_back( "ZonePlugin2" );
-		kNames.push_back( "ZonePlugin3" );
-		kNames.push_back( "PeerZone0Master" );
-		kNames.push_back( "PeerZone1Master" );
-		kNames.push_back( "PeerZone2Master" );
-		kNames.push_back( "PeerZone3Master" );
-		kNames.push_back( "PeerZoneViewer" );
+		kNames.push_back( "PedestrianPlugin" );
+		kNames.push_back( "PedestrianClientPlugin" );
+		kNames.push_back( "PedestrianServerPlugin" );
+		kNames.push_back( "PedestrianClientServerPlugin" );
 	}
 
 	//-------------------------------------------------------------------------
-	OpenSteer::AbstractPlugin* ZoningModulePluginFactory::createPluginByNameInternal(
+	OpenSteer::AbstractPlugin* PedestrianModulePluginFactory::createPluginByNameInternal(
 		const char* pszName ) const
 	{
 		std::string kName(pszName);
-		if( kName == "ZonePlugin" )
+		if( kName == "PedestrianPlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false );
-
-			return pkZone;  
+			OpenSteer::AbstractPlugin* plugin( ET_NEW OfflinePedestrianPlugin() );
+			return plugin;  
 		}
-		if( kName == "EmptyZonePlugin" )
+		if( kName == "PedestrianClientPlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 5 );
-
-			return pkZone;  
+			OpenSteer::AbstractPlugin* plugin( ET_NEW PedestrianRenderClientPlugin( true ) );
+			return plugin;  
 		}
-		if( kName == "ZonePlugin0" )
+		if( kName == "PedestrianServerPlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 0 );
-
-			return pkZone;  
+			OpenSteer::AbstractPlugin* plugin( ET_NEW PedestrianRenderPeerPlugin( true ) );
+			return plugin;  
 		}
-		if( kName == "ZonePlugin1" )
+		if( kName == "PedestrianClientServerPlugin" )
 		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 1 );
-
-			return pkZone;  
-		}
-		if( kName == "ZonePlugin2" )
-		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 2 );
-
-			return pkZone;  
-		}
-		if( kName == "ZonePlugin3" )
-		{
-			ZonePlugin* pkZone = ET_NEW MasterZonePlugin( false, 3 );
-
-			return pkZone;  
-		}
-		if( kName == "PeerZone0Master" )
-		{
-			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
-			pkZone->setZoneId( 0 );
-
-			return pkZone;  
-		}
-		if( kName == "PeerZone1Master" )
-		{
-			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
-			pkZone->setZoneId( 1 );
-
-			return pkZone;  
-		}
-		if( kName == "PeerZone2Master" )
-		{
-			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
-			pkZone->setZoneId( 2 );
-
-			return pkZone;  
-		}
-		if( kName == "PeerZone3Master" )
-		{
-			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
-			pkZone->setZoneId( 3 );
-
-			return pkZone;  
-		}
-		if( kName == "PeerZoneViewer" )
-		{
-			PeerZonePlugin* pkZone = ET_NEW PeerZonePlugin( false );
-			pkZone->setZoneId( 5 );
-
-			return pkZone;  
+			OpenSteer::AbstractPlugin* plugin( ET_NEW PedestrianClientServerPlugin() );
+			return plugin;  
 		}
 		return NULL;
 	}
 
 	//-------------------------------------------------------------------------
-	const char* ZoningModule::getName( void ) const
+	const char* PedestrianModule::getName( void ) const
 	{
-		return "ModZones";
+		return "ModPedestrians";
 	}
 
 	//-------------------------------------------------------------------------
-	const char* ZoningModule::getAbout( void ) const
+	const char* PedestrianModule::getAbout( void ) const
 	{
-		return "provides plugins to describe zoning concepts";
+		return "provides plugins to describe moving entity synchronization";
 	}
 
 	//-------------------------------------------------------------------------
-	void ZoningModule::setOpenSteerUTData( OpenSteerUTData* data ) const
+	void PedestrianModule::setOpenSteerUTData( OpenSteerUTData* data ) const
 	{
 		OpenSteerUTData::_SDMInitDLL( data );
 	}
 
 	//-------------------------------------------------------------------------
-	PluginFactory* ZoningModule::createPluginFactory( void ) const
+	PluginFactory* PedestrianModule::createPluginFactory( void ) const
 	{
-		return ET_NEW ZoningModulePluginFactory();
+		return ET_NEW PedestrianModulePluginFactory();
 	}
 }
 
-ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::ZoningModule)
+ET_IMPLEMENT_MODULE_ENTRYFUNC(EduNet::PedestrianModule)
 

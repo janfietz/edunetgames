@@ -29,9 +29,13 @@ ENDIF (NOT WIN32)
 add_library(${PROJECT_NAME} STATIC
 	${EduNetMemoryHdr} ${EduNetMemorySrc} ${EduNetMemoryFuildSrc} ${EduNetMemoryFuildHdr})
 
+source_group( source FILES ${EduNetMemoryHdr} ${EduNetMemorySrc} )
+source_group( fluid FILES ${EduNetMemoryFuildSrc} ${EduNetMemoryFuildHdr} )
+
+set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/libraries" )
+
 set_target_properties( ${PROJECT_NAME} PROPERTIES
 	ARCHIVE_OUTPUT_DIRECTORY ${EDUNET_COMMON_LIB_OUTPUT_DIRECTORY} )
-
 	
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
