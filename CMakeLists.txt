@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
 PROJECT(EDUNET_GAMES)
-SET(EDUNET_GAMES 0.01)
+SET(EDUNET_GAMES 0.05)
 ######################################################################
 # return a list of directories that we should add_subdirectory()
 macro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
@@ -89,7 +89,6 @@ ENDIF (WIN32)
 
 # This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
 # This should be the case.
-
 FIND_PACKAGE(OpenGL)
 IF (NOT OPENGL_FOUND)
 MESSAGE("OPENGL NOT FOUND")
@@ -97,10 +96,8 @@ SET(OPENGL_gl_LIBRARY opengl32)
 SET(OPENGL_glu_LIBRARY glu32)
 ENDIF (NOT OPENGL_FOUND)
 
-# ADD_DEFINITIONS(-DBT_USE_FREEGLUT)
 
 FIND_PACKAGE(GLU)
-
 FIND_PACKAGE(GLUT)
 IF (NOT GLUT_FOUND)
 	MESSAGE("GLUT NOT FOUND")
@@ -112,14 +109,10 @@ IF (NOT GLUT_FOUND)
 ENDIF(NOT GLUT_FOUND)
 
 #### BOOST
-
 IF ( ET_USE_THIRDPARTYDIR )
 	SET( BOOST_ROOT ${ET_THIRD_PARTY_DIR} )
 ENDIF( ET_USE_THIRDPARTYDIR )
-FIND_PACKAGE( Boost2 COMPONENTS system filesystem )
-IF( NOT Boost_FOUND )
-	MESSAGE( "Boost NOT FOUND use ${BOOST_INCLUDEDIR} instead" )
-ENDIF( NOT Boost_FOUND )
+FIND_PACKAGE( Boost COMPONENTS system filesystem)
 
 #### RakNet
 FIND_PACKAGE(RakNet)
