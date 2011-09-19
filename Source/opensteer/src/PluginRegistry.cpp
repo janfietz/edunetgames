@@ -36,7 +36,6 @@ namespace OpenSteer {
 
 	PluginRegistry::PluginRegistry( void ):
 		m_pkSelectedPlugin(NULL),
-		m_itemsInRegistry(0),
 		m_on_plugin_selected_func(NULL)
 	{
 
@@ -55,11 +54,12 @@ namespace OpenSteer {
 	OpenSteer::AbstractPlugin*
 	PluginRegistry::findNextPlugin( const AbstractPlugin* pkThis ) const
 	{
-		for (size_t i = 0; i < this->m_itemsInRegistry; i++)
+		const size_t itemsInRegistry( this->m_registry.size() );
+		for (size_t i = 0; i < itemsInRegistry; i++)
 		{
 			if (pkThis == this->m_registry[i])
 			{
-				const bool atEnd = (i == (this->m_itemsInRegistry - 1));
+				const bool atEnd = (i == (itemsInRegistry - 1));
 				return this->m_registry [atEnd ? 0 : i + 1];
 			}
 		}
@@ -69,7 +69,8 @@ namespace OpenSteer {
 	//-------------------------------------------------------------------------
 	int PluginRegistry::getPluginIdx( const AbstractPlugin* pkPlugin ) const
 	{
-		for (size_t i = 0; i < this->m_itemsInRegistry; ++i)
+		const size_t itemsInRegistry( this->m_registry.size() );
+		for (size_t i = 0; i < itemsInRegistry; ++i)
 		{
 			if (pkPlugin == this->m_registry[i])
 			{
@@ -87,7 +88,8 @@ namespace OpenSteer {
 	{
 		if ( string && string[0] )
 		{
-			for (size_t i = 0; i < this->m_itemsInRegistry; i++)
+			const size_t itemsInRegistry( this->m_registry.size() );
+			for (size_t i = 0; i < itemsInRegistry; i++)
 			{
 				AbstractPlugin* pi = this->m_registry[i];
 				AbstractEntity* pe = dynamic_cast<AbstractEntity*>(pi);
@@ -106,7 +108,8 @@ namespace OpenSteer {
 	void
 	PluginRegistry::applyToAll( plugInCallBackFunction f )
 	{
-		for (size_t i = 0; i < this->m_itemsInRegistry; i++)
+		const size_t itemsInRegistry( this->m_registry.size() );
+		for (size_t i = 0; i < itemsInRegistry; i++)
 		{
 			f(*this->m_registry[i]);
 		}
@@ -123,10 +126,11 @@ namespace OpenSteer {
 		// another inline shell sort implementation...
 
 		// starting at each of the first n-1 elements of the array
-		for (size_t i = 0; i < this->m_itemsInRegistry-1; i++)
+		const size_t itemsInRegistry( this->m_registry.size() );
+		for (size_t i = 0; i < itemsInRegistry-1; i++)
 		{
 			// scan over subsequent pairs, swapping if larger value is first
-			for (size_t j = i+1; j < this->m_itemsInRegistry; j++)
+			for (size_t j = i+1; j < itemsInRegistry; j++)
 			{
 				const float iKey = this->m_registry[i]->selectionOrderSortKey ();
 				const float jKey = this->m_registry[j]->selectionOrderSortKey ();
@@ -147,10 +151,11 @@ namespace OpenSteer {
 	PluginRegistry::findDefault (void) const
 	{
 		// return NULL if no PlugIns exist
-		if (this->m_itemsInRegistry == 0) return NULL;
+		const size_t itemsInRegistry( this->m_registry.size() );
+		if (itemsInRegistry == 0) return NULL;
 
 		// otherwise, return the first Plugin that requests initial selection
-		for (size_t i = 0; i < this->m_itemsInRegistry; i++)
+		for (size_t i = 0; i < itemsInRegistry; i++)
 		{
 			if (this->m_registry[i]->requestInitialSelection ()) return this->m_registry[i];
 		}
@@ -165,11 +170,17 @@ namespace OpenSteer {
 	void
 	PluginRegistry::addToRegistry (AbstractPlugin* pkPlugin)
 	{
+		// better be safe here
+		if( pkPlugin == NULL )
+		{
+			return;
+		}
 		// just for debugging
 		const char* pluginName( pkPlugin->pluginName() );
 
 		// prevent adding plugins twice
-		for (size_t i = 0; i < this->m_itemsInRegistry; ++i)
+		const size_t itemsInRegistry( this->m_registry.size() );
+		for (size_t i = 0; i < itemsInRegistry; ++i)
 		{
 			if (pkPlugin == this->m_registry[i])
 			{
@@ -178,9 +189,36 @@ namespace OpenSteer {
 		}
 
 		// save this instance in the this->m_registry
-		this->m_registry[this->m_itemsInRegistry++] = pkPlugin;
+		this->m_registry.push_back(pkPlugin);
 	}
 
+	//-------------------------------------------------------------------------
+	// save this instance in the class's this->m_registry of instances
+	// (for use by contractors)
+	void
+	PluginRegistry::removeFromRegistry( AbstractPlugin* pkPlugin )
+	{
+		// better be safe here
+		if( pkPlugin == NULL )
+		{
+			return;
+		}
+		// just for debugging
+		const char* pluginName( pkPlugin->pluginName() );
+
+		AbstractPluginVector::iterator kIter = this->m_registry.begin();
+		AbstractPluginVector::iterator kEnd = this->m_registry.end();
+		while( kIter != kEnd  )
+		{
+			AbstractPlugin* registeredPlugin(*kIter);
+			if( registeredPlugin == pkPlugin )
+			{
+				this->m_registry.erase( kIter );
+				break;
+			}
+			++kIter;
+		}
+	}
 	//-------------------------------------------------------------------------
 	// return a group (an STL vector of AbstractVehicle pointers) of all
 	// vehicles(/agents/characters) defined by the currently selected Plugin

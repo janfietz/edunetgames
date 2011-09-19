@@ -16,6 +16,7 @@
   3. This notice may not be removed or altered from any source distribution. 
 */
 
+#include "glui_memory.h"
 #include "GL/glui.h"
 
 
@@ -70,7 +71,7 @@ GLUI_Tree *GLUI_TreePanel::ab(const char *name, GLUI_Tree *root)
     resetToRoot(root);
   }
 
-  temp = new GLUI_Tree(curr_root, name);
+  temp = GLUI_NEW GLUI_Tree(curr_root, name);
   initNode(temp);
   formatNode(temp);
 

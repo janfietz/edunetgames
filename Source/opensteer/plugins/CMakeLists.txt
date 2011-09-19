@@ -1,4 +1,4 @@
-project(ExtOpenSteerDemo)
+project(OpenSteerDemo)
 
 INCLUDE_DIRECTORIES( ${EDUNET_GAMES_SOURCE_DIR}/Source/opensteer/include )
 SET(opensteerDemoSrcs

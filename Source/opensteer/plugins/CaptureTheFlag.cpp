@@ -832,14 +832,14 @@ namespace {
         void open (void)
         {
             // create the seeker ("hero"/"attacker")
-            ctfSeeker = new CtfSeeker;
+            ctfSeeker = OS_NEW CtfSeeker;
             all.push_back (ctfSeeker);
 
             // create the specified number of enemies, 
             // storing pointers to them in an array.
             for (int i = 0; i<ctfEnemyCount; i++)
             {
-                ctfEnemies[i] = new CtfEnemy;
+                ctfEnemies[i] = OS_NEW CtfEnemy;
                 all.push_back (ctfEnemies[i]);
             }
 

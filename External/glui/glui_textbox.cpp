@@ -31,6 +31,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 #include <cmath>
 
@@ -63,7 +64,7 @@ void GLUI_TextBox::common_construct(
   GLUI_Node *tb_panel = parent;
 
   if (scroll) {
-    GLUI_Panel *p = new GLUI_Panel(parent,"",GLUI_PANEL_NONE);
+    GLUI_Panel *p = GLUI_NEW GLUI_Panel(parent,"",GLUI_PANEL_NONE);
     p->x_off = 1;
     tb_panel = p;
   }
@@ -78,9 +79,9 @@ void GLUI_TextBox::common_construct(
   this->name        = "textbox";
   tb_panel->add_control( this );
   if (scroll) {
-    new GLUI_Column(tb_panel, false);
+    GLUI_NEW GLUI_Column(tb_panel, false);
     scrollbar = 
-      new GLUI_Scrollbar(tb_panel,
+      GLUI_NEW GLUI_Scrollbar(tb_panel,
                          "scrollbar",
                          GLUI_SCROLL_VERTICAL,
                          GLUI_SCROLL_INT);

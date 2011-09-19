@@ -31,6 +31,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 
 /****************************** GLUI_Listbox::GLUI_Listbox() **********/
@@ -153,7 +154,7 @@ void    GLUI_Listbox::set_int_val( int new_val )
 
 int  GLUI_Listbox::add_item( int id, const char *new_text )
 {
-  GLUI_Listbox_Item *new_node = new GLUI_Listbox_Item;
+  GLUI_Listbox_Item *new_node = GLUI_NEW GLUI_Listbox_Item;
   GLUI_Listbox_Item *head;
 
   new_node->text = new_text;

@@ -43,6 +43,7 @@ FIXME: there's a heck of a lot of duplication between this and glui_scrollbar.cp
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 #include <cmath>
 #include <cassert>

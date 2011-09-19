@@ -26,6 +26,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "glui_internal_control.h"
 
 
@@ -46,9 +47,9 @@ GLUI_Tree::GLUI_Tree(GLUI_Node *parent, const char *name,
   }
 
   parent->add_control( this );
-  inset_label = new GLUI_StaticText(this,"");
+  inset_label = GLUI_NEW GLUI_StaticText(this,"");
   inset_label->set_w(inset);
-  col = new GLUI_Column(this,true);
+  col = GLUI_NEW GLUI_Column(this,true);
   this->set_column(col);
   this->set_alignment(GLUI_ALIGN_LEFT);
 }

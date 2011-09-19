@@ -31,6 +31,7 @@
 
 *****************************************************************************/
 
+#include "glui_memory.h"
 #include "GL/glui.h"
 #include "arcball.h"
 #include "algebra3.h"
@@ -469,7 +470,7 @@ void GLUI_Rotation::common_init( void )
   can_spin            = false;
   spinning            = false;
   damping             = 0.0;
-  ball                = new Arcball;
+  ball                = GLUI_NEW Arcball;
 
   reset();
 }

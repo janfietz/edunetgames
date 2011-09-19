@@ -66,11 +66,12 @@ namespace OpenSteer {
 
 		//! save this instance in the class's registry of instances
 		void addToRegistry (AbstractPlugin*);
+		void removeFromRegistry (AbstractPlugin*);
 		AbstractPlugin* findNextPlugin( const AbstractPlugin* pkThis ) const;
 
 		//! 
-		int getNumPlugins( void ) const { return m_itemsInRegistry; };
-		AbstractPlugin* getPluginAt( size_t idx ) const { return m_registry[idx]; };
+		int getNumPlugins( void ) const { return static_cast<int>(m_registry.size()); };
+		AbstractPlugin* getPluginAt( size_t idx ) const { return idx < m_registry.size() ? m_registry[idx] : NULL; };
 		int getPluginIdx( const AbstractPlugin* pkPlugin ) const;
 
 		//! utility function
@@ -109,8 +110,8 @@ namespace OpenSteer {
 		enum	{
 			EPluginRegistry_Capacity = 1000
 		};
-		size_t m_itemsInRegistry;
-		AbstractPlugin* m_registry[EPluginRegistry_Capacity];
+		typedef std::vector<AbstractPlugin*> AbstractPluginVector;
+		AbstractPluginVector m_registry;
 
 	};
 

@@ -236,18 +236,18 @@ namespace {
         void open (void)
         {
             // Make a field
-            m_bbox = new AABBox(Vec3(-20,0,-10), Vec3(20,0,10));
+            m_bbox = OS_NEW AABBox(Vec3(-20,0,-10), Vec3(20,0,10));
             // Red goal
-            m_TeamAGoal = new AABBox(Vec3(-21,0,-7), Vec3(-19,0,7));
+            m_TeamAGoal = OS_NEW AABBox(Vec3(-21,0,-7), Vec3(-19,0,7));
             // Blue Goal
-            m_TeamBGoal = new AABBox(Vec3(19,0,-7), Vec3(21,0,7));
+            m_TeamBGoal = OS_NEW AABBox(Vec3(19,0,-7), Vec3(21,0,7));
             // Make a ball
-            m_Ball = new Ball(m_bbox);
+            m_Ball = OS_NEW Ball(m_bbox);
             // Build team A
             m_PlayerCountA = 8;
             for(unsigned int i=0; i < m_PlayerCountA ; i++)
             {
-                Player *pMicTest = new Player(TeamA, m_AllPlayers, m_Ball, true, i);
+                Player *pMicTest = OS_NEW Player(TeamA, m_AllPlayers, m_Ball, true, i);
                 SimpleVehicle::setSelectedVehicle( pMicTest );
                 TeamA.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);
@@ -256,7 +256,7 @@ namespace {
             m_PlayerCountB = 8;
             for(unsigned int i=0; i < m_PlayerCountB ; i++)
             {
-                Player *pMicTest = new Player(TeamB, m_AllPlayers, m_Ball, false, i);
+                Player *pMicTest = OS_NEW Player(TeamB, m_AllPlayers, m_Ball, false, i);
                 SimpleVehicle::setSelectedVehicle( pMicTest );
                 TeamB.push_back (pMicTest);
                 m_AllPlayers.push_back(pMicTest);

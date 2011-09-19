@@ -61,6 +61,14 @@ public:
 		this->m_pkNetPedestrianFactory = ET_NEW NetPedestrianReplicaFactory( &this->m_kReplicaManager );	
 		this->m_kGamePlugin.setEntityFactory( this->m_pkNetPedestrianFactory );
 	}
+
+	virtual ~PedestrianPeerPlugin() 
+	{
+		// detach vehicle factory
+		this->m_kGamePlugin.setEntityFactory( NULL );
+		ET_SAFE_DELETE( this->m_pkNetPedestrianFactory );	
+	}
+
 	OS_IMPLEMENT_CLASSNAME( PedestrianPeerPlugin )
 	virtual const char* name() const { return this->getClassName(); };
 
