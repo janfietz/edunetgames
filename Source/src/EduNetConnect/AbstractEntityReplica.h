@@ -60,10 +60,11 @@ public:
 	virtual void PostDeserializeConstruction( 
 		RakNet::Connection_RM3 *sourceConnection );
 
-	void addEntityToHostPlugin( void );
+	virtual void addEntityToHostPlugin( void );
 protected:
-private:
 	OpenSteer::AbstractPlugin* m_pkHostPlugin;
+
+private:	
 	RakNet::RakString m_kClassName;
 
 	ET_IMPLEMENT_CLASS_NO_COPY( AbstractEntityReplica );

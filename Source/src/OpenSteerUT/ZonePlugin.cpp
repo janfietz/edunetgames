@@ -253,3 +253,22 @@ void ZonePlugin::redraw (const float currentTime, const float elapsedTime)
 	}
 
 }
+
+void OpenSteer::ZonePlugin::addVehicle( OpenSteer::AbstractVehicle* pkVehicle )
+{
+	AbstractPlugin* contentPlugin = getPlugin(0);
+	if( NULL != contentPlugin )
+	{
+		contentPlugin->addVehicle(pkVehicle);
+	}
+	
+}
+
+void OpenSteer::ZonePlugin::removeVehicle( OpenSteer::AbstractVehicle* pkVehicle )
+{
+	AbstractPlugin* contentPlugin = getPlugin(0);
+	if( NULL != contentPlugin )
+	{
+		contentPlugin->removeVehicle(pkVehicle);
+	}
+}
