@@ -63,6 +63,9 @@ namespace OpenSteer
 		virtual void handleFunctionKeys( int keyNumber ) { } // fkeys reserved for Plugins
 		virtual void printMiniHelpForFunctionKeys( void ) const { } // if fkeys are used
 
+		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
+
 		// extende interface
 		virtual void onSubZoneAdded( ZonePlugin* pkSubZone ){};
 

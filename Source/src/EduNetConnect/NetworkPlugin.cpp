@@ -786,7 +786,7 @@ void NetworkPlugin::recordNetworkStatistics(const float currentTime,
 	RakNetStatistics kStats;
 	this->gatherNetworkStatistics( kStats );
 	this->m_kStats.m_uiBytesReceived = kStats.runningTotal[ACTUAL_BYTES_RECEIVED];
-	this->m_kStats.m_uiBytesSend = kStats.runningTotal[ACTUAL_BYTES_RECEIVED];
+	this->m_kStats.m_uiBytesSend = kStats.runningTotal[ACTUAL_BYTES_SENT];
 	if( 0 != this->m_bDrawNetworkPlot )
 	{
 		this->m_kNetworkPlot.recordUpdate( kStats, currentTime, elapsedTime);
