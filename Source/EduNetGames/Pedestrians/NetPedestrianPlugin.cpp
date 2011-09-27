@@ -41,6 +41,7 @@
 
 #include "OpenSteerUT/CameraPlugin.h"
 #include "OpenSteerUT/ZonePlugin.h"
+#include "boost/foreach.hpp"
 
 
 using namespace OpenSteer;
@@ -159,7 +160,6 @@ NetPedestrianPlugin::~NetPedestrianPlugin()
 {
 	this->close();
 	ET_SAFE_DELETE( this->m_pkPath );
-	ET_SAFE_DELETE( pd );
 }
 
 //-----------------------------------------------------------------------------
@@ -207,6 +207,8 @@ void NetPedestrianPlugin::close (void)
 	// delete all Pedestrians
 	while (kVG.population() > 0) 
 		removePedestrianFromCrowd ();
+
+	ET_SAFE_DELETE(pd);
 }
 
 //-----------------------------------------------------------------------------
@@ -231,7 +233,21 @@ void NetPedestrianPlugin::update (const float currentTime, const float elapsedTi
 		return;
 	}
 	// update each Pedestrian
-	AbstractVehicleGroup kVG( this->allVehicles() );
+	AVGroup& crowd = allVehicles();	
+	
+	BOOST_FOREACH(AbstractVehicle* pVehicle, crowd)
+	{
+		if (pVehicle->isRemoteObject() == false)
+		{
+			NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pVehicle);
+			if (pkPedestrian->hasPath() == false)
+			{
+				pkPedestrian->setPath(this->m_pkPath);
+			}
+		}			
+	}
+
+	AbstractVehicleGroup kVG( crowd );
 	kVG.update( currentTime, elapsedTime );
 }
 
@@ -376,12 +392,8 @@ void NetPedestrianPlugin::addPedestrianToCrowd (void)
 	if( NULL != pkVehicle )
 	{
 		NetPedestrian* pkPedestrian = dynamic_cast<NetPedestrian*>(pkVehicle);
-		pkPedestrian->setPath( this->m_pkPath );
-		// note: now the path is valid reset the vehicle again
-		pkVehicle->setRadius( 0.5 * this->m_fPathScale );
-		pkVehicle->reset();
-		AbstractVehicleGroup kVG( this->allVehicles() );
-		kVG.addVehicleToPlugin( pkVehicle, this );
+		pkPedestrian->setPath( this->m_pkPath );		
+		addVehicle(pkVehicle);		
 	}
 }
 
@@ -499,6 +511,24 @@ void NetPedestrianPlugin::initGui( void* pkUserdata )
 		pkControl->set_ptr_val( this );
 	}
 };
+
+void NetPedestrianPlugin::addVehicle( OpenSteer::AbstractVehicle* pkVehicle )
+{
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	pkVehicle->setRadius( 0.5 * this->m_fPathScale );
+	// note: now the path is valid reset the vehicle again
+	if (pkVehicle->isRemoteObject() == false)
+	{
+		pkVehicle->reset();
+	}
+	kVG.addVehicleToPlugin( pkVehicle, this );
+}
+
+void NetPedestrianPlugin::removeVehicle( OpenSteer::AbstractVehicle* pkVehicle )
+{
+	AbstractVehicleGroup kVG( this->allVehicles() );
+	kVG.removeVehicleFromPlugin( pkVehicle );
+}
 
 
 

@@ -52,7 +52,8 @@ namespace EduNet
 			
 			// required methods:
 			const char* name( void ) const { return this->getClassName(); }
-			virtual void prepareOpen (void);			
+			virtual void prepareOpen (void);
+			virtual void reset(void);
 			virtual void close( void );			
 			
 		private:

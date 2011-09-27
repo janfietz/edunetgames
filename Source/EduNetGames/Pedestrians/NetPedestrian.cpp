@@ -135,22 +135,25 @@ void NetPedestrian::update (const float currentTime, const float elapsedTime)
 {
 	BaseClass::update( currentTime, elapsedTime );
 
-	// reverse direction when we reach an endpoint
-	NetPedestrianPlugin* netPedestrianPlugin = dynamic_cast<NetPedestrianPlugin*>(this->getParentEntity());
-	if( netPedestrianPlugin->m_bUseDirectedPathFollowing )
+	if( false == this->isRemoteObject() )	
 	{
-		const Color darkRed (0.7f, 0, 0);
-		float const pathRadius = path->radius();
+		// reverse direction when we reach an endpoint
+		NetPedestrianPlugin* netPedestrianPlugin = dynamic_cast<NetPedestrianPlugin*>(this->getParentEntity());
+		if( netPedestrianPlugin->m_bUseDirectedPathFollowing )
+		{
+			const Color darkRed (0.7f, 0, 0);
+			float const pathRadius = path->radius();
 
-		if (osVector3::distance (position(), path->getStartPoint()) < pathRadius )
-		{
-			pathDirection = +1;
-			annotationXZCircle (pathRadius, path->getStartPoint(), darkRed, 20);
-		}
-		if (osVector3::distance (position(), path->getEndPoint()) < pathRadius )
-		{
-			pathDirection = -1;
-			annotationXZCircle (pathRadius, path->getEndPoint(), darkRed, 20);
+			if (osVector3::distance (position(), path->getStartPoint()) < pathRadius )
+			{
+				pathDirection = +1;
+				annotationXZCircle (pathRadius, path->getStartPoint(), darkRed, 20);
+			}
+			if (osVector3::distance (position(), path->getEndPoint()) < pathRadius )
+			{
+				pathDirection = -1;
+				annotationXZCircle (pathRadius, path->getEndPoint(), darkRed, 20);
+			}
 		}
 	}
 }
@@ -291,7 +294,7 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 		// textual annotation
 		std::ostringstream annote;
 		annote << std::setprecision (2) << std::setiosflags (std::ios::fixed);
-		annote << "[";
+		annote << "z[";
 		for( size_t i = 0; i < 4; ++i )
 		{
 			if( true == this->getIsZoneMember(i) )
@@ -307,7 +310,27 @@ void NetPedestrian::draw( const float currentTime, const float elapsedTime )
 				annote << "-";
 			}
 		}
+		annote << "]\n";	
+
+		//draw borders		
+		annote << "b[";
+		for( size_t i = 0; i < 4; ++i )
+		{
+			if( true == this->getIsZoneBorderMember(i) )
+			{
+				annote << i;
+			}
+			else
+			{
+				annote << " ";
+			}
+			if( i < 3 )
+			{
+				annote << "-";
+			}
+		}
 		annote << "]";
+		
 		draw2dTextAt3dLocation (annote, this->position(), gWhite, drawGetWindowWidth(), drawGetWindowHeight());
 	}
 }

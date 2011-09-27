@@ -28,59 +28,14 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteerUT/ZonePlugin.h"
-#include "EduNetConnect/NetworkPlugin.h"
 #include "EduNetConnect/PeerPlugin.h"
 #include "EduNetConnect/AbstractEntityReplicaConnection.h"
 #include "EduNetGames/Pedestrians/NetPedestrianFactory.h"
+#include "MasterZonePlugin.h"
 
 namespace OpenSteer	{
 	class SimpleNetworkVehicle;
 }
-
-namespace EduNet	{
-
-	class MasterZonePlugin : public OpenSteer::ZonePlugin
-	{
-		ET_DECLARE_BASE( OpenSteer::ZonePlugin )
-	public:
-		MasterZonePlugin ( bool bAddToRegistry = false, size_t zoneId = 4 );
-
-		const char* name() const;
-
-		void zoneCheck( const ZonePlugin* zone, SimpleNetworkVehicle* vehicle );
-
-		//---------------------------------------------------------------------
-		virtual void update( const float currentTime, const float elapsedTime );
-
-		virtual void onSubZoneAdded( ZonePlugin* pkSubZone );
-
-		bool createsContentZone( size_t uiZoneId ) const
-		{
-			if( uiZoneId < 4 )
-			{
-				return this->m_bCreateContentZone[uiZoneId];
-			}
-			return false;
-		}
-
-		virtual void setEntityFactory( AbstractEntityFactory* );
-
-		virtual AbstractEntityFactory* getEntityFactory( void ) const;
-
-		virtual void addVehicle (OpenSteer::AbstractVehicle* pkVehicle);
-		virtual void removeVehicle (OpenSteer::AbstractVehicle* pkVehicle);
-
-		bool m_bCreateContentZone[4];
-		size_t m_uiZoneId;
-
-		size_t getZoneId( void ) const{ return this->m_uiZoneId; };
-		void setZoneId( size_t zoneId );
-		AbstractEntityFactory* m_pEntityFactory;
-	};
-
-}
-
 
 //-----------------------------------------------------------------------------
 typedef PeerPlugin<EduNet::MasterZonePlugin> PeerZonePlugin_t;

@@ -105,6 +105,9 @@ public:
 		this->m_bRenderPath = bValue;
 	}
 
+	virtual void addVehicle( OpenSteer::AbstractVehicle* pkVehicle );
+	virtual void removeVehicle( OpenSteer::AbstractVehicle* pkVehicle );
+
 	int m_bWanderSwitch;
 	int m_bUseDirectedPathFollowing;
 	static OpenSteer::PolylineSegmentedPathwaySingleRadius* createTestPath( float scale );

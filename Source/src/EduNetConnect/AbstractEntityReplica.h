@@ -60,8 +60,11 @@ public:
 	virtual void PostDeserializeConstruction( 
 		RakNet::Connection_RM3 *sourceConnection );
 
-	virtual void addEntityToHostPlugin( void );
+	void addEntityToHostPlugin( bool bIgnoreRemote = false );
+	void removeEntityFromHostPlugin( void );
 protected:
+	virtual OpenSteer::AbstractPlugin* accessHostPlugin()const {return m_pkHostPlugin;};
+
 	OpenSteer::AbstractPlugin* m_pkHostPlugin;
 
 private:	

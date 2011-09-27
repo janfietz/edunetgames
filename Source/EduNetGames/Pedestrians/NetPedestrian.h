@@ -82,6 +82,8 @@ public:
 		this->path = _path;
 	}
 
+	bool hasPath() const { return path!=NULL; } 
+
 private:
 
 

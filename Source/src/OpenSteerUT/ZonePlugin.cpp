@@ -122,6 +122,17 @@ bool ZonePlugin::isVehicleInside( const OpenSteer::AbstractVehicle& kVehicle ) c
 	return this->m_kZoneAABBox.insideXZWithRadius(kVehicle);
 }
 
+bool OpenSteer::ZonePlugin::isVehicleInsideBorder( const OpenSteer::AbstractVehicle& kVehicle ) const
+{
+	osVector3 kCheckZoneExtent = this->m_kZoneExtent;
+	kCheckZoneExtent.x += this->m_fBorderWidth;	
+	kCheckZoneExtent.z += this->m_fBorderWidth;
+	OpenSteer::AABBox testBox;
+	testBox.initializeWithCenterAndExtent( this->position(), kCheckZoneExtent );
+	return testBox.insideXZWithRadius(kVehicle);
+}
+
+
 //-----------------------------------------------------------------------------
 bool ZonePlugin::queryVehicleColor( const OpenSteer::AbstractVehicle& kVehicle, OpenSteer::Color& kColor ) const 
 { 
@@ -272,3 +283,4 @@ void OpenSteer::ZonePlugin::removeVehicle( OpenSteer::AbstractVehicle* pkVehicle
 		contentPlugin->removeVehicle(pkVehicle);
 	}
 }
+

@@ -114,6 +114,10 @@ namespace OpenSteer {
 
 		bool getIsZoneMember( size_t zoneId ) const;
 
+		void setIsZoneBorderMember( size_t zoneId, bool value );
+
+		bool getIsZoneBorderMember( size_t zoneId ) const;
+
 		void setSupportZoning( bool value )
 		{ this->m_bSupportZoning = value; };
 
@@ -136,6 +140,7 @@ namespace OpenSteer {
 			MAX_ZONES = 16
 		};
 		bool m_bIsZoneMember[MAX_ZONES];
+		bool m_bIsZoneBorderMember[MAX_ZONES];
 	private:
 	};
 

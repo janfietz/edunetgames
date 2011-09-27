@@ -107,6 +107,7 @@ namespace OpenSteer
 		size_t getZoneId( void ) const { return this->m_zoneId; }
 
 		bool isVehicleInside( const OpenSteer::AbstractVehicle& kVehicle ) const;
+		bool isVehicleInsideBorder( const OpenSteer::AbstractVehicle& kVehicle ) const;
 
 		int m_iSolid;
 	private:
@@ -114,9 +115,9 @@ namespace OpenSteer
 		void updateZoneAABBox( void )
 		{
 			osVector3 kCheckZoneExtent = this->m_kZoneExtent;
-			kCheckZoneExtent.x += this->m_fBorderWidth;
+			//kCheckZoneExtent.x += this->m_fBorderWidth;
 //			kCheckZoneExtent.y += this->m_fBorderWidth;
-			kCheckZoneExtent.z += this->m_fBorderWidth;
+			//kCheckZoneExtent.z += this->m_fBorderWidth;
 			this->m_kZoneAABBox.initializeWithCenterAndExtent( this->position(), kCheckZoneExtent );
 		}
 		void zoneUtility( void );

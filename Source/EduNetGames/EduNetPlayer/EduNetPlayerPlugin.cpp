@@ -110,6 +110,12 @@ namespace EduNet
 			addPlugin(pPlugin);
 		}	
 
+		void HostPlugin::reset( void )
+		{
+			BaseClass::close();
+			BaseClass::open();
+		}
+
 	}
 }
 
