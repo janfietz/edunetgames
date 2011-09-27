@@ -5,6 +5,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 PROJECT(EDUNET_GAMES)
 SET(EDUNET_GAMES 0.05)
+SET(CMake_VERSION_MAJOR 0)
+SET(CMake_VERSION_MINOR 5)
+SET(CMake_VERSION_PATCH 0)
+
 ADD_DEFINITIONS( -DBOOST_ALL_DYN_LINK )
 ######################################################################
 # return a list of directories that we should add_subdirectory()
@@ -24,6 +28,15 @@ macro(ADD_SUBDIRECTORIES prefix header )
     add_subdirectory(${subdir})
   endforeach(subdir ${ARGN})
 endmacro(ADD_SUBDIRECTORIES prefix header)
+
+macro(COPYFILES_TO msg targetdir)
+  message(STATUS "- ${msg} to ${targetdir}")
+  foreach(et_libPath ${ARGN})		
+		#get_filename_component( filename ${et_libPath} NAME )
+		message(STATUS "   ${et_libPath}")
+		configure_file( ${et_libPath} ${targetdir} COPYONLY )
+	endforeach(et_libPath)
+endmacro(COPYFILES_TO msg targetdir)
 
 # -----------------------------------------------------------------------------
 IF (NOT CMAKE_BUILD_TYPE)
@@ -149,7 +162,7 @@ ${EDUNET_GAMES_SOURCE_DIR}/Source/src
 ${EDUNET_GAMES_SOURCE_DIR}/External
 ${GLUT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIR}
-${RakNet_INCLUDES}/raknet
+${RakNet_INCLUDES}
  )
 
 # -----------------------------------------------------------------------------
@@ -160,15 +173,6 @@ ELSE (WIN32)
   INCLUDE_DIRECTORIES(/usr/include /usr/local/include )
 ENDIF (WIN32)
 
-# -----------------------------------------------------------------------------
-# collect needed shared libs and copy them to output directories
-IF (WIN32)
-  FILE (GLOB ET_SHARED_THIRDPARTY_LIBS "${ET_THIRD_PARTY_DIR}/lib/*.dll")
-  #OPENGL STUFF
-  FILE (GLOB ET_SHARED_OPENGL_DLLS "${EDUNET_GAMES_SOURCE_DIR}/bin/win32/*32.dll")
-ELSE (WIN32)
-
-ENDIF (WIN32)
 
 # -----------------------------------------------------------------------------
 # collect all needed default libraries
@@ -235,8 +239,33 @@ add_subdirectory(External)
 
 # -----------------------------------------------------------------------------
 IF (WIN32)
+	# -----------------------------------------------------------------------------
+	# collect needed shared libs and copy them to output directories
+
+	FILE (GLOB ET_SHARED_THIRDPARTY_LIBS "${ET_THIRD_PARTY_DIR}lib/*.dll")
+	#OPENGL STUFF
+	FILE (GLOB ET_SHARED_OPENGL_DLLS "${EDUNET_GAMES_SOURCE_DIR}/bin/win32/*32.dll")
+
 	#copy needed dlls to debug and release kind of hack now
-	INSTALL(FILES ${ET_SHARED_THIRDPARTY_LIBS} DESTINATION ${EDUNET_COMMON_OUTPUT_DIRECTORY})
-	INSTALL(FILES ${ET_SHARED_OPENGL_DLLS} DESTINATION ${EDUNET_COMMON_OUTPUT_DIRECTORY})
+	COPYFILES_TO("Copy thirdparty DLL"  ${EDUNET_COMMON_OUTPUT_DIRECTORY} ${ET_SHARED_THIRDPARTY_LIBS})
+	COPYFILES_TO("Copy OpenGl DLL" ${EDUNET_COMMON_OUTPUT_DIRECTORY} ${ET_SHARED_OPENGL_DLLS} )	
 	
 ENDIF (WIN32)
+
+INSTALL(FILES ${ET_SHARED_THIRDPARTY_LIBS} DESTINATION bin)
+INSTALL(FILES ${ET_SHARED_OPENGL_DLLS} DESTINATION bin)
+
+# -----------------------------------------------------------------------------
+# create a packege
+
+SET(CPACK_GENERATOR "ZIP")
+SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+
+SET(CPACK_PACKAGE_VERSION_MAJOR ${CMake_VERSION_MAJOR})
+SET(CPACK_PACKAGE_VERSION_MINOR ${CMake_VERSION_MINOR})
+SET(CPACK_PACKAGE_VERSION_PATCH ${CMake_VERSION_PATCH})
+SET(CPACK_SOURCE_GENERATOR "ZIP")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}_SRC")
+#SET(CPACK_SOURCE_STRIP_FILES "")
+
+INCLUDE(CPack)

@@ -202,6 +202,37 @@ bool AbstractEntityReplicaFactory::ownsEntity( OpenSteer::AbstractEntity* pkEnti
 	return false;	
 }
 
+RakNet::Replica3* AbstractEntityReplicaFactory::accessEntityRepica( 
+	OpenSteer::AbstractEntity* pkEntity ) const
+{
+	if( NULL != pkEntity )
+	{
+		const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();			
+		return this->m_uidMap.Get( uiEntityId );
+	}
+	return NULL;	
+}
+
+void AbstractEntityReplicaFactory::attachReplica( OpenSteer::AbstractEntity* pkEntity,
+	RakNet::Replica3* pReplica)
+{
+	if( NULL != pkEntity )
+	{
+		const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();			
+		this->m_uidMap.Set( uiEntityId, pReplica );
+	}
+}
+
+void AbstractEntityReplicaFactory::detachReplica( OpenSteer::AbstractEntity* pkEntity, 
+	RakNet::Replica3* pReplica)
+{
+	if( NULL != pkEntity )
+	{
+		const OpenSteer::InstanceTracker::Id uiEntityId = pkEntity->getEntityId();			
+		this->m_uidMap.Set( uiEntityId, NULL );
+	}
+}
+
 //-----------------------------------------------------------------------------
 AbstractEntityReplica* AbstractEntityCCReplicaFactory::createEntityReplica( 
 	OpenSteer::AbstractPlugin* pPlugin, 
@@ -221,4 +252,6 @@ AbstractEntityReplica* AbstractEntitySSReplicaFactory::createEntityReplica(
 	return ET_NEW AbstractEntitySSReplica( 
 		pPlugin, classId, bIsRemoteObject, bClientReplica );	
 }
+
+
 

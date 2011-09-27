@@ -106,25 +106,8 @@ RakNet::RakString AbstractEntityReplica::GetName(void) const
 
 //-----------------------------------------------------------------------------
 void AbstractEntityReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
-{
-	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
-	if( NULL != pkVehicle )
-	{
-		m_pkHostPlugin->removeVehicle( pkVehicle );
-	}
-
-	OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
-	if( NULL != pkObstacle )
-	{
-		m_pkHostPlugin->removeObstacle( pkObstacle );
-	}
-
-	OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
-	if( NULL != pkPlayer )
-	{
-		m_pkHostPlugin->removePlayer( pkPlayer );
-	}
-
+{	
+	removeEntityFromHostPlugin();
 	this->releaseEntity();
 	ET_DELETE this;
 }
@@ -172,29 +155,53 @@ void AbstractEntityReplica::PostDeserializeConstruction(
 }
 
 //-----------------------------------------------------------------------------
-void AbstractEntityReplica::addEntityToHostPlugin( void )
+void AbstractEntityReplica::addEntityToHostPlugin( bool bIgnoreRemote )
 {
 	assert( NULL != this->getEntity() );
-	assert( NULL != this->m_pkHostPlugin );
+	OpenSteer::AbstractPlugin* pHostPlugin = accessHostPlugin();
+	assert(pHostPlugin != NULL);
 
 	// remote objects have to be added to the client game plugin
-	if( true == this->getEntity()->isRemoteObject() )
+	if( true == this->getEntity()->isRemoteObject() || bIgnoreRemote )
 	{
 		OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
 		if( NULL != pkVehicle )
 		{
-			this->m_pkHostPlugin->addVehicle( pkVehicle );
+			pHostPlugin->addVehicle( pkVehicle );
 		}
 		OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
 		if( NULL != pkObstacle )
 		{
-			this->m_pkHostPlugin->addObstacle( pkObstacle );
+			pHostPlugin->addObstacle( pkObstacle );
 		}
 		OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
 		if( NULL != pkPlayer )
 		{
-			this->m_pkHostPlugin->addPlayer( pkPlayer );
+			pHostPlugin->addPlayer( pkPlayer );
 		}
+	}
+}
+
+void AbstractEntityReplica::removeEntityFromHostPlugin( void )
+{
+	OpenSteer::AbstractPlugin* pHostPlugin = accessHostPlugin();
+	assert(pHostPlugin != NULL);
+	OpenSteer::AbstractVehicle* pkVehicle = dynamic_cast<OpenSteer::AbstractVehicle*>( this->accessEntity() );
+	if( NULL != pkVehicle )
+	{
+		pHostPlugin->removeVehicle( pkVehicle );
+	}
+
+	OpenSteer::AbstractObstacle* pkObstacle = dynamic_cast<OpenSteer::AbstractObstacle*>( this->accessEntity() );
+	if( NULL != pkObstacle )
+	{
+		pHostPlugin->removeObstacle( pkObstacle );
+	}
+
+	OpenSteer::AbstractPlayer* pkPlayer = dynamic_cast<OpenSteer::AbstractPlayer*>( this->accessEntity() );
+	if( NULL != pkPlayer )
+	{
+		pHostPlugin->removePlayer( pkPlayer );
 	}
 }
 

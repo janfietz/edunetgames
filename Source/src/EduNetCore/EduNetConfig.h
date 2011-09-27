@@ -37,13 +37,13 @@
 // profiling
 #ifndef WIN32
 #if __APPLE__ && __MACH__
-#define EDUNET_HAVE_PROFILE 1
+#define EDUNET_HAVE_PROFILE 0
 #else
-#define EDUNET_HAVE_PROFILE 1
+#define EDUNET_HAVE_PROFILE 0
 #endif
 #endif
 #ifndef EDUNET_HAVE_PROFILE
-#define EDUNET_HAVE_PROFILE 1
+#define EDUNET_HAVE_PROFILE 0
 #endif
 
 

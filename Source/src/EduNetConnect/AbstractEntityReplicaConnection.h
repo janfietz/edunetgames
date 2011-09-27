@@ -87,6 +87,11 @@ public:
 	  OpenSteer::AbstractEntity* createEntity( OpenSteer::EntityClassId,
 		  osAbstractPlugin* pkPlugin ) const;
 
+	  void attachReplica( OpenSteer::AbstractEntity* pkEntity, RakNet::Replica3* pReplica);
+	  void detachReplica( OpenSteer::AbstractEntity* pkEntity, RakNet::Replica3* pReplica);
+
+	  RakNet::Replica3* accessEntityRepica( OpenSteer::AbstractEntity* pkEntity ) const;
+
 protected:
 	virtual class AbstractEntityReplica* createEntityReplica( 
 		OpenSteer::AbstractPlugin* pPlugin, 
