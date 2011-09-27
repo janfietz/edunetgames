@@ -7,10 +7,12 @@
 #add_subdirectory(MemoryTest)
 #add_subdirectory(Tutorial_03)
 add_subdirectory(EduNetPlayer)
-#add_subdirectory(ModCtf)
-#add_subdirectory(ModLecture)
-#add_subdirectory(ModNetBoids)
+add_subdirectory(ModCtf)
+add_subdirectory(ModLecture)
+add_subdirectory(ModNetBoids)
 add_subdirectory(ModNetSoccer)
-#add_subdirectory(ModPedestrians)
+add_subdirectory(ModPedestrians)
 add_subdirectory(ModZoning)
-add_subdirectory(ModZoningJf)
+
+#STUFF of JF
+#add_subdirectory(ModZoningJf)
