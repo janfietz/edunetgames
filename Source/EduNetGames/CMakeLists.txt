@@ -13,6 +13,7 @@ add_subdirectory(ModNetBoids)
 add_subdirectory(ModNetSoccer)
 add_subdirectory(ModPedestrians)
 add_subdirectory(ModZoning)
+add_subdirectory(ModChat)
 
 #STUFF of JF
 #add_subdirectory(ModZoningJf)
