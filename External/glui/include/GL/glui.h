@@ -187,7 +187,7 @@ enum GLUI_Glut_CB_Types
 #define GLUI_LIVE_DOUBLE        4
 #define GLUI_LIVE_FLOAT_ARRAY   5
 
-/************* Textbox and List Defaults - JVK ******************/
+/************* Textbox and List Defaults - JV K******************/
 #define GLUI_TEXTBOX_HEIGHT          130
 #define GLUI_TEXTBOX_WIDTH           130
 #define GLUI_LIST_HEIGHT             130
