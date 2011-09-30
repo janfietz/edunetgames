@@ -34,7 +34,7 @@
 #include "glui_memory.h"
 #include "glui_internal_control.h"
 #include <cmath>
-
+#include <boost/regex.hpp>
 
 static const int LINE_HEIGHT = 15;
 
@@ -441,55 +441,113 @@ void    GLUI_TextBox::draw( int x, int y )
   /* Begin Drawing Lines of Text */
   substring_start = 0;
   substring_end = 0;
-  text_length = text.length()-1;
+  
+  visible_lines = (int)(h-20)/LINE_HEIGHT;
+  int maxDrawableLines = start_line+visible_lines;
 
+	if (start_line < (curr_line-visible_lines)) 
+	{
+		for (i = 0; ((curr_line-i)*LINE_HEIGHT+20) > h; i++);
+		start_line = i;
+	} else if ( start_line > curr_line) 
+	{
+		start_line = curr_line;
+	}
   /* Figure out how wide the box is */
   box_width = get_box_width();
+ 
+  boost::regex re("\\n+");
+  boost::sregex_token_iterator iToken(text.begin(), text.end(), re, -1);
+  boost::sregex_token_iterator jToken;
 
-  /* Get the first line substring */
-  while (substring_width(substring_start, substring_end+1 ) < box_width && 
-	 substring_end < text_length && text[substring_end+1] != '\n')
-    substring_end++;
+  unsigned count = 0;
+  substring_start = 0;
+  substring_end = 0;
 
-  /* Figure out which lines are visible*/
+  ;
+  while(iToken != jToken)
+  {
+	  std::string& strLine = (*iToken).str();
+		int endPos(0) ; 
+	 
+	  text_length = strLine.length();
+	 
+	  while ( endPos < text_length )
+	  {
+		  int lineWidth(0);
+		  while ( lineWidth < box_width && 
+			  endPos < text_length )
+		  {
+			  lineWidth += char_width( strLine[endPos] ); 
+			  ++endPos;
+			  substring_end++;
+		  }
 
-  visible_lines = (int)(h-20)/LINE_HEIGHT;
-  if (start_line < (curr_line-visible_lines)) {
-    for (i = 0; ((curr_line-i)*LINE_HEIGHT+20) > h; i++);
-    start_line = i;
-  } else if ( start_line > curr_line) {
-    start_line = curr_line;
+		  //draw the line
+		  if ( ((unsigned int)(line - start_line)) <= visible_lines)
+		  {
+			  draw_text(0,(line - start_line)*LINE_HEIGHT);
+		  }
+		  substring_start = substring_end;
+		  ++line;
+	  }
+	  ++iToken;
   }
-  line = 0;
-  do {
-    if (line && substring_end < text_length) {
-      substring_start = substring_end+1;
-      while (substring_width(substring_start, substring_end+1 ) < box_width && 
-	     substring_end < text_length && text[substring_end+1] != '\n')
-	substring_end++; 
-    }
-    if (text[substring_end+1] == '\n') { /* Skip newline */
-      substring_end++;
-    }
-    if (line < start_line || (line > curr_line && curr_line > (start_line + visible_lines))) {
-      line++;
-      continue;
-    }
-    if ((line - start_line) <= visible_lines)
-      draw_text(0,(line - start_line)*LINE_HEIGHT); /* tabs and other nasties are handled by substring_width */
-    line++;
-  } while (substring_end < text_length);
 
-  num_lines = line;
 
-  draw_insertion_pt();
-  if (scrollbar) {
-    scrollbar->set_int_limits(MAX(0,num_lines/*-1*/-visible_lines),0);
-    glPushMatrix();
-    glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
-    scrollbar->draw_scroll();
-    glPopMatrix();
-  }
+  //if (text.empty() == false)
+  //{
+	 //  text_length = text.length()-1;
+
+	 //  
+
+	 // /* Get the first line substring */
+	 // 
+
+	 // /* Figure out which lines are visible*/
+
+	 //
+	 // if (start_line < (curr_line-visible_lines)) {
+		//  for (i = 0; ((curr_line-i)*LINE_HEIGHT+20) > h; i++);
+		//  start_line = i;
+	 // } else if ( start_line > curr_line) {
+		//  start_line = curr_line;
+	 // }
+	 // line = 0;
+	 // do {
+		//  if (line && substring_end < text_length)
+		//  {
+		//	  substring_start = substring_end+1;
+		//	  while (substring_width(substring_start, substring_end+1 ) < box_width && 
+		//		  substring_end < text_length && text[substring_end+1] != '\n')
+		//		  substring_end++; 
+		//  }
+		//  if (substring_end < text_length)
+		//  {
+		//	  if (text[substring_end+1] == '\n') { /* Skip newline */
+		//		  substring_end++;
+		//	  }
+		//	  if (line < start_line || (line > curr_line && curr_line > (start_line + visible_lines))) {
+		//		  line++;
+		//		  continue;
+		//	  }
+		//  }		  
+		// 
+		//  /* tabs and other nasties are handled by substring_width */
+		//  
+	 // } while (substring_end < text_length);
+
+	  num_lines = line;
+
+	 draw_insertion_pt();
+	  if (scrollbar) {
+		  scrollbar->set_int_limits(MAX(0,num_lines/*-1*/-visible_lines),0);
+		  glPushMatrix();
+		  glTranslatef(scrollbar->x_abs-x_abs, scrollbar->y_abs-y_abs,0.0);
+		  scrollbar->draw_scroll();
+		  glPopMatrix();
+	  }
+  //} 
 }
 
 
@@ -590,7 +648,7 @@ void    GLUI_TextBox::draw_text( int x, int y )
     sel_x_start = text_x;
     sel_x_end   = text_x;
     delta = 0;
-    for( i=substring_start; sel_x_end < (w - text_x) && i<=substring_end; i++ ) {
+    for( i=substring_start; sel_x_end < (w - text_x) && i<substring_end; i++ ) {
       delta = 0;
       if (text[i] == '\t') // Character is a tab, go to next tab stop
         while (((delta + sel_x_end) < (w - text_x)) && 
@@ -621,11 +679,14 @@ void    GLUI_TextBox::draw_text( int x, int y )
       glColor3b( 32, 32, 32 );
       
     glRasterPos2i( text_x, y+LINE_HEIGHT);
-    for( i=substring_start; i<=substring_end; i++ ) {
+    for( i=substring_start; i<substring_end; i++ ) 
+	{
       if (this->text[i] == '\t') { // Character is a tab, go to next tab stop
         x_pos = ((x_pos-text_x)/tab_width)*tab_width+tab_width+text_x;
         glRasterPos2i( x_pos, y+LINE_HEIGHT); // Reposition pen after tab
-      } else {
+      }
+	  else 
+	  {
         glutBitmapCharacter( get_font(), this->text[i] );
         x_pos += char_width( this->text[i] );
       }
@@ -633,7 +694,7 @@ void    GLUI_TextBox::draw_text( int x, int y )
   }
   else {                        // There is a selection
     x_pos = text_x;
-    for( i=substring_start; i<=substring_end; i++ ) {
+    for( i=substring_start; i<substring_end; i++ ) {
       if ( IN_BOUNDS( i, sel_lo, sel_hi-1)) { // This character is selected
         glColor3f( 1., 1., 1. );
         glRasterPos2i( x_pos, y+LINE_HEIGHT);
@@ -764,7 +825,8 @@ int GLUI_TextBox::get_box_width()
 
 void     GLUI_TextBox::draw_insertion_pt( void )
 {
-  int curr_x, box_width, text_length, eol, sol, line;
+	int curr_x, box_width, text_length, eol, sol; 
+	int line(0);
 
   if ( NOT can_draw() )
     return;
@@ -792,63 +854,81 @@ void     GLUI_TextBox::draw_insertion_pt( void )
 
   sol = 0;
   eol = 0;
-  text_length = text.length()-1;
 
-  //while (eol < text_length && text[eol] != '\n' 
-  //       && substring_width(sol, eol + 1) < box_width )
-  //  eol++;
-  line = 0;
-  while (eol < insertion_pt && eol <= text_length) 
+  boost::regex re("\\n+");
+  boost::sregex_token_iterator iToken(text.begin(), text.end(), re, -1);
+  boost::sregex_token_iterator jToken;
+
+  unsigned count = 0;
+  sol = 0;
+  while(iToken != jToken)
   {
-    if (text[eol] == '\n' || substring_width(sol, eol + 1) >= box_width) 
-    {
-      eol++;
-      if (text[eol]=='\n'||eol!=insertion_pt
-          ||(eol==insertion_pt && eol>0 && text[eol-1]=='\n')) {
-        sol = eol;
-        line++;
-      }
-    } 
-    else {
-      eol++;
-    }
-  }
+	  std::string& strLine = (*iToken).str();	  
+	  eol = 0;
+	  text_length = strLine.length();
+
+	  while ( eol < text_length )
+	  {
+		  int lineWidth(0);
+		  while ( lineWidth < box_width && 
+			  eol < text_length )
+		  {
+			  lineWidth += char_width( strLine[eol] ); 
+			  eol++;
+			  if ((sol+eol) == insertion_pt)
+			  {
+				  curr_line = line;
+
+				  if (scrollbar)
+					  scrollbar->set_int_val(start_line);
+				  if (curr_line < start_line || curr_line > (start_line + visible_lines)) /* Insertion pt out of draw area */
+					  return;
+
+				  curr_x = this->x_abs 
+					+ 2                               /* The edittext box has a 2-pixel margin */
+					+ GLUI_TEXTBOX_BOXINNERMARGINX;   /** plus this many pixels blank space
+														between the text and the box       **/
+  
+					curr_x += substring_width(sol,insertion_pt-1);
+					if (insertion_pt == text.length() && text[text.length()-1] == '\n'
+						|| curr_x-this->x_abs > (w - 2 - GLUI_TEXTBOX_BOXINNERMARGINX))
+					{ // Insert on the next line 
+						curr_x = this->x_abs + GLUI_TEXTBOX_BOXINNERMARGINX;
+						line++;
+					}
+					/* update insertion coordinates */
+					insert_x = curr_x+5; /* I hate magic numbers too, these offset the imagined insertion point */
+					insert_y = (curr_line-start_line+2)*LINE_HEIGHT;
+
+
+					glColor3f( 0.0, 0.0, 0.0 );
+					glBegin( GL_LINE_LOOP );
+
+					curr_x -= x_abs;
+					glVertex2i( curr_x+1, (curr_line-start_line)*LINE_HEIGHT + 4 );
+					glVertex2i( curr_x,   (curr_line-start_line)*LINE_HEIGHT + 4 );
+					glVertex2i( curr_x+1, (curr_line-start_line)*LINE_HEIGHT + 16 );
+					glVertex2i( curr_x,   (curr_line-start_line)*LINE_HEIGHT + 16 );
+					glEnd();
+
+					return;
+			  }
+		  }
+		  sol += eol;
+		  ++line;
+	  }
+	  ++iToken;
+  }  
 
   //glColor3f(1,0,0);
   //glRecti(0, curr_line*LINE_HEIGHT, 3, (curr_line+1)*LINE_HEIGHT);
 
-  curr_line = line;
-
-  if (scrollbar)
-    scrollbar->set_int_val(start_line);
-  if (curr_line < start_line || curr_line > (start_line + visible_lines)) /* Insertion pt out of draw area */
-    return;
-
-  curr_x = this->x_abs 
-    + 2                               /* The edittext box has a 2-pixel margin */
-    + GLUI_TEXTBOX_BOXINNERMARGINX;   /** plus this many pixels blank space
-                                          between the text and the box       **/
   
-  curr_x += substring_width(sol,insertion_pt-1);
-  if (insertion_pt == text.length() && text[text.length()-1] == '\n'
-      || curr_x-this->x_abs > (w - 2 - GLUI_TEXTBOX_BOXINNERMARGINX)) { // Insert on the next line 
-    curr_x = this->x_abs + GLUI_TEXTBOX_BOXINNERMARGINX;
-    line++;
-  } 
-  /* update insertion coordinates */
-  insert_x = curr_x+5; /* I hate magic numbers too, these offset the imagined insertion point */
-  insert_y = (curr_line-start_line+2)*LINE_HEIGHT;
 
+  
 
-  glColor3f( 0.0, 0.0, 0.0 );
-  glBegin( GL_LINE_LOOP );
-
-  curr_x -= x_abs;
-  glVertex2i( curr_x+1, (curr_line-start_line)*LINE_HEIGHT + 4 );
-  glVertex2i( curr_x,   (curr_line-start_line)*LINE_HEIGHT + 4 );
-  glVertex2i( curr_x+1, (curr_line-start_line)*LINE_HEIGHT + 16 );
-  glVertex2i( curr_x,   (curr_line-start_line)*LINE_HEIGHT + 16 );
-  glEnd();
+  
+  
 
 
   if ( debug )    dump( stdout, "-> DRAW_INS_PT" );
@@ -864,7 +944,7 @@ int  GLUI_TextBox::substring_width( int start, int end, int initial_width )
   // Otherwise tabs will be messed up.
   int i, width = initial_width;
 
-  for( i=start; i<=end; i++ )
+  for( i=start; i<end; i++ )
     if (text[i] == '\t') { // Character is a tab, jump to next tab stop
       width += tab_width-(width%tab_width);
       //while (width == 0 || width % tab_width) 
