@@ -347,8 +347,8 @@ void NetSoccerPlugin::removeVehicle ( osAbstractVehicle* pkVehicle)
 
 	NetSoccerBall* pkBall = dynamic_cast<NetSoccerBall*>( pkVehicle );
 	if( NULL != pkBall )
-	{		
-		this->m_Ball = NULL;		
+	{
+		this->m_Ball = NULL;
 	}
 
 	NetSoccerPlayer* pkPlayerVehicle = dynamic_cast<NetSoccerPlayer*>( pkVehicle );
@@ -402,7 +402,7 @@ NetSoccerPlayer* NetSoccerPlugin::findUncontrolledSoccer(
 		{
 			return pkTmpVehicle;
 		}
-		++kIter;		
+		++kIter;
 	}
 	return NULL;
 }

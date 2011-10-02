@@ -135,12 +135,11 @@ void ReplicaManagerGui::addReplicaManagerGui( void* pkUserdata )
 		"Replication Settings", false );
 
 
-	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(replicaPanel, "Replication FPS",
-		GLUI_SPINNER_INT, NULL, -1, changeReplicationDelay);
-	repSpinner->set_float_limits( 10.0f, 50.0f );
+	GLUI_EditText* repSpinner =
+		glui->add_edittext_to_panel(replicaPanel, "Replication FPS",
+		GLUI_EDITTEXT_FLOAT, NULL, -1, changeReplicationDelay);
+	repSpinner->set_float_limits( 1.0f, 50.0f );
 	repSpinner->set_float_val(this->m_kReplicationParams.fReplicationFrameRate);
-	repSpinner->set_speed(0.01f);
 	repSpinner->set_ptr_val( this );
 
 	GLUI_Listbox* pluginList = 

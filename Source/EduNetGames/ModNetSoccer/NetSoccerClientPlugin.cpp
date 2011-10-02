@@ -42,7 +42,7 @@ void SoccerClientPlugin::CreateContent( void )
 	this->m_kReplicaManager->setPlugin( &this->m_kGamePlugin );
 	this->m_kGamePlugin.setEntityFactory( NULL );
 
-	this->m_pNetInterface->AttachPlugin( this->m_kReplicaManager );	
+	this->m_pNetInterface->AttachPlugin( this->m_kReplicaManager );
 
 	this->m_pkClientFactory = ET_NEW AbstractEntityCCReplicaFactory( this->m_kReplicaManager );
 	

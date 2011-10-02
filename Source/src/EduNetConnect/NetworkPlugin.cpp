@@ -160,13 +160,14 @@ void NetworkPlugin::addNetworkSimulatorGui( void* pkUserdata )
 		glui->add_checkbox_to_panel( simulatorPanel, "Enable Simulator", NULL, 1, changeNetworkSimulatorSettings );
 	pkControl->set_ptr_val( this );
 
-	GLUI_Spinner* repSpinner =
-		glui->add_spinner_to_panel(simulatorPanel, "Packetloss",
-		GLUI_SPINNER_FLOAT, NULL, 2, changeNetworkSimulatorSettings);
-	repSpinner->set_float_limits(0.0f, 1.0f);
-	repSpinner->set_ptr_val( this );
+	GLUI_EditText* pkTextControl =
+		glui->add_edittext_to_panel(simulatorPanel, "Packetloss",
+		GLUI_EDITTEXT_FLOAT, NULL, 2, changeNetworkSimulatorSettings);
+	pkTextControl->set_float_limits(0.0f, 1.0f);
+	pkTextControl->set_int_val( m_kSimulatorData.packetloss );
+	pkTextControl->set_ptr_val( this );
 
-	GLUI_EditText* pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
+	pkTextControl = glui->add_edittext_to_panel( simulatorPanel,
 		"MinPing", GLUI_EDITTEXT_INT, NULL, 3, changeNetworkSimulatorSettings );
 	pkTextControl->set_int_limits(0, (unsigned short)-1 );
 	pkTextControl->set_int_val( m_kSimulatorData.minExtraPing );
