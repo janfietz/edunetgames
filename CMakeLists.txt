@@ -10,33 +10,8 @@ SET(CMake_VERSION_MINOR 5)
 SET(CMake_VERSION_PATCH 0)
 
 ADD_DEFINITIONS( -DBOOST_ALL_DYN_LINK )
-######################################################################
-# return a list of directories that we should add_subdirectory()
-macro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
-  file(GLOB EDUNET_PLUGIN_CMAKE_FILES
-    RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*/${filename}")
-  foreach(EDUNET_PLUGIN_CMAKE_FILE ${EDUNET_PLUGIN_CMAKE_FILES})
-	get_filename_component(EDUNET_PLUGIN_DIR ${EDUNET_PLUGIN_CMAKE_FILE} PATH)
-    set(${varname} ${${varname}} ${EDUNET_PLUGIN_DIR})
-  endforeach(EDUNET_PLUGIN_CMAKE_FILE ${EDUNET_PLUGIN_CMAKE_FILES})
-endmacro(EDUNET_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname filename)
-
-macro(ADD_SUBDIRECTORIES prefix header )
-  message(STATUS "- ${header} -")
-  foreach(subdir ${ARGN})
-    message(STATUS "${prefix}${subdir}")
-    add_subdirectory(${subdir})
-  endforeach(subdir ${ARGN})
-endmacro(ADD_SUBDIRECTORIES prefix header)
-
-macro(COPYFILES_TO msg targetdir)
-  message(STATUS "- ${msg} to ${targetdir}")
-  foreach(et_libPath ${ARGN})		
-		#get_filename_component( filename ${et_libPath} NAME )
-		message(STATUS "   ${et_libPath}")
-		configure_file( ${et_libPath} ${targetdir} COPYONLY )
-	endforeach(et_libPath)
-endmacro(COPYFILES_TO msg targetdir)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
+include(ETMacros)
 
 # -----------------------------------------------------------------------------
 IF (NOT CMAKE_BUILD_TYPE)
@@ -97,9 +72,11 @@ set(ET_THIRD_PARTY_DIR ${EDUNET_GAMES_SOURCE_DIR}/../ThirdParty  CACHE PATH "Pat
 IF (ET_USE_THIRDPARTYDIR)
 	SET(CMAKE_INCLUDE_PATH ${ET_THIRD_PARTY_DIR}/include)
 	SET(CMAKE_LIBRARY_PATH ${ET_THIRD_PARTY_DIR}/lib)
+ELSE()
+	SET(CMAKE_INCLUDE_PATH ${CMAKE_SOURCE_DIR}../include)
+	SET(CMAKE_LIBRARY_PATH ${CMAKE_SOURCE_DIR}../lib)
 ENDIF (ET_USE_THIRDPARTYDIR)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
 IF (WIN32)
 	SET(ET_PLATFORM_BUILD_DIR buildwin32)	
