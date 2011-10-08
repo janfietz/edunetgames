@@ -31,6 +31,7 @@
 #include "OpenSteerUT/OpenSteerUT.h"
 
 #include <boost/filesystem/operations.hpp>
+#include <boost/algorithm/string.hpp>
 
 #if BOOST_VERSION >= 104700
 #define native_file_string string 
@@ -109,7 +110,7 @@ void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName,
 	if( (dotPos != enString_t::npos) && (underscorePos != enString_t::npos) )
 	{
 		kModuleType = tempString.substr( underscorePos, dotPos - underscorePos );
-		::tolower( kModuleType );
+		boost::to_lower(kModuleType);
 	}
 }
 
@@ -237,13 +238,13 @@ bool ModuleManager::appWantsToLoadModule (
 	}
 
 	enString_t moduleName(pszModuleName);
-	::tolower( moduleName );
+	boost::to_lower(moduleName);
 	enStringArray_t::const_iterator iter = kNames.begin();
 	enStringArray_t::const_iterator iterEnd = kNames.end();
 	while( iter != iterEnd )
 	{
 		enString_t temp(*iter);
-		::tolower( temp );
+		boost::to_lower(temp);
 		if( moduleName.find( temp ) != enString_t::npos )
 		{
 			return true;

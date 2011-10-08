@@ -137,13 +137,13 @@ namespace EduNet
 		}
 
 		enString_t pluginName(pszPluginName);
-		::tolower( pluginName );
+		boost::to_lower(pluginName);
 		enStringArray_t::const_iterator iter = kNames.begin();
 		enStringArray_t::const_iterator iterEnd = kNames.end();
 		while( iter != iterEnd )
 		{
 			enString_t temp(*iter);
-			::tolower( temp );
+			boost::to_lower(temp);
 			if( pluginName.find( temp ) != enString_t::npos )
 			{
 				return true;
