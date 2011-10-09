@@ -25,6 +25,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
+#pragma warning(push)
+#pragma warning(disable: 4996) // This function or variable may be unsafe. Consider using sprintf_s instead.
 
 #include "ChatPeerPlugin.h"
 #include "EduNetCommon/EduNetDraw.h"
@@ -34,6 +36,8 @@
 #include <boost/foreach.hpp>
 #include <boost/xpressive/xpressive.hpp>
 
+
+
 using namespace OpenSteer;
 using namespace boost::xpressive;
 namespace EduNet
@@ -41,6 +45,7 @@ namespace EduNet
 	namespace ModChat
 	{
 		ChatPeerPlugin::ChatPeerPlugin():BaseClass(false),
+			m_networkInterface(NULL),
 			m_pMessageTextBox(NULL),
 			m_receivedMesssages(MessageList(20))
 		{
@@ -85,14 +90,21 @@ namespace EduNet
 
 		void ChatPeerPlugin::open( void )
 		{
-			// allocate a network interface
-			m_networkInterface = RakNetworkFactory::GetRakPeerInterface();
+			if( NULL == m_networkInterface )
+			{
+				// allocate a network interface
+				m_networkInterface = RakNetworkFactory::GetRakPeerInterface();
+			}
 		}
 
 		void ChatPeerPlugin::close( void )
 		{
-			// do not forget to deallocate it
-			RakNetworkFactory::DestroyRakPeerInterface(m_networkInterface);
+			if( NULL != m_networkInterface )
+			{
+				// do not forget to deallocate it
+				RakNetworkFactory::DestroyRakPeerInterface(m_networkInterface);
+				m_networkInterface = NULL;
+			}
 		}
 
 		void ChatPeerPlugin::reset( void )
@@ -224,3 +236,6 @@ namespace EduNet
 
 	}
 }
+
+
+#pragma warning(pop)

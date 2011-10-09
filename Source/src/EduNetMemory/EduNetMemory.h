@@ -85,6 +85,10 @@
     # define ET_REALLOC realloc
   #endif
 #else
+	#ifdef _DEBUG
+	#include <crtdbg.h>
+	#endif
+
     # define ET_MALLOC malloc
     # define ET_CALLOC calloc
     # define ET_FREE free

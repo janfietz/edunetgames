@@ -196,33 +196,33 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 		enString_t moduleType;
 		this->queryModuleRuntimeTypeFromFileName( pszFileName, moduleType );
 		if( this->m_moduleRuntimeType.compare( moduleType ) == 0 )
-		{
-		
-			bool bWantsToLoadModule = this->appWantsToLoadModule( pszFileName );
-			if( ( true == bWantsToLoadModule ) )
+		{		
+			const bool wantsToLoadModule( this->appWantsToLoadModule( pszFileName ) );
+			if( ( true == wantsToLoadModule ) )
 			{
 				RawModulePtr spNewLib(ET_NEW RawModule() );
 				RawModule* pkNewmodule = spNewLib.get();
 
-				bool bResult = pkNewmodule->load ( pszFileName );
-				if ( true == bResult )
+				const bool moduleLoaded( pkNewmodule->load ( pszFileName ) );
+				if ( true == moduleLoaded )
 				{
 					// pass over important application data to this module
 					ModuleEntry* moduleEntry = pkNewmodule->accessEntry();
 					moduleEntry->setOpenSteerUTData( OpenSteerUTData::g_openSteerUTDataPtr );
 					this->m_modules.push_back ( spNewLib );
+					bResult = true;
 				}
-			}
-		
+			}		
 		}
 		else
 		{
-	#ifdef ET_DEBUG
+#if 0
+//#ifdef ET_DEBUG
 			std::ostringstream message;
 			message << "File: ";
 			message << pszFileName << " is not of type:" << m_moduleRuntimeType.c_str() << std::ends;
 			Log::printMessage ( message );
-	#endif
+#endif
 		}
 	}
 	return bResult;

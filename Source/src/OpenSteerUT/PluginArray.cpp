@@ -112,6 +112,7 @@ void PluginArray::removePlugin( AbstractPlugin* pkPlugin )
 		AbstractPlugin* pkArrayPlugin = (*kIter).get();
 		if( pkArrayPlugin == pkPlugin )
 		{
+			const char* pluginName( pkArrayPlugin->pluginName() );
 			pkArrayPlugin->close();
 			pkArrayPlugin->setParentPlugin( NULL );
 			this->erase( kIter );

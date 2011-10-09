@@ -41,7 +41,13 @@
 #else
 #define EDUNET_HAVE_PROFILE 0
 #endif
+#else
+#ifdef _DEBUG
+#define EDUNET_HAVE_PROFILE 0
 #endif
+#endif
+
+
 #ifndef EDUNET_HAVE_PROFILE
 #define EDUNET_HAVE_PROFILE 0
 #endif

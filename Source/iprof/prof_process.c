@@ -1,3 +1,6 @@
+#ifdef _DEBUG
+#include <crtdbg.h>
+#endif
 #include <math.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -6,8 +9,13 @@
 #include "prof.h"
 #include "prof_internal.h"
 
+#pragma warning(push)
+#pragma warning(disable: 4996) // This function or variable may be unsafe. Consider using sprintf_s instead.
+
 #ifdef WIN32
-#	define strdup _strdup
+#  ifndef strdup
+#    define strdup _strdup
+#  endif
 #endif
 
 /*
@@ -786,3 +794,5 @@ void Prof_graph(int num_frames, void (*callback)(int id, int x0, int x1, float *
 }
 
 
+
+#pragma warning(pop)
