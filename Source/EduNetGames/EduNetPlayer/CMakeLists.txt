@@ -11,6 +11,7 @@ LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
 LINK_LIBRARIES(
 ${EduNet_PLAYER_LIBRARIES}
+EduNetCore
 )
 
 add_executable(${PROJECT_NAME}  ${Tutorial_Hdrs} ${Tutorial_Src} ${Renderer_Src})

@@ -467,7 +467,7 @@ void    GLUI_TextBox::draw( int x, int y )
   ;
   while(iToken != jToken)
   {
-	  std::string& strLine = (*iToken).str();
+	  std::string strLine = (*iToken).str();
 		int endPos(0) ; 
 	 
 	  text_length = strLine.length();
@@ -863,7 +863,7 @@ void     GLUI_TextBox::draw_insertion_pt( void )
   sol = 0;
   while(iToken != jToken)
   {
-	  std::string& strLine = (*iToken).str();	  
+	  std::string strLine = (*iToken).str();	  
 	  eol = 0;
 	  text_length = strLine.length();
 

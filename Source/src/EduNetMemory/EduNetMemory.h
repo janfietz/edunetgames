@@ -93,12 +93,16 @@
     # define ET_MEMMOVE memmove
     # define ET_REALLOC realloc
 #endif
-
-#if ET_DEBUG
-#define ET_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__ )
+#ifdef _MSC_VER
+	#if ET_DEBUG
+		#define ET_NEW new ( _NORMAL_BLOCK, __FILE__, __LINE__ )
+	#else
+		#define ET_NEW new
+	#endif
 #else
-#define ET_NEW new
+	#define ET_NEW new
 #endif
+
 #define ET_DELETE delete
 
 #define ET_SAFE_DELETE( p ) { if( 0 != p ) { ET_DELETE p; p = 0; } }

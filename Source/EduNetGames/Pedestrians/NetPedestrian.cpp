@@ -53,8 +53,8 @@ path(NULL)
 	// for debugging
 	const char* pszClassName = this->getClassName();
 #ifdef ET_DEBUG
-	static TNetPedestrian kTestPedestrian;
-	OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
+	//static TNetPedestrian kTestPedestrian;
+	//OpenSteer::EntityClassId classId = kTestPedestrian.getClassId();
 #endif
 }
 

@@ -32,12 +32,14 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/xpressive/xpressive.hpp>
 
 #if BOOST_VERSION >= 104700
 #define native_file_string string 
 #endif
 
 namespace bfs = boost::filesystem;
+namespace bx = boost::xpressive;
 
 // note: set to 1 to debug loadModulesFromDirectory
 #define ET_DEBUG_LOADMODULES 0
@@ -48,45 +50,38 @@ namespace EduNet	{
 //-----------------------------------------------------------------------------
 ModuleManager::ModuleManager()
 {
+	char pszCurrentModuleFileName[EMaxPath];
 #ifdef WIN32
-	int bytes = ::GetModuleFileNameA( NULL, m_pszCurrentModuleFileName, sizeof(m_pszCurrentModuleFileName) );
-	if(bytes == 0)
-	{
-		m_pszCurrentModuleFileName[0] = '\0';
-	}
+	int bytes = ::GetModuleFileNameA( NULL, pszCurrentModuleFileName, sizeof(pszCurrentModuleFileName) );
 #else
-	assert( true == false );
-	// not tested ...
 	char szTmp[32];
 	sprintf(szTmp, "/proc/%d/exe", getpid());
-	int bytes = MIN(readlink(szTmp, m_pszCurrentModuleFileName, len), len - 1);
-	if(bytes >= 0)
-		m_pszCurrentModuleFileName[bytes] = '\0';
-	else
-		m_pszCurrentModuleFileName[0] = '\0';
+	int bytes = readlink(szTmp, pszCurrentModuleFileName, sizeof(pszCurrentModuleFileName) );
 #endif
-	if( m_pszCurrentModuleFileName[0] != 0 )
+	if(bytes > 0)
 	{
+		m_currentModuleFileName.assign(pszCurrentModuleFileName, bytes);
+	}
+
+	if( m_currentModuleFileName.empty() == false )
+	{
+		m_currentModulePath = m_currentModuleFileName;
 		// determine the module path
 		{
-			strcpy_s( m_pszCurrentModulePath, EMaxPath, m_pszCurrentModuleFileName );
-			size_t len = strlen( m_pszCurrentModulePath );
-			for( size_t i = len; i >= 0; --i )
+			size_t len = m_currentModuleFileName.length();
+			for( size_t i = len-1; i >= 0; --i )
 			{
-				if( ( m_pszCurrentModulePath[i] != '\\' ) && ( m_pszCurrentModulePath[i] != '/' ) )
+				if( ( m_currentModuleFileName[i] == '\\' ) || ( m_currentModuleFileName[i] == '/' ) )
 				{
-					m_pszCurrentModulePath[i] = '\0';
-				}
-				else
-				{
+					m_currentModulePath = m_currentModuleFileName.substr(0, i);
 					break;
 				}
 			}
 		}
-
 		// determine the module type
-		this->queryModuleRuntimeTypeFromFileName( this->m_pszCurrentModuleFileName, this->m_moduleRuntimeType );
+		this->queryModuleRuntimeTypeFromFileName( m_currentModuleFileName.c_str(), this->m_moduleRuntimeType );
 	}
+	
 }
 
 //-----------------------------------------------------------------------------
@@ -102,15 +97,18 @@ void ModuleManager::queryModuleRuntimeTypeFromFileName( const char* pszFileName,
 	{
 		return;
 	}
+
 	// determine the module type
 	enString_t tempString(pszFileName);
-	size_t dotPos = tempString.rfind('.');
-	size_t underscorePos = tempString.rfind('_');
 
-	if( (dotPos != enString_t::npos) && (underscorePos != enString_t::npos) )
+	bx::sregex re= bx::sregex::compile("_Debug");
+	if(bx::regex_search( tempString, re ))
 	{
-		kModuleType = tempString.substr( underscorePos, dotPos - underscorePos );
-		boost::to_lower(kModuleType);
+		kModuleType.assign("debug");
+	}
+	else
+	{
+		kModuleType.assign("release");
 	}
 }
 
@@ -135,15 +133,9 @@ const ModuleManager& ModuleManager::operator<<( unsigned long ul ) const
 }
 
 //-----------------------------------------------------------------------------
-const char* ModuleManager::getCurrentModuleFileName( void ) const
-{
-	return m_pszCurrentModuleFileName;
-}
-
-//-----------------------------------------------------------------------------
 const char* ModuleManager::getCurrentModulePath( void ) const
 {
-	return m_pszCurrentModulePath;
+	return m_currentModulePath.c_str();
 }
 
 //-----------------------------------------------------------------------------
@@ -199,12 +191,13 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 {
 	bool bResult = false;
 	// first check if the module type matches
-	enString_t moduleType;
-	this->queryModuleRuntimeTypeFromFileName( pszFileName, moduleType );
-	if( this->m_moduleRuntimeType.compare( moduleType ) == 0 )
+	if( ( true == EduNet::DynamicLibrary::isDynamicLib( pszFileName ) ) )
 	{
-		if( ( true == EduNet::DynamicLibrary::isDynamicLib( pszFileName ) ) )
+		enString_t moduleType;
+		this->queryModuleRuntimeTypeFromFileName( pszFileName, moduleType );
+		if( this->m_moduleRuntimeType.compare( moduleType ) == 0 )
 		{
+		
 			bool bWantsToLoadModule = this->appWantsToLoadModule( pszFileName );
 			if( ( true == bWantsToLoadModule ) )
 			{
@@ -220,6 +213,16 @@ bool ModuleManager::addModuleFromFile(const char* pszFileName)
 					this->m_modules.push_back ( spNewLib );
 				}
 			}
+		
+		}
+		else
+		{
+	#ifdef ET_DEBUG
+			std::ostringstream message;
+			message << "File: ";
+			message << pszFileName << " is not of type:" << m_moduleRuntimeType.c_str() << std::ends;
+			Log::printMessage ( message );
+	#endif
 		}
 	}
 	return bResult;

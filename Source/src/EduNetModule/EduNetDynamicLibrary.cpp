@@ -66,13 +66,14 @@ bool DynamicLibrary::loadLib ( const char* pszLibName )
         return false;
     }
 
+	char *error(NULL);
 #ifdef WIN32
     this->m_pLibHandle = ::LoadLibrary ( pszLibName );
 #else
-    std::string kName ( "./" );
-    kName += pszLibName;
-    // kName += ".so";
-    this->m_pLibHandle = dlopen ( kName.c_str(), RTLD_LAZY );
+    
+    this->m_pLibHandle = dlopen ( pszLibName, RTLD_LAZY );
+	error = dlerror();
+	
 #endif
 
     if ( NULL != this->m_pLibHandle )
@@ -88,7 +89,12 @@ bool DynamicLibrary::loadLib ( const char* pszLibName )
     {
         std::ostringstream message;
         message << "Failed to open dynamic library ";
-        message << '"' << pszLibName << '"' << std::ends;
+        message << '"' << pszLibName << '"' ;
+		if (error)
+		{
+			message << " Error: " << error ;
+		}
+		message << std::ends;
         Log::printError ( message );
     }
 

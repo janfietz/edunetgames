@@ -28,7 +28,7 @@ public:
 	}
 };
 
-
+#ifdef WIN32
 //-----------------------------------------------------------------------------
 int __cdecl g_DebugAllocHook(
 	int      nAllocType,
@@ -87,6 +87,7 @@ int __cdecl g_DebugAllocHook(
 	}
 	return( TRUE );         // Allow the memory operation to proceed
 }
+#endif //WIN32
 
 // install memory debugging facilities
 etMemoryDebug g_MemoryDebug;

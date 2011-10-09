@@ -30,9 +30,9 @@
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //-----------------------------------------------------------------------------
 
-#include "OpenSteer\Plugin.h"
-#include "OpenSteerUT\PluginArray.h"
-#include "EduNetApplication\EduNetModulePluginLoader.h"
+#include "OpenSteer/Plugin.h"
+#include "OpenSteerUT/PluginArray.h"
+#include "EduNetApplication/EduNetModulePluginLoader.h"
 
 
 namespace EduNet
