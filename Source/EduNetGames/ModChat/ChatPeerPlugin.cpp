@@ -211,7 +211,7 @@ namespace EduNet
 					draw2dTextAt2dLocation (str, linePos, gGreen, windowWidth, windowHeight);
 
 					//reset stream
-					str = std::ostringstream();
+					str.seekp(0);
 
 					linePos.y -= 11;
 					linePos.x = xOld + 100;

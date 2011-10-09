@@ -5,13 +5,13 @@
 #  RakNet_INCLUDES - the RakNet include directory
 #  RakNet_LIBRARY - Link these to use RakNet
 
-if(Win32)
-SET(RakNet_LIBRARY_Name RakNetLibStatic)
-SET(RakNet_LIBRARY_Name_Debug RakNetLibStaticDebug)
-else(Win32)
-SET(RakNet_LIBRARY_Name RakNetStatic)
-SET(RakNet_LIBRARY_Name_Debug RakNetStatic_Debug)
-endif(Win32)
+if(WIN32)
+	SET(RakNet_LIBRARY_Name RakNetLibStatic)
+	SET(RakNet_LIBRARY_Name_Debug RakNetLibStaticDebug)
+else(WIN32)
+	SET(RakNet_LIBRARY_Name RakNetStatic)
+	SET(RakNet_LIBRARY_Name_Debug RakNetStatic_Debug)
+endif(WIN32)
 
 FIND_LIBRARY (RakNet_LIBRARY_RELEASE NAMES ${RakNet_LIBRARY_Name}
     PATHS

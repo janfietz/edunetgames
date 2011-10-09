@@ -9,12 +9,16 @@ file (GLOB Tutorial_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/*.h")
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
-LINK_LIBRARIES(
+add_library(${PROJECT_NAME} SHARED  ${Tutorial_Hdrs} ${Tutorial_Src})
+
+target_link_libraries(${PROJECT_NAME} 
 ${EduNet_MODULE_LIBRARIES}
-${RakNet_LIBRARY}
+ExtOpensteer
+EduNetCommon
+EduNetCore
+${RAKNET_LIBRARY_LIBS}
 )
 
-add_library(${PROJECT_NAME} SHARED  ${Tutorial_Hdrs} ${Tutorial_Src})
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/modules" )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
@@ -22,6 +26,9 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )
 
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin
+				LIBRARY DESTINATION bin
+				ARCHIVE DESTINATION lib)
+
 
 

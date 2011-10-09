@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-
+SET(BUILD_SHARED_LIBS OFF)
 
 PROJECT(EDUNET_GAMES)
 SET(EDUNET_GAMES 0.05)
@@ -110,8 +110,16 @@ IF (NOT GLUT_FOUND)
 ENDIF(NOT GLUT_FOUND)
 
 #### RakNet
+IF ( ET_USE_THIRDPARTYDIR )
+	SET( BOOST_ROOT ${ET_THIRD_PARTY_DIR} )
+ENDIF( ET_USE_THIRDPARTYDIR )
 FIND_PACKAGE(RakNet)
 set(ET_RakNet_SOURCES ${ET_THIRD_PARTY_DIR}/raknet CACHE PATH "Path to raknet sources" )
+IF (NOT WIN32)
+	set(RAKNET_LIBRARY_LIBS pthread ${RakNet_LIBRARY})
+ELSE (NOT WIN32)	
+	set(RAKNET_LIBRARY_LIBS ${RakNet_LIBRARY})
+ENDIF(NOT WIN32)
 
 #### BOOST
 set(Boost_ADDITIONAL_VERSIONS "1.47" "1.47.0")
@@ -124,7 +132,7 @@ IF ( ET_USE_THIRDPARTYDIR )
 	SET( BOOST_ROOT ${ET_THIRD_PARTY_DIR} )
 ENDIF( ET_USE_THIRDPARTYDIR )
 
-FIND_PACKAGE( Boost COMPONENTS system filesystem program_options )
+FIND_PACKAGE( Boost COMPONENTS system filesystem program_options regex date_time)
 
 
 # -----------------------------------------------------------------------------
@@ -140,6 +148,7 @@ ${EDUNET_GAMES_SOURCE_DIR}/External
 ${GLUT_INCLUDE_DIR}
 ${Boost_INCLUDE_DIR}
 ${RakNet_INCLUDES}
+${RakNet_INCLUDES}/raknet
  )
 
 # -----------------------------------------------------------------------------
@@ -210,6 +219,10 @@ ExtLinearMath
 ${Boost_LIBRARIES}
 )
 
+IF(NOT WIN32)
+	set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+ENDIF(NOT WIN32)
+
 # -----------------------------------------------------------------------------
 add_subdirectory(Source)
 add_subdirectory(External)
@@ -219,7 +232,7 @@ IF (WIN32)
 	# -----------------------------------------------------------------------------
 	# collect needed shared libs and copy them to output directories
 
-	FILE (GLOB ET_SHARED_THIRDPARTY_LIBS "${ET_THIRD_PARTY_DIR}lib/*.dll")
+	FILE (GLOB ET_SHARED_THIRDPARTY_LIBS "${ET_THIRD_PARTY_DIR}/lib/*.dll")
 	#OPENGL STUFF
 	FILE (GLOB ET_SHARED_OPENGL_DLLS "${EDUNET_GAMES_SOURCE_DIR}/bin/win32/*32.dll")
 

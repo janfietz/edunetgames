@@ -11,12 +11,14 @@ file (GLOB Pedestrian_Hdrs "${${PROJECT_NAME}_SOURCE_DIR}/../Pedestrians/*.h")
 
 LINK_DIRECTORIES( ${LINK_DIRECTORIES} ${Boost_LIBRARY_DIRS} )
 
-LINK_LIBRARIES(
-${EduNet_MODULE_LIBRARIES}
-${RakNet_LIBRARY}
-)
-
 add_library(${PROJECT_NAME} SHARED  ${Module_Hdrs} ${Module_Src}  ${Pedestrian_Hdrs} ${Pedestrian_Src})
+target_link_libraries(${PROJECT_NAME} 
+${EduNet_MODULE_LIBRARIES}
+ExtOpensteer
+EduNetCommon
+EduNetCore
+${RAKNET_LIBRARY_LIBS}
+)
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/modules" )
 
@@ -29,5 +31,6 @@ set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES MINSIZEREL_POSTFIX "_MinsizeRel" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELWITHDEBINFO_POSTFIX "_RelWithDebugInfo" )
 
-INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-
+INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin
+				LIBRARY DESTINATION bin
+				ARCHIVE DESTINATION lib)

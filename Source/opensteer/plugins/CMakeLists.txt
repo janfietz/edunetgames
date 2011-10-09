@@ -33,7 +33,9 @@ endif()
 
 
 LINK_LIBRARIES(
- ExtOpensteer  ${GLUT_glut_LIBRARY} ExtIProf
+ ExtOpensteer  ${GLUT_glut_LIBRARY} 
+${OPENGL_gl_LIBRARY} 
+${OPENGL_glu_LIBRARY} ExtIProf
 )
 
 add_executable(${PROJECT_NAME} ${opensteerDemoSrcs})

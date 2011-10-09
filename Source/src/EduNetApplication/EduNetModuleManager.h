@@ -40,7 +40,6 @@ public:
 	ModuleManager();
 	virtual ~ModuleManager();
 
-	const char* getCurrentModuleFileName( void ) const;
 	const char* getCurrentModulePath( void ) const;
 	static void queryModuleRuntimeTypeFromFileName( const char* pszFileName, enString_t& kModuleType );
 
@@ -66,9 +65,10 @@ private:
 	RawModules m_modules;
 	
 	enum { EMaxPath = 2048 };
-	char m_pszCurrentModuleFileName[EMaxPath];
-	char m_pszCurrentModulePath[EMaxPath];
+	
 	enString_t m_moduleRuntimeType;
+	enString_t m_currentModulePath;
+	enString_t m_currentModuleFileName;
 
 };
 

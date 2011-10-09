@@ -69,16 +69,16 @@
     #ifdef _MSC_VER
         #include <windows.h>
     #endif
-    #include <GL/gl.h>     // for Linux and Windows
+   // #include <GL/gl.h>     // for Linux and Windows
     #include <GL/glu.h>     // for Linux and Windows
 	#ifdef _MSC_VER
 		#ifndef HAVE_NO_GLUT
 		#include "GL/glut.h"   // for Windows
 		#endif
 	#else
-		#ifndef HAVE_NO_GLUT
+		
 		#include <GL/glut.h>   // for Linux
-		#endif
+		
 	#endif
 #endif
 

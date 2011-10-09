@@ -29,6 +29,7 @@
 #include "EduNetCommon/EduNetOptions.h"
 #include "EduNetModule/EduNetPluginFactory.h"
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace EduNet
 {

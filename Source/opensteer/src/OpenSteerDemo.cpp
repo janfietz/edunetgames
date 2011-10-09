@@ -851,8 +851,16 @@ namespace {
         const GLfloat fieldOfViewY = 45;
         const GLfloat hither = 1;  // put this on Camera so PlugIns can frob it
         const GLfloat yon = 400;   // put this on Camera so PlugIns can frob it
-        gluPerspective (fieldOfViewY, aspectRatio, hither, yon);
-
+#ifndef WIN32
+		GLfloat zNear = 0.1f;
+		GLfloat zFar = 255.0f;
+		GLfloat aspect = float(width)/float(height);
+		GLfloat fH = tan( float(fieldOfViewY / 360.0f * 3.14159f) ) * zNear;
+		GLfloat fW = fH * aspect;
+		glFrustum( -fW, fW, -fH, fH, zNear, zFar );
+#else
+		gluPerspective (fieldOfViewY, aspectRatio, hither, yon);
+#endif
         // leave in modelview mode
         glMatrixMode(GL_MODELVIEW);
     }
