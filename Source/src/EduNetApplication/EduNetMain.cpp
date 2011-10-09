@@ -137,7 +137,7 @@ int EduNetMain (int argc, char **argv)
 	{
 		if( true == EduNet::Options::accessOptions().continueProcess() )
 		{
-			EduNet::Application::Run( argc, argv );
+			iExitCode = EduNet::Application::Run( argc, argv );
 		}
 		else
 		{
