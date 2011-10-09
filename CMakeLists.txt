@@ -84,6 +84,11 @@ ELSE (WIN32)
 	SET(ET_PLATFORM_BUILD_DIR build_x)		
 ENDIF (WIN32)
 
+# disable some warnings
+if(WIN32)
+	ADD_DEFINITIONS( -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS)
+endif(WIN32)
+
 # This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
 # This should be the case.
 

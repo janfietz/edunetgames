@@ -16,4 +16,4 @@ add_subdirectory(ModZoning)
 add_subdirectory(ModChat)
 
 #STUFF of JF
-add_subdirectory(ModZoningJf)
+#add_subdirectory(ModZoningJf)
