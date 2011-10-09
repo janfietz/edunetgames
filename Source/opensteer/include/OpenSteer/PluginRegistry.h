@@ -107,9 +107,6 @@ namespace OpenSteer {
 		on_plugin_selected_func m_on_plugin_selected_func;
 		AbstractPlugin* m_pkSelectedPlugin;
 
-		enum	{
-			EPluginRegistry_Capacity = 1000
-		};
 		typedef std::vector<AbstractPlugin*> AbstractPluginVector;
 		AbstractPluginVector m_registry;
 
