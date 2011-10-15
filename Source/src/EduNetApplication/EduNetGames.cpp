@@ -967,42 +967,6 @@ namespace EduNet	{
 		// service queued reset request, if any
 		doDelayedResetPluginXXX();
 
-		// update the local player object
-		// note: we simply use the custom update mechanism to pass
-		//       values from the local to the in game controller
-		//       the same mechanism might be used for a networking
-		//       client controller
-#if 1 // ET_HAVE_LOCALPLAYER_CONTROL
-		if ( EduNet::Application::AccessApplication().allowLocalPlayer() )
-		{
-			AbstractPlayer* pkPlayer = SimplePlayer::accessLocalPlayer();
-			AbstractController* pkController = pkPlayer->accessController();
-			if ( NULL != pkController )
-			{
-				pkController->setCustomUpdated ( LocalPlayerController::accessLocalPlayerController() );
-			}
-			pkPlayer->update ( currentTime, elapsedTime );
-			AbstractEntity* pkControlledEntity = pkPlayer->getControlledEntity();
-			AbstractEntity* pkNewControlledEntity = pkControlledEntity;
-			if ( SimpleVehicle::getSelectedVehicle() != pkNewControlledEntity )
-			{
-				pkNewControlledEntity = SimpleVehicle::getSelectedVehicle();
-			}
-			if ( pkNewControlledEntity != pkControlledEntity )
-			{
-				if ( NULL != pkNewControlledEntity )
-				{
-					// right now only authorities
-					if ( pkNewControlledEntity->isRemoteObject() )
-					{
-						pkNewControlledEntity = NULL;
-					}
-				}
-				pkPlayer->play ( pkNewControlledEntity );
-			}
-		}
-#endif
-
 		// invoke selected Plugin's Update method
 		EduNet::Application::AccessApplication().updateSelectedPlugin ( currentTime, elapsedTime );
 

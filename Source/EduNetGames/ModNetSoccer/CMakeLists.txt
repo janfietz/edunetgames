@@ -19,6 +19,7 @@ ${RAKNET_LIBRARY_LIBS}
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/modules" )
+source_group( source FILES ${Tutorial_Src} ${Tutorial_Hdrs} )
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )
 set_target_properties( ${PROJECT_NAME} PROPERTIES RELEASE_POSTFIX "_Release" )

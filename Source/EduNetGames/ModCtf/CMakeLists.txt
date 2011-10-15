@@ -22,6 +22,7 @@ ${RAKNET_LIBRARY_LIBS}
 )
 
 set_property( TARGET ${PROJECT_NAME} PROPERTY FOLDER "edunet/modules" )
+source_group( source FILES ${Module_Src} ${Module_Hdrs} )
 
 
 set_target_properties( ${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX "_Debug" )

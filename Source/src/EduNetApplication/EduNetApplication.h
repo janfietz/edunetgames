@@ -75,15 +75,6 @@ public:
 
 	static int Run(int argc, char **argv);
 
-	bool allowLocalPlayer(void)
-	{
-		return m_bAllowLocalPlayer;
-	}
-	void setAllowLocalPlayer(bool bValue)
-	{
-		m_bAllowLocalPlayer = bValue;
-	}
-
 	float m_fSimulationFPS;
 	float m_fTimeFactor;
 	int m_bFixedSimulationFPS;
@@ -101,7 +92,6 @@ private:
 	TUpdatePeriod<osScalar, FloatMathLimits> m_kUpdatePeriod;
 	OpenSteer::Clock m_kUpdateClock;
 	osScalar m_fUpdateCPUTime;
-	bool m_bAllowLocalPlayer;
 
 	OpenSteer::PluginArray m_plugins;
 
