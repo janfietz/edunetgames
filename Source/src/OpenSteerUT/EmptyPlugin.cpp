@@ -35,9 +35,7 @@
 
 #include <math.h>
 
-
 OpenSteer::InstanceTracker EduNet::EmptyVehicle::ms_kInstanceCount;
-
 
 using namespace EduNet;
 //-----------------------------------------------------------------------------
@@ -45,11 +43,8 @@ void EmptyPlugin::initGui( void* pkUserdata )
 {
 	GLUI* glui = ::getRootGLUI();
 	GLUI_Panel* pluginPanel = static_cast<GLUI_Panel*>( pkUserdata );
-//	glui->add_statictext_to_panel( pluginPanel, "no options" );
 	glui->add_checkbox_to_panel( pluginPanel, "Show Motionstate", &this->m_bShowMotionStatePlot);
-	glui->add_checkbox_to_panel( pluginPanel, "Show SamplePlot", &this->m_bShowSamplePlot);
 }
-
 
 //-----------------------------------------------------------------------------
 void EmptyPlugin::open (void)
@@ -105,58 +100,6 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 	AbstractVehicleGroup kVehicles( m_kVehicles );
 	kVehicles.redraw( currentTime, elapsedTime );
 
-	if( 0 != this->m_bShowSamplePlot )
-	{
-		const float fGraphHeight = 175;
-		// draw a test graph
-		{
-			Profile::GraphValues kValues;
-			const size_t uiMaxRecords = kValues.getMaxRecords();
-			float fX(0), fY(0);
-			for( size_t i = 0; i < uiMaxRecords; ++i )
-			{
-				fY = fX * fX;
-				fY = sinf( fX );
-				//		fY = sinf( fX ) * ( ( 0.5f * fX ) * ( 0.5f * fX ) );
-				kValues.addValue( fX, fY );
-				fX += 0.10f;
-			}
-			Profile::GraphPlot kPlot;
-			kPlot.draw( kValues, 50, 175, 300, fGraphHeight );
-		}
-
-		// draw a test graph
-		{
-			Profile::GraphValuesArray kValuesArray;
-
-			for( size_t i = 0; i < 3; ++i )
-			{
-				Profile::GraphValues& kValues = kValuesArray.accessValues(i);
-				const size_t uiMaxRecords = kValues.getMaxRecords();
-				float fX(0), fY(0);
-				for( size_t j = 0; j < uiMaxRecords; ++j )
-				{
-					fY = fX * fX;
-					switch( i )
-					{
-					case(0):
-						fY = sinf( fX ) * fX;
-						break;
-					case(1):
-						fY = cos( fX ) * fX;
-						break;
-					case(2):
-						fY = ( sinf( fX ) * ( ( 0.5f * fX ) * ( 0.5f * fX ) ) );
-						break;
-					}
-					kValues.addValue( fX, fY );
-					fX += 0.10f;
-				}
-			}
-			Profile::GraphPlot kPlot;
-			kPlot.draw( kValuesArray, 50, 175 + fGraphHeight + 20, 300, fGraphHeight );
-		}
-	}
 	if( 0 != this->m_bShowMotionStatePlot )
 	{
 		// draw motion state plot
@@ -165,6 +108,5 @@ void EmptyPlugin::redraw (const float currentTime, const float elapsedTime)
 			this->m_kMotionStateProfile.draw( currentTime );
 		}
 	}
-
 }
 

@@ -612,7 +612,7 @@ bool SimpleNetworkVehicle::getIsZoneMember( size_t zoneId ) const
 	return false;
 }
 
-
+//-----------------------------------------------------------------------------
 void OpenSteer::SimpleNetworkVehicle::setIsZoneBorderMember( size_t zoneId, bool value )
 {
 	if( zoneId < MAX_ZONES )
@@ -621,6 +621,7 @@ void OpenSteer::SimpleNetworkVehicle::setIsZoneBorderMember( size_t zoneId, bool
 	}
 }
 
+//-----------------------------------------------------------------------------
 bool OpenSteer::SimpleNetworkVehicle::getIsZoneBorderMember( size_t zoneId ) const
 {
 	if( zoneId < MAX_ZONES )

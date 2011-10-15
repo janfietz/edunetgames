@@ -105,8 +105,7 @@ namespace EduNet{
 
 		// construction / destruction
 		EmptyPlugin (bool bAddToRegistry = true):BaseClass(bAddToRegistry),
-			m_bShowMotionStatePlot(0),
-			m_bShowSamplePlot(1)
+			m_bShowMotionStatePlot(0)
 		{};
 		virtual ~EmptyPlugin() {}
 
@@ -137,7 +136,6 @@ namespace EduNet{
 
 		OpenSteer::AbstractVehicleMotionStatePlot m_kMotionStateProfile;
 		int m_bShowMotionStatePlot;
-		int m_bShowSamplePlot;
 	private:
 		AVGroup m_kVehicles; // for allVehicles
 		EmptyVehicle m_kVehicle;
