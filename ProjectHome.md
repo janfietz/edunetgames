@@ -1,0 +1,1 @@
+This project will create a framework to use it in lectures for computer games to teach networking und mmo technologies.
